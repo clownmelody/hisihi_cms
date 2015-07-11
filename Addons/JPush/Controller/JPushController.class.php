@@ -1,0 +1,281 @@
+<?php
+/**
+ *  author: 杨楚杰
+ *  function：嘿设汇推送服务
+ *  date: 2015-07-10
+ */
+namespace Addons\JPush\Controller;
+use Home\Controller\AddonsController;
+
+use JPush\JPushClient;
+use JPush\JPushLog;
+use JPush\Model as M;
+use JPush\Exception\APIConnectionException;
+use JPush\Exception\APIRequestException;
+use Think\Log;
+
+
+class JPushController extends AddonsController{
+    protected $push;
+    public function _initialize() {
+        vendor('Psr.Log.LoggerInterface');
+        vendor('Httpful.Httpful');
+        vendor('Httpful.Request');
+        vendor('Httpful.Http');
+        vendor('Httpful.Bootstrap');
+        vendor('Monolog.Formatter.FormatterInterface');
+        vendor('Monolog.Formatter.NormalizerFormatter');
+        vendor('Monolog.Formatter.LineFormatter');
+        vendor('Monolog.Registry');
+        vendor('Monolog.ErrorHandler');
+        vendor('Monolog.Logger');
+        vendor('Monolog.Handler.HandlerInterface');
+        vendor('Monolog.Handler.AbstractHandler');
+        vendor('Monolog.Handler.AbstractProcessingHandler');
+        vendor('Monolog.Handler.StreamHandler');
+        vendor('JPush.Model.Audience');
+        vendor('JPush.Model.PushPayload');
+        vendor('JPush.Model.Options');
+        vendor('JPush.Model.Platform');
+        vendor('JPush.Model.Notification');
+        vendor('JPush.Model.Message');
+        vendor('JPush.JPushLog');
+        vendor('JPush.JPushClient');
+        $config=  get_addon_config('JPush');
+        $app_key = $config['app_key'];
+        $master_secret = $config['master_secret'];
+        #JPushLog::setLogHandlers(array(new StreamHandler('jpush.log', Logger::DEBUG)));
+        $this->push = new JPushClient($app_key, $master_secret);
+    }
+
+    /**课程视频 或 文章 推送
+     * @param $alert_info  // 提示文字
+     * @param $id          // 视频或者文章ID
+     * @param $type        // 1表示视频，2表示文章
+     * @param $production  // 是否产品模式，默认为false（调试模式）
+     * @return mixed       // 推送结果
+     */
+    public function push_video_article($alert_info, $id, $type, $production){
+        if(!isset($alert_info)||!isset($id)||!isset($type)){
+            Log::write("传入参数未设置或为空", "WARN");
+            return false;
+        }
+        if($type==2){
+            $content_type = "article";
+        } else {
+            $content_type = "course_video";
+        }
+        $product = false;
+        if($production==true){
+            $product = true;
+        }
+        try{
+            $result = $this->push->push()
+                ->setPlatform(M\platform('ios', 'android'))
+                ->setAudience(M\all)
+                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                    M\ios($alert_info, "default", "+0", false, array('type'=>$content_type, 'id'=>$id,
+                        'infos'=>''), null)))
+                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->send();
+        } catch (APIRequestException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        } catch (APIConnectionException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        }
+        return $result;
+    }
+
+    /**用户被关注 推送
+     * @param $alert_info  // 提示文字
+     * @param $fans_id     // 粉丝ID
+     * @param $user_id     // 用户ID（被关注者ID）
+     * @param $production  // 是否产品模式，默认为false（调试模式）
+     * @return mixed       // 推送结果
+     */
+    public function push_followed($alert_info, $fans_id, $user_id, $production){
+        if(!isset($alert_info)||!isset($fans_id)||!isset($user_id)){
+            Log::write("传入参数未设置或为空", "WARN");
+            return false;
+        }
+        $product = false;
+        if($production==true){
+            $product = true;
+        }
+        try{
+            $arr = array ('to_uid'=>$user_id);
+            $result = $this->push->push()
+                ->setPlatform(M\platform('ios', 'android'))
+                ->setAudience(M\all)   //  需要根据alias单独推送
+                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"follow_you", 'id'=>$fans_id,
+                        'infos'=>$arr), null)))
+                ->setMessage(M\message($alert_info, null, null, array('type'=>"follow_you", 'id'=>$fans_id,
+                    'infos'=>$arr)))
+                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->printJson()
+                ->send();
+        } catch (APIRequestException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        } catch (APIConnectionException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        }
+        return $result;
+    }
+
+    /**提问被点赞 推送
+     * @param $alert_info     // 提示文字，信息需要调用者组装后传入
+     * @param $question_id    // 问题ID
+     * @param $fans_id        // 粉丝ID
+     * @param $user_id        // 用户ID（被关注者ID）
+     * @param $production     // 是否产品模式，默认为false（调试模式）
+     * @return mixed
+     */
+    public function push_question_like($alert_info, $question_id, $fans_id, $user_id, $production){
+        if(!isset($alert_info)||!isset($question_id)||!isset($fans_id)||!isset($user_id)){
+            Log::write("传入参数未设置或为空", "WARN");
+            return false;
+        }
+        $product = false;
+        if($production==true){
+            $product = true;
+        }
+        try{
+            $arr = array ('to_uid'=>$user_id, 'from_uid'=>$fans_id);
+            $result = $this->push->push()
+                ->setPlatform(M\platform('ios', 'android'))
+                ->setAudience(M\all)    //  需要根据alias单独推送
+                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"support_post", 'id'=>$fans_id,
+                        'infos'=>$arr), null)))
+                ->setMessage(M\message($alert_info, null, null, array('type'=>"support_post", 'id'=>$fans_id,
+                    'infos'=>$arr)))
+                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->send();
+        } catch (APIRequestException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        } catch (APIConnectionException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        }
+        return $result;
+    }
+
+    /**提问被回答 推送
+     * @param $alert_info     // 提示文字，信息需要调用者组装后传入
+     * @param $question_id    // 问题ID
+     * @param $reply_id       // 回答ID
+     * @param $fans_id        // 粉丝ID
+     * @param $user_id        // 用户ID（被关注者ID）
+     * @param $production     // 是否产品模式，默认为false（调试模式）
+     * @return mixed
+     */
+    public function push_question_answer($alert_info, $question_id, $reply_id,
+                                            $fans_id, $user_id, $production){
+        if(!isset($alert_info)||!isset($question_id)||!isset($reply_id)
+            ||!isset($fans_id)||!isset($user_id)){
+            Log::write("传入参数未设置或为空", "WARN");
+            return false;
+        }
+        $product = false;
+        if($production==true){
+            $product = true;
+        }
+        try{
+            $arr = array ('reply_id'=>$reply_id, 'to_uid'=>$user_id, 'from_uid'=>$fans_id);
+            $result = $this->push->push()
+                ->setPlatform(M\platform('ios', 'android'))
+                ->setAudience(M\all)     //  需要根据alias单独推送
+                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"answer_post", 'id'=>$question_id,
+                        'infos'=>$arr), null)))
+                ->setMessage(M\message($alert_info, null, null, array('type'=>"answer_post", 'id'=>$question_id,
+                    'infos'=>$arr)))
+                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->send();
+        } catch (APIRequestException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        } catch (APIConnectionException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        }
+        return $result;
+    }
+
+    /**楼中楼回复 推送
+     * @param $alert_info    // 提示文字，信息需要调用者组装后传入
+     * @param $question_id   // 问题ID
+     * @param $lzl_id        // 楼中楼回复的ID
+     * @param $reply_id      // 回答ID
+     * @param $fans_id       // 粉丝ID
+     * @param $user_id       // 用户ID（被关注者ID）
+     * @param $production    // 是否产品模式，默认为false（调试模式）
+     * @return mixed
+     */
+    public function push_floor_reply($alert_info, $question_id, $lzl_id, $reply_id,
+                                         $fans_id, $user_id, $production){
+        if(!isset($alert_info)||!isset($question_id)||!isset($lzl_id)||
+            !isset($reply_id)||!isset($fans_id)||!isset($user_id)){
+            Log::write("传入参数未设置或为空", "WARN");
+            return false;
+        }
+        $product = false;
+        if($production==true){
+            $product = true;
+        }
+        try{
+            $arr = array ('reply_id'=>$reply_id, 'lzl_id'=>$lzl_id, 'to_uid'=>$user_id, 'from_uid'=>$fans_id);
+            $result = $this->push->push()
+                ->setPlatform(M\platform('ios', 'android'))
+                ->setAudience(M\all)    //  需要根据alias单独推送
+                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"lzl_reply", 'id'=>$question_id,
+                        'infos'=>$arr), null)))
+                ->setMessage(M\message($alert_info, null, null, array('type'=>"lzl_reply", 'id'=>$question_id,
+                    'infos'=>$arr)))
+                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->send();
+        } catch (APIRequestException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        } catch (APIConnectionException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        }
+        return $result;
+    }
+
+    /**被提问 推送
+     * @param $alert_info     // 提示文字，信息需要调用者组装后传入
+     * @param $question_id    // 问题ID
+     * @param $fans_id        // 粉丝ID
+     * @param $user_id        // 用户ID（被关注者ID）
+     * @param $production     // 是否产品模式，默认为false（调试模式）
+     * @return mixed
+     */
+    public function push_question_asked($alert_info, $question_id, $fans_id, $user_id, $production){
+        if(!isset($alert_info)||!isset($question_id)||!isset($fans_id)||!isset($user_id)){
+            Log::write("传入参数未设置或为空", "WARN");
+            return false;
+        }
+        $product = false;
+        if($production==true){
+            $product = true;
+        }
+        try{
+            $arr = array ('to_uid'=>$user_id, 'from_uid'=>$fans_id);
+            $result = $this->push->push()
+                ->setPlatform(M\platform('ios', 'android'))
+                ->setAudience(M\all)       //  需要根据alias单独推送
+                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"ask_you", 'id'=>$question_id,
+                        'infos'=>$arr), null)))
+                ->setMessage(M\message($alert_info, null, null, array('type'=>"ask_you", 'id'=>$question_id,
+                    'infos'=>$arr)))
+                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->send();
+        } catch (APIRequestException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        } catch (APIConnectionException $e) {
+            Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
+        }
+        return $result;
+    }
+
+}

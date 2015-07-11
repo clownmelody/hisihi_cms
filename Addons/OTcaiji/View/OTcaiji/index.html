@@ -1,0 +1,58 @@
+<extend name="Public/base"/>
+<block name="body">
+	<div class="main-title cf">
+		<h2>采集信息</h2>
+	</div>
+	<!-- 表单 -->
+  <form id="form" action="" method="post" class="form-horizontal">
+		<!-- 基础文档模型 -->
+		
+	</form>
+<div id="show">
+        <volist name='str' id='v'>
+		{$v}
+		</volist>		
+</div>
+<style>
+#show{ width: 500px; height:300px; overflow:auto; border:1px #ddd solid; background:#fff; padding:5px;}
+#show span.success{ color:#06C;}
+#show span.error{ color:red;}
+
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	var status=true;
+	
+    $('#type').change(function(){
+	 var name=$(this).val();
+	    $.post("{:addons_url('OTcaiji://OTcaiji/get_tag')}",{name:name},function(data){
+			$('#tag').html('<option value="全部">全部</option>'+data);
+			$('#tag_show').show();
+		});
+	});
+	
+	$('#sub').click(function(){
+	  status=true;
+	  c();
+	});
+	
+	$('#off').click(function(){
+		status=false;
+	});
+	
+	function c(){
+		if(status){
+		 $.post("{:addons_url('OTcaiji://OTcaiji/coolect')}",$('#form').serialize(),function(re){
+		   var p=$('input[name=pn]').val();
+		   $('input[name=pn]').val(Number(p)+Number('{$c.add_pn}'));
+		   $('#show').html(re);
+		   c();
+	   });
+	   }
+	}
+});
+
+</script>
+</block>
+
