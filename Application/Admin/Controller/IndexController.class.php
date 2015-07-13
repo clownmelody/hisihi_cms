@@ -22,14 +22,14 @@ class IndexController extends AdminController {
      * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
     public function index(){
-        $param['alert_info'] = '推送钩子测试';
-        $param['id'] = 66;
-        $param['type'] = 1;
-        $param['user_id'] = 36;
-        $param['fans_id'] = 22;
-        $param['production'] = false;
-        #Hook::exec('Addons\\JPush\\JPushAddon', 'push_video_article', $param);
-        Hook::exec('Addons\\JPush\\JPushAddon', 'push_followed', $param);
+//        $param['alert_info'] = '推送钩子测试';
+//        $param['id'] = 66;
+//        $param['type'] = 1;
+//        $param['user_id'] = 36;
+//        $param['fans_id'] = 22;
+//        $param['production'] = false;
+//        #Hook::exec('Addons\\JPush\\JPushAddon', 'push_video_article', $param);
+//        Hook::exec('Addons\\JPush\\JPushAddon', 'push_followed', $param);
         if(UID){
             $this->meta_title = '管理首页';
             $this->display();

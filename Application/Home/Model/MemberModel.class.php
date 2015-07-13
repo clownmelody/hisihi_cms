@@ -47,8 +47,8 @@ class MemberModel extends Model
 
     );
 
-    protected $insertField = 'nickname,sex,birthday,qq,signature'; //新增数据时允许操作的字段
-    protected $updateField = 'nickname,sex,birthday,qq,signature,last_login_ip,login,last_login_ip,last_login_time,update_time,status,tox_money,score,pos_province,pos_city,pos_district,pos_community'; //编辑数据时允许操作的字段
+    protected $insertField = 'nickname,sex,birthday,qq,signature,reg_id'; //新增数据时允许操作的字段
+    protected $updateField = 'nickname,sex,birthday,qq,signature,last_login_ip,login,last_login_ip,last_login_time,update_time,status,tox_money,score,pos_province,pos_city,pos_district,pos_community,reg_id'; //编辑数据时允许操作的字段
 
     /**
      * 检测用户名是不是被禁止注册
@@ -108,6 +108,34 @@ class MemberModel extends Model
         //记录行为
         action_log('user_login', 'member', $uid, $uid);
         return true;
+    }
+
+    /**更新用户绑定reg_id用于推送
+     * @param $uid
+     * @param $reg_id
+     */
+    public function updateRegID($uid, $reg_id){
+        if(isset($reg_id)&&!is_null($reg_id)){
+            $vo = $this->where('reg_id=' . $reg_id)->select();
+            foreach($vo as $key => $value){
+                \Think\Log::write('select reg_id -- key:'.$key.' -- value:'.$value['uid']);
+                if($value['uid']!=$uid){
+                    $data = array('reg_id'=>'');
+                    $this->where('uid=' . $value['uid'])->data($data)->save();
+                }
+            }
+            $data = array('reg_id'=>$reg_id);
+            $this->where('uid=' . $uid)->data($data)->save();
+        }
+    }
+
+    /**根据uid获取用户名
+     * @param $uid
+     * @return mixed
+     */
+    public function getNickName($uid){
+        $vo = $this->where('uid=' . $uid)->select();
+        return $vo[0]['nickname'];
     }
 
     /**
