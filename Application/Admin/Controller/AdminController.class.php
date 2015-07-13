@@ -10,7 +10,6 @@ namespace Admin\Controller;
 use Think\Controller;
 use Admin\Model\AuthRuleModel;
 use Admin\Model\AuthGroupModel;
-use Think\Log;
 /**
  * 后台首页控制器
  * @author 麦当苗儿 <zuojiazi@vip.qq.com>

@@ -10,9 +10,6 @@
 // +----------------------------------------------------------------------
 namespace Think\Db\Driver;
 use Think\Db;
-use Think\Log;
-use Think\Think;
-
 defined('THINK_PATH') or exit();
 /**
  * Mysqli数据库驱动类

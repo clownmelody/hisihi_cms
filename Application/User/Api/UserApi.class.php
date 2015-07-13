@@ -50,6 +50,7 @@ class UserApi extends Api{
             }
             elseif($uc_user[0]==-1){
                 return '用户不存在，或者被删除';
+
             }
             elseif($uc_user[0]>0){
                 if(strtolower(UC_CHARSET) == 'gbk'){

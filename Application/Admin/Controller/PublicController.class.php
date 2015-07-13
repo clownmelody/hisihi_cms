@@ -8,10 +8,8 @@
 // +----------------------------------------------------------------------
 
 namespace Admin\Controller;
-use Think\Think;
 use User\Api\UserApi;
-use Think\Log;
-use Think\Verify;
+
 /**
  * 后台首页控制器
  * @author 麦当苗儿 <zuojiazi@vip.qq.com>
@@ -30,6 +28,9 @@ class PublicController extends \Think\Controller {
                     $this->error('验证码输入错误！');
                 }
             }
+
+
+
             /* 调用UC登录接口登录 */
             $User = new UserApi;
             $uid = $User->login($username, $password);
@@ -80,7 +81,7 @@ class PublicController extends \Think\Controller {
     }
 
     public function verify(){
-        $verify = new Verify();
+        $verify = new \Think\Verify();
         $verify->entry(1);
     }
 

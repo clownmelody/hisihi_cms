@@ -3,6 +3,7 @@
 /Runtime/*
 /*.sh
 /.idea
+/.svn
 /Application/Install/Data/install.lock
 /Runtime
 /_runtime
