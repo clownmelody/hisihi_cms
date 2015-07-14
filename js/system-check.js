@@ -1,4 +1,4 @@
-$(document).ready(function () {
+//$(document).ready(function () {
 //平台、设备和操作系统
     var system = {
         win: false,
@@ -16,4 +16,4 @@ $(document).ready(function () {
     } else {
         window.location.href = "app/apps/";//手机
     }
-});
+//});

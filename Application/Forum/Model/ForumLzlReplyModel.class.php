@@ -70,12 +70,12 @@ class ForumLzlReplyModel extends Model
 
         //增加微博的评论数量
         $user = query_user(array('nickname', 'space_url'), $uid);
-        $title = $user['nickname'] . '回复了您的评论。';
+        $title = $user['nickname'] . '回复了您的楼中楼。';
         $content = '回复内容：' . mb_substr($content, 0, 20);
         $url = U('Forum/Index/detail', array('id' => $post_id,'page'=>$p,'sr'=>$to_f_reply_id,'sp'=>$pageCount)).'#'.$to_f_reply_id;
         $from_uid = $uid;
         $type = 2;
-        D('Message')->sendMessage($to_uid, $content, $title, $url, $from_uid, $type, '', '', $post_id, $result);
+        D('Message')->sendMessage($to_uid, $content, $title, $url, $from_uid, $type, '', 'lzl_reply', $post_id, $result);
 
     }
 

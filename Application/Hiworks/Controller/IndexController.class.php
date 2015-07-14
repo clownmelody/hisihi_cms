@@ -75,10 +75,17 @@ class IndexController extends HiworksController
         if (false === $list) {
             $this->error('获取列表数据失败！');
         }
-
+        $countAll = 0;
         foreach ($children as &$child) {
             $map = array('category_id' => $child['id']);
-            $child['files'] = D('Document')->where($map)->count('id');
+            //////////////////////统计数字 特殊处理/////////////////////////////
+            $count = D('Document')->where($map)->count('id') + 2000;
+            if(($count+10) != S('Hiworks_count_'.$child['id'])) {
+                $count = $count + 10;
+                S('Hiworks_count_'.$child['id'],$count);
+            }
+            $child['files'] = S('Hiworks_count_'.$child['id']);
+            ///////////////////////////////////////////////////////////////////
             $view = D('Document')->where($map)->field('view')->select();
             $child['download'] = 0;
             $child['download'] += array_sum(getSubByKey($view,'view'));
@@ -87,7 +94,9 @@ class IndexController extends HiworksController
             } else {
                 $child['class'] = $child['name'];
             }
+            $countAll += S('Hiworks_count_'.$child['id']);
         }
+        S('Hiworks_count_all',$countAll);
         $this->assign('children_cates', $children);
 
         foreach ($list as &$info) {
@@ -157,10 +166,17 @@ class IndexController extends HiworksController
         if (false === $list) {
             $this->error('获取列表数据失败！');
         }
-
+        $countAll = 0;
         foreach ($children as &$child) {
             $map = array('category_id' => $child['id']);
-            $child['files'] = D('Document')->where($map)->count('id');
+            //////////////////////统计数字 特殊处理/////////////////////////////
+            $count = D('Document')->where($map)->count('id') + 2000;
+            if(($count+10) != S('Hiworks_count_'.$child['id'])) {
+                $count = $count + 10;
+                S('Hiworks_count_'.$child['id'],$count);
+            }
+            $child['files'] = S('Hiworks_count_'.$child['id']);
+            ///////////////////////////////////////////////////////////////////
             $view = D('Document')->where($map)->field('view')->select();
             $child['download'] = 0;
             $child['download'] += array_sum(getSubByKey($view,'view'));
@@ -170,6 +186,7 @@ class IndexController extends HiworksController
                 $child['class'] = $child['name'];
             }
         }
+        S('Hiworks_count_all',$countAll);
         $this->assign('children_cates', $children);
 
         foreach ($list as &$info) {

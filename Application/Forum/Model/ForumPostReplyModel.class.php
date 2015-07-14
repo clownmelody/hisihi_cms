@@ -77,7 +77,7 @@ class ForumPostReplyModel extends Model
         $content = '回复内容：' . mb_substr(op_t($content), 0, 20);
         $url = U('Forum/Index/detail', array('id' => $post_id, 'page' => $pageCount)) . '#' . $reply_id;
         $from_uid = $uid;
-        D('Message')->sendMessage($post['uid'], $content, $title, $url, $from_uid, 2, null, 'reply', $post_id, $reply_id);
+        D('Message')->sendMessage($post['uid'], $content, $title, $url, $from_uid, 2, null, 'reply_post', $post_id, $reply_id);
 
         return $url;
     }

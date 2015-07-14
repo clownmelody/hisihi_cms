@@ -48,7 +48,7 @@ class FollowModel extends Model
          */
         $user = query_user(array('id', 'username', 'space_url'));
 
-        D('Message')->sendMessage($uid, $user['username'] . ' 关注了你。', '粉丝数增加', $user['space_url'], is_login(), 0);
+        D('Message')->sendMessage($uid, $user['username'] . ' 关注了你。', '粉丝数增加', $user['space_url'], is_login(), 2, null, 'follow_you');
         return $this->add($follow);
     }
 
@@ -64,7 +64,8 @@ class FollowModel extends Model
         clean_query_user_cache(is_login(),'following');
         S('atUsersJson_'.is_login(),null);
         $user = query_user(array('id', 'username', 'space_url'));
-        D('Message')->sendMessage($uid, $user['username'] . '取消了对你的关注', '粉丝数减少', $user['space_url'], is_login(), 0);
+        //取消关注不需要消息
+        D('Message')->sendMessage($uid, $user['username'] . '取消了对你的关注', '粉丝数减少', $user['space_url'], is_login(), 2, null, 'unfollow_you');
         return $this->where($follow)->delete();
     }
 
