@@ -48,7 +48,7 @@ class MemberModel extends Model
     );
 
     protected $insertField = 'nickname,sex,birthday,qq,signature,reg_id'; //新增数据时允许操作的字段
-    protected $updateField = 'nickname,sex,birthday,qq,signature,last_login_ip,login,last_login_ip,last_login_time,update_time,status,tox_money,score,pos_province,pos_city,pos_district,pos_community,reg_id'; //编辑数据时允许操作的字段
+    protected $updateField = 'nickname,sex,birthday,qq,signature,last_login_ip,login,last_login_ip,last_login_time,update_time,status,tox_money,score,pos_province,pos_city,pos_district,pos_community,reg_id,last_login_client'; //编辑数据时允许操作的字段
 
     /**
      * 检测用户名是不是被禁止注册
@@ -118,13 +118,23 @@ class MemberModel extends Model
         if(isset($reg_id)&&!is_null($reg_id)){
             $vo = $this->where('reg_id=' . $reg_id)->select();
             foreach($vo as $key => $value){
-                \Think\Log::write('select reg_id -- key:'.$key.' -- value:'.$value['uid']);
                 if($value['uid']!=$uid){
                     $data = array('reg_id'=>'');
                     $this->where('uid=' . $value['uid'])->data($data)->save();
                 }
             }
             $data = array('reg_id'=>$reg_id);
+            $this->where('uid=' . $uid)->data($data)->save();
+        }
+    }
+
+    /**解绑用户reg_id
+     * @param $uid
+     * @param $reg_id
+     */
+    public function removeRegID($uid, $reg_id){
+        if(isset($reg_id)&&!is_null($reg_id)){
+            $data = array('reg_id'=>'');
             $this->where('uid=' . $uid)->data($data)->save();
         }
     }
@@ -136,6 +146,21 @@ class MemberModel extends Model
     public function getNickName($uid){
         $vo = $this->where('uid=' . $uid)->select();
         return $vo[0]['nickname'];
+    }
+
+    /**获取用户设备的推送id
+     * @param $uid
+     * @return mixed
+     */
+    public function getRegId($uid){
+        $vo = $this->where('uid=' . $uid)->select();
+        return $vo[0]['reg_id'];
+    }
+
+    public function updateLastLoginClient($uid, $client){
+        $data = array('last_login_client'=>$client);
+        \Think\Log::write("..更新client数据, client:".$client.',  uid:'.$uid, "WARN");
+        $this->where('uid=' . $uid)->data($data)->save();
     }
 
     /**
