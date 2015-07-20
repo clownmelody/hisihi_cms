@@ -295,12 +295,15 @@ class JPushController extends AddonsController{
             $product = true;
         }
         try{
+            $arr = array ('to_uid'=>$user_id);
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
                 ->setNotification(M\notification("推送测试", M\android('Hi, android'),
-                    M\ios($alert_info, "default", "+1", false, array('type'=>"logout", 'id'=>$user_id), null)))
-                ->setMessage(M\message($alert_info, null, null, array('type'=>"logout", 'id'=>$user_id)))
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"logout", 'id'=>$user_id,
+                        'infos'=>$arr), null)))
+                ->setMessage(M\message($alert_info, null, null, array('type'=>"logout", 'id'=>$user_id,
+                    'infos'=>$arr)))
                 ->setOptions(M\options(1234, null, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {

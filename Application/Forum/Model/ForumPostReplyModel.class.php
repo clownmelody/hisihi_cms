@@ -116,5 +116,11 @@ class ForumPostReplyModel extends Model
         return $res;
     }
 
+    public function setReplyTop($id)
+    {
+        $data['status'] = 3;
+        $res = $this->where('id=' . $id)->save($data);
+        return $res;
+    }
 
 }
