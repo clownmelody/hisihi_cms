@@ -11,6 +11,7 @@ namespace App\Controller;
 use Think\Controller;
 use Think\Model;
 use Weibo\Api\WeiboApi;
+use Think\Hook;
 
 define('TOP_ALL', 2);
 define('TOP_FORUM', 1);
@@ -1024,10 +1025,10 @@ class ForumController extends AppController
                     $_user = D('Home/Member')->where($map)->find();
                     $param['reg_id'] = $_user['reg_id'];
                     $text_content = strip_tags($post_content);
-                    if($text_content != ''){
-                        $content_length = mb_strlen($text_content);
-                        if($content_length>30){
-                            $tail_content = mb_substr($text_content, 0, 30, 'utf-8');
+		            if($text_content!=' '&&strlen($text_content)!=0){
+                        $content_length = mb_strlen($text_content,'utf-8');
+                        if($content_length>58){
+                            $tail_content = mb_substr($text_content, 0, 50, 'utf-8');
                             $tail_content = $tail_content . '...';
                         } else {
                             $tail_content = $text_content;
@@ -1035,7 +1036,7 @@ class ForumController extends AppController
                     } else {
                         $tail_content = "[图片]";
                     }
-                    $alert_info = $_user['nickname'] . '赞了你的提问:';
+                    $alert_info = $_user['nickname'] . '赞了你的提问:' . $tail_content;
                     $param['alert_info'] = $alert_info;
                     $param['question_id'] = $id;
                     $param['fans_id'] = $support['uid'];

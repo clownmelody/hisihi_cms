@@ -73,10 +73,10 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\all)
-                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                ->setNotification(M\notification("文章或视频推送", M\android('Hi, android'),
                     M\ios($alert_info, "default", "+0", false, array('type'=>$content_type, 'id'=>$id,
                         'infos'=>''), null)))
-                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->setOptions(M\options(1234, 0, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {
             Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
@@ -107,12 +107,12 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                ->setNotification(M\notification("被关注推送", M\android('Hi, android'),
                     M\ios($alert_info, "default", "+1", false, array('type'=>"follow_you", 'id'=>$fans_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"follow_you", 'id'=>$fans_id,
                     'infos'=>$arr)))
-                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->setOptions(M\options(1234, 0, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {
             Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
@@ -144,12 +144,12 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                ->setNotification(M\notification("被点赞推送", M\android('Hi, android'),
                     M\ios($alert_info, "default", "+1", false, array('type'=>"support_post", 'id'=>$question_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"support_post", 'id'=>$question_id,
                     'infos'=>$arr)))
-                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->setOptions(M\options(1234, 0, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {
             Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
@@ -184,12 +184,12 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
-                    M\ios($alert_info, "default", "+1", false, array('type'=>"answer_post", 'id'=>$question_id,
+                ->setNotification(M\notification("提问被回答推送", M\android('Hi, android'),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"reply_post", 'id'=>$question_id,
                         'infos'=>$arr), null)))
-                ->setMessage(M\message($alert_info, null, null, array('type'=>"answer_post", 'id'=>$question_id,
+                ->setMessage(M\message($alert_info, null, null, array('type'=>"reply_post", 'id'=>$question_id,
                     'infos'=>$arr)))
-                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->setOptions(M\options(1234, 0, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {
             Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
@@ -225,13 +225,12 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                ->setNotification(M\notification("楼中楼回复推送", M\android('Hi, android'),
                     M\ios($alert_info, "default", "+1", false, array('type'=>"lzl_reply", 'id'=>$question_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"lzl_reply", 'id'=>$question_id,
                     'infos'=>$arr)))
-                ->setOptions(M\options(1234, null, null, $product, 0))
-                ->printJson()
+                ->setOptions(M\options(1234, 0, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {
             Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
@@ -263,12 +262,12 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id($reg_id)))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                ->setNotification(M\notification("被提问推送", M\android('Hi, android'),
                     M\ios($alert_info, "default", "+1", false, array('type'=>"ask_you", 'id'=>$question_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"ask_you", 'id'=>$question_id,
                     'infos'=>$arr)))
-                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->setOptions(M\options(1234, 0, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {
             Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
@@ -299,12 +298,12 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("推送测试", M\android('Hi, android'),
+                ->setNotification(M\notification("下线通知推送", M\android('Hi, android'),
                     M\ios($alert_info, "default", "+1", false, array('type'=>"logout", 'id'=>$user_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"logout", 'id'=>$user_id,
                     'infos'=>$arr)))
-                ->setOptions(M\options(1234, null, null, $product, 0))
+                ->setOptions(M\options(1234, 0, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {
             Log::write("Push Video or Article Exception: ".$e->getMessage(), "ERROR");
