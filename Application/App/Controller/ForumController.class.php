@@ -977,10 +977,7 @@ class ForumController extends AppController
         $param['lzl_id'] = $result;
         $param['reply_id'] = $to_f_reply_id;
 
-        $forum_model = D('Forum/ForumPost');
-        $map = array('id' => $post_id);
-        $forum_detail = $forum_model->where($map)->find();
-        $param['user_id'] = $forum_detail['uid'];
+        $param['user_id'] = $to_uid;
         $map = array('uid'=>$param['user_id']);
         $_user = $model->where($map)->find();
         $param['reg_id'] = $_user['reg_id'];
@@ -1024,8 +1021,10 @@ class ForumController extends AppController
                     $map = array('uid' => $message_uid);
                     $_user = D('Home/Member')->where($map)->find();
                     $param['reg_id'] = $_user['reg_id'];
-                    $text_content = strip_tags($post_content);
-		            if($text_content!=' '&&strlen($text_content)!=0){
+                    $origin_length = strlen(trim($post_content));
+                    $text_content = trim(strip_tags($post_content));
+                    $new_length = strlen($text_content);
+		            if($text_content!=''&&$new_length!=0){
                         $content_length = mb_strlen($text_content,'utf-8');
                         if($content_length>58){
                             $tail_content = mb_substr($text_content, 0, 50, 'utf-8');
@@ -1033,8 +1032,10 @@ class ForumController extends AppController
                         } else {
                             $tail_content = $text_content;
                         }
-                    } else {
+                    } else if($text_content =='' && $origin_length>$new_length) {
                         $tail_content = "[图片]";
+                    } else {
+                        $tail_content = "[语音]";
                     }
                     $alert_info = $_user['nickname'] . '赞了你的提问:' . $tail_content;
                     $param['alert_info'] = $alert_info;
