@@ -159,7 +159,6 @@ class MemberModel extends Model
 
     public function updateLastLoginClient($uid, $client){
         $data = array('last_login_client'=>$client);
-        \Think\Log::write("..更新client数据, client:".$client.',  uid:'.$uid, "WARN");
         $this->where('uid=' . $uid)->data($data)->save();
     }
 
