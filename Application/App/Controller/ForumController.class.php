@@ -1037,6 +1037,8 @@ class ForumController extends AppController
                     } else {
                         $tail_content = "[语音]";
                     }
+                    $map = array('uid' => $this->getUid());
+                    $_user = D('Home/Member')->where($map)->find();
                     $alert_info = $_user['nickname'] . '赞了你的提问:' . $tail_content;
                     $param['alert_info'] = $alert_info;
                     $param['question_id'] = $id;
@@ -1047,10 +1049,6 @@ class ForumController extends AppController
                         Hook::exec('Addons\\JPush\\JPushAddon', 'push_question_like', $param);
                     }
                 }
-                /**
-                 * 1、自己点赞自己
-                 * 2、添加问题内容（内容分类型）
-                 */
 
                 D('Message')->sendMessage($message_uid, $user['username'] . '给您点了个赞。', $title =$user['username'] . '赞了您。', '', is_login(), 2, null, 'support_post', $source_id);
                 $this->apiSuccess('感谢您的支持');
