@@ -8,6 +8,7 @@ require_once('ThinkPHP/Library/Vendor/PHPImageWorkshop/ImageWorkshop.php');
 
 use PHPImageWorkshop\Core\ImageWorkshopLayer;
 use PHPImageWorkshop\ImageWorkshop;
+use Think\Hook;
 
 /**
  * 头像插件插件
@@ -104,6 +105,9 @@ class AvatarAddon extends Addon
         //调用组件上传临时头像
         $path = $this->saveUploadedFile($image);
 
+        $param['objectKey'] = $path;
+        Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadAvatorResource', $param);
+
         //保存临时头像
         $model = $this->getAvatarModel();
         $result = $model->saveTempAvatar($uid, $path);
@@ -145,6 +149,8 @@ class AvatarAddon extends Addon
             $this->error = '裁剪头像失败：' . $this->error;
             return false;
         }
+        $param['objectKey'] = $path;
+        Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadAvatorResource', $param);
         //保存新头像
         $model->saveAvatar($uid, $path);
         //返回成功消息

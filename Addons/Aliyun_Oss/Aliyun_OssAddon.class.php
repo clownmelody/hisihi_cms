@@ -1,6 +1,7 @@
 <?php
 
 namespace Addons\Aliyun_Oss;
+use Addons\Aliyun_Oss\Controller\AliyunOssController;
 use Common\Controller\Addon;
 /**
  * Aliyun_Oss插件
@@ -26,5 +27,14 @@ use Common\Controller\Addon;
             return true;
         }
 
+        public function uploadAvatorResource($param){
+            $oss_controller = new AliyunOssController();
+            $oss_controller->uploadAvatorResource($param["objectKey"]);
+        }
+
+        public function uploadForumPicResource($param){
+            $oss_controller = new AliyunOssController();
+            $oss_controller->uploadForumPicResource($param["objectKey"]);
+        }
 
     }

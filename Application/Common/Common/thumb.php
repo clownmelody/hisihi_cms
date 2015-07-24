@@ -5,6 +5,7 @@
  * Date: 14-3-10
  * Time: PM7:40
  */
+use Think\Hook;
 
 function getImageUrlByPath($path, $size)
 {
@@ -131,6 +132,15 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
             $info['src'] = $thumbFile;
             $info['width'] = intval($old_image_width);
             $info['height'] = intval($old_image_height);
+            if(strpos($thumbFile, "Avatar")){
+                $new_pic_file = substr($thumbFile,15);
+                $param['objectKey'] = $new_pic_file;
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadAvatorResource', $param);
+            } else {
+                $new_pic_file = substr($thumbFile, 16);
+                $param['objectKey'] = $new_pic_file;
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadForumPicResource', $param);
+            }
             return $info;
         } else {
             if($height != "auto" && $width != "auto") {
@@ -190,6 +200,16 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
                 $thumb->resize($width, $height);
             }
             $res = $thumb->save($UPLOAD_PATH . $thumbFile);
+
+            if(strpos($thumbFile, "Avatar")){
+                $new_pic_file = substr($thumbFile, 15);
+                $param['objectKey'] = $new_pic_file;
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadAvatorResource', $param);
+            } else {
+                $new_pic_file = substr($thumbFile, 16);
+                $param['objectKey'] = $new_pic_file;
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadForumPicResource', $param);
+            }
 
             $info['src'] = $UPLOAD_PATH . $thumbFile;
             $info['width'] = intval($width);

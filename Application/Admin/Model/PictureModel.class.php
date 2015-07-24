@@ -10,6 +10,7 @@
 namespace Admin\Model;
 use Think\Model;
 use Think\Upload;
+use Think\Hook;
 
 /**
  * 图片模型
@@ -68,6 +69,9 @@ class PictureModel extends Model{
                     }
 
                 }
+
+                $param['objectKey'] = $value['savepath'].$value['savename'];
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadForumPicResource', $param);
 
                 $value['type'] = strtolower($driver);
 
