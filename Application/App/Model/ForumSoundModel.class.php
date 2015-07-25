@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Model;
+use Think\Hook;
 use Think\Model;
 use Think\Upload;
 
@@ -63,6 +64,8 @@ class ForumSoundModel extends Model{
                     //TODO: 文件上传成功，但是记录文件信息失败，需记录日志
                     unset($info[$key]);
                 }
+                $param['objectKey'] = $value['savepath'].$value['savename'];
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadForumSoundResource', $param);
             }
             return $info; //文件上传成功
         } else {

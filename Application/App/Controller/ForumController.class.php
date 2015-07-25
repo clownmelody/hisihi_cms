@@ -96,7 +96,6 @@ class ForumController extends AppController
 
             //解析并成立图片数据
             $v['img'] = $this->match_img($v['content']);
-
             /*
             $tmpImgArr = array();
             preg_match_all("/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.png]))[\'|\"].*?[\/]?>/",  $v['content'], $tmpImgArr); //匹配所有的图片
@@ -1365,6 +1364,10 @@ class ForumController extends AppController
                 return null;
             }
             $soundRes['url'] = str_replace('./','',$soundRes['url']);
+            if(strpos($soundRes['url'], "Download")) {
+                $src = substr($soundRes['url'], 17);
+                $soundRes['url'] = "http://".C('OSS_FORUM_SOUND').C('OSS_ENDPOINT').$src;
+            }
         }
         return $soundRes;
     }
@@ -1390,6 +1393,12 @@ class ForumController extends AppController
                 $size[] = $pic_small['height'];
                 $img['src'] = ltrim($v1, '/');
                 $img['thumb'] = $pic_small['src'];
+                if(strpos($img['src'], "Picture")) {
+                    $src = substr($img['src'], 16);
+                    $img['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
+                    $thumb_src = substr($pic_small['src'], 16);
+                    $img['thumb'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$thumb_src;
+                }
                 $img['size'] = $size;
                 $ImgResult[] = $img;
                 unset($size);

@@ -2,6 +2,7 @@
 
 namespace Addons\Avatar;
 
+use Addons\Aliyun_Oss\Aliyun_OssAddon;
 use Common\Controller\Addon;
 
 require_once('ThinkPHP/Library/Vendor/PHPImageWorkshop/ImageWorkshop.php');
@@ -337,7 +338,14 @@ class AvatarAddon extends Addon
                 }
 
             }
-           return getImageUrlByPath($avatar_path,$avatarSize);
+            $src = getImageUrlByPath($avatar_path,$avatarSize);
+            if(strpos($src, "Avatar")) {
+                $src = substr($src, 15);
+                $param["bucketName"] = "hisihi-avator";
+                $param['objectKey'] = $src;
+                $src = "http://".C('OSS_AVATAR').C('OSS_ENDPOINT').$src;
+            }
+           return $src;
         }else{
             //如果没有头像，返回默认头像
             if($avatarSize!=0){

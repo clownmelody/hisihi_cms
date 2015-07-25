@@ -27,14 +27,36 @@ use Common\Controller\Addon;
             return true;
         }
 
+        /**上传头像数据到OSS
+         * @param $param
+         */
         public function uploadAvatorResource($param){
             $oss_controller = new AliyunOssController();
             $oss_controller->uploadAvatorResource($param["objectKey"]);
         }
 
+        /**上传论坛图片到OSS
+         * @param $param
+         */
         public function uploadForumPicResource($param){
             $oss_controller = new AliyunOssController();
             $oss_controller->uploadForumPicResource($param["objectKey"]);
+        }
+
+        /**上传论坛声音到OSS
+         * @param $param
+         */
+        public function uploadForumSoundResource($param){
+            $oss_controller = new AliyunOssController();
+            $oss_controller->uploadForumSoundResource($param["objectKey"]);
+        }
+
+        /**获取OSS公开资源的链接
+         * @param $param
+         */
+        public function getPublicResourceUrl($param){
+            $oss_controller = new AliyunOssController();
+            $oss_controller->getPublicResourceUrl($param["bucketName"], $param["objectKey"]);
         }
 
     }

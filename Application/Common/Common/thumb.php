@@ -120,6 +120,12 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
         $info['src'] = $thumbFile;
         $info['width'] = intval($imageinfo[0]);
         $info['height'] = intval($imageinfo[1]);
+        if(strpos($info['src'], "Avatar")) {
+            $src = substr($info['src'], 15);
+            $param["bucketName"] = "hisihi-avator";
+            $param['objectKey'] = $src;
+            $info['src'] = "http://".C('OSS_AVATAR').C('OSS_ENDPOINT').$src;
+        }
         return $info;
         //执行缩图操作
     } else {
@@ -140,6 +146,12 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
                 $new_pic_file = substr($thumbFile, 16);
                 $param['objectKey'] = $new_pic_file;
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadForumPicResource', $param);
+            }
+            if(strpos($info['src'], "Avatar")) {
+                $src = substr($info['src'], 15);
+                $param["bucketName"] = "hisihi-avator";
+                $param['objectKey'] = $src;
+                $info['src'] = "http://".C('OSS_AVATAR').C('OSS_ENDPOINT').$src;
             }
             return $info;
         } else {
@@ -209,6 +221,12 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
                 $new_pic_file = substr($thumbFile, 16);
                 $param['objectKey'] = $new_pic_file;
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadForumPicResource', $param);
+            }
+            if(strpos($info['src'], "Avatar")) {
+                $src = substr($info['src'], 15);
+                $param["bucketName"] = "hisihi-avator";
+                $param['objectKey'] = $src;
+                $info['src'] = "http://".C('OSS_AVATAR').C('OSS_ENDPOINT').$src;
             }
 
             $info['src'] = $UPLOAD_PATH . $thumbFile;

@@ -29,7 +29,7 @@ class AliyunOssController extends AddonsController{
         if(isset($objectKey)){
             try {
                 $content_length = filesize("./Uploads/Avatar/$objectKey");
-                $result = $this->oss_client->putObject(array(
+                $this->oss_client->putObject(array(
                     'Bucket' => 'hisihi-avator',
                     'Key' => $objectKey,
                     'Content' => fopen("./Uploads/Avatar/$objectKey", 'r'),
@@ -45,9 +45,7 @@ class AliyunOssController extends AddonsController{
         if(isset($objectKey)){
             try {
                 $content_length = filesize("./Uploads/Picture/$objectKey");
-                $param['a'] = $content_length;
-                $param['b'] = "./Uploads/Picture/$objectKey";
-                $result = $this->oss_client->putObject(array(
+                $this->oss_client->putObject(array(
                     'Bucket' => 'forum-pic',
                     'Key' => $objectKey,
                     'Content' => fopen("./Uploads/Picture/$objectKey", 'r'),
@@ -59,7 +57,23 @@ class AliyunOssController extends AddonsController{
         }
     }
 
-    public function deleteAvatorResource($bucketName, $objectKey){
+    public function uploadForumSoundResource($objectKey){
+        if(isset($objectKey)){
+            try {
+                $content_length = filesize("./Uploads/Download/$objectKey");
+                $this->oss_client->putObject(array(
+                    'Bucket' => 'forum-sound',
+                    'Key' => $objectKey,
+                    'Content' => fopen("./Uploads/Download/$objectKey", 'r'),
+                    'ContentLength' => $content_length,
+                ));
+            } catch (Exception $ex) {
+                \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getMessage(), "ERR");
+            }
+        }
+    }
+
+    public function deleteResource($bucketName, $objectKey){
         if(isset($bucketName)&&isset($objectKey)){
             try {
                 $this->oss_client->deleteObject(array(
@@ -73,19 +87,8 @@ class AliyunOssController extends AddonsController{
     }
 
     public function getPublicResourceUrl($bucketName, $objectKey){
-        try {
-            $object = $this->oss_client->getObject(array(
-                'Bucket' => $bucketName,
-                'Key' => $objectKey,
-            ));
-        } catch (Exception $ex) {
-            \Think\Log::write("AliYun OSS Service Get Resource Url Exception: ".$ex.getMessage(), "ERR");
-        }
-        if($object){
-            return "http://$bucketName.oss-cn-qingdao.aliyuncs.com/$objectKey";
-        } else {
-            return null;
-        }
+        $url = "http://$bucketName.oss-cn-qingdao.aliyuncs.com/$objectKey";
+        return $url;
     }
 
     public function generatePresignedUrl($key, $time = 60){
