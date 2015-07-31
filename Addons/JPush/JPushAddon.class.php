@@ -8,8 +8,6 @@ use Common\Controller\Addon;
  * 极光推送插件
  * @author RFly
  */
-//http://localhost:8989/hisihi_web/api.php?s=%2Fuser%2Flogin&password=123456&username=10011234001&reg_id=0813a6507f0&client=5&session_id=c3177a47uaokloicrqfqj85o34
-//http://localhost:8989/hisihi_web/api.php?s=%2Fuser%2Flogin&password=123456&username=10011234002&reg_id=0a14e09a866&client=4&session_id=gv5344qhmnsd5l3nifivrcoaf3
     class JPushAddon extends Addon{
 
         public $info = array(
@@ -32,8 +30,9 @@ use Common\Controller\Addon;
         public function push_video_article($param){
             $this->checkArguments($param);
             $pushService = new JPushController();
-            $pushService->push_video_article($param['alert_info'], $param['id'],
+            $result = $pushService->push_video_article($param['alert_info'], $param['id'],
                 $param['type'], $param['production']);
+            return $result;
         }
 
         public function push_followed($param){

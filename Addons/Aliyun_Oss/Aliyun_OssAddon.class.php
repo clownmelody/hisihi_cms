@@ -51,12 +51,9 @@ use Common\Controller\Addon;
             $oss_controller->uploadForumSoundResource($param["objectKey"]);
         }
 
-        /**获取OSS公开资源的链接
-         * @param $param
-         */
-        public function getPublicResourceUrl($param){
+        public function isResourceExistInOSS($param){
             $oss_controller = new AliyunOssController();
-            $oss_controller->getPublicResourceUrl($param["bucketName"], $param["objectKey"]);
+            return $oss_controller->isResourceExistInOSS($param["bucketName"], $param["objectKey"]);
         }
 
     }

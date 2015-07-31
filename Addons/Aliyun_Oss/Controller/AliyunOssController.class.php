@@ -4,7 +4,6 @@ namespace Addons\Aliyun_Oss\Controller;
 use Home\Controller\AddonsController;
 require_once './Addons/Aliyun_Oss/OSS/aliyun.php';
 use \Aliyun\OSS\OSSClient;
-use PHPImageWorkshop\ImageWorkshop;
 use Think\Exception;
 use Think\Think;
 
@@ -73,6 +72,20 @@ class AliyunOssController extends AddonsController{
         }
     }
 
+    public function isResourceExistInOSS($bucketName, $objectKey){
+        $result = true;
+        try {
+             $this->oss_client->getObject(array(
+                'Bucket' => $bucketName,
+                'Key' => $objectKey,
+            ));
+        } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
+            \Think\Log::write("AliYun OSS Service Exception: ".$ex->getErrorCode(), "ERR");
+            return false;
+        }
+        return $result;
+    }
+
     public function deleteResource($bucketName, $objectKey){
         if(isset($bucketName)&&isset($objectKey)){
             try {
@@ -84,11 +97,6 @@ class AliyunOssController extends AddonsController{
                 \Think\Log::write("AliYun OSS Service Delete Resource Exception: ".$ex.getMessage(), "ERR");
             }
         }
-    }
-
-    public function getPublicResourceUrl($bucketName, $objectKey){
-        $url = "http://$bucketName.oss-cn-qingdao.aliyuncs.com/$objectKey";
-        return $url;
     }
 
     public function generatePresignedUrl($key, $time = 60){

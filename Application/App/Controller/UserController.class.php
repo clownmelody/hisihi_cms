@@ -8,6 +8,7 @@
 
 namespace App\Controller;
 
+use Addons\Aliyun_Oss\Controller\AliyunOssController;
 use Addons\Avatar\AvatarAddon;
 use Think\Model;
 use User\Api\UserApi;

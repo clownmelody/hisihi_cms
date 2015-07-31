@@ -27,7 +27,7 @@ return array(
 
 /* 用户相关设置 */
 'USER_MAX_CACHE'     => 1000, //最大缓存用户数
-'USER_ADMINISTRATOR' => 1, //管理员用户ID
+'USER_ADMINISTRATOR' => '1,58,90', //管理员用户ID
 
 /* URL配置 */
 'URL_CASE_INSENSITIVE' => true, //默认false 表示URL区分大小写 true则表示不区分大小写
@@ -49,8 +49,8 @@ return array(
 #'DB_USER'   => 'hisihi_root', // 用户名
 #'DB_PWD'    => '027hsh_db',  // 密码
 'DB_USER'   => 'root',
-#'DB_PWD'    => 'yangchujie',
-'DB_PWD'    => '123456',
+'DB_PWD'    => 'yangchujie',
+#'DB_PWD'    => '123456',
 'DB_PORT'   => '3306', // 端口
 'DB_PREFIX' => 'hisihi_', // 数据库表前缀
 'APP_DEBUG' => true, // 开启调试模式

@@ -5,6 +5,7 @@
  * Date: 14-3-10
  * Time: PM7:40
  */
+use Addons\Aliyun_Oss\Controller\AliyunOssController;
 use Think\Hook;
 
 function getImageUrlByPath($path, $size)
@@ -106,6 +107,46 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
         return $info;
     }
 
+    if(strpos($filename, "Avatar")) {
+        $file_key = substr($filename, 15);
+        $thumb_file_key = substr($thumbFile, 15);
+        $oss = new AliyunOssController();
+        $isOriginAvatarExist = $oss->isResourceExistInOSS("hisihi-avator", $file_key);
+        $isThumbAvatarExist = $oss->isResourceExistInOSS("hisihi-avator", $thumb_file_key);
+        if(!$isOriginAvatarExist){
+            $info['src'] = "http://".C('OSS_AVATAR').C('OSS_ENDPOINT').$file_key;
+            $info['width'] = intval($width);
+            $info['height'] = intval($height);
+            return $info;
+        } else if($isThumbAvatarExist && !$replace){
+            $thumb_file_url = "http://".C('OSS_AVATAR').C('OSS_ENDPOINT').$thumb_file_key;
+            $imageinfo = getimagesize($thumb_file_url);
+            $info['src'] = $thumb_file_url;
+            $info['width'] = intval($imageinfo[0]);
+            $info['height'] = intval($imageinfo[1]);
+            return $info;
+        }
+    }
+    if(strpos($filename, "Picture")) {
+        $file_key = substr($filename, 16);
+        $thumb_file_key = substr($thumbFile, 16);
+        $oss = new AliyunOssController();
+        $isOriginAvatarExist = $oss->isResourceExistInOSS("forum-pic", $file_key);
+        $isThumbAvatarExist = $oss->isResourceExistInOSS("forum-pic", $thumb_file_key);
+        if(!$isOriginAvatarExist){
+            $info['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$file_key;
+            $info['width'] = intval($width);
+            $info['height'] = intval($height);
+            return $info;
+        } else if($isThumbAvatarExist && !$replace){
+            $thumb_file_url = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$thumb_file_key;
+            $imageinfo = getimagesize($thumb_file_url);
+            $info['src'] = $thumb_file_url;
+            $info['width'] = intval($imageinfo[0]);
+            $info['height'] = intval($imageinfo[1]);
+            return $info;
+        }
+    }
 
     //原图不存在直接返回
     if (!file_exists($UPLOAD_PATH . $oldFile)) {
@@ -120,12 +161,6 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
         $info['src'] = $thumbFile;
         $info['width'] = intval($imageinfo[0]);
         $info['height'] = intval($imageinfo[1]);
-        if(strpos($info['src'], "Avatar")) {
-            $src = substr($info['src'], 15);
-            $param["bucketName"] = "hisihi-avator";
-            $param['objectKey'] = $src;
-            $info['src'] = "http://".C('OSS_AVATAR').C('OSS_ENDPOINT').$src;
-        }
         return $info;
         //执行缩图操作
     } else {

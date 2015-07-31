@@ -34,6 +34,7 @@
 			<input type="hidden" class="hide-data" name="cate_id" value="47"/>
 			<input type="hidden" class="hide-data" name="pid" value="{$pid}"/>
 			<button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/setStatus",array("status"=>-1))}">删 除</button>
+            <button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/pushArticleOrVideo")}">推 送</button>
 		</div>
 
 		<!-- 高级搜索 -->

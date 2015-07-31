@@ -56,6 +56,7 @@ class JPushController extends AddonsController{
      * @return mixed       // 推送结果
      */
     public function push_video_article($alert_info, $id, $type, $production){
+        $result = false;
         if(!isset($alert_info)||!isset($id)||!isset($type)){
             Log::write("传入参数未设置或为空", "WARN");
             return false;

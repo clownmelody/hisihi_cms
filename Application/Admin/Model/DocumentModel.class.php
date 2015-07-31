@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 
 namespace Admin\Model;
+use Think\Hook;
 use Think\Model;
 use Admin\Model\AuthGroupModel;
 
