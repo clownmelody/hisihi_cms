@@ -1,0 +1,6 @@
+/Runtime/*
+/*.sh
+/.idea
+/.svn
+/Runtime
+/Uploads

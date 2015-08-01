@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<title>嘿设汇积分规则</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="Resource-type" content="Document" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=8">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<style>
+	*::after, *::before {
+	    box-sizing: border-box;
+	}
+	body{
+		margin: 0 8px;
+		font-size: 14px;
+    	line-height: 1.42857143;
+	}
+	p{
+		display: block;
+	    -webkit-margin-before: 1em;
+	    -webkit-margin-after: 1em;
+	    -webkit-margin-start: 0px;
+	    -webkit-margin-end: 0px;
+	}
+	.panel {
+	    margin-bottom: 10px;
+	    background-color: #fff;
+	    border: 1px solid #ddd;
+	    border-radius: 4px;
+	    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+	    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+	}
+	.panel-default>.panel-heading {
+	    color: #333;
+	    padding: 10px 15px;
+	    background-color: #f5f5f5;
+	    border-color: #ddd;
+	    border-bottom: 1px solid #ddd;
+	    border-top-left-radius: 3px;
+	    border-top-right-radius: 3px;
+	}
+	.panel-title {
+	    margin-top: 0;
+	    margin-bottom: 0;
+	    font-size: 16px;
+	    color: inherit;
+	}
+	.panel-body {
+	    padding: 15px;
+	}
+	.text-danger{
+		color: #a94442;
+		margin: 0 15px 10px;
+		
+	}
+	.text-muted {
+	    color: #777;
+	}
+	.table-bordered {
+	    border: 1px solid #ddd;
+	}
+	.table {
+	    margin-bottom: 0;
+	    max-width: 100%;
+	    width: 100%;
+	    background-color: transparent;
+	    border-collapse: collapse;
+    	border-spacing: 0;
+	}
+	tbody {
+	    display: table-row-group;
+	    vertical-align: middle;
+	    border-color: inherit;
+	}
+	.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+	    border: 1px solid #ddd;
+	    line-height: 1.42857;
+	    padding: 8px;
+	    vertical-align: top;
+	}
+	.tableimg > tbody > tr > td{
+		color: #000;
+	}
+	 .demoImg{ 
+	 	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAYAAAArdgcFAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAY5JREFUeNq0VctRw0AMtTO+kzsHuwPcgUMFhBs36CAlQCpgqIDkxtGpIOsOnAowB+4uAcnzlnlo1p980IxmveuV9q2epI0jku+P+VyGXHQhmopmon4tJK1oje9KtNH59UPbrcVwqk6eRZ/I0GHzF63VcJjjUC8FgGSYq906BtpPGG1FS3/ysQJfeus7BTojFOpwc6pjFbFtRUuEqFXketLeXN0hHDWMXA/SzPByA+RdyBLae4/FAhtycjIFuCf3TUMr+srO/ZU2AWRj4XCBW/1BHjJqwPxJMqPvPLqQIGsyS2iDeFUohuYIh54n5WzZFRE5X1u26cChQxZmrqTuNNc55k6QvhgiuRJTQ25FY42EcHSTIhkh0p0TeyZ0JafllyBTVHtUHqrQFogPJt4NEww7jvuVLT4Oyy1VqG5YGWLHKrUGkC0y7j0xsS7xI5papQN9Z7hCz63SWfSPwo9FhKa167vqhEzJQOqjjvaZWxKJ/kmrRnymgYLrWm880CNSSqs+Uh2l7wFOf3vSjwADAGC6pHQ4A8SaAAAAAElFTkSuQmCC"); 
+	 	background-repeat: no-repeat;
+	    background-size: 100% auto;
+	    display: block;
+	    float: left;
+	    height: 20px;
+	    line-height: 20px;
+	    margin-right: 10px;
+	    width: 20px;
+	} 
+	</style>
+</head>
+<body>
+<h2 style="text-align: center;">用户成长体系（积分规则）</h2>
+<p class="text-muted" style="text-align: center;">用户成长体系由:积分和等级2部分组成。</p>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">1、积分</h3>
+  </div>
+  <div class="panel-body">
+    积分是用户使用嘿设汇APP的日常积累，是嘿设汇对用户良好行为包括注册、签到、提问和回复等的奖励。具体见下面积分增加规则。
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">2、等级</h3>
+  </div>
+  <div class="panel-body">
+    等级与积分相对应，会随着用户的积分增加而提升，对于本平台组织的某些活动需要指定等级的用户才可参与。积分一般会在包括注册、签到，提问和回复等行为中获得，积分达到一定积累后，就可以获得相应等级。具体见下面积分与等级的对应关系。
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">3、积分增加规则</h3>
+  </div>
+  <div class="panel-body"  style="padding: 0;">
+    <table class="table tableimg">
+      <tbody>
+        <tr>
+          <th>注册</th>
+          <td>
+          	<span class="demoImg"></span>
+          	100
+          </td>
+        </tr>
+        <tr>
+          <th>上传头像</th>
+          <td>
+          	<span class="demoImg"></span>
+          	10
+          </td>
+        </tr>
+        <tr>
+          <th>提问</th>
+          <td>
+          	<span class="demoImg"></span>
+          	1
+          </td>
+        </tr>
+        <tr>
+          <th>评论</th>
+          <td>
+          	<span class="demoImg"></span>
+          	2
+          </td>
+        </tr>
+        <tr>
+          <th>回答问题</th>
+          <td>
+          	<span class="demoImg"></span>
+          	3
+          </td>
+        </tr>
+        <tr>
+          <th>被关注</th>
+          <td><span class="demoImg"></span>1</td>
+        </tr>
+        <tr>
+          <th>被赞</th>
+          <td><span class="demoImg"></span>1</td>
+        </tr>
+        <tr>
+          <th>分享</th>
+          <td><span class="demoImg"></span>3</td>
+        </tr>
+        <tr>
+          <th>收藏</th>
+          <td><span class="demoImg"></span>1</td>
+        </tr>
+        <tr>
+          <th>签到</th>
+          <td><span class="demoImg"></span>5</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">4、等级与积分对应关系</h3>
+  </div>
+  <div class="panel-body"  style="padding: 0;">
+    <table class="table">
+    	<thead>
+	        <tr>
+		        <th>等级</th>
+		        <th>积分下限</th>
+		        <th>积分上限</th>
+	        </tr>
+      	</thead>
+      	<tbody>
+        	<tr>
+	          	<th>V1</th>
+	          	<td>0</td>
+	          	<td>500</td>
+        	</tr>
+        	<tr>
+	          	<th>V2</th>
+	          	<td>501</td>
+	          	<td>1000</td>
+        	</tr>
+        	<tr>
+	          	<th>V3</th>
+	          	<td>1001</td>
+	          	<td>10000</td>
+        	</tr>
+        	<tr>
+	          	<th>V4</th>
+	          	<td>10001</td>
+	          	<td>80000</td>
+        	</tr>
+        	<tr>
+	          	<th>V5</th>
+	          	<td>80001</td>
+	          	<td></td>
+        	</tr>
+      	</tbody>
+    </table>
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">5、查看积分、等级</h3>
+  </div>
+  <div class="panel-body">
+    请登录嘿设汇APP，可以直接查看到个人的等级和积分情况
+  </div>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">6、其他说明</h3>
+  </div>
+  <div class="panel-body">
+    如有积分等方面的问题欢迎给我们反馈，邮箱xuniu@hisihi.com，如有发现用户恶意获得积分或在评论中发违规内容则会被给予禁用账号的处罚。
+  </div>
+</div>
+
+<p class="text-danger">备注：积分规则有可能会微增加或调整</p>
+
+</body>
+
+</html>
