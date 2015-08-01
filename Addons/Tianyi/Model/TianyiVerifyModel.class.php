@@ -16,7 +16,9 @@ class TianyiVerifyModel extends Model
     private $addonName = 'Tianyi';
 
     private $api = '接口地址';
-    private $appkey = '您的appkey';
+
+    private $appkey_a = '您的Android appkey';
+    private $appkey_i = '您的iOS appkey';
 
     /**
      * 调用天翼接口前必须调用此方法传入配置信息
@@ -26,7 +28,8 @@ class TianyiVerifyModel extends Model
     {
         $this->config = $config;
         $this->api = $config['api_url'];
-        $this->appkey = $config['app_key'];
+        $this->appkey_a = $config['app_key_a'];
+        $this->appkey_i = $config['app_key_i'];
     }
 
 /**
@@ -135,11 +138,14 @@ class TianyiVerifyModel extends Model
         return $result;
     }
 
-    public function checkMobVerify($mobile, $verify)
+    public function checkMobVerify($mobile, $verify, $client)
     {
+        $app_key = $this->appkey_i;
+        if($client == 'Android')
+            $app_key = $this->appkey_a;
         //调用Mob验证接口
         $response = $this->postRequest( $this->api . '/sms/verify', array(
-            'appkey' => $this->appkey,
+            'appkey' => $app_key,
             'phone' => $mobile,
             'zone' => '86',
             'code' => $verify,

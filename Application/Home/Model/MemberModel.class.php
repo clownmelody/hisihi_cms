@@ -103,6 +103,7 @@ class MemberModel extends Model
         }
         /* 登录用户 */
         $this->autoLogin($user, $remember,$client);
+
         //记录行为
         action_log('user_login', 'member', $uid, $uid);
         return true;
