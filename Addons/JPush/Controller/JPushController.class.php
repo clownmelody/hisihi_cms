@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  author: 杨楚杰
  *  function：嘿设汇推送服务
@@ -14,6 +13,7 @@ use JPush\Model as M;
 use JPush\Exception\APIConnectionException;
 use JPush\Exception\APIRequestException;
 use Think\Log;
+
 
 class JPushController extends AddonsController{
     protected $push;

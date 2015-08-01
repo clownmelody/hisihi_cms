@@ -171,4 +171,8 @@ return  array(
     'OSS_AVATAR'            => 'hisihi-avator',
     'OSS_FORUM_PIC'         => 'forum-pic',
     'OSS_FORUM_SOUND'       => 'forum-sound',
+<<<<<<< HEAD
+=======
+
+>>>>>>> gitlab
 );

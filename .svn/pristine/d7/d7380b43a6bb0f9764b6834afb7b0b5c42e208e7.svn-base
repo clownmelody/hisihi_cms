@@ -81,10 +81,10 @@ class TianyiAddon extends Addon
      * @param $mobile
      * @param $verify
      */
-    public function checkMobVerify($mobile, $verify, $client)
+    public function checkMobVerify($mobile, $verify)
     {
         $model = $this->getTianyiVerifyModel();
-        return $model->checkMobVerify($mobile, $verify, $client);
+        return $model->checkMobVerify($mobile, $verify);
     }
 
     private function getTianyiVerifyModel()

@@ -8,7 +8,6 @@ use Common\Controller\Addon;
  * 极光推送插件
  * @author RFly
  */
-
     class JPushAddon extends Addon{
 
         public $info = array(

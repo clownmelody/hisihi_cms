@@ -150,7 +150,7 @@ class AvatarAddon extends Addon
             $this->error = '裁剪头像失败：' . $this->error;
             return false;
         }
-
+        
         $param['objectKey'] = $path;
         Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadAvatorResource', $param);
 
