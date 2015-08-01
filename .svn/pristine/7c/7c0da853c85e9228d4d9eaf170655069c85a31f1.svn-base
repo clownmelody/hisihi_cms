@@ -16,7 +16,6 @@ class TianyiVerifyModel extends Model
     private $addonName = 'Tianyi';
 
     private $api = '接口地址';
-
     private $appkey_a = '您的Android appkey';
     private $appkey_i = '您的iOS appkey';
 
