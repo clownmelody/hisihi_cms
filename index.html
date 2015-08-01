@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="Resource-type" content="Document" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<meta http-equiv="X-UA-Compatible" content="IE=8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Cache-control" content="no-cache">
@@ -14,7 +14,6 @@
 <link rel="shortcut icon" href="images/web-favicon.ico"/>
 <link rel="stylesheet" href="css/jquery.fullPage.css">
 <link rel="stylesheet" href="css/style.css?v=1.0.0">
-<link href="js/pace/pace-theme-minimal.css?v=1.0.2" rel="stylesheet" type="text/css">
 
 <script src="js/jquery-1.8.3.min.js"></script>
 <script src="js/system-check.js"></script>
@@ -22,7 +21,6 @@
 
 <script src="js/jquery.fullPage.min.js"></script>
 <script src="js/jquery.qrcode.js"></script>
-<script type="text/javascript" src="js/pace/pace.min.js?v=1.0.2"></script>
 
 <!-- Statistics -->
 <script>
@@ -48,7 +46,18 @@ var _hmt = _hmt || [];
 			<div class="nav_guid_btn"></div>
 		</div>
 		<div id="qrcode" class="qrcode_hide">
-            <div id="qrcodeimg" style="margin-left: 21px; margin-top: 6px;"></div>
+            <div id="qrcodeimg">
+                <img src="images/twocode.png" alt="">
+            </div>
+            <div class="qrcodebtn">
+                <div class="btn-item">
+                    <a class="btn-android" href="http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/hisihi.apk"></a>
+                </div>
+                <div class="btn-item">
+                    <a class="btn-ios" href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=983468515"></a>
+                </div>
+                                
+            </div>
         </div>
 	</div>
 </div>
@@ -186,25 +195,25 @@ $(function(){
             $("#qrcode").addClass('qrcode_hide');
     }
 	});
-    var options = {
-        render: "image",
-        ecLevel: "H",
-        minVersion: 3,
-        color: "#333",
-        bgColor: "#fff",
-        text: "http://www.hisihi.com/app/downloadapp.html",
-        size: 120,
-        radius: 0.5,
-        quiet: 1,
-        mode: 2,
-        labelsize: 0.15,
-        fontname: "microsoft yahei",
-        fontcolor: "#333",
-        image: null,
-        imagesize: 120
-    };
+    // var options = {
+    //     render: "image",
+    //     ecLevel: "H",
+    //     minVersion: 3,
+    //     color: "#333",
+    //     bgColor: "#fff",
+    //     text: "http://www.hisihi.com/download.php",
+    //     size: 120,
+    //     radius: 0.5,
+    //     quiet: 1,
+    //     mode: 2,
+    //     labelsize: 0.15,
+    //     fontname: "microsoft yahei",
+    //     fontcolor: "#333",
+    //     image: null,
+    //     imagesize: 120
+    // };
 
-    $("#qrcodeimg").empty().qrcode(options);
+    // $("#qrcodeimg").empty().qrcode(options);
 });
 </script>
 </body>
