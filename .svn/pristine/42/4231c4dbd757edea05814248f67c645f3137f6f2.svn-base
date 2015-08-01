@@ -1,9 +1,0 @@
-<?php
-//000000000000a:14:{s:2:"id";i:411;s:7:"content";s:113:"我发表了一个新的帖子【图片测试】：http://115.29.44.35/index.php?s=/forum/index/detail/id/25.html";s:11:"create_time";i:1423907965;s:4:"type";s:5:"image";s:4:"data";a:1:{s:10:"attach_ids";s:3:"115";}s:10:"weibo_data";a:1:{s:10:"attach_ids";s:3:"115";}s:13:"comment_count";i:0;s:12:"repost_count";i:0;s:10:"can_delete";i:0;s:4:"user";a:15:{s:8:"nickname";s:5:"admin";s:3:"uid";s:1:"1";s:5:"score";s:3:"130";s:8:"avatar32";s:58:"Uploads/Avatar/2015-02-10/54da1fbfeb78c-05505543_32_32.png";s:8:"avatar64";s:58:"Uploads/Avatar/2015-02-10/54da1fbfeb78c-05505543_64_64.png";s:9:"avatar128";s:60:"Uploads/Avatar/2015-02-10/54da1fbfeb78c-05505543_128_128.png";s:9:"avatar256";s:60:"Uploads/Avatar/2015-02-10/54da1fbfeb78c-05505543_256_256.png";s:9:"avatar512";s:60:"Uploads/Avatar/2015-02-10/54da1fbfeb78c-05505543_512_512.png";s:5:"title";s:10:"Lv3 转正";s:9:"space_url";s:47:"/index.php?s=/usercenter/index/index/uid/1.html";s:9:"rank_link";a:0:{}s:10:"icons_html";s:49:"<span class="usercenter-verify-icon-list"></span>";s:4:"fans";s:1:"0";s:9:"following";s:1:"0";s:10:"weibocount";s:1:"9";}s:6:"is_top";s:1:"0";s:3:"uid";s:1:"1";s:12:"fetchContent";s:724:"    <p class="word-wrap">我发表了一个新的帖子【图片测试】：<a href="http://115.29.44.35/index.php?s=/forum/index/detail/id/25.html" target="_blank"><i class="glyphicon glyphicon-link" title="http://115.29.44.35/index.php?s=/forum/index/detail/id/25.html"></i></a> </p>
-    <div class="popup-gallery"  >
-        <a href="Uploads/Picture/2015-02-14/54df1c504be31.jpg" title="点击查看大图"><img class="lazy" data-original="Uploads/Picture/2015-02-14/54df1c504be31_100_100.jpg" width="100" height="100" style="margin-right: 7px;margin-bottom: 7px;"></a>    </div>
-<script>
-    $("#weibo_411 img.lazy").lazyload({effect: "fadeIn",threshold:200,failure_limit : 100});
-    bind_weibo_popup();
-</script>";s:4:"from";s:0:"";}
-?>

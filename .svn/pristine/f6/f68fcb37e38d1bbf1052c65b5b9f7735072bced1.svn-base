@@ -1,1 +1,0 @@
-<?php if (!defined('THINK_PATH')) exit(); echo (op_t($category_name)); ?>, 商城

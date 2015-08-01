@@ -1,4 +1,0 @@
-<volist name="cate" id="vo">
-    <input type="checkbox" value="{$vo.id}"/>{$vo.title}
-</volist>
-<input type="hidden" name="id" value="{$id}">
