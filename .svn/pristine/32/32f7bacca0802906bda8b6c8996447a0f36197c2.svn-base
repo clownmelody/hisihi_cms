@@ -1,0 +1,1 @@
+<?php if (!defined('THINK_PATH')) exit();?>OpenSNS轻量化社交框架

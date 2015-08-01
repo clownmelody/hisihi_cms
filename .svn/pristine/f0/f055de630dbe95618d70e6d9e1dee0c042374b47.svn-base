@@ -1,0 +1,10 @@
+1、吧cron文件夹下的CronRunBehavior.class.php放到根目录下的ThinkPHP/Library/Behavior下
+2、到Application/Home/Controller/IndexController.php下新增一个方法如下：
+	//自动执行任务
+    public function cron() {
+        B( 'Behavior\CronRun');
+       
+    }
+3、到Application/Home/View/default/Index/index.html中增加一行代码如下：
+<img src="{:U('Index/cron')}" width="0" height="0" />增加到页面最后
+4、

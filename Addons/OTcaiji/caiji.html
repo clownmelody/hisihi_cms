@@ -1,0 +1,53 @@
+<script src="Public/Admin/js/jquery.mousewheel.js" type="text/javascript"></script>
+<script type="text/javascript">
+$("div").remove(".search-form");
+$("div").remove(".cf");
+$("div").remove("#top-alert");
+</script>
+<div class="tools" style="margin-bottom:10px;">
+   <a class="btn" href="{:addons_url('OTcaiji://OTcaiji/caji')}">采 集</a>
+    <button class="btn ajax-post confirm" target-form="ids" url="{:addons_url('OTcaiji://OTcaiji/delList')}">删 除</button>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th class="row-selected row-selected"><input class="check-all" type="checkbox"></th>
+            <th>序号</th>
+            <th>标题</th>
+            <th>来源</th>
+            <th>采集时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    <volist name="_list" id="lv" >
+        <tr>
+            <td><input class="ids" type="checkbox" name="id[]" value="{$lv.id}"></td>
+            <td>{$lv.id}</td>
+            <td><a href="{$lv.url}" target="_blank">{$lv.title}</a></td>
+            <td><a href="{$lv.sourceurl}" target="_blank">{$lv.source}</a></td>
+            <td>{$lv.create_time|time_format}</td>
+            <td id="zt"><if condition="$lv.zt eq 1"><font color='#gde967'>未入库</font><else/><font color='red'>已入库</font></if></td>
+            <td style="width: 170px;">
+			<!-- ==================================== -->
+                    <div class="btn-group">
+                        <button class="btn document_add">入 库
+                            <i class="btn-arrowdown"></i>
+                        </button>
+                        <ul class="dropdown nav-list" style="display: none; z-index:2">
+							 <volist name="cate" id="vo" >
+							 <li><a href="{:addons_url('OTcaiji://OTcaiji/add',array('id'=>$lv['id'],'cate_id'=>$vo['id'],'model_id'=>2))}" id="rk">{$vo.title}</a></li> 
+							 </volist>
+						</ul>
+                    </div>
+                <a class="btn document_add" href="{:addons_url('OTcaiji://OTcaiji/delList',array('id'=>$lv['id']))}">删除</a>
+            </td>
+        </tr>
+    </volist>
+</tbody>
+</table>
+<block name="script">
+<script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+</block>
+<!--{:addons_url('OTcaiji://OTcaiji/add',array('id'=>$lv['id'],'cate_id'=>2,'model_id'=>2))}-->
