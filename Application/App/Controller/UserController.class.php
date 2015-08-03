@@ -645,7 +645,7 @@ class UserController extends AppController
         $this->apiSuccess("密码修改成功");
     }
 
-    public function resetPasswordByMobile($mobile, $verify, $new_password) {
+    public function resetPasswordByMobile($mobile, $verify, $new_password, $client = 'iOS') {
         //根据手机号查询UID
         $uid = $this->getUidByMobile($mobile);
         if(!$uid) {
@@ -654,7 +654,7 @@ class UserController extends AppController
         if($mobile != '13720277921')
         {
             $tianyi = new TianyiAddon;
-            $check = $tianyi->checkMobVerify($mobile, $verify);
+            $check = $tianyi->checkMobVerify($mobile, $verify, $client);
             if($check !== 200) {
                 $this->apiError($check, "校验码错误");
             }

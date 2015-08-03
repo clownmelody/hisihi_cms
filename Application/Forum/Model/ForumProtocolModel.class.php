@@ -89,6 +89,7 @@ class ForumProtocolModel extends Model
             $totalCount = $this->forum_postModel->where($map)->count();
         } elseif ($tab == 'forum_in') {
             $map_in = $this->_getInMap($map);
+            unset($map_in['uid']);
             $map_in['status'] = 1;
             $totalCount = $this->forum_postModel->where($map_in)->count();
         }
