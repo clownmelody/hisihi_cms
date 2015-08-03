@@ -145,7 +145,12 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
             $info['width'] = intval($imageinfo[0]);
             $info['height'] = intval($imageinfo[1]);
             return $info;
-        }
+        } /*else if($replace) {
+            $info['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$file_key;
+            $info['width'] = intval($width);
+            $info['height'] = intval($height);
+            return $info;
+        }*/
     }
 
     //原图不存在直接返回
@@ -319,7 +324,7 @@ function getThumbImageById($cover_id, $width = 100, $height = 'auto', $type = 0,
             break;
         case 'local':
             $attach = getThumbImage($picture['path'], $width, $height, $type, $replace);
-            $attach['src'] = getRootUrl() . $attach['src'];
+            //$attach['src'] = getRootUrl() . $attach['src'];
             return $attach['src'];
         case 'sae':
             $attach = getThumbImage($picture['path'], $width, $height, $type, $replace);

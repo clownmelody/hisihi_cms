@@ -224,7 +224,7 @@
             <div class="post-head">
                 <div class="post-user">
                     <span class="post-user-pic">
-                        <img style="width: 50px; border-radius: 50px" src="/{$post.userInfo.avatar128}" />
+                        <img style="width: 50px; border-radius: 50px" src="{$post.userInfo.avatar128}" />
                     </span>
                     <span class="post-user-name">
                         <p>{$post.userInfo.nickname}</p>
@@ -255,7 +255,7 @@
             </eq>
             <foreach name="post_img" item="img">
                 <div>
-                    <img src="/{$img.thumb}" style="position: relative;width: auto" />
+                    <img src="{$img.thumb}" style="position: relative;width: auto" />
                     <if condition="$key eq 0">
                         <neq name="post.sound" value="">
                             <div class="icon-post-sound" style="position:absolute;margin:7px auto auto -33px;">
@@ -279,7 +279,7 @@
                 <div class="post-head">
                     <div class="post-user">
                     <span class="post-user-pic">
-                        <img style="width: 50px; border-radius: 50px" src="/{$reply.userInfo.avatar128}" />
+                        <img style="width: 50px; border-radius: 50px" src="{$reply.userInfo.avatar128}" />
                     </span>
                     <span class="post-user-name">
                         <p>{$reply.userInfo.nickname}</p>

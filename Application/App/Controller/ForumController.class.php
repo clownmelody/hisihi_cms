@@ -298,7 +298,7 @@ class ForumController extends AppController
         $post = D('ForumPost')->where(array('id' => $id, 'status' => 1))->field($field)->find();
         if (!$post) {
             if($lite == 0)
-                $this->apiError(-100,'找不到该提问');
+                $this->apiError(404,'找不到该提问');
             else
                 return null;
         }
@@ -420,6 +420,8 @@ class ForumController extends AppController
         $page = intval($page);
         $count = intval($count);
 
+        $this->requirePostExists($id);
+
         //判断是否需要显示1楼
         if ($page == 1) {
             $showMainPost = true;
@@ -431,8 +433,10 @@ class ForumController extends AppController
         }
 
         //读取回复列表
-        $map = array('post_id' => $id, 'status' => 1);
-        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'create_time', $page, $count);
+        //$map = array('post_id' => $id, 'status' => 1);
+        $map['post_id'] = $id;
+        $map['status'] = array('in','1,3');
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status desc,create_time', $page, $count);
 
         $replyTotalCount = D('ForumPostReply')->where($map)->count();
 
@@ -681,7 +685,7 @@ class ForumController extends AppController
             $after = getMyScore();
             $tox_money_after = getMyToxMoney();
             if (!$result) {
-                $this->error($model->getError(),'提问失败!');
+                $this->apiError($model->getError(),'提问失败!');
             }
             $post_id = $result;
 
@@ -794,6 +798,8 @@ class ForumController extends AppController
     {
         $this->requireLogin();
 
+        $this->requirePostExists($post_id);
+
         $post_id = intval($post_id);
         $content = $this->filterPostContent($content);
 
@@ -844,6 +850,12 @@ class ForumController extends AppController
 
             $after = getMyScore();
             $tox_money_after = getMyToxMoney();
+	    
+	    //当前用户如果是讲师，则回复需要置顶
+            $user = query_user(array('group'),$uid);
+            if($user['group'] == 6 && $result)
+                $model->setReplyTop($result);
+            clean_query_user_cache($uid, array('replycount'));
 
             // 发送提问被回复的推送通知
             $model = D('Home/Member');
@@ -900,12 +912,14 @@ class ForumController extends AppController
             $this->apiError(-102,'to_f_reply_id和to_f_lzl_id至少传入1个!');
 
         if($to_f_reply_id != 0){
-            $post = D('Forum/ForumPostReply')->field('post_id,uid')->find(intval($to_f_reply_id));
-            if(!$post)
+            $postReply = D('Forum/ForumPostReply')->field('post_id,uid')->find(intval($to_f_reply_id));
+            if(!$postReply)
                 $this->apiError(-102,'所传入to_f_reply_id参数错误!');
 
-            $post_id = $post['post_id'];
-            $to_uid = $post['uid'];
+            $post_id = $postReply['post_id'];
+            $to_uid = $postReply['uid'];
+
+            $this->requirePostExists($post_id);
         }
 
         if($to_f_lzl_id != 0){
@@ -915,6 +929,9 @@ class ForumController extends AppController
             $post_id = $lzl_reply['post_id'];
             $to_uid = $lzl_reply['uid'];
             $to_f_reply_id = $lzl_reply['to_f_reply_id'];
+
+            $this->requirePostExists($post_id);
+            $this->requirePostReplyExists($to_f_reply_id);
         }
 
         if($content != ' ')
@@ -994,6 +1011,7 @@ class ForumController extends AppController
         $this->requireLogin();
 
         if($type == 'post') {
+	    $this->requirePostExists($id);
             $post_info = D('ForumPost')->where(array('id' => intval($id), 'status' => 1))->field('uid, content')->find();
             $message_uid = $post_info['uid'];
             $post_content = $post_info['content'];
@@ -1063,6 +1081,7 @@ class ForumController extends AppController
         $this->requireLogin();
 
         if($type == 'post') {
+            $this->requirePostExists($id);
             $message_uid = D('ForumPost')->where(array('id' => intval($id), 'status' => 1))->getField('uid');
         } else if($type == 'reply') {
             $message_uid = D('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->getField('uid');
@@ -1289,9 +1308,18 @@ class ForumController extends AppController
     private function requirePostExists($post_id)
     {
         $post_id = intval($post_id);
-        $post = D('ForumPost')->where(array('id' => $post_id))->find();
+        $post = D('ForumPost')->where(array('id' => $post_id, 'status' => 1))->find();
         if (!$post) {
-            $this->error('帖子不存在');
+            $this->apiError(404,'找不到该提问');
+        }
+    }
+
+    private function requirePostReplyExists($reply_id)
+    {
+        $reply_id = intval($reply_id);
+        $reply = D('ForumPostReply')->where(array('id' => $reply_id, 'status' => 1))->find();
+        if (!$reply) {
+            $this->apiError(404,'找不到该回复');
         }
     }
 

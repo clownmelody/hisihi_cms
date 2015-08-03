@@ -351,9 +351,11 @@ class AvatarAddon extends Addon
         }else{
             //如果没有头像，返回默认头像
             if($avatarSize!=0){
-                return getRootUrl()."Addons/Avatar/default_".$avatarSize."_".$avatarSize.".jpg";
+                return "http://".C('OSS_AVATAR').C('OSS_ENDPOINT')."default/default_".$avatarSize."_".$avatarSize.".jpg";
+                //return getRootUrl()."Addons/Avatar/default_".$avatarSize."_".$avatarSize.".jpg";
             }else{
-                return getRootUrl()."Addons/Avatar/default.jpg";
+                return "http://".C('OSS_AVATAR').C('OSS_ENDPOINT')."default/default.jpg";
+                //return getRootUrl()."Addons/Avatar/default.jpg";
             }
 
         }
