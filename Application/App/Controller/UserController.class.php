@@ -165,6 +165,7 @@ class UserController extends AppController
         $extra['tox_money'] = $user1['tox_money'];
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
+        \Think\Log::write("login response data: ".json_encode($extra));
         $this->apiSuccess("登录成功", null, $extra);
     }
 	
@@ -173,7 +174,9 @@ class UserController extends AppController
         $this->requireLogin();
         //调用用户中心
         $model = D('Home/Member');
+        $uid = $this->getUid();
         $model->logout();
+        $model->updateRegID($uid, '');  // 抹掉reg_id
         session_destroy();
         //返回成功信息
         $this->apiSuccess("注销成功");
@@ -247,10 +250,8 @@ class UserController extends AppController
         if(!isset($reg_id)||is_null($reg_id)){
             $this->apiError(-1, "解绑失败,没有传入相应的参数");
         }
-        #$this->requireLogin();
         $model = D('Home/Member');
-        $uid = $this->getUid();
-        $model->removeRegId($uid, $reg_id);
+        $model->removeRegId($reg_id);
         // 绑定reg_id和用户
         $user = session("user_auth");
         $user['reg_id'] = null;

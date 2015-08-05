@@ -352,7 +352,8 @@
         $(page)
         .find('.app-button')
         .on('click', function () {
-            App.dialog({
+            window.location.href = "http://www.hisihi.com/download.php";
+            /*App.dialog({
                 title        : '嘿设汇',
                 rawText      : '<img style="width: 50px;" src="__IMG__/icon.png" /><br>火速下载',
                 okButton     : '确定',
@@ -361,7 +362,7 @@
                 if (tryAgain) {
 
                 }
-            });
+            });*/
         });
         $(page).find('#detail').on('click', function () {
             $(page).find('#detail').addClass("tab-active");

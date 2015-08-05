@@ -130,10 +130,10 @@ class MemberModel extends Model
      * @param $uid
      * @param $reg_id
      */
-    public function removeRegID($uid, $reg_id){
+    public function removeRegID($reg_id){
         if(isset($reg_id)&&!is_null($reg_id)){
             $data = array('reg_id'=>'');
-            $this->where('uid=' . $uid)->data($data)->save();
+            $this->where('reg_id=' . $reg_id)->data($data)->save();
         }
     }
 
