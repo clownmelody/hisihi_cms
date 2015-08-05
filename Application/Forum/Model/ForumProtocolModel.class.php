@@ -51,7 +51,7 @@ class ForumProtocolModel extends Model
             $map_in = $this->_getInMap($map);
             unset($map_in['uid']);
             $map_in['status'] = 1;
-            $result = $this->forum_postModel->where($map_in)->page($page, $count)->order('update_time desc')->select();
+            $result = $this->forum_postModel->where($map_in)->page($page, $count)->order('last_reply_time desc')->select();
             foreach ($result as &$v) {
                 $v['forum'] = $forum_key_value[$v['forum_id']];
             }
@@ -120,7 +120,8 @@ class ForumProtocolModel extends Model
     private function _getInMap($map = array())
     {
         $map_reply = $map;
-        $map_reply['status'] = 1;
+        //$map_reply['status'] = 1;
+        $map_reply['status'] = array('in','1,3');
         $reply_ids = $this->forum_replyModel->where($map_reply)->field('post_id')->select();
         $reply_ids = array_column($reply_ids, 'post_id');
         $map_lzl_reply = $map;
