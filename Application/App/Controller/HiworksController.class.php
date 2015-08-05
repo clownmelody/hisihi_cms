@@ -37,7 +37,7 @@ class HiworksController extends AppController
             $child = D('Hiworks/Category')->info($child);
             $childcategory['id'] = $child['id'];
             $childcategory['name'] = $child['name'];
-            $childcategory['icon'] = "/images/mobile_".$child['name'].".jpg";
+            $childcategory['icon'] = "http://www.hisihi.com/images/mobile_".$child['name'].".jpg";
             $childcategory['title'] = $child['title'];
             $map = array('category_id' => $child['id']);
             $childcategory['files'] = D('Document')->where($map)->count('id');

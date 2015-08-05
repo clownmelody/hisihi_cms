@@ -5,11 +5,12 @@
         $oneplus_seo_meta = get_seo_meta($vars,$seo);
     </php>
 
-    <if condition="$oneplus_seo_meta['title']">
+    <!--<if condition="$oneplus_seo_meta['title']">
         <title>{$oneplus_seo_meta['title']}</title>
         <else/>
         <title>{:C('WEB_SITE_TITLE')}</title>
-    </if>
+    </if>-->
+    <title>嘿设汇</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="__CSS__/app.min.css">
     <style>
@@ -387,16 +388,17 @@
         $(page)
             .find('.app-button')
             .on('click', function () {
-                    App.dialog({
-                        title        : '嘿设汇',
-                        rawText      : '<img style="width: 50px;" src="__IMG__/icon.png" /><br>火速下载',
-                        okButton     : '确定',
-                        cancelButton : '取消'
-                    }, function (tryAgain) {
-                        if (tryAgain) {
+                    window.location.href = "http://www.hisihi.com/download.php";
+                    /*App.dialog({
+                     title        : '嘿设汇',
+                     rawText      : '<img style="width: 50px;" src="__IMG__/icon.png" /><br>火速下载',
+                     okButton     : '确定',
+                     cancelButton : '取消'
+                     }, function (tryAgain) {
+                     if (tryAgain) {
 
-                        }
-                    });
+                     }
+                     });*/
             });
     });
 

@@ -54,7 +54,7 @@ return array(
 'DB_PORT'   => '3306', // 端口
 'DB_PREFIX' => 'hisihi_', // 数据库表前缀
 'APP_DEBUG' => true, // 开启调试模式
-'DB_CHARSET'=>'utf8',  // 字符集
+'DB_CHARSET'=>'utf8mb4',  // 字符集
 'DB_DEBUG'=> true,  // 数据库调试模式，记录SQL日志
 
 /* 文档模型配置 (文档模型核心配置，请勿更改) */

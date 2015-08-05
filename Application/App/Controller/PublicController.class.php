@@ -201,7 +201,7 @@ class PublicController extends AppController {
         foreach($list as &$topic){
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage($topic['cover_id']);
-            $topic['content_url'] = 'app.php/public/topcontent/type/view/id/'.$topic['id'];
+            $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
             unset($topic['uid']);
             unset($topic['name']);
             unset($topic['category_id']);

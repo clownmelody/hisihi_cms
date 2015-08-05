@@ -96,7 +96,7 @@ class JPushController extends AddonsController{
      * @return mixed       // 推送结果
      */
     public function push_followed($alert_info, $fans_id, $user_id, $reg_id, $production){
-        if(!isset($alert_info)||!isset($fans_id)||!isset($user_id)||!isset($reg_id)){
+        if(!isset($alert_info)||!isset($fans_id)||!isset($user_id)||empty($reg_id)){
             Log::write("传入参数未设置或为空", "WARN");
             return false;
         }
@@ -134,7 +134,7 @@ class JPushController extends AddonsController{
      * @return mixed
      */
     public function push_question_like($alert_info, $question_id, $fans_id, $user_id, $reg_id, $production){
-        if(!isset($alert_info)||!isset($question_id)||!isset($fans_id)||!isset($user_id)||!isset($reg_id)){
+        if(!isset($alert_info)||!isset($question_id)||!isset($fans_id)||!isset($user_id)||empty($reg_id)){
             Log::write("传入参数未设置或为空", "WARN");
             return false;
         }
@@ -175,7 +175,7 @@ class JPushController extends AddonsController{
     public function push_question_answer($alert_info, $question_id, $reply_id,
                                             $fans_id, $user_id, $reg_id, $production){
         if(!isset($alert_info)||!isset($question_id)||!isset($reply_id)
-            ||!isset($fans_id)||!isset($user_id)||!isset($reg_id)){
+            ||!isset($fans_id)||!isset($user_id)||empty($reg_id)){
             Log::write("传入参数未设置或为空", "WARN");
             return false;
         }
@@ -217,7 +217,7 @@ class JPushController extends AddonsController{
     public function push_floor_reply($alert_info, $question_id, $lzl_id, $reply_id,
                                          $fans_id, $user_id, $reg_id, $production){
         if(!isset($alert_info)||!isset($question_id)||!isset($lzl_id)||
-            !isset($reply_id)||!isset($fans_id)||!isset($user_id)||!isset($reg_id)){
+            !isset($reply_id)||!isset($fans_id)||!isset($user_id)||empty($reg_id)){
             Log::write("传入参数未设置或为空", "WARN");
             return false;
         }
@@ -255,7 +255,7 @@ class JPushController extends AddonsController{
      * @return mixed
      */
     public function push_question_asked($alert_info, $question_id, $fans_id, $user_id, $reg_id, $production){
-        if(!isset($alert_info)||!isset($question_id)||!isset($fans_id)||!isset($user_id)||!isset($reg_id)){
+        if(!isset($alert_info)||!isset($question_id)||!isset($fans_id)||!isset($user_id)||empty($reg_id)){
             Log::write("传入参数未设置或为空", "WARN");
             return false;
         }
@@ -292,7 +292,7 @@ class JPushController extends AddonsController{
      * @return bool
      */
     public function push_offline_notification($alert_info, $reg_id, $user_id, $production){
-        if(!isset($alert_info)||!isset($reg_id)||!isset($user_id)){
+        if(!isset($alert_info)||empty($reg_id)||!isset($user_id)){
             Log::write("传入参数未设置或为空", "WARN");
             return false;
         }

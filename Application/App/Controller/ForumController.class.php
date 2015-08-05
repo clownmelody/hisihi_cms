@@ -427,7 +427,7 @@ class ForumController extends AppController
             $showMainPost = true;
             $post = $this->getPostInfo($id);
             //增加浏览次数
-            D('ForumPost')->where(array('id' => $id))->setInc('view_count');
+            //D('ForumPost')->where(array('id' => $id))->setInc('view_count');
         } else {
             $showMainPost = false;
         }
@@ -620,7 +620,7 @@ class ForumController extends AppController
     }
 
     //发表提问
-    public function doPost($post_id = null, $forum_id = 0, $title, $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null)
+    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null)
     {
         $this->requireLogin();
         //dump($content);
@@ -629,6 +629,7 @@ class ForumController extends AppController
         //dump($content);
         $post_id = intval($post_id);
         $forum_id = intval($forum_id);
+        $title='标题';
         $title = op_t($title);
         // if($content != ' ')
         //     $content = op_t($content);
