@@ -301,7 +301,8 @@ class JPushController extends AddonsController{
             $product = true;
         }
         try{
-            $arr = array ('to_uid'=>$user_id);
+            $timestamp = time();
+            $arr = array ('to_uid'=>$user_id, 'timestamp'=>$timestamp);
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送

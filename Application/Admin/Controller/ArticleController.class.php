@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 namespace Admin\Controller;
 use Admin\Model\AuthGroupModel;
+use Think\Exception;
 use Think\Hook;
 use Think\Page;
 
@@ -524,6 +525,28 @@ class ArticleController extends AdminController {
         } else {
             $this->error('推送异常，请检查后重试');
         }
+    }
+
+    /**
+     * 添加到推荐头条部分
+     */
+    public function pushToRecommend(){
+        $ids    =   I('request.ids');
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        \Think\Log::write("ids: ".json_encode($ids));
+        $model = M();
+        try {
+            foreach($ids as $rid){
+                $result = $model ->execute("update hisihi_document_article set isrecommend = 1 where id=".$rid);
+                \Think\Log::write("sql result :".$result);
+            }
+        } catch (Exception $e){
+            \Think\Log::write("sql exception :".$e->getMessage());
+            $this->error('操作失败，请重试');
+        }
+        $this->success('操作成功');
     }
 
     /**

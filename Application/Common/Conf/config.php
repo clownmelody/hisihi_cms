@@ -49,8 +49,8 @@ return array(
 #'DB_USER'   => 'hisihi_root', // 用户名
 #'DB_PWD'    => '027hsh_db',  // 密码
 'DB_USER'   => 'root',
-#'DB_PWD'    => 'yangchujie',
-'DB_PWD'    => '123456',
+'DB_PWD'    => 'yangchujie',
+#'DB_PWD'    => '123456',
 'DB_PORT'   => '3306', // 端口
 'DB_PREFIX' => 'hisihi_', // 数据库表前缀
 'APP_DEBUG' => true, // 开启调试模式

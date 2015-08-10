@@ -43,7 +43,7 @@ class ForumProtocolModel extends Model
         }
         if ($tab == 'forum') {
             $map['status'] = 1;
-            $result = $this->forum_postModel->where($map)->page($page, $count)->order('update_time desc')->select();
+            $result = $this->forum_postModel->where($map)->page($page, $count)->order('create_time desc')->select();
             foreach ($result as &$v) {
                 $v['forum'] = $forum_key_value[$v['forum_id']];
             }

@@ -10,12 +10,10 @@ use Think\Think;
 class AliyunOssController extends AddonsController{
     protected $oss_client;
     protected $config;
-    protected $avator_bucket;
     public function _initialize() {
         $this->config = get_addon_config('Aliyun_Oss');
         $accessKeyId = $this->config['AccessKeyId'];
         $accessKeySecret = $this->config['AccessKeySecret'];
-        $this->avator_bucket = $this->config['AvatarBucket'];
 
         $this->oss_client = OSSClient::factory(array(
             'AccessKeyId' => $accessKeyId,
@@ -34,8 +32,8 @@ class AliyunOssController extends AddonsController{
                     'Content' => fopen("./Uploads/Avatar/$objectKey", 'r'),
                     'ContentLength' => $content_length,
                 ));
-            } catch (Exception $ex) {
-                \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getMessage(), "ERR");
+            } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
+                \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getErrorCode(), "ERR");
             }
         }
     }
@@ -50,8 +48,8 @@ class AliyunOssController extends AddonsController{
                     'Content' => fopen("./Uploads/Picture/$objectKey", 'r'),
                     'ContentLength' => $content_length,
                 ));
-            } catch (Exception $ex) {
-                \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getMessage(), "ERR");
+            } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
+                \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getErrorCode(), "ERR");
             }
         }
     }
@@ -66,8 +64,8 @@ class AliyunOssController extends AddonsController{
                     'Content' => fopen("./Uploads/Download/$objectKey", 'r'),
                     'ContentLength' => $content_length,
                 ));
-            } catch (Exception $ex) {
-                \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getMessage(), "ERR");
+            } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
+                \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getErrorCode(), "ERR");
             }
         }
     }
@@ -80,7 +78,7 @@ class AliyunOssController extends AddonsController{
                 'Key' => $objectKey,
             ));
         } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
-            \Think\Log::write("AliYun OSS Service Exception: ".$ex->getErrorCode(), "ERR");
+            \Think\Log::write("AliYun OSS Service Exception: ".$ex->getErrorCode().'-'.$bucketName.'-'.$objectKey, "ERR");
             return false;
         }
         return $result;

@@ -171,4 +171,9 @@ return  array(
     'OSS_AVATAR'            => 'hisihi-avator',
     'OSS_FORUM_PIC'         => 'forum-pic',
     'OSS_FORUM_SOUND'       => 'forum-sound',
+
+    'STUDENT_COUNT_BASE'    => 10000,
+    'TEACHER_COUNT_BASE'    => 800,
+    'QUESTION_COUNT_BASE'   => 0,
+    'HIWORK_COUNT_BASE'     => 0,
 );

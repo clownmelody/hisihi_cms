@@ -168,7 +168,10 @@ class PublicController extends AppController {
             S('Hiworks_count_all',$countAll);
             $hiworksCount = S('Hiworks_count_all');
         }
-        $statInfo['hiworks'] = $hiworksCount;
+        $statInfo['hiworks'] = $hiworksCount + C('HIWORK_COUNT_BASE');
+        $statInfo['students'] = $statInfo['students'] + C('STUDENT_COUNT_BASE');
+        $statInfo['designers'] = $statInfo['designers'] + C('TEACHER_COUNT_BASE');
+        $statInfo['questions'] = $statInfo['questions'] + C('QUESTION_COUNT_BASE');
         ////////////////////////////////////////////////////////////////////
 
         //返回结果

@@ -303,6 +303,7 @@ class CourseController extends AppController
             unset($comment['status']);
             $totalCount++;
         }
+        $totalCount = $commentModel->where($map)->count();
         //返回结果
         if($type == 'view') {
             return($list);

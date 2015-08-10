@@ -99,6 +99,8 @@ abstract class AppController extends Controller {
         $user = session('user_auth');
         $last_login = query_user(array('last_login_time','last_login_client'));
         // && $last_login['last_login_client'] != $user['client']
+        //var_dump("last_login_time:".$last_login['last_login_time']);
+        //var_dump("now_login_time:".$user['last_login_time']);
         if($last_login['last_login_time'] != $user['last_login_time']){
             $model = D('Home/Member');
             $model->logout();

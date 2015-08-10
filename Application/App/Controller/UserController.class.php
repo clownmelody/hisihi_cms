@@ -70,6 +70,20 @@ class UserController extends AppController
         $extra['uid'] = $uid;
         $this->apiSuccess("注册成功", null, $extra);
     }
+
+    public function isMobileRegExist($mobile){
+        if(empty($mobile)){
+            $this->apiError(-1, "传入参数为空");
+        }
+        $map['username'] = $mobile;
+        $user = D('User/UcenterMember')->where($map)->find();
+        if($user){
+            $this->apiError(-2, "该手机号已注册");
+        } else {
+            $this->apiSuccess(0, "该手机号尚未注册，允许获取验证码");
+        }
+    }
+
 	
 	//登录
 	public function login($username, $password, $type = 1, $client = 'iOS', $reg_id = '') {
