@@ -71,16 +71,21 @@ class UserController extends AppController
         $this->apiSuccess("注册成功", null, $extra);
     }
 
+    /**检查手机号是否已经被注册
+     * @param $mobile
+     */
     public function isMobileRegExist($mobile){
         if(empty($mobile)){
             $this->apiError(-1, "传入参数为空");
         }
-        $map['username'] = $mobile;
+        $map['mobile'] = $mobile;
         $user = D('User/UcenterMember')->where($map)->find();
         if($user){
-            $this->apiError(-2, "该手机号已注册");
+            $extraData['isExist'] = true;
+            $this->apiError(-2, "该手机号已注册", null, $extraData);
         } else {
-            $this->apiSuccess(0, "该手机号尚未注册，允许获取验证码");
+            $extraData['isExist'] = false;
+            $this->apiSuccess("该手机号尚未注册，允许获取验证码", null, $extraData);
         }
     }
 

@@ -1,0 +1,116 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <!-- 标题栏 -->
+    <div class="main-title">
+        <h2>用户课程反馈列表(未处理-{$total})</h2>
+    </div>
+    <div class="cf">
+        <div  id="select_group" style="display:none;position: fixed;top:30%;left: 50%;width:400px;margin-left:-200px;background: white;padding: 50px;border: 1px solid #ccc">
+            载入中.......
+        </div>
+
+        <!-- 高级搜索 -->
+        <!--<div class="search-form fr cf">
+            <div class="sleft">
+                <div class="drop-down">
+                    <span id="sch-sort-txt" class="sort-txt">课程</span>
+                    <i class="arrow arrow-down"></i>
+                    <ul id="sub-sch-menu" class="nav-list hidden">
+                        <li><a href="javascript:;" value="">学校</a></li>
+                        <li><a href="javascript:;" value="1">课程</a></li>
+                    </ul>
+                </div>
+                <input type="text" name="courseSchool" class="search-input" value="{:I('courseSchool')}"
+                       placeholder="请输入课程名称或者学校">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('index')}"><i class="btn-search"></i></a>
+            </div>
+        </div>-->
+    </div>
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+        <table class="">
+            <thead>
+            <tr>
+                <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                <th class="">ID</th>
+                <th class="">学校</th>
+                <th class="">课程名称</th>
+                <th class="">邮箱</th>
+                <th class="">反馈时间</th>
+                <th class="">状态</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="_list">
+                <volist name="_list" id="vo">
+                    <tr>
+                        <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.school}</td>
+                        <td>{$vo.course_name}</td>
+                        <td>{$vo.email}</td>
+                        <td><span>{$vo.create_time|time_format}</span></td>
+                        <td><if condition="($vo.resolved eq 1) "> 已处理
+                            <else /> 未处理
+                            </if>
+                        </td>
+                        <td>
+                            <a href="{:U('CourseFeedBack/resolve?id='.$vo['id'])}" class="ajax-get confirm">处理</a>
+                            <a href="{:U('CourseFeedBack/deleteFeedback?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <div class="page">
+        {$_page}
+    </div>
+</block>
+
+<block name="script">
+    <script src="__STATIC__/thinkbox/jquery.thinkbox.js"></script>
+
+    <script type="text/javascript">
+        //搜索功能
+        $("#search").click(function () {
+            var url = $(this).attr('url');
+            var query = $('.search-form').find('input').serialize();
+            query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g, '');
+            query = query.replace(/^&/g, '');
+            if (url.indexOf('?') > 0) {
+                url += '&' + query;
+            } else {
+                url += '?' + query;
+            }
+            window.location.href = url;
+        });
+        /* 状态搜索子菜单 */
+        $(".search-form").find(".drop-down").hover(function(){
+            $("#sub-sch-menu").removeClass("hidden");
+        },function(){
+            $("#sub-sch-menu").addClass("hidden");
+        });
+        $("#sub-sch-menu li").find("a").each(function(){
+            $(this).click(function(){
+                var text = $(this).text();
+                $("#sch-sort-txt").text(text).attr("data",$(this).attr("value"));
+                $("#sub-sch-menu").addClass("hidden");
+            })
+        });
+        //回车搜索
+        $(".search-input").keyup(function (e) {
+            if (e.keyCode === 13) {
+                $("#search").click();
+                return false;
+            }
+        });
+        //导航高亮
+        highlight_subnav("{:U('User/index')}");
+    </script>
+</block>

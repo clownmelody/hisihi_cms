@@ -60,6 +60,15 @@ class DocumentModel extends Model{
 		return $this->field($field)->where($map)->order($order)->select();
 	}
 
+    /**
+     * 获取推荐头条文章的列表
+     * @param $category
+     */
+    public function listRecommend($category, $page, $count){
+        return $this->where('status=1 and isrecommend=1 and category_id='.$category)->order('create_time')
+            ->page($page, $count)->select();
+    }
+
 	/**
 	 * 计算列表总数
 	 * @param  number  $category 分类ID

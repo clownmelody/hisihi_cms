@@ -195,10 +195,32 @@ class PublicController extends AppController {
         $this->apiSuccess('建议发送成功！');
     }
 
-    public function topList(){
+    public function topList($recommend=false, $page=1, $count=5){
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
-
+        if($recommend){
+            $list = $Document->listRecommend(47, $page, $count);
+            foreach($list as &$topic){
+                //解析并成立图片数据
+                $topic['img'] = $this->fetchImage($topic['cover_id']);
+                $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
+                unset($topic['uid']);
+                unset($topic['name']);
+                unset($topic['category_id']);
+                unset($topic['type']);
+                unset($topic['root']);
+                unset($topic['pid']);
+                unset($topic['model_id']);
+                unset($topic['position']);
+                unset($topic['link_id']);
+                unset($topic['cover_id']);
+                unset($topic['deadline']);
+                unset($topic['attach']);
+                unset($topic['extend']);
+                unset($topic['level']);
+            }
+            $this->apiSuccess("获取推荐头条成功", null, array('course' => $list));
+        }
         //获取当前分类下的文章
         $list = $Document->page(1, 5)->lists(47);
         foreach($list as &$topic){

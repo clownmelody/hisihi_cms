@@ -535,15 +535,12 @@ class ArticleController extends AdminController {
         if(empty($ids)){
             $this->error('请选择要操作的数据');
         }
-        \Think\Log::write("ids: ".json_encode($ids));
         $model = M();
         try {
             foreach($ids as $rid){
-                $result = $model ->execute("update hisihi_document_article set isrecommend = 1 where id=".$rid);
-                \Think\Log::write("sql result :".$result);
+                $model->execute("update hisihi_document set isrecommend = 1 where id=".$rid);
             }
         } catch (Exception $e){
-            \Think\Log::write("sql exception :".$e->getMessage());
             $this->error('操作失败，请重试');
         }
         $this->success('操作成功');

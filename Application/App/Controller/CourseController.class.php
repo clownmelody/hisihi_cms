@@ -9,6 +9,7 @@
 namespace App\Controller;
 
 use Think\Controller;
+use Think\Exception;
 use Think\Model;
 
 
@@ -406,6 +407,26 @@ class CourseController extends AppController
             $this->apiError(-102,'您还没有赞过，不能取消!');
         }
     }
+
+    public function userFeedBack($course_name='', $school='', $email=''){
+        if(empty($course_name)||empty($school)||empty($email)){
+            $this->apiError(-1, "传入参数为空");
+        } else {
+            $model = D("Admin/CourseFeedBack");
+            $data['course_name'] = $course_name;
+            $data['school'] = $school;
+            $data['email'] = $email;
+            $data['create_time'] = time();
+            $data['resolved'] = 0;
+            $result = $model->addFeedBack($data);
+            if($result){
+                $this->apiSuccess("用户反馈成功");
+            } else {
+                $this->apiError(-1, "用户反馈异常");
+            }
+        }
+    }
+
 
     /**
      * @param $map_support
