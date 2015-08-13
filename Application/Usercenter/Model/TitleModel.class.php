@@ -14,7 +14,13 @@ class TitleModel
 {
     public function getTitle($uid)
     {
-        $score = query_user(array('score'), $uid);
+        //$score = query_user(array('score'), $uid);
+        $member = M();
+        $memberResult = $member->query("SELECT score FROM hisihi_member WHERE uid=".$uid);
+        $score['score'] = 0;
+        if($memberResult){
+            $score['score'] = $memberResult[0]['score'];
+        }
         return $this->getTitleByScore($score['score']);
     }
 

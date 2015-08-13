@@ -88,6 +88,7 @@ class AvatarAddon extends Addon
             return false;
         }
         //返回成功消息
+        increaseScore($uid, 10);
         return true;
     }
 

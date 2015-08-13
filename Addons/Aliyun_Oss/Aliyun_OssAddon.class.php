@@ -51,6 +51,14 @@ use Common\Controller\Addon;
             $oss_controller->uploadForumSoundResource($param["objectKey"]);
         }
 
+        /**上传广告图片到OSS
+         * @param $param
+         */
+        public function uploadAdvsPicResource($param){
+            $oss_controller = new AliyunOssController();
+            $oss_controller->uploadAdvsPicResource($param["objectKey"]);
+        }
+
         public function isResourceExistInOSS($param){
             $oss_controller = new AliyunOssController();
             return $oss_controller->isResourceExistInOSS($param["bucketName"], $param["objectKey"]);

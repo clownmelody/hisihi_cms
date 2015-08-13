@@ -1191,6 +1191,23 @@ function getLou($k)
     return $res;
 }
 
+function increaseScore($uid, $score){
+    $member = M();
+    $score = intval($score);
+    $result = $member->execute("UPDATE hisihi_member SET score=score+".$score." WHERE uid=".$uid);
+    return $result;
+}
+
+function getScoreCount($uid){
+    $score = 0;
+    $member = M();
+    $memberResult = $member->query("SELECT score FROM hisihi_member WHERE uid=".$uid);
+    if($memberResult){
+        $score = $memberResult[0]['score'];
+    }
+    return $score;
+}
+
 function getMyScore()
 {
     $user = query_user(array('score'), is_login());

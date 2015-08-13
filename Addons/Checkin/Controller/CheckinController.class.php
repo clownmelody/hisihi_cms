@@ -96,7 +96,7 @@ class CheckinController extends AddonsController{
             $data['uid'] = $uid;
             $data['ctime'] = $_SERVER['REQUEST_TIME'];
 
-            $add_score= modC('User_CheckIN_Score', '3', 'user');
+            $add_score= modC('User_CheckIN_Score', '5', 'user');
             //是否有签到记录
             if ($last) {
                 //是否是连续签到
@@ -166,7 +166,7 @@ class CheckinController extends AddonsController{
             $data['uid'] = $uid;
             $data['ctime'] = $_SERVER['REQUEST_TIME'];
 
-            $add_score= modC('User_CheckIN_Score', '3', 'user');
+            $add_score= modC('User_CheckIN_Score', '5', 'user');
            //是否有签到记录
             if ($last) {
                 //是否是连续签到

@@ -82,7 +82,7 @@ class UserController extends AppController
         $user = D('User/UcenterMember')->where($map)->find();
         if($user){
             $extraData['isExist'] = true;
-            $this->apiError(-2, "该手机号已注册", null, $extraData);
+            $this->apiSuccess("该手机号已注册", null, $extraData);
         } else {
             $extraData['isExist'] = false;
             $this->apiSuccess("该手机号尚未注册，允许获取验证码", null, $extraData);
@@ -302,7 +302,13 @@ class UserController extends AppController
             unset($check_info['ctime']);
         }
         //返回成功信息
-        $this->apiSuccess("签到成功", null, array('checkInfo'=>$check_info));
+        $extra['checkInfo'] = $check_info;
+        $uid = $this->getUid();
+        $extraData['scoreAdd'] = "5";
+        $extraData['scoreTotal'] = getScoreCount($uid);
+        $extra['score'] = $extraData;
+
+        $this->apiSuccess("签到成功", null, $extra);
     }
 
     //加关注
@@ -324,7 +330,12 @@ class UserController extends AppController
             $param['production'] = C('APNS_PRODUCTION');
             Hook::exec('Addons\\JPush\\JPushAddon', 'push_followed', $param);
             //返回成功信息
-            $this->apiSuccess("关注成功");
+            if(increaseScore($uid, 1)){
+                $extraData['scoreAdd'] = "1";
+                $extraData['scoreTotal'] = getScoreCount($uid);
+                $extra['score'] = $extraData;
+            }
+            $this->apiSuccess("关注成功", null, $extra);
         }
         $this->apiError(-1,"关注失败");
     }
@@ -755,7 +766,11 @@ class UserController extends AppController
             $this->apiError(0, $addon->getError());
         }
         //返回成功消息
-        $this->apiSuccess('头像保存成功');
+        $extraData['scoreAdd'] = "10";
+        $extraData['scoreTotal'] = getScoreCount($uid);
+        $extra['score'] = $extraData;
+
+        $this->apiSuccess('头像保存成功', null, $extra);
     }
 
     /**
@@ -919,7 +934,7 @@ class UserController extends AppController
                 'signature' => $user1['signature'],
                 'email' => $user2['email'],
                 'mobile' => $user2['mobile'],
-                'tox_money' => $user1['tox_money'],
+                'tox_money' => $user1['score'],
                 'name' => $user1['nickname'],
                 'sex' => $this->encodeSex($user1['sex']),
                 'birthday' => $user1['birthday'],

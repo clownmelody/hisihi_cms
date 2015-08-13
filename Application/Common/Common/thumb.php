@@ -111,7 +111,6 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
         $file_key = substr($filename, 15);
         $thumb_file_key = substr($thumbFile, 15);
         $oss = new AliyunOssController();
-        \Think\Log::write("OSSDEBUG-avatar-key".$file_key);
         $isOriginAvatarExist = $oss->isResourceExistInOSS("hisihi-avator", $file_key);
         $isThumbAvatarExist = $oss->isResourceExistInOSS("hisihi-avator", $thumb_file_key);
         if(!$isOriginAvatarExist){

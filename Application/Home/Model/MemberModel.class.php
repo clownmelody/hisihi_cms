@@ -28,7 +28,7 @@ class MemberModel extends Model
         array('update_time', NOW_TIME),
         array('status', 1, self::MODEL_INSERT),
         array('tox_money', 100, self::MODEL_INSERT),
-        array('score', 0, self::MODEL_INSERT),
+        array('score', 100, self::MODEL_INSERT),
         array('pos_province', 0, self::MODEL_INSERT),
         array('pos_city', 0, self::MODEL_INSERT),
         array('pos_district', 0, self::MODEL_INSERT),

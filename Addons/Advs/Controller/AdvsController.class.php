@@ -8,7 +8,8 @@
 // +----------------------------------------------------------------------
 
 namespace Addons\Advs\Controller;
-use Admin\Controller\AddonsController; 
+use Admin\Controller\AddonsController;
+use Think\Hook;
 
 class AdvsController extends AddonsController{
 	/* 添加 */
@@ -68,6 +69,7 @@ class AdvsController extends AddonsController{
 		if(!$res){
 			$this->error(D('Addons://Advs/Advs')->getError());
 		}else{
+            $this->uploadAdvsPicToOSS($res['advspic']);
 			if($res['id']){
 				$this->success('更新成功', Cookie('__forward__'));
 			}else{
@@ -75,6 +77,24 @@ class AdvsController extends AddonsController{
 			}
 		}
 	}
+
+    /*
+     * 上传广告图片到OSS
+     */
+    private function uploadAdvsPicToOSS($advPicID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$advPicID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "advs-pic";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadAdvsPicResource', $param);
+            }
+        }
+    }
 	/**
 	 * 批量处理
 	 */

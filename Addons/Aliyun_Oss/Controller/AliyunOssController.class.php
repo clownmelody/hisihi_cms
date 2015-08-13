@@ -70,6 +70,22 @@ class AliyunOssController extends AddonsController{
         }
     }
 
+    public function uploadAdvsPicResource($objectKey){
+        if(isset($objectKey)){
+            try {
+                $content_length = filesize("./Uploads/Picture/$objectKey");
+                $this->oss_client->putObject(array(
+                    'Bucket' => 'advs-pic',
+                    'Key' => $objectKey,
+                    'Content' => fopen("./Uploads/Picture/$objectKey", 'r'),
+                    'ContentLength' => $content_length,
+                ));
+            } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
+                \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getErrorCode(), "ERR");
+            }
+        }
+    }
+
     public function isResourceExistInOSS($bucketName, $objectKey){
         $result = true;
         try {

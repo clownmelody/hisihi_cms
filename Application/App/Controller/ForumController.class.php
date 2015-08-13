@@ -682,8 +682,8 @@ class ForumController extends AppController
 
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
-            $result = $model->createPost($data);
             $after = getMyScore();
+            $result = $model->createPost($data);
             $tox_money_after = getMyToxMoney();
             if (!$result) {
                 $this->apiError($model->getError(),'提问失败!');
@@ -792,7 +792,15 @@ class ForumController extends AppController
 
         //显示成功消息
         $message = $isEdit ? '编辑成功。' : '提问成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after);
-        $this->apiSuccess($message,null, array('post_id' => $post_id,'shareUrl' => 'app.php/forum/detail/type/view/post_id/'.$post_id));
+        $extra['post_id'] = $post_id;
+        $extra['shareUrl'] = 'app.php/forum/detail/type/view/post_id/'.$post_id;
+        $uid = $this->getUid();
+        if(increaseScore($uid, 1)){
+            $extraData['scoreAdd'] = "1";
+            $extraData['scoreTotal'] = getScoreCount($uid);
+            $extra['score'] = $extraData;
+        }
+        $this->apiSuccess($message,null, $extra);
     }
 
     public function doReply($post_id, $content = ' ', $pos = null, $pictures = null, $sound = null)
@@ -891,7 +899,15 @@ class ForumController extends AppController
             }
 
             //显示成功消息
-            $this->apiSuccess('回复成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after), null, array('reply_id' => $result));
+            $extra['reply_id'] = $result;
+
+            $uid = $this->getUid();
+            if(increaseScore($uid, 3)){
+                $extraData['scoreAdd'] = "3";
+                $extraData['scoreTotal'] = getScoreCount($uid);
+                $extra['score'] = $extraData;
+            }
+            $this->apiSuccess('回复成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after), null, $extra);
         } else {
             $this->apiError(-101,'请10秒之后再回复');
         }
@@ -1068,7 +1084,12 @@ class ForumController extends AppController
                 }
 
                 D('Message')->sendMessage($message_uid, $user['username'] . '给您点了个赞。', $title =$user['username'] . '赞了您。', '', is_login(), 2, null, 'support_post', $source_id);
-                $this->apiSuccess('感谢您的支持');
+                if(increaseScore($message_uid, 1)){
+                    $extraData['scoreAdd'] = "1";
+                    $extraData['scoreTotal'] = getScoreCount($message_uid);
+                    $extra['score'] = $extraData;
+                }
+                $this->apiSuccess('感谢您的支持', null, $extra);
             } else {
                 $this->apiError(-101,'写入数据库失败!');
             }

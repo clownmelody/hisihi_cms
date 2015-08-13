@@ -321,4 +321,61 @@ class PublicController extends AppController {
 //        return $pic_src;
         return $pic_small;
     }
+
+    /**
+     * 应用启动页广告
+     */
+    public function indexAdv(){
+        $model = M();
+        $now = time();
+        $result = $model->query("select advspic from hisihi_advs where ".
+            "position=3 and status=1 and ".$now." between create_time and end_time order by id desc");
+        if($result){
+            $picID = $result[0]['advspic'];
+            $result = $model->query("select path from hisihi_picture where id=".$picID);
+            if($result){
+                $path = $result[0]['path'];
+                $objKey = substr($path, 17);
+                $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                $data['showAdv'] = true;
+                $data['pic'] = $picUrl;
+                $this->apiSuccess("获取广告数据成功", null, $data);
+            } else {
+                $data['showAdv'] = false;
+                $this->apiSuccess("获取广告数据失败", null, $data);
+            }
+        } else {
+            $data['showAdv'] = false;
+            $this->apiSuccess("不存在当前时间段的广告", null, $data);
+        }
+    }
+
+    /**
+     * 论坛内广告
+     */
+    public function forumAdv(){
+        $model = M();
+        $now = time();
+        $result = $model->query("select advspic from hisihi_advs where ".
+            "position=4 and status=1 and ".$now." between create_time and end_time order by id desc");
+        if($result){
+            $picID = $result[0]['advspic'];
+            $result = $model->query("select path from hisihi_picture where id=".$picID);
+            if($result){
+                $path = $result[0]['path'];
+                $objKey = substr($path, 17);
+                $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                $data['showAdv'] = true;
+                $data['pic'] = $picUrl;
+                $this->apiSuccess("获取论坛广告数据成功", null, $data);
+            } else {
+                $data['showAdv'] = false;
+                $this->apiSuccess("获取论坛广告数据失败", null, $data);
+            }
+        } else {
+            $data['showAdv'] = false;
+            $this->apiSuccess("不存在当前时间段的论坛广告", null, $data);
+        }
+    }
+
 }

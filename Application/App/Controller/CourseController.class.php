@@ -157,9 +157,17 @@ class CourseController extends AppController
     public function courseShareURL($id)
     {
         if(($course_content = $this->findCourse($id)) != null){
-            $this->apiSuccess("获取课程分享链接成功", null, array('course_share_url' => 'app.php/course/coursedetail/type/view/id/'.$id));
+            $extra['course_share_url'] = 'app.php/course/coursedetail/type/view/id/'.$id;
+            $uid = $this->getUid();
+            if($uid){
+                if(increaseScore($uid, 1)){
+                    $extraData['scoreAdd'] = "1";
+                    $extraData['scoreTotal'] = getScoreCount($uid);
+                    $extra['score'] = $extraData;
+                }
+            }
+            $this->apiSuccess("获取课程分享链接成功", null, $extra);
         }
-
         else
             $this->apiError(-404, '未找到该课程！');
     }
@@ -277,9 +285,16 @@ class CourseController extends AppController
             $url = $_SERVER['HTTP_REFERER'];
             D('Common/Message')->sendMessage($uid, $message, $title, $url, get_uid(), 0, $app);
         }
-
         //返回结果
-        $this->apiSuccess('评论成功', null, array('commentID' => $result));
+        $extra['commentID'] = $result;
+
+        $uid = $this->getUid();
+        if(increaseScore($uid, 2)){
+            $extraData['scoreAdd'] = "2";
+            $extraData['scoreTotal'] = getScoreCount($uid);
+            $extra['score'] = $extraData;
+        }
+        $this->apiSuccess('评论成功', null, $extra);
     }
 
     //评论列表
@@ -329,8 +344,13 @@ class CourseController extends AppController
             $favorite['create_time'] = time();
             if (D('Favorite')->where($favorite)->add($favorite)) {
                 $this->clearCache($favorite,'favorite');
-
-                $this->apiSuccess('感谢您的支持');
+                $uid = $this->getUid();
+                if(increaseScore($uid, 1)){
+                    $extraData['scoreAdd'] = "1";
+                    $extraData['scoreTotal'] = getScoreCount($uid);
+                    $extra['score'] = $extraData;
+                }
+                $this->apiSuccess('感谢您的支持', null, $extra);
             } else {
                 $this->apiError(-101,'写入数据库失败!');
             }

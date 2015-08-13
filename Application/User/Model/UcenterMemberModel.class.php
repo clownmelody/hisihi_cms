@@ -152,7 +152,6 @@ class UcenterMemberModel extends Model
                 $this->setDefaultGroup($uid);//设置默认用户组
                 return $uid ? $uid : 0; //0-未知错误，大于0-注册成功
             } else {
-
                 return $result;
             }
         } else {

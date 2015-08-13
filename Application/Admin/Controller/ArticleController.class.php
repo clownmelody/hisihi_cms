@@ -661,6 +661,7 @@ class ArticleController extends AdminController {
 
         //获取表单字段排序
         $fields = get_model_attribute($model['id']);
+
         $this->assign('info',       $info);
         $this->assign('fields',     $fields);
         $this->assign('type_list',  get_type_bycate($cate_id));
