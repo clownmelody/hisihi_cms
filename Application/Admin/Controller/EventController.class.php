@@ -68,7 +68,7 @@ class EventController extends AdminController
             $event_types[$value['id']] = $value['title'];
         }
 
-        $event_add->title('添加报名')
+        $event_add->title('发布活动')
             ->keyText('title', '标题')->keySelect('type_id',"选择课程",'',$event_types)
             ->keyTime('deadline', '报名结束时间')
             ->keyTime('sTime', '课程开始时间')
@@ -76,6 +76,7 @@ class EventController extends AdminController
             ->keyText('address', '地点','先下培训地点')
             ->keyInteger('limitCount','人数','课程人数上线')
             ->keyTextArea('explain','介绍')
+            ->keyEditor('detail_content', '详细内容')
             ->keySingleImage('cover_id','封面')
             ->buttonSubmit(U('Event/addEvent'), '保存')
             ->buttonBack();
@@ -85,6 +86,7 @@ class EventController extends AdminController
             $event_content = D('Event')->where(array('status' => 1, 'id' => $id))->find();
             $event_add->data($event_content);
         }
+        $this->assign('meta_title', '活动');
         $event_add->display();
     }
 

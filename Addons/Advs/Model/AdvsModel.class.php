@@ -103,11 +103,15 @@ class AdvsModel extends Model
     public function detail($id)
     {
         $data = $this->find($id);
-        $cover = M('picture')->find($data['advspic']);
+        $pic_640_960 = M('picture')->find($data['advspic_640_960']);
+        $pic_640_1280 = M('picture')->find($data['advspic_640_1280']);
+        $pic_1242_2208 = M('picture')->find($data['advspic_1242_2208']);
         $sing = M('advertising')->find($data['position']);
         $data['create_time'] =intval($data['create_time'])!=0? date('Y-m-d H:i', $data['create_time']):'';
         $data['end_time']= intval($data['end_time'])!=0? date('Y-m-d H:i', $data['end_time']):'';
-        $data['path'] = $cover['path'];
+        $data['path_640_960'] = $pic_640_960['path'];
+        $data['path_640_1280'] = $pic_640_1280['path'];
+        $data['path_1242_2208'] = $pic_1242_2208['path'];
         $data['type'] = $sing['type'];
         return $data;
     }

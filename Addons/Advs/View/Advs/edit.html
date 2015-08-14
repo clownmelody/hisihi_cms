@@ -28,18 +28,18 @@
 			</div>	
 			
 			<div class="form-item cf" id="type1" <if condition="($info['type'] neq 1) or ($info['type'] neq 2)">style="display:none;"</if>>
-				<label class="item-label">广告图片<span class="check-tips">（请上传广告图片）</span></label>
+				<label class="item-label">广告图片(640*960)<span class="check-tips">（请上传广告图片）</span></label>
 	            <div class="controls">
-					<input type="file" id="upload_picture_advspic">
-					<input type="hidden" name="advspic" id="cover_id_advspic" value="{$info.advspic}"/>
+					<input type="file" id="upload_picture_advspic_640_960">
+					<input type="hidden" name="advspic_640_960" id="cover_id_advspic_640_960" value="{$info.advspic_640_960}"/>
 					<div class="upload-img-box">
-						<notempty name="info['advspic']"><div class="upload-pre-item"><img src="__ROOT__{$info.path}"/></div></notempty>
+						<notempty name="info['advspic_640_960']"><div class="upload-pre-item"><img src="__ROOT__{$info.path_640_960}"/></div></notempty>
 					</div>
 				</div>
 				<script type="text/javascript">
 				//上传图片
 			    /* 初始化上传插件 */
-				$("#upload_picture_advspic").uploadify({
+				$("#upload_picture_advspic_640_960").uploadify({
 			        "height"          : 30,
 			        "swf"             : "__STATIC__/uploadify/uploadify.swf",
 			        "fileObjName"     : "download",
@@ -57,9 +57,9 @@
 			    	var data = $.parseJSON(data);
 			    	var src = '';
 			        if(data.status){
-			        	$("#cover_id_advspic").val(data.id);
+			        	$("#cover_id_advspic_640_960").val(data.id);
 			        	src = data.url || data.path
-			        	$("#cover_id_advspic").parent().find('.upload-img-box').html(
+			        	$("#cover_id_advspic_640_960").parent().find('.upload-img-box').html(
 			        		'<div class="upload-pre-item"><img src="__ROOT__' + src + '"/></div>'
 			        	);
 			        } else {
@@ -71,7 +71,99 @@
 			        }
 			    }
 				</script>
-			</div>	
+			</div>
+
+            <div class="form-item cf" id="type2" <if condition="($info['type'] neq 1) or ($info['type'] neq 2)">style="display:none;"</if>>
+            <label class="item-label">广告图片(640*1280)<span class="check-tips">（请上传广告图片）</span></label>
+            <div class="controls">
+                <input type="file" id="upload_picture_advspic_640_1280">
+                <input type="hidden" name="advspic_640_1280" id="cover_id_advspic_640_1280" value="{$info.advspic_640_1280}"/>
+                <div class="upload-img-box">
+                    <notempty name="info['advspic_640_1280']"><div class="upload-pre-item"><img src="__ROOT__{$info.path_640_1280}"/></div></notempty>
+                </div>
+            </div>
+            <script type="text/javascript">
+                //上传图片
+                /* 初始化上传插件 */
+                $("#upload_picture_advspic_640_1280").uploadify({
+                    "height"          : 30,
+                    "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                    "fileObjName"     : "download",
+                    "buttonText"      : "上传图片",
+                    "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                    "width"           : 120,
+                    'removeTimeout'	  : 1,
+                    'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                    "onUploadSuccess" : uploadPicture{$field.name},
+                'onFallback' : function() {
+                    alert('未检测到兼容版本的Flash.');
+                }
+                });
+                function uploadPicture{$field.name}(file, data){
+                    var data = $.parseJSON(data);
+                    var src = '';
+                    if(data.status){
+                        $("#cover_id_advspic_640_1280").val(data.id);
+                        src = data.url || data.path
+                        $("#cover_id_advspic_640_1280").parent().find('.upload-img-box').html(
+                                '<div class="upload-pre-item"><img src="__ROOT__' + src + '"/></div>'
+                        );
+                    } else {
+                        updateAlert(data.info);
+                        setTimeout(function(){
+                            $('#top-alert').find('button').click();
+                            $(that).removeClass('disabled').prop('disabled',false);
+                        },1500);
+                    }
+                }
+            </script>
+            </div>
+
+            <div class="form-item cf" id="type11" <if condition="($info['type'] neq 1) or ($info['type'] neq 2)">style="display:none;"</if>>
+            <label class="item-label">广告图片(1242*2208)<span class="check-tips">（请上传广告图片）</span></label>
+            <div class="controls">
+                <input type="file" id="upload_picture_advspic_1242_2208">
+                <input type="hidden" name="advspic_1242_2208" id="cover_id_advspic_1242_2208" value="{$info.advspic_1242_2208}"/>
+                <div class="upload-img-box">
+                    <notempty name="info['advspic_1242_2208']"><div class="upload-pre-item"><img src="__ROOT__{$info.path_1242_2208}"/></div></notempty>
+                </div>
+            </div>
+            <script type="text/javascript">
+                //上传图片
+                /* 初始化上传插件 */
+                $("#upload_picture_advspic_1242_2208").uploadify({
+                    "height"          : 30,
+                    "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                    "fileObjName"     : "download",
+                    "buttonText"      : "上传图片",
+                    "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                    "width"           : 120,
+                    'removeTimeout'	  : 1,
+                    'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                    "onUploadSuccess" : uploadPicture{$field.name},
+                'onFallback' : function() {
+                    alert('未检测到兼容版本的Flash.');
+                }
+                });
+                function uploadPicture{$field.name}(file, data){
+                    var data = $.parseJSON(data);
+                    var src = '';
+                    if(data.status){
+                        $("#cover_id_advspic_1242_2208").val(data.id);
+                        src = data.url || data.path
+                        $("#cover_id_advspic_1242_2208").parent().find('.upload-img-box').html(
+                                '<div class="upload-pre-item"><img src="__ROOT__' + src + '"/></div>'
+                        );
+                    } else {
+                        updateAlert(data.info);
+                        setTimeout(function(){
+                            $('#top-alert').find('button').click();
+                            $(that).removeClass('disabled').prop('disabled',false);
+                        },1500);
+                    }
+                }
+            </script>
+            </div>
 			
 			<div class="form-item cf" id="type3" <if condition="$info['type'] neq 3">style="display:none;"</if>>
 				<label class="item-label">广告文字<span class="check-tips">（请填写广告文字）</span></label>
@@ -140,12 +232,16 @@ $(function(){
             $type = $('#mySelect').find("option:selected").attr("data");
             if($type == 1 || $type == 2){
                 $('#type1').css('display','block');
+                $('#type11').css('display','block');
+                $('#type2').css('display','block');
             }else if($type == 3){
                 $('#type3').css('display','block');
             }else if($type == 4){
                 $('#type4').css('display','block');
             }else{
                 $('#type1').css('display','none');
+                $('#type11').css('display','none');
+                $('#type2').css('display','none');
                 $('#type3').css('display','none');
                 $('#type4').css('display','none');
             }

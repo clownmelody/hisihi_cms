@@ -721,7 +721,28 @@ class ArticleController extends AdminController {
         if(!$res){
             $this->error(D('Document')->getError());
         }else{
+            $id = $res['id'];
+            $model = M();
+            $result = $model->query('SELECT logo_pic FROM hisihi_document_article WHERE id='.$id);
+            if($result){
+                $this->uploadLogoPicToOSS($result[0]['logo_pic']);
+            }
             $this->success($res['id']?'更新成功':'新增成功', Cookie('__forward__'));
+        }
+    }
+
+    private function uploadLogoPicToOSS($picID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$picID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            }
         }
     }
 

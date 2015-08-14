@@ -325,13 +325,17 @@ class PublicController extends AppController {
     /**
      * 应用启动页广告
      */
-    public function indexAdv(){
+    public function indexAdv($width=0, $height=0){
+        if($width==0||$height==0){
+            $this->apiError(-1, "未传入图片宽高参数");
+        }
         $model = M();
         $now = time();
-        $result = $model->query("select advspic from hisihi_advs where ".
+        $picKey = "advspic_".$width.'_'.$height;
+        $result = $model->query("select ".$picKey." from hisihi_advs where ".
             "position=3 and status=1 and ".$now." between create_time and end_time order by id desc");
         if($result){
-            $picID = $result[0]['advspic'];
+            $picID = $result[0][$picKey];
             $result = $model->query("select path from hisihi_picture where id=".$picID);
             if($result){
                 $path = $result[0]['path'];
@@ -346,7 +350,7 @@ class PublicController extends AppController {
             }
         } else {
             $data['showAdv'] = false;
-            $this->apiSuccess("不存在当前时间段的广告", null, $data);
+            $this->apiSuccess("不存在可用的广告", null, $data);
         }
     }
 

@@ -16,6 +16,7 @@ class AdvsController extends AddonsController{
 	public function add(){
 		$current = U('/Admin/Addons/adminList/name/Advs');
 		$sing = M('advertising')->where('status = 1')->select();
+        $this->assign('meta_title', '新增广告');
 		$this->assign('current',$current);
 		$this->assign('sing',$sing);
 		$this->display(T('Addons://Advs@Advs/edit'));
@@ -27,6 +28,7 @@ class AdvsController extends AddonsController{
 		$current = U('/Admin/Addons/adminList/name/Advs');
 		$sing = M('advertising')->where('status = 1')->select();
 		$detail = D('Addons://Advs/Advs')->detail($id);
+        $this->assign('meta_title', '广告编辑');
 		$this->assign('info',$detail);
 		$this->assign('current',$current);
 		$this->assign('sing',$sing);

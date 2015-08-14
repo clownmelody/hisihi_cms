@@ -59,6 +59,11 @@ use Common\Controller\Addon;
             $oss_controller->uploadAdvsPicResource($param["objectKey"]);
         }
 
+        public function uploadOtherResource($param){
+            $oss_controller = new AliyunOssController();
+            $oss_controller->uploadOtherResource($param["objectKey"]);
+        }
+
         public function isResourceExistInOSS($param){
             $oss_controller = new AliyunOssController();
             return $oss_controller->isResourceExistInOSS($param["bucketName"], $param["objectKey"]);

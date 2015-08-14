@@ -1468,4 +1468,37 @@ class ForumController extends AppController
             D('Message')->sendMessage($uid, $message, $title, $url, $fromUid, $messageType, null, 'ask_you', $post_id);
         }
     }
+
+    /**
+     * 获取一条社区内的广告
+     * @param $width
+     * @param $height
+     * @return bool
+     */
+    private function getOneForumAdv($width, $height){
+        $model = M();
+        $now = time();
+        $picKey = "advspic_".$width.'_'.$height;
+        $result = $model->query("select ".$picKey." , title, link from hisihi_advs where ".
+            "position=4 and status=1 and ".$now." between create_time and end_time order by id desc");
+        if($result){
+            $picID = $result[0][$picKey];
+            $advLink = $result[0]['link'];
+            $advTitle = $result[0]['title'];
+            $result = $model->query("select path from hisihi_picture where id=".$picID);
+            if($result){
+                $path = $result[0]['path'];
+                $objKey = substr($path, 17);
+                $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                $result['picUrl'] = $picUrl;
+                $result['link'] = $advLink;
+                $result['title'] = $advTitle;
+                return $result;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
