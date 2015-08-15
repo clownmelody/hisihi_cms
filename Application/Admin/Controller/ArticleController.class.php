@@ -727,6 +727,10 @@ class ArticleController extends AdminController {
             if($result){
                 $this->uploadLogoPicToOSS($result[0]['logo_pic']);
             }
+            $result = $model->query('SELECT cover_id FROM hisihi_document WHERE id='.$id);
+            if($result){
+                $this->uploadLogoPicToOSS($result[0]['cover_id']);
+            }
             $this->success($res['id']?'更新成功':'新增成功', Cookie('__forward__'));
         }
     }

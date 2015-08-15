@@ -366,6 +366,8 @@ class PublicController extends AppController {
         if($width==0||$height==0){
             $this->apiError(-1, "未传入图片宽高参数");
         }
+        $data['showAdv'] = false;
+        $data['pic'] = null;
         $model = M();
         $now = time();
         $picKey = "advspic_".$width.'_'.$height;
@@ -377,16 +379,19 @@ class PublicController extends AppController {
             if($result){
                 $path = $result[0]['path'];
                 $objKey = substr($path, 17);
-                $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
-                $data['showAdv'] = true;
-                $data['pic'] = $picUrl;
+                $param["bucketName"] = "advs-pic";
+                $param['objectKey'] = $objKey;
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                    $data['showAdv'] = true;
+                    $data['pic'] = $picUrl;
+                }
                 $this->apiSuccess("获取广告数据成功", null, $data);
             } else {
-                $data['showAdv'] = false;
                 $this->apiSuccess("获取广告数据失败", null, $data);
             }
         } else {
-            $data['showAdv'] = false;
             $this->apiSuccess("不存在可用的广告", null, $data);
         }
     }
@@ -395,6 +400,8 @@ class PublicController extends AppController {
      * 论坛内广告
      */
     public function forumAdv(){
+        $data['showAdv'] = false;
+        $data['pic'] = null;
         $model = M();
         $now = time();
         $result = $model->query("select advspic from hisihi_advs where ".
@@ -405,16 +412,19 @@ class PublicController extends AppController {
             if($result){
                 $path = $result[0]['path'];
                 $objKey = substr($path, 17);
-                $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
-                $data['showAdv'] = true;
-                $data['pic'] = $picUrl;
+                $param["bucketName"] = "advs-pic";
+                $param['objectKey'] = $objKey;
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                    $data['showAdv'] = true;
+                    $data['pic'] = $picUrl;
+                }
                 $this->apiSuccess("获取论坛广告数据成功", null, $data);
             } else {
-                $data['showAdv'] = false;
                 $this->apiSuccess("获取论坛广告数据失败", null, $data);
             }
         } else {
-            $data['showAdv'] = false;
             $this->apiSuccess("不存在当前时间段的论坛广告", null, $data);
         }
     }
