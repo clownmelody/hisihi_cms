@@ -71,7 +71,9 @@ class AdvsController extends AddonsController{
 		if(!$res){
 			$this->error(D('Addons://Advs/Advs')->getError());
 		}else{
-            $this->uploadAdvsPicToOSS($res['advspic']);
+            $this->uploadAdvsPicToOSS($res['advspic_640_960']);
+            $this->uploadAdvsPicToOSS($res['advspic_720_1280']);
+            $this->uploadAdvsPicToOSS($res['advspic_1242_2208']);
 			if($res['id']){
 				$this->success('更新成功', Cookie('__forward__'));
 			}else{

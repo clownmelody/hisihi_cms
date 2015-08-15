@@ -74,18 +74,18 @@
 			</div>
 
             <div class="form-item cf" id="type2" <if condition="($info['type'] neq 1) or ($info['type'] neq 2)">style="display:none;"</if>>
-            <label class="item-label">广告图片(640*1280)<span class="check-tips">（请上传广告图片）</span></label>
+            <label class="item-label">广告图片(720*1280)<span class="check-tips">（请上传广告图片）</span></label>
             <div class="controls">
-                <input type="file" id="upload_picture_advspic_640_1280">
-                <input type="hidden" name="advspic_640_1280" id="cover_id_advspic_640_1280" value="{$info.advspic_640_1280}"/>
+                <input type="file" id="upload_picture_advspic_720_1280">
+                <input type="hidden" name="advspic_720_1280" id="cover_id_advspic_720_1280" value="{$info.advspic_720_1280}"/>
                 <div class="upload-img-box">
-                    <notempty name="info['advspic_640_1280']"><div class="upload-pre-item"><img src="__ROOT__{$info.path_640_1280}"/></div></notempty>
+                    <notempty name="info['advspic_720_1280']"><div class="upload-pre-item"><img src="__ROOT__{$info.path_720_1280}"/></div></notempty>
                 </div>
             </div>
             <script type="text/javascript">
                 //上传图片
                 /* 初始化上传插件 */
-                $("#upload_picture_advspic_640_1280").uploadify({
+                $("#upload_picture_advspic_720_1280").uploadify({
                     "height"          : 30,
                     "swf"             : "__STATIC__/uploadify/uploadify.swf",
                     "fileObjName"     : "download",
@@ -103,9 +103,9 @@
                     var data = $.parseJSON(data);
                     var src = '';
                     if(data.status){
-                        $("#cover_id_advspic_640_1280").val(data.id);
+                        $("#cover_id_advspic_720_1280").val(data.id);
                         src = data.url || data.path
-                        $("#cover_id_advspic_640_1280").parent().find('.upload-img-box').html(
+                        $("#cover_id_advspic_720_1280").parent().find('.upload-img-box').html(
                                 '<div class="upload-pre-item"><img src="__ROOT__' + src + '"/></div>'
                         );
                     } else {

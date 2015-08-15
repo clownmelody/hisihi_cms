@@ -9,6 +9,7 @@
 namespace App\Controller;
 //use Addons\ResetByEmail\ResetByEmailAddon;
 use Think\Controller;
+use Think\Hook;
 use User\Api\UserApi;
 use Addons\Tianyi\TianyiAddon;
 use Weibo\Api\WeiboApi;
@@ -201,6 +202,9 @@ class PublicController extends AppController {
         if($recommend){
             $list = $Document->listRecommend(47, $page, $count);
             foreach($list as &$topic){
+                $did = $topic['id'];
+                $topic['source_name'] = $this->getSourceName($did);
+                $topic['logo_pic'] = $this->getSourceLogoPic($did);
                 //解析并成立图片数据
                 $topic['img'] = $this->fetchImage($topic['cover_id']);
                 $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
@@ -224,6 +228,9 @@ class PublicController extends AppController {
         //获取当前分类下的文章
         $list = $Document->page(1, 5)->lists(47);
         foreach($list as &$topic){
+            $did = $topic['id'];
+            $topic['source_name'] = $this->getSourceName($did);
+            $topic['logo_pic'] = $this->getSourceLogoPic($did);
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage($topic['cover_id']);
             $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
@@ -243,6 +250,36 @@ class PublicController extends AppController {
             unset($topic['level']);
         }
         $this->apiSuccess("获取首页顶部列表成功", null, array('course' => $list));
+    }
+
+    private function getSourceName($id){
+        $model = M();
+        $result = $model->query('SELECT source_name FROM hisihi_document_article WHERE id='.$id);
+        if($result){
+            return $result[0]['source_name'];
+        }
+        return null;
+    }
+
+    private function getSourceLogoPic($id){
+        $logo_pic = null;
+        $model = M();
+        $result = $model->query('SELECT logo_pic FROM hisihi_document_article WHERE id='.$id);
+        if($result){
+            $pic_id = $result[0]['logo_pic'];
+            $picDetail= $model->query("select path from hisihi_picture where id=".$pic_id);
+            if($picDetail){
+                $picLocalPath = $picDetail[0]['path'];
+                $picKey = substr($picLocalPath, 17);
+                $param["bucketName"] = "hisihi-other";
+                $param['objectKey'] = $picKey;
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $logo_pic = "http://hisihi-other".C('OSS_ENDPOINT').$picKey;
+                }
+            }
+        }
+        return $logo_pic;
     }
 
     public function topContent($id,$type = ''){
