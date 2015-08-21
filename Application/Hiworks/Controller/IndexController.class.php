@@ -2,6 +2,7 @@
 namespace Hiworks\Controller;
 
 use Think\Controller;
+use \Think\Hook;
 
 class IndexController extends HiworksController
 {
@@ -101,6 +102,22 @@ class IndexController extends HiworksController
 
         foreach ($list as &$info) {
             $detail = $Document->detail($info['id']);
+            $cover_id = $info['cover_id'];
+            $model = M();
+            $result = $model->query("select path from hisihi_picture where id=".$cover_id);
+            if($result){
+                $path = $result[0]['path'];
+                $objKey = substr($path, 17);
+                $param["bucketName"] = "hisihi-other";
+                $param['objectKey'] = $objKey;
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                    $data['showAdv'] = true;
+                    $data['pic'] = $picUrl;
+                    $info['pic_url'] = $picUrl;
+                }
+            }
             $info['size'] = $this->conversion($detail['size']);
             $info['download'] = $detail['download'];
         }
