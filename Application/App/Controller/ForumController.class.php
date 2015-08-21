@@ -629,8 +629,10 @@ class ForumController extends AppController
         //dump($content);
         $post_id = intval($post_id);
         $forum_id = intval($forum_id);
-        $title='标题';
         $title = op_t($title);
+        if(empty($title)){
+            $title='标题';
+        }
         // if($content != ' ')
         //     $content = op_t($content);
 
@@ -794,12 +796,12 @@ class ForumController extends AppController
         $message = $isEdit ? '编辑成功。' : '提问成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after);
         $extra['post_id'] = $post_id;
         $extra['shareUrl'] = 'app.php/forum/detail/type/view/post_id/'.$post_id;
-        $uid = $this->getUid();
+        /*$uid = $this->getUid();
         if(increaseScore($uid, 1)){
             $extraData['scoreAdd'] = "1";
             $extraData['scoreTotal'] = getScoreCount($uid);
             $extra['score'] = $extraData;
-        }
+        }*/
         $this->apiSuccess($message,null, $extra);
     }
 
@@ -902,11 +904,11 @@ class ForumController extends AppController
             $extra['reply_id'] = $result;
 
             $uid = $this->getUid();
-            if(increaseScore($uid, 3)){
+            /*if(increaseScore($uid, 3)){
                 $extraData['scoreAdd'] = "3";
                 $extraData['scoreTotal'] = getScoreCount($uid);
                 $extra['score'] = $extraData;
-            }
+            }*/
             $this->apiSuccess('回复成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after), null, $extra);
         } else {
             $this->apiError(-101,'请10秒之后再回复');
@@ -1084,11 +1086,11 @@ class ForumController extends AppController
                 }
 
                 D('Message')->sendMessage($message_uid, $user['username'] . '给您点了个赞。', $title =$user['username'] . '赞了您。', '', is_login(), 2, null, 'support_post', $source_id);
-                if(increaseScore($message_uid, 1)){
+                /*if(increaseScore($message_uid, 1)){
                     $extraData['scoreAdd'] = "1";
                     $extraData['scoreTotal'] = getScoreCount($message_uid);
                     $extra['score'] = $extraData;
-                }
+                }*/
                 $this->apiSuccess('感谢您的支持', null, $extra);
             } else {
                 $this->apiError(-101,'写入数据库失败!');
@@ -1339,7 +1341,8 @@ class ForumController extends AppController
     private function requirePostReplyExists($reply_id)
     {
         $reply_id = intval($reply_id);
-        $reply = D('ForumPostReply')->where(array('id' => $reply_id, 'status' => 1))->find();
+        //$reply = D('ForumPostReply')->where(array('id' => $reply_id, 'status' => 1))->find();
+        $reply = D('ForumPostReply')->where('id='.$reply_id.' and status=1 or status=3')->find();
         if (!$reply) {
             $this->apiError(404,'找不到该回复');
         }
