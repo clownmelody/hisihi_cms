@@ -11,6 +11,7 @@ namespace Admin\Controller;
 use Admin\Builder\AdminConfigBuilder;
 use Admin\Builder\AdminListBuilder;
 use Admin\Builder\AdminTreeListBuilder;
+use Think\Hook;
 
 
 class EventController extends AdminController
@@ -134,6 +135,7 @@ class EventController extends AdminController
             $rs = D('Event')->save($content);
 
             if ($rs) {
+                $this->uploadEventPicToOSS($content['cover_id']);
                 $this->success('编辑成功。', U('event'));
             } else {
                 $this->success('编辑失败。', '');
@@ -144,6 +146,21 @@ class EventController extends AdminController
                 $this->success('发布成功。' , U('event'));
             } else {
                 $this->success('发布失败。', '');
+            }
+        }
+    }
+
+    private function uploadEventPicToOSS($picID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$picID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
             }
         }
     }

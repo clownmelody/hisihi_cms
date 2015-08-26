@@ -530,7 +530,7 @@ class ArticleController extends AdminController {
     /**
      * 添加到推荐头条部分
      */
-    public function pushToRecommend(){
+    /*public function pushToRecommend(){
         $ids    =   I('request.ids');
         if(empty($ids)){
             $this->error('请选择要操作的数据');
@@ -544,7 +544,7 @@ class ArticleController extends AdminController {
             $this->error('操作失败，请重试');
         }
         $this->success('操作成功');
-    }
+    }*/
 
     /**
      * 文档新增页面初始化

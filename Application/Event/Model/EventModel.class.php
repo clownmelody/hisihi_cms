@@ -30,13 +30,18 @@ class EventModel extends Model{
         array('uid', 'is_login',3, 'function'),
     );
 
-    public function getEventList($page, $count){
-        $totalCount = $this->where("status=1")->count();
-        $list = $this->where("status=1")->page($page, $count)->order('deadline desc')
-                        ->field('title, explain, sTime, eTime, cover_id')->select();
+    public function getCompetitionEventList($page, $count){
+        $totalCount = $this->where("status=1 and type_id=2")->count();
+        $list = $this->where("status=1 and type_id=2")->page($page, $count)->order('deadline desc')
+                        ->field('title, explain, sTime, eTime, id, cover_id')->select();
         $result['totalCount'] = $totalCount;
         $result['list'] = $list;
         return $result;
+    }
+
+    public function getCompetitionDetail($id){
+        $competition = $this->where("status=1 and type_id=2 and id=".$id)->field('detail_content')->find();
+        return $competition;
     }
 
 }

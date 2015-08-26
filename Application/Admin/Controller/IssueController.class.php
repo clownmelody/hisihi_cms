@@ -11,6 +11,7 @@ namespace Admin\Controller;
 use Admin\Builder\AdminConfigBuilder;
 use Admin\Builder\AdminListBuilder;
 use Admin\Builder\AdminTreeListBuilder;
+use Think\Hook;
 
 
 class IssueController extends AdminController
@@ -354,7 +355,7 @@ class IssueController extends AdminController
 
 
         $builder->title('内容管理')
-            ->setStatusUrl(U('setIssueContentStatus'))->buttonDisable('','审核不通过')->buttonDelete()->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('editContents'))->button('课程同步',array('href'=>U('SyncCourse')))
+            ->setStatusUrl(U('setIssueContentStatus'))->buttonDisable('','审核不通过')->buttonDelete()->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('editContents'))->button('课程同步',array('href'=>U('SyncCourse')))->buttonSetStatus(U('PushVideo'),2,'推送',array())
             ->keyId()->keyLink('title', '标题','editContents?id=###')->keyText('lecturer','讲师')->keyText('duration','时长（秒）')->keyCreateTime()->keyMap('status','状态',array(1 => '未推荐', 2 => '已推荐', 0 => '未激活'))
             ->keyDoActionEdit( 'Issue/editcontents?id=###','编辑')
             ->data($list)
@@ -419,5 +420,28 @@ class IssueController extends AdminController
             ->data($list)
             ->pagination($totalCount, $r)
             ->display();
+    }
+
+    public function PushVideo($ids){
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        if(count($ids)>1){
+            $this->error('一次只能推送一条数据');
+        }
+
+        $issue_content_model = D('IssueContent');
+        $issue_content_detail = $issue_content_model->where(array('id'=>$ids[0]))->find();
+        $title = $issue_content_detail['title'];
+        $param['alert_info'] = "推荐视频:".$title;
+        $param['id'] = $ids[0];
+        $param['type'] = 1;
+        $param['production'] = C('APNS_PRODUCTION');
+        $result = Hook::exec('Addons\\JPush\\JPushAddon', 'push_video_article', $param);
+        if($result){
+            $this->success("推送成功");
+        } else {
+            $this->error('推送异常，请检查后重试');
+        }
     }
 }
