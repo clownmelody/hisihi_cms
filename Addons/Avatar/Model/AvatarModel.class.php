@@ -42,6 +42,17 @@ class AvatarModel extends Model {
         return $this->add($data);
     }
 
+    public function saveThirdPartyAvatar($uid, $path){
+        $data = array(
+            'uid'=>$uid,
+            'path'=>$path,
+            'status'=>1,
+            'is_temp'=>0,
+        );
+        $data = $this->create($data);
+        return $this->add($data);
+    }
+
     public function saveTempAvatar($uid, $path) {
         //删除旧的临时头像
         $this->removeTempAvatar($uid);

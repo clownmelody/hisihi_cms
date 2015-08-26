@@ -334,7 +334,8 @@ class AvatarAddon extends Addon
 
             }else{
                 if(!is_bool(strpos($avatar,'http://'))){
-                    return $avatar.'/thumbnail/'.$avatarSize.'x'.$avatarSize.'!';
+                    //return $avatar.'/thumbnail/'.$avatarSize.'x'.$avatarSize.'!';
+                    return $avatar;
                 }
                 else{
                     $avatar_path="/Uploads/Avatar/$avatar";

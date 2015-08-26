@@ -176,4 +176,6 @@ return  array(
     'TEACHER_COUNT_BASE'    => 800,
     'QUESTION_COUNT_BASE'   => 0,
     'HIWORK_COUNT_BASE'     => 0,
+
+    'QQOpenPlatFormLoginKey' => '1104475505',
 );
