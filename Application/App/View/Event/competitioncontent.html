@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <php>
+        $oneplus_seo_meta = get_seo_meta($vars,$seo);
+    </php>
+
+    <title>嘿设汇</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="__CSS__/app.min.css">
+    <style>
+        .app-bottombar {
+            z-index: 3000;
+            position: fixed;
+            bottom: 0;
+            height: 60px;
+            width: 100%;
+            display: none;
+            background: url("__IMG__/bg.png");
+        }
+
+        .bottomspace {
+            display: none;
+            height: 55px;
+        }
+        .bottom-icon {
+            float: left;
+            margin: 5px 10px 5px 10px;
+        }
+        .bottom-title {
+            float: left;
+            font-size: 18px;
+            color: #fff;
+            margin-top: 10px;
+        }
+        .bottom-content {
+            position: absolute;
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .bottom-star {
+            float: left;
+            width: 65px;
+            margin-top: 10px;
+            margin-left: 5px;
+        }
+
+        .bottom-right {
+            float: right;
+            margin: 12px 10px;
+            width: 80px;
+            height: 35px;
+            font-size: 16px;
+            color: #fff;
+            line-height: 35px;
+            border-radius: 5px;
+            background-color: #2aba00;
+            text-align: center;
+            z-index: 3000;
+        }
+        .info-title {
+            height: 40px;
+        }
+        .info-time {
+            font-size: 12px;
+            color: #ccc;
+        }
+        img {
+            max-width:100%;height:auto;
+        }
+    </style>
+</head>
+
+<body>
+<div class="app-page" data-page="home">
+    <div id="test-agent" style="display:none">user-agent</div>
+    <div class="app-content" style="-webkit-box-shadow: none;">
+        <div class="app-section" style="margin: 10px 10px 10px 10px">
+            <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
+            </div>
+            <div>
+            <p>
+                {$top_content_info.content}
+                </p>
+            </div>
+        </div>
+        <!--<div class="bottomspace"></div>-->
+    </div>
+    <!--<div class="app-bottombar">
+        <div>
+            <div>
+            <span class="bottom-icon">
+                <img style="width: 50px;" src="__IMG__/icon.png" />
+            </span>
+            <span class="bottom-title">
+                <p>嘿设汇</p>
+                <p class="bottom-content">设计师必备 百万设计师都在用</p>
+            </span>
+            <span class="bottom-star">
+                <img style="width: 10px;margin-left: -1px" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+            </span>
+            </div>
+            <div class="app-button bottom-right">
+                <p>立即下载</p>
+            </div>
+        </div>
+    </div>-->
+</div>
+
+<!--<div class="app-page" data-page="page2">
+    <div class="app-topbar">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Page 2</div>
+    </div>
+    <div class="app-content">
+        Create By RFly！
+    </div>
+</div>-->
+
+<script src="__JS__/zepto.js"></script>
+<script src="__JS__/app.min.js"></script>
+<script>
+    App.controller('home', function (page) {
+        $(page)
+            .find('.app-button')
+            .on('click', function () {
+                    window.location.href = "http://www.hisihi.com/download.php";
+            });
+    });
+
+    App.controller('page2', function (page) {
+        // put stuff here
+    });
+
+    try {
+        App.restore();
+    } catch (err) {
+        App.load('home');
+    }
+
+    $("a").removeAttr('href');
+
+    //var userAgent = navigator.userAgent.toLowerCase();
+
+    var userAgent = window.location.href;
+    //$("#test-agent").html(userAgent);
+    if(userAgent.indexOf("hisihi-app") < 0) {
+        $(".app-bottombar").show();
+        $(".bottomspace").show();
+    }
+
+</script>
+</body>
+</html>
