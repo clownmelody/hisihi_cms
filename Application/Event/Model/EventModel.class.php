@@ -32,8 +32,8 @@ class EventModel extends Model{
 
     public function getCompetitionEventList($page, $count){
         $totalCount = $this->where("status=1 and type_id=2")->count();
-        $list = $this->where("status=1 and type_id=2")->page($page, $count)->order('deadline desc')
-                        ->field('title, explain, sTime, eTime, id, cover_id')->select();
+        $list = $this->where("status=1 and type_id=2")->page($page, $count)->order('create_time desc')
+                        ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
         $result['totalCount'] = $totalCount;
         $result['list'] = $list;
         return $result;
@@ -47,8 +47,12 @@ class EventModel extends Model{
 
     public function getCompetitionInfo($id){
         $competition = $this->where("status=1 and type_id=2 and id=".$id)
-            ->field('id, title, explain, sTime, eTime, cover_id')->find();
+            ->field('id, title, explain, sTime, eTime, cover_id, view_count')->find();
         return $competition;
+    }
+
+    public function incViewCount($id){
+        $this->where(array('id' => $id))->setInc('view_count');
     }
 
 }

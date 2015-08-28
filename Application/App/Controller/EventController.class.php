@@ -67,6 +67,7 @@ class EventController extends AppController{
 
     public function competitioncontent($id,$type = ''){
         $detail = $this->eventModel->getCompetitionDetail($id);
+        $this->eventModel->incViewCount($id);
         $content = array(
             'content'=>$detail['detail_content'],
         );

@@ -71,10 +71,10 @@ class EventController extends AdminController
 
         $event_add->title('发布活动')
             ->keyText('title', '标题')->keySelect('type_id',"选择课程",'',$event_types)
-            ->keyTime('deadline', '报名结束时间')
+            /*->keyTime('deadline', '报名结束时间')*/
             ->keyTime('sTime', '课程开始时间')
             ->keyTime('eTime', '课程结束时间')
-            ->keyText('address', '地点','先下培训地点')
+            ->keyText('address', '地点','线下培训地点')
             ->keyInteger('limitCount','人数','课程人数上线')
             ->keyTextArea('explain','介绍')
             ->keyEditor('detail_content', '详细内容')
@@ -108,12 +108,12 @@ class EventController extends AdminController
         if (trim(op_h($address)) == '') {
             $this->error('请输入地点。');
         }
-        if ($sTime < $deadline) {
+        /*if ($sTime < $deadline) {
             $this->error('报名截止不能大于活动开始时间');
         }
         if ($deadline == '') {
             $this->error('请输入截止日期');
-        }
+        }*/
         if ($sTime > $eTime) {
             $this->error('活动开始时间不能大于活动结束时间');
         }
@@ -123,6 +123,8 @@ class EventController extends AdminController
         $content['title'] = op_t($content['title']);
         $content['type_id'] = intval($type_id);
         $content['create_time'] = time();
+        $content['sTime'] = $sTime;
+        $content['eTime'] = $eTime;
         $content['status'] = 1;
         if ($id) {
             $content_temp = D('Event')->find($id);
