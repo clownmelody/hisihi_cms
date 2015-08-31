@@ -10,6 +10,7 @@
 namespace App\Controller;
 
 use Think\Controller;
+use Think\Hook;
 
 class HiworksController extends AppController
 {
@@ -89,5 +90,33 @@ class HiworksController extends AppController
             $ids[] = $value['id'];
         }
         return implode(',', $ids);
+    }
+
+    /** hiworks_list.php/file/download/id/3578
+     * 金榜作业
+     */
+    public function topDownload(){
+        $model = M();
+        $result = $model->query("select document.id, document.title, document.cover_id, download.download from hisihi_document_download as download,
+                                  hisihi_document as document where download.id=document.id and document.cover_id!=0 and document.status=1
+                                  order by download.download desc limit 0,3");
+        foreach($result as &$value){
+            $pic_id = $value['cover_id'];
+            $value['pic'] = null;
+            $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+            if($pic_info){
+                $path = $pic_info[0]['path'];
+                $objKey = substr($path, 17);
+                $param["bucketName"] = "hisihi-other";
+                $param['objectKey'] = $objKey;
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                    $value['pic'] = $picUrl;
+                }
+            }
+            unset($value['cover_id']);
+        }
+        $this->apiSuccess($result);
     }
 }

@@ -304,6 +304,52 @@ class PublicController extends AppController {
         $this->apiSuccess("获取首页顶部列表成功", null, array('totalCount' => $totalCount,'course' => $list));
     }
 
+    /**
+     * 获取头条详情
+     * @param $id
+     */
+    public function findArticle($id){
+        $doc_model = M();
+        $article = $doc_model->query("select id, title, description, display, view, comment, create_time, update_time from hisihi_document where id=".$id);
+        foreach($article as &$info){
+            $info['source_name'] = $this->getSourceName($id);
+            $info['logo_pic'] = $this->getSourceLogoPic($id);
+            //解析并成立图片数据
+            $info['img'] = $this->fetchImage($info['cover_id']);
+            $info['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$id;
+            unset($info['uid']);
+            unset($info['name']);
+            unset($info['category_id']);
+            unset($info['type']);
+            unset($info['root']);
+            unset($info['pid']);
+            unset($info['model_id']);
+            unset($info['position']);
+            unset($info['link_id']);
+            unset($info['cover_id']);
+            unset($info['deadline']);
+            unset($info['attach']);
+            unset($info['extend']);
+            unset($info['level']);
+            $this->apiSuccess($info);
+        }
+        $this->apiError(-1, "获取头条详情异常");
+        /*"id": "1287",
+      "title": "利用变形液化工具把人像转为搞笑漫画",
+      "description": "利用变形液化工具把人像转为搞笑漫画",
+      "display": "1",
+      "view": "0",
+      "comment": "0",
+      "create_time": "1434951120",
+      "update_time": "1439605901",
+      "status": "1",
+      "isrecommend": "1",
+      "source_name": "嘿设汇",
+      "logo_pic": "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-08-13/55cc792a7866c.jpg",
+      "img": "/hisihi.jpg",
+      "content_url": "http://www.hisihi.com/app.php/public/topcontent/type/view/id/1287"*/
+    }
+
     private function getSourceName($id){
         $model = M();
         $result = $model->query('SELECT source_name FROM hisihi_document_article WHERE id='.$id);

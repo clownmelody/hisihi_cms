@@ -148,4 +148,105 @@ class DocumentController extends AppController {
         //返回成功信息
         $this->apiSuccess("编辑成功");
     }
+
+    /**
+     * 设计头条点赞
+     * @param $id
+     */
+    public function doSupport($id){
+        $this->requireLogin();
+        $support['appname'] = 'Article';
+        $support['table'] = 'article_content';
+        $support['row'] = $id;
+        $support['uid'] = is_login();
+        if (D('Support')->where($support)->count()) {
+            $this->apiError(-100,'您已经赞过，不能再赞了!');
+        } else {
+            $support['create_time'] = time();
+            if (D('Support')->where($support)->add($support)) {
+                $this->clearCache($support);
+                $this->apiSuccess('感谢您的支持');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**
+     * 取消设计头条点赞
+     * @param $id
+     */
+    public function unDoSupport($id)
+    {
+        $this->requireLogin();
+        $support['appname'] = 'Article';
+        $support['table'] = 'article_content';
+        $support['row'] = $id;
+        $support['uid'] = is_login();
+        if (D('Support')->where($support)->count()) {
+            if (D('Support')->where($support)->delete()) {
+                $this->clearCache($support);
+                $this->apiSuccess('取消支持成功！');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        } else {
+            $this->apiError(-102,'您还没有赞过，不能取消!');
+        }
+    }
+
+    /**
+     * 设计头条收藏
+     * @param $id
+     */
+    public function doFavorite($id)
+    {
+        $this->requireLogin();
+        $favorite['appname'] = 'Article';
+        $favorite['table'] = 'article_content';
+        $favorite['row'] = $id;
+        $favorite['uid'] = is_login();
+        if (D('Favorite')->where($favorite)->count()) {
+            $this->apiError(-100,'您已经收藏，不能再收藏了!');
+        } else {
+            $favorite['create_time'] = time();
+            if (D('Favorite')->where($favorite)->add($favorite)) {
+                $this->clearCache($favorite,'favorite');
+                $uid = $this->getUid();
+                if(increaseScore($uid, 1)){
+                    $extraData['scoreAdd'] = "1";
+                    $extraData['scoreTotal'] = getScoreCount($uid);
+                    $extra['score'] = $extraData;
+                }
+                $this->apiSuccess('感谢您的支持', null, $extra);
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+
+        }
+    }
+
+    /**
+     * 设计头条删除收藏
+     * @param $id
+     */
+    public function deleteFavorite($id)
+    {
+        $this->requireLogin();
+        $favorite['appname'] = 'Article';
+        $favorite['table'] = 'article_content';
+        $favorite['row'] = $id;
+        $favorite['uid'] = is_login();
+        if (D('Favorite')->where($favorite)->count()) {
+            if (D('Favorite')->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('删除收藏成功！');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        } else {
+            $this->apiError(-102,'您还没有收藏过，不能删除!');
+        }
+    }
+
 }

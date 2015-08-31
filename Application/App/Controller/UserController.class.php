@@ -1145,7 +1145,14 @@ class UserController extends AppController
         $this->apiSuccess("获取成功", null, array('total_count' => $totalCount, 'list' => $result));
     }
 
-    public function listFavorite($uid = 0, $page = 1, $count = 10)
+    /**
+     * 用户收藏列表
+     * @param int $uid
+     * @param string $type Issue or Article
+     * @param int $page
+     * @param int $count
+     */
+    public function listFavorite($uid = 0, $type="Issue", $page = 1, $count = 10)
     {
         //默认UID
         if (!$uid) {
@@ -1157,7 +1164,7 @@ class UserController extends AppController
             $this->apiError(400, '参数错误');
         }
         //获取收藏列表
-        $map = array('uid' => $uid, 'status' => 1);
+        $map = array('uid' => $uid, 'status' => 1, 'appname' => $type);
         $list = D('Favorite')->where($map)->order('create_time desc')->page($page,$count)->select();
         $totalCount = D('Favorite')->where($map)->order('create_time desc')->count();
 
@@ -1167,6 +1174,10 @@ class UserController extends AppController
                 case 'Issue':
                     $favorite['type'] = 'Course';
                     $favorite['info'] = A('Course')->findCourse($favorite['row']);
+                    break;
+                case 'Article':
+                    $favorite['type'] = 'Article';
+                    $favorite['info'] = A('Public')->findArticle($favorite['row']);
                     break;
             }
             unset($favorite['appname']);
@@ -1256,7 +1267,7 @@ class UserController extends AppController
         $this->apiSuccess("解绑成功");
     }
 
-    // tab='fans' 'question' 'answer'
+    // tab='fans' 'question' 'answer' 'honor'
     public function find($group = 5, $page = 1, $count = 10, $keywords = '', $tab = 'fans')
     {
         $nickname = op_t($keywords);
@@ -1277,7 +1288,7 @@ class UserController extends AppController
             $isfollowing = $isfollowing ? 2:0;
             $isfans = $isfans ? 1:0;
             $v['relationship'] = $isfollowing | $isfans;
-            $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
+            $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
             switch($tab){
                 case 'fans':
                     $v['fans'] = $v['info']['fans'];
@@ -1287,6 +1298,9 @@ class UserController extends AppController
                     break;
                 case 'answer':
                     $v['answer'] = $v['info']['replycount'];
+                    break;
+                case 'honor':
+                    $v['honor'] = $v['info']['score'];
                     break;
             }
 
@@ -1303,6 +1317,22 @@ class UserController extends AppController
         //返回成功结果
         $this->apiSuccess("获取用户列表成功", null, array('totalCount' => $totalCount,'userList' => $list));
     }
+
+    /**
+     * 荣誉学员和讲师
+     * @param int $group
+     */
+    public function honorUsers($group = 5){
+        $model = M();
+        $list = $model->query("SELECT uid FROM hisihi_auth_group_access AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(uid) FROM hisihi_member)-(SELECT MIN(uid) FROM hisihi_member))+(SELECT MIN(uid) FROM hisihi_member)) AS id) AS t2 WHERE t1.uid >= t2.id and t1.group_id=".$group." ORDER BY t1.uid LIMIT 0,4");
+        foreach ($list as &$v) {
+            $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
+        }
+        unset($v);
+        //返回成功结果
+        $this->apiSuccess("获取荣誉用户列表成功", null, array('totalCount' => count($list),'userList' => $list));
+    }
+
     /**
      * @param $condition
      * @auth RFly
