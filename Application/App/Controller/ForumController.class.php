@@ -162,7 +162,13 @@ class ForumController extends AppController
         return $list;
     }
 
-    //提问列表
+    /**
+     * @param int $type_id  帖子类型
+     * @param int $page
+     * @param int $count
+     * @param int $is_reply  -1 全部 0 无回答 1 有回答
+     * @param string $order
+     */
     public function forum($type_id = 0, $page = 1, $count = 10, $is_reply = -1, $order = 'ctime')
     {
         //$this->requireLogin();
@@ -223,6 +229,58 @@ class ForumController extends AppController
             $map['reply_count'] = $is_reply;
         if($is_reply == 1)
             $map['reply_count'] = array('gt',0);
+        $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
+        $totalCount = D('ForumPost')->where($map)->count();
+
+        $list = $this->formatList($list);
+
+        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+    }
+
+    /**
+     * 论坛数据筛选
+     * @param int $field_type -1 最新 -2 无回答 -3 有回答 -4 热门 1..帖子小类别
+     * @param int $page
+     * @param int $count
+     * @param string $order
+     */
+    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime')
+    {
+        $field_type = intval($field_type);
+        $page = intval($page);
+        $count = intval($count);
+        $order = op_t($order);
+
+        if ($order == 'ctime') {
+            $order = 'create_time desc';
+        } else if ($order == 'reply') {
+            $order = 'last_reply_time desc';
+        } else {
+            $order = 'last_reply_time desc';//默认的
+        }
+
+        //读取帖子列表
+        $map = array('status' => 1);
+        if ($field_type > 0) {
+            $forums = $this->getForumsByType($field_type);
+            if($forums == null){
+                $this->apiError(404,"该分类下无任何提问");
+            }
+            $forums = $forums[0]['forums'];
+            foreach($forums as $forum){
+                $forumIds[]=$forum['id'];
+            }
+            $ids= implode(',',$forumIds);
+            $map['forum_id'] = array('in',$ids);
+        }
+
+        if($field_type == -2)  // 无回复
+            $map['reply_count'] = 0;
+        if($field_type == -3)  // 有回复
+            $map['reply_count'] = array('gt',0);
+        if($field_type == -4){  // 热门
+            $order = "reply_count desc";
+        }
         $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
         $totalCount = D('ForumPost')->where($map)->count();
 
