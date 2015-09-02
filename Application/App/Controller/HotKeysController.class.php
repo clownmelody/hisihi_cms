@@ -17,19 +17,19 @@ class HotKeysController extends AppController
         $data = array();
         $data[] = array(
             'text' => 'ps',
-            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys%2FPS.png'
+            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/PS.png'
         );
         $data[] = array(
             'text' => 'ai',
-            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys%2FAI.png'
+            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/AI.png'
         );
         $data[] = array(
             'text' => 'cad',
-            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys%2FCAD.jpg'
+            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/CAD.jpg'
         );
         $data[] = array(
             'text' => 'cdr',
-            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys%2FCDR.png'
+            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/CDR.png'
         );
         $data[] = array(
             'text' => 'ae',

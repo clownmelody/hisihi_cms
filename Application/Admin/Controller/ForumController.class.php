@@ -290,7 +290,7 @@ class ForumController extends AdminController
         //显示页面
         $builder = new AdminListBuilder();
         $builder->title('帖子管理' . $forumTitle)
-            ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()
+            ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))
             ->keyId()->keyLink('title', '标题', 'Forum/reply?post_id=###')
             ->keyCreateTime()->keyUpdateTime()->keyTime('last_reply_time', '最后回复时间')->key('top', '是否置顶')->keyStatus()->keyDoActionEdit('editPost?id=###')
             ->setSearchPostUrl()->search('标题', 'title')->search('内容', 'content')
@@ -320,7 +320,7 @@ class ForumController extends AdminController
             ->display();
     }
 
-    public function editPost($id = null, $title = '', $content = '', $create_time = 0, $update_time = 0, $last_reply_time = 0, $is_top = 0)
+    public function editPost($id = null, $title = '', $content = '', $create_time = 0, $update_time = 0, $last_reply_time = 0, $type = '普通', $is_top = 0)
     {
         if (IS_POST) {
             //判断是否为编辑模式
@@ -328,7 +328,7 @@ class ForumController extends AdminController
 
             //写入数据库
             $model = M('ForumPost');
-            $data = array('title' => $title, 'content' => $content, 'create_time' => $create_time, 'update_time' => $update_time, 'last_reply_time' => $last_reply_time, 'is_top' => $is_top);
+            $data = array('title' => $title, 'content' => $content, 'create_time' => $create_time, 'update_time' => $update_time, 'last_reply_time' => $last_reply_time, 'type'=>$type, 'is_top' => $is_top);
             if ($isEdit) {
                 $result = $model->where(array('id' => $id))->save($data);
             } else {
@@ -336,10 +336,10 @@ class ForumController extends AdminController
             }
             //如果写入不成功，则报错
             if (!$result) {
-                $this->error($isEdit ? '编辑失败' : '创建成功');
+                $this->error($isEdit ? '编辑失败' : '创建成功', U('post'));
             }
             //返回成功信息
-            $this->success($isEdit ? '编辑成功' : '创建成功');
+            $this->success($isEdit ? '编辑成功' : '创建成功', U('post'));
         } else {
             //判断是否在编辑模式
             $isEdit = $id ? true : false;
@@ -354,13 +354,47 @@ class ForumController extends AdminController
             //显示页面
             $builder = new AdminConfigBuilder();
             $builder->title($isEdit ? '编辑帖子' : '新建帖子')
-                ->keyId()->keyTitle()->keyEditor('content', '内容')->keyRadio('is_top', '置顶', '选择置顶形式', array(0 => '不置顶', 1 => '本版置顶', 2 => '全局置顶'))->keyCreateTime()->keyUpdateTime()
+                ->keyId()->keyTitle()->keyEditor('content', '内容')->keyRadio('is_top', '置顶', '选择置顶形式', array(0 => '不置顶', 1 => '本版置顶', 2 => '全局置顶'))->keyText('type', '类型', '填写置顶或加精等')->keyCreateTime()->keyUpdateTime()
                 ->keyTime('last_reply_time', '最后回复时间')
                 ->buttonSubmit(U('editPost'))->buttonBack()
                 ->data($post)
                 ->display();
         }
 
+    }
+
+    /**
+     * 添加置顶帖
+     */
+    public function addTopPost(){
+        //显示页面
+        $builder = new AdminConfigBuilder();
+        $builder->title('添加论坛置顶帖')
+            ->keyId()->keyTitle()->keyEditor('content', '内容')
+            /*->keyRadio('is_top', '置顶', '选择置顶形式', array(0 => '不置顶', 1 => '本版置顶', 2 => '全局置顶'))*/
+            ->keyText('top_type', '类型', '填写置顶或加精等')
+            ->buttonSubmit(U('saveTopPost'))->buttonBack()
+            ->display();
+    }
+
+    /**
+     * 置顶帖保存
+     * @param string $title
+     * @param string $content
+     * @param string $type
+     * @param int $is_top
+     */
+    public function saveTopPost($title = '', $content = '', $type = '置顶', $is_top = 1){
+        //写入数据库
+        $model = D('Forum/ForumPost');
+        $data = array('title' => $title, 'content' => $content, 'type' => $type, 'is_top' => $is_top);
+        $result = $model->createPost($data);
+        //如果写入不成功，则报错
+        if (!$result) {
+            $this->error('添加失败');
+        }
+        //返回成功信息
+        $this->success('添加成功', U('post'));
     }
 
     public function setPostStatus($ids, $status)

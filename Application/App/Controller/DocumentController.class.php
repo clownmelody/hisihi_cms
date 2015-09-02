@@ -186,7 +186,7 @@ class DocumentController extends AppController {
         if (D('Support')->where($support)->count()) {
             if (D('Support')->where($support)->delete()) {
                 $this->clearCache($support);
-                $this->apiSuccess('取消支持成功！');
+                $this->apiSuccess('取消点赞成功！');
             } else {
                 $this->apiError(-101,'写入数据库失败!');
             }

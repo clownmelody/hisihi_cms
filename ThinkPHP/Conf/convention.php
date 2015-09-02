@@ -172,10 +172,12 @@ return  array(
     'OSS_FORUM_PIC'         => 'forum-pic',
     'OSS_FORUM_SOUND'       => 'forum-sound',
 
-    'STUDENT_COUNT_BASE'    => 10000,
+    'STUDENT_COUNT_BASE'    => 14000,
     'TEACHER_COUNT_BASE'    => 800,
     'QUESTION_COUNT_BASE'   => 0,
     'HIWORK_COUNT_BASE'     => 0,
+    'VIDEO_BASE_SUPPORT'    => 600,
+    'VIDEO_BASE_FAVORITE'   => 400,
 
     'QQOpenPlatFormLoginKey' => '1104475505',
 );

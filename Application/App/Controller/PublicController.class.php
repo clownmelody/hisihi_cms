@@ -286,6 +286,14 @@ class PublicController extends AppController {
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage($topic['cover_id']);
             $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
+
+            $map_support['row'] = $did;
+            $map_support['appname'] = 'Article';
+            $map_supported = array_merge($map_support, array('uid' => is_login()));
+            $supported = D('Support')->where($map_supported)->count();
+            $favorited = D('Favorite')->where($map_supported)->count();
+            $topic['isSupportd'] = $supported;
+            $topic['isFavorited'] = $favorited;
             unset($topic['uid']);
             unset($topic['name']);
             unset($topic['category_id']);

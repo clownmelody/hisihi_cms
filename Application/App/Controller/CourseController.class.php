@@ -233,9 +233,9 @@ class CourseController extends AppController
             $course_content['isRecommend'] = $course_content['status'] == 2 ? '1':'0';
             $course_content['ViewCount'] = $course_content['view_count'];
             $course_content['ReplyCount'] = $course_content['reply_count'];
-            $course_content['favoriteCount'] = $favoriteCount;
+            $course_content['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE');
             $course_content['isFavorited'] = $favorited;
-            $course_content['supportCount'] = $supportCount;
+            $course_content['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT');
             $course_content['isSupportd'] = $supported;
 
             unset($course_content['uid']);
@@ -538,7 +538,7 @@ class CourseController extends AppController
             //查询条件同support
             $favoriteCount = $this->getFavoriteCountCache($map_support);
 
-
+            $map_support['appname'] = 'Issue';
             $map_supported = array_merge($map_support, array('uid' => is_login()));
             $supported = D('Support')->where($map_supported)->count();
 
@@ -547,9 +547,9 @@ class CourseController extends AppController
 
             $v['ViewCount'] = $v['view_count'];
             $v['ReplyCount'] = $v['reply_count'];
-            $v['supportCount'] = $supportCount;
+            $v['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT');
             $v['isSupportd'] = $supported;
-            $v['favoriteCount'] = $favoriteCount;
+            $v['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE');
             $v['isFavorited'] = $favorited;
 
             $v['isRecommend'] = $v['status'] == 2 ? '1':'0';
