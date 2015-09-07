@@ -44,13 +44,13 @@ return array(
 /* 数据库配置 */
 'DB_TYPE'   => 'mysqli', // 数据库类型
 #'DB_HOST'   => 'rdse1jrbrxqx7x18irl5m.mysql.rds.aliyuncs.com', // 服务器地址
-'DB_HOST'   => 'localhost',
+'DB_HOST'   => '115.28.72.197',
 'DB_NAME'   => 'hisihi', // 数据库名
 #'DB_USER'   => 'hisihi_root', // 用户名
 #'DB_PWD'    => '027hsh_db',  // 密码
 'DB_USER'   => 'root',
-'DB_PWD'    => 'yangchujie',
-#'DB_PWD'    => '123456',
+#'DB_PWD'    => 'yangchujie',
+'DB_PWD'    => '123456',
 'DB_PORT'   => '3306', // 端口
 'DB_PREFIX' => 'hisihi_', // 数据库表前缀
 'APP_DEBUG' => true, // 开启调试模式

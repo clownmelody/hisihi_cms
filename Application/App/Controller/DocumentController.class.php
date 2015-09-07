@@ -249,4 +249,19 @@ class DocumentController extends AppController {
         }
     }
 
+    /**
+     * @param $condition
+     * @auth RFly
+     */
+    private function clearCache($condition,$type='support')
+    {
+        unset($condition['uid']);
+        unset($condition['create_time']);
+        if($type == 'support')
+            $cache_key = "support_count_" . implode('_', $condition);
+        else if($type == 'favorite')
+            $cache_key = "favorite_count_" . implode('_', $condition);
+        S($cache_key, null);
+    }
+
 }

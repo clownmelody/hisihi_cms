@@ -11,7 +11,7 @@
  * 调试开关
  * 项目正式部署后请设置为false
  */
-define ('APP_DEBUG', true);
+define ('APP_DEBUG', false);
 
 if ($_REQUEST['client'] && $_REQUEST['client'] == 'pc') {
     ini_set("session.use_cookies", 1);

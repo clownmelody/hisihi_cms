@@ -1151,8 +1151,9 @@ class UserController extends AppController
      * @param string $type Issue or Article
      * @param int $page
      * @param int $count
+     * @param string $version
      */
-    public function listFavorite($uid = 0, $type="Issue", $page = 1, $count = 10)
+    public function listFavorite($uid = 0, $type="Issue", $page = 1, $count = 10, $version='1.0')
     {
         //默认UID
         if (!$uid) {
@@ -1177,13 +1178,17 @@ class UserController extends AppController
                     break;
                 case 'Article':
                     $favorite['type'] = 'Article';
-                    $favorite['info'] = A('Public')->findArticle($favorite['row']);
-                    break;
+                    $favorite['info'] = A('Public')->findArticle($favorite['row'], $version);
+                    $aid = $favorite['info']['id'];
+                    $favorite['isSupportd'] = $this->isArticleSupport($aid);
+                    $favorite['isFavorited'] = $this->isArticleFavorite($aid);
+                    $favorite['supportCount'] = $this->getArticleSupportCount($aid);
             }
             unset($favorite['appname']);
             unset($favorite['table']);
             unset($favorite['row']);
-
+            unset($favorite['uid']);
+            unset($favorite['create_time']);
         }
         //返回成功结果
         $this->apiSuccess("获取成功", null, array('total_count' => $totalCount, 'favoriteList' => $list));

@@ -344,4 +344,59 @@ abstract class AppController extends Controller {
         //返回结果
         return $result;
     }
+
+    /**
+     * 头条是否被点赞
+     * @param $id
+     * @return mixed
+     */
+    protected function isArticleSupport($id){
+        $map_support['row'] = $id;
+        $map_support['appname'] = 'Article';
+        $map_supported = array_merge($map_support, array('uid' => is_login()));
+        $supported = D('Support')->where($map_supported)->count();
+        return $supported;
+    }
+
+    /**
+     * 头条是否被收藏
+     * @param $id
+     * @return mixed
+     */
+    protected function isArticleFavorite($id){
+        $map_support['row'] = $id;
+        $map_support['appname'] = 'Article';
+        $map_supported = array_merge($map_support, array('uid' => is_login()));
+        $favorited = D('Favorite')->where($map_supported)->count();
+        return $favorited;
+    }
+
+    /**
+     * 获取头条的点赞数
+     * @param $id
+     * @return mixed
+     */
+    protected function getArticleSupportCount($id){
+        $map_support_count['row'] = $id;
+        $map_support_count['appname'] = 'Article';
+        $supportCount = $this->getSupportCountCache($map_support_count);
+        return $supportCount;
+    }
+
+    /**
+     * @param $map_support
+     * @return mixed
+     * @auth RFly
+     */
+    private function getSupportCountCache($map_support)
+    {
+        $cache_key = "support_count_" . implode('_', $map_support);
+        $count = S($cache_key);
+        if (empty($count)) {
+            $count = D('Support')->where($map_support)->count();
+            S($cache_key, $count);
+            return $count;
+        }
+        return $count;
+    }
 }

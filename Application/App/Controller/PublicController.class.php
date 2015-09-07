@@ -22,6 +22,7 @@ class PublicController extends AppController {
     public function _initialize()
     {
         $this->weiboApi = new WeiboApi();
+        C('SHOW_PAGE_TRACE', false);
     }
     public function login($username, $password) {
         //登录单点登录系统
@@ -272,7 +273,7 @@ class PublicController extends AppController {
         $this->apiSuccess('建议发送成功！');
     }
 
-    public function topList($page=1, $count=5){
+    public function topList($page=1, $count=5, $version="1.0"){
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         //获取当前分类下的文章
@@ -285,15 +286,16 @@ class PublicController extends AppController {
             $topic['logo_pic'] = $this->getSourceLogoPic($did);
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage($topic['cover_id']);
-            $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
+            if($version=="2.0"){
+                $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
+                $topic['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
+            } else {
+                $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
+            }
 
-            $map_support['row'] = $did;
-            $map_support['appname'] = 'Article';
-            $map_supported = array_merge($map_support, array('uid' => is_login()));
-            $supported = D('Support')->where($map_supported)->count();
-            $favorited = D('Favorite')->where($map_supported)->count();
-            $topic['isSupportd'] = $supported;
-            $topic['isFavorited'] = $favorited;
+            $topic['isSupportd'] = $this->isArticleSupport($did);
+            $topic['isFavorited'] = $this->isArticleFavorite($did);
+            $topic['supportCount'] = $this->getArticleSupportCount($did);
             unset($topic['uid']);
             unset($topic['name']);
             unset($topic['category_id']);
@@ -308,6 +310,10 @@ class PublicController extends AppController {
             unset($topic['attach']);
             unset($topic['extend']);
             unset($topic['level']);
+            unset($topic['display']);
+            unset($topic['comment']);
+            unset($topic['status']);
+            unset($topic['isrecommend']);
         }
         $this->apiSuccess("获取首页顶部列表成功", null, array('totalCount' => $totalCount,'course' => $list));
     }
@@ -315,16 +321,22 @@ class PublicController extends AppController {
     /**
      * 获取头条详情
      * @param $id
+     * @param $version
      */
-    public function findArticle($id){
+    public function findArticle($id, $version){
         $doc_model = M();
-        $article = $doc_model->query("select id, title, description, display, view, comment, create_time, update_time from hisihi_document where id=".$id);
+        $article = $doc_model->query("select id, title, cover_id, description, view, create_time, update_time from hisihi_document where id=".$id);
         foreach($article as &$info){
             $info['source_name'] = $this->getSourceName($id);
             $info['logo_pic'] = $this->getSourceLogoPic($id);
             //解析并成立图片数据
             $info['img'] = $this->fetchImage($info['cover_id']);
-            $info['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$id;
+            if($version=='2.0'){
+                $info['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/version/2.0/type/view/id/'.$id;
+                $info['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$id;
+            } else {
+                $info['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$id;
+            }
             unset($info['uid']);
             unset($info['name']);
             unset($info['category_id']);
@@ -339,23 +351,8 @@ class PublicController extends AppController {
             unset($info['attach']);
             unset($info['extend']);
             unset($info['level']);
-            $this->apiSuccess($info);
         }
-        $this->apiError(-1, "获取头条详情异常");
-        /*"id": "1287",
-      "title": "利用变形液化工具把人像转为搞笑漫画",
-      "description": "利用变形液化工具把人像转为搞笑漫画",
-      "display": "1",
-      "view": "0",
-      "comment": "0",
-      "create_time": "1434951120",
-      "update_time": "1439605901",
-      "status": "1",
-      "isrecommend": "1",
-      "source_name": "嘿设汇",
-      "logo_pic": "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-08-13/55cc792a7866c.jpg",
-      "img": "/hisihi.jpg",
-      "content_url": "http://www.hisihi.com/app.php/public/topcontent/type/view/id/1287"*/
+        return $article[0];
     }
 
     private function getSourceName($id){
@@ -388,13 +385,14 @@ class PublicController extends AppController {
         return $logo_pic;
     }
 
-    public function topContent($id,$type = ''){
+    public function topContent($id, $type = '', $version='1.0'){
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         $Article = D('Blog/Article', 'Logic');
 
         //获取当前分类下的文章
-        $info = $Document->field('id,title,description,display,view,comment,create_time,update_time,cover_id')->find($id);
+        //$info = $Document->field('id,title,description,display,view,comment,create_time,update_time,cover_id')->find($id);
+        $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
         if(empty($info)){
             $this->apiError(-1, "id不存在");
         }
@@ -404,11 +402,24 @@ class PublicController extends AppController {
         if($type == 'view') {
             $this->assign('top_content_info', $content);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
-            $this->display();
+            if($version=="2.0"){
+                $this->display('v2content');
+            } else {
+                $this->display();
+            }
         } else {
             $info['img'] = $this->fetchImage($info['cover_id']);
-            $info['content_url'] = 'app.php/public/topcontent/type/view/id/'.$info['id'];
-
+            if($version=="2.0"){
+                $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
+                $info['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$info['id'];
+            } else {
+                $info['content_url'] = 'app.php/public/topcontent/type/view/id/'.$info['id'];
+            }
+            // 是否点赞和收藏
+            $info['isSupportd'] = $this->isArticleSupport($id);
+            $info['isFavorited'] = $this->isArticleFavorite($id);
+            // 头条点赞数
+            $info['supportCount'] = $this->getArticleSupportCount($id);
             unset($info['uid']);
             unset($info['name']);
             unset($info['category_id']);
@@ -423,11 +434,11 @@ class PublicController extends AppController {
             unset($info['attach']);
             unset($info['extend']);
             unset($info['level']);
+            unset($info['status']);
             $this->apiSuccess("获取首页顶部列表成功", null, array('TopContent' => $info));
         }
-        
-        
     }
+
 
     /**
      * 发送微博、评论等，不能太频繁，否则抛出异常。
@@ -538,5 +549,6 @@ class PublicController extends AppController {
             $this->apiSuccess("不存在当前时间段的论坛广告", null, $data);
         }
     }
+
 
 }
