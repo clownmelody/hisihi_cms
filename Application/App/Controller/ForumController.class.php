@@ -1641,6 +1641,10 @@ class ForumController extends AppController
                 if(strpos($img['src'], "Picture")) {
                     $src = substr($img['src'], 16);
                     $img['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
+                    $origin_img_info = getimagesize($img['src']);
+                    $src_size[] = $origin_img_info[0]; // width
+                    $src_size[] = $origin_img_info[1]; // height
+                    $img['src_size'] = $src_size;
                 }
                 $img['size'] = $size;
                 $ImgResult[] = $img;

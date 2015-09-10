@@ -10,6 +10,7 @@
 namespace Admin\Controller;
 
 use Admin\Model\AuthGroupModel;
+use Think\Hook;
 
 /**
  * 后台分类管理控制器
@@ -135,6 +136,10 @@ class CategoryController extends AdminController
 
         if (IS_POST) { //提交表单
             if (false !== $Category->update()) {
+                $icon = $_POST["icon"];
+                if(!empty($icon)){
+                    $this->uploadCategoryIcon($icon);
+                }
                 $this->success('编辑成功！', U('index'));
             } else {
                 $error = $Category->getError();
@@ -167,6 +172,10 @@ class CategoryController extends AdminController
 
         if (IS_POST) { //提交表单
             if (false !== $Category->update()) {
+                $icon = $_POST["icon"];
+                if(!empty($icon)){
+                    $this->uploadCategoryIcon($icon);
+                }
                 $this->success('新增成功！', U('index'));
             } else {
                 $error = $Category->getError();
@@ -310,4 +319,20 @@ class CategoryController extends AdminController
         }
 
     }
+
+    private function uploadCategoryIcon($id){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$id);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            }
+        }
+    }
+
 }

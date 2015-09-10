@@ -50,7 +50,7 @@
 	.headlines-body p{
 		width: 100%;
 		line-height: 25px;
-		font-style: 14px;
+		/*font-style: 14px;*/
 		color: #333;
 		margin: 0 0 5px 0;
 	}
@@ -123,5 +123,12 @@
 		<p class="fix-body-txt">设计师必备 百万设计师都在用</p>
 	</div>
 </div>-->
+<script>
+	var aLink=document.getElementsByTagName("a");
+	for(var i=0; i<aLink.length; i++){
+		aLink[i].href = "javascript:void(0);";
+		aLink[i].setAttribute("disabled", "disabled");
+	}
+</script>
 </body>
 </html>

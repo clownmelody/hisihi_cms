@@ -149,8 +149,10 @@ h2 {
                 $.get('/api.php?client=pc&s=/qrscan/askstatus/guid/'+guid,
                     function(d){
                         if(d){
+                            console.log(JSON.stringify(d));
                             if(d.success==true){
-                                window.location=''
+                                //window.location=''
+                                window.location= d.data.url;
                             }else if(d.error_code==-1){
                                 $('#refresh').css('display','block');
                                 if($.browser.msie && parseInt($.browser.version) <= 8){

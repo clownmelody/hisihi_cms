@@ -30,6 +30,10 @@ class HiworksController extends AppController
         $category = $this->cate($cate);
 
         $children = $this->getChildrenId($category['id']);
+        if($children==null){
+            $this->apiSuccess("该类别下没有子分类", null, null);
+        }
+
         //分割分类
         $children = explode(',', $children);
 
@@ -38,7 +42,8 @@ class HiworksController extends AppController
             $child = D('Hiworks/Category')->info($child);
             $childcategory['id'] = $child['id'];
             $childcategory['name'] = $child['name'];
-            $childcategory['icon'] = "http://www.hisihi.com/images/mobile_".$child['name'].".jpg";
+            //$childcategory['icon'] = "http://www.hisihi.com/images/mobile_".$child['name'].".jpg";
+            $childcategory['icon'] = $this->getIconUrl($child['icon']);
             $childcategory['title'] = $child['title'];
             $map = array('category_id' => $child['id']);
             $childcategory['files'] = D('Document')->where($map)->count('id');
@@ -58,7 +63,8 @@ class HiworksController extends AppController
         /* 标识正确性检测 */
         $id = $id ? $id : I('get.category', 0);
         if (empty($id)) {
-            $this->error('没有指定文档分类！');
+            $this->apiError(-1, '没有指定文档分类！');
+            //$this->error('没有指定文档分类！');
         }
         /* 获取分类信息 */
         $category = D('Hiworks/Category')->info($id);
@@ -72,7 +78,8 @@ class HiworksController extends AppController
                     return $category;
             }
         } else {
-            $this->error('分类不存在或被禁用！');
+            $this->apiError(-1, '分类不存在或被禁用！');
+            //$this->error('分类不存在或被禁用！');
         }
     }
 
@@ -89,10 +96,13 @@ class HiworksController extends AppController
         foreach ($category['_'] as $key => $value) {
             $ids[] = $value['id'];
         }
+        if(count($ids)==0){
+            return null;
+        }
         return implode(',', $ids);
     }
 
-    /** hiworks_list.php/file/download/id/3578
+    /**
      * 金榜作业
      */
     public function topDownload(){
@@ -122,5 +132,45 @@ class HiworksController extends AppController
         }
         $extra['data'] = $result;
         $this->apiSuccess("获取金榜作业成功", null, $extra);
+    }
+
+    /**
+     * 获取云作业制定类别下的子分类
+     * @param $category_id
+     * @param int $page
+     * @param int $count
+     */
+    public function hiworksChildCategory($category_id, $page=0, $count=10){
+        $model = D('Hiworks/Category');
+        $condition['status'] = 1;
+        $condition['allow_publish'] = 1;
+        $condition['pid'] = $category_id;
+        $result = $model->where($condition)->field('id, name, title, pid, icon')->order('create_time desc')->page($page, $count)->select();
+        foreach($result as &$value){
+            $value['icon'] = $this->getIconUrl($value['icon']);
+        }
+        $extra['data'] = $result;
+        $this->apiSuccess('获取云作业子列表成功', null, $extra);
+    }
+
+    /**
+     * @param $id
+     * @return null|string
+     */
+    private function getIconUrl($id){
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+               return "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            } else {
+               return null;
+            }
+        }
     }
 }

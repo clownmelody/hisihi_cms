@@ -120,7 +120,15 @@ class QrscanController extends AppController
                 session('scan_uid',$data['scan_uid']);
                 $_SESSION["token"]=$guid;
 
-                $this->apiSuccess('');
+                $type = $data['type'];
+                $category_id = $data['category_id'];
+
+                if($type==1){  // 单个作业
+                    $extra['url'] = 'http://115.28.72.197/hiworks_list.php/file/download/id/'.$category_id;
+                } else if($type==0){  // 作业分类
+                    $extra['url'] = 'http://115.28.72.197/hiworks.php/index/index/cate/'.$category_id.'.html';
+                }
+                $this->apiSuccess('', null, $extra);
             }
 
         }else{
@@ -134,8 +142,10 @@ class QrscanController extends AppController
     /**
      * 扫描处理
      * @param $guid
+     * @param int $type  0 作业列表 1 单个作业
+     * @param int $category_id 作业分类id,如果是单个作业就是作业id
      */
-    public function scan($guid)
+    public function scan($guid, $type=0, $category_id=0)
     {
         $uid = get_uid();
 
@@ -163,7 +173,9 @@ class QrscanController extends AppController
             'status'      => 2,
             'scan_time'   => time(),
             'scan_uid'    => $uid,
-            'scan_session'=> session_id()
+            'scan_session'=> session_id(),
+            'type'        => $type,
+            'category_id' => $category_id,
         );
 
         //修改状态，并记录扫描时间和扫描人的uid

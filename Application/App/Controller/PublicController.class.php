@@ -415,6 +415,8 @@ class PublicController extends AppController {
             } else {
                 $info['content_url'] = 'app.php/public/topcontent/type/view/id/'.$info['id'];
             }
+            $info['source_name'] = $this->getSourceName($id);
+            $info['logo_pic'] = $this->getSourceLogoPic($id);
             // 是否点赞和收藏
             $info['isSupportd'] = $this->isArticleSupport($id);
             $info['isFavorited'] = $this->isArticleFavorite($id);

@@ -33,7 +33,7 @@ class HotKeysController extends AppController
         );
         $data[] = array(
             'text' => 'ae',
-            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys%2FAE.png'
+            'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/AE.png'
         );
         $extra['data'] = $data;
         $this->apiSuccess('获取快捷键列表成功', null, $extra);

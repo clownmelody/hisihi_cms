@@ -547,9 +547,9 @@ class CourseController extends AppController
 
             $v['ViewCount'] = $v['view_count'];
             $v['ReplyCount'] = $v['reply_count'];
-            $v['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT');
+            $v['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT') + $this->getRandomBaseCount($v['id']);
             $v['isSupportd'] = $supported;
-            $v['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE');
+            $v['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE') + $this->getRandomBaseCount($v['id']);
             $v['isFavorited'] = $favorited;
 
             $v['isRecommend'] = $v['status'] == 2 ? '1':'0';
@@ -599,4 +599,34 @@ class CourseController extends AppController
         }
         return $res;
     }
+
+    private function getRandomBaseCount($id){
+        $base = 23;
+        $num = $id % 6;
+        switch ($num)
+        {
+            case 0:
+                $base = 90;
+                break;
+            case 1:
+                $base = 150;
+                break;
+            case 2:
+                $base = 172;
+                break;
+            case 3:
+                $base = 76;
+                break;
+            case 4:
+                $base = 120;
+                break;
+            case 5:
+                $base = 53;
+                break;
+            default:
+                $base = 36;
+        }
+        return $base;
+    }
+
 }
