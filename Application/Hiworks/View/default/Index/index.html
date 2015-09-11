@@ -20,7 +20,7 @@
     <!-- /.container-fluid -->
 
     <nav class="nav-logo">
-        <p>嘿设汇-云作业</p>
+        <a href="/hiworks.php"><p>嘿设汇-云作业</p></a>
     </nav>
 
     <div class="nav-options">
@@ -40,9 +40,10 @@
                     <li>
                         <div class="list-item">
                             <div class="list-top">
-                                <a class="fancybox" rel="fancybox-button" href="{$data.pic_url}">
+                                <a class="fancybox" rel="fancybox-button" href="{$data.pic_url|default='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hiwork_placeholder.jpg'}">
+                                    <!--http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hiwork_placeholder.jpg-->
                                     <!--<span class="top-title" title="{$data.title|op_t}">{$data.title|op_t}</span>-->
-                                    <img src="{$data.pic_url}">
+                                    <img src="{$data.pic_url|default='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hiwork_placeholder.jpg'}">
                                 </a>
                             </div>
                             <a href="#" class="item-title">{$data.title|op_t}</a>

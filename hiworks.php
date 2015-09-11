@@ -152,7 +152,7 @@ h2 {
                             console.log(JSON.stringify(d));
                             if(d.success==true){
                                 //window.location=''
-                                window.location= d.data.url;
+                                window.location= d.url;
                             }else if(d.error_code==-1){
                                 $('#refresh').css('display','block');
                                 if($.browser.msie && parseInt($.browser.version) <= 8){
