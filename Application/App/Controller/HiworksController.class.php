@@ -13,13 +13,10 @@ use Think\Controller;
 
 class HiworksController extends AppController
 {
-
-
     public function _initialize()
     {
 
     }
-
     /**
      * 分类信息
      */
