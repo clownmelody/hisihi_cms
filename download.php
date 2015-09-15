@@ -45,14 +45,47 @@ if($is_weixin){
 } else {
     header("Content-type:text/html; charset=utf-8");
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    $channel = $_GET["channel"];
     if(stristr($_SERVER['HTTP_USER_AGENT'],'Android')) {
-        header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/hisihi.apk');
-        //header('Location: http://pan.baidu.com/s/1bnbgnQB');
+        switch ($channel){
+            case '1':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p1/hisihi.apk');
+                break;
+            case '2':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p2/hisihi.apk');
+                break;
+            case '3':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p3/hisihi.apk');
+                break;
+            case '4':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p4/hisihi.apk');
+                break;
+            case '5':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p5/hisihi.apk');
+                break;
+            case '6':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p6/hisihi.apk');
+                break;
+            case '7':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p7/hisihi.apk');
+                break;
+            case '8':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p8/hisihi.apk');
+                break;
+            case '9':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p9/hisihi.apk');
+                break;
+            case '10':
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p10/hisihi.apk');
+                break;
+            default;
+                header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/hisihi.apk');
+                break;
+        }
     }else if(stristr($_SERVER['HTTP_USER_AGENT'],'iPhone')){
         header('Location: http://itunes.apple.com/cn/app/id999416879?mt=8');
     }else{
         header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/hisihi.apk');
-        //header('Location: http://pan.baidu.com/s/1bnbgnQB');
     }
 }
 ?>

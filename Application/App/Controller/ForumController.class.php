@@ -720,6 +720,7 @@ class ForumController extends AppController
         //    $this->apiError(-102,'提问失败：内容长度不能小于5');
         //}
 
+        $pictures_ids_str = $pictures;
         $pictures = $this->fetchImage($pictures);
         foreach($pictures as $pic) {
             $content = $content.$pic;
@@ -767,6 +768,15 @@ class ForumController extends AppController
                 $Sound->where(array('id' => $sound))->save($data);
             }
         }
+
+        // 写入用户作品表
+        $user_works_data['uid'] = is_login();
+        $user_works_data['forum_id'] = $forum_id;
+        $user_works_data['post_id'] = $post_id;
+        $user_works_data['picture_id'] = $pictures_ids_str;
+        $user_works_data['create_time'] = NOW_TIME;
+        $user_works_model = D('User/UserWorks');
+        $user_works_model->add($user_works_data);
 
         //发布帖子成功，发送一条微博消息
         $postUrl = "http://$_SERVER[HTTP_HOST]" . U('Forum/Index/detail', array('id' => $post_id));

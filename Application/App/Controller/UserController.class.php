@@ -1325,17 +1325,60 @@ class UserController extends AppController
 
     /**
      * 荣誉学员和讲师
-     * @param int $group
+     * @param int $group  5为学生  6为老师
      */
     public function honorUsers($group = 5){
         $model = M();
-        $list = $model->query("SELECT uid FROM hisihi_auth_group_access AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(uid) FROM hisihi_member)-(SELECT MIN(uid) FROM hisihi_member))+(SELECT MIN(uid) FROM hisihi_member)) AS id) AS t2 WHERE t1.uid >= t2.id and t1.group_id=".$group." ORDER BY t1.uid LIMIT 0,4");
+        /*$list = $model->query("SELECT uid FROM hisihi_auth_group_access AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(uid) FROM hisihi_member)-(SELECT MIN(uid) FROM hisihi_member))+(SELECT MIN(uid) FROM hisihi_member)) AS id) AS t2 WHERE t1.uid >= t2.id and t1.group_id=".$group." ORDER BY t1.uid LIMIT 0,4");
+        foreach ($list as &$v) {
+            $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
+        }
+        unset($v);*/
+        if($group==5){  // 学生
+            $list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) limit 0,4");
+        } else {        // 老师
+            $list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) limit 0,4");
+        }
         foreach ($list as &$v) {
             $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
         }
         unset($v);
-        //返回成功结果
         $this->apiSuccess("获取荣誉用户列表成功", null, array('totalCount' => count($list),'userList' => $list));
+    }
+
+    /**
+     * 获取用户的所有作品（论坛发帖的图片）
+     */
+    public function works($page=0, $count=5){
+        $this->requireLogin();
+        $uid = $this->getuid();
+        $model = M();
+        $tem = $model->query('select count(*) as count from hisihi_user_works where status=1 and uid='.$uid);
+        $totalCount = $tem[0]['count'];
+        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and uid='.$uid.' order by create_time desc limit '.$page.','.$count);
+        foreach ($pic_list as &$picinfo) {
+            $pic_id = $picinfo['picture_id'];
+            $picDetail= $model->query("select path from hisihi_picture where id=".$pic_id);
+            $pic_small = getThumbImageById($pic_id, 280, 160);
+            $origin_img_info = getimagesize($pic_small);
+            $size[] = $origin_img_info[0]; // width
+            $size[] = $origin_img_info[1]; // height
+            $picinfo['src'] = ltrim($picDetail[0]['path'], '/');
+            $picinfo['thumb'] = $pic_small;
+            if(strpos($picinfo['src'], "Picture")) {
+                $src = substr($picinfo['src'], 16);
+                $picinfo['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
+                $origin_img_info = getimagesize($picinfo['src']);
+                $src_size[] = $origin_img_info[0]; // width
+                $src_size[] = $origin_img_info[1]; // height
+                $picinfo['src_size'] = $src_size;
+            }
+            $picinfo['thumb_size'] = $size;
+            unset($picinfo['picture_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $pic_list;
+        $this->apiSuccess('获取个人作品成功', null, $extra);
     }
 
     /**

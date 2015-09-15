@@ -9,10 +9,12 @@ class HotKeysController extends AppController
 
     public function _initialize()
     {
-
+        C('SHOW_PAGE_TRACE', false);
     }
 
-    // ps  ai  cad   CDR   AE
+    /**
+     * 客户端快捷键列表
+     */
     public function sort(){
         $data = array();
         $data[] = array(
@@ -37,5 +39,75 @@ class HotKeysController extends AppController
         );
         $extra['data'] = $data;
         $this->apiSuccess('获取快捷键列表成功', null, $extra);
+    }
+
+    /**
+     * 快捷键分享
+     * @param string $type
+     */
+    public function share($type='ps'){
+        switch ($type){
+            case '3dmax':
+                $this->assign('url', 'download.php');
+                $this->display('3dmax');
+                break;
+            case 'ae':
+                $this->assign('url', 'download.php');
+                $this->display('ae');
+                break;
+            case 'ai':
+                $this->assign('url', 'download.php');
+                $this->display('ai');
+                break;
+            case 'cad':
+                $this->assign('url', 'download.php');
+                $this->display('cad');
+                break;
+            case 'cdr':
+                $this->assign('url', 'download.php');
+                $this->display('cdr');
+                break;
+            case 'dw':
+                $this->assign('url', 'download.php');
+                $this->display('dw');
+                break;
+            case 'flash':
+                $this->assign('url', 'download.php');
+                $this->display('flash');
+                break;
+            case 'id':
+                $this->assign('url', 'download.php');
+                $this->display('id');
+                break;
+            case 'keyshot':
+                $this->assign('url', 'download.php');
+                $this->display('keyshot');
+                break;
+            case 'maya':
+                $this->assign('url', 'download.php');
+                $this->display('maya');
+                break;
+            case 'pr':
+                $this->assign('url', 'download.php');
+                $this->display('pr');
+                break;
+            case 'proe':
+                $this->assign('url', 'download.php');
+                $this->display('proe');
+                break;
+            case 'ps':
+                $this->assign('url', 'download.php');
+                $this->display('ps');
+                break;
+            case 'rhino':
+                $this->assign('url', 'download.php');
+                $this->display('rhino');
+                break;
+            case 'su':
+                $this->assign('url', 'download.php');
+                $this->display('su');
+                break;
+        }
+
     }
 }

@@ -12,6 +12,7 @@ use Admin\Builder\AdminListBuilder;
 use Admin\Builder\AdminConfigBuilder;
 use Admin\Builder\AdminSortBuilder;
 use Admin\Builder\AdminTreeListBuilder;
+use Think\Hook;
 
 class ForumController extends AdminController
 {
@@ -290,7 +291,7 @@ class ForumController extends AdminController
         //显示页面
         $builder = new AdminListBuilder();
         $builder->title('帖子管理' . $forumTitle)
-            ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))
+            ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))->ajaxButton(U('Forum/pushTopPost'), null, '推送')
             ->keyId()->keyLink('title', '标题', 'Forum/reply?post_id=###')
             ->keyCreateTime()->keyUpdateTime()->keyTime('last_reply_time', '最后回复时间')->key('top', '是否置顶')->keyStatus()->keyDoActionEdit('editPost?id=###')
             ->setSearchPostUrl()->search('标题', 'title')->search('内容', 'content')
@@ -502,6 +503,38 @@ class ForumController extends AdminController
                 ->display();
         }
 
+    }
+
+    /*
+     * 推送论坛置顶帖
+     */
+    public function pushTopPost($ids){
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        if(count($ids)>1){
+            $this->error('一次只能推送一条数据');
+        }
+
+        /*$document_model = D('Document');
+        $document_detail = $document_model->where(array('id'=>$ids[0]))->find();
+        $title = $document_detail['title'];
+        $type = intval($document_detail['type']);
+        $param['type'] = $type;
+        if($param['type']==2){
+            $param['alert_info'] = "推荐文章:".$title;
+        } else {
+            $param['alert_info'] = "推荐视频:".$title;
+        }
+        $param['id'] = $ids[0];
+        $param['production'] = C('APNS_PRODUCTION');
+        $result = Hook::exec('Addons\\JPush\\JPushAddon', 'push_video_article', $param);*/
+        $result = true;
+        if($result){
+            $this->success("推送成功");
+        } else {
+            $this->error('推送异常，请检查后重试');
+        }
     }
 
 }

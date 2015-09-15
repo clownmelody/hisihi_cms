@@ -1,0 +1,83 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
+body {
+  font: 14px/1.6 "Microsoft Yahei";
+  background: #eee;
+}
+.container {
+  margin: 0 auto;
+}
+@media (min-width: 240px) and (max-width: 640px) {
+  .container {
+    width: 100%;
+  }
+}
+@media (min-width: 641px) and (max-width: 980px) {
+  .container {
+    width: 720px;
+  }
+}
+@media (min-width: 981px) and (max-width: 1280px) {
+  .container {
+    width: 960px;
+  }
+}
+@media (min-width: 1280px) {
+  .container {
+    width: 1200px;
+  }
+}
+.header-top {
+  background: #333;
+  overflow: auto;
+  width: 100%;
+  position: fixed;
+  top: 0;
+}
+.header-top .list-nav {
+  width: 1020px;
+  margin: 0 auto;
+}
+.header-top .list-nav > li {
+  float: left;
+  list-style: outside none none;
+}
+.header-top .list-nav > li a {
+  line-height: 35px;
+  display: block;
+}
+.header-top .list-nav .nav-item {
+  background: #333;
+  color: #fff;
+  padding: 5px 20px;
+}
+.header-top .list-nav .nav-item:hover {
+  background: #444;
+  color: #fff;
+}
+.header-top .list-nav .active .nav-item {
+  background: #eee;
+  color: #333;
+}
+.box-body {
+  border: 1px solid #ddd;
+  background: #fff;
+  margin: 55px 10px 10px;
+  border-radius: 5px;
+  padding: 0 20px;
+}
+.box-body p {
+  margin: 5px 0;
+  padding: 0 10px;
+  border-bottom: 1px solid #eee;
+  line-height: 30px;
+  color: #333;
+}
+.box-body p:last-child {
+  border-bottom-width: 0;
+}

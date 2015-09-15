@@ -20,6 +20,7 @@ class CourseController extends AppController
     public function _initialize()
     {
         $this->course_type = D('Issue/Issue')->getTree(0, 'id,title,sort,pid,status');
+        C('SHOW_PAGE_TRACE', false);
     }
 
     public function courseType($type_id = 0)
@@ -627,6 +628,72 @@ class CourseController extends AppController
                 $base = 36;
         }
         return $base;
+    }
+
+    /**
+     * 微信公众号以web形式展示课程列表
+     * @param int $type_id
+     * @param int $page
+     * @param int $count
+     * @param string $order
+     * @param int $recommend
+     * @param int $id
+     * @param string $keywords
+     * @param string $type
+     */
+    public function webListCourses($type_id = 0, $page = 1, $count = 5, $order = '',  $recommend = 0, $id = 0, $keywords = '', $type = ''){
+        $type_id = intval($type_id);
+        $page = intval($page);
+        $count = intval($count);
+        $order = op_t($order);
+
+        if ($order == 'view') {
+            $order = 'view_count desc';
+        } else if ($order == 'reply') {
+            $order = 'reply_count desc';
+        } else {
+            $order = 'create_time desc';//默认的
+        }
+
+        $map['status'] = array('gt' , 0);
+        if($type_id !== 0){
+            $issueType = D('Issue')->field('pid')->find($type_id);
+            if(!$issueType)
+                $this->apiError(-404, '未找到该课程分类！');
+            if($issueType['pid'] == 0){
+                $issueTypeList = D('Issue')->field('id')->where('pid='.$type_id)->select();
+                $issueTypeIds[] = $type_id;
+                foreach($issueTypeList as $issueType){
+                    $issueTypeIds[] = $issueType['id'];
+                }
+                $ids= implode(',',$issueTypeIds);
+                $map['issue_id'] = array('in',$ids);
+            } else {
+                $map['issue_id'] = $type_id;
+            }
+        }
+        if($keywords != ''){
+            $keywords = '%'.$keywords.'%';
+            $map['title'] = array('like',$keywords);
+        }
+        if($recommend == 1)
+            $map['status'] = 2;
+        if($id != 0){
+            $course = D('IssueContent')->field('issue_id')->find($id);
+            if(!$course){
+                $this->apiError(-404, '未找到该课程！');
+            }
+            $map['id'] = array('neq' , $id);
+            $map['issue_id'] = $course['issue_id'];
+        }
+        $coursesList = D('IssueContent')->where($map)->order($order)->page($page, $count)->select();
+        $totalCount = D('IssueContent')->where($map)->count();
+
+        if($type == 'view')
+            $fetchImage = 1;
+        $coursesList = $this->formatList($id, $coursesList,$fetchImage);
+        $this->assign('courseList', $coursesList);
+        $this->display('webListCourses');
     }
 
 }
