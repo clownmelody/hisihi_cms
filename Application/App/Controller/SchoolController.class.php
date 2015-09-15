@@ -30,9 +30,11 @@ class SchoolController extends AppController
         //进行原生的SQL查询
         $list = $Model->query('SELECT * FROM hisihi_province');
         if($list){
-            $this->apiSuccess("获取省信息成功", null, $list);
+            $resultlist = array();
+            $resultlist["data"] = $list;
+            $this->apiSuccess("获取省信息成功", null, $resultlist);
         }else{
-            $this->apiError("未查询到高校信息");
+            $this->apiError("未查询到省信息");
         }
     }
 
@@ -171,9 +173,11 @@ class SchoolController extends AppController
         //进行原生的SQL查询
         $list = $Model->query('SELECT * FROM hisihi_school_type');
         if($list){
-            $this->apiSuccess("获取省信息成功", null, $list);
+            $resultlist = array();
+            $resultlist["data"] = $list;
+            $this->apiSuccess("获取高校类型信息成功", null, $resultlist);
         }else{
-            $this->apiError("未查询到高校信息");
+            $this->apiError("未查询到高校类型信息");
         }
     }
 
