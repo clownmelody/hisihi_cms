@@ -184,7 +184,6 @@ class UserController extends AppController
         $extra['tox_money'] = $user1['tox_money'];
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
-        \Think\Log::write("login response data: ".json_encode($extra));
         $this->apiSuccess("登录成功", null, $extra);
     }
 	
@@ -1422,5 +1421,191 @@ class UserController extends AppController
             }
         }
         return $types;
+    }
+
+    /**
+     * 第三方登陆
+     * @param $platform
+     * @param $access_token 微博和qq登陆 token
+     * @param $openId       微博和qq登陆 id
+     * @param string $code  微信登陆
+     */
+    public function loginByThirdPartyOpenPlatform($platform='', $access_token='', $openId='', $code='') {
+        if("weibo"==$platform){
+            $data = array(
+                'access_token'=>$access_token,
+                'uid'=>$openId
+            );
+            $query = http_build_query($data);
+            $content = $this->request_by_curl("https://api.weibo.com/2/users/show.json", $query);
+            $user = json_decode($content, true);
+            $id = $user['id'];
+            $nickname = $user['screen_name'];
+            $avatar = $user['avatar_large'];
+            $api = new UserApi();
+            $userExist = $api->info($id, true);
+            if($userExist==-1){  // 用户不存在
+                $uid = $api->register($id, $nickname, '123456', substr($id,1,3).'@'.substr($id,5,7).'.com');
+                if($uid <= 0) {
+                    $message = $this->getRegisterErrorMessage($uid);
+                    $code = $this->getRegisterErrorCode($uid);
+                    $this->apiError($code,$message);
+                }
+                $avatar_model = D('Addons://Avatar/Avatar');
+                $avatar_model->saveThirdPartyAvatar($uid, $avatar);
+            } else {
+                $uid = $userExist['id'];
+            }
+            $this->thirdPartyLoginGetUserInfo($uid);
+        } else if("qq"==$platform){
+            $data = array(
+                'access_token'=>$access_token,
+                'openid'=>$openId,
+                'oauth_consumer_key'=> C('QQOpenPlatFormLoginKey'),
+            );
+            $query = http_build_query($data);
+            $content = $this->request_by_curl("https://graph.qq.com/user/get_simple_userinfo", $query);
+            $user = json_decode($content, true);
+            $this->apiSuccess($user);
+            $id = $openId;
+            $nickname = $user['nickname'];
+            $avatar = $user['figureurl_qq_2'];
+            if(empty($avatar)) {
+                $avatar = $user['figureurl_qq_1'];
+            }
+            $api = new UserApi();
+            $userExist = $api->info($id, true);
+            if($userExist==-1) {  // 用户不存在
+                $uid = $api->register($id, $nickname, '123456', substr($id,1,3).'@'.substr($id,5,7).'.com');
+                if($uid <= 0) {
+                    $message = $this->getRegisterErrorMessage($uid);
+                    $code = $this->getRegisterErrorCode($uid);
+                    $this->apiError($code,$message);
+                }
+                $avatar_model = D('Addons://Avatar/Avatar');
+                $avatar_model->saveThirdPartyAvatar($uid, $avatar);
+            } else {
+                $uid = $userExist['id'];
+            }
+            $this->thirdPartyLoginGetUserInfo($uid);
+        } else if('weixin'==$platform){
+            $data = array(
+                'appid'      => C('WeiXinPlatFormId'),
+                'secret'     => C('WeiXinPlatFormSecret'),
+                'code'       => $code,
+                'grant_type' => 'authorization_code',
+            );
+            $query = http_build_query($data);
+            $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/access_token", $query);
+            $user = json_decode($content, true);
+            $refresh_token = $user['refresh_token'];
+            $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
+            $query = http_build_query($tokenData);
+            $content = $this->request_by_curl("https://api.weixin.qq.com/sns/auth");
+            $user = json_decode($content, true);
+            if($user['errorcode']!=0){
+                $refreshData = array(
+                    'appid' => C('WeiXinPlatFormId'),
+                    'grant_type' => 'refresh_token',
+                    'refresh_token' => $refresh_token,
+                );
+                $query = http_build_query($refreshData);
+                $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/refresh_token", $query);
+                $user = json_decode($content, true);
+                if($user['errcode']==40030){
+                    $this->apiError(-1, '重新获取token失败');
+                }
+                $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
+                $query = http_build_query($tokenData);
+            }
+            $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
+            $user = json_decode($content, true);
+            $openid = $user['openid'];
+            $uid = $openid;
+            $nickname = $user['nickname'];
+            $avatar = $user['headimgurl'];
+            $api = new UserApi();
+            $userExist = $api->info($uid, true);
+            if($userExist==-1) {  // 用户不存在
+                $uid = $api->register($uid, $nickname, '123456', substr($uid,1,3).'@'.substr($uid,5,7).'.com');
+                if($uid <= 0) {
+                    $message = $this->getRegisterErrorMessage($uid);
+                    $code = $this->getRegisterErrorCode($uid);
+                    $this->apiError($code,$message);
+                }
+                $avatar_model = D('Addons://Avatar/Avatar');
+                $avatar_model->saveThirdPartyAvatar($uid, $avatar);
+            } else {
+                $uid = $userExist['id'];
+            }
+            $this->thirdPartyLoginGetUserInfo($uid);
+        } else {
+            $this->apiError(-1, '暂时不支持该平台的登陆');
+        }
+
+    }
+
+    /**
+     * 第三方登陆时返回用户信息
+     * @param $uid
+     */
+    private function thirdPartyLoginGetUserInfo($uid){
+        //读取数据库中的用户详细资料
+        $map = array('uid' => $uid);
+        $user1 = D('Home/Member')->where($map)->find();
+
+        //获取头像信息
+        $avatar = new AvatarAddon();
+        $avatar_path = $avatar->getAvatarPath($uid);
+        $avatar_url = getRootUrl() . $avatar->getAvatarPath($uid);
+
+        //缩略头像
+        $avatar128_path = getThumbImage($avatar_path, 128);
+        $avatar128_url = getRootUrl() . $avatar128_path['src'];
+
+        //获取等级
+        $title = D('Usercenter/Title')->getTitle($user1['score']);
+
+        //签到状态
+        $map['ctime'] = array('gt', strtotime(date('Ymd')));
+        $ischeck = D('Check_info')->where($map)->find();
+        if($ischeck) {
+            unset($ischeck['uid']);
+            unset($ischeck['total_score']);
+            unset($ischeck['ctime']);
+        }
+
+        //用户分组
+        $profile_group = $this->_profile_group($uid);
+
+        //返回成功信息
+        $extra = array();
+        $extra['session_id'] = session_id();
+        $extra['uid'] = $uid;
+        $extra['name'] = $user1['nickname'];
+        $extra['group'] = $profile_group['gid'];
+        $extra['avatar_url'] = $avatar_url;
+        $extra['avatar128_url'] = $avatar128_url;
+        $extra['signature'] = $user1['signature'];
+        $extra['tox_money'] = $user1['tox_money'];
+        $extra['title'] = $title;
+        $extra['ischeck'] = $ischeck;
+        $this->apiSuccess("第三方登录成功", null, $extra);
+    }
+
+    /**
+     * @param $url
+     * @param $query
+     * @return mixed
+     */
+    private function request_by_curl($url, $query) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url.'?'.$query);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
     }
 }

@@ -180,4 +180,6 @@ return  array(
     'VIDEO_BASE_FAVORITE'   => 400,
 
     'QQOpenPlatFormLoginKey' => '1104475505',
+    'WeiXinPlatFormId'       => 'wx9dcbe8acfcac3740',
+	'WeiXinPlatFormSecret'   => '8a418ba59c7347a3927a5a13ed17fded',
 );

@@ -63,7 +63,9 @@ class JPushController extends AddonsController{
         }
         if($type==2){
             $content_type = "article";
-        } else {
+        } else if($type==3) {
+            $content_type = "forum_post";
+        } else  {
             $content_type = "course_video";
         }
         $product = false;
@@ -74,7 +76,7 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\all)
-                ->setNotification(M\notification("文章或视频推送", M\android($alert_info, '嘿设汇',
+                ->setNotification(M\notification("文章|视频|论坛推送", M\android($alert_info, '嘿设汇',
                     null, array('type'=>$content_type, 'id'=>$id, 'infos'=>'')),
                     M\ios($alert_info, "default", "+0", false, array('type'=>$content_type, 'id'=>$id,
                         'infos'=>''), null)))

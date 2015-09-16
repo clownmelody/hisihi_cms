@@ -229,6 +229,7 @@ class ForumController extends AppController
             $map['reply_count'] = $is_reply;
         if($is_reply == 1)
             $map['reply_count'] = array('gt',0);
+        $map['is_top'] = 0;
         $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
         $totalCount = D('ForumPost')->where($map)->count();
 
@@ -1329,7 +1330,7 @@ class ForumController extends AppController
         $this->assign('post_img', $post['img']);
         $this->assign('replyList',$replyList);
         $this->setTitle('{$post.title|op_t} — 嘿设汇');
-        $this->display();
+        $this->display('toppostdetail');
     }
 
     /**

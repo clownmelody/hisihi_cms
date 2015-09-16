@@ -516,19 +516,11 @@ class ForumController extends AdminController
             $this->error('一次只能推送一条数据');
         }
 
-        /*$document_model = D('Document');
-        $document_detail = $document_model->where(array('id'=>$ids[0]))->find();
-        $title = $document_detail['title'];
-        $type = intval($document_detail['type']);
-        $param['type'] = $type;
-        if($param['type']==2){
-            $param['alert_info'] = "推荐文章:".$title;
-        } else {
-            $param['alert_info'] = "推荐视频:".$title;
-        }
+        $param['type'] = 3;
+        $param['alert_info'] = "嘿设汇-论坛精华帖推荐";
         $param['id'] = $ids[0];
         $param['production'] = C('APNS_PRODUCTION');
-        $result = Hook::exec('Addons\\JPush\\JPushAddon', 'push_video_article', $param);*/
+        $result = Hook::exec('Addons\\JPush\\JPushAddon', 'push_video_article', $param);
         $result = true;
         if($result){
             $this->success("推送成功");
