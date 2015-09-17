@@ -32,7 +32,7 @@ class ForumController extends AppController
             $e['allow_publish'] = $this->isForumAllowPublish($e['id']);
         }
         unset($e);
-
+        C('SHOW_PAGE_TRACE', false);
         //$myInfo = query_user(array('avatar128', 'avatar64', 'nickname', 'uid', 'space_url', 'icons_html'), is_login());
         //$this->assign('myInfo', $myInfo);
         //赋予论坛列表
@@ -169,7 +169,7 @@ class ForumController extends AppController
      * @param int $is_reply  -1 全部 0 无回答 1 有回答
      * @param string $order
      */
-    public function forum($type_id = 0, $page = 1, $count = 10, $is_reply = -1, $order = 'ctime')
+    public function forum($type_id = 0, $page = 1, $count = 10, $is_reply = -1, $order = 'ctime', $show_adv=false)
     {
         //$this->requireLogin();
         $type_id = intval($type_id);
@@ -235,6 +235,11 @@ class ForumController extends AppController
 
         $list = $this->formatList($list);
 
+        if($show_adv==true){
+            $len = count($list);
+            $list[$len] = $this->getOneForumAdv(640, 960);
+        }
+
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
@@ -245,7 +250,7 @@ class ForumController extends AppController
      * @param int $count
      * @param string $order
      */
-    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime')
+    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime', $show_adv=false)
     {
         $field_type = intval($field_type);
         $page = intval($page);
@@ -286,6 +291,11 @@ class ForumController extends AppController
         $totalCount = D('ForumPost')->where($map)->count();
 
         $list = $this->formatList($list);
+
+        if($show_adv==true){
+            $len = count($list);
+            $list[$len] = $this->getOneForumAdv(640, 960);
+        }
 
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
@@ -1685,7 +1695,7 @@ class ForumController extends AppController
      * @param $height
      * @return bool
      */
-    private function getOneForumAdv($width, $height){
+    public function getOneForumAdv($width, $height){
         $model = M();
         $now = time();
         $picKey = "advspic_".$width.'_'.$height;
@@ -1700,10 +1710,15 @@ class ForumController extends AppController
                 $path = $result[0]['path'];
                 $objKey = substr($path, 17);
                 $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
-                $result['picUrl'] = $picUrl;
-                $result['link'] = $advLink;
-                $result['title'] = $advTitle;
-                return $result;
+                $data['type'] = "advertisment";
+                $data['pic'] = $picUrl;
+                $data['content_url'] = $advLink;
+                $data['title'] = $advTitle;
+                $origin_img_info = getimagesize($picUrl);
+                $size[] = $origin_img_info[0]; // width
+                $size[] = $origin_img_info[1]; // height
+                $data['size'] = $size;
+                return $data;
             } else {
                 return false;
             }
