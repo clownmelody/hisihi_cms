@@ -21,7 +21,7 @@ use Think\Hook;
 class UserController extends AppController
 {
     //注册 只有手机号
-    public function registerByMobile($mobile, $password, $group=0) {
+    public function registerByMobile($mobile, $password, $group=0, $school="") {
         //调用用户中心
         $api = new UserApi();
         $uid = $api->register($mobile, $mobile, $password, $mobile.'@hisihi.com', $mobile); // 邮箱
@@ -38,6 +38,13 @@ class UserController extends AppController
                 $model->removeFromGroup($uid, $groupid);
                 $model->addToGroup($uid, $group);
             }
+        }
+        if(!empty($school)){
+            $field_data['uid'] = $uid;
+            $field_data['field_id'] = 36;
+            $field_data['field_data'] = $school;
+            $field_data['createTime'] = $field_data['changeTime'] = time();
+            D('field')->add($field_data);
         }
         //返回成功信息
         $extra = array();
@@ -78,6 +85,7 @@ class UserController extends AppController
         if(empty($mobile)){
             $this->apiError(-1, "传入参数为空");
         }
+        $map['status'] = 1;
         $map['mobile'] = $mobile;
         $user = D('User/UcenterMember')->where($map)->find();
         if($user){
@@ -181,7 +189,7 @@ class UserController extends AppController
         $extra['avatar_url'] = $avatar_url;
         $extra['avatar128_url'] = $avatar128_url;
         $extra['signature'] = $user1['signature'];
-        $extra['tox_money'] = $user1['tox_money'];
+        $extra['tox_money'] = $user1['score'];
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
         $this->apiSuccess("登录成功", null, $extra);
@@ -1453,10 +1461,11 @@ class UserController extends AppController
                 }
                 $avatar_model = D('Addons://Avatar/Avatar');
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, true);
             } else {
                 $uid = $userExist['id'];
+                $this->thirdPartyLoginGetUserInfo($uid, $id, false);
             }
-            $this->thirdPartyLoginGetUserInfo($uid);
         } else if("qq"==$platform){
             $data = array(
                 'access_token'=>$access_token,
@@ -1484,10 +1493,11 @@ class UserController extends AppController
                 }
                 $avatar_model = D('Addons://Avatar/Avatar');
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, true);
             } else {
                 $uid = $userExist['id'];
+                $this->thirdPartyLoginGetUserInfo($uid, $id, false);
             }
-            $this->thirdPartyLoginGetUserInfo($uid);
         } else if('weixin'==$platform){
             $data = array(
                 'appid'      => C('WeiXinPlatFormId'),
@@ -1535,10 +1545,11 @@ class UserController extends AppController
                 }
                 $avatar_model = D('Addons://Avatar/Avatar');
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
+                $this->thirdPartyLoginGetUserInfo($uid, $openid, true);
             } else {
                 $uid = $userExist['id'];
+                $this->thirdPartyLoginGetUserInfo($uid, $openid, false);
             }
-            $this->thirdPartyLoginGetUserInfo($uid);
         } else {
             $this->apiError(-1, '暂时不支持该平台的登陆');
         }
@@ -1548,8 +1559,10 @@ class UserController extends AppController
     /**
      * 第三方登陆时返回用户信息
      * @param $uid
+     * @param $openid
+     * @param $isNewUser
      */
-    private function thirdPartyLoginGetUserInfo($uid){
+    private function thirdPartyLoginGetUserInfo($uid, $openid, $isNewUser){
         //读取数据库中的用户详细资料
         $map = array('uid' => $uid);
         $user1 = D('Home/Member')->where($map)->find();
@@ -1582,6 +1595,7 @@ class UserController extends AppController
         $extra = array();
         $extra['session_id'] = session_id();
         $extra['uid'] = $uid;
+        $extra['openid'] = $openid;
         $extra['name'] = $user1['nickname'];
         $extra['group'] = $profile_group['gid'];
         $extra['avatar_url'] = $avatar_url;
@@ -1590,6 +1604,11 @@ class UserController extends AppController
         $extra['tox_money'] = $user1['tox_money'];
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
+        if($isNewUser){
+            $extra['is_new'] = true;
+        } else {
+            $extra['is_new'] = false;
+        }
         $this->apiSuccess("第三方登录成功", null, $extra);
     }
 

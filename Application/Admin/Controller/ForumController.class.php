@@ -385,10 +385,10 @@ class ForumController extends AdminController
      * @param string $type
      * @param int $is_top
      */
-    public function saveTopPost($title = '', $content = '', $type = '置顶', $is_top = 1){
+    public function saveTopPost($title = '', $content = '', $top_type = '置顶', $is_top = 1){
         //写入数据库
         $model = D('Forum/ForumPost');
-        $data = array('title' => $title, 'content' => $content, 'type' => $type, 'is_top' => $is_top);
+        $data = array('title' => $title, 'content' => $content, 'type' => $top_type, 'is_top' => $is_top);
         $result = $model->createPost($data);
         //如果写入不成功，则报错
         if (!$result) {

@@ -5,11 +5,6 @@
         $oneplus_seo_meta = get_seo_meta($vars,$seo);
     </php>
 
-    <!--<if condition="$oneplus_seo_meta['title']">
-        <title>{$oneplus_seo_meta['title']}</title>
-        <else/>
-        <title>{:C('WEB_SITE_TITLE')}</title>
-    </if>-->
     <title>嘿设汇</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="__CSS__/app.min.css">
@@ -339,7 +334,29 @@
         </volist>
         <div class="bottomspace"></div>
     </div>
-
+    <div class="app-bottombar">
+        <div>
+            <div>
+            <span class="bottom-icon">
+                <img style="width: 50px;" src="__IMG__/icon.png" />
+            </span>
+            <span class="bottom-title">
+                <p>嘿设汇</p>
+                <p class="bottom-content">设计师必备 百万设计师都在用</p>
+            </span>
+            <span class="bottom-star">
+                <img style="width: 10px;margin-left: -1px" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+            </span>
+            </div>
+            <div class="app-button bottom-right">
+                <p>立即下载</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="app-page" data-page="page2">
@@ -383,6 +400,12 @@
         App.restore();
     } catch (err) {
         App.load('home');
+    }
+
+    var userAgent = window.location.href;
+    if(userAgent.indexOf("hisihi-app") < 0) {
+        $(".app-bottombar").show();
+        $(".bottomspace").show();
     }
 
 </script>

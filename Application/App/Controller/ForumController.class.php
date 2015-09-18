@@ -1234,6 +1234,22 @@ class ForumController extends AppController
     }
 
     /**
+     * 获取推送的置顶帖的信息
+     * @param $id
+     */
+    public function pushTopPostInfo($id){
+        $data = M('ForumPost')->where('status=1 and is_top=1')->find($id);
+        if(empty($data)){
+            $this->apiError(-1, '传入置顶帖ID无效');
+        }
+        $result['id'] = $id;
+        $result['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$data['id'];
+        $result['title'] = $data['title'];
+        $result['type'] = $data['type'];
+        $this->apiSuccess('获取推送置顶帖信息成功', null, $result);
+    }
+
+    /**
      * 置顶帖详情
      * @param $post_id
      * @param int $page
