@@ -64,7 +64,7 @@ class JPushController extends AddonsController{
         if($type==2){
             $content_type = "article";
         } else if($type==3) {
-            $content_type = "forum_post";
+            $content_type = "top_post";
         } else  {
             $content_type = "course_video";
         }
