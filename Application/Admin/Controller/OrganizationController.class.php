@@ -29,8 +29,9 @@ class OrganizationController extends AdminController
         parent::_initialize();
     }
 
-    /**商品分类
-     *
+    /**查看机构信息
+     * @param int $page
+     * @param int $r
      */
     public function organizationInfo($page=1,$r=10)
     {
@@ -44,9 +45,8 @@ class OrganizationController extends AdminController
         $attr['class'] = 'btn ajax-post';
         $attr['target-form'] = 'ids';
 
-
         $builder->title('机构信息管理')
-            ->setStatusUrl(U('setIssueContentStatus'))->buttonDisable('','审核不通过')->buttonDelete()->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('editContents'))->button('课程同步',array('href'=>U('SyncCourse')))
+            ->setStatusUrl(U('setOrganizationIdentification'))->buttonDisable('','审核不通过')->buttonDelete()->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('editContents'))->button('课程同步',array('href'=>U('SyncCourse')))
             ->keyId()->keyLink('name', '机构名称','editContents?id=###')->keyText('type','机构类型')->keyText('form','形式')
             ->keyText('period','周期')->keyText('location','地址')->keyMap('identification','是否认证',array(0 => '未认证',1 => '已认证'))
             ->keyCreateTime()
@@ -56,4 +56,23 @@ class OrganizationController extends AdminController
             ->pagination($totalCount, $r)
             ->display();
     }
+
+    public function setOrganizationIdentification($ids,$status){
+        $builder = new AdminListBuilder();
+        if($status==1){
+            foreach($ids as $id){
+                $content=D('Organization')->find($id);
+                D('Common/Message')->sendMessage($content['uid'],"管理员审核通过了您发布的内容。现在可以在列表看到该内容了。" , $title = '机构认证通知', U('Issue/Index/issueContentDetail',array('id'=>$id)), is_login(), 2);
+                /*同步微博*/
+                $user = query_user(array('nickname', 'space_link'), $content['uid']);
+                $weibo_content = '管理员审核通过了@' . $user['nickname'] . ' 的内容：【' . $content['title'] . '】，快去看看吧：' ."http://$_SERVER[HTTP_HOST]" .U('Issue/Index/issueContentDetail',array('id'=>$content['id']));
+                $model = D('Weibo/Weibo');
+                $model->addWeibo(is_login(), $weibo_content);
+                /*同步微博end*/
+            }
+        }
+        $builder->doSetStatus('IssueContent', $ids, $status);
+    }
+
+
 }

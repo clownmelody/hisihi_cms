@@ -291,7 +291,61 @@ class ForumController extends AdminController
         //显示页面
         $builder = new AdminListBuilder();
         $builder->title('帖子管理' . $forumTitle)
-            ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))->ajaxButton(U('Forum/pushTopPost'), null, '推送')
+            ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))
+            ->ajaxButton(U('Forum/pushTopPost'), null, '推送')->buttonNew(U('Forum/showTopPost'),'显示置顶帖')
+            ->keyId()->keyLink('title', '标题', 'Forum/reply?post_id=###')
+            ->keyCreateTime()->keyUpdateTime()->keyTime('last_reply_time', '最后回复时间')->key('top', '是否置顶')->keyStatus()->keyDoActionEdit('editPost?id=###')
+            ->setSearchPostUrl()->search('标题', 'title')->search('内容', 'content')
+            ->data($list)
+            ->pagination($totalCount, $r)
+            ->display();
+    }
+
+    /**显示置顶帖
+     * @param int $page
+     * @param null $forum_id
+     * @param int $r
+     * @param string $title
+     * @param string $content
+     */
+    public function showTopPost($page = 1, $forum_id = null, $r = 20, $title = '', $content = '')
+    {
+        //读取帖子数据
+        $map = array('status' => array('EGT', 0));
+        if ($title != '') {
+            $map['title'] = array('like', '%' . $title . '%');
+        }
+        if ($content != '') {
+            $map['content'] = array('like', '%' . $content . '%');
+        }
+        $map['is_top'] = array('EQ',1);
+        if ($forum_id) $map['forum_id'] = $forum_id;
+        $model = M('ForumPost');
+        $list = $model->where($map)->order('last_reply_time desc')->page($page, $r)->select();
+        $totalCount = $model->where($map)->count();
+
+        foreach ($list as &$v) {
+            if ($v['is_top'] == 1) {
+                $v['top'] = '版内置顶';
+            } else if ($v['is_top'] == 2) {
+                $v['top'] = '全局置顶';
+            } else {
+                $v['top'] = '不置顶';
+            }
+        }
+        //读取板块基本信息
+        if ($forum_id) {
+            $forum = M('Forum')->where(array('id' => $forum_id))->find();
+            $forumTitle = ' - ' . $forum['title'];
+        } else {
+            $forumTitle = '';
+        }
+
+        //显示页面
+        $builder = new AdminListBuilder();
+        $builder->title('帖子管理' . $forumTitle)
+            ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))
+            ->ajaxButton(U('Forum/pushTopPost'), null, '推送')
             ->keyId()->keyLink('title', '标题', 'Forum/reply?post_id=###')
             ->keyCreateTime()->keyUpdateTime()->keyTime('last_reply_time', '最后回复时间')->key('top', '是否置顶')->keyStatus()->keyDoActionEdit('editPost?id=###')
             ->setSearchPostUrl()->search('标题', 'title')->search('内容', 'content')
