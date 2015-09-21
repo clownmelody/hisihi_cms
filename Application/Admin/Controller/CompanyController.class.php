@@ -28,7 +28,6 @@ class CompanyController extends AdminController {
      * 显示公司列表
      */
     public function index(){
-        $this->getMenu();
         $model = D('Company');
         $count = $model->where('status=1')->count();
         $Page = new Page($count, 5);
@@ -134,7 +133,6 @@ class CompanyController extends AdminController {
     }
 
     public function add(){
-        $this->getMenu();
         $this->display();
     }
 
@@ -152,11 +150,13 @@ class CompanyController extends AdminController {
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功');
+                //$this->success('添加成功', Cookie('__forward__'));
+                $this->success('添加成功', 'index.php?s=/admin/company');
             } else {
                 $model = D('Company');
                 $model->updateCompany($cid, $data);
-                $this->success('更新成功', Cookie('__forward__'));
+                //$this->success('更新成功', Cookie('__forward__'));
+                $this->success('更新成功', 'index.php?s=/admin/company');
             }
         } else {
             $this->display('add');
@@ -191,7 +191,7 @@ class CompanyController extends AdminController {
                 $id = intval($id);
                 $model->updateCompany($id, $data);
             }
-            $this->success('删除成功',Cookie('__forward__'));
+            $this->success('删除成功','index.php?s=/admin/company');
         } else {
             $this->error('未选择要删除的数据');
         }
