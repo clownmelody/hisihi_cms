@@ -403,9 +403,9 @@
     }
 
     var userAgent = window.location.href;
-    if(userAgent.indexOf("hisihi-app") < 0) {
-        $(".app-bottombar").show();
-        $(".bottomspace").show();
+    if(userAgent.indexOf("hisihi-app") > 0) {
+        $(".app-bottombar").hide();
+        $(".bottomspace").hide();
     }
 
 </script>

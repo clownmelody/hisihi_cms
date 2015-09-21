@@ -294,7 +294,10 @@ class ForumController extends AppController
 
         if($show_adv==true){
             $len = count($list);
-            $list[$len] = $this->getOneForumAdv(640, 960);
+            $adv = $this->getOneForumAdv(640, 960);
+            if($adv){
+                $list[$len] = $adv;
+            }
         }
 
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
@@ -1740,6 +1743,38 @@ class ForumController extends AppController
             }
         } else {
             return false;
+        }
+    }
+
+    /**
+     * 解析论坛中的旧数据到用户作品表
+     */
+    public function parse_old_forum_pic(){
+        $map['is_top'] = 0;
+        $map['status'] = 1;
+        $list = M('ForumPost')->where($map)->select();
+        foreach ($list as &$v) {
+            //解析并成立图片数据
+            $tmpImgArr = array();
+            preg_match_all("/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.png]))[\'|\"].*?[\/]?>/",  $v['content'], $tmpImgArr);
+            $imgArr = $tmpImgArr[1];
+            if(count($imgArr)>0){
+                foreach($imgArr as $key => $value){
+                    $pic_model = M();
+                    $result = $pic_model->query("select id from hisihi_picture where path='".$value."'");
+                    if(!empty($result)) {
+                        foreach($result as $pic){
+                            $user_works_data['uid'] = $v['uid'];
+                            $user_works_data['forum_id'] = $v['forum_id'];
+                            $user_works_data['post_id'] = $v['id'];
+                            $user_works_data['picture_id'] = $pic['id'];
+                            $user_works_data['create_time'] = NOW_TIME;
+                            $user_works_model = D('User/UserWorks');
+                            $user_works_model->add($user_works_data);
+                        }
+                    }
+                }
+            }
         }
     }
 }

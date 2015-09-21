@@ -1355,32 +1355,39 @@ class UserController extends AppController
 
     /**
      * 获取用户的所有作品（论坛发帖的图片）
+     * @param int $uid
+     * @param int $page
+     * @param int $count
      */
-    public function works($page=0, $count=5){
-        $this->requireLogin();
-        $uid = $this->getuid();
+    public function works($uid=0, $page=1, $count=5){
+        if($uid==0){
+            $this->apiError(-1, '传入用户ID为空异常');
+        }
         $model = M();
         $tem = $model->query('select count(*) as count from hisihi_user_works where status=1 and uid='.$uid);
         $totalCount = $tem[0]['count'];
-        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and uid='.$uid.' order by create_time desc limit '.$page.','.$count);
+        $page = $page - 1;
+        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and uid='.$uid.' order by picture_id desc limit '.$page.','.$count);
         foreach ($pic_list as &$picinfo) {
             $pic_id = $picinfo['picture_id'];
             $picDetail= $model->query("select path from hisihi_picture where id=".$pic_id);
             $pic_small = getThumbImageById($pic_id, 280, 160);
-            $origin_img_info = getimagesize($pic_small);
-            $size[] = $origin_img_info[0]; // width
-            $size[] = $origin_img_info[1]; // height
+            $thumb_img_info = getimagesize($pic_small);
+            $size = Array();
+            $size[0] = $thumb_img_info[0]; // width
+            $size[1] = $thumb_img_info[1]; // height
             $picinfo['src'] = ltrim($picDetail[0]['path'], '/');
             $picinfo['thumb'] = $pic_small;
             if(strpos($picinfo['src'], "Picture")) {
                 $src = substr($picinfo['src'], 16);
                 $picinfo['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
                 $origin_img_info = getimagesize($picinfo['src']);
-                $src_size[] = $origin_img_info[0]; // width
-                $src_size[] = $origin_img_info[1]; // height
+                $src_size = Array();
+                $src_size[0] = $origin_img_info[0]; // width
+                $src_size[1] = $origin_img_info[1]; // height
                 $picinfo['src_size'] = $src_size;
             }
-            $picinfo['thumb_size'] = $size;
+            $picinfo['size'] = $size;
             unset($picinfo['picture_id']);
         }
         $extra['totalCount'] = $totalCount;

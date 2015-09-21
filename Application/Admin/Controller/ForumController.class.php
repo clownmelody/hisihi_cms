@@ -402,6 +402,9 @@ class ForumController extends AdminController
     {
         $builder = new AdminListBuilder();
         $builder->doSetStatus('ForumPost', $ids, $status);
+        // 改变用户作品表中的数据状态
+        $ids = is_array($ids) ? $ids : explode(',', $ids);
+        M('UserWorks')->where(array('post_id' => array('in', $ids)))->save(array('status' => $status));
     }
 
     public function reply($page = 1, $post_id = null, $r = 20)
