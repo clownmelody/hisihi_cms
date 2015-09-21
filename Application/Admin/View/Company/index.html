@@ -1,5 +1,8 @@
 <extend name="Public/base"/>
-
+<!-- 子导航 -->
+<block name="sidebar">
+    <include file="Article/sidemenu" />
+</block>
 <block name="body">
     <!-- 标题 -->
     <div class="main-title">
@@ -12,7 +15,7 @@
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <button class="btn document_add" url="{:U('company/add')}">新 增</button>
+                <button class="btn document_add" url="{:U('add')}">新 增</button>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("company/delete",array("status"=>-1))}">删 除</button>
             </div>
         </div>
@@ -83,13 +86,9 @@
             //搜索功能
             $("#search").click(function(){
                 var url = $(this).attr('url');
-                var status = $("#sch-sort-txt").attr("data");
                 var query  = $('.search-form').find('input').serialize();
                 query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
                 query = query.replace(/^&/g,'');
-                if(status != ''){
-                    query += 'status=' + status + "&" + query;
-                }
                 if( url.indexOf('?')>0 ){
                     url += '&' + query;
                 }else{

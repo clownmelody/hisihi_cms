@@ -17,7 +17,7 @@
 				'3'=>'UBB解析',
 				'4'=>'Markdown编辑器'
 			),
-			'value'=>'1',
+			'value'=>'1'
 		),
 		'editor_wysiwyg'=>array(
 			'title'=>'富文本编辑器:',
@@ -26,7 +26,7 @@
 				'1'=>'Kindeditor',
 				'2'=>'Ueditor(百度编辑器)',
 			),
-			'value'=>1
+			'value'=>'1'
 		),
 		'editor_height'=>array(
 			'title'=>'编辑器高度:',
