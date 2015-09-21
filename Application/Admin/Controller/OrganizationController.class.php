@@ -12,6 +12,7 @@ use Admin\Builder\AdminListBuilder;
 use Admin\Builder\AdminTreeListBuilder;
 
 use Think\Model;
+use Think\Page;
 
 class OrganizationController extends AdminController
 {
@@ -117,6 +118,102 @@ class OrganizationController extends AdminController
     public function works(){
         $this->display();
     }
+
+    /**
+     * 机构配置列表
+     */
+    public function config()
+    {
+        $model = D('OrganizationConfig');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构配置");
+        $this->display();
+    }
+
+
+    public function config_edit($id){
+        $config = D('OrganizationConfig');
+        $info = $config->where('status=1 and id='.$id)->find();
+        $this->assign('config', $info);
+        $this->meta_title = '编辑机构配置';
+        $this->display();
+    }
+
+    /**
+     * 机构配置添加和修改
+     */
+    public function configUpdate($id=0){
+        if(IS_POST){
+            $Config = D('OrganizationConfig');
+            $data = $Config->create();
+            if(empty($id)){
+                if($data){
+                    if($Config->add()){
+                        $this->success('新增成功', U('config'));
+                    } else {
+                        $this->error('新增失败');
+                    }
+                } else {
+                    $this->error($Config->getError());
+                }
+            } else {
+                $result = $Config->where('id='.$id)->save($data);
+                if($result){
+                    $this->success('编辑成功', U('config'));
+                } else {
+                    $this->error('编辑失败');
+                }
+            }
+        } else {
+            $this->meta_title = '新增配置';
+            $this->assign('info',null);
+            $this->display('config_add');
+        }
+    }
+
+    /**
+     * 机构配置删除
+     * @param $ids
+     */
+    public function config_delete(){
+        $id = array_unique((array)I('id',0));
+        if (empty($id)) {
+            $this->error('请选择要操作的数据!');
+        }
+        $config = D('OrganizationConfig');
+        $map = array('id' => array('in', $id) );
+        $result = $config->where($map)->save(Array('status'=>-1));
+        if($result){
+            $this->success('删除成功', U('config'));
+        } else {
+            $this->error('删除失败');
+        }
+    }
+
+    /**
+     * 机构配置信息从删除中恢复
+     */
+    public function config_restore(){
+        $id = array_unique((array)I('id',0));
+        if (empty($id)) {
+            $this->error('请选择要操作的数据!');
+        }
+        $config = D('OrganizationConfig');
+        $map = array('id' => array('in', $id) );
+        $result = $config->where($map)->save(Array('status'=>1));
+        if($result){
+            $this->success('启用成功', U('config'));
+        } else {
+            $this->error('启用失败');
+        }
+    }
+
 
 
 }
