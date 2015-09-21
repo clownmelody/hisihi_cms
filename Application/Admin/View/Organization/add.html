@@ -25,22 +25,52 @@
                             <input type="text" class="text input-large" name="slogan" value="">
                         </div>
                     </div>
-
                     <div class="form-item cf">
-                        <label class="item-label">公司详情</label>
+                        <label class="item-label">机构地址</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="location" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构联系电话</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="phone_num" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">优势标签</label>
+                        <div class="controls">
+                            <ul class="dowebok">
+                                <li><input type="checkbox" name="advantage[]" data-labelauty="环境好"></li>
+                                <li><input type="checkbox" name="advantage[]" data-labelauty="设备先进"></li>
+                                <li><input type="checkbox" name="advantage[]" data-labelauty="包吃包住"></li>
+                                <li><input type="checkbox" name="advantage[]" data-labelauty="师资力量强"></li>
+                                <li><input type="checkbox" name="advantage[]" data-labelauty="钱多人傻"></li>
+                                <li><input type="checkbox" name="advantage[]" data-labelauty="胸大无脑"></li>
+                                <li><input type="checkbox" name="advantage[]" data-labelauty="妹子多"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构基本信息</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="introduce" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">认证报告</label>
                         <div class="controls">
                             <label class="textarea">
-                                <textarea name="content"></textarea>
-                                {:hook('adminArticleEdit', array('name'=>'content','value'=>$field['value']))}
+                                <textarea name="certification"></textarea>
+                                {:hook('adminArticleEdit', array('name'=>'certification','value'=>$field['value']))}
                             </label>
                         </div>
                     </div>
-
                     <div class="form-item cf">
-                        <label class="item-label">公司图片</label>
+                        <label class="item-label">机构LOGO</label>
                         <div class="controls">
-                            <input type="file" id="upload_company_picture">
-                            <input type="hidden" name="picture" id="cover_id_company"/>
+                            <input type="file" id="upload_organization_picture">
+                            <input type="hidden" name="picture" id="cover_id_organization"/>
                             <div class="upload-img-box">
                                 <notempty name="data[$field['name']]">
                                     <div class="upload-pre-item"><img src="{$data[$field['name']]|get_cover='path'}"/></div>
@@ -50,7 +80,7 @@
                         <script type="text/javascript">
                             //上传图片
                             /* 初始化上传插件 */
-                            $("#upload_company_picture").uploadify({
+                            $("#upload_organization_picture").uploadify({
                                 "height"          : 30,
                                 "swf"             : "__STATIC__/uploadify/uploadify.swf",
                                 "fileObjName"     : "download",
@@ -68,9 +98,9 @@
                                 var data = $.parseJSON(data);
                                 var src = '';
                                 if(data.status){
-                                    $("#cover_id_company").val(data.id);
+                                    $("#cover_id_organization").val(data.id);
                                     src = data.url ||  data.path
-                                    $("#cover_id_company").parent().find('.upload-img-box').html(
+                                    $("#cover_id_organization").parent().find('.upload-img-box').html(
                                             '<div class="upload-pre-item"><img src="' + src + '"/></div>'
                                     );
                                 } else {
@@ -98,9 +128,22 @@
         </div>
     </div>
 </block>
+<block name="script">
+    <link href="__STATIC__/labelauty/jquery-labelauty.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="__STATIC__/labelauty/jquery-labelauty.js"></script>
+    <style type="text/css">
+        .dowebok{list-style-type: none;}
+        .dowebok li{display: inline-block;}
+        .dowebok li{margin: 10px 0;}
+        input.labelauty + label{font:12px "Microsoft Yahei";}
+    </style>
+    <script>
+        //导航高亮
+        highlight_subnav('{:U('Organization/organizationinfo')}');
+        $(function(){
+            $(':input').labelauty();
+        });
+    </script>
+</block>
 
-<script>
-    //导航高亮
-    highlight_subnav('{:U('Organization/index')}');
-</script>
 

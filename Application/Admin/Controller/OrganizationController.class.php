@@ -50,12 +50,13 @@ class OrganizationController extends AdminController
         $attr['target-form'] = 'ids';
 
         $builder->title('机构信息管理')
-            ->setStatusUrl(U('setOrganizationIdentification'))->buttonDisable('','审核不通过')->buttonDelete()->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('add'))
+            ->setStatusUrl(U('setOrganizationIdentification'))->buttonDisable('','审核不通过')->buttonDelete(U('delete'))
+            ->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('add'))
             ->keyId()->keyLink('name', '机构名称','editContents?id=###')->keyText('type','机构类型')->keyText('form','形式')
             ->keyText('period','周期')->keyText('location','地址')->keyMap('identification','是否认证',array(0 => '未认证',1 => '已认证'))
             ->keyCreateTime()
             ->keyMap('status','状态',array(1 => '正常', 0 => '未激活'))
-            ->keyDoActionEdit( 'Issue/editcontents?id=###','编辑')
+            ->keyDoActionEdit( 'update?id=###','编辑')
             ->data($list)
             ->pagination($totalCount, $r)
             ->display();
@@ -83,6 +84,62 @@ class OrganizationController extends AdminController
      */
     public function add(){
         $this->display();
+    }
+
+    /**
+     * 机构基本信息更新
+     */
+    public function update(){
+        if (IS_POST) { //提交表单
+            //$model = M('Organization');
+            $model = $this->organizationModel;
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $data["slogan"] = $_POST["slogan"];
+            $data["location"] = $_POST["location"];
+            $data["phone_num"] = $_POST["phone_num"];
+            $data["advantage"] = implode("#",$_POST["advantage"]);
+            $data["introduce"] = $_POST["introduce"];
+            $data["certification"] = $_POST["certification"];
+            $data["logo"] = $_POST["picture"];
+            $data["create_time"] = time();
+            if(empty($cid)){
+                try {
+                    $res = $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                //$this->success('添加成功', Cookie('__forward__'));
+                $this->success('添加成功', 'index.php?s=/admin/organization/organizationinfo');
+            } else {
+                //$model = D('Organization');
+                $model = $this->organizationModel;
+                $model->updateCompany($cid, $data);
+                //$this->success('更新成功', Cookie('__forward__'));
+                $this->success('更新成功', 'index.php?s=/admin/organization/organizationinfo');
+            }
+        } else {
+            $this->display('add');
+        }
+    }
+
+    public function delete($id){
+        if(!empty($id)){
+            $model = D('Company');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->updateCompany($i, $data);
+                }
+            } else {
+                $id = intval($id);
+                $model->updateCompany($id, $data);
+            }
+            $this->success('删除成功','index.php?s=/admin/company');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
     }
 
     /**
