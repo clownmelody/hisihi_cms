@@ -12,6 +12,7 @@ use Admin\Builder\AdminListBuilder;
 use Admin\Builder\AdminTreeListBuilder;
 
 use Think\Model;
+use Think\Page;
 
 class OrganizationController extends AdminController
 {
@@ -145,27 +146,17 @@ class OrganizationController extends AdminController
     /**
      * 机构学生老师关系管理
      */
-    public function relation($page=1,$r=10){
-        //读取列表
-        $map['status'] = array('egt', 0);
-        $list = $this->organizationModel->where($map)->order('id desc')->page($page, $r)->select();
-        unset($li);
-        $totalCount = $this->organizationModel->where($map)->count();
-        //显示页面
-        $builder = new AdminListBuilder();
-        $attr['class'] = 'btn ajax-post';
-        $attr['target-form'] = 'ids';
-
-        $builder->title('机构信息管理')
-            ->setStatusUrl(U('setOrganizationIdentification'))->buttonDisable('','审核不通过')->buttonDelete()->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('add'))
-            ->keyId()->keyLink('name', '机构名称','editContents?id=###')->keyText('type','机构类型')->keyText('form','形式')
-            ->keyText('period','周期')->keyText('location','地址')->keyMap('identification','是否认证',array(0 => '未认证',1 => '已认证'))
-            ->keyCreateTime()
-            ->keyMap('status','状态',array(1 => '正常', 0 => '未激活'))
-            ->keyDoActionEdit( 'Issue/editcontents?id=###','编辑')
-            ->data($list)
-            ->pagination($totalCount, $r)
-            ->display();
+    public function relation(){
+        $model = D('OrganizationRelation');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构评论");
+        $this->display();
     }
 
     /**
@@ -175,5 +166,116 @@ class OrganizationController extends AdminController
         $this->display();
     }
 
+    /**
+     * 机构配置列表
+     */
+    public function config()
+    {
+        $model = D('OrganizationConfig');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构配置");
+        $this->display();
+    }
+
+
+    public function config_edit($id){
+        $config = D('OrganizationConfig');
+        $info = $config->where('status=1 and id='.$id)->find();
+        $this->assign('config', $info);
+        $this->meta_title = '编辑机构配置';
+        $this->display();
+    }
+
+    /**
+     * 机构配置添加和修改
+     */
+    public function configUpdate($id=0){
+        if(IS_POST){
+            $Config = D('OrganizationConfig');
+            $data = $Config->create();
+            if(empty($id)){
+                if($data){
+                    if($Config->add()){
+                        $this->success('新增成功', U('config'));
+                    } else {
+                        $this->error('新增失败');
+                    }
+                } else {
+                    $this->error($Config->getError());
+                }
+            } else {
+                $result = $Config->where('id='.$id)->save($data);
+                if($result){
+                    $this->success('编辑成功', U('config'));
+                } else {
+                    $this->error('编辑失败');
+                }
+            }
+        } else {
+            $this->meta_title = '新增配置';
+            $this->assign('info',null);
+            $this->display('config_add');
+        }
+    }
+
+    /**
+     * 机构配置删除
+     * @param $ids
+     */
+    public function config_delete(){
+        $id = array_unique((array)I('id',0));
+        if (empty($id)) {
+            $this->error('请选择要操作的数据!');
+        }
+        $config = D('OrganizationConfig');
+        $map = array('id' => array('in', $id) );
+        $result = $config->where($map)->save(Array('status'=>-1));
+        if($result){
+            $this->success('删除成功', U('config'));
+        } else {
+            $this->error('删除失败');
+        }
+    }
+
+    /**
+     * 机构配置信息从删除中恢复
+     */
+    public function config_restore(){
+        $id = array_unique((array)I('id',0));
+        if (empty($id)) {
+            $this->error('请选择要操作的数据!');
+        }
+        $config = D('OrganizationConfig');
+        $map = array('id' => array('in', $id) );
+        $result = $config->where($map)->save(Array('status'=>1));
+        if($result){
+            $this->success('启用成功', U('config'));
+        } else {
+            $this->error('启用失败');
+        }
+    }
+
+    /**
+     * 机构评论列表
+     */
+    public function comment()
+    {
+        $model = D('OrganizationComment');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构评论");
+        $this->display();
+    }
 
 }
