@@ -89,27 +89,17 @@ class OrganizationController extends AdminController
     /**
      * 机构学生老师关系管理
      */
-    public function relation($page=1,$r=10){
-        //读取列表
-        $map['status'] = array('egt', 0);
-        $list = $this->organizationModel->where($map)->order('id desc')->page($page, $r)->select();
-        unset($li);
-        $totalCount = $this->organizationModel->where($map)->count();
-        //显示页面
-        $builder = new AdminListBuilder();
-        $attr['class'] = 'btn ajax-post';
-        $attr['target-form'] = 'ids';
-
-        $builder->title('机构信息管理')
-            ->setStatusUrl(U('setOrganizationIdentification'))->buttonDisable('','审核不通过')->buttonDelete()->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('add'))
-            ->keyId()->keyLink('name', '机构名称','editContents?id=###')->keyText('type','机构类型')->keyText('form','形式')
-            ->keyText('period','周期')->keyText('location','地址')->keyMap('identification','是否认证',array(0 => '未认证',1 => '已认证'))
-            ->keyCreateTime()
-            ->keyMap('status','状态',array(1 => '正常', 0 => '未激活'))
-            ->keyDoActionEdit( 'Issue/editcontents?id=###','编辑')
-            ->data($list)
-            ->pagination($totalCount, $r)
-            ->display();
+    public function relation(){
+        $model = D('OrganizationRelation');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构评论");
+        $this->display();
     }
 
     /**
@@ -214,6 +204,21 @@ class OrganizationController extends AdminController
         }
     }
 
-
+    /**
+     * 机构评论列表
+     */
+    public function comment()
+    {
+        $model = D('OrganizationComment');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构评论");
+        $this->display();
+    }
 
 }
