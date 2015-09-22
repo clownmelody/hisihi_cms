@@ -366,7 +366,7 @@ class ForumController extends AppController
         //读取帖子内容
         $field = 'id,uid,content,create_time';
         if($lite == 0)
-            $field = $field . ',forum_id,title,create_time,last_reply_time,view_count,reply_count';
+            $field = $field . ',forum_id,title,create_time,last_reply_time, type, view_count,reply_count';
         $post = D('ForumPost')->where(array('id' => $id, 'status' => 1))->field($field)->find();
         if (!$post) {
             if($lite == 0)
