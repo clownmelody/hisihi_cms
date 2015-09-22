@@ -148,7 +148,7 @@ class OrganizationController extends AdminController
      */
     public function relation(){
         $model = D('OrganizationRelation');
-        $count = $model->where('status=1')->count();
+        $count = $model->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
         $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -163,6 +163,15 @@ class OrganizationController extends AdminController
      * 学生作品管理
      */
     public function works(){
+        $model = D('OrganizationWorks');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构评论");
         $this->display();
     }
 
@@ -171,11 +180,15 @@ class OrganizationController extends AdminController
      */
     public function config()
     {
+        $configvalue = I('configvalue');
+        if(!empty($configvalue)){
+            $map['value'] = array('like', '%' . (string)$configvalue . '%');
+        }
         $model = D('OrganizationConfig');
-        $count = $model->where('status=1')->count();
+        $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($map)->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -267,7 +280,7 @@ class OrganizationController extends AdminController
     public function comment()
     {
         $model = D('OrganizationComment');
-        $count = $model->where('status=1')->count();
+        $count = $model->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
         $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -277,5 +290,65 @@ class OrganizationController extends AdminController
         $this->assign("meta_title","机构评论");
         $this->display();
     }
+
+    /**
+     * 机构环境图片列表
+     */
+    public function environment(){
+        $model = D('OrganizationResource');
+        $count = $model->where('type=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构环境");
+        $this->display();
+    }
+
+    /**
+     * 机构视频列表
+     */
+    public function video(){
+        $model = D('OrganizationResource');
+        $count = $model->where('type=2')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构环境");
+        $this->display();
+    }
+
+    /**
+     * 机构证书
+     */
+    public function certificate(){
+        $name = I('name');
+        if(!empty($name)){
+            $map['value'] = array('like', '%' . (string)$name . '%');
+        }
+        $model = D('OrganizationCertificate');
+        $count = $model->where($map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where($map)->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构环境");
+        $this->display();
+    }
+
+    /**
+     * 新增证书或修改
+     */
+    public function certificateUpdate(){
+
+    }
+
 
 }
