@@ -256,7 +256,7 @@ class ForumController extends AdminController
     }
 
 
-    public function post($page = 1, $forum_id = null, $r = 20, $title = '', $content = '')
+    public function post($page = 1, $forum_id = null, $r = 20, $title = '', $content = '', $showtop=0)
     {
         //读取帖子数据
         $map = array('status' => array('EGT', 0));
@@ -266,6 +266,7 @@ class ForumController extends AdminController
         if ($content != '') {
             $map['content'] = array('like', '%' . $content . '%');
         }
+        if($showtop==1) $map['is_top'] = 1;
         if ($forum_id) $map['forum_id'] = $forum_id;
         $model = M('ForumPost');
         $list = $model->where($map)->order('last_reply_time desc')->page($page, $r)->select();
@@ -292,7 +293,7 @@ class ForumController extends AdminController
         $builder = new AdminListBuilder();
         $builder->title('帖子管理' . $forumTitle)
             ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))
-            ->ajaxButton(U('Forum/pushTopPost'), null, '推送')->buttonNew(U('Forum/showTopPost'),'显示置顶帖')
+            ->ajaxButton(U('Forum/pushTopPost'), null, '推送')->buttonNew(U('Forum/post?showtop=1'),'显示置顶帖')
             ->keyId()->keyLink('title', '标题', 'Forum/reply?post_id=###')
             ->keyCreateTime()->keyUpdateTime()->keyTime('last_reply_time', '最后回复时间')->key('top', '是否置顶')->keyStatus()->keyDoActionEdit('editPost?id=###')
             ->setSearchPostUrl()->search('标题', 'title')->search('内容', 'content')
@@ -308,7 +309,7 @@ class ForumController extends AdminController
      * @param string $title
      * @param string $content
      */
-    public function showTopPost($page = 1, $forum_id = null, $r = 20, $title = '', $content = '')
+    /*public function showTopPost($page = 1, $forum_id = null, $r = 20, $title = '', $content = '')
     {
         //读取帖子数据
         $map = array('status' => array('EGT', 0));
@@ -352,7 +353,7 @@ class ForumController extends AdminController
             ->data($list)
             ->pagination($totalCount, $r)
             ->display();
-    }
+    }*/
 
     public function postTrash($page = 1, $r = 20)
     {

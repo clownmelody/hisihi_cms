@@ -1470,7 +1470,7 @@ class UserController extends AppController
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
                 $this->thirdPartyLoginGetUserInfo($uid, $id, true);
             } else {
-                $uid = $userExist['id'];
+                $uid = $userExist[0];
                 $this->thirdPartyLoginGetUserInfo($uid, $id, false);
             }
         } else if("qq"==$platform){
@@ -1482,7 +1482,6 @@ class UserController extends AppController
             $query = http_build_query($data);
             $content = $this->request_by_curl("https://graph.qq.com/user/get_simple_userinfo", $query);
             $user = json_decode($content, true);
-            $this->apiSuccess($user);
             $id = $openId;
             $nickname = $user['nickname'];
             $avatar = $user['figureurl_qq_2'];
@@ -1502,7 +1501,7 @@ class UserController extends AppController
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
                 $this->thirdPartyLoginGetUserInfo($uid, $id, true);
             } else {
-                $uid = $userExist['id'];
+                $uid = $userExist[0];
                 $this->thirdPartyLoginGetUserInfo($uid, $id, false);
             }
         } else if('weixin'==$platform){
@@ -1554,7 +1553,7 @@ class UserController extends AppController
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
                 $this->thirdPartyLoginGetUserInfo($uid, $openid, true);
             } else {
-                $uid = $userExist['id'];
+                $uid = $userExist[0];
                 $this->thirdPartyLoginGetUserInfo($uid, $openid, false);
             }
         } else {
@@ -1569,10 +1568,12 @@ class UserController extends AppController
      * @param $openid
      * @param $isNewUser
      */
-    private function thirdPartyLoginGetUserInfo($uid, $openid, $isNewUser){
+    public function thirdPartyLoginGetUserInfo($uid, $openid, $isNewUser){
         //读取数据库中的用户详细资料
         $map = array('uid' => $uid);
         $user1 = D('Home/Member')->where($map)->find();
+
+        D('Home/Member')->login($uid);
 
         //获取头像信息
         $avatar = new AvatarAddon();
@@ -1608,7 +1609,7 @@ class UserController extends AppController
         $extra['avatar_url'] = $avatar_url;
         $extra['avatar128_url'] = $avatar128_url;
         $extra['signature'] = $user1['signature'];
-        $extra['tox_money'] = $user1['tox_money'];
+        $extra['tox_money'] = $user1['score'];
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
         if($isNewUser){
