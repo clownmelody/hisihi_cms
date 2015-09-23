@@ -187,6 +187,9 @@ class MemberModel extends Model
         );
         $this->save($data);
 
+        $temmodel = M();
+        $temmodel->execute("UPDATE hisihi_ucenter_member SET last_login_time = ".$data['last_login_time'].", last_login_ip=".$data['last_login_time']." WHERE id=".$data['uid']);
+
         /* 记录登录SESSION和COOKIES */
         $auth = array(
             'uid' => $user['uid'],

@@ -70,7 +70,7 @@ return  array(
     'DB_SQL_BUILD_CACHE'    =>  false, // 数据库查询的SQL创建缓存
     'DB_SQL_BUILD_QUEUE'    =>  'file',   // SQL缓存队列的缓存方式 支持 file xcache和apc
     'DB_SQL_BUILD_LENGTH'   =>  20, // SQL缓存的队列长度
-    'DB_SQL_LOG'            =>  false, // SQL执行日志记录
+    'DB_SQL_LOG'            =>  true, // SQL执行日志记录
     'DB_BIND_PARAM'         =>  false, // 数据库写入数据自动参数绑定
 
     /* 数据缓存设置 */

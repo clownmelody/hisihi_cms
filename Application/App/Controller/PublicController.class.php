@@ -477,5 +477,48 @@ class PublicController extends AppController {
         }
     }
 
+    /**
+     * 获取公司列表banner
+     * @param int $page
+     * @param int $count
+     */
+    public function bannerlist($page=1, $count=5){
+        $Document = D('Blog/Document');
+        $all_list = $Document->where("category_id=47 and position='5'")->select();
+        $totalCount = count($all_list);
+        $list = $Document->where("category_id=47 and position='5'")->page($page, $count)->select();
+        foreach($list as &$topic){
+            $did = $topic['id'];
+            $topic['source_name'] = $this->getSourceName($did);
+            $topic['logo_pic'] = $this->getSourceLogoPic($did);
+            //解析并成立图片数据
+            $topic['img'] = $this->fetchImage($topic['cover_id']);
+            $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
+            $topic['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
+            $topic['isSupportd'] = $this->isArticleSupport($did);
+            $topic['isFavorited'] = $this->isArticleFavorite($did);
+            $topic['supportCount'] = $this->getArticleSupportCount($did);
+            unset($topic['uid']);
+            unset($topic['name']);
+            unset($topic['category_id']);
+            unset($topic['type']);
+            unset($topic['root']);
+            unset($topic['pid']);
+            unset($topic['model_id']);
+            #unset($topic['position']);
+            unset($topic['link_id']);
+            unset($topic['cover_id']);
+            unset($topic['deadline']);
+            unset($topic['attach']);
+            unset($topic['extend']);
+            unset($topic['level']);
+            unset($topic['display']);
+            unset($topic['comment']);
+            unset($topic['status']);
+            unset($topic['isrecommend']);
+        }
+        $this->apiSuccess("获取公司列表Banner成功", null, array('totalCount' => $totalCount,'course' => $list));
+    }
+
 
 }

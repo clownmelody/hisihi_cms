@@ -230,7 +230,7 @@ abstract class AppController extends Controller {
         $result = array();
         $home_fields = array('nickname','sex','qq','name','signature','birthday');
         $result['home'] = array_gets($data, $home_fields);
-        $ucenter_fields = array('email','password');
+        $ucenter_fields = array('email','password', 'mobile');
         $result['ucenter'] = array_gets($data, $ucenter_fields);
         return $result;
     }

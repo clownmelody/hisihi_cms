@@ -197,4 +197,171 @@ class CompanyController extends AdminController {
         }
     }
 
+    /**
+     * 公司列表banner
+     */
+    public function banner($cate_id = 47)
+    {
+        if ($cate_id === null) {
+            $cate_id = $this->cate_id;
+        }
+
+        //获取模型信息
+        $model = M('Model')->getByName('topcommend');
+
+        //解析列表规则
+        $fields = array();
+        $grids = preg_split('/[;\r\n]+/s', $model['list_grid']);
+        foreach ($grids as &$value) {
+            // 字段:标题:链接
+            $val = explode(':', $value);
+            // 支持多个字段显示
+            $field = explode(',', $val[0]);
+            $value = array('field' => $field, 'title' => $val[1]);
+            if (isset($val[2])) {
+                // 链接信息
+                $value['href'] = $val[2];
+                // 搜索链接信息中的字段信息
+                preg_replace_callback('/\[([a-z_]+)\]/', function ($match) use (&$fields) {
+                    $fields[] = $match[1];
+                }, $value['href']);
+            }
+            if (strpos($val[1], '|')) {
+                // 显示格式定义
+                list($value['title'], $value['format']) = explode('|', $val[1]);
+            }
+            foreach ($field as $val) {
+                $array = explode('|', $val);
+                $fields[] = $array[0];
+            }
+        }
+
+        // 过滤重复字段信息 TODO: 传入到查询方法
+        $fields = array_unique($fields);
+
+        //获取对应分类下的模型
+        if (!empty($cate_id)) {   //没有权限则不查询数据
+            //获取分类绑定的模型
+            $models = get_category($cate_id, 'model');
+            $allow_reply = get_category($cate_id, 'reply');//分类文档允许回复
+            $pid = I('pid');
+            if ($pid == 0) {
+                //开发者可根据分类绑定的模型,按需定制分类文档列表
+                $template = $this->topCommendOfArticle($cate_id); //转入默认文档列表方法
+                $this->assign('model', explode(',', $models));
+            } else {
+                //开发者可根据父文档的模型类型,按需定制子文档列表
+                $doc_model = M('Document')->where(array('id' => $pid, 'position' => 5))->find();
+
+                switch ($doc_model['model_id']) {
+                    default:
+                        if ($doc_model['type'] == 2 && $allow_reply) {
+                            $this->assign('model', array(2));
+                            $template = $this->indexOfReply($cate_id); //转入子文档列表方法
+                        } else {
+                            $this->assign('model', explode(',', $models));
+                            $template = $this->topCommendOfArticle($cate_id); //转入默认文档列表方法
+                        }
+                }
+            }
+            $this->assign('list_grids', $grids);
+            $this->assign('model_list', $model);
+            // 记录当前列表页的cookie
+            Cookie('__forward__', $_SERVER['REQUEST_URI']);
+            $this->display($template);
+        }
+    }
+
+    protected function topCommendOfArticle($cate_id){
+        /* 查询条件初始化 */
+        $map = array();
+        $map['position'] = 5;
+        if(isset($_GET['title'])){
+            $map['title']  = array('like', '%'.(string)I('title').'%');
+        }
+        if(isset($_GET['status'])){
+            $map['status'] = I('status');
+            $status = $map['status'];
+        }else{
+            $status = null;
+            $map['status'] = array('in', '-1,0,1,2');
+        }
+        if ( !isset($_GET['pid']) ) {
+            $map['pid']    = 0;
+        }
+        if ( isset($_GET['time-start']) ) {
+            $map['update_time'][] = array('egt',strtotime(I('time-start')));
+        }
+        if ( isset($_GET['time-end']) ) {
+            $map['update_time'][] = array('elt',24*60*60 + strtotime(I('time-end')));
+        }
+        if ( isset($_GET['nickname']) ) {
+            $map['uid'] = M('Member')->where(array('nickname'=>I('nickname')))->getField('uid');
+        }
+
+        // 构建列表数据
+        $Document = M('Document');
+        $map['category_id'] =   $cate_id;
+        $map['pid']         =   I('pid',0);
+        if($map['pid']){ // 子文档列表忽略分类
+            unset($map['category_id']);
+        }
+
+        $list = $this->lists($Document,$map,'level DESC,id DESC');
+        int_to_string($list);
+        if($map['pid']){
+            // 获取上级文档
+            $article    =   $Document->field('id,title,type')->find($map['pid']);
+            $this->assign('article',$article);
+        }
+        //检查该分类是否允许发布内容
+        $allow_publish  =   get_category($cate_id, 'allow_publish');
+
+        $this->assign('status', $status);
+        $this->assign('list',   $list);
+        $this->assign('allow',  $allow_publish);
+        $this->assign('pid',    $map['pid']);
+
+        $this->meta_title = '公司列表Banner';
+        return 'banner';
+    }
+
+    public function topedit(){
+
+        $id     =   I('get.id','');
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+
+        /*获取一条记录的详细数据*/
+        $Document = D('Document');
+        $data = $Document->detail($id);
+        if(!$data){
+            $this->error($Document->getError());
+        }
+
+        if($data['pid']){
+            // 获取上级文档
+            $article        =   M('Document')->field('id,title,type')->find($data['pid']);
+            $this->assign('article',$article);
+        }
+        $this->assign('data', $data);
+        $this->assign('model_id', $data['model_id']);
+
+        /* 获取要编辑的扩展模型模板 */
+        $model      =   get_document_model($data['model_id']);
+        $this->assign('model',      $model);
+
+        //获取表单字段排序
+        $fields = get_model_attribute($model['id']);
+        $this->assign('fields',     $fields);
+
+
+        //获取当前分类的文档类型
+        $this->assign('type_list', get_type_bycate($data['category_id']));
+
+        $this->meta_title   =   '编辑文档';
+        $this->display();
+    }
+
 }

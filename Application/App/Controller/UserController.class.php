@@ -192,6 +192,7 @@ class UserController extends AppController
         $extra['tox_money'] = $user1['score'];
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
+        $extra['timestamp'] = time();
         $this->apiSuccess("登录成功", null, $extra);
     }
 	
@@ -975,7 +976,7 @@ class UserController extends AppController
         }
     }
 
-    public function setProfile($signature = null, $email = null, $name = null, $sex = null, $birthday = null, $college = null, $major = null, $grade = null, $institution = null, $student = null, $year = null)
+    public function setProfile($signature = null, $email = null, $name = null, $sex = null, $birthday = null, $college = null, $major = null, $grade = null, $institution = null, $student = null, $year = null, $mobile = null, $password = null)
     {
         $this->requireLogin();
         //获取用户编号
@@ -987,6 +988,8 @@ class UserController extends AppController
         if ($name !== null) $fields['nickname'] = $name;
         if ($sex !== null) $fields['sex'] = $sex;
         if ($birthday !== null) $fields['birthday'] = $birthday;
+        if ($mobile !== null) $fields['mobile'] = $mobile;
+        if ($password !== null) $fields['password'] = $password;
 
         foreach($fields as $key=> $field)
         {
@@ -1445,7 +1448,7 @@ class UserController extends AppController
      * @param $openId       微博和qq登陆 id
      * @param string $code  微信登陆
      */
-    public function loginByThirdPartyOpenPlatform($platform='', $access_token='', $openId='', $code='') {
+    public function loginByThirdPartyOpenPlatform($platform='', $access_token='', $openId='', $code='', $client = 'client') {
         if("weibo"==$platform){
             $data = array(
                 'access_token'=>$access_token,
@@ -1468,10 +1471,10 @@ class UserController extends AppController
                 }
                 $avatar_model = D('Addons://Avatar/Avatar');
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
-                $this->thirdPartyLoginGetUserInfo($uid, $id, true);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, true, $client);
             } else {
                 $uid = $userExist[0];
-                $this->thirdPartyLoginGetUserInfo($uid, $id, false);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, false, $client);
             }
         } else if("qq"==$platform){
             $data = array(
@@ -1499,62 +1502,95 @@ class UserController extends AppController
                 }
                 $avatar_model = D('Addons://Avatar/Avatar');
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
-                $this->thirdPartyLoginGetUserInfo($uid, $id, true);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, true, $client);
             } else {
                 $uid = $userExist[0];
-                $this->thirdPartyLoginGetUserInfo($uid, $id, false);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, false, $client);
             }
         } else if('weixin'==$platform){
-            $data = array(
-                'appid'      => C('WeiXinPlatFormId'),
-                'secret'     => C('WeiXinPlatFormSecret'),
-                'code'       => $code,
-                'grant_type' => 'authorization_code',
-            );
-            $query = http_build_query($data);
-            $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/access_token", $query);
-            $user = json_decode($content, true);
-            $refresh_token = $user['refresh_token'];
-            $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
-            $query = http_build_query($tokenData);
-            $content = $this->request_by_curl("https://api.weixin.qq.com/sns/auth");
-            $user = json_decode($content, true);
-            if($user['errorcode']!=0){
-                $refreshData = array(
-                    'appid' => C('WeiXinPlatFormId'),
-                    'grant_type' => 'refresh_token',
-                    'refresh_token' => $refresh_token,
-                );
-                $query = http_build_query($refreshData);
-                $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/refresh_token", $query);
+            if($code=='android'){ // 由于android使用share sdk，特殊情况区别对待
+                $tokenData = array('access_token'=> $access_token, 'openid' => $openId);
+                $query = http_build_query($tokenData);
+                $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
                 $user = json_decode($content, true);
-                if($user['errcode']==40030){
-                    $this->apiError(-1, '重新获取token失败');
+                $openid = $user['openid'];
+                $uid = $openid;
+                $nickname = $user['nickname'];
+                $avatar = $user['headimgurl'];
+                $api = new UserApi();
+                $userExist = $api->info(substr($uid,1,5), true);
+                if($userExist==-1) {  // 用户不存在
+                    $t['uid'] = substr($uid,1,5);
+                    $t['nickname'] = $nickname;
+                    $t['email'] = substr($uid,1,3).'@'.substr($uid,3,5).'.com';
+                    \Think\Log::write('testtest--------');
+                    $uid = $api->register($t['uid'], $nickname, '123456', substr($uid,1,3).'@'.substr($uid,3,5).'.com');
+                    $t['code'] = $uid;
+                    \Think\Log::write(json_encode($t));
+                    if($uid <= 0) {
+                        $message = $this->getRegisterErrorMessage($uid);
+                        $code = $this->getRegisterErrorCode($uid);
+                        $this->apiError($code,$message);
+                    }
+                    $avatar_model = D('Addons://Avatar/Avatar');
+                    $avatar_model->saveThirdPartyAvatar($uid, $avatar);
+                    $this->thirdPartyLoginGetUserInfo($uid, $openid, true, $client);
+                } else {
+                    $uid = $userExist[0];
+                    $this->thirdPartyLoginGetUserInfo($uid, $openid, false, $client);
                 }
+            } else {
+                $data = array(
+                    'appid'      => C('WeiXinPlatFormId'),
+                    'secret'     => C('WeiXinPlatFormSecret'),
+                    'code'       => $code,
+                    'grant_type' => 'authorization_code',
+                );
+                $query = http_build_query($data);
+                $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/access_token", $query);
+                $user = json_decode($content, true);
+                $refresh_token = $user['refresh_token'];
                 $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
                 $query = http_build_query($tokenData);
-            }
-            $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
-            $user = json_decode($content, true);
-            $openid = $user['openid'];
-            $uid = $openid;
-            $nickname = $user['nickname'];
-            $avatar = $user['headimgurl'];
-            $api = new UserApi();
-            $userExist = $api->info($uid, true);
-            if($userExist==-1) {  // 用户不存在
-                $uid = $api->register($uid, $nickname, '123456', substr($uid,1,3).'@'.substr($uid,5,7).'.com');
-                if($uid <= 0) {
-                    $message = $this->getRegisterErrorMessage($uid);
-                    $code = $this->getRegisterErrorCode($uid);
-                    $this->apiError($code,$message);
+                $content = $this->request_by_curl("https://api.weixin.qq.com/sns/auth");
+                $user = json_decode($content, true);
+                if($user['errorcode']!=0){
+                    $refreshData = array(
+                        'appid' => C('WeiXinPlatFormId'),
+                        'grant_type' => 'refresh_token',
+                        'refresh_token' => $refresh_token,
+                    );
+                    $query = http_build_query($refreshData);
+                    $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/refresh_token", $query);
+                    $user = json_decode($content, true);
+                    if($user['errcode']==40030){
+                        $this->apiError(-1, '重新获取token失败');
+                    }
+                    $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
+                    $query = http_build_query($tokenData);
                 }
-                $avatar_model = D('Addons://Avatar/Avatar');
-                $avatar_model->saveThirdPartyAvatar($uid, $avatar);
-                $this->thirdPartyLoginGetUserInfo($uid, $openid, true);
-            } else {
-                $uid = $userExist[0];
-                $this->thirdPartyLoginGetUserInfo($uid, $openid, false);
+                $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
+                $user = json_decode($content, true);
+                $openid = $user['openid'];
+                $uid = $openid;
+                $nickname = $user['nickname'];
+                $avatar = $user['headimgurl'];
+                $api = new UserApi();
+                $userExist = $api->info($uid, true);
+                if($userExist==-1) {  // 用户不存在
+                    $uid = $api->register($uid, $nickname, '123456', substr($uid,1,3).'@'.substr($uid,5,7).'.com');
+                    if($uid <= 0) {
+                        $message = $this->getRegisterErrorMessage($uid);
+                        $code = $this->getRegisterErrorCode($uid);
+                        $this->apiError($code,$message);
+                    }
+                    $avatar_model = D('Addons://Avatar/Avatar');
+                    $avatar_model->saveThirdPartyAvatar($uid, $avatar);
+                    $this->thirdPartyLoginGetUserInfo($uid, $openid, true, $client);
+                } else {
+                    $uid = $userExist[0];
+                    $this->thirdPartyLoginGetUserInfo($uid, $openid, false, $client);
+                }
             }
         } else {
             $this->apiError(-1, '暂时不支持该平台的登陆');
@@ -1568,12 +1604,14 @@ class UserController extends AppController
      * @param $openid
      * @param $isNewUser
      */
-    public function thirdPartyLoginGetUserInfo($uid, $openid, $isNewUser){
+    public function thirdPartyLoginGetUserInfo($uid, $openid, $isNewUser, $client){
         //读取数据库中的用户详细资料
         $map = array('uid' => $uid);
         $user1 = D('Home/Member')->where($map)->find();
 
-        D('Home/Member')->login($uid);
+        D('Home/Member')->login($uid, false, $client);
+        //清除登录缓存
+        clean_query_user_cache($uid,array('last_login_time','last_login_client'));
 
         //获取头像信息
         $avatar = new AvatarAddon();
@@ -1612,6 +1650,7 @@ class UserController extends AppController
         $extra['tox_money'] = $user1['score'];
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
+        $extra['timestamp'] = time();
         if($isNewUser){
             $extra['is_new'] = true;
         } else {
