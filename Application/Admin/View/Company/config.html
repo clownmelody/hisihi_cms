@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <div class="main-title">
         <h2>
-            公司列表(共：{$_total|default=0} 家)
+            公司信息配置管理
         </h2>
     </div>
 
@@ -11,18 +11,18 @@
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <button class="btn document_add" url="{:U('add')}">新 增</button>
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U("company/delete",array("status"=>-1))}">删 除</button>
+                <button class="btn document_add" url="{:U('config_add')}">新 增</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U("company/config_delete",array("status"=>-1))}">删 除</button>
             </div>
         </div>
 
         <!-- 高级搜索 -->
-        <div class="search-form fr cf">
-            <div class="sleft">
-                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入公司名">
-                <a class="sch-btn" href="javascript:;" id="search" url="{:U('company/index')}"><i class="btn-search"></i></a>
-            </div>
-        </div>
+        <!--<div class="search-form fr cf">-->
+            <!--<div class="sleft">-->
+                <!--<input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入公司名">-->
+                <!--<a class="sch-btn" href="javascript:;" id="search" url="{:U('company/index')}"><i class="btn-search"></i></a>-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
 
     <!-- 数据列表 -->
@@ -32,10 +32,10 @@
             <tr>
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
-                <th class="">公司名称</th>
-                <th class="">所在城市</th>
-                <th class="">公司规模</th>
-                <th class="">公司网站</th>
+                <th class="">配置类型</th>
+                <th class="">类型说明</th>
+                <th class="">配置值</th>
+                <th class="">值说明</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -47,19 +47,18 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.name}</td>
-                        <td>{$vo.city}</td>
-                        <td>{$vo.scale}</td>
-                        <td>{$vo.website}</td>
+                        <td>{$vo.type}</td>
+                        <td>{$vo.type_explain}</td>
+                        <td>{$vo.value}</td>
+                        <td>{$vo.value_explain}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                         </if>
                         </td>
                         <td>
-                            <a href="{:U('company/edit?id='.$vo['id'])}" >编辑</a>
-                            <a href="{:U('company/delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
-                            <a href="{:U('company/recruit?id='.$vo['id'])}" class="ajax-get confirm">招聘</a>
+                            <a href="{:U('company/config_edit?id='.$vo['id'])}" >编辑</a>
+                            <a href="{:U('company/config_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
                 </volist>
@@ -82,7 +81,7 @@
     <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
     <script type="text/javascript">
         //导航高亮
-        highlight_subnav('{:U('Company/index')}');
+        highlight_subnav('{:U('Company/config')}');
         $(function(){
             //搜索功能
             $("#search").click(function(){

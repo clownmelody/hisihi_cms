@@ -41,22 +41,32 @@
                     <div class="form-item cf">
                         <label class="item-label">公司标签</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="marks" value="{$info.marks}">
+                            <div class="controls">
+                                <notempty name="_marks">
+                                    <ul class="dowebok">
+                                        <volist name="_marks" id="vo">
+                                            <li><input type="checkbox" id="{$vo.id}" <if condition="strpos($info.marks,$vo.id) neq false">checked</if> data-labelauty="{$vo.value}"></li>
+                                        </volist>
+                                    </ul>
+                                    <else/>
+                                    <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                                </notempty>
+                                <input type="hidden" class="text input-large" name="marks" id="advantage" value="{$info.marks}">
+                            </div>
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">公司规模</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="scale" value="{$info.scale}">
-                            <select class="text input-large">
-                                <option value="" selected="selected">20人以下</option>
-                                <option value="">20-50人</option>
-                                <option value="">50-100人</option>
-                                <option value="">100-300人</option>
-                                <option value="">300-500人</option>
-                                <option value="">500-1000人</option>
-                                <option value="">1000人以上</option>
-                            </select>
+                            <notempty name="_scale">
+                                <select class="text input-large" name="scale" style="height: 30px;width: 400px;">
+                                    <volist name="_scale" id="vo">
+                                        <option value="{$vo.value}" <eq name="$vo.value|intval" value="$info.scale">selected='selected'</eq>>{$vo.value_explain}</option>
+                                    </volist>
+                                </select>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -132,7 +142,7 @@
                 <div class="form-item cf">
                     <label class="item-label"></label>
                     <div class="controls edit_sort_btn">
-                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">确 定</button>
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" onclick="setAdvantage();" target-form="form-horizontal">确 定</button>
                         <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
                     </div>
                 </div>
@@ -142,5 +152,31 @@
 </block>
 
 <block name="script">
-
+    <link href="__STATIC__/labelauty/jquery-labelauty.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="__STATIC__/labelauty/jquery-labelauty.js"></script>
+    <style>
+        .dowebok{list-style-type: none;}
+        .dowebok li{display: inline-block;}
+        .dowebok li{margin: 10px 5px;}
+        input.labelauty + label{font:12px "Microsoft Yahei";}
+    </style>
+    <script>
+        $(function() {
+            $(':input').labelauty();
+        });
+        function setAdvantage(){
+            var advantage = "";
+            $.each($(".dowebok li"),function(i,n){
+                var li = $(this);
+                var span = li.find("span:visible");
+                var input = li.find("input");
+                var classattr = span.attr("class");
+                if(classattr == "labelauty-checked-image"){
+                    advantage += (input.attr("id") + "#");
+                }
+            });
+            advantage = advantage.substring(0,advantage.length - 1);
+            $("#advantage").val(advantage);
+        }
+    </script>
 </block>
