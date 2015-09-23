@@ -1,8 +1,4 @@
 <extend name="Public/base"/>
-<!-- 子导航 -->
-<block name="sidebar">
-    <include file="Article/sidemenu" />
-</block>
 <block name="body">
     <!-- 标题 -->
     <div class="main-title">
@@ -37,7 +33,9 @@
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
                 <th class="">公司名称</th>
-                <th class="">详情</th>
+                <th class="">所在城市</th>
+                <th class="">公司规模</th>
+                <th class="">公司网站</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -50,7 +48,9 @@
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
                         <td>{$vo.name}</td>
-                        <td>公司详细介绍内容</td>
+                        <td>{$vo.city}</td>
+                        <td>{$vo.scale}</td>
+                        <td>{$vo.website}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
