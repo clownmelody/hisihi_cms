@@ -51,19 +51,22 @@ class OrganizationController extends AdminController
         $attr['target-form'] = 'ids';
 
         $builder->title('机构信息管理')
-            ->setStatusUrl(U('setOrganizationIdentification'))->buttonDisable('','审核不通过')->buttonDelete(U('delete'))
-            ->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('add'))
-            ->keyId()->keyLink('name', '机构名称','editContents?id=###')->keyText('type','机构类型')->keyText('form','形式')
+            ->setStatusUrl(U('setOrganizationStatus'))->buttonNew(U('add'))->buttonDelete()
+            ->keyId()->keyLink('name', '机构名称','edit?id=###')->keyText('type','机构类型')->keyText('form','形式')
             ->keyText('period','周期')->keyText('location','地址')->keyMap('identification','是否认证',array(0 => '未认证',1 => '已认证'))
             ->keyCreateTime()
             ->keyMap('status','状态',array(1 => '正常', 0 => '未激活'))
-            ->keyDoActionEdit( 'update?id=###','编辑')
+            ->keyDoActionEdit( 'edit?id=###','编辑')
             ->data($list)
             ->pagination($totalCount, $r)
             ->display();
     }
 
-    public function setOrganizationIdentification($ids,$status){
+    /**设置机构信息的状态
+     * @param $ids
+     * @param $status
+     */
+    public function setOrganizationStatus($ids,$status){
         $builder = new AdminListBuilder();
         if($status==1){
             foreach($ids as $id){
@@ -77,13 +80,32 @@ class OrganizationController extends AdminController
                 /*同步微博end*/
             }
         }
-        $builder->doSetStatus('IssueContent', $ids, $status);
+        $builder->doSetStatus('Organization', $ids, $status);
     }
 
     /**
      * 机构基本信息增加
      */
     public function add(){
+        $model = $this->organization_configModel;
+        $list = $model->where("type=2")->order("create_time")->select();
+        $this->assign('_list', $list);
+        $this->display();
+    }
+
+    public function edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        //$Model = M('Company');
+        $Model = $this->organizationModel;
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $this->assign('organization', $data);
+        $this->meta_title = '编辑机构信息';
         $this->display();
     }
 
@@ -94,12 +116,15 @@ class OrganizationController extends AdminController
         if (IS_POST) { //提交表单
             //$model = M('Organization');
             $model = $this->organizationModel;
-            $cid = $_POST["cid"];
+            $cid = $_POST["id"];
             $data["name"] = $_POST["name"];
             $data["slogan"] = $_POST["slogan"];
             $data["location"] = $_POST["location"];
+            $data["latitude"] = $_POST["latitude"];
+            $data["longitude"] = $_POST["longitude"];
             $data["phone_num"] = $_POST["phone_num"];
-            $data["advantage"] = implode("#",$_POST["advantage"]);
+            //$data["advantage"] = implode("#",$_POST["advantage"]);
+            $data["advantage"] = $_POST["advantage"];
             $data["introduce"] = $_POST["introduce"];
             $data["certification"] = $_POST["certification"];
             $data["logo"] = $_POST["picture"];
@@ -115,7 +140,7 @@ class OrganizationController extends AdminController
             } else {
                 //$model = D('Organization');
                 $model = $this->organizationModel;
-                $model->updateCompany($cid, $data);
+                $model->updateOrganization($cid, $data);
                 //$this->success('更新成功', Cookie('__forward__'));
                 $this->success('更新成功', 'index.php?s=/admin/organization/organizationinfo');
             }

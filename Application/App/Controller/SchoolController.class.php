@@ -53,13 +53,21 @@ class SchoolController extends AppController
         $sqlstr = "SELECT * FROM hisihi_school where school_pro_id = ".$provinceid;
         //进行原生的SQL查询
         $list = $Model->query($sqlstr);
-        if($list){
+        if($total == 0){
             $resultlist = array();
             $resultlist["totalcount"] = $total;
-            $resultlist["data"] = $list;
+            $resultlist["data"] = array();
             $this->apiSuccess("获取高校信息成功", null, $resultlist);
-        }else{
-            $this->apiError("未查询到高校信息");
+        }else
+        {
+            if($list){
+                $resultlist = array();
+                $resultlist["totalcount"] = $total;
+                $resultlist["data"] = $list;
+                $this->apiSuccess("获取高校信息成功", null, $resultlist);
+            }else{
+                $this->apiError("未查询到高校信息");
+            }
         }
     }
 

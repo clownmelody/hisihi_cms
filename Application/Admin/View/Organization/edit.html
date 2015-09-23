@@ -2,7 +2,7 @@
 <block name="body">
     <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
     <div class="main-title cf">
-        <h2>新增机构</h2>
+        <h2>修改机构信息</h2>
     </div>
 
     <!-- 标签页导航 -->
@@ -10,27 +10,27 @@
         <div class="tab-content">
             <!-- 表单 -->
             <form id="form" action="{:U('update')}" method="post" class="form-horizontal doc-modal-form">
-                <input type="hidden" name="cid" id="cid" value=""/>
+                <input type="hidden" name="id" id="id" value="{$organization.id}"/>
                 <!-- 基础 -->
                 <div id="tab1" class="tab-pane in tab1">
                     <div class="form-item cf">
                         <label class="item-label">机构名称</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="name" value="">
+                            <input type="text" class="text input-large" name="name" value="{$organization.name}">
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">机构宣传语</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="slogan" value="">
+                            <input type="text" class="text input-large" name="slogan" value="{$organization.slogan}">
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">机构地址</label>
                         <div class="controls">
-                            <input type="text" id="location" class="text input-large" name="location" value="">
-                            <input type="hidden" id="longitude" class="text input-large" name="longitude" value="">
-                            <input type="hidden" id="latitude" class="text input-large" name="latitude" value="">
+                            <input type="text" class="text input-large" name="location" value="{$organization.location}">
+                            <input type="hidden" id="longitude" class="text input-large" name="longitude" value="{$organization.longitude}">
+                            <input type="hidden" id="latitude" class="text input-large" name="latitude" value="{$organization.latitude}">
                             <button class="btn" style="margin-left: 20px;" onclick="javascript:locationSearch();return false;">查  找</button>
                             <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
                             <div id="allmap"></div>
@@ -39,28 +39,27 @@
                     <div class="form-item cf">
                         <label class="item-label">机构联系电话</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="phone_num" value="">
+                            <input type="text" class="text input-large" name="phone_num" value="{$organization.phone_num}">
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">优势标签</label>
                         <div class="controls">
                             <ul class="dowebok">
-                                <notempty name="_list">
-                                    <volist name="_list" id="vo">
-                                        <li><input type="checkbox"  data-labelauty="{$vo.value}"></li>
-                                    </volist>
-                                    <else/>
-                                    <div  class="text-center"> aOh! 暂时还没有内容!</div>
-                                </notempty>
+                                <li><input type="checkbox" name="advantage[]" value="0" data-labelauty="环境好"></li>
+                                <li><input type="checkbox" name="advantage[]" value="0" data-labelauty="设备先进"></li>
+                                <li><input type="checkbox" name="advantage[]" value="0" data-labelauty="包吃包住"></li>
+                                <li><input type="checkbox" name="advantage[]" value="0" data-labelauty="师资力量强"></li>
+                                <li><input type="checkbox" name="advantage[]" value="0" data-labelauty="钱多人傻"></li>
+                                <li><input type="checkbox" name="advantage[]" value="0" data-labelauty="胸大无脑"></li>
+                                <li><input type="checkbox" name="advantage[]" value="0" data-labelauty="妹子多"></li>
                             </ul>
-                            <input type="hidden" class="text input-large" name="advantage" id="advantage" value="">
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">机构基本信息</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="introduce" value="">
+                            <input type="text" class="text input-large" name="introduce" value="{$organization.introduce}">
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -113,6 +112,7 @@
 
                 </div>
 
+
                 <!-- 按钮 -->
                 <div class="form-item cf">
                     <label class="item-label"></label>
@@ -133,20 +133,32 @@
     <script type="text/javascript" src="http://dev.baidu.com/wiki/static/map/tuan/js/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix("#float_search_bar");</script>
     <![endif]-->
-    <style>
+    <style type="text/css">
         #allmap{  border: 1px solid #bfd2e1;  width: 500px;  height: 400px;  font-family: Arial, Helvetica, sans-serif,"宋体";  }
-
         .dowebok{list-style-type: none;}
         .dowebok li{display: inline-block;}
-        .dowebok li{margin: 10px 5px;}
+        .dowebok li{margin: 10px 0;}
         input.labelauty + label{font:12px "Microsoft Yahei";}
     </style>
     <script>
         //导航高亮
         //highlight_subnav('{:U('Organization/organizationinfo')}');
-        $(function() {
+        $(function(){
             $(':input').labelauty();
+
+            var longitude = Number($("#longitude").val());
+            var latitude = Number($("#latitude").val());
+            var point1 = new BMap.Point(longitude,latitude);
+            map.centerAndZoom(point1,16);
+            map.addOverlay(new BMap.Marker(point1));
+
+            myGeo.getLocation(point1, function(rs){
+                var addComp = rs.addressComponents;
+                //alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+                localcity =  addComp.city;
+            });
         });
+
         function setAdvantage(){
             var advantage = "";
             $.each($(".dowebok li"),function(i,n){
@@ -176,10 +188,6 @@
         //根据ip获取城市
         var city = new BMap.LocalCity();
         var localcity = "";
-        city.get(function(result){
-            localcity = result.name;
-            map.setCenter(localcity);
-        });
 
         function locationSearch(){
             var location = $("#location").val();
@@ -247,7 +255,7 @@
             });
             local.search(myValue);
         }
+
     </script>
 </block>
-
 
