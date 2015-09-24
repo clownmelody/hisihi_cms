@@ -45,15 +45,15 @@
                     <div class="form-item cf">
                         <label class="item-label">优势标签</label>
                         <div class="controls">
-                            <ul class="dowebok">
                                 <notempty name="_list">
+                                    <ul class="dowebok">
                                     <volist name="_list" id="vo">
-                                        <li><input type="checkbox"  data-labelauty="{$vo.value}"></li>
+                                        <li><input type="checkbox" id="{$vo.id}" data-labelauty="{$vo.value}"></li>
                                     </volist>
+                                    </ul>
                                     <else/>
                                     <div  class="text-center"> aOh! 暂时还没有内容!</div>
                                 </notempty>
-                            </ul>
                             <input type="hidden" class="text input-large" name="advantage" id="advantage" value="">
                         </div>
                     </div>
@@ -152,11 +152,10 @@
             $.each($(".dowebok li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
+                var input = li.find("input");
                 var classattr = span.attr("class");
                 if(classattr == "labelauty-checked-image"){
-                    advantage += "1#"
-                }else{
-                    advantage += "0#"
+                    advantage += (input.attr("id") + "#");
                 }
             });
             advantage = advantage.substring(0,advantage.length - 1);

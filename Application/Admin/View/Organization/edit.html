@@ -164,11 +164,10 @@
             $.each($(".dowebok li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
+                var input = li.find("input");
                 var classattr = span.attr("class");
                 if(classattr == "labelauty-checked-image"){
-                    advantage += "1#"
-                }else{
-                    advantage += "0#"
+                    advantage += (input.attr("id") + "#");
                 }
             });
             advantage = advantage.substring(0,advantage.length - 1);
