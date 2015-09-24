@@ -34,53 +34,28 @@ class OrganizationController extends AdminController
         parent::_initialize();
     }
 
-    /**查看机构信息
-     * @param int $page
-     * @param int $r
+    /**
+     * 显示公司列表
      */
-    public function organizationInfo($page=1,$r=10)
-    {
-        //读取列表
-        $map['status'] = array('egt', 0);
-        $list = $this->organizationModel->where($map)->order('id desc')->page($page, $r)->select();
-        unset($li);
-        $totalCount = $this->organizationModel->where($map)->count();
-        //显示页面
-        $builder = new AdminListBuilder();
-        $attr['class'] = 'btn ajax-post';
-        $attr['target-form'] = 'ids';
-
-        $builder->title('机构信息管理')
-            ->setStatusUrl(U('setOrganizationStatus'))->buttonNew(U('add'))->buttonDelete()
-            ->keyId()->keyLink('name', '机构名称','edit?id=###')->keyText('type','机构类型')->keyText('form','形式')
-            ->keyText('period','周期')->keyText('location','地址')->keyMap('identification','是否认证',array(0 => '未认证',1 => '已认证'))
-            ->keyCreateTime()
-            ->keyMap('status','状态',array(1 => '正常', 0 => '未激活'))
-            ->keyDoActionEdit( 'edit?id=###','编辑')
-            ->data($list)
-            ->pagination($totalCount, $r)
-            ->display();
-    }
-
-    /**设置机构信息的状态
-     * @param $ids
-     * @param $status
-     */
-    public function setOrganizationStatus($ids,$status){
-        $builder = new AdminListBuilder();
-        if($status==1){
-            foreach($ids as $id){
-                $content=D('Organization')->find($id);
-                D('Common/Message')->sendMessage($content['uid'],"管理员审核通过了您发布的内容。现在可以在列表看到该内容了。" , $title = '机构认证通知', U('Issue/Index/issueContentDetail',array('id'=>$id)), is_login(), 2);
-                /*同步微博*/
-                $user = query_user(array('nickname', 'space_link'), $content['uid']);
-                $weibo_content = '管理员审核通过了@' . $user['nickname'] . ' 的内容：【' . $content['title'] . '】，快去看看吧：' ."http://$_SERVER[HTTP_HOST]" .U('Issue/Index/issueContentDetail',array('id'=>$content['id']));
-                $model = D('Weibo/Weibo');
-                $model->addWeibo(is_login(), $weibo_content);
-                /*同步微博end*/
-            }
+    public function index(){
+        $model = $this->organizationModel;
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['name'] = array('like','%'.$name.'%');
+            $list = $model->where($map)->where("status=1")->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where('status=1')->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
-        $builder->doSetStatus('Organization', $ids, $status);
+
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","机构列表");
+        $this->display();
     }
 
     /**
@@ -92,7 +67,9 @@ class OrganizationController extends AdminController
         $this->assign('_list', $list);
         $this->display();
     }
-
+    /**
+     * 机构基本信息编辑
+     */
     public function edit($id){
         if(empty($id)){
             $this->error('参数不能为空！');
@@ -132,37 +109,54 @@ class OrganizationController extends AdminController
             if(empty($cid)){
                 try {
                     $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }else{
+                        $id = $res;
+                        //上传图片到OSS
+                        $picid = $model->where('id='.$id)->getField('logo');
+                        if($picid){
+                            $this->uploadLogoPicToOSS($picid);
+                        }
+                    }
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
                 //$this->success('添加成功', Cookie('__forward__'));
-                $this->success('添加成功', 'index.php?s=/admin/organization/organizationinfo');
+                $this->success('添加成功', 'index.php?s=/admin/organization/index');
             } else {
                 //$model = D('Organization');
                 $model = $this->organizationModel;
                 $model->updateOrganization($cid, $data);
+                //上传图片到OSS
+                $picid = $model->where('id='.$cid)->getField('logo');
+                if($picid){
+                    $this->uploadLogoPicToOSS($picid);
+                }
                 //$this->success('更新成功', Cookie('__forward__'));
-                $this->success('更新成功', 'index.php?s=/admin/organization/organizationinfo');
+                $this->success('更新成功', 'index.php?s=/admin/organization/index');
             }
         } else {
             $this->display('add');
         }
     }
-
+    /**
+     * 机构基本信息删除
+     */
     public function delete($id){
         if(!empty($id)){
-            $model = D('Company');
+            $model = $this->organizationModel;
             $data['status'] = -1;
             if(is_array($id)){
                 foreach ($id as $i)
                 {
-                    $model->updateCompany($i, $data);
+                    $model->updateOrganization($i, $data);
                 }
             } else {
                 $id = intval($id);
-                $model->updateCompany($id, $data);
+                $model->updateOrganization($id, $data);
             }
-            $this->success('删除成功','index.php?s=/admin/company');
+            $this->success('删除成功','index.php?s=/admin/organization');
         } else {
             $this->error('未选择要删除的数据');
         }
@@ -375,5 +369,21 @@ class OrganizationController extends AdminController
 
     }
 
-
+    /**上传图片到OSS
+     * @param $picID
+     */
+    private function uploadLogoPicToOSS($picID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$picID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            }
+        }
+    }
 }

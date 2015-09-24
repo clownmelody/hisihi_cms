@@ -45,9 +45,13 @@
                                 <notempty name="_marks">
                                     <ul class="dowebok">
                                         <volist name="_marks" id="vo">
-                                            <li><input type="checkbox" id="{$vo.id}" <if condition="strpos($info.marks,$vo.id) neq false">checked</if> data-labelauty="{$vo.value}"></li>
+                                            <li><input type="checkbox" id="{$vo.id}" <between name="vo['id']" value="$_markarray">checked</between> data-labelauty="{$vo.value}"></li>
+                                            <input type="text" class="text input-large"  value="{vo['id']}">
                                         </volist>
+
                                     </ul>
+                                    <input type="text" class="text input-large"  value="{$_markarray}">
+
                                     <else/>
                                     <div  class="text-center"> aOh! 暂时还没有内容!</div>
                                 </notempty>
@@ -61,7 +65,7 @@
                             <notempty name="_scale">
                                 <select class="text input-large" name="scale" style="height: 30px;width: 400px;">
                                     <volist name="_scale" id="vo">
-                                        <option value="{$vo.value}" <eq name="$vo.value|intval" value="$info.scale">selected='selected'</eq>>{$vo.value_explain}</option>
+                                        <option value="{$vo.value}" <eq name="vo['value']" value="$info['scale']">selected="selected"</eq>>{$vo.value_explain}</option>
                                     </volist>
                                 </select>
                                 <else/>

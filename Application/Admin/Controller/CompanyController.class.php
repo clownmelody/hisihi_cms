@@ -48,6 +48,9 @@ class CompanyController extends AdminController {
         $this->display();
     }
 
+    /**
+     * 显示company新增页面
+     */
     public function add(){
         $model = D('CompanyConfig');
         $marks = $model->where('type=1 and status=1')->select();
@@ -58,6 +61,9 @@ class CompanyController extends AdminController {
         $this->display();
     }
 
+    /**
+     * 更新company
+     */
     public function update(){
         if (IS_POST) { //提交表单
             $model = M('Company');
@@ -108,6 +114,9 @@ class CompanyController extends AdminController {
         }
     }
 
+    /**显示company的编辑页面
+     * @param $id
+     */
     public function edit($id){
         if(empty($id)){
             $this->error('参数不能为空！');
@@ -121,7 +130,9 @@ class CompanyController extends AdminController {
         $cmodel = D('CompanyConfig');
         $marks = $cmodel->where('type=1 and status=1')->select();
         $scale = $cmodel->where('type=2  and status=1')->order('id')->select();
+        $markarray = implode('#',$data->scale);
 
+        $this->assign('_markarray', $markarray);
         $this->assign('_marks', $marks);
         $this->assign('_scale', $scale);
         $this->assign('info', $data);
@@ -129,6 +140,9 @@ class CompanyController extends AdminController {
         $this->display();
     }
 
+    /**company的删除
+     * @param string $id
+     */
     public function delete($id){
         if(!empty($id)){
             $model = D('Company');
@@ -339,10 +353,16 @@ class CompanyController extends AdminController {
         $this->display();
     }
 
+    /**
+     * 新增配置信息
+     */
     public function config_add(){
         $this->display();
     }
 
+    /**编辑配置信息
+     * @param $id
+     */
     public function config_edit($id){
         if(empty($id)){
             $this->error('参数不能为空！');
@@ -358,6 +378,9 @@ class CompanyController extends AdminController {
         $this->display();
     }
 
+    /**
+     * 更新配置信息
+     */
     public function config_update(){
         if (IS_POST) { //提交表单
             $model = M('CompanyConfig');
@@ -386,6 +409,9 @@ class CompanyController extends AdminController {
         }
     }
 
+    /**删除配置信息
+     * @param $id
+     */
     public function config_delete($id){
         if(!empty($id)){
             $model = D('CompanyConfig');
