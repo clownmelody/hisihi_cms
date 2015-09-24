@@ -1,0 +1,116 @@
+<extend name="Public/base" />
+<block name="body">
+    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+    <div class="main-title cf">
+        <h2>编辑招聘信息</h2>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="tab-wrap">
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('recruitUpdate')}" method="post" class="form-horizontal doc-modal-form">
+                <input type="hidden" name="company_id" id="company_id" value="{$recruit.company_id}"/>
+                <input type="hidden" name="rid" id="rid" value="{$recruit.id}"/>
+                <!-- 基础 -->
+                <div id="tab1" class="tab-pane in tab1">
+                    <div class="form-item cf">
+                        <label class="item-label">职位名称</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="job" value="{$recruit.job}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">薪酬</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="salary" value="{$recruit.salary}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">任职要求</label>
+                        <div class="controls">
+                            <notempty name="requirement">
+                                <ul class="dowebok">
+                                    <volist name="requirement" id="vo">
+                                        <li><input type="checkbox" id="{$vo.id}"  data-labelauty="{$vo.value}"></li>
+                                    </volist>
+                                </ul>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                            <input type="hidden" class="text input-large" name="requirement" id="advantage" value="{$recruit.requirement}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">任职技能描述</label>
+                        <div class="controls">
+                            <textarea name="skills">{$recruit.skills}</textarea>
+                            {:hook('adminArticleEdit', array('name'=>'skills','value'=>$field['value']))}
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">招聘截止时间</label>
+                        <div class="controls">
+                            <input type="text" name="end_time" class="text input-large time" value="{$recruit.end_time|time_format}" placeholder="请选择时间" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="form-item cf">
+                    <label class="item-label"></label>
+                    <div class="controls edit_sort_btn">
+                        <button class="btn submit-btn ajax-post no-refresh" onclick="setAdvantage();" type="submit" target-form="form-horizontal">确 定</button>
+                        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+
+<script>
+    //导航高亮
+    highlight_subnav('{:U('Company/index')}');
+</script>
+<block name="script">
+    <link href="__STATIC__/labelauty/jquery-labelauty.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="__STATIC__/labelauty/jquery-labelauty.js"></script>
+    <link href="__STATIC__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+    <php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__STATIC__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+    <link href="__STATIC__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <style>
+        .dowebok{list-style-type: none;}
+        .dowebok li{display: inline-block;}
+        .dowebok li{margin: 10px 5px;}
+        input.labelauty + label{font:12px "Microsoft Yahei";}
+    </style>
+    <script>
+        $(function() {
+            $(':input').labelauty();
+            $('.time').datetimepicker({
+                format: 'yyyy-mm-dd hh:ii',
+                language:"zh-CN",
+                minView:2,
+                autoclose:true
+            });
+        });
+        function setAdvantage(){
+            var advantage = "";
+            $.each($(".dowebok li"),function(i,n){
+                var li = $(this);
+                var span = li.find("span:visible");
+                var input = li.find("input");
+                var classattr = span.attr("class");
+                if(classattr == "labelauty-checked-image"){
+                    advantage += (input.attr("id") + "#");
+                }
+            });
+            advantage = advantage.substring(0,advantage.length - 1);
+            $("#advantage").val(advantage);
+        }
+    </script>
+
+</block>

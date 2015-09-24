@@ -129,6 +129,9 @@ class CompanyController extends AdminController {
         $this->display();
     }
 
+    /**
+     * @param string $id
+     */
     public function delete($id){
         if(!empty($id)){
             $model = D('Company');
@@ -417,6 +420,134 @@ class CompanyController extends AdminController {
             if(!$isExist){
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
             }
+        }
+    }
+
+    /**
+     * 公司招聘信息列表
+     */
+    public function recruit(){
+        $model = D('CompanyRecruit');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['name'] = array('like','%'.$name.'%');
+            $list = $model->where($map)->where("status=1")->order('type')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        foreach($list as &$recruit){
+            $company_id = $recruit['id'];
+            $companyModel = M('Company');
+            $company_info = $companyModel->where('id='.$company_id)->find();
+            $recruit['company_name'] = $company_info['name'];
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","招聘职位列表");
+        $this->display();
+    }
+
+    /**
+     * 添加公司招聘信息
+     * @param $id
+     */
+    public function addRecruit($id){
+        $cmodel = D('CompanyConfig');
+        $marks = $cmodel->where('type=3 and status=1')->select();
+        $this->assign('requirement', $marks);
+        $this->assign('company_id', $id);
+        $this->display();
+    }
+
+    /**
+     * 招聘信息添加和修改
+     */
+    public function recruitUpdate(){
+        if (IS_POST) { //提交表单
+            $model = D('CompanyRecruit');
+            $data = $model->create();
+            $data['end_time'] = strtotime($_POST["end_time"]);
+            $rid = $_POST['rid'];
+            if(empty($rid)){
+                try {
+                    $model = M('CompanyRecruit');
+                    $data = $model->create();
+                    $data['end_time'] = strtotime($_POST["end_time"]);
+                    $data['create_time'] = time();
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/company/recruit');
+            } else {
+                $model = D('CompanyRecruit');
+                $model->updateCompanyRecruit($rid, $data);
+                $this->success('更新成功', 'index.php?s=/admin/company/recruit');
+            }
+        } else {
+            $this->display('addRecruit');
+        }
+    }
+
+    /**
+     * 编辑招聘信息
+     * @param $id
+     */
+    public function editRecruit($id){
+        $model = M('CompanyRecruit');
+        $result = $model->where('id='.$id)->find();
+        $this->assign('recruit', $result);
+        $this->display();
+    }
+
+    /**
+     * 删除招聘信息
+     * @param $id
+     */
+    public function deleteRecruit($id){
+        if(!empty($id)){
+            $model = D('CompanyRecruit');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->updateCompanyRecruit($i, $data);
+                }
+            } else {
+                $id = intval($id);
+                $model->updateCompanyRecruit($id, $data);
+            }
+            $this->success('删除成功','index.php?s=/admin/company/recruit');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 恢复删除的招聘信息数据
+     * @param $id
+     */
+    public function setRecruitStatus($id){
+        if(!empty($id)){
+            $model = D('CompanyRecruit');
+            $data['status'] = 1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->updateCompanyRecruit($i, $data);
+                }
+            } else {
+                $id = intval($id);
+                $model->updateCompanyRecruit($id, $data);
+            }
+            $this->success('启用数据成功','index.php?s=/admin/company/recruit');
+        } else {
+            $this->error('未选择要启用的数据');
         }
     }
 
