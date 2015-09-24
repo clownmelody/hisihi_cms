@@ -130,7 +130,7 @@ class CompanyController extends AdminController {
         $cmodel = D('CompanyConfig');
         $marks = $cmodel->where('type=1 and status=1')->select();
         $scale = $cmodel->where('type=2  and status=1')->order('id')->select();
-        $markarray = implode('#',$data->scale);
+        $markarray = explode("#",$data['marks']);
 
         $this->assign('_markarray', $markarray);
         $this->assign('_marks', $marks);

@@ -45,13 +45,9 @@
                                 <notempty name="_marks">
                                     <ul class="dowebok">
                                         <volist name="_marks" id="vo">
-                                            <li><input type="checkbox" id="{$vo.id}" <between name="vo['id']" value="$_markarray">checked</between> data-labelauty="{$vo.value}"></li>
-                                            <input type="text" class="text input-large"  value="{vo['id']}">
+                                            <li><input type="checkbox" id="{$vo.id}" <in name="vo['id']" value="$_markarray">checked</in> data-labelauty="{$vo.value}"></li>
                                         </volist>
-
                                     </ul>
-                                    <input type="text" class="text input-large"  value="{$_markarray}">
-
                                     <else/>
                                     <div  class="text-center"> aOh! 暂时还没有内容!</div>
                                 </notempty>
