@@ -1345,9 +1345,9 @@ class UserController extends AppController
         }
         unset($v);*/
         if($group==5){  // 学生
-            $list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) limit 0,4");
+            $list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) desc limit 0,4");
         } else {        // 老师
-            $list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) limit 0,4");
+            $list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) desc limit 0,4");
         }
         foreach ($list as &$v) {
             $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
@@ -1674,4 +1674,17 @@ class UserController extends AppController
         curl_close($ch);
         return $output;
     }
+
+    // 2732 - 536 - 2733 - 2734
+    public function autoFollow(){
+        $startUid = 115;
+        $count = 400;
+        $model = M();
+        for ($x=0; $x<$count; $x++) {
+            $time = time();
+            $model->execute("INSERT INTO hisihi_follow (follow_who, who_follow, create_time) values(2734, ".$startUid.", ".$time.")");
+            $startUid++;
+        }
+    }
+
 }
