@@ -36,9 +36,15 @@ class CompanyController extends AdminController {
         $name = $_GET["title"];
         if($name){
             $map['name'] = array('like','%'.$name.'%');
-            $list = $model->where($map)->where("status=1")->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($map)->where("status=1")->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('status=1')->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        foreach($list as &$recruit){
+            $scale_value = $recruit['scale'];
+            $cmodel = D('CompanyConfig');
+            $scale = $cmodel->where('type=2 and status=1 and value='.$scale_value)->getField("value_explain");
+            $recruit['scale'] = $scale;
         }
 
         $this->assign('_list', $list);
@@ -291,6 +297,48 @@ class CompanyController extends AdminController {
         return 'banner';
     }
 
+    /**
+     * 顶部文档新增页面初始化
+     * @author huajie <banhuajie@163.com>
+     */
+    public function topadd(){
+        $cate_id    =   I('get.cate_id',0);
+        $model_id   =   I('get.model_id',0);
+
+        empty($cate_id) && $this->error('参数不能为空！');
+        empty($model_id) && $this->error('该分类未绑定模型！');
+
+        //检查该分类是否允许发布
+        $allow_publish = D('Document')->checkCategory($cate_id);
+        !$allow_publish && $this->error('该分类不允许发布内容！');
+
+        /* 获取要编辑的扩展模型模板 */
+        $model      =   get_document_model($model_id);
+
+        //处理结果
+        $info['pid']            =   $_GET['pid']?$_GET['pid']:0;
+        $info['model_id']       =   $model_id;
+        $info['category_id']    =   $cate_id;
+        if($info['pid']){
+            // 获取上级文档
+            $article            =   M('Document')->field('id,title,type')->find($info['pid']);
+            $this->assign('article',$article);
+        }
+
+        //获取表单字段排序
+        $fields = get_model_attribute($model['id']);
+
+        $this->assign('info',       $info);
+        $this->assign('fields',     $fields);
+        $this->assign('type_list',  get_type_bycate($cate_id));
+        $this->assign('model',      $model);
+        $this->meta_title = '新增'.$model['title'];
+        $this->display();
+    }
+    /**
+     * 顶部文档编辑页面初始化
+     * @author huajie <banhuajie@163.com>
+     */
     public function topedit(){
 
         $id     =   I('get.id','');
@@ -327,6 +375,29 @@ class CompanyController extends AdminController {
 
         $this->meta_title   =   '编辑文档';
         $this->display();
+    }
+
+    /**
+     * 更新顶部banner数据
+     * @author huajie <banhuajie@163.com>
+     */
+    public function topupdate(){
+        $res = D('Document')->update();
+        if(!$res){
+            $this->error(D('Document')->getError());
+        }else{
+            $id = $res['id'];
+            $model = M();
+            $result = $model->query('SELECT logo_pic FROM hisihi_document_article WHERE id='.$id);
+            if($result){
+                $this->uploadLogoPicToOSS($result[0]['logo_pic']);
+            }
+            $result = $model->query('SELECT cover_id FROM hisihi_document WHERE id='.$id);
+            if($result){
+                $this->uploadLogoPicToOSS($result[0]['cover_id']);
+            }
+            $this->success($res['id']?'更新成功':'新增成功', Cookie('__forward__'));
+        }
     }
 
     /*
@@ -460,13 +531,18 @@ class CompanyController extends AdminController {
             $map['name'] = array('like','%'.$name.'%');
             $list = $model->where($map)->where("status=1")->order('type')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$recruit){
-            $company_id = $recruit['id'];
+            $company_id = $recruit['company_id'];
             $companyModel = M('Company');
             $company_info = $companyModel->where('id='.$company_id)->find();
             $recruit['company_name'] = $company_info['name'];
+
+            $salary_value = $recruit['salary'];
+            $cmodel = D('CompanyConfig');
+            $salary = $cmodel->where('type=4 and status=1 and value='.$salary_value)->getField("value_explain");
+            $recruit['salary'] = $salary;
         }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
@@ -482,6 +558,8 @@ class CompanyController extends AdminController {
     public function addRecruit($id){
         $cmodel = D('CompanyConfig');
         $marks = $cmodel->where('type=3 and status=1')->select();
+        $salary = $cmodel->where('type=4 and status=1')->select();
+        $this->assign('_salary', $salary);
         $this->assign('requirement', $marks);
         $this->assign('company_id', $id);
         $this->display();
@@ -524,6 +602,13 @@ class CompanyController extends AdminController {
     public function editRecruit($id){
         $model = M('CompanyRecruit');
         $result = $model->where('id='.$id)->find();
+        $cmodel = D('CompanyConfig');
+        $marks = $cmodel->where('type=3 and status=1')->select();
+        $salary = $cmodel->where('type=4 and status=1')->select();
+        $markarray = explode("#",$result['requirement']);
+        $this->assign('_markarray', $markarray);
+        $this->assign('_salary', $salary);
+        $this->assign('requirement', $marks);
         $this->assign('recruit', $result);
         $this->display();
     }

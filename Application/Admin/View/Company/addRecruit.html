@@ -23,7 +23,16 @@
                     <div class="form-item cf">
                         <label class="item-label">薪酬</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="salary" value="">
+                            <!--<input type="text" class="text input-large" name="salary" value="">-->
+                            <notempty name="_salary">
+                                <select class="text input-large" name="salary" style="height: 30px;width: 400px;">
+                                    <volist name="_salary" id="vo">
+                                        <option value="{$vo.value}" >{$vo.value_explain}</option>
+                                    </volist>
+                                </select>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -45,7 +54,7 @@
                         <label class="item-label">任职技能描述</label>
                         <div class="controls">
                             <textarea name="skills"></textarea>
-                            {:hook('adminArticleEdit', array('name'=>'skills','value'=>$field['value']))}
+                            <!--{:hook('adminArticleEdit', array('name'=>'skills','value'=>$field['value']))}-->
                         </div>
                     </div>
                     <div class="form-item cf">
