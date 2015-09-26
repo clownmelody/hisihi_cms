@@ -99,7 +99,7 @@ class UserController extends AppController
 
 	
 	//登录
-	public function login($username, $password, $type = 1, $client = 'iOS', $reg_id = '') {
+	public function login($username, $password='', $type = 1, $client = 'iOS', $reg_id = '') {
         // 获取上次登录的终端设备
         switch ($type) {
             case 1:
@@ -126,6 +126,7 @@ class UserController extends AppController
         } else {
             \Think\Log::write("根据用户名获取id为空，可能该用户不存在", "INFO");
         }
+
         //登录单点登录系统
         $result = $this->api->login($username, $password, $type); //1表示登录类型，使用用户名登录。
         if($result <= 0) {
@@ -135,6 +136,7 @@ class UserController extends AppController
         } else {
             $uid = $result;
         }
+
         //清除登录缓存
         clean_query_user_cache($uid,array('last_login_time','last_login_client'));
         //登录前台

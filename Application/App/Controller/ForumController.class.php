@@ -474,6 +474,54 @@ class ForumController extends AppController
         return $post;
     }
 
+    public function getTopPostInfo($id, $lite = 0)
+    {
+        //读取帖子内容
+        $field = 'id,uid,content,create_time';
+        if($lite == 0)
+            $field = $field . ',forum_id,title,create_time,last_reply_time, type, view_count,reply_count';
+        $post = D('ForumPost')->where(array('id' => $id, 'status' => 1))->field($field)->find();
+        if (!$post) {
+            if($lite == 0)
+                $this->apiError(404,'找不到该提问');
+            else
+                return null;
+        }
+        unset($post['id']);
+        $post['post_id'] = $id;
+
+        $post['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $post['uid']);
+        unset($post['uid']);
+
+        if($lite == 0){
+            $forum = D('Forum')->find($post['forum_id']);
+            $mapx = array('id' => $forum['type_id'], 'status' => 1);
+            $forumType = D('ForumType')->where($mapx)->select();
+            $post['forumTitle'] = $forum['title'] . '/' . $forumType[0]['title'];
+
+            $map_support['appname'] = 'Forum';
+            $map_support['table'] = 'post';
+            $map_support['row'] = $id;
+            $supportCount = $this->getSupportCountCache($map_support);
+            $map_supported = array_merge($map_support, array('uid' => is_login()));
+            $supported = D('Support')->where($map_supported)->count();
+            $post['supportCount'] = $supportCount;
+            $post['isSupportd'] = $supported;
+
+            $map_pos['type'] = 0;
+            $map_pos['id'] = $id;
+            $pos = $this->getForumPos($map_pos);
+            $post['pos'] = $pos['pos'];
+
+            unset($pos);
+            unset($map_pos);
+        }
+        //解析并成立图片数据
+        $post['img'] = $this->match_img($post['content']);
+        $post['sound'] = $this->fetchSound($id,0);
+        return $post;
+    }
+
     public function getReplyInfo($reply_id)
     {
         $map['id'] = $reply_id;
@@ -1306,7 +1354,7 @@ class ForumController extends AppController
         //判断是否需要显示1楼
         if ($page == 1) {
             $showMainPost = true;
-            $post = $this->getPostInfo($id);
+            $post = $this->getTopPostInfo($id);
             //增加浏览次数
             //D('ForumPost')->where(array('id' => $id))->setInc('view_count');
         } else {
@@ -1390,11 +1438,100 @@ class ForumController extends AppController
         unset($reply);
         //判断是否已经收藏
         $isBookmark = D('Forum/ForumBookmark')->exists(is_login(), $id);
+        if(count($replyList)){
+            $this->assign('isShowReply', true);
+        } else {
+            $this->assign('isShowReply', false);
+        }
         $this->assign('post', $post);
         $this->assign('post_img', $post['img']);
         $this->assign('replyList',$replyList);
         $this->setTitle('{$post.title|op_t} — 嘿设汇');
         $this->display('toppostdetail');
+    }
+
+    /**
+     * 客户端置顶帖ajax获取评论列表
+     * @param int $post_id
+     * @param $page
+     * @param int $count
+     */
+    public function ajaxPostReplyList($post_id=0, $page, $count=10){
+        if($post_id==0){
+            $this->apiError(-1, '传入帖子ID不能为空');
+        }
+        $map['post_id'] = $post_id;
+        $map['status'] = array('in','1,3');
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status desc,create_time', $page, $count);
+
+        foreach ($replyList as &$reply) {
+            $reply['reply_id'] = $reply['id'];
+            unset($reply['id']);
+            $map_pos['type'] = 1;
+            $map_pos['id'] = $reply['reply_id'];
+            $pos = $this->getForumPos($map_pos);
+            $reply['pos'] = $pos['pos'];
+
+            $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+
+            $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$reply['uid']))->find();
+            $isfans = D('Follow')->where(array('who_follow'=>$reply['uid'],'follow_who'=>get_uid()))->find();
+            $isfollowing = $isfollowing ? 2:0;
+            $isfans = $isfans ? 1:0;
+            $reply['userInfo']['relationship'] = $isfollowing | $isfans;
+
+            unset($reply['uid']);
+
+            unset($pos);
+            unset($map_pos);
+
+            $map_support['table'] = 'reply';
+            $map_support['row'] = $reply['reply_id'];
+
+            $supportCount = $this->getSupportCountCache($map_support);
+
+            $map_supported = array_merge($map_support, array('uid' => is_login()));
+            $supported = D('Support')->where($map_supported)->count();
+
+            $reply['supportCount'] = $supportCount;
+            $reply['isSupportd'] = $supported;
+
+            //解析并成立图片数据
+            $reply['img'] = $this->match_img($reply['content']);
+
+            $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
+
+            $reply['content'] = op_t($reply['content']);
+            unset($reply['user']);
+            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc',$page,$limit,false);
+            foreach ($lzlList as &$lzl) {
+                $lzl['lzl_id'] = $lzl['id'];
+                unset($lzl['id']);
+                $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
+                unset($lzl['uid']);
+
+                $map_pos['type'] = 2;
+                $map_pos['id'] = $lzl['lzl_id'];
+                $pos = $this->getForumPos($map_pos);
+                $lzl['pos'] = $pos['pos'];
+
+                unset($pos);
+                unset($map_pos);
+
+                $lzl['img'] = $this->match_img($lzl['content']);
+                $lzl['content'] = op_t($lzl['content']);
+                $lzl['sound'] = $this->fetchSound($lzl['lzl_id'],2);
+            }
+            $reply['lzlList'] = $lzlList;
+        }
+        unset($reply);
+        if(count($replyList)){
+            $this->assign('isShowReply', true);
+        } else {
+            $this->assign('isShowReply', false);
+        }
+        $extra['data'] = $replyList;
+        $this->apiSuccess('获取帖子回复成功', null, $extra);
     }
 
     /**
