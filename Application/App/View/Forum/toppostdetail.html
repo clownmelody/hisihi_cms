@@ -167,11 +167,12 @@
 	<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 	<script>
 		var page = 2;
+		var server_url = '{$Think.server.HTTP_HOST}';
 		function getMoreReplay(){
 			var postid = $('#postid').val();
 			$.ajax({
 				type: 'GET',
-				url: 'http://localhost/hisihi-cms/api.php?s=/forum/ajaxPostReplyList/post_id/' + postid +'/page/' + page,
+				url: 'http://' + server_url + '/api.php?s=/forum/ajaxPostReplyList/post_id/' + postid +'/page/' + page,
 				dataType: 'json',
 				success: function(data){
 					console.log(data);
