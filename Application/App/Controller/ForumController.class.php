@@ -288,6 +288,7 @@ class ForumController extends AppController
             $order = "reply_count desc";
         }
         $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
+        $list = $this->list_sort_by($list, 'last_reply_time');
         $totalCount = D('ForumPost')->where($map)->count();
 
         $list = $this->formatList($list);
@@ -301,6 +302,36 @@ class ForumController extends AppController
         }
 
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+    }
+
+    /**
+     * 对结果集排序
+     * @param $list
+     * @param $field
+     * @param string $sortby
+     * @return array|bool
+     */
+    private function list_sort_by($list, $field, $sortby='desc') {
+        if(is_array($list)){
+            $refer = $resultSet = array();
+            foreach ($list as $i => $data)
+                $refer[$i] = &$data[$field];
+            switch ($sortby) {
+                case 'asc': // 正向排序
+                    asort($refer);
+                    break;
+                case 'desc':// 逆向排序
+                    arsort($refer);
+                    break;
+                case 'nat': // 自然排序
+                    natcasesort($refer);
+                    break;
+            }
+            foreach ( $refer as $key=> $val)
+                $resultSet[] = &$list[$key];
+            return $resultSet;
+        }
+        return false;
     }
 
     //提问列表,置顶
@@ -866,6 +897,8 @@ class ForumController extends AppController
         foreach ($uids as $uid) {
             $reg_id = $model->getRegId($uid);
             array_push($reg_ids, $reg_id);
+            // 添加 @ 数据到对应表中
+            #D('ForumAt')->addAtPost($param['fans_id'], $uid, $post_id);
         }
         $param['reg_id'] = $reg_ids;
         $param['user_id'] = $atUids;

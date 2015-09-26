@@ -204,7 +204,8 @@ class PublicController extends AppController {
         //获取当前分类下的文章
         $all_list = $Document->lists(47);
         $totalCount = count($all_list);
-        $list = $Document->page($page, $count)->lists(47);
+        $topMap['position'] = array('neq', 5);
+        $list = $Document->where($topMap)->page($page, $count)->lists(47);
         foreach($list as &$topic){
             $did = $topic['id'];
             $topic['source_name'] = $this->getSourceName($did);
