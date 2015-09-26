@@ -487,7 +487,7 @@ class PublicController extends AppController {
         $Document = D('Blog/Document');
         $all_list = $Document->where("category_id=47 and position='5'")->select();
         $totalCount = count($all_list);
-        $list = $Document->where("category_id=47 and position='5'")->page($page, $count)->select();
+        $list = $Document->where("category_id=47 and position='5'")->order('create_time desc')->page($page, $count)->select();
         foreach($list as &$topic){
             $did = $topic['id'];
             $topic['source_name'] = $this->getSourceName($did);

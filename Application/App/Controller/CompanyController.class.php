@@ -22,10 +22,13 @@ class CompanyController extends AppController {
      */
     public function alllist(){
         $model = D('Admin/Company');
-        $result = $model->where('status<>-1')->select();
+        $result = $model->where('status<>-1')->order('scale desc')->select();
+        $cmodel = D('CompanyConfig');
         if($result){
             foreach($result as &$company){
                 $company['picture'] = $this->fetchImage($company['picture']);
+                $scale = $cmodel->where('type=2 and status=1 and value='.$company['scale'])->getField("value_explain");
+                $company['scale'] = $scale;
             }
         }
         $extra['totalCount'] = count($result);
@@ -43,8 +46,17 @@ class CompanyController extends AppController {
         }
         $model = D('Admin/Company');
         $result = $model->where('status<>-1 and id='.$id)->find();
+        $cmodel = D('CompanyConfig');
         if($result){
             $result['picture'] = $this->fetchImage($result['picture']);
+
+            $scale = $cmodel->where('type=2 and status=1 and value='.$result['scale'])->getField("value_explain");
+            $result['scale'] = $scale;
+
+            $markarray = explode('#',$result['marks']);
+            $map['id'] = array('in',$markarray);
+            $marks = $cmodel->where($map)->where('type=1 and status=1')->getField("value",true);
+            $result['marks'] = $marks;
         }
         $extra['data'] = $result;
         $this->apiSuccess('获取公司信息成功', null, $extra);
@@ -59,10 +71,22 @@ class CompanyController extends AppController {
             $this->apiError(-1, "传入参数不能为空");
         }
         $model = D('CompanyRecruit');
-        $result = $model->field('company_id, job, salary, requirement, skills, end_time')->where('status<>-1 and company_id='.$id)->select();
+        $result = $model->field('company_id, job, salary, requirement, skills,create_time,end_time')->where('status<>-1 and company_id='.$id)
+            ->order('create_time desc')->select();
+        $cmodel = D('CompanyConfig');
+        foreach($result as &$recruit){
+            $salary = $cmodel->where('type=4 and status=1 and value='.$recruit['salary'])->getField("value_explain");
+            $recruit['salary'] = $salary;
+
+            $markarray = explode('#',$recruit['requirement']);
+            $map['id'] = array('in',$markarray);
+            $marks = $cmodel->where($map)->where('type=3 and status=1')->getField("value",true);
+            $recruit['requirement'] = $marks;
+        }
+
         $extra['totalCount'] = count($result);
         $extra['data'] = $result;
-        $this->apiSuccess('获取公司信息成功', null, $extra);
+        $this->apiSuccess('获取公司招聘信息成功', null, $extra);
     }
 
     private function fetchImage($pic_id)
