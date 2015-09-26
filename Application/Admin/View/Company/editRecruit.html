@@ -23,7 +23,16 @@
                     <div class="form-item cf">
                         <label class="item-label">薪酬</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="salary" value="{$recruit.salary}">
+                            <!--<input type="text" class="text input-large" name="salary" value="{$recruit.salary}">-->
+                            <notempty name="_salary">
+                                <select class="text input-large" name="salary" style="height: 30px;width: 400px;">
+                                    <volist name="_salary" id="vo">
+                                        <option value="{$vo.value}" <eq name="vo['value']" value="$recruit['salary']">selected="selected"</eq> >{$vo.value_explain}</option>
+                                    </volist>
+                                </select>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -32,7 +41,7 @@
                             <notempty name="requirement">
                                 <ul class="dowebok">
                                     <volist name="requirement" id="vo">
-                                        <li><input type="checkbox" id="{$vo.id}"  data-labelauty="{$vo.value}"></li>
+                                        <li><input type="checkbox" id="{$vo.id}" <in name="vo['id']" value="$_markarray">checked</in>  data-labelauty="{$vo.value}"></li>
                                     </volist>
                                 </ul>
                                 <else/>
@@ -44,8 +53,8 @@
                     <div class="form-item cf">
                         <label class="item-label">任职技能描述</label>
                         <div class="controls">
-                            <textarea name="skills">{$recruit.skills}</textarea>
-                            {:hook('adminArticleEdit', array('name'=>'skills','value'=>$field['value']))}
+                            <textarea name="skills" style="height: 300px;width: 500px;">{$recruit.skills}</textarea>
+                            <!--{:hook('adminArticleEdit', array('name'=>'skills','value'=>$field['value']))}-->
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -71,7 +80,7 @@
 
 <script>
     //导航高亮
-    highlight_subnav('{:U('Company/index')}');
+    highlight_subnav('{:U('Company/recruit')}');
 </script>
 <block name="script">
     <link href="__STATIC__/labelauty/jquery-labelauty.css" rel="stylesheet" type="text/css">

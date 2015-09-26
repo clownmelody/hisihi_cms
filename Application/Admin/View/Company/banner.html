@@ -13,7 +13,7 @@
 		<div class="fl">
 			<div class="btn-group">
 				<gt name="allow" value="0">
-					<button class="btn document_add" <if condition="count($model) eq 1">url="{:U('article/topadd',array('cate_id'=>47,'pid'=>I('pid',0),'model_id'=>$model[0]))}"</if>>新 增
+					<button class="btn document_add" <if condition="count($model) eq 1">url="{:U('company/topadd',array('cate_id'=>47,'pid'=>I('pid',0),'model_id'=>$model[0]))}"</if>>新 增
 					<if condition="count($model) gt 1"><i class="btn-arrowdown"></i></if>
 					</button>
 					<if condition="count($model) gt 1">
