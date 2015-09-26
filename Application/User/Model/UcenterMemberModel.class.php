@@ -34,7 +34,7 @@ class UcenterMemberModel extends Model
     /* 用户模型自动验证 */
     protected $_validate = array(
         /* 验证用户名 */
-        array('username', '4,50', -1, self::EXISTS_VALIDATE, 'length'), //用户名长度不合法
+        array('username', '4,100', -1, self::EXISTS_VALIDATE, 'length'), //用户名长度不合法
         array('username', 'checkDenyMember', -2, self::EXISTS_VALIDATE, 'callback'), //用户名禁止注册
         array('username', 'checkUsername', -20, self::EXISTS_VALIDATE, 'callback'),
         array('username', '', -3, self::EXISTS_VALIDATE, 'unique'), //用户名被占用
@@ -143,12 +143,10 @@ class UcenterMemberModel extends Model
         $usercenter_member = $this->create($data);
 
         if ($usercenter_member) {
-
             $result = D('Home/Member')->registerMember($nickname);
             if ($result > 0) {
                 $usercenter_member['id'] = $result;
                 $uid = $this->add($usercenter_member);
-
                 $this->setDefaultGroup($uid);//设置默认用户组
                 return $uid ? $uid : 0; //0-未知错误，大于0-注册成功
             } else {

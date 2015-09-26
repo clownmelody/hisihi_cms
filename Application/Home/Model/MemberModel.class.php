@@ -40,10 +40,9 @@ class MemberModel extends Model
 
 
         /* 验证昵称 */
-        array('nickname', '2,30', -33, self::EXISTS_VALIDATE, 'length'), //昵称长度不合法
+        array('nickname', '2,50', -33, self::EXISTS_VALIDATE, 'length'), //昵称长度不合法
         array('nickname', 'checkDenyNickname', -31, self::EXISTS_VALIDATE, 'callback'), //昵称禁止注册
         array('nickname', 'checkNickname', -32, self::EXISTS_VALIDATE, 'callback'),
-        array('nickname', '', -30, self::EXISTS_VALIDATE, 'unique'), //昵称被占用
 
     );
 
@@ -76,8 +75,10 @@ class MemberModel extends Model
 
     public function registerMember($nickname=''){
         /* 在当前应用中注册用户 */
+        \Think\Log::write("finaltest5: registerMember nickname");
         if($user = $this->create(array('nickname' => $nickname, 'status' => 1))){
             $uid=$this->add($user);
+            \Think\Log::write("finaltest6: ".$this->getLastSql());
             if (!$uid) {
                 $this->error = '前台用户信息注册失败，请重试！';
                 return false;

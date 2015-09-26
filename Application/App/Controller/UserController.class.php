@@ -99,7 +99,7 @@ class UserController extends AppController
 
 	
 	//登录
-	public function login($username, $password, $type = 1, $client = 'iOS', $reg_id = '') {
+	public function login($username, $password='123456', $type = 1, $client = 'iOS', $reg_id = '') {
         // 获取上次登录的终端设备
         switch ($type) {
             case 1:
@@ -1345,9 +1345,9 @@ class UserController extends AppController
         }
         unset($v);*/
         if($group==5){  // 学生
-            $list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) limit 0,4");
+            $list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) desc limit 0,4");
         } else {        // 老师
-            $list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) limit 0,4");
+            $list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) desc limit 0,4");
         }
         foreach ($list as &$v) {
             $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
@@ -1459,6 +1459,7 @@ class UserController extends AppController
             $user = json_decode($content, true);
             $id = $user['id'];
             $nickname = $user['screen_name'];
+            $nickname = str_replace(' ', '', $nickname);
             $avatar = $user['avatar_large'];
             $api = new UserApi();
             $userExist = $api->info($id, true);
@@ -1487,6 +1488,7 @@ class UserController extends AppController
             $user = json_decode($content, true);
             $id = $openId;
             $nickname = $user['nickname'];
+            $nickname = str_replace(' ', '', $nickname);
             $avatar = $user['figureurl_qq_2'];
             if(empty($avatar)) {
                 $avatar = $user['figureurl_qq_1'];
@@ -1514,19 +1516,14 @@ class UserController extends AppController
                 $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
                 $user = json_decode($content, true);
                 $openid = $user['openid'];
-                $uid = $openid;
+                $uid = str_replace("-", "", $openid);
                 $nickname = $user['nickname'];
+                $nickname = str_replace(' ', '', $nickname);
                 $avatar = $user['headimgurl'];
                 $api = new UserApi();
-                $userExist = $api->info(substr($uid,1,5), true);
+                $userExist = $api->info($uid, true);
                 if($userExist==-1) {  // 用户不存在
-                    $t['uid'] = substr($uid,1,5);
-                    $t['nickname'] = $nickname;
-                    $t['email'] = substr($uid,1,3).'@'.substr($uid,3,5).'.com';
-                    \Think\Log::write('testtest--------');
-                    $uid = $api->register($t['uid'], $nickname, '123456', substr($uid,1,3).'@'.substr($uid,3,5).'.com');
-                    $t['code'] = $uid;
-                    \Think\Log::write(json_encode($t));
+                    $uid = $api->register($uid, $nickname, '123456', substr($uid,1,3).'@'.substr($uid,3,5).'.com');
                     if($uid <= 0) {
                         $message = $this->getRegisterErrorMessage($uid);
                         $code = $this->getRegisterErrorCode($uid);
@@ -1534,10 +1531,10 @@ class UserController extends AppController
                     }
                     $avatar_model = D('Addons://Avatar/Avatar');
                     $avatar_model->saveThirdPartyAvatar($uid, $avatar);
-                    $this->thirdPartyLoginGetUserInfo($uid, $openid, true, $client);
+                    $this->thirdPartyLoginGetUserInfo($uid, $uid, true, $client);
                 } else {
                     $uid = $userExist[0];
-                    $this->thirdPartyLoginGetUserInfo($uid, $openid, false, $client);
+                    $this->thirdPartyLoginGetUserInfo($uid, $uid, false, $client);
                 }
             } else {
                 $data = array(
@@ -1549,36 +1546,19 @@ class UserController extends AppController
                 $query = http_build_query($data);
                 $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/access_token", $query);
                 $user = json_decode($content, true);
-                $refresh_token = $user['refresh_token'];
                 $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
                 $query = http_build_query($tokenData);
-                $content = $this->request_by_curl("https://api.weixin.qq.com/sns/auth");
-                $user = json_decode($content, true);
-                if($user['errorcode']!=0){
-                    $refreshData = array(
-                        'appid' => C('WeiXinPlatFormId'),
-                        'grant_type' => 'refresh_token',
-                        'refresh_token' => $refresh_token,
-                    );
-                    $query = http_build_query($refreshData);
-                    $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/refresh_token", $query);
-                    $user = json_decode($content, true);
-                    if($user['errcode']==40030){
-                        $this->apiError(-1, '重新获取token失败');
-                    }
-                    $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
-                    $query = http_build_query($tokenData);
-                }
                 $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
                 $user = json_decode($content, true);
                 $openid = $user['openid'];
                 $uid = $openid;
                 $nickname = $user['nickname'];
+                $nickname = str_replace(' ', '', $nickname);
                 $avatar = $user['headimgurl'];
                 $api = new UserApi();
                 $userExist = $api->info($uid, true);
                 if($userExist==-1) {  // 用户不存在
-                    $uid = $api->register($uid, $nickname, '123456', substr($uid,1,3).'@'.substr($uid,5,7).'.com');
+                    $uid = $api->register($uid, $nickname, '123456', substr($uid,1,3).'@'.substr($uid, 3, 6).'.com');
                     if($uid <= 0) {
                         $message = $this->getRegisterErrorMessage($uid);
                         $code = $this->getRegisterErrorCode($uid);
@@ -1674,4 +1654,17 @@ class UserController extends AppController
         curl_close($ch);
         return $output;
     }
+
+    // 2732 - 536 - 2733 - 2734
+    public function autoFollow(){
+        $startUid = 115;
+        $count = 400;
+        $model = M();
+        for ($x=0; $x<$count; $x++) {
+            $time = time();
+            $model->execute("INSERT INTO hisihi_follow (follow_who, who_follow, create_time) values(2734, ".$startUid.", ".$time.")");
+            $startUid++;
+        }
+    }
+
 }

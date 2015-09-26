@@ -45,7 +45,8 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
     $filename = ltrim($filename, '/');
     $oldFile = ltrim($oldFile, '/');
     $thumbFile = ltrim($thumbFile, '/');
-
+    $oldFile = rtrim($oldFile, '.');
+    $thumbFile = ltrim($thumbFile, '.');
 
     //兼容SAE的中心裁剪缩略
     if (strtolower(C('PICTURE_UPLOAD_DRIVER')) == 'sae') {
@@ -131,7 +132,6 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
         $file_key = substr($filename, 16);
         $thumb_file_key = substr($thumbFile, 16);
         $oss = new AliyunOssController();
-        \Think\Log::write("OSSDEBUG-picture-key".$file_key);
         $isOriginAvatarExist = $oss->isResourceExistInOSS("forum-pic", $file_key);
         $isThumbAvatarExist = $oss->isResourceExistInOSS("forum-pic", $thumb_file_key);
         if(!$isOriginAvatarExist){

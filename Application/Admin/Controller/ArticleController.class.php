@@ -579,6 +579,11 @@ class ArticleController extends AdminController {
 
         //获取表单字段排序
         $fields = get_model_attribute($model['id']);
+
+        $cateModel = D('Category');
+        $result = $cateModel->getTree(1);
+        $fields[1][7]['extra'] = $this->categroyList($result);
+
         $this->assign('info',       $info);
         $this->assign('fields',     $fields);
         $this->assign('type_list',  get_type_bycate($cate_id));
@@ -621,14 +626,44 @@ class ArticleController extends AdminController {
 
         //获取表单字段排序
         $fields = get_model_attribute($model['id']);
+
+        $cateModel = D('Category');
+        $result = $cateModel->getTree(1);
+        $fields[1][7]['extra'] = $this->categroyList($result);
+
         $this->assign('fields',     $fields);
-
-
         //获取当前分类的文档类型
         $this->assign('type_list', get_type_bycate($data['category_id']));
 
         $this->meta_title   =   '编辑文档';
         $this->display();
+    }
+
+    public function categroyList($result){
+        if($result['_']){
+            $index = 0;
+            $select = $this->getChildCateList($result['_'], "", $index);
+        }
+        return $select;
+    }
+
+    private function getChildCateList($list, $select, $index){
+        $index = $index + 1;
+        foreach($list as $childCate){
+            $select = $select . $childCate['id'].":".$this->getTab($index).$childCate['title']."\n";
+            if($childCate['_']){
+                $select = $this->getChildCateList($childCate['_'], $select, $index);
+            }
+        }
+        return $select;
+    }
+
+    private function getTab($level){
+        $str = "-";
+        for($i=0; $i<$level; $i++){
+            $str = $str . "-";
+        }
+        return $str;
     }
 
     /**
