@@ -188,6 +188,7 @@ class DocumentModel extends Model{
 
         //行为记录
         if($id){
+            $data['id'] = $id;
         	action_log('add_document', 'document', $id, UID);
         }
 

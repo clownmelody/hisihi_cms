@@ -513,6 +513,7 @@ class CompanyController extends AdminController {
             $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
             if(!$isExist){
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+                getThumbImageById($picID, 280, 160);//上传时生成固定大小图片
             }
         }
     }
