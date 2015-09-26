@@ -55,8 +55,8 @@
 		padding: 10px;
 	}
 	.detailed-txt{
-		font-size: 14px;
-		color: #8E8A87;
+		/*font-size: 14px;*/
+		/*color: #8E8A87;*/
 	}
 	.review-top{
 		border-bottom: 1px solid #676767;
@@ -117,7 +117,7 @@
 	
 	<div class="detailed-main">
 		<div class="detailed-box">
-
+			<input type="hidden" id="postid" value="{$post.id}">
 			<div class="detailed-top">
 				<p class="detailed-top-title">
 					<span class="line-icon">{$post.type}</span>
@@ -137,25 +137,27 @@
 		</div>
 		<!-- /.detailed-box -->
 
-		<div class="detailed-box detailed-body">
-			<p class="detailed-top-title review-top">
-				评论
-			</p>
-			<ul class="detailed-list">
-				<volist name="replyList" id="reply">
-					<li>
-						<img src="{$reply.userInfo.avatar128}" alt="" class="detailed-item-img">
-						<div class="detailed-item-body">
-							<p class="detailed-item-name">{$reply.userInfo.nickname}</p>
-							<p class="detailed-item-time">{$reply.create_time|date='m-d H:i',###}</p>
-							<p class="detailed-item-txt">
-								{$reply.content}
-							</p>
-						</div>
-					</li>
-				</volist>
-			</ul>
-		</div>
+		<if condition="$isShowReply==1 ">
+			<div class="detailed-box detailed-body">
+					<p class="detailed-top-title review-top">
+						评论
+					</p>
+					<ul class="detailed-list">
+						<volist name="replyList" id="reply">
+							<li>
+								<img src="{$reply.userInfo.avatar128}" alt="" class="detailed-item-img">
+								<div class="detailed-item-body">
+									<p class="detailed-item-name">{$reply.userInfo.nickname}</p>
+									<p class="detailed-item-time">{$reply.create_time|date='m-d H:i',###}</p>
+									<p class="detailed-item-txt">
+										{$reply.content}
+									</p>
+								</div>
+							</li>
+						</volist>
+					</ul>
+			</div>
+		</if>
 		<!-- /.detailed-box -->
 
 	</div>
