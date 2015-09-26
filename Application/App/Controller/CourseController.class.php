@@ -234,9 +234,11 @@ class CourseController extends AppController
             $course_content['isRecommend'] = $course_content['status'] == 2 ? '1':'0';
             $course_content['ViewCount'] = $course_content['view_count'];
             $course_content['ReplyCount'] = $course_content['reply_count'];
-            $course_content['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE');
+            $course_content['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT') + $this->getRandomBaseCount($id);
+            $course_content['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE') + $this->getRandomBaseCount($id);
+            #$course_content['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE');
             $course_content['isFavorited'] = $favorited;
-            $course_content['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT');
+            #$course_content['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT');
             $course_content['isSupportd'] = $supported;
 
             unset($course_content['uid']);
