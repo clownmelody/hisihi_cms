@@ -156,12 +156,67 @@
 							</li>
 						</volist>
 					</ul>
+				<p class="detailed-top-title review-top">
+					<button onclick="getMoreReplay();">更多评论</button>
+				</p>
 			</div>
 		</if>
 		<!-- /.detailed-box -->
 
 	</div>
 	<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
+	<script>
+		var page = 2;
+		function getMoreReplay(){
+			var postid = $('#postid').val();
+			$.ajax({
+				type: 'GET',
+				url: 'http://localhost/hisihi-cms/api.php?s=/forum/ajaxPostReplyList/post_id/' + postid +'/page/' + page,
+				dataType: 'json',
+				success: function(data){
+					console.log(data);
+					if(data['error_code'] == 0 && data != null){
+						var replay = data['data'];
+						var replayarray = [];
+						for(var i in replay){
+							var userInfo = replay[i]['userInfo'];
+							replayarray.push('<li>');
+							replayarray.push('<img src="' + userInfo['avatar128'] +'" alt="" class="detailed-item-img">');
+							replayarray.push('<div class="detailed-item-body">');
+							replayarray.push('<p class="detailed-item-name">' + userInfo['nickname'] +'</p>');
+							replayarray.push('<p class="detailed-item-time">' + dateParse(replay[i]['create_time']) +'</p>');
+							replayarray.push('<p class="detailed-item-txt">' + replay[i]['content'] +'</p>');
+							replayarray.push('</div></li>');
+						}
+						$('ul.detailed-list').append(replayarray.join(''));
+						page += 1;
+					}
+				},
+				error: function(xhr, type){
+					alert('获取评论失败!')
+				}
+			})
+		}
+		function dateParse(date){
+			var newDate = new Date(parseInt(date) * 1000).Format('MM-dd hh:mm');
+			return newDate;
+		}
 
+		Date.prototype.Format = function (fmt) { //author: meizz
+			var o = {
+				"M+": this.getMonth() + 1, //月份
+				"d+": this.getDate(), //日
+				"h+": this.getHours(), //小时
+				"m+": this.getMinutes(), //分
+				"s+": this.getSeconds(), //秒
+				"q+": Math.floor((this.getMonth() + 3) / 3), //季度
+				"S": this.getMilliseconds() //毫秒
+			};
+			if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+			for (var k in o)
+				if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+			return fmt;
+		}
+	</script>
 </body>
 </html>
