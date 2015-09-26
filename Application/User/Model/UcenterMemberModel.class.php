@@ -185,6 +185,7 @@ class UcenterMemberModel extends Model
         $map = array();
         switch ($type) {
             case 1:
+            case 5:
                 $map['username'] = $username;
                 break;
             case 2:
@@ -203,6 +204,10 @@ class UcenterMemberModel extends Model
         /* 获取用户数据 */
         $user = $this->where($map)->find();
         if (is_array($user) && $user['status']) {
+            if($type==5){
+                $this->updateLogin($user['id']); //更新用户登录信息
+                return $user['id']; //登录成功，返回用户ID
+            }
             /* 验证用户密码 */
             if (think_ucenter_md5($password, UC_AUTH_KEY) === $user['password']) {
                 $this->updateLogin($user['id']); //更新用户登录信息

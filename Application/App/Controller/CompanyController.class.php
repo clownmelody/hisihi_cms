@@ -65,7 +65,6 @@ class CompanyController extends AppController {
         $this->apiSuccess('获取公司信息成功', null, $extra);
     }
 
-
     private function fetchImage($pic_id)
     {
         if($pic_id == null)

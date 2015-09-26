@@ -896,9 +896,11 @@ class ForumController extends AppController
         $reg_ids = array();
         foreach ($uids as $uid) {
             $reg_id = $model->getRegId($uid);
-            array_push($reg_ids, $reg_id);
+            if(!empty($reg_id)){
+                array_push($reg_ids, $reg_id);
+            }
             // 添加 @ 数据到对应表中
-            #D('ForumAt')->addAtPost($param['fans_id'], $uid, $post_id);
+            D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id);
         }
         $param['reg_id'] = $reg_ids;
         $param['user_id'] = $atUids;
@@ -1393,6 +1395,39 @@ class ForumController extends AppController
         $this->assign('replyList',$replyList);
         $this->setTitle('{$post.title|op_t} — 嘿设汇');
         $this->display('toppostdetail');
+    }
+
+    /**
+     * 获取公司热门话题
+     * @param $id
+     * @param int $page
+     * @param int $count
+     */
+    public function companyHotTopics($id, $page = 1, $count = 10){
+        $id = intval($id);
+        if(empty($id)){
+            $this->error('传入的id参数不允许为空');
+        }
+        $page = intval($page);
+        $count = intval($count);
+        $order = 'create_time desc';
+
+        //读取帖子列表
+        $atData['status'] = 1;
+        $atData['at_uid'] = $id;
+        $forumAtModel = D('Forum/ForumAt');
+        $totalCount = $forumAtModel->where($atData)->count();
+        $forumAtList = $forumAtModel->where($atData)->order($order)->page($page, $count)->select();
+        $list = array();
+        if($forumAtList){
+            foreach($forumAtList as $forumAt){
+                $postId = $forumAt['post_id'];
+                $postInfo = D('ForumPost')->where('id='.$postId)->find();
+                array_push($list, $postInfo);
+            }
+        }
+        $list = $this->formatList($list);
+        $this->apiSuccess("获取公司热门话题列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
     /**
