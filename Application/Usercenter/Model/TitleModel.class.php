@@ -17,19 +17,24 @@ class TitleModel
         //$score = query_user(array('score'), $uid);
         $member = M();
         $memberResult = $member->query("SELECT score FROM hisihi_member WHERE uid=".$uid);
-        $score['score'] = 0;
         if($memberResult){
-            $score['score'] = $memberResult[0]['score'];
+            $score = $memberResult[0]['score'];
         }
-        return $this->getTitleByScore($score['score']);
+        return $this->getTitleByScore($score);
     }
 
     public function getTitleByScore($score)
     {
         //根据积分查询对应等级
         $config = $this->getTitleConfig();
-
-        $config = array_reverse($config, true);
+        $user_title = $config[0];
+        foreach ($config as $min => $title) {
+            if ($score >= $min) {
+                $user_title = $title;
+            }
+        }
+        return $user_title;
+        /*$config = array_reverse($config, true);
         foreach ($config as $min => $title) {
             if ($score >= $min) {
                 return $title;
@@ -39,7 +44,7 @@ class TitleModel
         //查询无结果，返回最高等级
         $keys = array_keys($config);
         $max_key = $keys[count($config) - 1];
-        return $config[$max_key];
+        return $config[$max_key];*/
     }
 
     /**获取等级配置
@@ -65,7 +70,7 @@ class TitleModel
             $title= explode("\n",$title);
             foreach($title as $v){
                 $temp=explode(':',$v);
-                $result[$temp[0]]=$temp[1];
+                $result[intval($temp[0])]=$temp[1];
             }
             return $result;
         }

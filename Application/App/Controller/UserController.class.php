@@ -164,7 +164,7 @@ class UserController extends AppController
         $avatar128_url = getRootUrl() . $avatar128_path['src'];
 
         //获取等级
-        $title = D('Usercenter/Title')->getTitle($user1['score']);
+        $title = D('Usercenter/Title')->getTitle($uid);
 
         //签到状态
         $map['ctime'] = array('gt', strtotime(date('Ymd')));
@@ -923,7 +923,7 @@ class UserController extends AppController
             $avatar128_url = getRootUrl() . $avatar128_path['src'];
 
             //获取等级
-            $title = D('Usercenter/Title')->getTitle($user1['score']);
+            $title = D('Usercenter/Title')->getTitle($uid);
 
             //签到状态
             $map['ctime'] = array('gt', strtotime(date('Ymd')));
@@ -1606,7 +1606,7 @@ class UserController extends AppController
         $avatar128_url = getRootUrl() . $avatar128_path['src'];
 
         //获取等级
-        $title = D('Usercenter/Title')->getTitle($user1['score']);
+        $title = D('Usercenter/Title')->getTitle($uid);
 
         //签到状态
         $map['ctime'] = array('gt', strtotime(date('Ymd')));
