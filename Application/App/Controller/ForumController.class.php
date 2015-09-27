@@ -1365,7 +1365,7 @@ class ForumController extends AppController
         //$map = array('post_id' => $id, 'status' => 1);
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status desc,create_time', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'create_time desc', $page, $count);
 
         $replyTotalCount = D('ForumPostReply')->where($map)->count();
 
