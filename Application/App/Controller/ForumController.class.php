@@ -1367,7 +1367,7 @@ class ForumController extends AppController
         $map['status'] = array('in','1,3');
         $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'create_time desc', $page, $count);
 
-        $replyTotalCount = D('ForumPostReply')->where($map)->count();
+        $replyTotalCount = D('Forum/ForumPostReply')->where($map)->count();
 
         foreach ($replyList as &$reply) {
             //dump($reply);
@@ -1443,6 +1443,7 @@ class ForumController extends AppController
         } else {
             $this->assign('isShowReply', false);
         }
+        $this->assign('replyTotalCount', $replyTotalCount);
         $this->assign('post', $post);
         $this->assign('post_img', $post['img']);
         $this->assign('replyList',$replyList);
