@@ -1,0 +1,372 @@
+a:hover,
+a:link,
+a:hover,
+a:active,
+a:visited {
+  text-decoration: none;
+}
+a:focus {
+  outline: none;
+  -moz-outline: none;
+}
+body {
+  padding: 0;
+  margin: 0;
+  font: 14px/1.6 "Microsoft Yahei";
+  background: #eee;
+}
+.container {
+  margin: 0 auto;
+}
+@media (min-width: 240px) and (max-width: 640px) {
+  .container {
+    width: 100%;
+  }
+}
+@media (min-width: 641px) and (max-width: 980px) {
+  .container {
+    width: 720px;
+  }
+}
+@media (min-width: 981px) and (max-width: 1280px) {
+  .container {
+    width: 960px;
+  }
+}
+@media (min-width: 1280px) {
+  .container {
+    width: 1200px;
+  }
+}
+.wrap {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #2f2f2f;
+  background: -moz-linear-gradient(bottom, #2f2f2f 70%, #101010 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(#2f2f2f 70%), color-stop(#101010 100%));
+  /* Chrome, Safari4+ */
+  background: -webkit-linear-gradient(bottom, #2f2f2f 70%, #101010 100%);
+  /* Chrome10+, Safari5.1+ */
+  background: -o-linear-gradient(bottom, #2f2f2f 70%, #101010 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(bottom, #2f2f2f 70%, #101010 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, #2f2f2f 70%, #101010 100%);
+  /* W3C */
+}
+#showcase {
+  height: 860px;
+  width: 1200px;
+  margin: 4% auto 0;
+  border-radius: 8px;
+}
+#item-title {
+  color: #F31414;
+  font-size: 29px;
+  letter-spacing: 0.13em;
+  text-shadow: 1px 1px 6px #C72B2B;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 22px;
+}
+.cloud9-item {
+  width: 350px;
+}
+.main {
+  background: rgba(19, 19, 19, 0.8);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+}
+.header .logo-icon {
+  background: url(../images/logo_v2.png);
+  width: 122px;
+  height: 60px;
+  margin: 39px 0 0 100px;
+}
+.body {
+  text-align: center;
+  margin-top: 80px;
+}
+.body .prompt-txt,
+.body .font-txt {
+  font-size: 24px;
+  color: #D8D8D8;
+  line-height: 35px;
+  font-weight: 100;
+  margin-bottom: 50px;
+  -webkit-transition: all 0.5s ease 0s;
+  -moz-transition: all 0.5s ease 0s;
+  -o-transition: all 0.5s ease 0s;
+  transition: all 0.5s ease 0s;
+}
+.body .code-box {
+  margin-bottom: 100px;
+  height: 282px;
+  position: relative;
+}
+.body .code-box .code-img {
+  width: 282px;
+  height: 282px;
+  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 1;
+  -webkit-transition: all 1s ease 0s;
+  -moz-transition: all 1s ease 0s;
+  -o-transition: all 1s ease 0s;
+  transition: all 1s ease 0s;
+}
+.body .code-box .code-img img {
+  width: 282px;
+  height: 282px;
+}
+.body .code-box .code-img.img-work {
+  z-index: 700;
+  background: url(../images/work.png);
+  background-size: 100%;
+}
+.body .code-box .code-img.img-download {
+  z-index: 650;
+  opacity: 0;
+  background: url(../images/download_v2.png);
+  background-size: 100%;
+}
+.body .code-box .code-img.active-work {
+  opacity: 0;
+  -webkit-transition: all 0.5s ease 0s;
+  -moz-transition: all 0.5s ease 0s;
+  -o-transition: all 0.5s ease 0s;
+  transition: all 0.5s ease 0s;
+}
+.body .code-box .code-img.active-download {
+  opacity: 1;
+  -webkit-transition: all 0.5s ease 0s;
+  -moz-transition: all 0.5s ease 0s;
+  -o-transition: all 0.5s ease 0s;
+  transition: all 0.5s ease 0s;
+}
+.body .code-box .code-img.active-ios {
+  left: -380px;
+  -webkit-transition: all 1s ease 0s;
+  -moz-transition: all 1s ease 0s;
+  -o-transition: all 1s ease 0s;
+  transition: all 1s ease 0s;
+}
+.body .code-box .code-img.active-android {
+  right: -380px;
+  -webkit-transition: all 1s ease 0s;
+  -moz-transition: all 1s ease 0s;
+  -o-transition: all 1s ease 0s;
+  transition: all 1s ease 0s;
+}
+.body .code-box .font-box {
+  padding: 100px 0 0 0;
+}
+.body .code-box .font-box .font-img {
+  width: 71px;
+  height: 43px;
+  margin: 0 auto;
+  position: absolute;
+  top: 100px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+}
+.body .code-box .font-box .font-img.font-img-left {
+  left: 200px;
+  background: url(../images/aircraft-l.png);
+}
+.body .code-box .font-box .font-img.font-img-right {
+  left: -200px;
+  background: url(../images/aircraft-r.png);
+}
+.body .code-box .font-box .font-txt {
+  margin: 0 auto;
+  position: absolute;
+  top: 100px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+}
+.body .code-box .font-box .font-txt.font-txt-left {
+  left: 300px;
+}
+.body .code-box .font-box .font-txt.font-txt-right {
+  left: -300px;
+}
+.body .code-box .font-box.active-ios .font-img-left {
+  opacity: 1;
+  left: -20px;
+  -webkit-transition: all 0.5s ease 0.5s;
+  -moz-transition: all 0.5s ease 0.5s;
+  -o-transition: all 0.5s ease 0.5s;
+  transition: all 0.5s ease 0.5s;
+}
+.body .code-box .font-box.active-ios .font-txt-left {
+  left: 200px;
+  opacity: 1;
+  -webkit-transition: all 0.6s ease 0.5s;
+  -moz-transition: all 0.6s ease 0.5s;
+  -o-transition: all 0.6s ease 0.5s;
+  transition: all 0.6s ease 0.5s;
+}
+.body .code-box .font-box.active-android .font-img-right {
+  opacity: 1;
+  left: 20px;
+  -webkit-transition: all 0.5s ease 0.5s;
+  -moz-transition: all 0.5s ease 0.5s;
+  -o-transition: all 0.5s ease 0.5s;
+  transition: all 0.5s ease 0.5s;
+}
+.body .code-box .font-box.active-android .font-txt-right {
+  left: -200px;
+  opacity: 1;
+  -webkit-transition: all 0.6s ease 0.5s;
+  -moz-transition: all 0.6s ease 0.5s;
+  -o-transition: all 0.6s ease 0.5s;
+  transition: all 0.6s ease 0.5s;
+}
+.body .btn-box {
+  text-align: center;
+}
+.body .btn-box .btn {
+  width: 292px;
+  height: 92px;
+  display: inline-block;
+  margin: 0 50px;
+}
+.body .btn-box .btn.btn-ios {
+  background: url(../images/ios_v2.png);
+  background-size: 100%;
+}
+.body .btn-box .btn.btn-ios:hover {
+  background: url(../images/ios_hover.png);
+  background-size: 100%;
+}
+.body .btn-box .btn.btn-android {
+  background: url(../images/android_v2.png);
+  background-size: 100%;
+}
+.body .btn-box .btn.btn-android:hover {
+  background: url(../images/android_hover.png);
+  background-size: 100%;
+}
+.foot {
+  margin-top: 50px;
+}
+.foot p {
+  color: #a1a1a1;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 641px) and (max-width: 980px) {
+  #showcase {
+    height: 600px;
+    width: 640px;
+  }
+  .cloud9-item {
+    width: 200px;
+  }
+  .body {
+    margin-top: 20px;
+  }
+  .body .prompt-txt {
+    margin-bottom: 40px;
+  }
+  .body .code-box {
+    margin-bottom: 50px;
+    height: 200px;
+  }
+  .body .code-box .code-img {
+    width: 200px;
+    height: 200px;
+  }
+  .body .code-box .code-img img {
+    width: 200px;
+    height: 200px;
+  }
+  .body .code-box .code-img.active-ios {
+    left: -300px;
+  }
+  .body .code-box .code-img.active-android {
+    right: -300px;
+  }
+  .body .code-box .font-box {
+    padding: 60px 0 0;
+  }
+  .body .code-box .font-box .font-img {
+    top: 60px;
+  }
+  .body .code-box .font-box .font-txt {
+    top: 60px;
+  }
+  .body .btn-box .btn {
+    width: 200px;
+    height: 60px;
+  }
+}
+@media (min-width: 981px) and (max-width: 1280px) {
+  #showcase {
+    height: 560px;
+    width: 960px;
+    margin: 4% auto 0;
+    border-radius: 8px;
+  }
+  .cloud9-item {
+    width: 260px;
+  }
+  .body {
+    margin-top: 20px;
+  }
+  .body .prompt-txt {
+    margin-bottom: 40px;
+  }
+  .body .code-box {
+    margin-bottom: 50px;
+    height: 200px;
+  }
+  .body .code-box .code-img {
+    width: 200px;
+    height: 200px;
+  }
+  .body .code-box .code-img img {
+    width: 200px;
+    height: 200px;
+  }
+  .body .code-box .code-img.active-ios {
+    left: -300px;
+  }
+  .body .code-box .code-img.active-android {
+    right: -300px;
+  }
+  .body .code-box .font-box {
+    padding: 60px 0 0;
+  }
+  .body .code-box .font-box .font-img {
+    top: 60px;
+  }
+  .body .code-box .font-box .font-txt {
+    top: 60px;
+  }
+  .body .btn-box .btn {
+    width: 200px;
+    height: 60px;
+  }
+}

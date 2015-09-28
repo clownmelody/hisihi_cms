@@ -563,7 +563,7 @@ class CompanyController extends AdminController {
         $this->assign('_salary', $salary);
         $this->assign('requirement', $marks);
         $this->assign('company_id', $id);
-        $this->display();
+        $this->display('addRecruit');
     }
 
     /**
@@ -611,7 +611,7 @@ class CompanyController extends AdminController {
         $this->assign('_salary', $salary);
         $this->assign('requirement', $marks);
         $this->assign('recruit', $result);
-        $this->display();
+        $this->display('editRecruit');
     }
 
     /**

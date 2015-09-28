@@ -47,7 +47,12 @@ if($is_weixin){
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
     $channel = $_GET["channel"];
     if(stristr($_SERVER['HTTP_USER_AGENT'],'Android')) {
-        switch ($channel){
+        if(!empty($channel)){
+            header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p'.$channel.'/hisihi.apk');
+        } else {
+            header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/hisihi.apk');
+        }
+        /*switch ($channel){
             case '1':
                 header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/p1/hisihi.apk');
                 break;
@@ -81,7 +86,7 @@ if($is_weixin){
             default;
                 header('Location: http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/hisihi.apk');
                 break;
-        }
+        }*/
     }else if(stristr($_SERVER['HTTP_USER_AGENT'],'iPhone')){
         header('Location: http://itunes.apple.com/cn/app/id999416879?mt=8');
     }else{

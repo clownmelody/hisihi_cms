@@ -1,219 +1,191 @@
-﻿<!DOCTYPE html>
-<html  lang="zh-CN">
+<!doctype html>
+<html lang="zh">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="Resource-type" content="Document" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="Expires" content="0">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Cache-control" content="no-cache">
-<meta http-equiv="Cache" content="no-cache">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>嘿设汇-一大波设计尸即将来临</title>
-<link rel="shortcut icon" href="images/web-favicon.ico"/>
-<link rel="stylesheet" href="css/jquery.fullPage.css">
-<link rel="stylesheet" href="css/style.css?v=1.0.0">
+	<title>嘿设汇</title>
 
-<script src="js/jquery-1.8.3.min.js"></script>
-<script src="js/system-check.js"></script>
-<script src="js/jquery.easing.min.js"></script>
+  <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+  
+  <script src="js/jquery.reflection.js"></script>
+  <script src="js/jquery.cloud9carousel.js"></script>
+  <script src="js/jquery.lazyload.min.js"></script>
+  <script src="js/jquery.qrcode.js"></script>
+  <script src="js/system-check.js"></script>
 
-<script src="js/jquery.fullPage.min.js"></script>
-<script src="js/jquery.qrcode.js"></script>
+  <script data-pace-options='{ "ajax": false }' src='js/pace/pace.min.js?v=1.0.2'></script>
+  <link href="js/pace/themes/pace-theme-minimal.css?v=1.0.2" rel="stylesheet" />
 
-<!-- Statistics -->
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?416d29a76964fb68d26cb80b8ce4e94b";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+  <link rel="stylesheet" href="css/style_v2.css">
+
+  <!--[if lt IE 8]>
+    <link href="css/style-ie8.css" rel="stylesheet" type="text/css" />
+  <![endif]-->
+
 </head>
-
 <body>
-<div class="hisihi-hd">
-	<div class="inner">
-		<h1><a href="">嘿设汇</a></h1>
-		<ul class="nav">
-			<li><a href="hiworks.php">嘿云作业</a></li>
-		</ul>
-		<div class="nav_guid">
-			<div class="nav_guid_btn"></div>
-		</div>
-		<div id="qrcode" class="qrcode_hide">
-            <div id="qrcodeimg">
-                <img src="images/twocode.png" alt="">
-            </div>
-            <div class="qrcodebtn">
-                <div class="btn-item">
-                    <a class="btn-android" href="http://hisihi-apk.oss-cn-qingdao.aliyuncs.com/hisihi.apk"></a>
-                </div>
-                <div class="btn-item">
-                    <a class="btn-ios" href="http://itunes.apple.com/cn/app/id999416879?mt=8"></a>
-                </div>
-                                
-            </div>
-        </div>
-	</div>
-</div>
-<div id="hisihi">
-	<div id="section1" class="section section1">
-        <div class="inner">
-            <div id="sec1" style="position: absolute">
-                <div class="sec1_p1"></div>
-                <div class="sec1_p2"></div>
-                <div class="sec1_p3"></div>
-                <div class="sec1_p5"></div>
-                <div class="sec1_p4"></div>
-                <div class="sec1_p6"></div>
-                <div class="sec1_p7"></div>
-                <div class="sec1_txt"></div>
-            </div>
-            <div id="sec1T" style="position: absolute">
-                <div class="sec1T_p1"></div>
-                <div class="sec1T_p2"></div>
-                <div class="sec1T_p3"></div>
-                <div class="sec1T_p5"></div>
-                <div class="sec1T_p4"></div>
-                <div class="sec1T_p6"></div>
-                <div class="sec1T_p7"></div>
-                <div class="sec1T_txt"></div>
-            </div>
-        </div>
-	</div>
-	<div id="section2" class="section section2">
-        <div class="inner">
-            <div class="sec2_p1"></div>
-            <div class="sec2_p2"></div>
-            <div class="sec2_p3"></div>
-            <div class="sec2_txt"></div>
-        </div>
-	</div>
-	<div id="section3" class="section section3">
-        <div class="inner">
-            <div class="sec3_c"></div>
-            <div class="sec3_l"></div>
-            <div class="sec3_p"></div>
-            <div class="sec3_txt"></div>
-        </div>
-	</div>
-	<div id="section4" class="section section4">
-        <div class="inner">
-            <div class="sec4_l"></div>
-            <div class="sec4_p"></div>
-            <div class="sec4_txt"></div>
-        </div>
-	</div>
-	<div id="section5" class="section section5">
-        <div class="inner">
-            <div class="sec5_m"></div>
-            <div class="sec5_p"></div>
-            <div class="sec5_txt"></div>
-        </div>
-	</div>
-    <div id="section6" class="section section6">
-        <div class="inner">
-            <div class="sec6_b"></div>
-            <div class="sec6_p"></div>
-            <div class="sec6_f"></div>
-            <div class="sec6_t"></div>
-            <div class="sec6_txt"></div>
-        </div>
-        <div class="ft">
-            <div class="copy">
-                <p>Copyright©2015-2016 www.hisihi.com All Rights Reserved. 武汉迅牛科技有限公司</p>
-                <p>鄂ICP备15003238号</p>
-            </div>
-        </div>
-    </div>
-</div>
-<input id="label" type="text" style="display: none" value="嘿设汇" />
-<script>
-function GetCookie(Name) {
-	var search = Name + "="
-	var Cookie =document.cookie;
-	if (Cookie.length <= 0 )return "";// cookie 不存在,返回空值
-	if (Cookie.indexOf(search)==-1)return "";// 'visited' 不存在,返回空值
-	start = Cookie.indexOf(search)+ search.length//"visited=yes"起始位置索引值
-	end = Cookie.indexOf(";", start);//"visited=yes"终止位置索引值
-	if (end == -1);//";"不存在
-		end = Cookie.length;
-	return unescape(Cookie.substring(start, end))
-}
-function SetCookie(){
-	if (GetCookie('visited')==''){
-		document.cookie="visited=yes"
-		$(".nav_guid").css('visibility','visible');
-	}
-}
-SetCookie();
-$('.nav_guid_btn').click(function(){
-  $(".nav_guid").css('visibility','hidden');
-});
-function showAndHide(){
-    $("#sec1").css('display','block');
-    $("#sec1T").css('display','none');
-}
-$(function(){
-    if($.browser.msie && $.browser.version < 10){
-        $('body').addClass('ltie10');
-    }
-	$('#hisihi').fullpage({
-        verticalCentered: true,
-        navigation: true,
-        //anchors: ['page1', 'page2', 'page3', 'page4', 'page5', 'page6'],
-        navigationTooltips: ["嘿设汇", "软件遗忘", "无处可问", "计无可施", "每日一键", "嘿云作业"],
-        afterRender: function(anchorLink, index){
-            $("#sec1").css('display','none');
-            $(".sec1T_p1").addClass('sec1T_p1M');
-            $(".sec1T_p2").addClass('sec1T_p2M');
-            $(".sec1T_p3").addClass('sec1T_p3M');
-            $(".sec1T_p4").addClass('sec1T_p4M');
-            $(".sec1T_p5").addClass('sec1T_p5M');
-            $(".sec1T_p6").addClass('sec1T_p6M');
-            $(".sec1T_p7").addClass('sec1T_p7M');
-            $(".sec1T_txt").addClass('sec1T_txtM');
-            $("#qrcode").removeClass('qrcode_hide');
-            $("#qrcode").addClass('qrcode_show');
-            setTimeout(showAndHide,1900);
-        },
-        afterLoad: function(anchorLink, index){
-            $("#qrcode").removeClass('qrcode_hide');
-            $("#qrcode").addClass('qrcode_show');
-        },
-        onLeave: function(index, nextIndex, direction){
-            if(index == 1) {
-                $("#sec1").css('display','block');
-                $("#sec1T").css('display','none');
-            }
-            $("#qrcode").removeClass('qrcode_show');
-            $("#qrcode").addClass('qrcode_hide');
-    }
-	});
-    // var options = {
-    //     render: "image",
-    //     ecLevel: "H",
-    //     minVersion: 3,
-    //     color: "#333",
-    //     bgColor: "#fff",
-    //     text: "http://www.hisihi.com/download.php",
-    //     size: 120,
-    //     radius: 0.5,
-    //     quiet: 1,
-    //     mode: 2,
-    //     labelsize: 0.15,
-    //     fontname: "microsoft yahei",
-    //     fontcolor: "#333",
-    //     image: null,
-    //     imagesize: 120
-    // };
 
-    // $("#qrcodeimg").empty().qrcode(options);
-});
-</script>
+	<div class="wrap">
+    <div id="showcase" class="noselect">
+        <img class="cloud9-item lazy" src="images/1.png"  data-original="images/1.png">
+        <img class="cloud9-item lazy" src="images/2.png"  data-original="images/2.png">
+        <img class="cloud9-item lazy" src="images/3.png"  data-original="images/3.png">
+        <img class="cloud9-item lazy" src="images/4.png"  data-original="images/4.png">
+        <img class="cloud9-item lazy" src="images/5.png"  data-original="images/5.png">
+        <img class="cloud9-item lazy" src="images/6.png"  data-original="images/6.png">
+    </div>
+    <!-- #showcase -->
+
+  </div>
+  <!-- /.wrap -->
+  
+  <div class="main">
+    <div class="container">
+      <div class="header">
+        <div class="logo-icon"></div>
+      </div>
+      <!-- /.header -->
+
+      <div class="body">
+
+        <p class="prompt-txt">扫码进入云作业</p>
+
+        <div class="code-box">
+          <div class="code-img img-work"></div>
+          <div class="code-img img-download"></div>
+          <div class="font-box">
+            <div class="font-img font-img-left"></div>
+            <p class="font-txt font-txt-left">扫码下载APP</p>
+            <div class="font-img font-img-right"></div>
+            <p class="font-txt font-txt-right">扫码下载APP</p>
+          </div>
+        </div>
+
+        <div class="btn-box">
+          <a href="#" class="btn btn-ios"></a>
+          <a href="#" class="btn btn-android"></a>
+        </div>
+
+      </div>
+      <!-- /.body -->
+
+      <div class="foot">
+          <p>Copyright&copy;2015-2016 www.hisihi.com All Rights Reserved. 武汉迅牛科技有限公司</p>
+          <p>鄂ICP备15003238号</p>
+      </div>
+
+    </div>
+    <!-- /.container -->
+
+  </div>
+  <!-- /.main -->
+  
 </body>
+
+<script>
+    var ASK_TIME=5;
+    var guid;
+  $(function() {
+
+      $.get('/api.php?s=/qrscan/initdata',
+              function(d){
+                  if(d){
+                      guid=d.message;
+                      console.log('guid: '+guid);
+                      var options={
+                          render:"image",
+                          ecLevel:"H",
+                          minVersion:3,
+                          color:"#3e3a39",
+                          bgColor:"#e8e8e8",
+                          text:"hisihi://hiworks?guid="+guid,
+                          size:250,
+                          radius:0.5,
+                          quiet:1,
+                          mode:0
+                      };
+                      $(".img-work").empty().qrcode(options)}},'json');
+      setInterval(function(){
+          $.get('/api.php?client=pc&s=/qrscan/askstatus/guid/'+guid,
+                  function(d){
+                      if(d){
+                          console.log(JSON.stringify(d));
+                          if(d.success==true){
+                              window.location= d.url;
+                          }else if(d.error_code==-1){
+                              $('#refresh').css('display','block');
+                              if($.browser.msie && parseInt($.browser.version) <= 8){
+                                  $('#container').css('visibility','hidden');
+                              }
+                          }}},'json')},ASK_TIME*1000)
+
+    var showcase = $("#showcase");
+    //var title = $('.item-title');
+
+    showcase.Cloud9Carousel( {
+      yOrigin: 42,
+      yRadius: 48,
+      mirror: {
+        gap: 5,
+        height: 0.1,
+        opacity: 0.2,
+      },
+      buttonLeft: $("#nav > .left"),
+      buttonRight: $("#nav > .right"),
+      autoPlay: 1,
+      speed: 1,
+      autoPlayDelay: 4000,
+      bringToFront:  false,
+      onRendered: rendered,
+      onLoaded: function() {
+        showcase.css( 'visibility', 'visible' )
+        showcase.css( 'display', 'none' )
+        showcase.fadeIn( 1500 )
+      }
+    } )
+
+    function rendered( carousel ) {
+      //title.text( carousel.nearestItem().element.alt )
+
+      //var c = Math.cos((carousel.floatIndex() % 1) * 2 * Math.PI)
+      ///title.css('opacity', 0.5 + (0.5 * c))
+    }
+
+  });
+
+  $(function () {
+      $(".btn-ios").hover(
+      function () {
+          $(".prompt-txt").css("opacity","0");
+          $(".img-work").addClass("active-ios active-work");
+          $(".img-download").addClass("active-ios active-download");
+          $(".font-box").addClass("active-ios");
+      },
+      function () {
+          $(".prompt-txt").css("opacity","1");
+          $(".img-work").removeClass("active-ios active-work");
+          $(".img-download").removeClass("active-ios active-download");
+          $(".font-box").removeClass("active-ios");
+      })
+
+      $(".btn-android").hover(
+      function () {
+          $(".prompt-txt").css("opacity","0");
+          $(".img-work").addClass("active-android active-work");
+          $(".img-download").addClass("active-android active-download");
+          $(".font-box").addClass("active-android");
+      },
+      function () {
+          $(".prompt-txt").css("opacity","1");
+          $(".img-work").removeClass("active-android active-work");
+          $(".img-download").removeClass("active-android active-download");
+          $(".font-box").removeClass("active-android");
+      })
+  });
+
+</script>
+
+
 </html>

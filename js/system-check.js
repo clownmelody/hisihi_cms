@@ -14,6 +14,6 @@
     if (system.win || system.mac || system.xll) {//不跳转
 
     } else {
-        window.location.href = "app/apps/";//手机
+        window.location.href = "app/apps/index.htm";//手机
     }
 //});
