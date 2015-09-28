@@ -102,7 +102,10 @@ class IndexController extends HiworksController
 
         foreach ($list as &$info) {
             $detail = $Document->detail($info['id']);
-            $cover_id = $info['cover_id'];
+            srand(microtime(true) * 1000);
+            $index =  rand(1, 120);
+            $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
+            /*$cover_id = $info['cover_id'];
             $model = M();
             $result = $model->query("select path from hisihi_picture where id=".$cover_id);
             if($result){
@@ -117,7 +120,7 @@ class IndexController extends HiworksController
                     $data['pic'] = $picUrl;
                     $info['pic_url'] = $picUrl;
                 }
-            }
+            }*/
             $info['size'] = $this->conversion($detail['size']);
             $info['download'] = $detail['download'];
         }

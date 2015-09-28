@@ -259,7 +259,7 @@ class ForumController extends AdminController
     public function post($page = 1, $forum_id = null, $r = 20, $title = '', $content = '', $showtop=0)
     {
         //读取帖子数据
-        $map = array('status' => array('EGT', 0));
+        #$map = array('status' => array('EGT', 0));
         if ($title != '') {
             $map['title'] = array('like', '%' . $title . '%');
         }

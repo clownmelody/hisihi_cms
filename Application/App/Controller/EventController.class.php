@@ -16,6 +16,7 @@ class EventController extends AppController{
 
     function _initialize(){
         $this->eventModel = D('Event/Event');
+        C('SHOW_PAGE_TRACE', false);
     }
 
     public function competitionList($page=1, $count=5){

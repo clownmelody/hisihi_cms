@@ -1350,7 +1350,8 @@ class UserController extends AppController
         if($group==5){  // 学生
             $list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) desc limit 0,4");
         } else {        // 老师
-            $list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) desc limit 0,4");
+            #$list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) desc limit 1,4");
+            $list = $model->query("select p.uid, count(*) as count from hisihi_forum_post_reply as p,  hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by p.uid order by count desc limit 1,4");
         }
         foreach ($list as &$v) {
             $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
