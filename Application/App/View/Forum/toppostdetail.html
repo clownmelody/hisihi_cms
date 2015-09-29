@@ -117,7 +117,7 @@
 	.box-btn{
 		text-align: center;
 		text-decoration: none;
-		display: block;
+		display: none;
 		padding:  10px;
 		color: #9C9A9D;
 	}
@@ -210,6 +210,9 @@
 			svgloading = $('svg.svg-loading');
 			repalybtn = $('a.box-btn');
 			detailedlist = $('ul.detailed-list');
+			if(totalReplayCount > 10){
+				repalybtn.css('display','block');
+			}
 		});
 		var totalReplayCount = 0;
 		var curRepalyCount = 10;
