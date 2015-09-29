@@ -31,9 +31,15 @@ class EventModel extends Model{
     );
 
     public function getCompetitionEventList($page, $count){
+        $now = time();
         $totalCount = $this->where("status=1 and type_id=2")->count();
-        $list = $this->where("status=1 and type_id=2")->page($page, $count)->order('create_time desc')
+        $list = $this->where("status=1 and type_id=2 and eTime>".$now)->page($page, $count)->order('eTime asc')
                         ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
+        if($count>count($list)){
+            $expire_list = $this->where("status=1 and type_id=2 and eTime<".$now)->page($page, $count-count($list))->order('eTime desc')
+                ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
+            $list = array_merge($list, $expire_list);
+        }
         $result['totalCount'] = $totalCount;
         $result['list'] = $list;
         return $result;
