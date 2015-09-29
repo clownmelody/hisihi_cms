@@ -32,6 +32,5 @@ class FileController extends HiworksController
         if (!$logic->download($id)) {
             $this->error($logic->getError());
         }
-
     }
 }

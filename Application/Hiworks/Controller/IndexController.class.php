@@ -6,7 +6,7 @@ use \Think\Hook;
 
 class IndexController extends HiworksController
 {
-    public function index($cate = 1, $page = 1)
+    public function index($cate = 1, $page = 1, $download=0)
     {
         $token = $_SESSION["token"];
         if(!defined('Scan') || !$token) {
@@ -30,8 +30,28 @@ class IndexController extends HiworksController
         }
         $user = query_user(array('nickname','avatar128'));
 
-        //if(session('is_scanned') != 1 || session('scan_uid') != get_uid())
-        //    redirect('hiworks.php');
+        /*  获取主分类   */
+        $category = $this->category(1);
+        /* 获取当前分类列表 */
+        $Document = D('Document');
+        $Category = D('Category');
+        $top_children = $Category->getChildrenId($category['id']);
+        if(!empty($top_children)){
+            $top_children = explode(',', $top_children);
+            //将当前分类的文章和子分类的文章混合到一起
+            $cates = $top_children;
+            array_push($cates, $category['id']);
+            $list = $Document->page($page, $category['list_row'])->lists(implode(',', $cates));
+            //得到子分类的目录
+            foreach ($top_children as &$child) {
+                $child = $Category->info($child);
+            }
+            unset($child);
+            $this->setCurrent($cate);
+            $category['id'] = implode(',', $cates);
+        }
+        /*  --------    */
+
         /* 分类信息 */
         $category = $this->category($cate);
 
@@ -40,37 +60,23 @@ class IndexController extends HiworksController
         $Category = D('Category');
 
         $children = $Category->getChildrenId($category['id']);
-        if ($children == '') {
-            //获取当前分类下的文章
-            $list = $Document->page($page, $category['list_row'])->lists($category['id']);
-            $is_top_category = ($category['pid'] == 0);
-            if (!$is_top_category) {//判断是否是顶级分类，如果是顶级，就算没有子分类，也不获取同级
-                //如果是不是顶级分类
-                $children = $Category->getSameLevel($category['id']);
-                $this->setCurrent($category['pid']);
-                //$this->assign('children_cates', $children);
-            } else {
-                //如果是顶级分类
-                $this->setCurrent($category['id']);
-            }
-
-        } else {
-            //如果还有子分类
-            //分割分类
+        if(!empty($children)){
             $children = explode(',', $children);
             //将当前分类的文章和子分类的文章混合到一起
             $cates = $children;
             array_push($cates, $category['id']);
             $list = $Document->page($page, $category['list_row'])->lists(implode(',', $cates));
-            //dump($children);exit;
             //得到子分类的目录
             foreach ($children as &$child) {
                 $child = $Category->info($child);
             }
             unset($child);
-            $this->setCurrent($category['id']);
+            if($cate==1){
+                $this->setCurrent($children[0]['id']);
+            } else {
+                $this->setCurrent($category['id']);
+            }
             $category['id'] = implode(',', $cates);
-            //$this->assign('children_cates', $children);
         }
 
         if (false === $list) {
@@ -102,10 +108,7 @@ class IndexController extends HiworksController
 
         foreach ($list as &$info) {
             $detail = $Document->detail($info['id']);
-            srand(microtime(true) * 1000);
-            $index =  rand(1, 120);
-            $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
-            /*$cover_id = $info['cover_id'];
+            $cover_id = $info['cover_id'];
             $model = M();
             $result = $model->query("select path from hisihi_picture where id=".$cover_id);
             if($result){
@@ -119,18 +122,29 @@ class IndexController extends HiworksController
                     $data['showAdv'] = true;
                     $data['pic'] = $picUrl;
                     $info['pic_url'] = $picUrl;
+                } else {
+                    srand(microtime(true) * 1000);
+                    $index =  rand(1, 120);
+                    $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
                 }
-            }*/
+            } else {
+                srand(microtime(true) * 1000);
+                $index =  rand(1, 120);
+                $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
+            }
             $info['size'] = $this->conversion($detail['size']);
             $info['download'] = $detail['download'];
         }
         /* 模板赋值并渲染模板 */
         $this->assign('user',$user);
-        $this->assign('category', $category);
+        $this->assign('category', $top_children);
         $this->setTitle('{$category.title|op_t} — 嘿云作业');
         $this->assign('list', $list);
         $this->assign('page', D('Document')->page); //分页
 
+        if(!empty($download)){
+            $this->assign('download', $download);
+        }
 
         $this->display();
     }

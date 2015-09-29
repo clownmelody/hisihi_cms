@@ -17,81 +17,84 @@
 </head>
 
 <body>
-    <!-- /.container-fluid -->
 
-    <nav class="nav-logo">
-        <a href="/hiworks.php"><p>嘿设汇-云作业</p></a>
-    </nav>
-
-    <div class="nav-options">
-        <div class="container">
-            <volist name="children_cates" id="cat">
-               <a id="cate" class="{$cat.class}" href="{:U('index/',array('cate'=>$cat['id']))}">
-                   {$cat.title}
-               </a>
-            </volist>
-        </div>
-    </div>
-
-    <div class="box-body">
-        <div class="container">
-            <ul class="list-picture">
-                <volist name="list" id="data">
-                    <li>
-                        <div class="list-item">
-                            <div class="list-top">
-                                <a class="fancybox" rel="fancybox-button" href="{$data.pic_url|default='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hiwork_placeholder.jpg'}">
-                                    <!--http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hiwork_placeholder.jpg-->
-                                    <!--<span class="top-title" title="{$data.title|op_t}">{$data.title|op_t}</span>-->
-                                    <img src="{$data.pic_url|default='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hiwork_placeholder.jpg'}">
-                                </a>
-                            </div>
-                            <a href="#" class="item-title">{$data.title|op_t}</a>
-                            <div class="item-foot">
-                                <p class="foot-left">大小:{$data.size|op_t}</p>
-                                <a href="/hiworks_list.php/file/download/id/{$data['id']}" class="foot-right"><i class="fa fa-cloud-download"></i>下载</a>
-                            </div>
-                        </div>
+<nav class="nav-header">
+    <div class="container">
+        <img  class="nav-logo" src="__IMG__/logo.png" alt="">
+        <div class="nav-list-box">
+            <ul class="nav-list">
+                <volist name="category" id="cat">
+                        <if condition="$current eq $cat.id "><li class="active">
+                            <else /> <li>
+                        </if>
+                        <a id="cate" class="nav-list-item" href="{:U('index/',array('cate'=>$cat['id']))}">
+                            {$cat.title}
+                        </a>
                     </li>
                 </volist>
             </ul>
-            <nav style="text-align: right">
-                <article:page cate="$category['id']" listrow="12"/>
-            </nav>
         </div>
     </div>
+</nav>
+<!-- /.nav-header -->
 
-    <footer class="footer">
-        <p>Copyright©2015-2016 www.hisihi.com All Rights Reserved. 武汉迅牛科技有限公司</p>
-        <p>鄂ICP备15003238号</p>
-    </footer>
+<div class="nav-body">
+    <div class="container">
+        <ul class="nav-item">
+            <volist name="children_cates" id="cat">
+                <if condition="$current eq $cat.pid "><li class="active">
+                    <else /> <li>
+                </if>
+                    <a href="{:U('index/',array('cate'=>$cat['id']))}">{$cat.title}</a>
+                </li>
+            </volist>
+        </ul>
+    </div>
+</div>
+<!-- /.nav-body -->
 
-    <!-- jQuery -->
-    <script src="__JS__/jquery.js?v=1.11.1"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="__JS__/bootstrap.min.js?v=3.3.4"></script>
+<div class="box-body">
+    <div class="container">
+        <ul class="list-picture">
+            <volist name="list" id="data">
+                <li>
+                    <a href="/hiworks_list.php/file/download/id/{$data['id']}" class="list-item">
+                        <img src="{$data.pic_url|default='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hiwork_placeholder.jpg'}" alt="">
+                        <p class="list-item-txt">{$data.title|op_t}</p>
+                        <span class="list-icon-box"></span>
+                        <span class="list-item-icon"></span>
+                    </a>
+                </li>
+            </volist>
+        </ul>
+        <!-- /.list-picture -->
 
-    <!-- fancyBox -->
-    <link rel="stylesheet" href="__JS__/fancyBox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-    <script type="text/javascript" src="__JS__/fancyBox/jquery.fancybox.pack.js?v=2.1.5"></script>
-    <link rel="stylesheet" href="__JS__/fancyBox/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
-    <script type="text/javascript" src="__JS__/fancyBox/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
-    <script type="text/javascript" src="__JS__/fancyBox/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
+        <div class="nav-pag">
+            <article:page cate="$current" listrow="12"/>
+        </div>
+    </div>
+</div>
 
-    <script>
-    $(document).ready(function() {
-        $(".fancybox").fancybox({
-            prevEffect      : 'none',
-            nextEffect      : 'none',
-            closeBtn        : false,
-            helpers     : {
-                title   : { type : 'inside' },
-                buttons : {}
-            }
-        });
-    });
-    </script>
+<input id="downloadId" type="hidden" value="{$download|default=0}">
+
+<footer class="footer">
+    <p>Copyright©2015-2016 www.hisihi.com All Rights Reserved. 武汉迅牛科技有限公司</p>
+    <p>鄂ICP备15003238号</p>
+</footer>
+<!-- /.footer -->
+
+<!-- jQuery -->
+<script src="__JS__/jquery.js?v=1.11.1"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="__JS__/bootstrap.min.js?v=3.3.4"></script>
+<script>
+    var downloadId = document.getElementById('downloadId').value;
+    if(downloadId!=0){
+        window.location = "http://hisihi.com/hiworks_list.php/file/download/id/"+downloadId;
+    }
+</script>
 </body>
 
 </html>
