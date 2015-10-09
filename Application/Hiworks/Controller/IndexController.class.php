@@ -3,10 +3,12 @@ namespace Hiworks\Controller;
 
 use Think\Controller;
 use \Think\Hook;
+use Think\Page;
+use Think\Log;
 
 class IndexController extends HiworksController
 {
-    public function index($cate = 1, $page = 1, $download=0)
+    public function index($cate = 1, $page = 1, $download=0, $sub=0, $base=0)
     {
         $token = $_SESSION["token"];
         if(!defined('Scan') || !$token) {
@@ -30,42 +32,33 @@ class IndexController extends HiworksController
         }
         $user = query_user(array('nickname','avatar128'));
 
-        /*  获取主分类   */
+        /* --- 获取主分类  --- */
         $category = $this->category(1);
-        /* 获取当前分类列表 */
-        $Document = D('Document');
         $Category = D('Category');
         $top_children = $Category->getChildrenId($category['id']);
         if(!empty($top_children)){
             $top_children = explode(',', $top_children);
-            //将当前分类的文章和子分类的文章混合到一起
-            $cates = $top_children;
-            array_push($cates, $category['id']);
-            $list = $Document->page($page, $category['list_row'])->lists(implode(',', $cates));
-            //得到子分类的目录
             foreach ($top_children as &$child) {
                 $child = $Category->info($child);
             }
             unset($child);
             $this->setCurrent($cate);
-            $category['id'] = implode(',', $cates);
         }
-        /*  --------    */
+        /* ---------------- */
 
-        /* 分类信息 */
+        /* ----获取子分类信息---- */
         $category = $this->category($cate);
-
         /* 获取当前分类列表 */
         $Document = D('Document');
         $Category = D('Category');
-
         $children = $Category->getChildrenId($category['id']);
         if(!empty($children)){
             $children = explode(',', $children);
             //将当前分类的文章和子分类的文章混合到一起
             $cates = $children;
             array_push($cates, $category['id']);
-            $list = $Document->page($page, $category['list_row'])->lists(implode(',', $cates));
+            //$list = $Document->page($page, $category['list_row'])->lists(implode(',', $cates));
+            $list = $Document->page($page, 12)->lists(implode(',', $cates));
             //得到子分类的目录
             foreach ($children as &$child) {
                 $child = $Category->info($child);
@@ -73,15 +66,62 @@ class IndexController extends HiworksController
             unset($child);
             if($cate==1){
                 $this->setCurrent($children[0]['id']);
+                $this->assign('detail_cate', $children[0]['id']);
             } else {
                 $this->setCurrent($category['id']);
+                $this->assign('detail_cate', $category['id']);
             }
-            $category['id'] = implode(',', $cates);
         }
 
-        if (false === $list) {
-            $this->error('获取列表数据失败！');
+        if($sub==1){
+            /* 分类信息 */
+            $category = $this->category($cate);
+            $this->setCurrent($base);
+            $this->setSubCurrent($cate);
+            $this->assign('detail_cate', $cate);
+            /* 获取当前分类列表 */
+            $Document = D('Document');
+            $Category = D('Category');
+
+            /*$children = $Category->getChildrenId($category['id']);
+            if(!empty($children)){
+                $children = explode(',', $children);
+                //将当前分类的文章和子分类的文章混合到一起
+                $cates = $children;
+                array_push($cates, $category['id']);
+                //$list = $Document->page($page, $category['list_row'])->lists(implode(',', $cates));
+                $list = $Document->page($page, 12)->lists(implode(',', $cates));
+                //得到子分类的目录
+                foreach ($children as &$child) {
+                    $child = $Category->info($child);
+                }
+                unset($child);
+            } else {
+                $tmp_cates = array();
+                array_push($tmp_cates, $category['id']);
+                //$list = $Document->page($page, $category['list_row'])->lists(implode(',', $tmp_cates));
+                $list = $Document->page($page, 12)->lists(implode(',', $tmp_cates));
+            }*/
+            $children = $Category->getChildrenId($base);
+            if(!empty($children)){
+                $children = explode(',', $children);
+                //将当前分类的文章和子分类的文章混合到一起
+                $tmp_cates = array();
+                array_push($tmp_cates, $category['id']);
+                $list = $Document->page($page, 12)->lists(implode(',', $tmp_cates));
+                //得到子分类的目录
+                foreach ($children as &$child) {
+                    $child = $Category->info($child);
+                }
+                unset($child);
+            } else {
+                $tmp_cates = array();
+                array_push($tmp_cates, $category['id']);
+                //$list = $Document->page($page, $category['list_row'])->lists(implode(',', $tmp_cates));
+                $list = $Document->page($page, 12)->lists(implode(',', $tmp_cates));
+            }
         }
+
         $countAll = 0;
         foreach ($children as &$child) {
             $map = array('category_id' => $child['id']);
@@ -104,8 +144,12 @@ class IndexController extends HiworksController
             $countAll += S('Hiworks_count_'.$child['id']);
         }
         S('Hiworks_count_all',$countAll);
+
         $this->assign('children_cates', $children);
 
+        if (false === $list) {
+            $this->error('获取列表数据失败！');
+        }
         foreach ($list as &$info) {
             $detail = $Document->detail($info['id']);
             $cover_id = $info['cover_id'];
@@ -140,7 +184,10 @@ class IndexController extends HiworksController
         $this->assign('category', $top_children);
         $this->setTitle('{$category.title|op_t} — 嘿云作业');
         $this->assign('list', $list);
-        $this->assign('page', D('Document')->page); //分页
+        $count = 20;
+        $Page  = new Page($count, 12);
+        $show  = $Page->show();
+        $this->assign('page', $show);
 
         if(!empty($download)){
             $this->assign('download', $download);
@@ -266,6 +313,11 @@ class IndexController extends HiworksController
     private function setCurrent($category_id)
     {
         $this->assign('current', $category_id);
+    }
+
+    private function setSubCurrent($category_id)
+    {
+        $this->assign('subCurrent', $category_id);
     }
 
     //字节换算

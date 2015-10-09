@@ -89,6 +89,36 @@ class CompanyController extends AppController {
         $this->apiSuccess('获取公司招聘信息成功', null, $extra);
     }
 
+    /**
+     * 获取用户资料中的职位名称
+     */
+    public function jobNameList(){
+        $cmodel = D('Admin/CompanyConfig');
+        $jobList = $cmodel->field('id, value')->where('type=5 and status=1')->select();
+        $extra['data'] = $jobList;
+        $this->apiSuccess('获取职位名称列表成功', null, $extra);
+    }
+
+    /**
+     * 获取软件技能列表
+     */
+    public function softwareSkillsList(){
+        $cmodel = D('Admin/CompanyConfig');
+        $jobList = $cmodel->field('id, value')->where('type=6 and status=1')->select();
+        $extra['data'] = $jobList;
+        $this->apiSuccess('获取软件技能列表成功', null, $extra);
+    }
+
+    /**
+     * 获取亮点列表
+     */
+    public function highlightsList(){
+        $cmodel = D('Admin/CompanyConfig');
+        $jobList = $cmodel->field('id, value')->where('type=7 and status=1')->select();
+        $extra['data'] = $jobList;
+        $this->apiSuccess('获取个人亮点列表成功', null, $extra);
+    }
+
     private function fetchImage($pic_id)
     {
         if($pic_id == null)
