@@ -16,7 +16,17 @@
                     <div class="form-item cf">
                         <label class="item-label">配置类型</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="type" value="{$info.type}">
+                            <!--<input type="text" class="text input-large" name="type" value="{$info.type}">-->
+                            <select name="type" class="text input-large" style="height: 30px;width: 400px;">
+                                <option value="1" <eq name="info['type']" value="1">selected</eq>>公司标签</option>
+                                <option value="2" <eq name="info['type']" value="2">selected</eq>>公司规模</option>
+                                <option value="3" <eq name="info['type']" value="3">selected</eq>>任职要求</option>
+                                <option value="4" <eq name="info['type']" value="4">selected</eq>>薪酬范围</option>
+                                <option value="5" <eq name="info['type']" value="5">selected</eq>>职位名称</option>
+                                <option value="6" <eq name="info['type']" value="6">selected</eq>>软件技能标签</option>
+                                <option value="7" <eq name="info['type']" value="7">selected</eq>>亮点标签</option>
+                                <option value="8" <eq name="info['type']" value="8">selected</eq>>公司筛选标签</option>
+                            </select>
                         </div>
                     </div>
 

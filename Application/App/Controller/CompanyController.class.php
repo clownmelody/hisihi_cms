@@ -24,10 +24,17 @@ class CompanyController extends AppController {
      * @param int $page
      * @param int $count
      */
-    public function alllist($page=1, $count=5){
+    public function alllist($page=1, $count=5,$id=0){
         $model = D('Admin/Company');
-        $totalCount = $model->where('status<>-1')->count();
-        $result = $model->where('status<>-1')->order('scale desc')->page($page, $count)->select();
+        if($id == 0){
+            $totalCount = $model->where('status<>-1')->count();
+            $result = $model->where('status<>-1')->order('scale desc')->page($page, $count)->select();
+        }else{
+            $totalCount = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%' or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')")
+                ->count();
+            $result = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%' or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')")
+                ->order('scale desc')->page($page, $count)->select();
+        }
         $cmodel = D('CompanyConfig');
         if($result){
             foreach($result as &$company){
@@ -86,6 +93,11 @@ class CompanyController extends AppController {
             $map['id'] = array('in',$markarray);
             $marks = $cmodel->where($map)->where('type=1 and status=1')->getField("value",true);
             $result['marks'] = $marks;
+
+            $filtrate_array = explode('#',$result['filtrate_mark']);
+            $fmap['id'] = array('in',$filtrate_array);
+            $fmarks = $cmodel->where($fmap)->where('type=8 and status=1')->getField("value",true);
+            $result['filtrate_mark'] = $fmarks;
         }
         $extra['data'] = $result;
         $this->apiSuccess('获取公司信息成功', null, $extra);
@@ -156,54 +168,6 @@ class CompanyController extends AppController {
         $jobList = $cmodel->field('id, value')->where('type=8 and status=1')->select();
         $extra['data'] = $jobList;
         $this->apiSuccess('获取公司筛选标签成功', null, $extra);
-    }
-
-    /**
-     * 根据筛选标签获取公司信息
-     * @param $id
-     */
-    public function filtrateCompany($id){
-        if(empty($id)){
-            $this->apiError(-1, "传入参数不能为空");
-        }
-        $model = D('Admin/Company');
-        $result = $model->where("status<>-1 and (filtrate_mark like '".$id."#%' or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')")
-            ->order('scale desc')->select();
-        $cmodel = D('CompanyConfig');
-        if($result){
-            foreach($result as &$company){
-                $company['picture'] = $this->fetchImage($company['picture']);
-                $scale = $cmodel->where('type=2 and status=1 and value='.$company['scale'])->getField("value_explain");
-                $company['scale'] = $scale;
-
-                $mark = explode("#",$company['marks']);
-                $markarray = array();
-                foreach($mark as &$markid){
-                    $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
-                    $markobj = array();
-                    $markobj = (object)$markobj;
-                    $markobj->id = $markarr['0']['id'];
-                    $markobj->value = $markarr['0']['value'];
-                    array_push($markarray,$markobj);
-                }
-                $company['marks'] = $markarray;
-
-                $filtrate_mark = explode("#",$company['filtrate_mark']);
-                $filtrate_array = array();
-                foreach($filtrate_mark as &$markid){
-                    $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
-                    $markobj = array();
-                    $markobj = (object)$markobj;
-                    $markobj->id = $markarr['0']['id'];
-                    $markobj->value = $markarr['0']['value'];
-                    array_push($filtrate_array,$markobj);
-                }
-                $company['filtrate_mark'] = $filtrate_array;
-            }
-    }
-        $extra['totalCount'] = count($result);
-        $extra['data'] = $result;
-        $this->apiSuccess('获取公司列表成功', null, $extra);
     }
 
     private function fetchImage($pic_id)
