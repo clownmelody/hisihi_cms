@@ -969,10 +969,10 @@ class UserController extends AppController
             $result['info'] = query_user(array('avatar256', 'avatar128', 'username','group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $uid);
 
             //扩展信息
-            //$profile_group = $this->_profile_group($uid);
-            //$info_list = $this->_info_list($profile_group['id'], $uid);
+            $profile_group = $this->_profile_group($uid);
+            $info_list = $this->_info_list($profile_group['id'], $uid);
             //$result['info']['group'] = $profile_group['gid'];
-            //$result['info']['extinfo'] = $info_list;
+            $result['info']['extinfo'] = $info_list;
 
             //返回成功结果
             $this->apiSuccess("获取用户信息成功", null, array('userInfo' => $result));

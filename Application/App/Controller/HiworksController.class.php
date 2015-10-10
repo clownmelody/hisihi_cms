@@ -47,6 +47,20 @@ class HiworksController extends AppController
             $view = D('Document')->where($map)->field('view')->select();
             $childcategory['download'] = 0;
             $childcategory['download'] += array_sum(getSubByKey($view,'view'));
+            /* -- */
+            $model = D('Hiworks/Category');
+            $condition['status'] = 1;
+            $condition['allow_publish'] = 1;
+            $condition['pid'] = $child['id'];
+            $cateResult = $model->where($condition)->field('id')->select();
+            foreach($cateResult as &$value){
+                $submap = array('category_id' => $value['id']);
+                $subCount = D('Document')->where($submap)->count('id');
+                $childcategory['files'] = $childcategory['files'] + $subCount;
+                $subview = D('Document')->where($submap)->field('view')->select();
+                $childcategory['download'] += array_sum(getSubByKey($subview,'view'));
+            }
+            /* -- */
             $categorylist[] = $childcategory;
         }
 

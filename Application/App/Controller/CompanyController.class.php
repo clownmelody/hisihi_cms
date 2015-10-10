@@ -8,6 +8,8 @@
 
 namespace App\Controller;
 use Addons\Avatar\AvatarAddon;
+use Addons\Email\EmailUtils;
+use Addons\Pdf\PdfUtils;
 use Think\Hook;
 
 /**
@@ -19,10 +21,13 @@ class CompanyController extends AppController {
 
     /**
      * 公司列表
+     * @param int $page
+     * @param int $count
      */
-    public function alllist(){
+    public function alllist($page=1, $count=5){
         $model = D('Admin/Company');
-        $result = $model->where('status<>-1')->order('scale desc')->select();
+        $totalCount = $model->where('status<>-1')->count();
+        $result = $model->where('status<>-1')->order('scale desc')->page($page, $count)->select();
         $cmodel = D('CompanyConfig');
         if($result){
             foreach($result as &$company){
@@ -31,7 +36,7 @@ class CompanyController extends AppController {
                 $company['scale'] = $scale;
             }
         }
-        $extra['totalCount'] = count($result);
+        $extra['totalCount'] = $totalCount;
         $extra['data'] = $result;
         $this->apiSuccess('获取公司列表成功', null, $extra);
     }
@@ -136,6 +141,13 @@ class CompanyController extends AppController {
             }
         }
         return $picUrl;
+    }
+
+    public function testPdf(){
+        /*$pdfUtils = new PdfUtils();
+        $pdfUtils->init();*/
+        $emailUtils = new EmailUtils();
+        $emailUtils->init();
     }
 
 }

@@ -193,9 +193,10 @@ class CourseController extends AppController
         if($course_content){
             D('IssueContent')->where(array('id' => $id))->setInc('view_count');
 
-            if($course_content['update_time'] == 0){
+            $course_content['update_time'] = $course_content['create_time'];
+            /*if($course_content['update_time'] == 0){
                 $course_content['update_time'] = $course_content['create_time'];
-            }
+            }*/
             $course_content['type'] = $this->courseType($course_content['issue_id']);
             $course_content['type_id'] = $course_content['issue_id'];
 
