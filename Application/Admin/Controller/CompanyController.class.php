@@ -61,9 +61,11 @@ class CompanyController extends AdminController {
         $model = D('CompanyConfig');
         $marks = $model->where('type=1 and status=1')->select();
         $scale = $model->where('type=2  and status=1')->order('id')->select();
+        $filtrate = $model->where('type=8 and status=1')->select();
 
         $this->assign('_marks', $marks);
         $this->assign('_scale', $scale);
+        $this->assign('_filtrate', $filtrate);
         $this->display();
     }
 
@@ -77,6 +79,7 @@ class CompanyController extends AdminController {
             $data["name"] = $_POST["name"];
             $data["city"] = $_POST["city"];
             $data["slogan"] = $_POST["slogan"];
+            $data["filtrate_mark"] = $_POST["filtrate_mark"];
             $data["introduce"] = $_POST["introduce"];
             $data["marks"] = $_POST["marks"];
             $data["scale"] = $_POST["scale"];
@@ -137,7 +140,11 @@ class CompanyController extends AdminController {
         $marks = $cmodel->where('type=1 and status=1')->select();
         $scale = $cmodel->where('type=2  and status=1')->order('id')->select();
         $markarray = explode("#",$data['marks']);
+        $filtrateArray =  explode("#",$data['filtrate_mark']);
+        $filtrate =  $cmodel->where('type=8 and status=1')->select();
 
+        $this->assign('_filtrate',$filtrate);
+        $this->assign('_filtrate_array',$filtrateArray);
         $this->assign('_markarray', $markarray);
         $this->assign('_marks', $marks);
         $this->assign('_scale', $scale);

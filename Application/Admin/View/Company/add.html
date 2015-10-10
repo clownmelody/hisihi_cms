@@ -32,6 +32,22 @@
                         </div>
                     </div>
                     <div class="form-item cf">
+                        <label class="item-label">筛选标签</label>
+                        <div class="controls">
+                            <!--<input type="text" class="text input-large" name="marks" value="">-->
+                            <notempty name="_filtrate">
+                                <ul class="dowebok" id="filtrate_ul">
+                                    <volist name="_filtrate" id="vo">
+                                        <li><input type="checkbox" id="{$vo.id}"  data-labelauty="{$vo.value}"></li>
+                                    </volist>
+                                </ul>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                            <input type="hidden" class="text input-large" name="filtrate_mark" id="filtrate" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
                         <label class="item-label">公司简介</label>
                         <div class="controls">
                             <input type="text" class="text input-large" name="introduce" value="">
@@ -42,7 +58,7 @@
                         <div class="controls">
                             <!--<input type="text" class="text input-large" name="marks" value="">-->
                                 <notempty name="_marks">
-                                    <ul class="dowebok">
+                                    <ul class="dowebok" id="advantage_ul">
                                     <volist name="_marks" id="vo">
                                         <li><input type="checkbox" id="{$vo.id}"  data-labelauty="{$vo.value}"></li>
                                     </volist>
@@ -169,7 +185,7 @@
         });
         function setAdvantage(){
             var advantage = "";
-            $.each($(".dowebok li"),function(i,n){
+            $.each($("#advantage_ul li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
                 var input = li.find("input");
@@ -180,6 +196,19 @@
             });
             advantage = advantage.substring(0,advantage.length - 1);
             $("#advantage").val(advantage);
+
+            var filtrate = "";
+            $.each($("#filtrate_ul li"),function(i,n){
+                var li = $(this);
+                var span = li.find("span:visible");
+                var input = li.find("input");
+                var classattr = span.attr("class");
+                if(classattr == "labelauty-checked-image"){
+                    filtrate += (input.attr("id") + "#");
+                }
+            });
+            filtrate = filtrate.substring(0,filtrate.length - 1);
+            $("#filtrate").val(filtrate);
         }
     </script>
 
