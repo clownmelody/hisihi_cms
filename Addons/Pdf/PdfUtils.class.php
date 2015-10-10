@@ -12,54 +12,57 @@ require_once './Addons/Pdf/tcpdf/tcpdf.php';
 
 class PdfUtils
 {
-    function init(){
-        //实例化 
-        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+    private $pdf;
 
+    public function __construct() {
+        $this->pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+    }
+
+    function init(){
         // 设置文档信息
-        $pdf->SetCreator('Helloweba');
-        $pdf->SetAuthor('yueguangguang');
-        $pdf->SetTitle('Welcome to helloweba.com!');
-        $pdf->SetSubject('TCPDF Tutorial');
-        $pdf->SetKeywords('TCPDF, PDF, PHP');
+        $this->pdf->SetCreator('嘿设汇');
+        $this->pdf->SetAuthor('hisihi');
+        $this->pdf->SetTitle('标题');
+        $this->pdf->SetSubject('子标题');
+        $this->pdf->SetKeywords('关键字, PDF, PHP');
 
         // 设置页眉和页脚信息
-        $pdf->SetHeaderData('logo_example.png', 30, 'Helloweba.com', '致力于WEB前端技术在中国的应用',
+        $this->pdf->SetHeaderData('logo_example.png', 30, 'hisihi.com', '来自嘿设汇的简历',
             array(0,64,255), array(0,64,128));
-        $pdf->setFooterData(array(0,64,0), array(0,64,128));
+        $this->pdf->setFooterData(array(0,64,0), array(0,64,128));
 
         // 设置页眉和页脚字体
-        $pdf->setHeaderFont(Array('stsongstdlight', '', '10'));
-        $pdf->setFooterFont(Array('helvetica', '', '8'));
+        $this->pdf->setHeaderFont(Array('stsongstdlight', '', '10'));
+        $this->pdf->setFooterFont(Array('helvetica', '', '8'));
 
         // 设置默认等宽字体
-        $pdf->SetDefaultMonospacedFont('courier');
+        $this->pdf->SetDefaultMonospacedFont('courier');
 
         // 设置间距
-        $pdf->SetMargins(15, 27, 15);
-        $pdf->SetHeaderMargin(5);
-        $pdf->SetFooterMargin(10);
+        $this->pdf->SetMargins(15, 27, 15);
+        $this->pdf->SetHeaderMargin(5);
+        $this->pdf->SetFooterMargin(10);
 
         // 设置分页
-        $pdf->SetAutoPageBreak(TRUE, 25);
+        $this->pdf->SetAutoPageBreak(TRUE, 25);
 
         // set image scale factor
-        $pdf->setImageScale(1.25);
+        $this->pdf->setImageScale(1.25);
 
         // set default font subsetting mode
-        $pdf->setFontSubsetting(true);
+        $this->pdf->setFontSubsetting(true);
 
         //设置字体
-        $pdf->SetFont('stsongstdlight', '', 14);
+        $this->pdf->SetFont('stsongstdlight', '', 14);
 
-        $pdf->AddPage();
+        $this->pdf->AddPage();
 
-        $str1 = '欢迎来到Helloweba.com';
+        $str1 = '嘿设汇简历生成测试';
 
-        $pdf->Write(0,$str1,'', 0, 'L', true, 0, false, false, 0);
+        $this->pdf->Write(0, $str1,'', 0, 'L', true, 0, false, false, 0);
 
         //输出PDF
-        $pdf->Output('t.pdf', 'I');
+        $this->pdf->Output('t.pdf', 'I');
     }
 
 }
