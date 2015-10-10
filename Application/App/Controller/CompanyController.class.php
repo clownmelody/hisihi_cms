@@ -29,6 +29,18 @@ class CompanyController extends AppController {
                 $company['picture'] = $this->fetchImage($company['picture']);
                 $scale = $cmodel->where('type=2 and status=1 and value='.$company['scale'])->getField("value_explain");
                 $company['scale'] = $scale;
+
+                $mark = explode("#",$company['marks']);
+                $markarray = array();
+                foreach($mark as &$markid){
+                    $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+                    $markobj = array();
+                    $markobj = (object)$markobj;
+                    $markobj->id = $markarr['0']['id'];
+                    $markobj->value = $markarr['0']['value'];
+                    array_push($markarray,$markobj);
+                }
+                $company['marks'] = $markarray;
             }
         }
         $extra['totalCount'] = count($result);
