@@ -433,7 +433,7 @@ class IssueController extends AdminController
         $issue_content_model = D('IssueContent');
         $issue_content_detail = $issue_content_model->where(array('id'=>$ids[0]))->find();
         $title = $issue_content_detail['title'];
-        $param['alert_info'] = "推荐视频:".$title;
+        $param['alert_info'] = $title;
         $param['id'] = $ids[0];
         $param['type'] = 1;
         $param['production'] = C('APNS_PRODUCTION');

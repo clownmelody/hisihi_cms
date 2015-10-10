@@ -513,9 +513,9 @@ class ArticleController extends AdminController {
         $type = intval($document_detail['type']);
         $param['type'] = $type;
         if($param['type']==2){
-            $param['alert_info'] = "推荐文章:".$title;
+            $param['alert_info'] = $title;
         } else {
-            $param['alert_info'] = "推荐视频:".$title;
+            $param['alert_info'] = $title;
         }
         $param['id'] = $ids[0];
         $param['production'] = C('APNS_PRODUCTION');
