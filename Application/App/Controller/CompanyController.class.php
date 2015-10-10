@@ -190,10 +190,10 @@ class CompanyController extends AppController {
     }
 
     public function testPdf(){
-        /*$pdfUtils = new PdfUtils();
-        $pdfUtils->init();*/
-        $emailUtils = new EmailUtils();
-        $emailUtils->init();
+        $pdfUtils = new PdfUtils();
+        $pdfUtils->init();
+        /*$emailUtils = new EmailUtils();
+        $emailUtils->sendMail();*/
     }
 
 }
