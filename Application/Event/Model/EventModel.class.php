@@ -33,13 +33,30 @@ class EventModel extends Model{
     public function getCompetitionEventList($page, $count){
         $now = time();
         $totalCount = $this->where("status=1 and type_id=2")->count();
+        $unend_count = $this->where("status=1 and type_id=2 and eTime>".$now)->count();
+        $ended_count = $totalCount - $unend_count;
         $list = $this->where("status=1 and type_id=2 and eTime>".$now)->page($page, $count)->order('eTime asc')
                         ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
-        if($count>count($list)){
-            $expire_list = $this->where("status=1 and type_id=2 and eTime<".$now)->page($page, $count-count($list))->order('eTime desc')
+
+        $can_page_count = ceil($unend_count/$count);  // 未结束比赛可以形成的分页数
+        $start_limit = 0;
+        if($page-$can_page_count==0){  // 当前页需要已完成比赛数据的填充
+            $start_limit = 0;
+        }
+        if($page-$can_page_count==1)
+            $start_limit = $can_page_count*$count - $unend_count;
+        if($page-$can_page_count>1)
+            $start_limit = $count*($page-$can_page_count-1) + $can_page_count*$count - $unend_count;
+
+        if($count>count($list)){  // 当前页中进行中的比赛数量不够，加入已结束的比赛
+            $expire_list = $this->where("status=1 and type_id=2 and eTime<".$now)->limit($start_limit, $count-count($list))/*->page($page-$page_count, $count-count($list))*/->order('eTime desc')
                 ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
+            if(empty($list)){
+                $list = array();
+            }
             $list = array_merge($list, $expire_list);
         }
+
         $result['totalCount'] = $totalCount;
         $result['list'] = $list;
         return $result;

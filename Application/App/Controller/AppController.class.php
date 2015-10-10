@@ -390,13 +390,15 @@ abstract class AppController extends Controller {
      */
     private function getSupportCountCache($map_support)
     {
-        $cache_key = "support_count_" . implode('_', $map_support);
+        /*$cache_key = "support_count_" . implode('_', $map_support);
         $count = S($cache_key);
         if (empty($count)) {
             $count = D('Support')->where($map_support)->count();
             S($cache_key, $count);
             return $count;
-        }
+        }*/
+        $count = D('Support')->where($map_support)->count();
+        return $count;
         return $count;
     }
 }

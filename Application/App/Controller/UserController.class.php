@@ -979,7 +979,11 @@ class UserController extends AppController
         }
     }
 
-    public function setProfile($signature = null, $email = null, $name = null, $sex = null, $birthday = null, $college = null, $major = null, $grade = null, $institution = null, $student = null, $year = null, $mobile = null, $password = null)
+    public function setProfile($signature = null, $email = null, $name = null, $sex = null, $birthday = null,
+                               $college = null, $major = null, $grade = null, $institution = null,
+                               $student = null, $year = null, $mobile = null, $password = null,
+                               $study_institution = null, $skills = null, $expected_position = null,
+                               $my_highlights = null, $my_strengths = null)
     {
         $this->requireLogin();
         //获取用户编号
@@ -1049,6 +1053,26 @@ class UserController extends AppController
                     case 'institution':
                         if($institution != null)
                             $data[$key]['field_data'] = $institution;
+                        break;
+                    case 'study_institution':
+                        if($study_institution != null)
+                            $data[$key]['field_data'] = $study_institution;
+                        break;
+                    case 'skills':
+                        if($skills != null)
+                            $data[$key]['field_data'] = $skills;
+                        break;
+                    case 'expected_position':
+                        if($expected_position != null)
+                            $data[$key]['field_data'] = $expected_position;
+                        break;
+                    case 'my_highlights':
+                        if($my_highlights != null)
+                            $data[$key]['field_data'] = $my_highlights;
+                        break;
+                    case 'my_strengths':
+                        if($my_strengths != null)
+                            $data[$key]['field_data'] = $my_strengths;
                         break;
                     case 'student':
                         if($student != null)
@@ -1403,6 +1427,111 @@ class UserController extends AppController
     }
 
     /**
+     * 保存用户的工作经历
+     * @param int $uid
+     * @param $position
+     * @param $company_name
+     * @param $start_time
+     * @param $end_time
+     * @param $department
+     * @param $job_content
+     */
+    public function saveWorkExperience($uid=0, $position, $company_name, $start_time, $end_time, $department, $job_content){
+        if (!$uid) {
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $workExperienceModel = D('User/UserWorkExperience');
+        $data['uid'] = $uid;
+        $data['position'] = $position;
+        $data['company_name'] = $company_name;
+        $data['start_time'] = $start_time;
+        $data['end_time'] = $end_time;
+        $data['department'] = $department;
+        $data['job_content'] = $job_content;
+        if($workExperienceModel->save($data)){
+            $this->apiSuccess('保存用户工作经历成功');
+        } else {
+            $this->apiError(-1, '保存用户工作经历失败');
+        }
+    }
+
+    /**
+     * 上传用户的用于个人简历作品
+     * @param int $picId
+     */
+    public function uploadUserWorks($picId=0){
+        $this->requireLogin();
+        if(empty($picId)){
+            $this->apiError(-1, "传入图片ID为空");
+        }
+        $this->uploadLogoPicToOSS($picId);
+        $user_works_data['uid'] = is_login();
+        $user_works_data['forum_id'] = 1001;
+        $user_works_data['post_id'] = 0;
+        $user_works_data['picture_id'] = $picId;
+        $user_works_data['create_time'] = NOW_TIME;
+        $user_works_model = D('User/UserWorks');
+        $user_works_model->add($user_works_data);
+        $this->apiSuccess("上传成功");
+    }
+
+    /**
+     * 获取用户用于简历的作品
+     * @param $uid
+     */
+    public function userProfileWorks($uid, $page=1, $count=6){
+        if($uid==0){
+            $this->apiError(-1, '传入用户ID为空异常');
+        }
+        $model = M();
+        $tem = $model->query('select count(*) as count from hisihi_user_works where status=1 and uid='.$uid);
+        $totalCount = $tem[0]['count'];
+        $index = ($page - 1) * $count;
+        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and uid='.$uid.' order by create_time desc limit '.$index.','.$count);
+        foreach ($pic_list as &$picinfo) {
+            $pic_id = $picinfo['picture_id'];
+            $picDetail= $model->query("select path from hisihi_picture where id=".$pic_id);
+            $pic_small = getThumbImageById($pic_id, 280, 160);
+            $thumb_img_info = getimagesize($pic_small);
+            $size = Array();
+            $size[0] = $thumb_img_info[0]; // width
+            $size[1] = $thumb_img_info[1]; // height
+            $picinfo['src'] = ltrim($picDetail[0]['path'], '/');
+            $picinfo['thumb'] = $pic_small;
+            if(strpos($picinfo['src'], "Picture")) {
+                $src = substr($picinfo['src'], 16);
+                $picinfo['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
+                $origin_img_info = getimagesize($picinfo['src']);
+                $src_size = Array();
+                $src_size[0] = $origin_img_info[0]; // width
+                $src_size[1] = $origin_img_info[1]; // height
+                $picinfo['src_size'] = $src_size;
+            }
+            $picinfo['size'] = $size;
+            unset($picinfo['picture_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $pic_list;
+        $this->apiSuccess('获取个人简历作品成功', null, $extra);
+    }
+
+    private function uploadLogoPicToOSS($picID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$picID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "forum-pic";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadForumPicResource', $param);
+            }
+        }
+    }
+
+    /**
      * @param $condition
      * @auth RFly
      */
@@ -1547,11 +1676,30 @@ class UserController extends AppController
                     'code'       => $code,
                     'grant_type' => 'authorization_code',
                 );
+
                 $query = http_build_query($data);
                 $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/access_token", $query);
                 $user = json_decode($content, true);
+                $refresh_token = $user['refresh_token'];
                 $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
                 $query = http_build_query($tokenData);
+                $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
+                $user = json_decode($content, true);
+                if($user['errorcode']!=0){
+                    $refreshData = array(
+                        'appid' => C('WeiXinPlatFormId'),
+                        'grant_type' => 'refresh_token',
+                        'refresh_token' => $refresh_token,
+                    );
+                    $query = http_build_query($refreshData);
+                    $content = $this->request_by_curl("https://api.weixin.qq.com/sns/oauth2/refresh_token", $query);
+                    $user = json_decode($content, true);
+                    if($user['errcode']==40030){
+                        $this->apiError(-1, '重新获取token失败');
+                    }
+                    $tokenData = array('access_token'=> $user['access_token'], 'openid' => $user['openid']);
+                    $query = http_build_query($tokenData);
+                }
                 $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
                 $user = json_decode($content, true);
                 $openid = $user['openid'];

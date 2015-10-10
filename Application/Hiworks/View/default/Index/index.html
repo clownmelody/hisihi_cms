@@ -42,10 +42,10 @@
     <div class="container">
         <ul class="nav-item">
             <volist name="children_cates" id="cat">
-                <if condition="$current eq $cat.pid "><li class="active">
+                <if condition="$subCurrent eq $cat.id "><li class="active">
                     <else /> <li>
                 </if>
-                    <a href="{:U('index/',array('cate'=>$cat['id']))}">{$cat.title}</a>
+                    <a href="{:U('index/',array('cate'=>$cat['id'], 'sub'=>1, 'base'=>$current))}">{$cat.title}</a>
                 </li>
             </volist>
         </ul>
@@ -71,7 +71,7 @@
         <!-- /.list-picture -->
 
         <div class="nav-pag">
-            <article:page cate="$current" listrow="12"/>
+            <article:page cate="$detail_cate" listrow="12"/>
         </div>
     </div>
 </div>
