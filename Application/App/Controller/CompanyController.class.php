@@ -119,6 +119,16 @@ class CompanyController extends AppController {
         $this->apiSuccess('获取个人亮点列表成功', null, $extra);
     }
 
+    /**
+     * 获取公司筛选标签列表
+     */
+    public function companyFiltrateList(){
+        $cmodel = D('Admin/CompanyConfig');
+        $jobList = $cmodel->field('id, value')->where('type=8 and status=1')->select();
+        $extra['data'] = $jobList;
+        $this->apiSuccess('获取公司筛选标签成功', null, $extra);
+    }
+
     private function fetchImage($pic_id)
     {
         if($pic_id == null)
