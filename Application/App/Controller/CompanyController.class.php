@@ -170,6 +170,35 @@ class CompanyController extends AppController {
         $this->apiSuccess('获取公司筛选标签成功', null, $extra);
     }
 
+    /**
+     * 用户向公司投递简历
+     * @param int $uid
+     * @param int $companyId
+     */
+    public function sendResume($uid=0, $companyId=0){
+        if(!$companyId){
+            $this->apiError(-1, '传入公司id为空');
+        }
+        if (!$uid) {
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $pdfUtils = new PdfUtils();
+        $path = $pdfUtils->init($uid);
+        /*$emailUtils = new EmailUtils();
+        $model = M();
+        $result = $model->query("select hr_email from hisihi_company where status=1 and id=".$companyId.' limit 1');
+        if(empty($result[0]['hr_email'])){
+            $this->apiError(-1, "该公司未填写HR邮箱");
+        }
+        $email = $result[0]['hr_email'];
+        if($emailUtils->sendMail($email, $path)){
+            $this->apiSuccess("简历投递成功");
+        } else {
+            $this->apiError(-1, "简历投递失败");
+        }*/
+    }
+
     private function fetchImage($pic_id)
     {
         if($pic_id == null)
@@ -187,13 +216,6 @@ class CompanyController extends AppController {
             }
         }
         return $picUrl;
-    }
-
-    public function testPdf(){
-        $pdfUtils = new PdfUtils();
-        $pdfUtils->init();
-        /*$emailUtils = new EmailUtils();
-        $emailUtils->sendMail();*/
     }
 
 }

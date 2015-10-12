@@ -1792,6 +1792,99 @@ class UserController extends AppController
     }
 
     /**
+     * 获取个人简历中的用户信息
+     * @param int $uid
+     * 返回json结构:
+     * {
+            "username":"10011234004",
+            "signature":"signature",
+            "nickname":"琦琦",
+            "avatar256":"http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/default/default_256_256.jpg",
+            "avatar128":"http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/default/default_128_128.jpg",
+            "extinfo":[
+                        {
+                            "id":"36",
+                            "field_name":"college",
+                            "field_title":"所在大学",
+                            "field_content":"纺织大学"
+                        },
+                        {
+                            "id":"37",
+                            "field_name":"major",
+                            "field_title":"所学专业",
+                            "field_content":"平面设计"
+                        },
+                        ......
+                    ],
+            "experience":[
+                            {
+                                "id":"3",
+                                "uid":"118",
+                                "position":"工程师",
+                                "company_name":"腾讯",
+                                "start_time":"345342",
+                                "end_time":"134124145",
+                                "department":"研发",
+                                "job_content":"后台开发而已",
+                                "status":"1"
+                            }
+                        ],
+            "works":[
+                        {
+                            "src":"http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-09-15/55f7fc45ad19b.jpg"
+                        }
+                    ]
+        }
+     */
+    public function getResumeProfile($uid=0){
+        if(empty($uid)){
+            $this->apiError(-1, "传入用户id为空");
+        }
+        $map = array('uid' => $uid);
+        $user = D('Home/Member')->where($map)->find();
+        if(!$user){
+            $this->apiError(-1,"获取用户信息失败");
+        }
+        $result['info'] = query_user(array('avatar256', 'avatar128', 'username', 'extinfo', 'signature', 'nickname'), $uid);
+
+        // 扩展信息
+        $profile_group = $this->_profile_group($uid);
+        $info_list = $this->_info_list($profile_group['id'], $uid);
+        $result['info']['extinfo'] = $info_list;
+
+        // 用户工作经历
+        $workExperienceModel = D('User/UserWorkExperience');
+        $experList = $workExperienceModel->getUserWorkExperiences($uid);
+        if($experList){
+            $result['info']['experience'] = $experList;
+        } else {
+            $result['info']['experience'] = null;
+        }
+        // 用户作品
+        $user_works_model = D('User/UserWorks');
+        $resumeWorkList = $user_works_model->getResumeWorks($uid);
+        if($resumeWorkList){
+            $worksArray = array();
+            foreach ($resumeWorkList as &$picinfo) {
+                $pic_id = $picinfo['picture_id'];
+                $model = M();
+                $picDetail= $model->query("select path from hisihi_picture where id=".$pic_id);
+                $picinfo['src'] = ltrim($picDetail[0]['path'], '/');
+                if(strpos($picinfo['src'], "Picture")) {
+                    $src = substr($picinfo['src'], 16);
+                    $picinfo['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
+                }
+                unset($picinfo['picture_id']);
+                array_push($worksArray, $picinfo);
+            }
+            $result['info']['works'] = $worksArray;
+        } else {
+            $result['info']['works'] = null;
+        }
+        return $result;
+    }
+
+    /**
      * @param $url
      * @param $query
      * @return mixed
