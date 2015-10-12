@@ -210,7 +210,7 @@ EOF;
         $time = time();
         $path = '/tmp/'.$time.'.pdf';
         //输出PDF
-        $this->pdf->Output($path, 'I');
+        $this->pdf->Output($path, 'F');
         return $path;
     }
 

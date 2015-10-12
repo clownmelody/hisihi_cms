@@ -201,7 +201,7 @@ class CompanyController extends AppController {
         }
         $pdfUtils = new PdfUtils();
         $path = $pdfUtils->init($uid);
-        /*$emailUtils = new EmailUtils();
+        $emailUtils = new EmailUtils();
         $model = M();
         $result = $model->query("select hr_email from hisihi_company where status=1 and id=".$companyId.' limit 1');
         if(empty($result[0]['hr_email'])){
@@ -209,10 +209,16 @@ class CompanyController extends AppController {
         }
         $email = $result[0]['hr_email'];
         if($emailUtils->sendMail($email, $path)){
+            $model = D('User/ResumeDelivery');
+            $data['uid'] = $uid;
+            $data['company_id'] = $companyId;
+            $data['job_id'] = 0;
+            $data['create_time'] = time();
+            $model->save($data);
             $this->apiSuccess("简历投递成功");
         } else {
             $this->apiError(-1, "简历投递失败");
-        }*/
+        }
     }
 
     private function fetchImage($pic_id)
