@@ -14,4 +14,8 @@ class UserWorkExperienceModel extends Model
         return $this->add($data);
     }
 
+    public function getUserWorkExperiences($uid){
+        return $this->where('status=1 and uid='.$uid)->select();
+    }
+
 }

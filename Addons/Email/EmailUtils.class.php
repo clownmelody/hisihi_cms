@@ -26,12 +26,14 @@ class EmailUtils
         $this->mail->SMTPSecure = 'ssl';
         $this->mail->Port = 465;
         $this->mail->setFrom('1424627720@qq.com', '杨楚杰');
-        $this->mail->addAddress('yangchujie1@163.com', 'walterYang');
     }
 
-    function sendMail(){
-
-        $this->mail->addAttachment("/tmp/test.txt", "test.txt");
+    function sendMail($email=null, $path=null){
+        if(!$path || !$email){
+            return false;
+        }
+        $this->mail->addAddress($email);
+        $this->mail->addAttachment($path, "简历.pdf");
         $this->mail->isHTML(true);
 
         $this->mail->Subject = '邮件系统测试';
@@ -39,10 +41,9 @@ class EmailUtils
         $this->mail->AltBody = "为了查看该邮件，请切换到支持 HTML 的邮件客户端";
 
         if(!$this->mail->send()) {
-            echo 'Message could not be sent.';
-            echo 'Mailer Error: ' . $this->mail->ErrorInfo;
+            return false;
         } else {
-            echo 'Message has been sent: ';
+            return true;
         }
     }
 

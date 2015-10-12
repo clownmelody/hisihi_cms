@@ -7,7 +7,7 @@
 // | Author: 麦当苗儿 <zuojiazi@vip.qq.com> <http://www.zjzit.cn>
 // +----------------------------------------------------------------------
 
-namespace Hiworks\Model;
+namespace User\Model;
 use Think\Model;
 use Think\Page;
 
@@ -24,6 +24,10 @@ class UserWorksModel extends Model{
 
 	public function add($data){
 		return $this->add($data);
+	}
+
+	public function getResumeWorks($uid){
+		return $this->field('picture_id')->where('post_id=0 and forum_id=1001 and status=1 and uid='.$uid)->select();
 	}
 
 }
