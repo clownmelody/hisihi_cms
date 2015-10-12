@@ -23,16 +23,22 @@ class CompanyController extends AppController {
      * 公司列表
      * @param int $page
      * @param int $count
+     *
      */
-    public function alllist($page=1, $count=5,$id=0){
+    public function alllist($page=1, $count=5, $id=0, $name=''){
         $model = D('Admin/Company');
         if($id == 0){
-            $totalCount = $model->where('status<>-1')->count();
-            $result = $model->where('status<>-1')->order('scale desc')->page($page, $count)->select();
+            $totalCount = $model->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")->count();
+            $result = $model->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
+                ->order('scale desc')->page($page, $count)->select();
         }else{
-            $totalCount = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%' or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')")
+            $totalCount = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%'
+                or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')
+                and (`name` like '%".$name."%' or fullname like '%".$name."%')")
                 ->count();
-            $result = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%' or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')")
+            $result = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%'
+                or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')
+                and (`name` like '%".$name."%' or fullname like '%".$name."%')")
                 ->order('scale desc')->page($page, $count)->select();
         }
         $cmodel = D('CompanyConfig');
