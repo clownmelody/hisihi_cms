@@ -25,7 +25,11 @@ class CompanyController extends AppController {
      * @param int $count
      *
      */
-    public function alllist($page=1, $count=5, $id=0, $name=''){
+    public function alllist($uid=0, $page=1, $count=5, $id=0, $name=''){
+        if (!$uid) {
+            //$this->requireLogin();
+            $uid = $this->getUid();
+        }
         $model = D('Admin/Company');
         if($id == 0){
             $totalCount = $model->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")->count();
@@ -42,6 +46,7 @@ class CompanyController extends AppController {
                 ->order('scale desc')->page($page, $count)->select();
         }
         $cmodel = D('CompanyConfig');
+        $rmodel = D('User/ResumeDelivery');
         if($result){
             foreach($result as &$company){
                 $company['picture'] = $this->fetchImage($company['picture']);
@@ -71,6 +76,11 @@ class CompanyController extends AppController {
                     array_push($filtrate_array,$markobj);
                 }
                 $company['filtrate_mark'] = $filtrate_array;
+                $company['is_delivery'] = false;
+                $isdelivery = $rmodel->where('status=1 and uid='.$uid.' and company_id='.$company['id'])->select();
+                if($isdelivery){
+                    $company['is_delivery'] = true;
+                }
             }
         }
         $extra['totalCount'] = $totalCount;
