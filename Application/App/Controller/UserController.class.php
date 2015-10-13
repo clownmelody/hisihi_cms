@@ -1372,10 +1372,12 @@ class UserController extends AppController
         }
         unset($v);*/
         if($group==5){  // 学生
-            $list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) desc limit 0,4");
+            ///$list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) desc limit 0,4");
+            $list = $model->query("select uid from hisihi_member where uid in(277, 278, 279, 280)");
         } else {        // 老师
             #$list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) desc limit 1,4");
-            $list = $model->query("select p.uid, count(*) as count from hisihi_forum_post_reply as p,  hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by p.uid order by count desc limit 1,4");
+            ///$list = $model->query("select p.uid, count(*) as count from hisihi_forum_post_reply as p,  hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by p.uid order by count desc limit 1,4");
+            $list = $model->query("select uid from hisihi_member where uid in(81, 520, 521, 535)");
         }
         foreach ($list as &$v) {
             $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);

@@ -199,6 +199,11 @@ class CompanyController extends AppController {
             $this->requireLogin();
             $uid = $this->getUid();
         }
+        $resumeModel = D('User/ResumeDelivery');
+        $is_delivery = $resumeModel->where('status=1 and uid='.$uid.' and company_id='.$companyId)->select();
+        if($is_delivery){
+            $this->apiError(-1, '该公司已经投递过了');
+        }
         $pdfUtils = new PdfUtils();
         $path = $pdfUtils->init($uid);
         $emailUtils = new EmailUtils();
