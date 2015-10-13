@@ -832,7 +832,14 @@ class ForumController extends AppController
                 $this->apiError($model->getError(),'编辑失败!');
             }
         } else {
-            $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id);
+            $content_md5 = md5(str_replace(' ','', $content));
+            $t_uid = is_login();
+            $t_list = D('ForumPost')->where(array('uid' => $t_uid, 'content_md5' => $content_md5))->find();
+            if($t_list){
+                $this->apiError(-2, "你已经发过该帖子了");
+            }
+
+            $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
 
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
@@ -1987,5 +1994,19 @@ class ForumController extends AppController
                 }
             }
         }
+    }
+
+    /**
+     * 解析帖子内容为MD5
+     */
+    public function parsePostContentMD5(){
+        $model = M('ForumPost');
+        $list = $model->field('id, content')->select();
+        foreach ($list as &$v) {
+            $content_md5 = md5(str_replace(' ', '', $v['content']));
+            $v['content'] = $content_md5;
+            $model->where('id='.$v['id'])->setField('content_md5', $content_md5);
+        }
+        //$this->apiSuccess('ok', null, $list);
     }
 }

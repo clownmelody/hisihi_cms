@@ -207,12 +207,19 @@ class CompanyController extends AppController {
      */
     public function sendResume($uid=0, $companyId=0){
         if(!$companyId){
-            $this->apiError(-1, '传入公司id为空');
+            $this->apiError(-3, '传入公司id为空');
         }
         if (!$uid) {
             $this->requireLogin();
             $uid = $this->getUid();
         }
+
+        $resumeModel = D('User/ResumeDelivery');
+        $is_delivery = $resumeModel->where('status=1 and uid='.$uid.' and company_id='.$companyId)->select();
+        if($is_delivery){
+            $this->apiError(-1, '该公司已经投递过了');
+        }
+
         //判断简历信息是否完整
         $this->isResumeComplete($uid);
 
@@ -222,7 +229,7 @@ class CompanyController extends AppController {
         $model = M();
         $result = $model->query("select hr_email from hisihi_company where status=1 and id=".$companyId.' limit 1');
         if(empty($result[0]['hr_email'])){
-            $this->apiError(-1, "该公司未填写HR邮箱");
+            $this->apiError(-4, "该公司未填写HR邮箱");
         }
         $email = $result[0]['hr_email'];
         if($emailUtils->sendMail($email, $path)){
@@ -234,7 +241,7 @@ class CompanyController extends AppController {
             $model->save($data);
             $this->apiSuccess("简历投递成功");
         } else {
-            $this->apiError(-1, "简历投递失败");
+            $this->apiError(-5, "简历投递失败");
         }
     }
 
