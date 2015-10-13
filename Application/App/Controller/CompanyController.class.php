@@ -105,15 +105,29 @@ class CompanyController extends AppController {
             $scale = $cmodel->where('type=2 and status=1 and value='.$result['scale'])->getField("value_explain");
             $result['scale'] = $scale;
 
-            $markarray = explode('#',$result['marks']);
-            $map['id'] = array('in',$markarray);
-            $marks = $cmodel->where($map)->where('type=1 and status=1')->getField("value",true);
-            $result['marks'] = $marks;
+            $mark = explode('#',$result['marks']);
+            $markarray = array();
+            foreach($mark as &$markid){
+                $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['0']['id'];
+                $markobj->value = $markarr['0']['value'];
+                array_push($markarray,$markobj);
+            }
+            $result['marks'] = $markarray;
 
-            $filtrate_array = explode('#',$result['filtrate_mark']);
-            $fmap['id'] = array('in',$filtrate_array);
-            $fmarks = $cmodel->where($fmap)->where('type=8 and status=1')->getField("value",true);
-            $result['filtrate_mark'] = $fmarks;
+            $filtrate_mark = explode("#",$result['filtrate_mark']);
+            $filtrate_array = array();
+            foreach($filtrate_mark as &$markid){
+                $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['0']['id'];
+                $markobj->value = $markarr['0']['value'];
+                array_push($filtrate_array,$markobj);
+            }
+            $result['filtrate_mark'] = $filtrate_array;
         }
         $extra['data'] = $result;
         $this->apiSuccess('获取公司信息成功', null, $extra);
@@ -199,6 +213,9 @@ class CompanyController extends AppController {
             $this->requireLogin();
             $uid = $this->getUid();
         }
+        //判断简历信息是否完整
+        $this->isResumeComplete($uid);
+
         $pdfUtils = new PdfUtils();
         $path = $pdfUtils->init($uid);
         $emailUtils = new EmailUtils();
@@ -238,6 +255,47 @@ class CompanyController extends AppController {
             }
         }
         return $picUrl;
+    }
+
+    /**判断简历信息是否完整
+     * @param $uid
+     */
+    private function isResumeComplete($uid){
+        $userController = new UserController();
+        // 扩展信息
+        $profile_group = $userController->_profile_group($uid);
+        $info_list =  D('field')->where('uid='.$uid)->field('field_id')->select();
+        if($profile_group['id'] == 13){//设计师用户不用填写培训机构
+            $field_setting_list = D('field_setting')->field('id, input_tips')
+                ->where(array('profile_group_id' => $profile_group['id'], 'status' => '1', 'visiable' => '1'))
+                ->order('sort asc')->select();
+        }else{//讲师用户需要填写培训机构信息
+            $field_setting_list = D('field_setting')->field('id, input_tips')
+                ->where(array('status' => '1', 'visiable' => '1'))->order('sort asc')->select();
+        }
+        foreach ($field_setting_list as $val) {
+            $hasvalue = false;
+            $valid = $val['id'];
+            foreach ($info_list as $key){
+                $keyid = $key['field_id'];
+                if($keyid == $valid){
+                    $hasvalue = true;
+                }
+            }
+            if(!$hasvalue){
+                $this->apiError(-2, "您的简历不完整，".$val['input_tips']."未填写");
+            }
+        }
+        $profile = $userController->getResumeProfile($uid);
+        if($profile['info']['extinfo'] == null){
+            $this->apiError(-2, "您的简历不完整，个人信息未填写");
+        }
+        if($profile['info']['experience'] == null){
+            $this->apiError(-2, "您的简历不完整，工作经历未填写");
+        }
+        if($profile['info']['works'] == null){
+            $this->apiError(-2, "您的简历不完整，个人作品未上传");
+        }
     }
 
 }
