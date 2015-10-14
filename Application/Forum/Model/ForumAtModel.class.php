@@ -15,8 +15,8 @@ class ForumAtModel extends Model {
      * @param $post_id
      * @return bool|mixed
      */
-    public function addAtPost($uid, $at_uid, $post_id) {
-        $data = array('uid'=>$uid, 'at_uid'=>$at_uid, 'post_id'=>$post_id);
+    public function addAtPost($uid, $at_uid, $post_id, $type=1) {
+        $data = array('uid'=>$uid, 'at_uid'=>$at_uid, 'post_id'=>$post_id, 'type'=>$type);
         $data = $this->create($data);
         if(!$data) return false;
         return $this->add($data);

@@ -771,7 +771,7 @@ class ForumController extends AppController
     }
 
     //发表提问
-    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null)
+    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $iscompany=0)
     {
         $this->requireLogin();
         //dump($content);
@@ -955,7 +955,11 @@ class ForumController extends AppController
                 array_push($reg_ids, $reg_id);
             }
             // 添加 @ 数据到对应表中
-            D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id);
+            if(!$iscompany){
+                D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id, 2);
+            }else{
+                D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id);
+            }
         }
         $param['reg_id'] = $reg_ids;
         $param['user_id'] = $atUids;
@@ -1560,6 +1564,7 @@ class ForumController extends AppController
         //读取帖子列表
         $atData['status'] = 1;
         $atData['at_uid'] = $id;
+        $atData['type'] = 2;
         $forumAtModel = D('Forum/ForumAt');
         $totalCount = $forumAtModel->where($atData)->count();
         $forumAtList = $forumAtModel->where($atData)->order($order)->page($page, $count)->select();

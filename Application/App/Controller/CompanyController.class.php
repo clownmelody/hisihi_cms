@@ -33,14 +33,16 @@ class CompanyController extends AppController {
         $model = D('Admin/Company');
         if($id == 0){
             $totalCount = $model->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")->count();
-            $result = $model->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
+            $result = $model->field("id,name,city,slogan,introduce,filtrate_mark,marks,scale,website,fullname,location,picture,hr_email")
+                ->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
                 ->order('scale desc')->page($page, $count)->select();
         }else{
             $totalCount = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%'
                 or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')
                 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
                 ->count();
-            $result = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%'
+            $result = $model->field("id,name,city,slogan,introduce,filtrate_mark,marks,scale,website,fullname,location,picture,hr_email")
+                ->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%'
                 or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')
                 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
                 ->order('scale desc')->page($page, $count)->select();
@@ -97,7 +99,8 @@ class CompanyController extends AppController {
             $this->apiError(-1, "传入参数不能为空");
         }
         $model = D('Admin/Company');
-        $result = $model->where('status<>-1 and id='.$id)->find();
+        $result = $model->field("id,name,city,slogan,introduce,filtrate_mark,marks,scale,website,fullname,location,picture,hr_email")
+            ->where('status<>-1 and id='.$id)->find();
         $cmodel = D('CompanyConfig');
         if($result){
             $result['picture'] = $this->fetchImage($result['picture']);
@@ -105,15 +108,29 @@ class CompanyController extends AppController {
             $scale = $cmodel->where('type=2 and status=1 and value='.$result['scale'])->getField("value_explain");
             $result['scale'] = $scale;
 
-            $markarray = explode('#',$result['marks']);
-            $map['id'] = array('in',$markarray);
-            $marks = $cmodel->where($map)->where('type=1 and status=1')->getField("value",true);
-            $result['marks'] = $marks;
+            $mark = explode('#',$result['marks']);
+            $markarray = array();
+            foreach($mark as &$markid){
+                $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['0']['id'];
+                $markobj->value = $markarr['0']['value'];
+                array_push($markarray,$markobj);
+            }
+            $result['marks'] = $markarray;
 
-            $filtrate_array = explode('#',$result['filtrate_mark']);
-            $fmap['id'] = array('in',$filtrate_array);
-            $fmarks = $cmodel->where($fmap)->where('type=8 and status=1')->getField("value",true);
-            $result['filtrate_mark'] = $fmarks;
+            $filtrate_mark = explode("#",$result['filtrate_mark']);
+            $filtrate_array = array();
+            foreach($filtrate_mark as &$markid){
+                $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['0']['id'];
+                $markobj->value = $markarr['0']['value'];
+                array_push($filtrate_array,$markobj);
+            }
+            $result['filtrate_mark'] = $filtrate_array;
         }
         $extra['data'] = $result;
         $this->apiSuccess('获取公司信息成功', null, $extra);
@@ -123,22 +140,30 @@ class CompanyController extends AppController {
      * 获取公司招聘信息
      * @param $id
      */
-    public function recruits($id){
+    public function recruits($id,$page=1, $count=5){
         if(empty($id)){
             $this->apiError(-1, "传入参数不能为空");
         }
         $model = D('CompanyRecruit');
-        $result = $model->field('company_id, job, salary, requirement, skills,create_time,end_time')->where('status<>-1 and company_id='.$id)
-            ->order('create_time desc')->select();
+        $result = $model->field('id, job, salary, requirement, skills,work_city,create_time,end_time')
+            ->where('status<>-1 and company_id='.$id)
+            ->order('create_time desc')->page($page, $count)->select();
         $cmodel = D('CompanyConfig');
         foreach($result as &$recruit){
             $salary = $cmodel->where('type=4 and status=1 and value='.$recruit['salary'])->getField("value_explain");
             $recruit['salary'] = $salary;
 
-            $markarray = explode('#',$recruit['requirement']);
-            $map['id'] = array('in',$markarray);
-            $marks = $cmodel->where($map)->where('type=3 and status=1')->getField("value",true);
-            $recruit['requirement'] = $marks;
+            $mark = explode('#',$recruit['requirement']);
+            $markarray = array();
+            foreach($mark as &$markid){
+                $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['0']['id'];
+                $markobj->value = $markarr['0']['value'];
+                array_push($markarray,$markobj);
+            }
+            $recruit['requirement'] = $markarray;
         }
 
         $extra['totalCount'] = count($result);
@@ -193,24 +218,29 @@ class CompanyController extends AppController {
      */
     public function sendResume($uid=0, $companyId=0){
         if(!$companyId){
-            $this->apiError(-1, '传入公司id为空');
+            $this->apiError(-3, '传入公司id为空');
         }
         if (!$uid) {
             $this->requireLogin();
             $uid = $this->getUid();
         }
+
         $resumeModel = D('User/ResumeDelivery');
         $is_delivery = $resumeModel->where('status=1 and uid='.$uid.' and company_id='.$companyId)->select();
         if($is_delivery){
             $this->apiError(-1, '该公司已经投递过了');
         }
+
+        //判断简历信息是否完整
+        $this->isResumeComplete($uid);
+
         $pdfUtils = new PdfUtils();
         $path = $pdfUtils->init($uid);
         $emailUtils = new EmailUtils();
         $model = M();
         $result = $model->query("select hr_email from hisihi_company where status=1 and id=".$companyId.' limit 1');
         if(empty($result[0]['hr_email'])){
-            $this->apiError(-1, "该公司未填写HR邮箱");
+            $this->apiError(-4, "该公司未填写HR邮箱");
         }
         $email = $result[0]['hr_email'];
         if($emailUtils->sendMail($email, $path)){
@@ -222,7 +252,7 @@ class CompanyController extends AppController {
             $model->save($data);
             $this->apiSuccess("简历投递成功");
         } else {
-            $this->apiError(-1, "简历投递失败");
+            $this->apiError(-5, "简历投递失败");
         }
     }
 
@@ -243,6 +273,47 @@ class CompanyController extends AppController {
             }
         }
         return $picUrl;
+    }
+
+    /**判断简历信息是否完整
+     * @param $uid
+     */
+    private function isResumeComplete($uid){
+        $userController = new UserController();
+        // 扩展信息
+        $profile_group = $userController->_profile_group($uid);
+        $info_list =  D('field')->where('uid='.$uid)->field('field_id')->select();
+        if($profile_group['id'] == 13){//设计师用户不用填写培训机构
+            $field_setting_list = D('field_setting')->field('id, input_tips')
+                ->where(array('profile_group_id' => $profile_group['id'], 'status' => '1', 'visiable' => '1'))
+                ->order('sort asc')->select();
+        }else{//讲师用户需要填写培训机构信息
+            $field_setting_list = D('field_setting')->field('id, input_tips')
+                ->where(array('status' => '1', 'visiable' => '1'))->order('sort asc')->select();
+        }
+        foreach ($field_setting_list as $val) {
+            $hasvalue = false;
+            $valid = $val['id'];
+            foreach ($info_list as $key){
+                $keyid = $key['field_id'];
+                if($keyid == $valid){
+                    $hasvalue = true;
+                }
+            }
+            if(!$hasvalue){
+                $this->apiError(-2, "您的简历不完整，".$val['input_tips']."未填写");
+            }
+        }
+        $profile = $userController->getResumeProfile($uid);
+        if($profile['info']['extinfo'] == null){
+            $this->apiError(-2, "您的简历不完整，个人信息未填写");
+        }
+        if($profile['info']['experience'] == null){
+            $this->apiError(-2, "您的简历不完整，工作经历未填写");
+        }
+        if($profile['info']['works'] == null){
+            $this->apiError(-2, "您的简历不完整，个人作品未上传");
+        }
     }
 
 }
