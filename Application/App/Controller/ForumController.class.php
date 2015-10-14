@@ -169,7 +169,7 @@ class ForumController extends AppController
      * @param int $is_reply  -1 全部 0 无回答 1 有回答
      * @param string $order
      */
-    public function forum($type_id = 0, $page = 1, $count = 10, $is_reply = -1, $order = 'ctime', $show_adv=false)
+    public function forum($type_id = 0, $page = 1, $count = 10, $is_reply = -1, $order = 'ctime', $show_adv=false, $post_type=1)
     {
         //$this->requireLogin();
         $type_id = intval($type_id);
@@ -212,6 +212,9 @@ class ForumController extends AppController
 
         //读取帖子列表
         $map = array('status' => 1);
+        if($post_type==2){
+            $map['post_type'] = 2;
+        }
         if ($type_id != 0) {
             $forums = $this->getForumsByType($type_id);
             if($forums == null){

@@ -43,6 +43,7 @@ class ForumProtocolModel extends Model
         }
         if ($tab == 'forum') {
             $map['status'] = 1;
+            $map['is_top'] = 0;
             $result = $this->forum_postModel->where($map)->page($page, $count)->order('create_time desc')->select();
             foreach ($result as &$v) {
                 $v['forum'] = $forum_key_value[$v['forum_id']];
@@ -51,6 +52,7 @@ class ForumProtocolModel extends Model
             $map_in = $this->_getInMap($map);
             unset($map_in['uid']);
             $map_in['status'] = 1;
+            $map_in['is_top'] = 0;
             $result = $this->forum_postModel->where($map_in)->page($page, $count)->order('last_reply_time desc')->select();
             foreach ($result as &$v) {
                 $v['forum'] = $forum_key_value[$v['forum_id']];
@@ -86,11 +88,13 @@ class ForumProtocolModel extends Model
         }
         if ($tab == 'forum') {
             $map['status'] = 1;
+            $map['is_top'] = 0;
             $totalCount = $this->forum_postModel->where($map)->count();
         } elseif ($tab == 'forum_in') {
             $map_in = $this->_getInMap($map);
             unset($map_in['uid']);
             $map_in['status'] = 1;
+            $map_in['is_top'] = 0;
             $totalCount = $this->forum_postModel->where($map_in)->count();
         }
         return $totalCount;
