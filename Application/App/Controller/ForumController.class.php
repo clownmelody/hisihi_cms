@@ -771,7 +771,7 @@ class ForumController extends AppController
     }
 
     //发表提问
-    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $iscompany=0)
+    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $at_type=0)
     {
         $this->requireLogin();
         //dump($content);
@@ -955,9 +955,12 @@ class ForumController extends AppController
                 array_push($reg_ids, $reg_id);
             }
             // 添加 @ 数据到对应表中
-            if(!$iscompany){
+            if($at_type == 1){//@公司帖子
                 D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id, 2);
-            }else{
+            }else if($at_type == 2){//@机构帖子
+                D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id, 3);
+            }else
+            {
                 D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id);
             }
         }

@@ -131,6 +131,8 @@ class CompanyController extends AppController {
                 array_push($filtrate_array,$markobj);
             }
             $result['filtrate_mark'] = $filtrate_array;
+        }else{
+            $this->apiError(-1, "该公司不存在");
         }
         $extra['data'] = $result;
         $this->apiSuccess('获取公司信息成功', null, $extra);
