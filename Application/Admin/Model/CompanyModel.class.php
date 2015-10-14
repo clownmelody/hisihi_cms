@@ -31,7 +31,7 @@ class CompanyModel extends Model{
         array('location', 'require', '公司地址不能为空', self::MUST_VALIDATE, 'regex', self::MODEL_BOTH),
         array('hr_email', 'require', 'HR邮箱不能为空', self::MUST_VALIDATE, 'regex', self::MODEL_BOTH),
         array('hr_email','email','email格式错误'),
-        array('picture', 'require', '图片不能为空', self::MUST_VALIDATE, 'regex', self::MODEL_BOTH)
+        array('picture', 'require', '图片不能为空', self::MUST_VALIDATE, 'regex', self::MODEL_BOTH),
     );
 
     /* 自动完成规则 */

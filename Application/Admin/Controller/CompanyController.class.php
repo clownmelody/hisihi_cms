@@ -74,7 +74,7 @@ class CompanyController extends AdminController {
      */
     public function update(){
         if (IS_POST) { //提交表单
-            $model = M('Company');
+            $model = D('Company');
             $cid = $_POST["cid"];
             $data["name"] = $_POST["name"];
             $data["city"] = $_POST["city"];
