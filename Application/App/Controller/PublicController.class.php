@@ -407,6 +407,25 @@ class PublicController extends AppController {
 //        return $pic_src;
         return $pic_small;
     }
+    //获取hisihi-other中的图片
+    private function fetchImage_other($pic_id)
+    {
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            }
+        }
+        return $picUrl;
+    }
 
     /**
      * 应用启动页广告
@@ -493,7 +512,7 @@ class PublicController extends AppController {
             $topic['source_name'] = $this->getSourceName($did);
             $topic['logo_pic'] = $this->getSourceLogoPic($did);
             //解析并成立图片数据
-            $topic['img'] = $this->fetchImage($topic['cover_id']);
+            $topic['img'] = $this->fetchImage_other($topic['cover_id']);
             $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
             $topic['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
             $topic['isSupportd'] = $this->isArticleSupport($did);

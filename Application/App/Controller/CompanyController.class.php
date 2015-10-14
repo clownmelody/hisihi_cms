@@ -33,14 +33,16 @@ class CompanyController extends AppController {
         $model = D('Admin/Company');
         if($id == 0){
             $totalCount = $model->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")->count();
-            $result = $model->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
+            $result = $model->field("id,name,city,slogan,introduce,filtrate_mark,marks,scale,website,fullname,location,picture,hr_email")
+                ->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
                 ->order('scale desc')->page($page, $count)->select();
         }else{
             $totalCount = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%'
                 or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')
                 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
                 ->count();
-            $result = $model->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%'
+            $result = $model->field("id,name,city,slogan,introduce,filtrate_mark,marks,scale,website,fullname,location,picture,hr_email")
+                ->where("status<>-1 and (filtrate_mark like '".$id."' or filtrate_mark like '".$id."#%'
                 or filtrate_mark like '%#".$id."' or filtrate_mark like '%#".$id."#%')
                 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
                 ->order('scale desc')->page($page, $count)->select();
@@ -97,7 +99,8 @@ class CompanyController extends AppController {
             $this->apiError(-1, "传入参数不能为空");
         }
         $model = D('Admin/Company');
-        $result = $model->where('status<>-1 and id='.$id)->find();
+        $result = $model->field("id,name,city,slogan,introduce,filtrate_mark,marks,scale,website,fullname,location,picture,hr_email")
+            ->where('status<>-1 and id='.$id)->find();
         $cmodel = D('CompanyConfig');
         if($result){
             $result['picture'] = $this->fetchImage($result['picture']);
@@ -137,22 +140,30 @@ class CompanyController extends AppController {
      * 获取公司招聘信息
      * @param $id
      */
-    public function recruits($id){
+    public function recruits($id,$page=1, $count=5){
         if(empty($id)){
             $this->apiError(-1, "传入参数不能为空");
         }
         $model = D('CompanyRecruit');
-        $result = $model->field('company_id, job, salary, requirement, skills,create_time,end_time')->where('status<>-1 and company_id='.$id)
-            ->order('create_time desc')->select();
+        $result = $model->field('id, job, salary, requirement, skills,work_city,create_time,end_time')
+            ->where('status<>-1 and company_id='.$id)
+            ->order('create_time desc')->page($page, $count)->select();
         $cmodel = D('CompanyConfig');
         foreach($result as &$recruit){
             $salary = $cmodel->where('type=4 and status=1 and value='.$recruit['salary'])->getField("value_explain");
             $recruit['salary'] = $salary;
 
-            $markarray = explode('#',$recruit['requirement']);
-            $map['id'] = array('in',$markarray);
-            $marks = $cmodel->where($map)->where('type=3 and status=1')->getField("value",true);
-            $recruit['requirement'] = $marks;
+            $mark = explode('#',$recruit['requirement']);
+            $markarray = array();
+            foreach($mark as &$markid){
+                $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['0']['id'];
+                $markobj->value = $markarr['0']['value'];
+                array_push($markarray,$markobj);
+            }
+            $recruit['requirement'] = $markarray;
         }
 
         $extra['totalCount'] = count($result);
