@@ -34,6 +34,10 @@ if (get_magic_quotes_gpc()) {
 /*移除magic_quotes_gpc参数影响end*/
 
 
+define('Scan', true);
+$lifeTime = 10*60;
+session_set_cookie_params($lifeTime);
+session_start();
 
 
 /**
