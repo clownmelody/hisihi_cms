@@ -826,13 +826,7 @@ class ForumController extends AppController
         //写入帖子的内容
         $model = D('Forum/ForumPost');
         if ($isEdit) {
-            if($at_type = 1){//@公司发帖，post_type=2
-                $data = array('id' => intval($post_id), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => intval($forum_id), 'post_type'=>2);
-            }else if($at_type = 2){//@机构发帖，post_type=3
-                $data = array('id' => intval($post_id), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => intval($forum_id), 'post_type'=>3);
-            } else{
-                $data = array('id' => intval($post_id), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => intval($forum_id));
-            }
+            $data = array('id' => intval($post_id), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => intval($forum_id));
             $result = $model->editPost($data);
             if (!$result) {
                 $this->apiError($model->getError(),'编辑失败!');
@@ -844,8 +838,11 @@ class ForumController extends AppController
             if($t_list){
                 $this->apiError(-2, "你已经发过该帖子了");
             }*/
-
-            $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
+            if($at_type = 1){//@公司发帖，post_type=2
+                $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5, 'post_type'=>2);
+            }else{
+                $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
+            }
 
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
