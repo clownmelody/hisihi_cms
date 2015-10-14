@@ -11,7 +11,7 @@ class IndexController extends HiworksController
     public function index($cate = 1, $page = 1, $download=0, $sub=0, $base=0)
     {
         $token = $_SESSION["token"];
-        if(!defined('Scan') || !$token) {
+        if(/*!defined('Scan') ||*/ !$token) {
             redirect('/hiworks.php');
         }
 

@@ -832,12 +832,12 @@ class ForumController extends AppController
                 $this->apiError($model->getError(),'编辑失败!');
             }
         } else {
-            $content_md5 = md5(str_replace(' ','', $content));
-            $t_uid = is_login();
-            $t_list = D('ForumPost')->where(array('uid' => $t_uid, 'content_md5' => $content_md5))->find();
+            $content_md5 = md5($content);
+            /*$t_uid = is_login();
+            $t_list = D('Forum/ForumPost')->where(array('uid' => $t_uid, 'content_md5' => $content_md5))->find();
             if($t_list){
                 $this->apiError(-2, "你已经发过该帖子了");
-            }
+            }*/
 
             $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
 
@@ -876,7 +876,7 @@ class ForumController extends AppController
         $user_works_data['picture_id'] = $pictures_ids_str;
         $user_works_data['create_time'] = NOW_TIME;
         $user_works_model = D('User/UserWorks');
-        $user_works_model->add($user_works_data);
+        $user_works_model->saveWorks($user_works_data);
 
         //发布帖子成功，发送一条微博消息
         $postUrl = "http://$_SERVER[HTTP_HOST]" . U('Forum/Index/detail', array('id' => $post_id));
@@ -1996,11 +1996,12 @@ class ForumController extends AppController
      */
     public function parsePostContentMD5(){
         $model = M('ForumPost');
-        $list = $model->field('id, content')->select();
+        $list = $model->field('id, content')->page(0, 10)->select();
         foreach ($list as &$v) {
             $content_md5 = md5(str_replace(' ', '', $v['content']));
             $v['content'] = $content_md5;
-            $model->where('id='.$v['id'])->setField('content_md5', $content_md5);
+            $data['content_md5'] = $content_md5;
+            $model->where('id='.$v['id'])->save($data);
         }
         //$this->apiSuccess('ok', null, $list);
     }

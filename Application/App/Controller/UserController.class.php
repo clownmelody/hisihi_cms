@@ -1366,18 +1366,55 @@ class UserController extends AppController
      */
     public function honorUsers($group = 5){
         $model = M();
-        /*$list = $model->query("SELECT uid FROM hisihi_auth_group_access AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(uid) FROM hisihi_member)-(SELECT MIN(uid) FROM hisihi_member))+(SELECT MIN(uid) FROM hisihi_member)) AS id) AS t2 WHERE t1.uid >= t2.id and t1.group_id=".$group." ORDER BY t1.uid LIMIT 0,4");
-        foreach ($list as &$v) {
-            $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
-        }
-        unset($v);*/
         if($group==5){  // 学生
             ///$list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) desc limit 0,4");
-            $list = $model->query("select uid from hisihi_member where uid in(277, 278, 279, 280)");
+            //$list = $model->query("select uid from hisihi_member where uid in(277, 278, 279, 280)");
+            /* ---------  简化获取相应用户的sql ------------ */
+            $post_list = $model->query("select uid, count(*) as number from hisihi_forum_post group by uid order by number desc");
+            $uid_list = array();
+            if($post_list){
+                foreach($post_list as $post){
+                    $uid = $post['uid'];
+                    $access_list = $model->query("select uid from hisihi_auth_group_access where group_id=5 and uid=".$uid);
+                    if($access_list[0]['uid']){
+                        if(count($uid_list)<4){
+                            $da['uid'] = $access_list[0]['uid'];
+                            $uid_list[] = $da;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                $list = $uid_list;
+            } else {
+                $list = null;
+            }
+            /* ------------------- */
         } else {        // 老师
             #$list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) desc limit 1,4");
             ///$list = $model->query("select p.uid, count(*) as count from hisihi_forum_post_reply as p,  hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by p.uid order by count desc limit 1,4");
-            $list = $model->query("select uid from hisihi_member where uid in(81, 520, 521, 535)");
+            //$list = $model->query("select uid from hisihi_member where uid in(81, 520, 521, 535)");
+            /* ---------  简化获取相应用户的sql ------------ */
+            $post_list = $model->query("select uid, count(*) as number from hisihi_forum_post_reply group by uid order by number desc");
+            $uid_list = array();
+            if($post_list){
+                foreach($post_list as $post){
+                    $uid = $post['uid'];
+                    $access_list = $model->query("select uid from hisihi_auth_group_access where group_id=6 and uid=".$uid);
+                    if($access_list[0]['uid']){
+                        if(count($uid_list)<4){
+                            $da['uid'] = $access_list[0]['uid'];
+                            $uid_list[] = $da;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                $list = $uid_list;
+            } else {
+                $list = null;
+            }
+            /* ------------------- */
         }
         foreach ($list as &$v) {
             $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);

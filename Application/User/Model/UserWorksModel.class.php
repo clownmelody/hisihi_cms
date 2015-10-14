@@ -22,7 +22,7 @@ class UserWorksModel extends Model{
 		array('status', 1, self::MODEL_INSERT),
 	);
 
-	public function add($data){
+	public function saveWorks($data){
 		return $this->add($data);
 	}
 
