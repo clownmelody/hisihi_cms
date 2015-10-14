@@ -826,7 +826,13 @@ class ForumController extends AppController
         //写入帖子的内容
         $model = D('Forum/ForumPost');
         if ($isEdit) {
-            $data = array('id' => intval($post_id), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => intval($forum_id));
+            if($at_type = 1){//@公司发帖，post_type=2
+                $data = array('id' => intval($post_id), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => intval($forum_id), 'post_type'=>2);
+            }else if($at_type = 2){//@机构发帖，post_type=3
+                $data = array('id' => intval($post_id), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => intval($forum_id), 'post_type'=>3);
+            } else{
+                $data = array('id' => intval($post_id), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => intval($forum_id));
+            }
             $result = $model->editPost($data);
             if (!$result) {
                 $this->apiError($model->getError(),'编辑失败!');
