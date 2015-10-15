@@ -30,14 +30,8 @@ class PdfUtils
         $this->pdf->SetSubject('子标题');
         $this->pdf->SetKeywords('简历, 嘿设汇, PDF,');
 
-        // 设置页眉和页脚信息
-        $this->pdf->SetHeaderData('logo_example.png', 10, 'hisihi.com', '通过嘿设汇投递的简历',
-            array(0,64,255), array(0,64,128));
-        $this->pdf->setFooterData(array(0,64,0), array(0,64,128));
-
-        // 设置页眉和页脚字体
-        $this->pdf->setHeaderFont(Array('stsongstdlight', '', '10'));
-        $this->pdf->setFooterFont(Array('helvetica', '', '8'));
+        $this->pdf->setPrintHeader(false);
+        $this->pdf->setPrintFooter(false);
 
         // 设置默认等宽字体
         $this->pdf->SetDefaultMonospacedFont('courier');
@@ -64,19 +58,50 @@ class PdfUtils
         $userController = new UserController();
         $profile = $userController->getResumeProfile($uid);
 
-        $str1 = '姓名: ' . $profile['info']['nickname'];
+        $nickname = $profile['info']['nickname'];
+        $username = $profile['info']['username'];
+        $avatar = $profile['info']['avatar256'];
 
-        //$this->pdf->Write(0, $str1,'', 0, 'C', true, 0, false, false, 0);
-        /*$this->pdf->Image($profile['info']['avatar256'], 25, 23, 20, 25);
+        $extinfo_list = $profile['info']['extinfo'];
+        foreach($extinfo_list as $extinfo){
+            switch($extinfo['field_name']){
+                case 'college':  // 大学
+                    $collage = $extinfo['field_content'];
+                    break;
+                case 'major':    // 专业
+                    $major = $extinfo['field_content'];
+                    break;
+                case 'grade':    // 年级
+                    $grade = $extinfo['field_content'];
+                    break;
+                case 'study_institution':    // 学习机构
+                    $study_institution = $extinfo['field_content'];
+                    break;
+                case 'skills':    // 软件技能
+                    $skills = $extinfo['field_content'];
+                    break;
+                case 'expected_position':    // 期望职位
+                    $expected_position = $extinfo['field_content'];
+                    break;
+                case 'my_highlights':    // 我的亮点
+                    $my_highlights = $extinfo['field_content'];
+                    break;
+                case 'my_strengths':    // 我的优势
+                    $my_strengths = $extinfo['field_content'];
+                    break;
+            }
+        }
 
-        $this->pdf->setCellPaddings(1, 1, 1, 1);
+        $experience_list = $profile['info']['experience'];  //  工作经历
+        foreach ($experience_list as &$experience) {
+            unset($experience['id']);
+            unset($experience['uid']);
+            unset($experience['status']);
+        }
 
-        $this->pdf->setCellMargins(1, 1, 1, 1);
+        $work_list = $profile['info']['works'];     //  用户作品
 
-        $this->pdf->MultiCell(20, 25, '', 1, 'L', 0, 0, 25, 23, true);
-        $this->pdf->MultiCell(55, 5, $str1, 1, 'R', 0, 1, '', '', true);*/
         $html = <<<EOF
-        <!-- EXAMPLE OF CSS STYLE -->
         <style>
             h1 {
                 color: navy;
@@ -154,55 +179,6 @@ class PdfUtils
         </div>
 
         <br />
-
-        <table class="first" cellpadding="4" cellspacing="6">
-         <tr>
-          <td width="30" align="center"><b>No.</b></td>
-          <td width="140" align="center" bgcolor="#FFFF00"><b>XXXX</b></td>
-          <td width="140" align="center"><b>XXXX</b></td>
-          <td width="80" align="center"> <b>XXXX</b></td>
-          <td width="80" align="center"><b>XXXX</b></td>
-          <td width="45" align="center"><b>XXXX</b></td>
-         </tr>
-         <tr>
-          <td width="30" align="center">1.</td>
-          <td width="140" rowspan="6" class="second">XXXX<br />XXXX<br />XXXX<br />XXXX<br />XXXX<br />XXXX<br />XXXX<br />XXXX</td>
-          <td width="140">XXXX<br />XXXX</td>
-          <td width="80">XXXX<br />XXXX</td>
-          <td width="80">XXXX</td>
-          <td align="center" width="45">XXXX<br />XXXX</td>
-         </tr>
-         <tr>
-          <td width="30" align="center" rowspan="3">2.</td>
-          <td width="140" rowspan="3">XXXX<br />XXXX</td>
-          <td width="80">XXXX<br />XXXX</td>
-          <td width="80">XXXX<br />XXXX</td>
-          <td align="center" width="45">XXXX<br />XXXX</td>
-         </tr>
-         <tr>
-          <td width="80">XXXX<br />XXXX<br />XXXX<br />XXXX</td>
-          <td width="80">XXXX<br />XXXX</td>
-          <td align="center" width="45">XXXX<br />XXXX</td>
-         </tr>
-         <tr>
-          <td width="80" rowspan="2" >XXXX<br />XXXX<br />XXXX<br />XXXX<br />XXXX<br />XXXX<br />XXXX<br />XXXX</td>
-          <td width="80">XXXX<br />XXXX</td>
-          <td align="center" width="45">XXXX<br />XXXX</td>
-         </tr>
-         <tr>
-          <td width="30" align="center">3.</td>
-          <td width="140">XXXX<br />XXXX</td>
-          <td width="80">XXXX<br />XXXX</td>
-          <td align="center" width="45">XXXX<br />XXXX</td>
-         </tr>
-         <tr bgcolor="#FFFF80">
-          <td width="30" align="center">4.</td>
-          <td width="140" bgcolor="#00CC00" color="#FFFF00">XXXX<br />XXXX</td>
-          <td width="80">XXXX<br />XXXX</td>
-          <td width="80">XXXX<br />XXXX</td>
-          <td align="center" width="45">XXXX<br />XXXX</td>
-         </tr>
-        </table>
 EOF;
 
         $this->pdf->writeHTML($html, true, false, true, false, '');
@@ -210,7 +186,8 @@ EOF;
         $time = time();
         $path = '/tmp/'.$time.'.pdf';
         //输出PDF
-        $this->pdf->Output($path, 'F');
+        $this->pdf->Output($path, 'I');
+        //$this->pdf->Output($path, 'F');
         return $path;
     }
 

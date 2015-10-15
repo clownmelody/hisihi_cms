@@ -214,6 +214,8 @@ class ForumController extends AppController
         $map = array('status' => 1);
         if($post_type==2){
             $map['post_type'] = 2;
+        } else {
+            $map['post_type'] = 1;
         }
         if ($type_id != 0) {
             $forums = $this->getForumsByType($type_id);
@@ -253,7 +255,7 @@ class ForumController extends AppController
      * @param int $count
      * @param string $order
      */
-    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime', $show_adv=false)
+    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime', $show_adv=false, $post_type=1)
     {
         $field_type = intval($field_type);
         $page = intval($page);
@@ -270,6 +272,11 @@ class ForumController extends AppController
 
         //读取帖子列表
         $map = array('status' => 1);
+        if($post_type==2){
+            $map['post_type'] = 2;
+        } else {
+            $map['post_type'] = 1;
+        }
         if ($field_type > 0) {
             $forums = $this->getForumsByType($field_type);
             if($forums == null){
@@ -1575,10 +1582,15 @@ class ForumController extends AppController
         if($forumAtList){
             foreach($forumAtList as $forumAt){
                 $postId = $forumAt['post_id'];
-                $postInfo = D('ForumPost')->where('id='.$postId)->find();
-                array_push($list, $postInfo);
+                $map['id'] = $postId;
+                $map['post_type'] = 2;
+                $postInfo = D('ForumPost')->where($map)->find();
+                if($postInfo){
+                    $list[] =  $postInfo;
+                }
             }
         }
+        $this->apiSuccess('ok', null, $list);
         $list = $this->formatList($list);
         $this->apiSuccess("获取公司热门话题列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
