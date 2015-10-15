@@ -33,9 +33,24 @@ body {
     width: 960px;
   }
 }
-@media (min-width: 1280px) {
+@media (min-width: 1281px) and (max-width: 1440px) {
   .container {
     width: 1200px;
+  }
+}
+@media (min-width: 1441px) and (max-width: 1680px) {
+  .container {
+    width: 1440px;
+  }
+}
+@media (min-width: 1681px) and (max-width: 1920px) {
+  .container {
+    width: 1680px;
+  }
+}
+@media (min-width: 1921px) {
+  .container {
+    width: 1920px;
   }
 }
 .wrap {
@@ -265,7 +280,11 @@ body {
   background-size: 100%;
 }
 .foot {
-  margin-top: 50px;
+  bottom: 0;
+  left: 0;
+  margin: 20px auto;
+  position: fixed;
+  right: 0;
 }
 .foot p {
   color: #a1a1a1;
@@ -276,53 +295,7 @@ body {
   margin: 0;
   padding: 0;
 }
-@media (min-width: 641px) and (max-width: 980px) {
-  #showcase {
-    height: 600px;
-    width: 640px;
-  }
-  .cloud9-item {
-    width: 200px;
-  }
-  .body {
-    margin-top: 20px;
-  }
-  .body .prompt-txt {
-    margin-bottom: 40px;
-  }
-  .body .code-box {
-    margin-bottom: 50px;
-    height: 200px;
-  }
-  .body .code-box .code-img {
-    width: 200px;
-    height: 200px;
-  }
-  .body .code-box .code-img img {
-    width: 200px;
-    height: 200px;
-  }
-  .body .code-box .code-img.active-ios {
-    left: -300px;
-  }
-  .body .code-box .code-img.active-android {
-    right: -300px;
-  }
-  .body .code-box .font-box {
-    padding: 60px 0 0;
-  }
-  .body .code-box .font-box .font-img {
-    top: 60px;
-  }
-  .body .code-box .font-box .font-txt {
-    top: 60px;
-  }
-  .body .btn-box .btn {
-    width: 200px;
-    height: 60px;
-  }
-}
-@media (min-width: 981px) and (max-width: 1280px) {
+@media (min-width: 641px) and (max-width: 1440px) {
   #showcase {
     height: 560px;
     width: 960px;
@@ -370,15 +343,15 @@ body {
     height: 60px;
   }
 }
-@media (min-width: 1280px) {
+@media (min-width: 1441px) and (max-width: 1680px) {
   #showcase {
-    height: 560px;
-    width: 960px;
+    height: 700px;
+    width: 1200px;
     margin: 4% auto 0;
     border-radius: 8px;
   }
   .cloud9-item {
-    width: 260px;
+    width: 310px;
   }
   .body {
     margin-top: 20px;
@@ -387,34 +360,130 @@ body {
     margin-bottom: 40px;
   }
   .body .code-box {
-    margin-bottom: 50px;
-    height: 200px;
+    margin-bottom: 100px;
+    height: 250px;
   }
   .body .code-box .code-img {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
   }
   .body .code-box .code-img img {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
   }
   .body .code-box .code-img.active-ios {
-    left: -300px;
+    left: -350px;
   }
   .body .code-box .code-img.active-android {
-    right: -300px;
+    right: -350px;
   }
   .body .code-box .font-box {
-    padding: 60px 0 0;
+    padding: 90px 0 0;
   }
   .body .code-box .font-box .font-img {
-    top: 60px;
+    top: 90px;
   }
   .body .code-box .font-box .font-txt {
-    top: 60px;
+    top: 90px;
   }
   .body .btn-box .btn {
-    width: 200px;
-    height: 60px;
+    width: 250px;
+    height: 80px;
+  }
+}
+@media (min-width: 1681px) and (max-width: 1920px) {
+  #showcase {
+    height: 940px;
+    width: 1440px;
+    margin: 4% auto 0;
+    border-radius: 8px;
+  }
+  .cloud9-item {
+    width: 330px;
+  }
+  .body {
+    margin-top: 60px;
+  }
+  .body .prompt-txt {
+    margin-bottom: 60px;
+  }
+  .body .code-box {
+    margin-bottom: 100px;
+    height: 300px;
+  }
+  .body .code-box .code-img {
+    width: 300px;
+    height: 300px;
+  }
+  .body .code-box .code-img img {
+    width: 300px;
+    height: 300px;
+  }
+  .body .code-box .code-img.active-ios {
+    left: -400px;
+  }
+  .body .code-box .code-img.active-android {
+    right: -400px;
+  }
+  .body .code-box .font-box {
+    padding: 120px 0 0;
+  }
+  .body .code-box .font-box .font-img {
+    top: 120px;
+  }
+  .body .code-box .font-box .font-txt {
+    top: 120px;
+  }
+  .body .btn-box .btn {
+    width: 300px;
+    height: 90px;
+  }
+}
+@media (min-width: 1921px) {
+  #showcase {
+    height: 940px;
+    width: 1440px;
+    margin: 4% auto 0;
+    border-radius: 8px;
+  }
+  .cloud9-item {
+    width: 330px;
+  }
+  .body {
+    margin-top: 100px;
+  }
+  .body .prompt-txt {
+    margin-bottom: 60px;
+  }
+  .body .code-box {
+    margin-bottom: 100px;
+    height: 300px;
+  }
+  .body .code-box .code-img {
+    width: 300px;
+    height: 300px;
+  }
+  .body .code-box .code-img img {
+    width: 300px;
+    height: 300px;
+  }
+  .body .code-box .code-img.active-ios {
+    left: -400px;
+  }
+  .body .code-box .code-img.active-android {
+    right: -400px;
+  }
+  .body .code-box .font-box {
+    padding: 120px 0 0;
+  }
+  .body .code-box .font-box .font-img {
+    top: 120px;
+  }
+  .body .code-box .font-box .font-txt {
+    top: 120px;
+  }
+  .body .btn-box .btn {
+    width: 300px;
+    height: 90px;
   }
 }

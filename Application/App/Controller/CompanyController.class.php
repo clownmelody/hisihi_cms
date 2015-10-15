@@ -227,18 +227,18 @@ class CompanyController extends AppController {
             $uid = $this->getUid();
         }
 
-        $resumeModel = D('User/ResumeDelivery');
+        /*$resumeModel = D('User/ResumeDelivery');
         $is_delivery = $resumeModel->where('status=1 and uid='.$uid.' and company_id='.$companyId)->select();
         if($is_delivery){
             $this->apiError(-1, '该公司已经投递过了');
         }
 
         //判断简历信息是否完整
-        $this->isResumeComplete($uid);
+        $this->isResumeComplete($uid);*/
 
         $pdfUtils = new PdfUtils();
         $path = $pdfUtils->init($uid);
-        $emailUtils = new EmailUtils();
+        /*$emailUtils = new EmailUtils();
         $model = M();
         $result = $model->query("select hr_email from hisihi_company where status=1 and id=".$companyId.' limit 1');
         if(empty($result[0]['hr_email'])){
@@ -255,7 +255,7 @@ class CompanyController extends AppController {
             $this->apiSuccess("简历投递成功");
         } else {
             $this->apiError(-5, "简历投递失败");
-        }
+        }*/
     }
 
     public function isUserInfoComplete($uid=0){

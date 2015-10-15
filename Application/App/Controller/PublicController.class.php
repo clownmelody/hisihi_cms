@@ -367,6 +367,25 @@ class PublicController extends AppController {
         }
     }
 
+    public function companybanner($id){
+        /* 获取当前分类列表 */
+        $Document = D('Blog/Document');
+        $Article = D('Blog/Article', 'Logic');
+
+        //获取当前分类下的文章
+        //$info = $Document->field('id,title,description,display,view,comment,create_time,update_time,cover_id')->find($id);
+        $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
+        if(empty($info)){
+            $this->apiError(-1, "id不存在");
+        }
+        $Document->where(array('id' => $id))->setInc('view');
+        $content = $Article->detail($id);
+        $content = array_merge($info, $content);
+
+        $this->assign('top_content_info', $content);
+        $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
+        $this->display('companybanner');
+    }
 
     /**
      * 发送微博、评论等，不能太频繁，否则抛出异常。
@@ -504,8 +523,8 @@ class PublicController extends AppController {
      */
     public function bannerlist($page=1, $count=5){
         $Document = D('Blog/Document');
-        $all_list = $Document->where("category_id=47 and position='5'")->select();
-        $totalCount = count($all_list);
+        //$all_list = $Document->where("category_id=47 and position='5'")->select();
+        //$totalCount = count($all_list);
         $list = $Document->where("category_id=47 and position='5'")->order('create_time desc')->page($page, $count)->select();
         foreach($list as &$topic){
             $did = $topic['id'];
@@ -513,11 +532,8 @@ class PublicController extends AppController {
             $topic['logo_pic'] = $this->getSourceLogoPic($did);
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage_other($topic['cover_id']);
-            $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
-            $topic['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
-            $topic['isSupportd'] = $this->isArticleSupport($did);
-            $topic['isFavorited'] = $this->isArticleFavorite($did);
-            $topic['supportCount'] = $this->getArticleSupportCount($did);
+            $topic['content_url'] = 'http://www.hisihi.com/app.php/public/companybanner/id/'.$topic['id'];
+            $topic['share_url'] = 'http://www.hisihi.com/app.php/public/companybanner/id/'.$topic['id'];
             unset($topic['uid']);
             unset($topic['name']);
             unset($topic['category_id']);
@@ -525,7 +541,7 @@ class PublicController extends AppController {
             unset($topic['root']);
             unset($topic['pid']);
             unset($topic['model_id']);
-            #unset($topic['position']);
+            unset($topic['position']);
             unset($topic['link_id']);
             unset($topic['cover_id']);
             unset($topic['deadline']);
@@ -536,8 +552,13 @@ class PublicController extends AppController {
             unset($topic['comment']);
             unset($topic['status']);
             unset($topic['isrecommend']);
+            unset($topic['create_time']);
+            unset($topic['update_time']);
+            unset($topic['source_name']);
+            unset($topic['logo_pic']);
+            unset($topic['view']);
         }
-        $this->apiSuccess("获取公司列表Banner成功", null, array('totalCount' => $totalCount,'course' => $list));
+        $this->apiSuccess("获取公司列表Banner成功", null, array('data' => $list));
     }
 
 
