@@ -781,7 +781,7 @@ class ForumController extends AppController
     }
 
     //发表提问
-    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $iscompany=0)
+    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $at_type=0)
     {
         $this->requireLogin();
         //dump($content);
@@ -848,8 +848,11 @@ class ForumController extends AppController
             if($t_list){
                 $this->apiError(-2, "你已经发过该帖子了");
             }*/
-
-            $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
+            if($at_type = 1){//@公司发帖，post_type=2
+                $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5, 'post_type'=>2);
+            }else{
+                $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
+            }
 
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
@@ -965,9 +968,12 @@ class ForumController extends AppController
                 array_push($reg_ids, $reg_id);
             }
             // 添加 @ 数据到对应表中
-            if(!$iscompany){
+            if($at_type == 1){//@公司帖子
                 D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id, 2);
-            }else{
+            }else if($at_type == 2){//@机构帖子
+                D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id, 3);
+            }else
+            {
                 D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id);
             }
         }

@@ -131,6 +131,8 @@ class CompanyController extends AppController {
                 array_push($filtrate_array,$markobj);
             }
             $result['filtrate_mark'] = $filtrate_array;
+        }else{
+            $this->apiError(-1, "该公司不存在");
         }
         $extra['data'] = $result;
         $this->apiSuccess('获取公司信息成功', null, $extra);
@@ -254,6 +256,39 @@ class CompanyController extends AppController {
         } else {
             $this->apiError(-5, "简历投递失败");
         }*/
+    }
+
+    public function isUserInfoComplete($uid=0){
+        if (!$uid) {
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $userController = new UserController();
+        // 扩展信息
+        $profile_group = $userController->_profile_group($uid);
+        $info_list =  D('field')->where('uid='.$uid)->field('field_id')->select();
+        if($profile_group['id'] == 13){//设计师用户不用填写培训机构
+            $field_setting_list = D('field_setting')->field('id, input_tips')
+                ->where(array('profile_group_id' => $profile_group['id'], 'status' => '1', 'visiable' => '1'))
+                ->order('sort asc')->select();
+        }else{//讲师用户需要填写培训机构信息
+            $field_setting_list = D('field_setting')->field('id, input_tips')
+                ->where(array('status' => '1', 'visiable' => '1'))->order('sort asc')->select();
+        }
+        foreach ($field_setting_list as $val) {
+            $hasvalue = false;
+            $valid = $val['id'];
+            foreach ($info_list as $key){
+                $keyid = $key['field_id'];
+                if($keyid == $valid){
+                    $hasvalue = true;
+                }
+            }
+            if(!$hasvalue){
+                $this->apiError(-2, "您的信息不完整，'".$val['input_tips']."'未填写");
+            }
+        }
+        $this->apiSuccess("信息已填写完整");
     }
 
     private function fetchImage($pic_id)
