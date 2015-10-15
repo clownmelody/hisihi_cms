@@ -897,7 +897,7 @@ class UserController extends AppController
         return $profile_group;
     }
 
-    public function getProfile($uid = null)
+    public function getProfile($uid = null, $version="1.0")
     {
         //$this->requireLogin();
 
@@ -1884,7 +1884,7 @@ class UserController extends AppController
         if(!$user){
             $this->apiError(-1,"获取用户信息失败");
         }
-        $result['info'] = query_user(array('avatar256', 'avatar128', 'username', 'extinfo', 'signature', 'nickname'), $uid);
+        $result['info'] = query_user(array('avatar256', 'avatar128', 'username', 'extinfo', 'signature', 'nickname', 'mobile', 'sex', 'birthday', 'email'), $uid);
 
         // 扩展信息
         $profile_group = $this->_profile_group($uid);

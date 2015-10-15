@@ -1596,7 +1596,6 @@ class ForumController extends AppController
                 }
             }
         }
-        $this->apiSuccess('ok', null, $list);
         $list = $this->formatList($list);
         $this->apiSuccess("获取公司热门话题列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
