@@ -91,7 +91,10 @@ class CompanyController extends AdminController {
             $data["create_time"] = time();
             if(empty($cid)){
                 try {
-                    $res = $model->add($data);
+                    if(!$model->create($data)){
+                        $this->error($model->getError());
+                    }
+                    $res = $model->addNewDate($data);
                     if(!$res){
                         $this->error(D('Company')->getError());
                     }else{
@@ -102,7 +105,6 @@ class CompanyController extends AdminController {
                             $this->uploadLogoPicToOSS($picid);
                         }
                     }
-
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
@@ -110,6 +112,9 @@ class CompanyController extends AdminController {
                 $this->success('添加成功', 'index.php?s=/admin/company');
             } else {
                 $model = D('Company');
+                if(!$model->create($data)){
+                    $this->error($model->getError());
+                }
                 $model->updateCompany($cid, $data);
                 //上传图片到OSS
                 $picid = $model->where('id='.$cid)->getField('picture');
