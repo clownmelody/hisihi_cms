@@ -275,6 +275,7 @@ class CompanyController extends AppController {
             $field_setting_list = D('field_setting')->field('id, input_tips')
                 ->where(array('status' => '1', 'visiable' => '1'))->order('sort asc')->select();
         }
+
         foreach ($field_setting_list as $val) {
             $hasvalue = false;
             $valid = $val['id'];
@@ -285,10 +286,12 @@ class CompanyController extends AppController {
                 }
             }
             if(!$hasvalue){
-                $this->apiError(-2, "您的信息不完整，'".$val['input_tips']."'未填写");
+                $extra['isComplete'] = false;
+                $this->apiSuccess("您的信息不完整，'".$val['input_tips']."'未填写",null,$extra);
             }
         }
-        $this->apiSuccess("信息已填写完整");
+        $extra['isComplete'] = true;
+        $this->apiSuccess("信息已填写完整",null,$extra);
     }
 
     private function fetchImage($pic_id)

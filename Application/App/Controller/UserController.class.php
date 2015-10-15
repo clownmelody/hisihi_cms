@@ -897,7 +897,49 @@ class UserController extends AppController
         return $profile_group;
     }
 
-    public function getProfile($uid = null, $version="1.0")
+    /**获取用户软件技能
+     * @param $uid
+     * @return array
+     */
+    public function _user_skills($uid){
+        $field = D('field');
+        $map['uid'] = $uid;
+        $map['field_id'] = 43;//技能字段id
+        $skill = $field->where($map)->getField('field_data');
+        $skill = explode("#",$skill);
+        $skill_array = array();
+        $cmodel = D('Admin/CompanyConfig');
+        foreach($skill as &$markid){
+            $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+            $markobj = array();
+            $markobj = (object)$markobj;
+            $markobj->id = $markarr['0']['id'];
+            $markobj->value = $markarr['0']['value'];
+            array_push($skill_array,$markobj);
+        }
+        return $skill_array;
+    }
+
+    public function  _user_lightspot($uid){
+        $field = D('field');
+        $map['uid'] = $uid;
+        $map['field_id'] = 45;//亮点字段id
+        $lightspot = $field->where($map)->getField('field_data');
+        $lightspot = explode("#",$lightspot);
+        $lightspot_array = array();
+        $cmodel = D('Admin/CompanyConfig');
+        foreach($lightspot as &$markid){
+            $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
+            $markobj = array();
+            $markobj = (object)$markobj;
+            $markobj->id = $markarr['0']['id'];
+            $markobj->value = $markarr['0']['value'];
+            array_push($lightspot_array,$markobj);
+        }
+        return $lightspot_array;
+    }
+
+    public function getProfile($uid = null)
     {
         //$this->requireLogin();
 
@@ -936,7 +978,8 @@ class UserController extends AppController
             //扩展信息
             $profile_group = $this->_profile_group($uid);
             $info_list = $this->_info_list($profile_group['id'], $uid);
-
+            $skills = $this->_user_skills($uid);
+            $lightspot = $this->_user_lightspot($uid);
             //只返回必要的详细资料
             $this->apiSuccess("获取成功", null, array(
                 'uid' => $uid,
@@ -953,6 +996,8 @@ class UserController extends AppController
                 'ischeck' => $ischeck,
                 'username' => $user2['username'],
                 'group' => $profile_group['gid'],
+                'skills'=>$skills,
+                'lightspot'=>$lightspot,
                 'extinfo' => $info_list
             ));
         } else {
@@ -972,7 +1017,11 @@ class UserController extends AppController
             $profile_group = $this->_profile_group($uid);
             $info_list = $this->_info_list($profile_group['id'], $uid);
             //$result['info']['group'] = $profile_group['gid'];
+            $skills = $this->_user_skills($uid);
+            $lightspot = $this->_user_lightspot($uid);
             $result['info']['extinfo'] = $info_list;
+            $result['info']['skills'] = $skills;
+            $result['info']['lightspot'] = $lightspot;
 
             //返回成功结果
             $this->apiSuccess("获取用户信息成功", null, array('userInfo' => $result));
