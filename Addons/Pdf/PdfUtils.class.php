@@ -19,7 +19,50 @@ class PdfUtils
         $this->pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
     }
 
-    function init($uid=0){
+	function init(){
+		$this->pdf->SetCreator('嘿设汇');
+		$this->pdf->SetAuthor('hisihi');
+		$this->pdf->SetTitle('个人简历');
+		$this->pdf->SetSubject('子标题');
+		$this->pdf->SetKeywords('简历, 嘿设汇, PDF,');
+
+		$this->pdf->setPrintHeader(false);
+		$this->pdf->setPrintFooter(false);
+
+		// 设置默认等宽字体
+		$this->pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $this->pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $this->pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $this->pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $this->pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+		//设置字体
+		$this->pdf->SetFont('stsongstdlight', '', '');
+
+		$this->pdf->AddPage();
+
+		$this->pdf->setCellPaddings(1, 1, 1, 1);
+
+		$this->pdf->setCellMargins(1, 1, 1, 1);
+
+		$this->pdf->SetFillColor(255, 255, 127);
+
+		$txt = 'Lorem ipsum dolor sit amet, consectetur adipisicing eli';
+
+		$this->pdf->MultiCell(55, 5, '[LEFT] '.$txt, 1, 'L', 1, 0, '', '', true);
+		$this->pdf->MultiCell(55, 5, '[RIGHT] '.$txt, 1, 'R', 0, 1, '', '', true);
+		$this->pdf->MultiCell(55, 5, '[CENTER] '.$txt, 1, 'C', 0, 0, '', '', true);
+		$this->pdf->MultiCell(55, 5, '[JUSTIFY] '.$txt."\n", 1, 'J', 1, 2, '' ,'', true);
+		$this->pdf->MultiCell(55, 5, '[DEFAULT] '.$txt, 1, '', 0, 1, '', '', true);
+
+		$time = time();
+		$path = '/tmp/'.$time.'.pdf';
+		//输出PDF
+		$this->pdf->Output($path, 'I');
+	}
+
+    function _winit($uid=0){
         if(!$uid){
             return false;
         }
@@ -34,24 +77,15 @@ class PdfUtils
         $this->pdf->setPrintFooter(false);
 
         // 设置默认等宽字体
-        /*$this->pdf->SetDefaultMonospacedFont('courier');
+        /*$this->pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $this->pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $this->pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $this->pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $this->pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);*/
 
-        // 设置间距
-        $this->pdf->SetMargins(15, 20, 15);
-        $this->pdf->SetHeaderMargin(5);
-        $this->pdf->SetFooterMargin(10);
-
-        // 设置分页
-        $this->pdf->SetAutoPageBreak(TRUE, 10);
-
-        // set image scale factor
-        $this->pdf->setImageScale(1.25);
-
-        // set default font subsetting mode
-        $this->pdf->setFontSubsetting(true);
-        */
         //设置字体
-        $this->pdf->SetFont('stsongstdlight', '', 14);
+        $this->pdf->SetFont('stsongstdlight', '', '');
 
         $this->pdf->AddPage();
 
@@ -103,14 +137,16 @@ class PdfUtils
             }
         }
 
+        $education_list = '<p class="txt"><span>'.$collage.'</span><span>   '.$major.'</span></p>';
+
         $experience_list = $profile['info']['experience'];  //  工作经历
         $experience_list_ele = null;
         foreach ($experience_list as &$experience) {
             $start_time = date('Y-m-d', $experience['start_time']);
             $end_time = date('Y-m-d', $experience['end_time']);
             $time = $start_time.'--'.$end_time;
-            $str = '<p class="txt"><span>'.$time.'</span><span>'.$experience["company_name"].'</span><span>'.$experience["department"].'</span></p>';
-            $experience_list_ele = $experience_list_ele + $str;
+            $str = '<p class="txt word"><span>'.$time.'  </span><span>'.$experience["company_name"].'   '.$experience["department"].'</span></p><p class="txt">'.$experience['job_content'].'</p>';
+            $experience_list_ele = $experience_list_ele . $str;
             unset($experience['id']);
             unset($experience['uid']);
             unset($experience['status']);
@@ -124,189 +160,75 @@ class PdfUtils
         }
 
         $html = <<<EOF
-        <!DOCTYPE html>
-<html lang="zh-CN">
+<body style="width: 960px;margin: 0 auto;background: #fff;">
 
-<head>
-	<title>嘿设汇</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="Resource-type" content="Document" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<meta http-equiv="Expires" content="0">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Cache-control" content="no-cache">
-	<meta http-equiv="Cache" content="no-cache">
-	<style>
-	*::after, *::before {
-	    box-sizing: border-box;
-	}
-	ul{
-		 list-style-type: none;
-	}
-	*{
-		margin: 0;
-		padding: 0;
-	}
-	body{
-		background: #fff;
-	}
-	.main{
-		margin: 45px 45px 90px;
-	}
-	@media (min-width: 240px) and (max-width: 640px) {
-	  .main{
-	  		margin: 25px 10px 60px;
-	  	}
-	}
+	<div class="main" style="margin: 45px 71px 90px;">
 
-	.box{
-		padding: 30px 25px;
-		border-bottom: 1px solid #D8D9DB;
-	}
-	.img{
-		padding-bottom: 50px;
-		position: relative;
-	}
-	.box >img{
-		max-width: 100%;
-		margin-bottom: 20px;
-	}
-	.title{
-		font-size: 18px;
-		color: #454546;
-		margin-bottom: 20px;
-		font-weight: bold;
-	}
-	.txt{
-		font-size: 14px;
-		color: #707072;
-	}
-	span{
-		margin-right: 20px;
-		line-height: 25px;
-	}
-	.icon{
-		margin-bottom: 15px;
-	}
-	.icon span{
-		background: #E6E7E9;
-		border-radius: 50px;
-		padding: 3px 8px;
-		color: #5A5B5C;
-		line-height: 35px;
-	}
-	.word{
-		font-size: 16px;
-		margin-bottom: 10px;
-		font-weight: bold;
-		color: #57585A;
-	}
-	.foot{
-		position: absolute;
-		bottom: -60px;
-		left: 0;
-		right: 0;
-		text-align: center;
-	}
-	.foot-img{
-		background: #fff;
-		padding: 20px;
-		margin: 0 auto;
-		width: 140px;
-	}
-	.user{
-		position: relative;
-	}
-	.user .title{
-		font-size: 30px;
-		font-weight: normal;
-		margin-bottom: 15px;
-	}
-	.user-img{
-		width: 125px;
-		height: 125px;
-		position: absolute;
-		top: 0;
-		right: 20px;
-	}
-	@media (min-width: 240px) and (max-width: 640px) {
-	  	.user-img{
-	  		width: 90px;
-	  		height: 90px;
-	  		right: 10px;
-	  	}
-	}
-	</style>
-</head>
-<body>
-	<div class="main">
-		<div class="box user">
-			<p class="title">$nickname</p>
-			<img src="$avatar" alt="" class="user-img">
-			<p class="txt">
-				<span>$sex</span>
-				<span>$birthday</span>
-				<span>$expected_position</span>
+		<div class="box user" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;position: relative;">
+			<p class="title" style="font-size: 24px;font-weight: bold;margin-bottom: 36px;color: #666;">设计师</p>
+			<img src="http://pic.yupoo.com/hiskyido/EZpoKkNf/N0bu3.jpg" alt="" class="user-img" style="width: 150px;height: 150px;position: absolute;top: 0;right: 20px;">
+			<p class="txt" style="font-size: 12px;color: #999;">
+				<span style="margin-right: 24px;line-height: 25px;">男</span>
+				<span style="margin-right: 24px;line-height: 25px;">25岁</span>
+				<span style="margin-right: 24px;line-height: 25px;">UI设计师</span>
 			</p>
-			<p class="txt">
-				<span>$mobile</span>
-				<span>$email</span>
+			<p class="txt" style="font-size: 12px;color: #999;">
+				<span style="margin-right: 24px;line-height: 25px;">12345678901</span>
+				<span style="margin-right: 24px;line-height: 25px;">123456789@qq.com</span>
 			</p>
 		</div>
 		<!-- /.box -->
 
-		<div class="box">
-			<p class="title">教育经历</p>
-			<p class="txt">
-				<span>2012.05——至今</span>
-				<span>华中农业大学</span>
-				<span>UI设计专业</span>
+		<div class="box" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;">
+			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">教育经历</p>
+			<p class="txt" style="font-size: 12px;color: #999;">
+				<span style="margin-right: 24px;line-height: 25px;">2012.05——至今</span>
+				<span style="margin-right: 24px;line-height: 25px;">华中农业大学</span>
+				<span style="margin-right: 24px;line-height: 25px;">UI设计专业</span>
 			</p>
 		</div>
 		<!-- /.box -->
 
-		<div class="box">
-			<p class="title">自我评价</p>
-			<p class="txt icon">
-				<span>独当一面</span>
-				<span>完美主义</span>
-				<span>极客精神</span>
-				<span>思维慎密</span>
+		<div class="box" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;">
+			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">自我评价</p>
+			<p class="txt icon"  style="font-size: 12px;color: #999;margin-bottom: 15px;">
+				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">独当一面</span>
+				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">完美主义</span>
+				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">极客精神</span>
+				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">思维慎密</span>
 			</p>
-			<p class="txt">我有良好的美术基础受过系统的计算机艺术设计专业知识训练并仍在设计方面不断的学习中，计算机艺术设计专业知识训练仍在学习中</p>
+			<p class="txt"  style="font-size: 12px;color: #999;">我有良好的美术基础受过系统的计算机艺术设计专业知识训练并仍在设计方面不断的学习中，计算机艺术设计专业知识训练仍在学习中</p>
 		</div>
 		<!-- /.box -->
 
-		<div class="box">
-			<p class="title">工作经验</p>
-			<p class="txt word">
-				<span>2012.05——至今</span>
-				<span>腾讯新闻事业部</span>
+		<div class="box" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;">
+			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">工作经验</p>
+			<p class="txt word"  style="font-size: 12px;margin-bottom: 10px;font-weight: bold;color: #666;">
+				<span style="margin-right: 24px;line-height: 25px;">2012.05——至今</span>
+				<span style="margin-right: 24px;line-height: 25px;">腾讯新闻事业部</span>
 			</p>
-			<p class="txt">我有良好的美术基础受过系统的计算机艺术设计专业知识训练并仍在设计方面不断的学习中，计算机艺术设计专业知识训练仍在学习中</p>
+			<p class="txt"  style="font-size: 12px;color: #999;">我有良好的美术基础受过系统的计算机艺术设计专业知识训练并仍在设计方面不断的学习中，计算机艺术设计专业知识训练仍在学习中</p>
 		</div>
 		<!-- /.box -->
 
-		<div class="box img">
-			<p class="title">作品展示</p>
-			<img src="http://pic.yupoo.com/hiskyido/EZpoJdCA/medish.jpg" alt="">
-			<img src="http://pic.yupoo.com/hiskyido/EZpoKkNf/N0bu3.jpg" alt="">
-			<div class="foot">
-				<div class="foot-img">
-					<img src="http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-10-15/icon_pdf_logo.jpg" alt="">
+		<div class="box img" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;padding-bottom: 50px;position: relative;">
+			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">作品展示</p>
+			<img src="http://pic.yupoo.com/hiskyido/EZpoJdCA/medish.jpg" alt="" style="max-width: 626px;margin-bottom: 20px;">
+			<img src="http://pic.yupoo.com/hiskyido/EZpoKkNf/N0bu3.jpg" alt="" style="max-width: 626px;margin-bottom: 20px;">
+			<div class="foot" style="position: absolute; bottom: -60px;left: 0;right: 0;text-align: center;">
+				<div class="foot-img" style="background: #fff;padding: 20px;margin: 0 auto; width: 140px;">
+					<img src="http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-10-15/icon_pdf_logo.png" alt="">
 				</div>
 			</div>
 		</div>
 		<!-- /.box -->
 	</div>
 </body>
-</html>
 EOF;
 
         $this->pdf->writeHTML($html, true, false, true, false, '');
 
-        $time = time();
+		$time = time();
         $path = '/tmp/'.$time.'.pdf';
         //输出PDF
         $this->pdf->Output($path, 'I');
