@@ -921,28 +921,45 @@ class UserController extends AppController
             $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
             $markobj = array();
             $markobj = (object)$markobj;
-            $markobj->id = $markarr['0']['id'];
-            $markobj->value = $markarr['0']['value'];
-            array_push($skill_array,$markobj);
+            if($markarr){
+                $markobj->id = $markarr['0']['id'];
+                $markobj->value = $markarr['0']['value'];
+                array_push($skill_array,$markobj);
+            }
         }
         return $skill_array;
     }
 
+    /**获取用户亮点
+     * @param $uid
+     * @return array
+     */
     public function  _user_lightspot($uid){
         $field = D('field');
         $map['uid'] = $uid;
         $map['field_id'] = 45;//亮点字段id
         $lightspot = $field->where($map)->getField('field_data');
-        $lightspot = explode("#",$lightspot);
+        $lightspot = json_decode($lightspot,true);
         $lightspot_array = array();
         $cmodel = D('Admin/CompanyConfig');
         foreach($lightspot as &$markid){
-            $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->select();
-            $markobj = array();
-            $markobj = (object)$markobj;
-            $markobj->id = $markarr['0']['id'];
-            $markobj->value = $markarr['0']['value'];
-            array_push($lightspot_array,$markobj);
+            $lightspotid = (int)$markid['id'];
+            if(0 == $lightspotid){
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markid['id'];
+                $markobj->value = $markid['value'];
+                array_push($lightspot_array,$markobj);
+            }else{
+                $markarr = $cmodel->field('id,value')->where('status=1 and id='.$lightspotid)->select();
+                $markobj = array();
+                $markobj = (object)$markobj;
+                if($markarr){
+                    $markobj->id = $markarr['0']['id'];
+                    $markobj->value = $markarr['0']['value'];
+                    array_push($lightspot_array,$markobj);
+                }
+            }
         }
         return $lightspot_array;
     }
@@ -1004,7 +1021,7 @@ class UserController extends AppController
                 'group' => $profile_group['gid'],
                 'extinfo' => $info_list
             );
-            if((float)$version > 2.0){//新版本增加技能和亮点
+            if((float)$version >= 2.1){//新版本增加技能和亮点
                 $skills = $this->_user_skills($uid);
                 $lightspot = $this->_user_lightspot($uid);
                 $info_map['skills'] = $skills;
