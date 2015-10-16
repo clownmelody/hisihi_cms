@@ -1889,47 +1889,6 @@ class UserController extends AppController
     /**
      * 获取个人简历中的用户信息
      * @param int $uid
-     * 返回json结构:
-     * {
-            "username":"10011234004",
-            "signature":"signature",
-            "nickname":"琦琦",
-            "avatar256":"http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/default/default_256_256.jpg",
-            "avatar128":"http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/default/default_128_128.jpg",
-            "extinfo":[
-                        {
-                            "id":"36",
-                            "field_name":"college",
-                            "field_title":"所在大学",
-                            "field_content":"纺织大学"
-                        },
-                        {
-                            "id":"37",
-                            "field_name":"major",
-                            "field_title":"所学专业",
-                            "field_content":"平面设计"
-                        },
-                        ......
-                    ],
-            "experience":[
-                            {
-                                "id":"3",
-                                "uid":"118",
-                                "position":"工程师",
-                                "company_name":"腾讯",
-                                "start_time":"345342",
-                                "end_time":"134124145",
-                                "department":"研发",
-                                "job_content":"后台开发而已",
-                                "status":"1"
-                            }
-                        ],
-            "works":[
-                        {
-                            "src":"http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-09-15/55f7fc45ad19b.jpg"
-                        }
-                    ]
-        }
      */
     public function getResumeProfile($uid=0){
         if(empty($uid)){
