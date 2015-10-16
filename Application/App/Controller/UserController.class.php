@@ -831,20 +831,28 @@ class UserController extends AppController
      * @param null $uid
      * @author RFly
      */
-    public function _info_list($id = null, $uid = null)
+    public function _info_list($id = null, $uid = null, $version=1)
     {
         $info_list = null;
-
+        $where_map['profile_group_id'] = $id;
+        $where_map['status'] = 1;
         if (isset($uid) && $uid != is_login()) {
             //查看别人的扩展信息
-            $field_setting_list = D('field_setting')->where(array('profile_group_id' => $id, 'status' => '1', 'visiable' => '1'))->order('sort asc')->select();
+            $where_map['visible'] = 1;
+            if((float)$version < 2.1){//老版本只显示学校、专业、年级
+                $where_map['id'] = array("in",array('36','37','38'));
+            }
+            $field_setting_list = D('field_setting')->where($where_map)->order('sort asc')->select();
 
             if (!$field_setting_list) {
                 return null;
             }
             $map['uid'] = $uid;
         } else if (is_login()) {
-            $field_setting_list = D('field_setting')->where(array('profile_group_id' => $id, 'status' => '1'))->order('sort asc')->select();
+            if((float)$version < 2.1){//老版本只显示学校、专业、年级
+                $where_map['id'] = array("in",array('36','37','38'));
+            }
+            $field_setting_list = D('field_setting')->where($where_map)->order('sort asc')->select();
 
             if (!$field_setting_list) {
                 return null;
@@ -939,11 +947,11 @@ class UserController extends AppController
         return $lightspot_array;
     }
 
-    public function getProfile($uid = null)
+    public function getProfile($uid = null,$version=1)
     {
         //$this->requireLogin();
 
-        //默认查看自己的详细资料
+        //默认查看自己的详细资料，点击“我的资料”
         if (!isset($uid)) {
             $this->requireLogin();
             $uid = $this->getUid();
@@ -977,11 +985,9 @@ class UserController extends AppController
             }
             //扩展信息
             $profile_group = $this->_profile_group($uid);
-            $info_list = $this->_info_list($profile_group['id'], $uid);
-            $skills = $this->_user_skills($uid);
-            $lightspot = $this->_user_lightspot($uid);
+            $info_list = $this->_info_list($profile_group['id'], $uid, $version);
             //只返回必要的详细资料
-            $this->apiSuccess("获取成功", null, array(
+            $info_map = array(
                 'uid' => $uid,
                 'avatar_url' => $avatar_url,
                 'avatar128_url' => $avatar128_url,
@@ -996,11 +1002,16 @@ class UserController extends AppController
                 'ischeck' => $ischeck,
                 'username' => $user2['username'],
                 'group' => $profile_group['gid'],
-                'skills'=>$skills,
-                'lightspot'=>$lightspot,
                 'extinfo' => $info_list
-            ));
-        } else {
+            );
+            if((float)$version > 2.0){//新版本增加技能和亮点
+                $skills = $this->_user_skills($uid);
+                $lightspot = $this->_user_lightspot($uid);
+                $info_map['skills'] = $skills;
+                $info_map['lightspot'] = $lightspot;
+            }
+            $this->apiSuccess("获取成功", null, $info_map);
+        } else {//此场景为点左侧头像出现的数据
             $map = array('uid' => $uid);
             $user = D('Home/Member')->where($map)->find();
             if(!$user)
@@ -1017,11 +1028,7 @@ class UserController extends AppController
             $profile_group = $this->_profile_group($uid);
             $info_list = $this->_info_list($profile_group['id'], $uid);
             //$result['info']['group'] = $profile_group['gid'];
-            $skills = $this->_user_skills($uid);
-            $lightspot = $this->_user_lightspot($uid);
             $result['info']['extinfo'] = $info_list;
-            $result['info']['skills'] = $skills;
-            $result['info']['lightspot'] = $lightspot;
 
             //返回成功结果
             $this->apiSuccess("获取用户信息成功", null, array('userInfo' => $result));
