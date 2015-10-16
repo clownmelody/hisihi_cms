@@ -1,4 +1,5 @@
 <?php
+phpinfo();
 header("Content-type:text/html; charset=utf-8");
 $guid = htmlspecialchars($_GET["guid"]);
 $user_agent = $_SERVER['HTTP_USER_AGENT'];

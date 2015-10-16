@@ -1961,7 +1961,7 @@ class UserController extends AppController
 
         // 扩展信息
         $profile_group = $this->_profile_group($uid);
-        $info_list = $this->_info_list($profile_group['id'], $uid);
+        $info_list = $this->_info_list($profile_group['id'], $uid, "2.1");
         $result['info']['extinfo'] = $info_list;
 
         // 用户工作经历

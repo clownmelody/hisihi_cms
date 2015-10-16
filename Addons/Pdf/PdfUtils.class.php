@@ -19,299 +19,184 @@ class PdfUtils
         $this->pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
     }
 
-    function init($uid=0){
-        if(!$uid){
-            return false;
-        }
-        // 设置文档信息
-        $this->pdf->SetCreator('嘿设汇');
-        $this->pdf->SetAuthor('hisihi');
-        $this->pdf->SetTitle('个人简历');
-        $this->pdf->SetSubject('子标题');
-        $this->pdf->SetKeywords('简历, 嘿设汇, PDF,');
+	function init($uid=0){
+		if(!$uid){
+			return false;
+		}
+		$this->pdf->SetCreator('嘿设汇');
+		$this->pdf->SetAuthor('hisihi');
+		$this->pdf->SetTitle('个人简历');
+		$this->pdf->SetSubject('子标题');
+		$this->pdf->SetKeywords('简历, 嘿设汇, PDF,');
 
-        $this->pdf->setPrintHeader(false);
-        $this->pdf->setPrintFooter(false);
+		$this->pdf->setPrintHeader(false);
+		$this->pdf->setPrintFooter(false);
 
-        // 设置默认等宽字体
-        /*$this->pdf->SetDefaultMonospacedFont('courier');
+		// 设置默认等宽字体
+		$this->pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $this->pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $this->pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $this->pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $this->pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-        // 设置间距
-        $this->pdf->SetMargins(15, 20, 15);
-        $this->pdf->SetHeaderMargin(5);
-        $this->pdf->SetFooterMargin(10);
+		//设置字体
+		$this->pdf->SetFont('stsongstdlight', '', 13);
 
-        // 设置分页
-        $this->pdf->SetAutoPageBreak(TRUE, 10);
+		$this->pdf->AddPage();
 
-        // set image scale factor
-        $this->pdf->setImageScale(1.25);
+		$userController = new UserController();
+		$profile = $userController->getResumeProfile($uid);
 
-        // set default font subsetting mode
-        $this->pdf->setFontSubsetting(true);
-        */
-        //设置字体
-        $this->pdf->SetFont('stsongstdlight', '', 14);
+		$nickname = $profile['info']['nickname'];
+		$username = $profile['info']['username'];
+		$avatar = $profile['info']['avatar256'];
+		$mobile = $profile['info']['mobile'];
+		$email = $profile['info']['email'];
+		$sex = $profile['info']['sex'];
+		if($sex==0){
+			$sex = "未填写";
+		} else if($sex==1){
+			$sex = "男";
+		} else {
+			$sex = "女";
+		}
+		$birthday = $profile['info']['birthday'];
+		list($by,$bm,$bd)=explode('-',$birthday);
+		$cm=date('n');
+		$cd=date('j');
+		$age=date('Y')-$by-1;
+		if ($cm>$bm || $cm==$bm && $cd>$bd) $age++;
 
-        $this->pdf->AddPage();
+		$extinfo_list = $profile['info']['extinfo'];
+		foreach($extinfo_list as $extinfo){
+			switch($extinfo['field_name']){
+				case 'college':  // 大学
+					$collage = $extinfo['field_content'];
+					break;
+				case 'major':    // 专业
+					$major = $extinfo['field_content'];
+					break;
+				case 'grade':    // 年级
+					$grade = $extinfo['field_content'];
+					break;
+				case 'study_institution':    // 学习机构
+					$study_institution = $extinfo['field_content'];
+					break;
+				case 'skills':    // 软件技能
+					$skills = $extinfo['field_content'];
+					break;
+				case 'expected_position':    // 期望职位
+					$expected_position = $extinfo['field_content'];
+					break;
+				case 'my_highlights':    // 我的亮点
+					$my_highlights = $extinfo['field_content'];
+					break;
+				case 'my_strengths':    // 我的优势
+					$my_strengths = $extinfo['field_content'];
+					break;
+			}
+		}
 
-        $userController = new UserController();
-        $profile = $userController->getResumeProfile($uid);
+		$experience_list = $profile['info']['experience'];  //  工作经历
+		$experience_list_ele = null;
+		foreach ($experience_list as &$experience) {
+			$start_time = date('Y-m-d', $experience['start_time']);
+			$end_time = date('Y-m-d', $experience['end_time']);
+			$time = $start_time.'--'.$end_time;
+			$str = '<p class="txt word" style="font-size: 12px;margin-bottom: 10px;font-weight: bold;color: #666;"><span>'.$time.'  </span><span>'.$experience["company_name"].'   '.$experience["department"].'</span></p><p class="txt" style="font-size: 12px;color: #999;">'.$experience['job_content'].'</p>';
+			$experience_list_ele = $experience_list_ele . $str;
+			unset($experience['id']);
+			unset($experience['uid']);
+			unset($experience['status']);
+		}
 
-        $nickname = $profile['info']['nickname'];
-        $username = $profile['info']['username'];
-        $avatar = $profile['info']['avatar256'];
-        $mobile = $profile['info']['mobile'];
-        $email = $profile['info']['email'];
-        $sex = $profile['info']['sex'];
-        if($sex==0){
-            $sex = "未填写";
-        } else if($sex==1){
-            $sex = "男";
-        } else {
-            $sex = "女";
-        }
-        $birthday = $profile['info']['birthday'];
+		$work_list = $profile['info']['works'];     //  用户作品
+		$work_list_ele = null;
+		foreach($work_list as $work){
+			$str =  '<img src="'. $work['src'] .'" style="max-width: 626px;margin-bottom: 20px;">';
+			$work_list_ele = $work_list_ele . $str;
+		}
 
-        $extinfo_list = $profile['info']['extinfo'];
-        foreach($extinfo_list as $extinfo){
-            switch($extinfo['field_name']){
-                case 'college':  // 大学
-                    $collage = $extinfo['field_content'];
-                    break;
-                case 'major':    // 专业
-                    $major = $extinfo['field_content'];
-                    break;
-                case 'grade':    // 年级
-                    $grade = $extinfo['field_content'];
-                    break;
-                case 'study_institution':    // 学习机构
-                    $study_institution = $extinfo['field_content'];
-                    break;
-                case 'skills':    // 软件技能
-                    $skills = $extinfo['field_content'];
-                    break;
-                case 'expected_position':    // 期望职位
-                    $expected_position = $extinfo['field_content'];
-                    break;
-                case 'my_highlights':    // 我的亮点
-                    $my_highlights = $extinfo['field_content'];
-                    break;
-                case 'my_strengths':    // 我的优势
-                    $my_strengths = $extinfo['field_content'];
-                    break;
-            }
-        }
+		$html = <<<EOF
+<table cellspacing="0" cellpadding="1" border="0">
+    <tr>
+        <td style="width: 27%;">$nickname</td>
+        <td style="width: 27%;"></td>
+        <td style="width: 28%;"></td>
+        <td style="width: 18%;" rowspan="3"><img src="$avatar" alt="" class="user-img" style="width: 80px;height: 100px;"></td>
+    </tr>
+    <tr>
+        <td colspan="2">$sex&nbsp;&nbsp;&nbsp;$age&nbsp;&nbsp;&nbsp;$expected_position</td>
+    </tr>
+    <tr>
+       <td colspan="3">$mobile&nbsp;&nbsp;&nbsp;$email</td>
+    </tr>
 
-        $experience_list = $profile['info']['experience'];  //  工作经历
-        $experience_list_ele = null;
-        foreach ($experience_list as &$experience) {
-            $start_time = date('Y-m-d', $experience['start_time']);
-            $end_time = date('Y-m-d', $experience['end_time']);
-            $time = $start_time.'--'.$end_time;
-            $str = '<p class="txt"><span>'.$time.'</span><span>'.$experience["company_name"].'</span><span>'.$experience["department"].'</span></p>';
-            $experience_list_ele = $experience_list_ele + $str;
-            unset($experience['id']);
-            unset($experience['uid']);
-            unset($experience['status']);
-        }
+</table>
+EOF;
+		$this->pdf->writeHTML($html, true, false, false, 0);
 
-        $work_list = $profile['info']['works'];     //  用户作品
-        $work_list_ele = null;
-        foreach($work_list as $work){
-            $str =  '<img src="'. $work['src'] .'">';
-            $work_list_ele = $work_list_ele . $str;
-        }
+		$html = <<<part1
+<div class="box" style="border-bottom: 1px solid #D8D9DB;">
+		</div>
+part1;
+		$this->pdf->writeHTML($html, true, false, false, 0);
 
-        $html = <<<EOF
-        <!DOCTYPE html>
-<html lang="zh-CN">
-
-<head>
-	<title>嘿设汇</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="Resource-type" content="Document" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<meta http-equiv="Expires" content="0">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Cache-control" content="no-cache">
-	<meta http-equiv="Cache" content="no-cache">
-	<style>
-	*::after, *::before {
-	    box-sizing: border-box;
-	}
-	ul{
-		 list-style-type: none;
-	}
-	*{
-		margin: 0;
-		padding: 0;
-	}
-	body{
-		background: #fff;
-	}
-	.main{
-		margin: 45px 45px 90px;
-	}
-	@media (min-width: 240px) and (max-width: 640px) {
-	  .main{
-	  		margin: 25px 10px 60px;
-	  	}
-	}
-
-	.box{
-		padding: 30px 25px;
-		border-bottom: 1px solid #D8D9DB;
-	}
-	.img{
-		padding-bottom: 50px;
-		position: relative;
-	}
-	.box >img{
-		max-width: 100%;
-		margin-bottom: 20px;
-	}
-	.title{
-		font-size: 18px;
-		color: #454546;
-		margin-bottom: 20px;
-		font-weight: bold;
-	}
-	.txt{
-		font-size: 14px;
-		color: #707072;
-	}
-	span{
-		margin-right: 20px;
-		line-height: 25px;
-	}
-	.icon{
-		margin-bottom: 15px;
-	}
-	.icon span{
-		background: #E6E7E9;
-		border-radius: 50px;
-		padding: 3px 8px;
-		color: #5A5B5C;
-		line-height: 35px;
-	}
-	.word{
-		font-size: 16px;
-		margin-bottom: 10px;
-		font-weight: bold;
-		color: #57585A;
-	}
-	.foot{
-		position: absolute;
-		bottom: -60px;
-		left: 0;
-		right: 0;
-		text-align: center;
-	}
-	.foot-img{
-		background: #fff;
-		padding: 20px;
-		margin: 0 auto;
-		width: 140px;
-	}
-	.user{
-		position: relative;
-	}
-	.user .title{
-		font-size: 30px;
-		font-weight: normal;
-		margin-bottom: 15px;
-	}
-	.user-img{
-		width: 125px;
-		height: 125px;
-		position: absolute;
-		top: 0;
-		right: 20px;
-	}
-	@media (min-width: 240px) and (max-width: 640px) {
-	  	.user-img{
-	  		width: 90px;
-	  		height: 90px;
-	  		right: 10px;
-	  	}
-	}
-	</style>
-</head>
-<body>
-	<div class="main">
-		<div class="box user">
-			<p class="title">$nickname</p>
-			<img src="$avatar" alt="" class="user-img">
-			<p class="txt">
-				<span>$sex</span>
-				<span>$birthday</span>
-				<span>$expected_position</span>
-			</p>
-			<p class="txt">
-				<span>$mobile</span>
-				<span>$email</span>
+		$html = <<<part1
+<div class="box" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;">
+			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">教育经历</p>
+			<p class="txt" style="font-size: 12px;color: #999;">
+				<span style="margin-right: 24px;line-height: 25px;">$collage</span>
+				<span style="margin-right: 24px;line-height: 25px;">$major</span>
 			</p>
 		</div>
-		<!-- /.box -->
+part1;
+		$this->pdf->writeHTML($html, true, false, false, 0);
 
-		<div class="box">
-			<p class="title">教育经历</p>
-			<p class="txt">
-				<span>2012.05——至今</span>
-				<span>华中农业大学</span>
-				<span>UI设计专业</span>
+		$html = <<<part1
+<div class="box" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;">
+			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">自我评价</p>
+			<p class="txt icon"  style="font-size: 12px;color: #999;margin-bottom: 15px;">
+				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">$my_highlights</span>
+				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">完美主义</span>
+				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">极客精神</span>
+				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">思维慎密</span>
 			</p>
+			<p class="txt"  style="font-size: 12px;color: #999;">$my_strengths</p>
 		</div>
-		<!-- /.box -->
+part1;
+		$this->pdf->writeHTML($html, true, false, false, 0);
 
-		<div class="box">
-			<p class="title">自我评价</p>
-			<p class="txt icon">
-				<span>独当一面</span>
-				<span>完美主义</span>
-				<span>极客精神</span>
-				<span>思维慎密</span>
-			</p>
-			<p class="txt">我有良好的美术基础受过系统的计算机艺术设计专业知识训练并仍在设计方面不断的学习中，计算机艺术设计专业知识训练仍在学习中</p>
-		</div>
-		<!-- /.box -->
+		$html = <<<part1
+<div class="box" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;">
+			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">工作经验</p>
+part1;
+		$this->pdf->writeHTML($html, true, false, false, 0);
+		$this->pdf->writeHTML($experience_list_ele, true, false, false, 0);
+		$this->pdf->writeHTML("</div>", true, false, false, 0);
 
-		<div class="box">
-			<p class="title">工作经验</p>
-			<p class="txt word">
-				<span>2012.05——至今</span>
-				<span>腾讯新闻事业部</span>
-			</p>
-			<p class="txt">我有良好的美术基础受过系统的计算机艺术设计专业知识训练并仍在设计方面不断的学习中，计算机艺术设计专业知识训练仍在学习中</p>
-		</div>
-		<!-- /.box -->
+		$html = <<<part1
+<div class="box img" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;padding-bottom: 50px;position: relative;">
+			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">作品展示</p>
+part1;
+		$this->pdf->writeHTML($html, true, false, false, 0);
 
-		<div class="box img">
-			<p class="title">作品展示</p>
-			<img src="http://pic.yupoo.com/hiskyido/EZpoJdCA/medish.jpg" alt="">
-			<img src="http://pic.yupoo.com/hiskyido/EZpoKkNf/N0bu3.jpg" alt="">
-			<div class="foot">
-				<div class="foot-img">
-					<img src="http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-10-15/icon_pdf_logo.jpg" alt="">
+		$this->pdf->writeHTML($work_list_ele, true, false, false, 0);
+
+		$html = <<<part1
+<div class="foot" style="position: absolute; bottom: -60px;left: 0;right: 0;text-align: center;">
+				<div class="foot-img" style="background: #fff;padding: 20px;margin: 0 auto; width: 140px;">
+					<img src="http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-10-15/icon_pdf_logo.png" alt="">
 				</div>
 			</div>
 		</div>
-		<!-- /.box -->
-	</div>
-</body>
-</html>
-EOF;
+part1;
+		$this->pdf->writeHTML($html, true, false, false, 0);
 
-        $this->pdf->writeHTML($html, true, false, true, false, '');
-
-        $time = time();
-        $path = '/tmp/'.$time.'.pdf';
-        //输出PDF
-        $this->pdf->Output($path, 'I');
-        //$this->pdf->Output($path, 'F');
-        return $path;
-    }
+		$time = time();
+		$path = '/tmp/'.$time.'.pdf';
+		$this->pdf->Output($path, 'I');
+	}
 
 }
