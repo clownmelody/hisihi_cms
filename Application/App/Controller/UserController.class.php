@@ -1568,6 +1568,25 @@ class UserController extends AppController
         }
     }
 
+    /**获取个人工作经历
+     * @param int $uid
+     * @param int $page
+     * @param int $count
+     */
+    public function getWorkExperience($uid=0,$page=1,$count=5){
+        if (!$uid) {
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $model = M('UserWorkExperience');
+        $map['uid'] = $uid;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $result = $model->where($map)->order('start_time desc')->page($page,$count)->select();
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $result;
+        $this->apiSuccess('获取个人工作经历成功', null, $extra);
+    }
     /**
      * 上传用户的用于个人简历作品
      * @param int $picId
@@ -1626,6 +1645,27 @@ class UserController extends AppController
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $pic_list;
         $this->apiSuccess('获取个人简历作品成功', null, $extra);
+    }
+
+    /**删除个人简历作品
+     * @param int $id
+     */
+    public function deleteUserWorks($id=0){
+        if($id==0){
+            $this->apiError(-1, '传入作品ID为空异常');
+        }
+        $this->requireLogin();
+        //获取用户编号
+        $uid = $this->getUid();
+        $model = D('User/UserWorks');
+        $data['status'] = -1;
+        $tem = $model->where('id='.$id.' and uid='.$uid)->save($data);
+        if($tem){
+            $extra['isdelete'] = true;
+            $this->apiSuccess('删除个人简历作品成功', null, $extra);
+        }else{
+            $this->apiError(-2, '删除个人简历作品失败');
+        }
     }
 
     private function uploadLogoPicToOSS($picID){
