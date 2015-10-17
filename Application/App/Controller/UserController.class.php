@@ -834,15 +834,21 @@ class UserController extends AppController
     public function _info_list($id = null, $uid = null, $version=1)
     {
         $info_list = null;
-        //简历信息不区分分组
-        //$where_map['profile_group_id'] = $id;
+        //简历信息区分分组,学生则只查询学生信息，讲师查询所有信息
+        if($id == 13){
+            $where_map['profile_group_id'] = $id;
+            if((float)$version < 2.1){//老版本只显示学校、专业、年级
+                $where_map['id'] = array("in",array('36','37','38'));
+            }
+        }else{
+            if((float)$version < 2.1){//老版本只显示学校、专业、年级
+                $where_map['profile_group_id'] = $id;
+            }
+        }
         $where_map['status'] = 1;
         if (isset($uid) && $uid != is_login()) {
             //查看别人的扩展信息
             $where_map['visible'] = 1;
-            if((float)$version < 2.1){//老版本只显示学校、专业、年级
-                $where_map['id'] = array("in",array('36','37','38'));
-            }
             $field_setting_list = D('field_setting')->where($where_map)->order('sort asc')->select();
 
             if (!$field_setting_list) {
@@ -850,9 +856,6 @@ class UserController extends AppController
             }
             $map['uid'] = $uid;
         } else if (is_login()) {
-            if((float)$version < 2.1){//老版本只显示学校、专业、年级
-                $where_map['id'] = array("in",array('36','37','38'));
-            }
             $field_setting_list = D('field_setting')->where($where_map)->order('sort asc')->select();
 
             if (!$field_setting_list) {
@@ -940,6 +943,7 @@ class UserController extends AppController
         $map['uid'] = $uid;
         $map['field_id'] = 45;//亮点字段id
         $lightspot = $field->where($map)->getField('field_data');
+        $lightspot = stripslashes($lightspot);
         $lightspot = json_decode($lightspot,true);
         $lightspot_array = array();
         $cmodel = D('Admin/CompanyConfig');
@@ -970,7 +974,6 @@ class UserController extends AppController
         //$this->requireLogin();
 
         //默认查看自己的详细资料，点击“我的资料”
-//        if($version == 2.1){
         if (!isset($uid)) {
             $this->requireLogin();
             $uid = $this->getUid();
