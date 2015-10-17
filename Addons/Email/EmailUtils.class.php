@@ -29,9 +29,9 @@ class EmailUtils
     }
 
     function sendMail($email=null, $path=null){
-        if(!$path || !$email){
+        /*if(!$path || !$email){
             return false;
-        }
+        }*/
         $this->mail->addAddress($email);
         $this->mail->addAttachment($path, "简历.pdf");
         $this->mail->isHTML(true);
@@ -41,6 +41,7 @@ class EmailUtils
         $this->mail->AltBody = "为了查看该邮件，请切换到支持 HTML 的邮件客户端";
 
         if(!$this->mail->send()) {
+            echo "Mailer Error: " . $this->mail->ErrorInfo;
             return false;
         } else {
             return true;

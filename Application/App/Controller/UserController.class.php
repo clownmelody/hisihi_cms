@@ -1564,6 +1564,25 @@ class UserController extends AppController
         $data['department'] = $department;
         $data['job_content'] = $job_content;
         if($workExperienceModel->save($data)){
+            $res = D('field')->where('uid=' . $uid.' and field_id=39')->find();
+            if (!$res) {
+                $dl['uid'] = $uid;
+                $dl['field_id'] = 39;
+                $dl['field_data'] = $company_name;
+                $dl['createTime'] = $dl['changeTime'] = time();
+                if (!D('field')->add($dl)) {
+                    $this->apiError(1001,'用户就职公司添加时出错！');
+                }
+            } else {
+                $dl['changeTime'] = time();
+                $work_res = $workExperienceModel->getLastWorkExperience($uid);
+                if($work_res){
+                    $dl['field_data'] = $work_res[0]['company_name'];
+                    if (!D('field')->where('uid=' . $uid.' and field_id=39')->save($dl)) {
+                        $this->apiError(1002,'用户就职公司修改时出错！');
+                    }
+                }
+            }
             $this->apiSuccess('保存用户工作经历成功');
         } else {
             $this->apiError(-1, '保存用户工作经历失败');
