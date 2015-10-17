@@ -18,4 +18,8 @@ class UserWorkExperienceModel extends Model
         return $this->where('status=1 and uid='.$uid)->select();
     }
 
+    public function getLastWorkExperience($uid){
+        return $this->where('status=1 and uid='.$uid)->order('end_time desc')->limit(1)->select();
+    }
+
 }
