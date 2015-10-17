@@ -98,6 +98,13 @@ class PdfUtils
 			}
 		}
 
+		$my_highlights = json_decode($my_highlights, true);
+		$highlights = null;
+		foreach($my_highlights as $light) {
+			$str = '<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;">' . $light["value"] . '</span>';
+			$highlights = $highlights . $str . "&nbsp;&nbsp;";
+		}
+
 		$experience_list = $profile['info']['experience'];  //  工作经历
 		$experience_list_ele = null;
 		foreach ($experience_list as &$experience) {
@@ -120,17 +127,17 @@ class PdfUtils
 
 		$html = <<<EOF
 <table cellspacing="0" cellpadding="1" border="0">
-    <tr>
-        <td style="width: 27%;">$nickname</td>
+    <tr style="line-height: 25px;">
+        <td style="width: 27%;font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">$nickname</td>
         <td style="width: 27%;"></td>
         <td style="width: 28%;"></td>
         <td style="width: 18%;" rowspan="3"><img src="$avatar" alt="" class="user-img" style="width: 80px;height: 100px;"></td>
     </tr>
-    <tr>
-        <td colspan="2">$sex&nbsp;&nbsp;&nbsp;$age&nbsp;&nbsp;&nbsp;$expected_position</td>
+    <tr style="line-height: 25px;">
+        <td colspan="2" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">$sex&nbsp;&nbsp;&nbsp;$age&nbsp;&nbsp;&nbsp;$expected_position</td>
     </tr>
-    <tr>
-       <td colspan="3">$mobile&nbsp;&nbsp;&nbsp;$email</td>
+    <tr style="line-height: 30px;">
+       <td colspan="3" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">$mobile&nbsp;&nbsp;&nbsp;$email</td>
     </tr>
 
 </table>
@@ -158,23 +165,16 @@ part1;
 <div class="box" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;">
 			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">自我评价</p>
 			<p class="txt icon"  style="font-size: 12px;color: #999;margin-bottom: 15px;">
-				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">$my_highlights</span>
-				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">完美主义</span>
-				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">极客精神</span>
-				<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;line-height: 40px;">思维慎密</span>
-			</p>
-			<p class="txt"  style="font-size: 12px;color: #999;">$my_strengths</p>
-		</div>
 part1;
+		$html = $html . $highlights . '</p><p class="txt" style="font-size: 12px;color: #999;">'.$my_strengths.'</p></div>';
 		$this->pdf->writeHTML($html, true, false, false, 0);
 
 		$html = <<<part1
 <div class="box" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;">
 			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">工作经验</p>
 part1;
+		$html = $html . $experience_list_ele . "</div>";
 		$this->pdf->writeHTML($html, true, false, false, 0);
-		$this->pdf->writeHTML($experience_list_ele, true, false, false, 0);
-		$this->pdf->writeHTML("</div>", true, false, false, 0);
 
 		$html = <<<part1
 <div class="box img" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;padding-bottom: 50px;position: relative;">

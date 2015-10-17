@@ -306,7 +306,7 @@ body {
     width: 260px;
   }
   .body {
-    margin-top: 20px;
+    margin-top: 10%;
   }
   .body .prompt-txt {
     margin-bottom: 40px;
@@ -354,7 +354,7 @@ body {
     width: 310px;
   }
   .body {
-    margin-top: 20px;
+    margin-top: 10%;
   }
   .body .prompt-txt {
     margin-bottom: 40px;
@@ -402,7 +402,7 @@ body {
     width: 330px;
   }
   .body {
-    margin-top: 60px;
+    margin-top: 6%;
   }
   .body .prompt-txt {
     margin-bottom: 60px;
@@ -450,7 +450,7 @@ body {
     width: 330px;
   }
   .body {
-    margin-top: 100px;
+    margin-top: 8%;
   }
   .body .prompt-txt {
     margin-bottom: 60px;
@@ -485,5 +485,101 @@ body {
   .body .btn-box .btn {
     width: 300px;
     height: 90px;
+  }
+}
+@media (max-height: 768px) {
+  .body {
+    margin-top: 0;
+  }
+  .foot {
+    bottom: 0;
+  }
+}
+@media (min-height: 768px) and (min-width: 1280px) {
+  .body {
+    margin-top: 10%;
+  }
+  .foot {
+    bottom: 5%;
+  }
+}
+@media (min-height: 901px) and (min-width: 1680px) {
+  .body {
+    margin-top: 7%;
+  }
+  .foot {
+    bottom: 3%;
+  }
+}
+@media (min-height: 1025px) and (min-width: 1920px) {
+  .body {
+    margin-top: 10%;
+  }
+  .foot {
+    bottom: 15%;
+  }
+}
+@media (height: 600px) and (width: 1280px) {
+  .body {
+    margin-top: 0;
+  }
+  .foot {
+    bottom: 0;
+  }
+}
+@media (height: 1024px) and (width: 768px) {
+  .body {
+    margin-top: 25%;
+  }
+  .foot {
+    bottom: 10%;
+  }
+}
+@media (height: 1280px) and (width: 800px) {
+  .body {
+    margin-top: 25%;
+  }
+  .foot {
+    bottom: 30%;
+  }
+}
+@media (height: 1280px) and (width: 980px) {
+  .body {
+    margin-top: 30%;
+  }
+  .foot {
+    bottom: 20%;
+  }
+}
+@media (height: 768px) and (width: 1024px) {
+  .body {
+    margin-top: 10%;
+  }
+  .foot {
+    bottom: 5%;
+  }
+}
+@media (height: 800px) and (width: 1280px) {
+  .body {
+    margin-top: 10%;
+  }
+  .foot {
+    bottom: 5%;
+  }
+}
+@media (height: 980px) and (width: 1280px) {
+  .body {
+    margin-top: 15%;
+  }
+  .foot {
+    bottom: 10%;
+  }
+}
+@media (min-height: 900px) and (width: 1920px) {
+  .body {
+    margin-top: 6%;
+  }
+  .foot {
+    bottom: 2%;
   }
 }
