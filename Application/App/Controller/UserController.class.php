@@ -834,7 +834,8 @@ class UserController extends AppController
     public function _info_list($id = null, $uid = null, $version=1)
     {
         $info_list = null;
-        $where_map['profile_group_id'] = $id;
+        //简历信息不区分分组
+        //$where_map['profile_group_id'] = $id;
         $where_map['status'] = 1;
         if (isset($uid) && $uid != is_login()) {
             //查看别人的扩展信息
@@ -969,6 +970,7 @@ class UserController extends AppController
         //$this->requireLogin();
 
         //默认查看自己的详细资料，点击“我的资料”
+//        if($version == 2.1){
         if (!isset($uid)) {
             $this->requireLogin();
             $uid = $this->getUid();
