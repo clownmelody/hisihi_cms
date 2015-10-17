@@ -835,13 +835,13 @@ class UserController extends AppController
     {
         $info_list = null;
         //简历信息区分分组,学生则只查询学生信息，讲师查询所有信息
-        if($id == 13){
+        if($id == 13){//学生组
             $where_map['profile_group_id'] = $id;
             if((float)$version < 2.1){//老版本只显示学校、专业、年级
                 $where_map['id'] = array("in",array('36','37','38'));
             }
-        }else{
-            if((float)$version < 2.1){//老版本只显示学校、专业、年级
+        }else{//讲师组
+            if((float)$version < 2.1){//老版本只显示讲师用户组信息
                 $where_map['profile_group_id'] = $id;
             }
         }
