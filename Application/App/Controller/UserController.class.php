@@ -839,10 +839,14 @@ class UserController extends AppController
             $where_map['profile_group_id'] = $id;
             if((float)$version < 2.1){//老版本只显示学校、专业、年级
                 $where_map['id'] = array("in",array('36','37','38'));
+            }else{
+                $where_map['id'] = array("in",array('36','37','44','46'));
             }
         }else{//讲师组
             if((float)$version < 2.1){//老版本只显示讲师用户组信息
                 $where_map['profile_group_id'] = $id;
+            }else{
+                $where_map['id'] = array("in",array('36','37','44','46'));
             }
         }
         $where_map['status'] = 1;
@@ -1161,7 +1165,6 @@ class UserController extends AppController
                             $data[$key]['field_data'] = $year;
                         break;
                 }
-
             }
         }
         $map['uid'] = $uid;
@@ -1553,17 +1556,12 @@ class UserController extends AppController
      * @param $department
      * @param $job_content
      */
-    public function saveWorkExperience($uid, $position, $company_name, $start_time, $end_time, $department, $job_content){
+    public function saveWorkExperience($uid=0,$id=0, $position, $company_name, $start_time, $end_time, $department, $job_content){
         if (!$uid) {
             $this->requireLogin();
             $uid = $this->getUid();
         }
         $workExperienceModel = D('User/UserWorkExperience');
-//        if(!$id){
-//            $map['1'] = 1;
-//        }else{
-//            $map['id'] = $id;
-//        }
         $data['uid'] = $uid;
         $data['position'] = $position;
         $data['company_name'] = $company_name;
@@ -1571,7 +1569,13 @@ class UserController extends AppController
         $data['end_time'] = $end_time;
         $data['department'] = $department;
         $data['job_content'] = $job_content;
-        if($workExperienceModel->save($data)){
+        if(!$id){
+            $issave = $workExperienceModel->add($data);
+        }else{
+            $issave = $workExperienceModel->where(array('id'=>$id))->save($data);
+        }
+//        if($workExperienceModel->save($data)){
+        if($issave){
             $res = D('field')->where('uid=' . $uid.' and field_id=39')->find();
             if (!$res) {
                 $dl['uid'] = $uid;
@@ -2012,7 +2016,12 @@ class UserController extends AppController
         $profile_group = $this->_profile_group($uid);
         $info_list = $this->_info_list($profile_group['id'], $uid, "2.1");
         $result['info']['extinfo'] = $info_list;
-
+        //软件技能
+        $skills = $this->_user_skills($uid);
+        $result['info']['skills'] = $skills;
+        //我的亮点
+        $lightspot = $this->_user_lightspot($uid);
+        $result['info']['lightspot'] = $skills;
         // 用户工作经历
         $workExperienceModel = D('User/UserWorkExperience');
         $experList = $workExperienceModel->getUserWorkExperiences($uid);
