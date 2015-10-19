@@ -834,14 +834,21 @@ class UserController extends AppController
     public function _info_list($id = null, $uid = null, $version=1)
     {
         $info_list = null;
-        $where_map['profile_group_id'] = $id;
+        //简历信息区分分组,学生则只查询学生信息，讲师查询所有信息
+        if($id == 13){//学生组
+            $where_map['profile_group_id'] = $id;
+            if((float)$version < 2.1){//老版本只显示学校、专业、年级
+                $where_map['id'] = array("in",array('36','37','38'));
+            }
+        }else{//讲师组
+            if((float)$version < 2.1){//老版本只显示讲师用户组信息
+                $where_map['profile_group_id'] = $id;
+            }
+        }
         $where_map['status'] = 1;
         if (isset($uid) && $uid != is_login()) {
             //查看别人的扩展信息
             $where_map['visible'] = 1;
-            if((float)$version < 2.1){//老版本只显示学校、专业、年级
-                $where_map['id'] = array("in",array('36','37','38'));
-            }
             $field_setting_list = D('field_setting')->where($where_map)->order('sort asc')->select();
 
             if (!$field_setting_list) {
@@ -849,9 +856,6 @@ class UserController extends AppController
             }
             $map['uid'] = $uid;
         } else if (is_login()) {
-            if((float)$version < 2.1){//老版本只显示学校、专业、年级
-                $where_map['id'] = array("in",array('36','37','38'));
-            }
             $field_setting_list = D('field_setting')->where($where_map)->order('sort asc')->select();
 
             if (!$field_setting_list) {
@@ -939,6 +943,7 @@ class UserController extends AppController
         $map['uid'] = $uid;
         $map['field_id'] = 45;//亮点字段id
         $lightspot = $field->where($map)->getField('field_data');
+        $lightspot = stripslashes($lightspot);
         $lightspot = json_decode($lightspot,true);
         $lightspot_array = array();
         $cmodel = D('Admin/CompanyConfig');
@@ -1102,8 +1107,8 @@ class UserController extends AppController
             }
         }
         //扩展信息
-        $profile_group = $this->_profile_group($uid);
-        $field_setting_list = D('field_setting')->where(array('profile_group_id' => $profile_group['id'], 'status' => '1'))->order('sort asc')->select();
+        //$profile_group = $this->_profile_group($uid);
+        $field_setting_list = D('field_setting')->where(array('status' => '1'))->order('sort asc')->select();
 
         if ($field_setting_list) {
             $data = null;
@@ -1548,12 +1553,17 @@ class UserController extends AppController
      * @param $department
      * @param $job_content
      */
-    public function saveWorkExperience($uid=0, $position, $company_name, $start_time, $end_time, $department, $job_content){
+    public function saveWorkExperience($uid, $position, $company_name, $start_time, $end_time, $department, $job_content){
         if (!$uid) {
             $this->requireLogin();
             $uid = $this->getUid();
         }
         $workExperienceModel = D('User/UserWorkExperience');
+//        if(!$id){
+//            $map['1'] = 1;
+//        }else{
+//            $map['id'] = $id;
+//        }
         $data['uid'] = $uid;
         $data['position'] = $position;
         $data['company_name'] = $company_name;
@@ -1584,6 +1594,44 @@ class UserController extends AppController
             $this->apiSuccess('保存用户工作经历成功');
         } else {
             $this->apiError(-1, '保存用户工作经历失败');
+        }
+    }
+
+    /**获取个人工作经历
+     * @param int $uid
+     * @param int $page
+     * @param int $count
+     */
+    public function getWorkExperience($uid=0,$page=1,$count=5){
+        if (!$uid) {
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $model = M('UserWorkExperience');
+        $map['uid'] = $uid;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $result = $model->where($map)->order('start_time desc')->page($page,$count)->select();
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $result;
+        $this->apiSuccess('获取个人工作经历成功', null, $extra);
+    }
+
+    public function deleteWorkExperience($id=0){
+        if($id == 0){
+            $this->apiError(-1, '传入作品ID为空异常');
+        }
+        $this->requireLogin();
+        //获取用户编号
+        $uid = $this->getUid();
+        $model = M('UserWorkExperience');
+        $data['status'] = -1;
+        $tem = $model->where('id='.$id.' and uid='.$uid)->save($data);
+        if($tem){
+            $extra['isdelete'] = true;
+            $this->apiSuccess('删除个人工作经历成功', null, $extra);
+        }else{
+            $this->apiError(-2, '删除个人工作经历失败');
         }
     }
 
@@ -1645,6 +1693,27 @@ class UserController extends AppController
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $pic_list;
         $this->apiSuccess('获取个人简历作品成功', null, $extra);
+    }
+
+    /**删除个人简历作品
+     * @param int $id
+     */
+    public function deleteUserWorks($id=0){
+        if($id==0){
+            $this->apiError(-1, '传入作品ID为空异常');
+        }
+        $this->requireLogin();
+        //获取用户编号
+        $uid = $this->getUid();
+        $model = M('UserWorks');
+        $data['status'] = -1;
+        $tem = $model->where('id='.$id.' and uid='.$uid)->save($data);
+        if($tem){
+            $extra['isdelete'] = true;
+            $this->apiSuccess('删除个人简历作品成功', null, $extra);
+        }else{
+            $this->apiError(-2, '删除个人简历作品失败');
+        }
     }
 
     private function uploadLogoPicToOSS($picID){
