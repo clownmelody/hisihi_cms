@@ -2013,6 +2013,7 @@ class UserController extends AppController
         $result['info'] = query_user(array('avatar256', 'avatar128', 'username', 'extinfo', 'signature', 'nickname', 'mobile', 'sex', 'birthday', 'email'), $uid);
 
         // 扩展信息
+        // 扩展信息
         $profile_group = $this->_profile_group($uid);
         $info_list = $this->_info_list($profile_group['id'], $uid, "2.1");
         $result['info']['extinfo'] = $info_list;
@@ -2055,6 +2056,21 @@ class UserController extends AppController
             $this->apiSuccess('ok', null, $result);
         } else {
             return $result;
+        }
+    }
+
+    /**
+     * @param int $uid
+     */
+    public function preview_resume_h5($uid=0){
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        if(empty($uid)){
+            $this->apiError(-1, '获取uid失败');
+        } else {
+            $this->display('user/resume_h5/index');
         }
     }
 
