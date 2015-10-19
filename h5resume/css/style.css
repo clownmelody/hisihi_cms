@@ -1,0 +1,154 @@
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+ul {
+  list-style-type: none;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: #fff;
+  font-size: 62.5%;
+}
+.top {
+  width: 100%;
+  height: 19.2em;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+}
+.top > img {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+.body .user-portrait {
+  border-radius: 50%;
+  border: 0.6em solid #fff;
+  width: 19.2em;
+  background: #fff;
+  margin: 9.6em auto 3.2em;
+  overflow: hidden;
+  box-shadow: 0 0.3em 0 rgba(0, 0, 0, 0.1);
+}
+.body .user-portrait > img {
+  width: 100%;
+  height: auto;
+}
+.body .box {
+  margin-bottom: 4.8em;
+}
+.body .box > p {
+  margin-bottom: 24px;
+}
+.body .box > .box-top {
+  background: #fff;
+  width: 176px;
+  height: 56px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 32px;
+}
+.body .box > .box-top > span {
+  background: url(../img/bg_title.png);
+  text-align: center;
+  line-height: 56px;
+  color: #999;
+  font-size: 2.8em;
+  display: block;
+  height: 56px;
+  margin: 0 auto;
+  width: 176px;
+}
+.body .box > .box-body {
+  border-top: 1px solid #e5e5e5;
+  margin: -2.8em 2em 0;
+  padding: 6em 2em 0;
+}
+.body .box > .box-body > p {
+  font-size: 28px;
+  color: #666;
+}
+.body .box > .box-body > .user-tag {
+  margin-bottom: 3.2em;
+  text-align: center;
+}
+.body .box > .box-body > .user-tag > span {
+  line-height: 4.8em;
+  margin: 0 10px;
+  padding: 0.3em 1em;
+  background: #fff;
+  border: 1px solid #999;
+  color: #999;
+  border-radius: 50px;
+}
+.body .box > .box-body > .user-tag .red {
+  border-color: #D30824;
+}
+.body .box > .box-body > .user-tag .green {
+  border-color: #96D94A;
+}
+.body .box > .box-body > .user-tag .orange {
+  border-color: #F5A81E;
+}
+.body .box > .box-body > .user-tag .bule {
+  border-color: #A4C7F0;
+}
+.body .box > .box-body > .empiric-box > li {
+  margin-bottom: 2.4em;
+}
+.body .box > .box-body > .empiric-box .user-major {
+  color: #999;
+  font-size: 2.4em;
+}
+.body .box > .box-body.box-empiric .user-empiric {
+  overflow: hidden;
+}
+.body .box > .box-body.box-empiric .user-empiric > li {
+  display: inline;
+  float: left;
+  width: 50%;
+  font-size: 2.8em;
+}
+.body .box > .box-body.box-empiric .user-empiric > .user-company {
+  text-align: left;
+  color: #666;
+}
+.body .box > .box-body.box-empiric .user-empiric > .user-time {
+  text-align: right;
+  color: #999;
+}
+.body .box > .box-body.box-img {
+  padding-left: 3.6em;
+  padding-right: 3.6em;
+}
+.body .box > .box-body.box-img > img {
+  margin-bottom: 3.2em;
+  max-width: 100%;
+}
+.body .box.box-info {
+  text-align: center;
+}
+.body .box.box-info > p {
+  font-size: 2.4em;
+  color: #999;
+}
+.body .box.box-info .user-name {
+  font-size: 3.6em;
+  color: #666;
+}
+.body .box.box-info .user-tool > img {
+  margin: 0 1.2em;
+  width: 56px;
+  height: 56px;
+}
+.body .box.box-logo {
+  text-align: center;
+}
+.body .box.box-logo > img {
+  margin: 0 auto;
+}

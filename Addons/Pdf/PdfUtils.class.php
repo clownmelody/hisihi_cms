@@ -196,7 +196,7 @@ part1;
 
 		$time = time();
 		$path = '/tmp/'.$time.'.pdf';
-		$this->pdf->Output($path, 'I');
+		$this->pdf->Output($path, 'F');
 		$returnData['path'] = $path;
 		$returnData['nickname'] = $nickname;
 		$returnData['sex'] = $sex;

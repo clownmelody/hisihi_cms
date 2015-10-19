@@ -238,7 +238,7 @@ class CompanyController extends AppController {
 
         $pdfUtils = new PdfUtils();
         $returnData = $pdfUtils->init($uid);
-        /*$emailUtils = new EmailUtils();
+        $emailUtils = new EmailUtils();
         $model = M();
         $result = $model->query("select hr_email, name from hisihi_company where status=1 and id=".$companyId.' limit 1');
         if(empty($result[0]['hr_email'])){
@@ -256,7 +256,7 @@ class CompanyController extends AppController {
             $this->apiSuccess("简历投递成功");
         } else {
             $this->apiError(-5, "简历投递失败");
-        }*/
+        }
     }
 
     public function isUserInfoComplete($uid=0){
