@@ -19,25 +19,25 @@ class EmailUtils
         $this->mail = new PHPMailer;
         $this->mail->CharSet ="UTF-8";
         $this->mail->isSMTP();
-        $this->mail->Host = 'smtp.qq.com';
+        $this->mail->Host = 'smtp.exmail.qq.com';
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = '1424627720@qq.com';
-        $this->mail->Password = '18507554340';
+        $this->mail->Username = 'resume@hisihi.com';
+        $this->mail->Password = '027Hisihi';
         $this->mail->SMTPSecure = 'ssl';
         $this->mail->Port = 465;
-        $this->mail->setFrom('1424627720@qq.com', '杨楚杰');
+        $this->mail->setFrom('resume@hisihi.com', '嘿设汇');
     }
 
-    function sendMail($email=null, $path=null){
-        /*if(!$path || !$email){
+    function sendMail($email=null, $value=null){
+        if(!$value || !$email){
             return false;
-        }*/
+        }
         $this->mail->addAddress($email);
-        $this->mail->addAttachment($path, "简历.pdf");
+        $this->mail->addAttachment($value['path'], "简历.pdf");
         $this->mail->isHTML(true);
 
-        $this->mail->Subject = '邮件系统测试';
-        $this->mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+        $this->mail->Subject = '来自嘿设汇的简历投递';
+        $this->mail->Body    = '数据测试--公司名称:'.$value['company_name'].', data:'.json_encode($value);
         $this->mail->AltBody = "为了查看该邮件，请切换到支持 HTML 的邮件客户端";
 
         if(!$this->mail->send()) {

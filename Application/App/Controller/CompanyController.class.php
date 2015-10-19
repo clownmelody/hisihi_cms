@@ -237,15 +237,16 @@ class CompanyController extends AppController {
         $this->isResumeComplete($uid);*/
 
         $pdfUtils = new PdfUtils();
-        $path = $pdfUtils->init($uid);
-        $emailUtils = new EmailUtils();
+        $returnData = $pdfUtils->init($uid);
+        /*$emailUtils = new EmailUtils();
         $model = M();
-        $result = $model->query("select hr_email from hisihi_company where status=1 and id=".$companyId.' limit 1');
+        $result = $model->query("select hr_email, name from hisihi_company where status=1 and id=".$companyId.' limit 1');
         if(empty($result[0]['hr_email'])){
             $this->apiError(-4, "该公司未填写HR邮箱");
         }
         $email = $result[0]['hr_email'];
-        if($emailUtils->sendMail($email, $path)){
+        $returnData['company_name'] = $result[0]['name'];
+        if($emailUtils->sendMail($email, $returnData)){
             $model = D('User/ResumeDelivery');
             $data['uid'] = $uid;
             $data['company_id'] = $companyId;
@@ -255,7 +256,7 @@ class CompanyController extends AppController {
             $this->apiSuccess("简历投递成功");
         } else {
             $this->apiError(-5, "简历投递失败");
-        }
+        }*/
     }
 
     public function isUserInfoComplete($uid=0){
