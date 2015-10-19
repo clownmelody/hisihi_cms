@@ -1925,6 +1925,8 @@ class UserController extends AppController
     /**
      * 获取个人简历中的用户信息
      * @param int $uid
+     * @param bool|false $api
+     * @return mixed
      */
     public function getResumeProfile($uid=0, $api=false){
         if(empty($uid)){
