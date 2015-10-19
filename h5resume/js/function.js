@@ -6,7 +6,7 @@ $(function () {
 function getData(Uid,Api){ 
     $.ajax({ 
         type: "GET",
-        url: "http://115.28.72.197/api.php?s=/user/getResumeProfile/uid/" + Uid + "/api/"+Api,
+        url: "api.php?s=/user/getResumeProfile/uid/" + Uid + "/api/"+Api,
         dataType: "json",
         success: function(data) {
             getDataFu(data.info);
