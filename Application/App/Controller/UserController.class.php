@@ -1107,8 +1107,8 @@ class UserController extends AppController
             }
         }
         //扩展信息
-        $profile_group = $this->_profile_group($uid);
-        $field_setting_list = D('field_setting')->where(array('profile_group_id' => $profile_group['id'], 'status' => '1'))->order('sort asc')->select();
+        //$profile_group = $this->_profile_group($uid);
+        $field_setting_list = D('field_setting')->where(array('status' => '1'))->order('sort asc')->select();
 
         if ($field_setting_list) {
             $data = null;
@@ -1559,6 +1559,11 @@ class UserController extends AppController
             $uid = $this->getUid();
         }
         $workExperienceModel = D('User/UserWorkExperience');
+//        if(!$id){
+//            $map['1'] = 1;
+//        }else{
+//            $map['id'] = $id;
+//        }
         $data['uid'] = $uid;
         $data['position'] = $position;
         $data['company_name'] = $company_name;
@@ -1566,7 +1571,7 @@ class UserController extends AppController
         $data['end_time'] = $end_time;
         $data['department'] = $department;
         $data['job_content'] = $job_content;
-        if($workExperienceModel->save($data)){
+        if($workExperienceModel->where($map)->save($data)){
             $res = D('field')->where('uid=' . $uid.' and field_id=39')->find();
             if (!$res) {
                 $dl['uid'] = $uid;
@@ -1611,6 +1616,25 @@ class UserController extends AppController
         $extra['data'] = $result;
         $this->apiSuccess('获取个人工作经历成功', null, $extra);
     }
+
+    public function deleteWorkExperience($id=0){
+        if($id == 0){
+            $this->apiError(-1, '传入作品ID为空异常');
+        }
+        $this->requireLogin();
+        //获取用户编号
+        $uid = $this->getUid();
+        $model = M('UserWorkExperience');
+        $data['status'] = -1;
+        $tem = $model->where('id='.$id.' and uid='.$uid)->save($data);
+        if($tem){
+            $extra['isdelete'] = true;
+            $this->apiSuccess('删除个人工作经历成功', null, $extra);
+        }else{
+            $this->apiError(-2, '删除个人工作经历失败');
+        }
+    }
+
     /**
      * 上传用户的用于个人简历作品
      * @param int $picId
@@ -1681,7 +1705,7 @@ class UserController extends AppController
         $this->requireLogin();
         //获取用户编号
         $uid = $this->getUid();
-        $model = D('User/UserWorks');
+        $model = M('UserWorks');
         $data['status'] = -1;
         $tem = $model->where('id='.$id.' and uid='.$uid)->save($data);
         if($tem){
