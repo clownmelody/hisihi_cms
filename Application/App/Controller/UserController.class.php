@@ -2070,7 +2070,8 @@ class UserController extends AppController
         if(empty($uid)){
             $this->apiError(-1, '获取uid失败');
         } else {
-            $this->display('user/resume_h5/index');
+            $this->assign('uid', $uid);
+            $this->display('User/resume_h5/index');
         }
     }
 

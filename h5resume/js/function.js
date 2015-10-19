@@ -1,6 +1,7 @@
 
 $(function () {
-    getData(118,true);
+    var uid = $('#uid').val();
+    getData(uid, true);
 });
 
 function getData(Uid,Api){ 
