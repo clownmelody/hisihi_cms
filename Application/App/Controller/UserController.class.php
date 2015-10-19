@@ -1553,7 +1553,7 @@ class UserController extends AppController
      * @param $department
      * @param $job_content
      */
-    public function saveWorkExperience($uid=0, $position, $company_name, $start_time, $end_time, $department, $job_content){
+    public function saveWorkExperience($uid, $position, $company_name, $start_time, $end_time, $department, $job_content){
         if (!$uid) {
             $this->requireLogin();
             $uid = $this->getUid();
@@ -1571,7 +1571,7 @@ class UserController extends AppController
         $data['end_time'] = $end_time;
         $data['department'] = $department;
         $data['job_content'] = $job_content;
-        if($workExperienceModel->where($map)->save($data)){
+        if($workExperienceModel->save($data)){
             $res = D('field')->where('uid=' . $uid.' and field_id=39')->find();
             if (!$res) {
                 $dl['uid'] = $uid;
