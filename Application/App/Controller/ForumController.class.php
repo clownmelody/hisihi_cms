@@ -254,6 +254,8 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      * @param string $order
+     * @param bool|false $show_adv
+     * @param int $post_type  区别公司热门话题和普通论坛
      */
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime', $show_adv=false, $post_type=1)
     {
@@ -780,8 +782,20 @@ class ForumController extends AppController
         $this->apiSuccess("上传声音成功",null,array('sound'=>implode(',',$info)));
     }
 
-    //发表提问
-    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $at_type=0)
+    /**
+     * 发表提问
+     * @param null $post_id
+     * @param int $forum_id
+     * @param string $title
+     * @param string $content
+     * @param null $pos
+     * @param null $pictures
+     * @param null $sound
+     * @param null $atUids
+     * @param int $at_type   1 为正常论坛包括@用户提问   2 为@公司提问
+     * @throws \Common\Exception\ApiException
+     */
+    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $at_type=1)
     {
         $this->requireLogin();
         //dump($content);
@@ -848,10 +862,10 @@ class ForumController extends AppController
             if($t_list){
                 $this->apiError(-2, "你已经发过该帖子了");
             }*/
-            if($at_type = 1){//@公司发帖，post_type=2
-                $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5, 'post_type'=>2);
-            }else{
+            if($at_type == 1){
                 $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
+            } else { //@公司发帖，post_type=2
+                $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5, 'post_type'=>2);
             }
 
             $before = getMyScore();
