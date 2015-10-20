@@ -982,13 +982,10 @@ class ForumController extends AppController
                 array_push($reg_ids, $reg_id);
             }
             // 添加 @ 数据到对应表中
-            if($at_type == 1){//@公司帖子
-                D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id, 2);
-            }else if($at_type == 2){//@机构帖子
-                D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id, 3);
-            }else
-            {
+            if($at_type == 1){//普通帖子
                 D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id);
+            }else {//@公司帖子
+                D('Forum/ForumAt')->addAtPost($param['fans_id'], $uid, $post_id, 2);
             }
         }
         $param['reg_id'] = $reg_ids;

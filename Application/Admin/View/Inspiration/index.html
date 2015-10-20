@@ -49,7 +49,7 @@
                         <td>{$vo.id}</td>
                         <td>{$vo.pic_id}</td>
                         <td>{$vo.description}</td>
-                        <td>{$vo.category_id}</td>
+                        <td>{$vo.category}</td>
                         <td>{$vo.special}</td>
                         <td>{$vo.selection}</td>
                         <td><if condition="($vo.status eq 1) "> 正常
@@ -81,7 +81,7 @@
     <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
     <script type="text/javascript">
         //导航高亮
-        highlight_subnav('{:U('Company/index')}');
+        highlight_subnav('{:U('Inspiration/index')}');
         $(function(){
             //搜索功能
             $("#search").click(function(){
