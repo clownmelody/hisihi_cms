@@ -212,7 +212,7 @@ class PublicController extends AppController {
             $topic['logo_pic'] = $this->getSourceLogoPic($did);
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage($topic['cover_id']);
-            if($version=="2.0"){
+            if((float)$version>=2.0){
                 $topic['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
                 $topic['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$topic['id'];
             } else {
@@ -257,7 +257,7 @@ class PublicController extends AppController {
             $info['logo_pic'] = $this->getSourceLogoPic($id);
             //解析并成立图片数据
             $info['img'] = $this->fetchImage($info['cover_id']);
-            if($version=='2.0'){
+            if((float)$version>=2.0){
                 $info['content_url'] = 'http://www.hisihi.com/app.php/public/topcontent/version/2.0/type/view/id/'.$id;
                 $info['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$id;
             } else {
@@ -328,14 +328,14 @@ class PublicController extends AppController {
         if($type == 'view') {
             $this->assign('top_content_info', $content);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
-            if($version=="2.0"){
+            if((float)$version >=2.0){
                 $this->display('v2content');
             } else {
                 $this->display();
             }
         } else {
             $info['img'] = $this->fetchImage($info['cover_id']);
-            if($version=="2.0"){
+            if((float)$version>=2.0){
                 $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
                 $info['share_url'] = 'http://www.hisihi.com/app.php/public/topcontent/type/view/id/'.$info['id'];
             } else {
