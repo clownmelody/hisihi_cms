@@ -22,17 +22,19 @@ class InspirationController extends AdminController {
         //用于公司名称搜索
         $name = $_GET["title"];
         if($name){
-            $map['name'] = array('like','%'.$name.'%');
+            $map['description'] = array('like','%'.$name.'%');
             $list = $model->where($map)->where("status=1")->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
             $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
-        /*foreach($list as &$recruit){
-            $scale_value = $recruit['scale'];
-            $cmodel = D('CompanyConfig');
-            $scale = $cmodel->where('type=2 and status=1 and value='.$scale_value)->getField("value_explain");
-            $recruit['scale'] = $scale;
-        }*/
+        foreach($list as &$inspiration){
+            $value = $inspiration['category_id'];
+            $cmodel = D('InspirationConfig');
+            $category = $cmodel->where('type=1 and status=1 and id='.$value)->getField("value");
+            $inspiration['category'] = $category;
+            $inspiration['special'] = $inspiration['special'] ? '是' : '否';
+            $inspiration['selection'] = $inspiration['selection'] ? '是' : '否';
+        }
 
         $this->assign('_list', $list);
         $this->assign('_page', $show);
@@ -102,6 +104,44 @@ class InspirationController extends AdminController {
         $this->display();
     }
 
+    /**修改灵感图片
+     * @param $id
+     */
+    public function edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        $inspiration = D('Inspiration');
+        $data = $inspiration->where('status=1 and id='.$id)->find();
+        $model = D('InspirationConfig');
+        $type = $model->where('type=1 and status=1')->order('id')->select();
+        $this->assign('_type', $type);
+        $this->assign('info',$data);
+        $this->display();
+    }
+
+    /**删除灵感图片
+     * @param string $id
+     */
+    public function  delete($id){
+        if(!empty($id)){
+            $model = D('Inspiration');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->updateData($i, $data);
+                }
+            } else {
+                $id = intval($id);
+                $model->updateData($id, $data);
+            }
+            $this->success('删除成功','index.php?s=/admin/inspiration');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
     /**
      * 显示配置信息列表
      */
@@ -144,6 +184,39 @@ class InspirationController extends AdminController {
         } else {
             $this->display('add');
         }
+    }
+
+    /**删除灵感配置
+     * @param $id
+     */
+    public function config_delete($id){
+        if(!empty($id)){
+            $model = D('InspirationConfig');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach($id as $val){
+                    $map['id'] = $val;
+                    $res = $model->where($map)->save($data);
+                }
+            }else{
+                $map['id'] = $id;
+                $res = $model->where($map)->save($data);
+            }
+            if(!$res){
+                $this->error("删除数据失败");
+            }else{
+                $this->success("删除成功",'index.php?s=/admin/inspiration/config');
+            }
+        }else{
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    public function config_edit($id){
+        $model = D('InspirationConfig');
+        $data = $model->where('status=1 and id='.$id)->find();
+        $this->assign('info',$data);
+        $this->display();
     }
 
     private function uploadLogoPicToOSS($picID){
