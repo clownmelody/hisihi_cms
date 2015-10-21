@@ -1,0 +1,49 @@
+.sidemenu{
+	position: fixed;
+	top: 0;
+	left: 0;
+	.size(200px,100%);
+	background: @md-grey-202;
+	box-shadow: 0 0 4px @md-grey-84;
+}
+
+
+@media (min-width: 240px) and (max-width: 1280px) {
+	.sideBar{
+		margin-left: 0;
+		transition: all .5s linear;
+		&.open{
+			margin-left: 230px !important;
+			transition: all .5s linear;
+		}
+		&.close{
+			margin-left: 0 !important;
+			transition: all .5s linear;
+		}
+	}
+    .sidemenu{
+    	left: -230px;
+    	transition: all .5s linear;
+    	&.open{
+    		left: 0;
+    		transition: all .5s linear;
+    	}
+    }
+}
+@media (min-width: 1281px){
+	.sideBar{
+		margin-left: 230px;
+		transition: all .5s linear;
+		&.open{
+			margin-left: 0 !important;
+			transition: all .5s linear;
+		}
+		&.close{
+			margin-left: 230px !important;
+			transition: all .5s linear;
+		}
+	}
+	.sidemenu{
+		display: block;
+	}
+}

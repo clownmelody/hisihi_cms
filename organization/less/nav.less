@@ -1,0 +1,40 @@
+.nav {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+  &:extend(.clearfix all);
+
+  > li {
+    position: relative;
+    display: block;
+
+    > a {
+      position: relative;
+      display: block;
+      padding: 0 40;
+      &:hover,
+      &:focus {
+        text-decoration: none;
+        background-color: darken(@md-grey-FA, 10%);
+      }
+    }
+  }
+  > li > a > img {
+    max-width: none;
+  }
+}
+.header{
+	height: 100px;
+	background: @md-grey-FA;
+	box-shadow: 0 0 4px @md-grey-84;
+}
+.navbar-content{
+	.nav{
+		>li{
+			padding: 0 40px;
+			line-height: 100px;
+			display: inline;
+			border-radius: 1
+		}
+	}
+}
