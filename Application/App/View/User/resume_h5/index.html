@@ -11,7 +11,66 @@
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
 	<link href="h5resume/css/style.css" rel="stylesheet" type="text/css">
-	
+	<link rel="stylesheet" href="__CSS__/app.min.css">
+	<style>
+		.app-bottombar {
+			z-index: 3000;
+			position: fixed;
+			bottom: 0;
+			height: 60px;
+			width: 100%;
+			display: none;
+			background: url("__IMG__/bg.png");
+		}
+
+		.bottomspace {
+			display: none;
+			height: 55px;
+		}
+		.bottom-icon {
+			float: left;
+			margin: 5px 10px 5px 10px;
+		}
+		.bottom-title {
+			float: left;
+			font-size: 18px;
+			color: #fff;
+			margin-top: 10px;
+		}
+		.bottom-content {
+			position: absolute;
+			color: #aaa;
+			font-size: 12px;
+			margin-top: 4px;
+		}
+		.bottom-star {
+			float: left;
+			width: 65px;
+			margin-top: 10px;
+			margin-left: 5px;
+		}
+
+		.bottom-right {
+			float: right;
+			margin: 12px 10px;
+			width: 80px;
+			height: 35px;
+			font-size: 16px;
+			color: #fff;
+			line-height: 35px;
+			border-radius: 5px;
+			background-color: #2aba00;
+			text-align: center;
+			z-index: 3000;
+		}
+		.info-title {
+			height: 40px;
+		}
+		.info-time {
+			font-size: 12px;
+			color: #ccc;
+		}
+	</style>
 </head>
 <body>
 	<input id="uid" type="hidden" value="{$uid}">
@@ -102,10 +161,35 @@
 		<!-- /.box -->
 
 		<div class="box box-logo">
-			<img src="img/icon_logo.png" alt="">
+			<img src="h5resume/img/icon_logo.png" alt="">
 		</div>
 		<!-- /.box -->
 
+		<div class="app-page" data-page="home">
+			<div class="app-bottombar">
+				<div>
+					<div>
+				<span class="bottom-icon">
+					<img style="width: 50px;" src="__IMG__/icon.png" />
+				</span>
+				<span class="bottom-title">
+					<p>嘿设汇</p>
+					<p class="bottom-content">设计师必备 百万设计师都在用</p>
+				</span>
+				<span class="bottom-star">
+					<img style="width: 10px;margin-left: -1px" src="__IMG__/star.png" />
+					<img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+					<img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+					<img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+					<img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+				</span>
+					</div>
+					<div class="app-button bottom-right">
+						<p>立即下载</p>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<!-- /.body -->
 
@@ -114,4 +198,34 @@
 
 <script src="h5resume/js/jquery-1.11.0.min.js"></script>
 <script src="h5resume/js/function.js"></script>
+<script src="__JS__/zepto.js"></script>
+<script src="__JS__/app.min.js"></script>
+<script>
+	App.controller('home', function (page) {
+		$(page)
+				.find('.app-button')
+				.on('click', function () {
+					window.location.href = "http://www.hisihi.com/download.php";
+				});
+	});
+
+	App.controller('page2', function (page) {
+		// put stuff here
+	});
+
+	try {
+		App.restore();
+	} catch (err) {
+		App.load('home');
+	}
+
+	$("a").removeAttr('href');
+
+	var userAgent = window.location.href;
+	if(userAgent.indexOf("hisihi-app") < 0) {
+		$(".app-bottombar").show();
+		$(".bottomspace").show();
+	}
+
+</script>
 </html>
