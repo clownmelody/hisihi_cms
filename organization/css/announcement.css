@@ -1,0 +1,19 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #EBEBEB;
+}
+.anWrapper{
+    position: absolute;
+    top:1.375em;
+    bottom: 4em;
+    right: 1.375em;
+    left: 1.375em;
+    background-color: #FAFAFA;
+}
+.header{
+    position: relative;
+    height: 3em;
+    width: 100%;
+
+}
