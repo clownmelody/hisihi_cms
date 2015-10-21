@@ -1606,7 +1606,7 @@ class UserController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function getWorkExperience($uid=0,$page=1,$count=5){
+    public function getWorkExperience($uid=0){
         if (!$uid) {
             $this->requireLogin();
             $uid = $this->getUid();
@@ -1615,7 +1615,7 @@ class UserController extends AppController
         $map['uid'] = $uid;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $result = $model->where($map)->order('start_time desc')->page($page,$count)->select();
+        $result = $model->where($map)->order('start_time desc')->select();
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $result;
         $this->apiSuccess('获取个人工作经历成功', null, $extra);
@@ -1641,21 +1641,25 @@ class UserController extends AppController
 
     /**
      * 上传用户的用于个人简历作品
-     * @param int $picId
+     * @param null $picIds
      */
-    public function uploadUserWorks($picId=0){
+    public function uploadUserWorks($picIds=null){
         $this->requireLogin();
-        if(empty($picId)){
+        if(empty($picIds)){
             $this->apiError(-1, "传入图片ID为空");
         }
-        $this->uploadLogoPicToOSS($picId);
-        $user_works_data['uid'] = is_login();
-        $user_works_data['forum_id'] = 1001;
-        $user_works_data['post_id'] = 0;
-        $user_works_data['picture_id'] = $picId;
-        $user_works_data['create_time'] = NOW_TIME;
-        $user_works_model = D('User/UserWorks');
-        $user_works_model->add($user_works_data);
+        $ids = explode(',',$picIds);
+        foreach($ids as $v){
+            $picId = $v;
+            $this->uploadLogoPicToOSS($picId);
+            $user_works_data['uid'] = is_login();
+            $user_works_data['forum_id'] = 1001;
+            $user_works_data['post_id'] = 0;
+            $user_works_data['picture_id'] = $picId;
+            $user_works_data['create_time'] = NOW_TIME;
+            $user_works_model = D('User/UserWorks');
+            $user_works_model->add($user_works_data);
+        }
         $this->apiSuccess("上传成功");
     }
 
