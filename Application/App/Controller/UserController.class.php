@@ -1726,12 +1726,16 @@ class UserController extends AppController
         $uid = $this->getUid();
         $model = M('UserWorks');
         $data['status'] = -1;
+        $isexist = $model->where(array('status'=>1,'id'=>$id))->find();
+        if(!$isexist){
+            $this->apiError(-2, '该简历作品不存在');
+        }
         $tem = $model->where('id='.$id.' and uid='.$uid)->save($data);
         if($tem){
             $extra['isdelete'] = true;
             $this->apiSuccess('删除个人简历作品成功', null, $extra);
         }else{
-            $this->apiError(-2, '删除个人简历作品失败');
+            $this->apiError(-1, '删除个人简历作品失败');
         }
     }
 

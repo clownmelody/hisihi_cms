@@ -264,22 +264,37 @@ class CompanyController extends AppController {
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $userController = new UserController();
-        // 扩展信息
-        $profile_group = $userController->_profile_group($uid);
-        $info_list =  D('field')->where('uid='.$uid)->field('field_id')->select();
-        if($profile_group['id'] == 13){//设计师用户不用填写培训机构
-            $map['profile_group_id'] = $profile_group['id'];
-            $map['status'] = 1;
-            $map['visiable'] = 1;
-            $map['id'] = array('in',array('36,37,43,44,45,46'));
-            $field_setting_list = D('field_setting')->field('id, input_tips')
-                ->where($map)->order('sort asc')->select();
-        }else{//讲师用户需要填写培训机构信息
-            $field_setting_list = D('field_setting')->field('id, input_tips')
-                ->where(array('status' => '1', 'visiable' => '1'))->order('sort asc')->select();
+        //个人信息
+        $user1 = D('Home/Member')->where(array('uid'=>$uid))->field('nickname,sex,birthday')->find();
+        foreach($user1 as $key=>$value){
+            $extra['isComplete'] = false;
+            if($key == 'nickname' && !$value){
+                $this->apiSuccess("您的信息不完整，'姓名'未填写",null,$extra);
+            }
+            if($key == 'sex' && !$value){
+                $this->apiSuccess("您的信息不完整，'性别'未填写",null,$extra);
+            }
+            if($key == 'birthday' && (!$value || $value == '0000-00-00')){
+                $this->apiSuccess("您的信息不完整，'生日'未填写",null,$extra);
+            }
         }
-
+        $user2 = D('User/UcenterMember')->where(array('id' => $uid))->field('email,mobile')->find();
+        foreach($user2 as $key=>$value){
+            $extra['isComplete'] = false;
+            if($key == 'mobile'&& !$value){
+                $this->apiSuccess("您的信息不完整，'手机号'未填写",null,$extra);
+            }
+            if($key == 'email' && !$value){
+                $this->apiSuccess("您的信息不完整，'邮箱'未填写",null,$extra);
+            }
+        }
+        // 扩展信息
+        $info_list =  D('field')->where('uid='.$uid)->field('field_id')->select();
+        $map['status'] = 1;
+        $map['visiable'] = 1;
+        $map['id'] = array('in',array('36','37','43','44','45','46'));
+        $field_setting_list = D('field_setting')->field('id, input_tips')
+            ->where($map)->order('sort asc')->select();
         foreach ($field_setting_list as $val) {
             $hasvalue = false;
             $valid = $val['id'];
