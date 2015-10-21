@@ -1572,9 +1572,15 @@ class UserController extends AppController
         if(!$id){
             $issave = $workExperienceModel->add($data);
         }else{
+            $isexist = $workExperienceModel->where(array('status'=>1,'id'=>$id))->find();
+            if(!$isexist){
+                $this->apiError(-2, '该工作经历不存在');
+            }
             $issave = $workExperienceModel->where(array('id'=>$id))->save($data);
+            if($issave){
+                $issave = $id;
+            }
         }
-//        if($workExperienceModel->save($data)){
         if($issave){
             $res = D('field')->where('uid=' . $uid.' and field_id=39')->find();
             if (!$res) {
@@ -1595,7 +1601,8 @@ class UserController extends AppController
                     }
                 }
             }
-            $this->apiSuccess('保存用户工作经历成功');
+            $extra['work_exp_id'] = $issave;
+            $this->apiSuccess('保存用户工作经历成功',null,$extra);
         } else {
             $this->apiError(-1, '保存用户工作经历失败');
         }
@@ -1630,12 +1637,16 @@ class UserController extends AppController
         $uid = $this->getUid();
         $model = M('UserWorkExperience');
         $data['status'] = -1;
+        $isexist = $model->where(array('status'=>1,'id'=>$id))->find();
+        if(!$isexist){
+            $this->apiError(-2, '该工作经历不存在');
+        }
         $tem = $model->where('id='.$id.' and uid='.$uid)->save($data);
         if($tem){
             $extra['isdelete'] = true;
             $this->apiSuccess('删除个人工作经历成功', null, $extra);
         }else{
-            $this->apiError(-2, '删除个人工作经历失败');
+            $this->apiError(-1, '删除个人工作经历失败');
         }
     }
 
@@ -1715,12 +1726,16 @@ class UserController extends AppController
         $uid = $this->getUid();
         $model = M('UserWorks');
         $data['status'] = -1;
+        $isexist = $model->where(array('status'=>1,'id'=>$id))->find();
+        if(!$isexist){
+            $this->apiError(-2, '该简历作品不存在');
+        }
         $tem = $model->where('id='.$id.' and uid='.$uid)->save($data);
         if($tem){
             $extra['isdelete'] = true;
             $this->apiSuccess('删除个人简历作品成功', null, $extra);
         }else{
-            $this->apiError(-2, '删除个人简历作品失败');
+            $this->apiError(-1, '删除个人简历作品失败');
         }
     }
 
