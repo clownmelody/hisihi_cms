@@ -11,7 +11,8 @@ ul {
 }
 body {
   background: #fff;
-  font-size: 62.5%;
+  font-size: 90%;
+  width: 960px;
 }
 .top {
   width: 100%;
@@ -55,22 +56,24 @@ body {
 }
 .body .box > .box-top > span {
   background: url(../img/bg_title.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
   text-align: center;
-  line-height: 56px;
+  line-height: 70px;
   color: #999;
   font-size: 2.8em;
   display: block;
-  height: 56px;
+  height: 70px;
   margin: 0 auto;
-  width: 176px;
+  width: 220px;
 }
 .body .box > .box-body {
-  border-top: 1px solid #e5e5e5;
-  margin: -2.8em 2em 0;
+  border-top: 2px solid #e5e5e5;
+  margin: -1.8em 2em 0;
   padding: 6em 2em 0;
 }
 .body .box > .box-body > p {
-  font-size: 28px;
+  font-size: 2.8em;
   color: #666;
 }
 .body .box > .box-body > .user-tag {
@@ -83,6 +86,7 @@ body {
   padding: 0.3em 1em;
   background: #fff;
   border: 1px solid #999;
+  font-size: 2.4em;
   color: #999;
   border-radius: 50px;
 }
@@ -111,16 +115,21 @@ body {
 .body .box > .box-body.box-empiric .user-empiric > li {
   display: inline;
   float: left;
-  width: 50%;
   font-size: 2.8em;
 }
 .body .box > .box-body.box-empiric .user-empiric > .user-company {
   text-align: left;
   color: #666;
+  width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .body .box > .box-body.box-empiric .user-empiric > .user-time {
   text-align: right;
   color: #999;
+  font-size: 2.6em;
+  width: 60%;
 }
 .body .box > .box-body.box-img {
   padding-left: 3.6em;
@@ -143,8 +152,8 @@ body {
 }
 .body .box.box-info .user-tool > img {
   margin: 0 1.2em;
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 80px;
 }
 .body .box.box-logo {
   text-align: center;

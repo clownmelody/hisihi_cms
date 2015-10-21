@@ -563,6 +563,97 @@ class ForumController extends AdminController
 
     }
 
+    /**
+     * 自动回复内容列表
+     */
+    public function autoreply(){
+        $builder = new AdminListBuilder();
+        $model = M('Autoreply');
+        $list = $model->order('create_time desc')->page(1, 10)->select();
+        $totalCount = $model->count();
+
+        foreach ($list as &$reply) {
+            $reply['content'] = op_t($reply['content']);
+        }
+        unset($reply);
+        //显示页面
+        $builder->title('自动回复内容管理')
+            ->setStatusUrl(U('setAutoReplyStatus'))->buttonNew(U('Forum/add_autoreply'))
+            ->keyId()->keyTruncText('content', '回复内容', 70)
+            ->keyText('forum_id', '论坛ID')->keyCreateTime()->keyStatus()->keyDoActionEdit('add_autoreply?id=###')
+            ->data($list)
+            ->pagination($totalCount, 10)
+            ->display();
+    }
+
+    public function setAutoReplyStatus($ids, $status){
+        $builder = new AdminListBuilder();
+        $builder->doSetStatus('Autoreply', $ids, $status);
+    }
+
+    /**
+     * 论坛帖子自动回复
+     */
+    public function add_autoreply($id = null, $content='', $forum_id=0, $status=1){
+        if (IS_POST) {
+            //判断是否为编辑模式
+            $isEdit = $id ? true : false;
+            //写入数据库
+            $time = time();
+            $data = array('content' => $content, 'forum_id'=>$forum_id, 'create_time'=>$time,'status' => $status);
+            $model = M('Autoreply');
+            if ($isEdit) {
+                $result = $model->where(array('id' => $id))->save($data);
+            } else {
+                $result = $model->add($data);
+            }
+            //如果写入出错，则显示错误消息
+            if (!$result) {
+                $this->error($isEdit ? '编辑失败' : '创建失败');
+            }
+            //返回成功消息
+            $this->success($isEdit ? '编辑成功' : '创建成功', U('autoreply'));
+        } else {
+            //判断是否为编辑模式
+            $isEdit = $id ? true : false;
+            //如果是编辑模式，读取贴吧的属性
+            if ($isEdit) {
+                $forum = M('Autoreply')->where(array('id' => $id))->find();
+            } else {
+                $forum = array('create_time' => time(), 'post_count' => 0, 'status' => 1);
+            }
+            $types = M('ForumType')->where(array('status' => 1))->select();
+            foreach ($types as $t) {
+                $type_id_array[$t['id']] = $t['title'];
+            }
+            //显示页面
+            $builder = new AdminConfigBuilder();
+            $builder
+                ->title($isEdit?'编辑自动回复内容':'新增自动回复内容')
+                ->keyId()->keySelect('forum_id', '分类板块', '选择板块所在分类', $type_id_array)
+                ->keyText('content', '回复内容')
+                ->data($forum)
+                ->buttonSubmit(U('add_autoreply'))->buttonBack()
+                ->display();
+        }
+    }
+
+    /**
+     * 定时执行的机器人
+     */
+    public function startAutoReplyRobot(){
+        $list = array(5210, 5211, 5213, 5214);
+        $content_list = M('Autoreply')->where(array('forum_id' => 48, 'status' => 1))->select();
+        $count = count($content_list);
+        $index = rand(1, $count);
+        foreach($list as $post_id){
+            $time = time();
+            $data = array('uid'=>72, 'post_id'=> $post_id, 'content' => $content_list[$index]['content'], 'create_time' => $time, 'update_time' => $time, 'status' => 1);
+            $model = M('ForumPostReply');
+            $model->add($data);
+        }
+    }
+
     /*
      * 推送论坛置顶帖
      */

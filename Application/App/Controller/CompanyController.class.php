@@ -227,14 +227,14 @@ class CompanyController extends AppController {
             $uid = $this->getUid();
         }
 
-        /*$resumeModel = D('User/ResumeDelivery');
+        $resumeModel = D('User/ResumeDelivery');
         $is_delivery = $resumeModel->where('status=1 and uid='.$uid.' and company_id='.$companyId)->select();
         if($is_delivery){
             $this->apiError(-1, '该公司已经投递过了');
         }
 
         //判断简历信息是否完整
-        $this->isResumeComplete($uid);*/
+        $this->isResumeComplete($uid);
 
         $pdfUtils = new PdfUtils();
         $returnData = $pdfUtils->init($uid);

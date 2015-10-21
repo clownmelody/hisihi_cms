@@ -1,7 +1,8 @@
 
+
 $(function () {
     var uid = $('#uid').val();
-    getData(uid, true);
+    getData(uid,true);
 });
 
 function getData(Uid,Api){ 
@@ -16,7 +17,7 @@ function getData(Uid,Api){
 };
 
 //头像
-function getDataFu(Data) {
+function  getDataFu(Data) {
     $(".user-portrait").append("<img src='"+Data.avatar128+"' alt=''>");
     userInfo(Data);
     extInfo(Data.extinfo);
@@ -27,9 +28,11 @@ function getDataFu(Data) {
 
 //详细
 function userInfo(DataInfo) {
+
     var info = $("#userInfo");
+
     info.find(".user-name").html(DataInfo.nickname);
-    info.find(".sex-day").html(SexAge(DataInfo.sex,DataInfo.birthday));
+    info.find(".sex-day").html(SexAge(DataInfo.sex,DataInfo.birthday)+ePosition(DataInfo.extinfo));
     info.find(".mobile-email").html(MobileEmail(DataInfo.mobile,DataInfo.email));
     info.find(".user-tool").append(userSkills(DataInfo.skills));
 }
@@ -134,7 +137,16 @@ function getRandom(n){
     return Math.floor(Math.random()*n+1)
 }
 
-
+//期望职位
+function ePosition (Dataposi) {
+    for (var i = Dataposi.length - 1; i >= 0; i--) {
+        
+        if (Dataposi[i].field_name == "expected_position") {
+           return " "+Dataposi[i].field_content;
+        };
+    };
+    return null;
+}
 
 //性别
 function userSex (DataSex) {
@@ -167,7 +179,7 @@ function userAge (DataAge) {
 //技能
 function userSkills (DataSkills) {
     for (var i = DataSkills.length - 1; i >= 0; i--) {
-        $(".user-tool").append("<img src="+"'h5resume/img/tool/"+DataSkills[i].value+".png'"+"alt=''>");
+        $(".user-tool").append("<img src="+"'img/tool/"+DataSkills[i].value+".png'"+"alt=''>");
     };
     
 }
