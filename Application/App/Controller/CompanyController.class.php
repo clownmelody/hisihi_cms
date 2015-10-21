@@ -269,9 +269,12 @@ class CompanyController extends AppController {
         $profile_group = $userController->_profile_group($uid);
         $info_list =  D('field')->where('uid='.$uid)->field('field_id')->select();
         if($profile_group['id'] == 13){//设计师用户不用填写培训机构
+            $map['profile_group_id'] = $profile_group['id'];
+            $map['status'] = 1;
+            $map['visiable'] = 1;
+            $map['id'] = array('in',array('36,37,43,44,45,46'));
             $field_setting_list = D('field_setting')->field('id, input_tips')
-                ->where(array('profile_group_id' => $profile_group['id'], 'status' => '1', 'visiable' => '1'))
-                ->order('sort asc')->select();
+                ->where($map)->order('sort asc')->select();
         }else{//讲师用户需要填写培训机构信息
             $field_setting_list = D('field_setting')->field('id, input_tips')
                 ->where(array('status' => '1', 'visiable' => '1'))->order('sort asc')->select();
