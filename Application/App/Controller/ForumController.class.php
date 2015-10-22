@@ -905,6 +905,19 @@ class ForumController extends AppController
         $user_works_model = D('User/UserWorks');
         $user_works_model->saveWorks($user_works_data);
 
+        /* -- 记录自动回复数据 -- */
+        if($at_type == 1){
+            $auto_reply = S('auto_reply');
+            if($auto_reply){
+                $cache = explode(',', $auto_reply);
+            } else {
+                $cache = array();
+            }
+            array_push($cache, $post_id);
+            S('auto_reply', implode(',', $cache));
+        }
+        /* -- -------------- -- */
+
         //发布帖子成功，发送一条微博消息
         $postUrl = "http://$_SERVER[HTTP_HOST]" . U('Forum/Index/detail', array('id' => $post_id));
         $weiboApi = new WeiboApi();
@@ -1615,17 +1628,42 @@ class ForumController extends AppController
      * 定时执行的机器人
      */
     public function startAutoReplyRobot(){
-        $list = array(5210, 5211, 5213, 5214);
-        $content_list = M('Autoreply')->where(array('forum_id' => 48, 'status' => 1))->select();
-        $count = count($content_list);
-        foreach($list as $post_id){
-            $index = rand(1, $count);
-            $time = time();
-            $data = array('uid'=>72, 'post_id'=> $post_id, 'content' => $content_list[$index]['content'], 'create_time' => $time, 'update_time' => $time, 'status' => 1);
-            $model = M('ForumPostReply');
-            $model->add($data);
+        $cache = S('auto_reply');
+        if($cache){
+            $list = explode(',', $cache);
+            foreach($list as $post_id){
+                $reply_count = rand(1,5);
+                while($reply_count){
+                    $post_info = M('ForumPost')->where('id='.$post_id)->find();
+                    if($post_info){
+                        $content_list = M('Autoreply')->where(array('forum_id' => $post_info['forum_id'], 'status' => 1))->select();
+                        $count = count($content_list);
+                        $index = rand(1, $count);
+                        $uid = rand(70, 90);
+                        $model = D('Forum/ForumPostReply');
+                        $model->addAutoReply($uid, $post_id, $content_list[$index]['content']);
+                        $reply_count = $reply_count - 1;
+                    }
+                }
+            }
+            $cache = S('auto_reply');
+            $new_list = explode(',', $cache);
+            $fresh_list = array_diff($new_list, $list);
+            $fresh_str = implode(',', $fresh_list);
+            if(empty($fresh_str)){
+                S('auto_reply', null);
+            } else {
+                S('auto_reply', $fresh_str);
+            }
+            $this->apiSuccess("auto reply success -- post_ids: ".json_encode($list));
         }
-        $this->apiSuccess("自动回复成功");
+    }
+
+    /**
+     * 清除自动回复缓存
+     */
+    public function cleanAutoReplyCache(){
+        S('auto_reply', null);
     }
 
     /**
