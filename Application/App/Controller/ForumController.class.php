@@ -21,6 +21,7 @@ class ForumController extends AppController
     protected $forumModel;
     protected $forum_list;
     protected $forum_type;
+    private $post_cache;
 
     public function _initialize()
     {
@@ -33,6 +34,7 @@ class ForumController extends AppController
         }
         unset($e);
         C('SHOW_PAGE_TRACE', false);
+        $post_cache = array();
         //$myInfo = query_user(array('avatar128', 'avatar64', 'nickname', 'uid', 'space_url', 'icons_html'), is_login());
         //$this->assign('myInfo', $myInfo);
         //赋予论坛列表
@@ -804,6 +806,11 @@ class ForumController extends AppController
         //dump($content);
         $post_id = intval($post_id);
         $forum_id = intval($forum_id);
+        // robot
+        $forum_robot = session('forum_robot');
+        array_push($forum_robot, $forum_id);
+        session('forum_robot', $forum_robot);
+        //
         $title = op_t($title);
         if(empty($title)){
             $title='标题';
@@ -1615,7 +1622,10 @@ class ForumController extends AppController
      * 定时执行的机器人
      */
     public function startAutoReplyRobot(){
-        $list = array(5210, 5211, 5213, 5214);
+        $extra['random'] =rand(1, 10);
+        $extra['post_id'] = $this->$post_cache;
+        $this->apiSuccess('auto reply', null, $extra);
+        /*$list = array(5210, 5211, 5213, 5214);
         $content_list = M('Autoreply')->where(array('forum_id' => 48, 'status' => 1))->select();
         $count = count($content_list);
         foreach($list as $post_id){
@@ -1625,7 +1635,11 @@ class ForumController extends AppController
             $model = M('ForumPostReply');
             $model->add($data);
         }
-        $this->apiSuccess("自动回复成功");
+        $this->apiSuccess("自动回复成功");*/
+    }
+
+    public function addsession($pid){
+        array_push($post_cache, $pid);
     }
 
     /**
