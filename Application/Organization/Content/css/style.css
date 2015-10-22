@@ -217,6 +217,175 @@
  * 4、 @colspan跨越的列
  * 5、 @rowspan跨越的行
  \*----------------------------------------------------------------*/
+.list dt {
+  text-align: center;
+  font-weight: bold;
+  background: #71829E;
+  color: #fff;
+  line-height: 30px;
+}
+.list dd {
+  clear: both;
+  padding: 10px;
+}
+.list dd .tags {
+  height: 25px;
+  padding: 0 10px;
+  background: #f4f4f4;
+  line-height: 25px;
+  color: #666;
+}
+.list dd.odd {
+  background: #fff;
+}
+.list li {
+  display: inline;
+  float: left;
+  width: 10%;
+  list-style: none;
+}
+.list li.wd5 {
+  width: 5%;
+  overflow: hidden;
+}
+.list li.w1 {
+  width: 10%;
+  overflow: hidden;
+}
+.list li.w1d5 {
+  width: 15%;
+  overflow: hidden;
+}
+.list li.w2 {
+  width: 20%;
+  overflow: hidden;
+}
+.list li.w2d5 {
+  width: 25%;
+  overflow: hidden;
+}
+.list li.w3 {
+  width: 30%;
+  overflow: hidden;
+}
+.list li.w3d5 {
+  width: 35%;
+  overflow: hidden;
+}
+.list li.w4 {
+  width: 40%;
+  overflow: hidden;
+}
+.list li.w4d5 {
+  width: 45%;
+  overflow: hidden;
+}
+.list li.w5 {
+  width: 50%;
+  overflow: hidden;
+}
+.list li.w5d5 {
+  width: 55%;
+  overflow: hidden;
+}
+.list li.w6 {
+  width: 60%;
+  overflow: hidden;
+}
+.list li.w6d5 {
+  width: 65%;
+  overflow: hidden;
+}
+.list li.w7 {
+  width: 70%;
+  overflow: hidden;
+}
+.list li.w7d5 {
+  width: 75%;
+  overflow: hidden;
+}
+.list li.w8 {
+  width: 80%;
+  overflow: hidden;
+}
+.list li.w8d5 {
+  width: 85%;
+  overflow: hidden;
+}
+.list li.w9 {
+  width: 90%;
+  overflow: hidden;
+}
+.list li.w9d5 {
+  width: 95%;
+  overflow: hidden;
+}
+.list li.w100 {
+  width: 100%;
+  overflow: hidden;
+}
+table {
+  background-color: transparent;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+caption {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: #777777;
+  text-align: left;
+}
+th {
+  text-align: left;
+}
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
+}
+.table > thead > tr > th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #dddddd;
+}
+.table > caption + thead > tr:first-child > th,
+.table > colgroup + thead > tr:first-child > th,
+.table > thead:first-child > tr:first-child > th,
+.table > caption + thead > tr:first-child > td,
+.table > colgroup + thead > tr:first-child > td,
+.table > thead:first-child > tr:first-child > td {
+  border-top: 0;
+}
+.table > tbody + tbody {
+  border-top: 2px solid #dddddd;
+}
+.table .table {
+  background-color: #ffffff;
+}
+.table-hover > tbody > tr:hover {
+  background-color: #f5f5f5;
+}
+table col[class*="col-"] {
+  position: static;
+  float: none;
+  display: table-column;
+}
+table td[class*="col-"],
+table th[class*="col-"] {
+  position: static;
+  float: none;
+  display: table-cell;
+}
 * {
   padding: 0;
   margin: 0;
