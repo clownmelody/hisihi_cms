@@ -23,10 +23,6 @@ class AutoreplyModel extends Model{
         array('create_time', 'getCreateTime', Model:: MODEL_INSERT,'callback'),
     );
 
-    public function add($data){
-        return $this->add($data);
-    }
-
     protected function getCreateTime(){
         return time();
     }

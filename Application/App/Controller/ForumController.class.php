@@ -1612,6 +1612,23 @@ class ForumController extends AppController
     }
 
     /**
+     * 定时执行的机器人
+     */
+    public function startAutoReplyRobot(){
+        $list = array(5210, 5211, 5213, 5214);
+        $content_list = M('Autoreply')->where(array('forum_id' => 48, 'status' => 1))->select();
+        $count = count($content_list);
+        foreach($list as $post_id){
+            $index = rand(1, $count);
+            $time = time();
+            $data = array('uid'=>72, 'post_id'=> $post_id, 'content' => $content_list[$index]['content'], 'create_time' => $time, 'update_time' => $time, 'status' => 1);
+            $model = M('ForumPostReply');
+            $model->add($data);
+        }
+        $this->apiSuccess("自动回复成功");
+    }
+
+    /**
      * @param $map_support
      * @return mixed
      * @auth RFly
