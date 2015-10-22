@@ -49,6 +49,32 @@ class ForumPostReplyModel extends Model
         return $result;
     }
 
+    public function addAutoReply($uid, $post_id, $content)
+    {
+        //新增一条回复
+        $data = array('uid' => $uid, 'post_id' => $post_id, 'parse' => 0, 'content' => $content);
+        $data = $this->create($data);
+        if (!$data) return false;
+        $result = $this->add($data);
+
+        S('post_replylist_' . $post_id, null);
+        //增加帖子的回复数
+        $postModel = D('ForumPost');
+
+        $postModel->where(array('id' => $post_id))->setInc('reply_count');
+
+        //更新最后回复时间
+        $postModel->where(array('id' => $post_id))->setField('last_reply_time', time());
+        $post = $postModel->find($post_id);
+        D('Forum')->where(array('id' => $post['forum_id']))->setField('last_reply_time', time());
+
+        $url = $this->sendReplyMessage(is_login(), $post_id, $content, $result);
+        $this->handleAt($content, $url);
+
+        //返回结果
+        return $result;
+    }
+
 
     public function handleAt($content, $url)
     {
