@@ -1,0 +1,437 @@
+.font_simsun {
+  font-family: SimSun;
+}
+.ov_visibel {
+  overflow: visible !important;
+}
+.ov_hide {
+  overflow: hidden !important;
+}
+.ws_normal {
+  white-space: normal !important;
+}
+.ws_break {
+  word-wrap: break-word !important;
+  word-break: normal !important;
+}
+.ws_prewrap {
+  white-space: pre-wrap !important;
+}
+.ws_hide {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.t_l {
+  text-align: left !important;
+}
+.t_c {
+  text-align: center !important;
+}
+.t_r {
+  text-align: right !important;
+}
+.block {
+  display: block !important;
+  visibility: visible;
+}
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+.fl_l {
+  float: left !important;
+}
+.fl_r {
+  float: right !important;
+}
+.fl_n {
+  float: none !important;
+}
+.mar0 {
+  margin: 0;
+}
+.mar_auto {
+  margin: auto;
+}
+.mar10 {
+  margin: 10px;
+}
+.mar20 {
+  margin: 20px;
+}
+.mt_5 {
+  margin-top: 5px;
+}
+.mt_10 {
+  margin-top: 10px;
+}
+.mt_20 {
+  margin-top: 20px;
+}
+.mt_30 {
+  margin-top: 30px;
+}
+.mt_35 {
+  margin-top: 35px;
+}
+.mb_5 {
+  margin-bottom: 5px;
+}
+.mb_10 {
+  margin-bottom: 10px;
+}
+.mb_20 {
+  margin-bottom: 20px;
+}
+.mb_30 {
+  margin-bottom: 30px;
+}
+.ml_4 {
+  margin-left: 4px;
+}
+.ml_5 {
+  margin-left: 5px;
+}
+.ml_10 {
+  margin-left: 10px;
+}
+.ml_20 {
+  margin-left: 20px;
+}
+.ml_30 {
+  margin-left: 30px;
+}
+.mr_5 {
+  margin-right: 5px;
+}
+.mr_10 {
+  margin-right: 10px;
+}
+.mr_20 {
+  margin-right: 20px;
+}
+.mr_30 {
+  margin-right: 30px;
+}
+.po_ab {
+  position: absolute;
+}
+.po_re {
+  position: relative;
+}
+.col1 {
+  display: inline;
+  float: left;
+  width: 100%;
+}
+.col2 {
+  display: inline;
+  float: left;
+  width: 50%;
+}
+.col3 {
+  display: inline;
+  float: left;
+  width: 33.33333333%;
+}
+.col4 {
+  display: inline;
+  float: left;
+  width: 25%;
+}
+.col5 {
+  display: inline;
+  float: left;
+  width: 20%;
+}
+.col6 {
+  display: inline;
+  float: left;
+  width: 16.66666667%;
+}
+.col7 {
+  display: inline;
+  float: left;
+  width: 14.28571429%;
+}
+.col8 {
+  display: inline;
+  float: left;
+  width: 12.5%;
+}
+.col9 {
+  display: inline;
+  float: left;
+  width: 11.11111111%;
+}
+.fixed-top {
+  position: fixed;
+  bottom: auto;
+  top: 0px;
+}
+.fixed-bottom {
+  position: fixed;
+  bottom: 0px;
+  top: auto;
+}
+.fixed-left {
+  position: fixed;
+  right: auto;
+  left: 0px;
+}
+.fixed-right {
+  position: fixed;
+  right: 0px;
+  left: auto;
+}
+#ie6,
+#ie6 body {
+  background-image: url(about:blank);
+  background-attachment: fixed;
+}
+#ie6 .fixed-top {
+  position: absolute;
+  bottom: auto;
+  top: expression(eval(document.documentElement.scrollTop));
+}
+#ie6 .fixed-right {
+  position: absolute;
+  right: auto;
+  left: expression(eval(document.documentElement.scrollLeft+document.documentElement.clientWidth-this.offsetWidth)-(parseInt(this.currentStyle.marginLeft,10)||0)-(parseInt(this.currentStyle.marginRight,10)||0));
+}
+#ie6 .fixed-bottom {
+  position: absolute;
+  bottom: auto;
+  top: expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop,10)||0)-(parseInt(this.currentStyle.marginBottom,10)||0)));
+}
+#ie6 .fixed-left {
+  position: absolute;
+  right: auto;
+  left: expression(eval(document.documentElement.scrollLeft));
+}
+/*----------------------------------------------------------------*\
+ * 1、使用LESS定义一个mixin,名叫.msgrid，定义方法类似定义一个类
+ * 2、 @column定义列
+ * 3、 @row定义行
+ * 4、 @colspan跨越的列
+ * 5、 @rowspan跨越的行
+ \*----------------------------------------------------------------*/
+* {
+  padding: 0;
+  margin: 0;
+}
+a:link,
+a:hover,
+a:active,
+a:visited {
+  text-decoration: none;
+}
+a:focus {
+  outline: none;
+  -moz-outline: none;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  background: #ebebeb;
+}
+.wrapper {
+  margin-left: 200px;
+}
+.frame-content {
+  padding: 40px;
+  min-height: 730px;
+}
+.foot {
+  padding: 20px 0;
+}
+.foot > p {
+  color: #a1a1a1;
+  font-size: 12px;
+  line-height: 24px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+}
+.header {
+  height: 100px;
+  background: #fafafa;
+  box-shadow: 0 0 4px #848484;
+}
+.navbar-content {
+  overflow: hidden;
+}
+.navbar-content .nav > .nav-item {
+  float: left;
+  width: 200px;
+  line-height: 100px;
+}
+.navbar-content .nav > .nav-item > .nav-link {
+  text-align: center;
+  padding: 0 30px;
+  display: block;
+  color: #666666;
+  transition: all .2s linear;
+}
+.navbar-content .nav > .nav-item > .nav-link:hover,
+.navbar-content .nav > .nav-item > .nav-link:active,
+.navbar-content .nav > .nav-item > .nav-link:visited {
+  background: #ededed;
+  color: #666666;
+  transition: all .2s linear;
+}
+.navbar-content .nav > .nav-item .nav-img {
+  float: left;
+  margin-right: 20px;
+}
+.navbar-content .nav > .nav-item.nav-user {
+  border-right: 2px solid #ebebeb;
+  min-width: 200px;
+  width: auto;
+  padding-right: 20px;
+}
+.navbar-content .nav > .nav-item.nav-user .user-img {
+  width: 50px;
+  height: 50px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  margin-top: 25px;
+  overflow: hidden;
+}
+.navbar-content .nav > .nav-item.nav-user .user-img > img {
+  width: 100%;
+}
+.navbar-content .nav > .nav-item.nav-user .user-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #666666;
+}
+.nav-right {
+  float: right !important;
+}
+.sidemenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100%;
+  background: #20212a;
+  box-shadow: 0 0 4px #848484;
+}
+.side-logo {
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.side-logo > img {
+  width: 110px;
+  height: 54px;
+  margin-top: 23px;
+}
+.side-list > li {
+  width: 100%;
+  display: inline;
+}
+.side-list .side-item {
+  text-align: center;
+  height: 90px;
+  padding-top: 30px;
+  display: block;
+}
+.side-list .side-item > span {
+  margin: 0 auto;
+}
+.side-list .side-item:hover {
+  background: #333644;
+  transition: all .2s linear;
+}
+.side-list .side-item.active {
+  background: #333644;
+  border-right: 6px solid #f5a623;
+}
+.side-list .side-item.active .item-txt {
+  color: #f5a623;
+}
+.side-list .item-txt {
+  color: #999999;
+  font-size: 18px;
+}
+.side-item.active .icon {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  font: 0/0;
+  background-image: url('../images/home.png');
+  background-repeat: no-repeat;
+}
+.side-item.active .icon.icon-works {
+  background-position: 0px -40px;
+}
+.side-item.active .icon.icon-home {
+  background-position: -40px -40px;
+}
+.side-item.active .icon.icon-information {
+  background-position: -80px -40px;
+}
+.side-item.active .icon.icon-imac {
+  background-position: -120px -40px;
+}
+.side-item.active .icon.icon-teacher {
+  background-position: -160px -40px;
+}
+.side-item.active .icon.icon-medal {
+  background-position: -200px -40px;
+}
+.side-item.active .icon.icon-video {
+  background-position: -240px -40px;
+}
+.side-item.active .icon.icon-close {
+  background-position: -280px -40px;
+}
+.icon {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  font: 0/0;
+  background-image: url('../images/home.png');
+  background-repeat: no-repeat;
+}
+.icon.icon-works {
+  background-position: 0px 0px;
+}
+.icon.icon-home {
+  background-position: -40px 0px;
+}
+.icon.icon-information {
+  background-position: -80px 0px;
+}
+.icon.icon-imac {
+  background-position: -120px 0px;
+}
+.icon.icon-teacher {
+  background-position: -160px 0px;
+}
+.icon.icon-medal {
+  background-position: -200px 0px;
+}
+.icon.icon-video {
+  background-position: -240px 0px;
+}
+.icon.icon-close {
+  background-position: -280px 0px;
+}

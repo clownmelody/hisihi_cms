@@ -1,0 +1,32 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.header{
+    height: 4.375em;
+    background-color: #7798BF;
+}
+.article{
+    margin-top: 0;
+    position:relative;
+    top: 0;
+    height: calc(100% - 4.375em);
+    height: -webkit-calc(100% - 4.375em);
+    height: -moz-calc(100% - 4.375em);
+}
+.leftMenu{
+    position: absolute;
+    width: 250px;
+    top:0;
+    left: 0;
+    bottom: 0;
+    background-color:#707074;
+}
+.main{
+    width: calc(100% - 15.625em);;
+    width: -webkit-calc(100% - 15.625em);
+    width: -moz-calc(100% - 15.625em);
+    height: 100%;
+    background-color:#F8B883;
+    margin-left: 15.625em;
+}

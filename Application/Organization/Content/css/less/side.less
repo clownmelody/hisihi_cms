@@ -1,0 +1,51 @@
+.sidemenu{
+	position: fixed;
+	top: 0;
+	left: 0;
+	//overflow-y: scroll;
+	.size(200px,100%);
+	background: @md-grey-202;
+	box-shadow: 0 0 4px @md-grey-84;
+}
+
+.side-logo{
+	width: 100%;
+	height: 100px;
+	line-height: 100px;
+	text-align: center;
+	>img{
+		width: 110px;
+		height: 54px;
+		margin-top: 23px;
+	}
+}
+.side-list{
+	>li{
+		width: 100%;
+		display: inline;
+	}
+	.side-item{
+		text-align: center;
+		height:90px;
+		padding-top: 30px;
+		display: block;
+		>span{
+			margin: 0 auto;
+		}
+		&:hover{
+			background: @md-grey-333;
+			transition: all .2s linear;
+		}
+		&.active{
+			background: @md-grey-333;
+			border-right: 6px solid @brand-primary;
+			.item-txt{
+				color: @brand-primary;
+			}
+		}
+	}
+	.item-txt{
+		color: @md-grey-900;
+		font-size: 18px;
+	}
+}
