@@ -39,7 +39,7 @@ define(function () {
         showDetailAnnounceInfo:function(data){
             var str='';
             $.each(data,function(item){
-                str+='<tr><td>item.title</td><td>item.time</td></tr>';
+                str+='<li><span>item.title</span><span>item.time</span></li>';
             });
             this.$wrapper.append(str);
         }
