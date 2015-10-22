@@ -11,7 +11,7 @@ class IndexController extends HiworksController
     public function index($cate = 1, $page = 1, $download=0, $sub=0, $base=0)
     {
         $token = $_SESSION["token"];
-        if(/*!defined('Scan') ||*/ !$token) {
+        if(!defined('Scan') /*|| !$token*/) {
             redirect('/hiworks.php');
         }
 
@@ -318,6 +318,45 @@ class IndexController extends HiworksController
     private function setSubCurrent($category_id)
     {
         $this->assign('subCurrent', $category_id);
+    }
+
+    protected function apiReturn($success, $error_code=0, $message=null, $redirect=null, $extra=null) {
+        //生成返回信息
+        $result = array();
+        $result['success'] = $success;
+        $result['error_code'] = $error_code;
+        if($message !== null) {
+            $result['message'] = $message;
+        }
+        if($redirect !== null) {
+            $result['redirect'] = $redirect;
+        }
+        foreach($extra as $key=>$value) {
+            $result[$key] = $value;
+        }
+        //将返回信息进行编码
+        $format = $_REQUEST['format'] ? $_REQUEST['format'] : 'json';//返回值格式，默认json
+        if($this->isInternalCall) {
+            throw new ReturnException($result);
+        } else if($format == 'json') {
+            echo json_encode($result);
+            exit;
+        } else if($format == 'xml') {
+            echo xml_encode($result);
+            exit;
+        } else {
+            $_GET['format'] = 'json';
+            $_REQUEST['format'] = 'json';
+            return $this->apiError(400, "format参数错误");
+        }
+    }
+
+    protected function apiSuccess($message, $redirect=null, $extra=null) {
+        return $this->apiReturn(true, 0, $message, $redirect, $extra);
+    }
+
+    protected function apiError($error_code, $message, $redirect=null, $extra=null) {
+        return $this->apiReturn(false, $error_code, $message, $redirect, $extra);
     }
 
     //字节换算
