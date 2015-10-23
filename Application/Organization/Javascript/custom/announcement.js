@@ -13,8 +13,11 @@ define(['jquery'],function () {
         this.loadData(0);
 
         //事件注册
-        this.$wrapper.on('ul li','click', $.proxy(this.showDetailAnnounceInfo));
-        this.$wrapper.on('#announcesContainer','scroll', $.proxy(this.loadData));
+        var that=this;
+        this.$wrapper.on('#announcesContainer ul li','click', $.proxy(this.showDetailAnnounceInfo));
+        this.$wrapper.find('#announcesContainer').scroll(function(){
+            that.scrollContainer.call(that,this);
+        });
 
     };
 
@@ -35,7 +38,7 @@ define(['jquery'],function () {
             //this.getDataAsync(function(data){
             //    data;
             //});
-            this.showDetailAnnounceInfo(data);
+            this.showShortAnnounceInfo(data);
         },
         getDataAsync:function(callback){
             var tempObj={
@@ -46,19 +49,41 @@ define(['jquery'],function () {
         },
 
         /*
-        *显示详细的公告信息
+        *滚动加载更多的数据
+        * @para:
+        * target - {object} javascript 对象
+        */
+        scrollContainer:function(target){
+            var height = target.scrollHeight - $(target).height();
+            if ($(target).scrollTop() == height) {  //滚动到底部
+                this.loadData();
+                this.$wrapper.find('.loadingData').show().delay(2000).hide(0);
+            }
+        },
+
+        /*
+         *显示详细的公告信息
+         * @para
+         * data -{array} 公告数组
+         */
+        showDetailAnnounceInfo:function(){
+            alert();
+        },
+
+        /*
+        *显示简要的公告信息
         * @para
         * data -{array} 公告数组
         */
-        showDetailAnnounceInfo:function(data){
+        showShortAnnounceInfo:function(data){
             var str='';
             $.each(data,function(){
                 str+='<li class="anListItem"><a href="'+this.src+'"> <span>'+this.title+'</span><span>'+this.date+'</span></a></li>';
             });
-            this.$wrapper.append(str);
+            this.$wrapper.find('#announcesContainer .clearDiv').before(str);
         }
     };
-    var todayAnnouncement=new TodayAnnoucement($('#announcesContainer ul'));
+    var todayAnnouncement=new TodayAnnoucement($('.anWrapper'));
     return todayAnnouncement;
 
 });
