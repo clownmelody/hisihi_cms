@@ -11,7 +11,7 @@ define(['jquery'],function () {
         this.pageSize=0;  //总页数
         this.perPageSize=10; //每次加载数目
         this.loadData(0);
-
+        this.controlContainerHeight();
         //事件注册
         var that=this;
         this.$wrapper.on('#announcesContainer ul li','click', $.proxy(this.showDetailAnnounceInfo));
@@ -81,7 +81,15 @@ define(['jquery'],function () {
                 str+='<li class="anListItem"><a href="'+this.src+'"> <span>'+this.title+'</span><span>'+this.date+'</span></a></li>';
             });
             this.$wrapper.find('#announcesContainer .clearDiv').before(str);
-        }
+        },
+
+        /*
+         控制容器的高度
+         */
+        controlContainerHeight:function(){
+           this.$wrapper.css('height',this.$wrapper.parent().height()-80);
+        },
+
     };
     var todayAnnouncement=new TodayAnnoucement($('.anWrapper'));
     return todayAnnouncement;
