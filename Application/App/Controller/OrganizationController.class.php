@@ -122,6 +122,7 @@ class OrganizationController extends AppController
                 $this->apiError(-2, '传入手机号不符合格式');
             }
         }
+        $this->isMobileExist($mobile);
         $url = C('bmob_send_sms_url');
         $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
         $headers['X-Bmob-REST-API-Key'] = C('bmob_api_key');
@@ -147,7 +148,10 @@ class OrganizationController extends AppController
      * @param $password
      * @param $org_name
      */
-    public function register($mobile, $sms_code, $password=0, $org_name=null){
+    public function register($mobile, $sms_code, $password=null){
+        if(empty($mobile)||empty($sms_code)||empty($password)){
+            $this->apiError(-1, '传入参数不完整');
+        }
         $url = C('bmob_verify_smscode_url').$sms_code;
         $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
         $headers['X-Bmob-REST-API-Key'] = C('bmob_api_key');
@@ -160,6 +164,7 @@ class OrganizationController extends AppController
         $post_data = json_encode($post_data);
         $result = $this->request_by_curl($url, $headerArr, $post_data);
         if($result){
+            M('OrganizationAdmin')->add();
             $this->apiSuccess('注册成功');
         } else {
             $this->apiError(-1, '验证码校验失败');
@@ -175,13 +180,10 @@ class OrganizationController extends AppController
         }
         $map['status'] = 1;
         $map['mobile'] = $mobile;
-        $user = D('User/UcenterMember')->where($map)->find();
+        $user = M('OrganizationAdmin')->where($map)->find();
         if($user){
             $extraData['isExist'] = true;
             $this->apiSuccess("该手机号已注册", null, $extraData);
-        } else {
-            $extraData['isExist'] = false;
-            $this->apiSuccess("该手机号尚未注册，允许获取验证码", null, $extraData);
         }
     }
 
