@@ -140,7 +140,24 @@ class InspirationController extends AppController {
         if(!empty($list)){
             foreach($list as &$inspira){
                 $pic_id = $inspira['pic_id'];
-                $inspira['pic_url'] = $this->fetchImage($pic_id);
+                $pic_url = $this->fetchImage($pic_id);
+                $origin_img_info = getimagesize($pic_url);
+                $src_size = Array();
+                $src_size['width'] = $origin_img_info[0]; // width
+                $src_size['height'] = $origin_img_info[1]; // height
+                $inspira['picture'] = array(
+                    'url'=>$pic_url,
+                    'size'=>$src_size
+                );
+                $pic_small = getThumbImageById($pic_id, 280, 160);
+                $thumb_img_info = getimagesize($pic_small);
+                $thumb_size = Array();
+                $thumb_size['width'] = $thumb_img_info[0]; // width
+                $thumb_size['height'] = $thumb_img_info[1]; // height
+                $inspira['thumb'] = array(
+                    'url'=>$pic_small,
+                    'size'=>$thumb_size
+                );
                 unset($inspira['id']);
                 unset($inspira['status']);
             }
