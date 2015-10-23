@@ -937,3 +937,7 @@ body {
   float: right;
   margin-right: 10px;
 }
+#announcesContainer ul li:last-of-type {
+  border-bottom: none;
+  margin-bottom: 10px;
+}
