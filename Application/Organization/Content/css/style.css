@@ -410,9 +410,15 @@ body {
 }
 .wrapper {
   margin-left: 160px;
+  height: 100%;
 }
 .frame-content {
   padding: 30px;
+  min-height: 600px;
+  /*Fallback for browsers that don't support the calc() function*/
+  min-height: -moz-calc(100% - 142px);
+  min-height: -webkit-calc(100% - 142px);
+  min-height: calc(100% - 142px);
 }
 .box {
   background: #ffffff;
@@ -533,8 +539,8 @@ body {
 }
 .side-list .side-item {
   text-align: center;
-  height: 80px;
-  padding-top: 15px;
+  height: 70px;
+  padding-top: 5px;
   display: block;
 }
 .side-list .side-item > span {
@@ -553,7 +559,7 @@ body {
 }
 .side-list .item-txt {
   color: #999999;
-  font-size: 18px;
+  font-size: 16px;
 }
 .side-item.active .icon {
   width: 40px;
