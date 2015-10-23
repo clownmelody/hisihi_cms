@@ -407,18 +407,19 @@ body {
 }
 body {
   background: #ebebeb;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
 }
 .wrapper {
   margin-left: 160px;
   height: 100%;
 }
 .frame-content {
-  padding: 30px;
+  padding: 84px 30px 30px;
   min-height: 600px;
   /*Fallback for browsers that don't support the calc() function*/
-  min-height: -moz-calc(100% - 142px);
-  min-height: -webkit-calc(100% - 142px);
-  min-height: calc(100% - 142px);
+  min-height: -moz-calc(100% - 202px);
+  min-height: -webkit-calc(100% - 202px);
+  min-height: calc(100% - 202px);
 }
 .box {
   background: #ffffff;
@@ -455,6 +456,11 @@ body {
   height: 54px;
   background: #fafafa;
   box-shadow: 0 0 4px #848484;
+  position: fixed;
+  right: 0;
+  left: 160px;
+  top: 0;
+  z-index: 10;
 }
 .navbar-content {
   overflow: hidden;
@@ -517,6 +523,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 10px;
   width: 160px;
   height: 100%;
   background: #20212a;
@@ -571,25 +578,25 @@ body {
   background-image: url('../images/home.png');
   background-repeat: no-repeat;
 }
-.side-item.active .icon.icon-works {
+.side-item.active .icon.icon-home {
   background-position: 0px -40px;
 }
-.side-item.active .icon.icon-home {
+.side-item.active .icon.icon-information {
   background-position: -40px -40px;
 }
-.side-item.active .icon.icon-information {
+.side-item.active .icon.icon-teacher {
   background-position: -80px -40px;
 }
-.side-item.active .icon.icon-imac {
+.side-item.active .icon.icon-video {
   background-position: -120px -40px;
 }
-.side-item.active .icon.icon-teacher {
+.side-item.active .icon.icon-imac {
   background-position: -160px -40px;
 }
-.side-item.active .icon.icon-medal {
+.side-item.active .icon.icon-works {
   background-position: -200px -40px;
 }
-.side-item.active .icon.icon-video {
+.side-item.active .icon.icon-medal {
   background-position: -240px -40px;
 }
 .side-item.active .icon.icon-close {
@@ -607,25 +614,25 @@ body {
   background-image: url('../images/home.png');
   background-repeat: no-repeat;
 }
-.icon.icon-works {
+.icon.icon-home {
   background-position: 0px 0px;
 }
-.icon.icon-home {
+.icon.icon-information {
   background-position: -40px 0px;
 }
-.icon.icon-information {
+.icon.icon-teacher {
   background-position: -80px 0px;
 }
-.icon.icon-imac {
+.icon.icon-video {
   background-position: -120px 0px;
 }
-.icon.icon-teacher {
+.icon.icon-imac {
   background-position: -160px 0px;
 }
-.icon.icon-medal {
+.icon.icon-works {
   background-position: -200px 0px;
 }
-.icon.icon-video {
+.icon.icon-medal {
   background-position: -240px 0px;
 }
 .icon.icon-close {
