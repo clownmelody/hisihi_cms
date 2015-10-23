@@ -17,8 +17,7 @@ class IndexController extends Controller
     }
     /* -- 添加自定义function -- */
     public function index(){
-        $this->name = 'thinkphp111'; // 进行模板变量赋值
-        $this->display();
+        $this->display('Index/announcement');
     }
 
     public function user(){

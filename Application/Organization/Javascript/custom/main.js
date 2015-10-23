@@ -1,19 +1,16 @@
-﻿/// <reference path="../../libs/require.js" />
-require.config({
-    baseUrl: '../js/',
+﻿require.config({
+    baseUrl:window.urlObject.js,
     paths: {
         jquery: 'libs/jquery-1.8.2.min',
-        drawLine: 'custom/drawline',
-        drawCircle: 'custom/drawcircle'
+        announcement: 'custom/announcement'
     }
 });
 
 require([
     'jquery', 
-    'drawLine',
-    'drawCircle',
+    'announcement'
 ]);
 
-//require(['jquery', 'drawCircle', 'drawLine'], function ($, myDrawCircle, myDrawLine) {
-//    myDrawLine.drawNormalLine();
-//});
+require(['jquery', 'announcement'], function ($, announcement) {
+
+});
