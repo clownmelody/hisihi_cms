@@ -578,25 +578,25 @@ body {
   background-image: url('../images/home.png');
   background-repeat: no-repeat;
 }
-.side-item.active .icon.icon-works {
+.side-item.active .icon.icon-home {
   background-position: 0px -40px;
 }
-.side-item.active .icon.icon-home {
+.side-item.active .icon.icon-information {
   background-position: -40px -40px;
 }
-.side-item.active .icon.icon-information {
+.side-item.active .icon.icon-teacher {
   background-position: -80px -40px;
 }
-.side-item.active .icon.icon-imac {
+.side-item.active .icon.icon-video {
   background-position: -120px -40px;
 }
-.side-item.active .icon.icon-teacher {
+.side-item.active .icon.icon-imac {
   background-position: -160px -40px;
 }
-.side-item.active .icon.icon-medal {
+.side-item.active .icon.icon-works {
   background-position: -200px -40px;
 }
-.side-item.active .icon.icon-video {
+.side-item.active .icon.icon-medal {
   background-position: -240px -40px;
 }
 .side-item.active .icon.icon-close {
@@ -614,25 +614,25 @@ body {
   background-image: url('../images/home.png');
   background-repeat: no-repeat;
 }
-.icon.icon-works {
+.icon.icon-home {
   background-position: 0px 0px;
 }
-.icon.icon-home {
+.icon.icon-information {
   background-position: -40px 0px;
 }
-.icon.icon-information {
+.icon.icon-teacher {
   background-position: -80px 0px;
 }
-.icon.icon-imac {
+.icon.icon-video {
   background-position: -120px 0px;
 }
-.icon.icon-teacher {
+.icon.icon-imac {
   background-position: -160px 0px;
 }
-.icon.icon-medal {
+.icon.icon-works {
   background-position: -200px 0px;
 }
-.icon.icon-video {
+.icon.icon-medal {
   background-position: -240px 0px;
 }
 .icon.icon-close {
