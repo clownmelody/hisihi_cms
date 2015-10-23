@@ -1,0 +1,48 @@
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\000031}}
+.anWrapper {
+  width: 100%;
+  height: 600px;
+  background-color: #FAFAFA;
+  padding-left: 35px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\000037}}
+.anWrapper * {
+  font-family: "microsoft yahei";
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\0000311}}
+.anHeader {
+  height: 60px;
+  width: 100%;
+  line-height: 60px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\0000317}}
+.anHeader p {
+  font-size: 20px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\0000321}}
+#announcesContainer {
+  width: 100%;
+  height: -webkit-calc(52%);
+  height: -moz-calc(52%);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\0000328}}
+#announcesContainer ul {
+  width: 100%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\0000331}}
+#announcesContainer ul li {
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  display: block;
+  border-bottom: 1px solid #CCCCCC;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\0000339}}
+#announcesContainer ul li a {
+  color: #999999;
+  display: block;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/Program Files (x86)\/wamp\/wamp\/www\/hisihi-cms\/Application\/Organization\/Content\/css\/less\/annoucement\.less}line{font-family:\0000343}}
+#announcesContainer ul li a:hover {
+  color: #625F5F;
+}
