@@ -114,7 +114,7 @@ class OrganizationController extends AppController
      * 获取短信验证码
      * @param $mobile
      */
-    public function getSMS($mobile){
+    public function getSMS($mobile=null){
         if(empty($mobile)){
             $this->apiError(-1, '传入手机号为空');
         } else {
@@ -164,14 +164,61 @@ class OrganizationController extends AppController
         $post_data = json_encode($post_data);
         $result = $this->request_by_curl($url, $headerArr, $post_data);
         if($result){
-            M('OrganizationAdmin')->add();
-            $this->apiSuccess('注册成功');
+            $data['mobile'] = $mobile;
+            $data['password'] = md5($password);
+            $data['create_time'] = time();
+            $result = M('OrganizationAdmin')->data($data)->add();
+            if($result){
+                $this->apiSuccess('注册成功');
+            } else {
+                $this->apiError(-2, '注册失败');
+            }
         } else {
             $this->apiError(-1, '验证码校验失败');
         }
     }
 
-    /**检查手机号是否已经被注册
+    /**
+     * 用户登陆
+     * @param null $mobile
+     * @param null $password
+     */
+    public function login($mobile=null, $password=null){
+        if(empty($mobile)||empty($password)){
+            $this->apiError(-1, '传入参数不完整');
+        }
+        $map['status'] = 1;
+        $map['mobile'] = $mobile;
+        $map['password'] = md5($password);
+        $user = M('OrganizationAdmin')->where($map)->find();
+        if($user){
+            $auth = array(
+                'uid' => $user['id'],
+                'mobile' => $user['mobile'],
+                'organization_id' => $user['organization_id']
+            );
+            session('user_auth', $auth);
+            session('user_auth_sign', data_auth_sign($auth));
+            $extra['uid'] = $user['id'];
+            $extra['username'] = $user['username'];
+            $extra['session_id'] = session_id();
+            $this->apiSuccess("登陆成功", null, $extra);
+        } else {
+            $this->apiError(-1, '用户不存在或密码错误');
+        }
+    }
+
+    public function isLogin(){
+        //session_start();
+        session_id($_REQUEST['session_id']);
+        $this->apiSuccess('ce: '.session_id().', value: '.json_encode(session('user_auth')));
+        $u = session('user_auth');
+        $id = is_login();
+        $this->apiSuccess(json_encode($id));
+    }
+
+    /**
+     * 检查手机号是否已经被注册
      * @param $mobile
      */
     private function isMobileExist($mobile){
