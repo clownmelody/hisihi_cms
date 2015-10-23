@@ -1,0 +1,42 @@
+.icon(@size ,@type , @bg){
+	width:@size; 
+	height:@size;
+	display:inline-block;
+	overflow:hidden; 
+	vertical-align:middle; 
+	font:0/0; 
+	background-image:url('@{bg}');
+	background-repeat:no-repeat;
+	&.icon-works{
+		background-position:-@size*0 -@type*@size; 
+	}
+	&.icon-home{
+		background-position:-@size*1 -@type*@size; 
+	}
+	&.icon-information{
+		background-position:-@size*2 -@type*@size; 
+	}
+	&.icon-imac{
+		background-position:-@size*3 -@type*@size; 
+	}
+	&.icon-teacher{
+		background-position:-@size*4 -@type*@size; 
+	}
+	&.icon-medal{
+		background-position:-@size*5 -@type*@size; 
+	}
+	&.icon-video{
+		background-position:-@size*6 -@type*@size; 
+	}
+	&.icon-close{
+		background-position:-@size*7 -@type*@size; 
+	}
+}
+
+.active.icon{
+	.icon(40px,1,'@{img-path}home.png');
+}
+
+.icon{
+	.icon(40px,0,'@{img-path}home.png'); 
+}

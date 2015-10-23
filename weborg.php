@@ -13,19 +13,6 @@
  */
 define ('APP_DEBUG', false);
 
-if ($_REQUEST['client'] && $_REQUEST['client'] == 'pc') {
-    ini_set("session.use_cookies", 1);
-    ini_set("session.use_trans_sid", 1);
-} else {
-//从URL获取SESSION编号
-    ini_set("session.use_cookies", 0);
-    ini_set("session.use_trans_sid", 1);
-}
-if ($_REQUEST['session_id']) {
-    session_id($_REQUEST['session_id']);
-    session_start();
-}
-
 //调用Application/App应用
 // 绑定访问App模块
 define('BIND_MODULE', 'Organization');

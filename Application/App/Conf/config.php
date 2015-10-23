@@ -32,5 +32,8 @@ return array(
         '__JS__'     => __ROOT__ . '/Public/' . MODULE_NAME . '/js',
     ),
 
-
+    'bmob_send_sms_url'   => 'https://api.bmob.cn/1/requestSmsCode',
+    'bmob_verify_smscode_url' => 'https://api.bmob.cn/1/verifySmsCode/',
+    'bmob_application_id' => 'fe5d2943e8ab656760d728951e6a3808',
+    'bmob_api_key'        => 'a5eb7910b742f9218329291fe0a1a3ff',
 );
