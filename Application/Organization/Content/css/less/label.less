@@ -1,0 +1,64 @@
+@label-default-bg:            #CDCDCD;
+@label-primary-bg:            @brand-bule;
+@label-color:                 #fff;
+@label-link-hover-color:      #fff;
+//
+//标签
+// --------------------------------------------------
+
+.label {
+  display: inline;
+  padding: .3em .7em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: @label-color;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+
+  &:empty {
+    display: none;
+  }
+  
+
+}
+
+.label-variant(@color) {
+  background-color: @color;
+
+  &[href] {
+    &:hover,
+    &:focus {
+      background-color: darken(@color, 10%);
+    }
+  }
+  
+  >a{
+	border-left: 1px solid @white-color;
+	margin-left:5px;
+	padding: .3em .7em;
+	margin-right: -9px;
+	line-height: 1;
+	border-radius: 0px 3px 3px 0px;
+	color: @white-color;
+	background-color: @color;
+	.font-size(12);
+	&:hover,
+	&:focus {
+	  background-color: darken(@color, 10%);
+	}
+  }
+
+}
+
+// Colors
+.label-default {
+  .label-variant(@label-default-bg);
+}
+
+.label-primary {
+	margin-right: 5px;
+  .label-variant(@label-primary-bg);
+}
