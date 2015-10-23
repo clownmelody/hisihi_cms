@@ -623,10 +623,9 @@ body {
 }
 #announcesContainer {
   width: 100%;
-  height: -webkit-calc(100% - 48px);
-  height: -moz-calc(100% - 48px);
+  height: -webkit-calc(52%);
+  height: -moz-calc(52%);
   overflow: auto;
-  height: 400px;
 }
 #announcesContainer ul {
   width: 100%;
