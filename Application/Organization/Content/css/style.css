@@ -696,7 +696,7 @@ body {
 .navbar-content .nav > .nav-item {
   float: left;
   width: 145px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 54px;
 }
 .navbar-content .nav > .nav-item > .nav-link {
@@ -774,9 +774,15 @@ body {
 }
 .side-list .side-item {
   text-align: center;
-  height: 70px;
-  padding-top: 5px;
+  height: 80px;
+  padding-top: 15px;
   display: block;
+}
+@media (max-height: 730px) {
+  .side-list .side-item {
+    height: 70px;
+    padding-top: 5px;
+  }
 }
 .side-list .side-item > span {
   margin: 0 auto;
