@@ -26,4 +26,17 @@ class IndexController extends Controller
     public function teachers(){
         $this->display();
     }
+    public function video(){
+        $this->display();
+    }
+    public  function  studentworks(){
+        $this->display();
+    }
+    public  function  teachcondition(){
+        $this->display();
+    }
+    public  function  certification(){
+        $this->display();
+    }
+
 }
