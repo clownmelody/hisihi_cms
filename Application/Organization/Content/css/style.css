@@ -1166,6 +1166,8 @@ body {
   margin: 5px;
 }
 .memberItemUl li .memberItemLeft img.hover {
+  -webkit-box-shadow: 0px 0 13px #999999;
+  -moz-box-shadow: 0px 0 13px #999999;
   box-shadow: 0px 0 13px #999999;
 }
 .memberItemUl li .memberItemRight {
@@ -1190,6 +1192,8 @@ body {
   cursor: pointer;
 }
 .addGroupCon:hover {
+  -webkit-box-shadow: 0 0 5px #999999;
+  -moz-box-shadow: 0 0 5px #999999;
   box-shadow: 0 0 5px #999999;
 }
 .addGroupCon > div {
@@ -1211,5 +1215,23 @@ body {
   font-weight: bold;
 }
 .addGroupDetailCon {
-  padding-left: 20px;
+  display: none;
+  height: 40px;
+  line-height: 40px;
+}
+.addGroupDetailCon span {
+  margin-left: 20px;
+}
+#newGroupName {
+  height: 20px;
+  width: 165px;
+  margin-right: 30px;
+}
+#newGroupCommitBtn {
+  height: 30px;
+  width: 75px;
+  margin-left: 15px;
+}
+#newGroupCommitCal {
+  color: #848484;
 }

@@ -19,6 +19,8 @@ define(['jquery'],function () {
                 $target.removeClass(className);
             }
         });
+        this.$wrapper.on('click','.addGroupCon', $.proxy(this,'controlAddGroupConState'));
+        this.$wrapper.on('click','.gAddBtn', $.proxy(this,'addNewGroup'));
     };
 
     MyTeacher.prototype={
@@ -98,11 +100,29 @@ define(['jquery'],function () {
         /*
          控制容器的高度
          */
-        controlContainerHeight:function(){
+        controlAddGroupConState:function(){
+            this.$wrapper.find('.addGroupDetailCon').toggle(50);
+        },
 
+        /*
+        *添加新的组别
+         */
+        addNewGroup:function(e){
+            var $target=$(e.srcElement),
+                index=$target.index();
+            this.$wrapper.find('.addGroupCon').trigger('click');
+
+            //提交取消
+            if(index==3){
+                this.$wrapper.find('#newGroupName').value('');
+            }
+
+
+            //添加
         },
 
     };
+
     var myTeacher=new MyTeacher($('.teachersWrapper'));
     return myTeacher;
 

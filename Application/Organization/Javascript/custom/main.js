@@ -9,15 +9,16 @@ require.config({
         jquery: 'libs/jquery-1.8.2.min',
         menus: 'custom/menus',
         announcement: 'custom/announcement',
-        teacher:'custom/teacher'
-    }
+        teacher:'custom/teacher',
+        basicinfo:'custom/basicinfo'
 });
 
 require([
     'jquery',
     'menus',
+    'teacher',
     'announcement',
-    'teacher'
+    'basicinfo'
 ]);
 
 
