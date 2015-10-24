@@ -1670,6 +1670,7 @@ class UserController extends AppController
         foreach($ids as $v){
             $picId = $v;
             $this->uploadLogoPicToOSS($picId);
+            getThumbImageById($picId, 280, 160);//上传时生成缩略图
             $user_works_data['uid'] = is_login();
             $user_works_data['forum_id'] = 1001;
             $user_works_data['post_id'] = 0;
@@ -1697,7 +1698,7 @@ class UserController extends AppController
         $tem = $model->query('select count(*) as count from hisihi_user_works where status=1 and uid='.$uid);
         $totalCount = $tem[0]['count'];
         $index = ($page - 1) * $count;
-        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and uid='.$uid.' order by create_time desc limit '.$index.','.$count);
+        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and uid='.$uid.' order by create_time asc limit '.$index.','.$count);
         foreach ($pic_list as &$picinfo) {
             $pic_id = $picinfo['picture_id'];
             $picDetail= $model->query("select path from hisihi_picture where id=".$pic_id);
