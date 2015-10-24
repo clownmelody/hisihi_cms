@@ -20,8 +20,7 @@ class IndexController extends Controller
         $this->display('Index/announcement');
     }
 
-    public function user(){
-        $this->name = 'thinkphp2'; // 进行模板变量赋值
+    public function basicinfo(){
         $this->display();
     }
     public function teachers(){
