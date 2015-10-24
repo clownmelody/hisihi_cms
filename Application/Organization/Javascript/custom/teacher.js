@@ -142,7 +142,7 @@ define(['jquery'],function () {
                 var data = [{groupName:validity.name,members:[]}];
                 this.showMembersInfo(data);
             }else{
-                this.$wrapper.find('#errorInfo').show().delay(500).hide(0);
+                this.$wrapper.find('#errorInfo').text(validity.tip).show().delay(500).hide(0);
             }
         },
 
@@ -152,14 +152,21 @@ define(['jquery'],function () {
         newNameValidity:function(){
             var name=this.$wrapper.find('#newGroupName').val().replace(/(^\s*)|(\s*$)/g,''),
                 $allTitles= this.$wrapper.find('#teacherMainCon li .teacherTitle'),
-                flag=true;
-            $allTitles.each(function(){
-                if($(this).text()==name){
-                    flag = false;
-                    return false;
-                }
-            });
-            return {flag:flag,name:name};
+                flag=true,
+                tip='';
+            if(name!='') {
+                $allTitles.each(function () {
+                    if ($(this).text() == name) {
+                        flag = false;
+                        tip='该组别已经存在';
+                        return false;
+                    }
+                });
+            }else{
+                flag=false;
+                tip='名称不能为空';
+            }
+            return {flag:flag,name:name,tip:tip};
         },
 
         /*
