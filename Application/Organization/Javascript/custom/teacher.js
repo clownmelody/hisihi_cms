@@ -68,33 +68,41 @@ define(['jquery'],function () {
         },
 
         /*
-        *显示简要的公告信息
+        *显示所有的分组和组员情况信息
         * @para
-        * data -{array} 公告数组
+        * data -{array} 分组和组员信息数组
         */
         showMembersInfo:function(data){
             var str='',
-                str1='';
+                that=this;
             $.each(data,function(){
-                str1='';
-                var gitem=this,
-                    members=this.members;
-                    $.each(members,function(){
-                        str1+='<li>'+
-                                    '<div class="memberItemLeft"><img src="'+this.imgSrc+'"></div>'+
-                                    '<div class="memberItemRight"><p class="tname">'+this.name+'</p><p class="trole">'+this.role+'</p></div>'+
-                                '</li>';
-                    });
-                str1+='<div style="clear:both;">';
                 str+='<li class="tItems">'+
                         '<div class="teacherHeader groupItemHeader"> '+
                             '<span class="teacherTitle">'+this.groupName+'</span>'+
                         '</div>'+
-                        '<ul class="list memberItemUl">'+str1+'</ul>'+
+                        '<ul class="list memberItemUl">'+that.getSomeGroupMembersStr(this.members)+'</ul>'+
                       '</li>';
             });
             str+='<div style="clear:both;">';
             this.$wrapper.find('#teacherMainCon').append(str);
+            this.scrollToBottom($('.wrapper')[0]); //滚动到底部
+        },
+
+        /*
+         *显示具体 某个小组的组员情况信息
+         * @para
+         * data -{object} 分组和组员信息数组
+         */
+        getSomeGroupMembersStr:function(members){
+            var str='';
+            $.each(members,function(){
+                str+='<li>'+
+                    '<div class="memberItemLeft"><img src="'+this.imgSrc+'"></div>'+
+                    '<div class="memberItemRight"><p class="tname">'+this.name+'</p><p class="trole">'+this.role+'</p></div>'+
+                    '</li>';
+            });
+            str+='<div style="clear:both;">';
+            return str;
         },
 
         /*
@@ -110,17 +118,57 @@ define(['jquery'],function () {
         addNewGroup:function(e){
             var $target=$(e.srcElement),
                 index=$target.index();
-            this.$wrapper.find('.addGroupCon').trigger('click');
+
 
             //提交取消
             if(index==3){
-                this.$wrapper.find('#newGroupName').value('');
+                this.$wrapper.find('#newGroupName').val('');
+                this.$wrapper.find('.addGroupCon').trigger('click');
+                return;
             }
 
-
             //添加
+            this.execAddNewGroup();
         },
 
+        /*
+         *执行新加组别
+         */
+        execAddNewGroup:function(){
+            //名称没有问题
+            var validity=this.newNameValidity();
+            if(validity.flag){
+                this.$wrapper.find('.addGroupCon').trigger('click');
+                var data = [{groupName:validity.name,members:[]}];
+                this.showMembersInfo(data);
+            }else{
+                this.$wrapper.find('#errorInfo').show().delay(500).hide(0);
+            }
+        },
+
+        /*
+        *名称合法性判断
+         */
+        newNameValidity:function(){
+            var name=this.$wrapper.find('#newGroupName').val().replace(/(^\s*)|(\s*$)/g,''),
+                $allTitles= this.$wrapper.find('#teacherMainCon li .teacherTitle'),
+                flag=true;
+            $allTitles.each(function(){
+                if($(this).text()==name){
+                    flag = false;
+                    return false;
+                }
+            });
+            return {flag:flag,name:name};
+        },
+
+        /*
+        *滚动到底部
+        **/
+        scrollToBottom:function(target){
+            $(target).scrollTop(target.scrollHeight+140);
+            //$('')
+        },
     };
 
     var myTeacher=new MyTeacher($('.teachersWrapper'));
