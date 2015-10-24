@@ -10,7 +10,7 @@ namespace Organization\Controller;
 use Think\Controller;
 
 class IndexController extends Controller
-{
+{   
     public function _initialize()
     {
         C('SHOW_PAGE_TRACE', false);
@@ -28,6 +28,7 @@ class IndexController extends Controller
     }
     public function video(){
         $this->display();
+
     }
     public  function  studentworks(){
         $this->display();
