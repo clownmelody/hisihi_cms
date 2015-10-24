@@ -92,10 +92,14 @@ class CompanyController extends AppController {
 
     /**
      * 获取公司详细信息
+     * @param $uid
      * @param $id
      */
-    public function info($id){
-        if(empty($id)){
+    public function info($uid=0,$id=0){
+        if (!$uid) {
+            $uid = $this->getUid();
+        }
+        if(!$id){
             $this->apiError(-1, "传入参数不能为空");
         }
         $model = D('Admin/Company');
@@ -131,6 +135,12 @@ class CompanyController extends AppController {
                 array_push($filtrate_array,$markobj);
             }
             $result['filtrate_mark'] = $filtrate_array;
+            $rmodel = D('User/ResumeDelivery');
+            $result['is_delivery'] = false;
+            $isdelivery = $rmodel->where('status=1 and uid='.$uid.' and company_id='.$id)->select();
+            if($isdelivery){
+                $result['is_delivery'] = true;
+            }
         }else{
             $this->apiError(-1, "该公司不存在");
         }
