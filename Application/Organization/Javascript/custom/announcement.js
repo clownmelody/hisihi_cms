@@ -15,7 +15,8 @@ define(['jquery'],function () {
         //事件注册
         var that=this;
         this.$wrapper.on('#announcesContainer ul li','click', $.proxy(this.showDetailAnnounceInfo));
-        this.$wrapper.find('#announcesContainer').scroll(function(){
+        this.$wrapper.parent().scroll(function(){
+            alert();
             that.scrollContainer.call(that,this);
         });
 
@@ -23,8 +24,16 @@ define(['jquery'],function () {
 
     TodayAnnoucement.prototype={
         loadData:function(){
-            var data=[{title:'习近平卡梅伦庄园会晤 在酒吧小酌吃炸鱼薯条',date:'2015.10.23',src:''},
-                {title:'巡视组：17家央企均有利益输送 存链条式腐败',date:'2015.10.20',src:''},
+            var data=[{title:'习近平卡梅伦庄园会晤 在酒吧小酌吃炸鱼薯条',date:'2015.10.23',src:'http://world.huanqiu.com/exclusive/2015-10/7827489.html?from=bdwz'},
+                {title:'巡视组：17家央企均有利益输送 存链条式腐败',date:'2015.10.20',src:'http://world.huanqiu.com/exclusive/2015-10/7827489.html?from=bdwz'},
+                {title:'交通部专车新规或存法律硬伤 专家建议重制',date:'2015.10.24',src:''},
+                {title:'中英签4000亿大单 李嘉诚被指又快人一步',date:'2015.10.04',src:''},
+                {title:'青岛“天价虾”被宰游客将5万奖金捐重病患儿',date:'2015.10.04',src:''},
+                {title:'陕西夜跑女教师遇害续：警方悬赏5万缉凶',date:'2015.10.14',src:''},
+                {title:'湖南杀师案细节：三名少年作案后淡定上网',date:'2015.09.04',src:''},
+                {title:'青岛“天价虾”被宰游客将5万奖金捐重病患儿',date:'2015.10.04',src:''},
+                {title:'陕西夜跑女教师遇害续：警方悬赏5万缉凶',date:'2015.10.14',src:''},
+                {title:'湖南杀师案细节：三名少年作案后淡定上网',date:'2015.09.04',src:''},
                 {title:'交通部专车新规或存法律硬伤 专家建议重制',date:'2015.10.24',src:''},
                 {title:'中英签4000亿大单 李嘉诚被指又快人一步',date:'2015.10.04',src:''},
                 {title:'青岛“天价虾”被宰游客将5万奖金捐重病患儿',date:'2015.10.04',src:''},
@@ -67,7 +76,7 @@ define(['jquery'],function () {
          * data -{array} 公告数组
          */
         showDetailAnnounceInfo:function(){
-            alert();
+
         },
 
         /*
@@ -87,7 +96,7 @@ define(['jquery'],function () {
          控制容器的高度
          */
         controlContainerHeight:function(){
-           this.$wrapper.css('height',this.$wrapper.parent().height()-80);
+
         },
 
     };
