@@ -73,7 +73,7 @@
   margin: 5px;
 }
 .memberItemUl li .memberItemLeft img.hover{
-  box-shadow: 0px 0 13px @md-grey-900;
+  .box-shadow(0px 0 13px @md-grey-900);
 }
 
 .memberItemUl li .memberItemRight{
@@ -98,7 +98,7 @@
   cursor: pointer;
 }
 .addGroupCon:hover{
-  box-shadow: 0 0 5px @md-grey-900;
+  .box-shadow(0 0 5px @md-grey-900;);
 }
 .addGroupCon>div{
   width: 195px;
@@ -119,5 +119,25 @@
   font-weight: bold;
 }
 .addGroupDetailCon{
-  padding-left: 20px;
+  display: none;
+  height: 40px;
+  line-height: 40px;
 }
+.addGroupDetailCon span {
+  margin-left: 20px;
+}
+#newGroupName{
+  height: 20px;
+  width: 165px;
+  margin-right: 30px;
+}
+
+#newGroupCommitBtn{
+  height:30px;
+  width: 75px;
+  margin-left: 15px;
+}
+#newGroupCommitCal{
+  color: @md-grey-84;
+}
+
