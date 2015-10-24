@@ -1638,10 +1638,12 @@ class ForumController extends AppController
                     if($post_info){
                         $content_list = M('Autoreply')->where(array('forum_id' => $post_info['forum_id'], 'status' => 1))->select();
                         $count = count($content_list);
-                        $index = rand(1, $count);
-                        $uid = rand(70, 90);
-                        $model = D('Forum/ForumPostReply');
-                        $model->addAutoReply($uid, $post_id, $content_list[$index]['content']);
+                        if($count!=0){
+                            $index = rand(1, $count);
+                            $uid = rand(70, 90);
+                            $model = D('Forum/ForumPostReply');
+                            $model->addAutoReply($uid, $post_id, $content_list[$index]['content']);
+                        }
                         $reply_count = $reply_count - 1;
                     }
                 }

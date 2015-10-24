@@ -333,14 +333,51 @@ class OrganizationController extends AppController
         }
     }
 
+    /**
+     * 机构环境图片添加或删除
+     * @param null $organization_id
+     * @param null $pic_id
+     * @param string $type
+     */
+    public function organizationEnvironment($organization_id=null, $pic_id=null, $type='add'){
+        if(empty($organization_id)||empty($pic_id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        if('add'==$type){  // 添加环境图片
 
-    public function isLogin(){
-        //session_start();
+        } else {  // 删除环境图片
+
+        }
+    }
+
+    /**
+     * 获取所有老师列表
+     */
+    public function teachersList(){
+
+    }
+
+    public function teachersGroup($organization_id=null, $group_name=null, $type='add'){
+
+    }
+
+    /**
+     * 当前用户登录状态检测
+     */
+    private function requireAdminLogin(){
+        $uid = $this->isLogin();
+        if(!$uid) {
+            $this->apiError(401,"需要登录");
+        }
+    }
+
+    /**
+     * 获取当前用户的uid
+     */
+    private function isLogin(){
         session_id($_REQUEST['session_id']);
-        $this->apiSuccess('ce: '.session_id().', value: '.json_encode(session('user_auth')));
-        $u = session('user_auth');
         $id = is_login();
-        $this->apiSuccess(json_encode($id));
+        return $id;
     }
 
     /**
