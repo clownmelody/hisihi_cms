@@ -209,6 +209,17 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 用户登出
+     */
+    public function logout(){
+        $session_id = $_REQUEST['session_id'];
+        session_id($session_id);
+        session('user_auth', null);
+        session('user_auth_sign', null);
+        $this->apiSuccess('注销成功');
+    }
+
+    /**
      * 机构相关图片上传
      */
     public function uploadPicture(){
@@ -372,11 +383,12 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 获取当前用户的uid
+     * @return int
      */
     private function isLogin(){
-        session_id($_REQUEST['session_id']);
-        $id = is_login();
+        $session_id = $_REQUEST['session_id'];
+        session_id($session_id);
+        $id = get_uid();
         return $id;
     }
 
