@@ -111,7 +111,7 @@ define(['jquery'],function () {
             var $target=$(e.srcElement),
                 index=$target.index();
             this.$wrapper.find('.addGroupCon').trigger('click');
-            
+
             //提交取消
             if(index==3){
                 this.$wrapper.find('#newGroupName').value('');
@@ -122,6 +122,7 @@ define(['jquery'],function () {
         },
 
     };
+
     var myTeacher=new MyTeacher($('.teachersWrapper'));
     return myTeacher;
 
