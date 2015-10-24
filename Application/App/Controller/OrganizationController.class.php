@@ -208,6 +208,105 @@ class OrganizationController extends AppController
         }
     }
 
+    /**
+     * 机构相关图片上传
+     */
+    public function uploadPicture(){
+        $Picture = D('Admin/Picture');
+        $pic_driver = C('PICTURE_UPLOAD_DRIVER');
+        $info = $Picture->upload(
+            $_FILES,
+            C('PICTURE_UPLOAD'),
+            C('PICTURE_UPLOAD_DRIVER'),
+            C("UPLOAD_{$pic_driver}_CONFIG")
+        );
+        if ($info) {
+            foreach($info as $key=>&$value){
+                $value = $value['id'];
+            }
+        } else {
+            $this->apiError(-1,"上传机构图片失败".$Picture->getError());
+        }
+        $this->apiSuccess("上传机构图片成功",null,array('pictures'=>implode(',',$info)));
+    }
+
+    /**
+     * 修改机构logo
+     * @param int $organization_id
+     * @param int $pic_id
+     */
+    public function updateLogo($organization_id=0, $pic_id=0){
+        if(empty($organization_id)||empty($pic_id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $model = M('Organization');
+        $data['logo'] = $pic_id;
+        $result = $model->where('id='.$organization_id)->save($data);
+        if($result){
+            $this->apiSuccess('修改机构logo成功');
+        } else {
+            $this->apiError(-1, '修改机构logo失败，请重试');
+        }
+    }
+
+    /**
+     * 新增或修改机构基本信息
+     * @param int $organization_id
+     * @param null $name
+     * @param null $slogan
+     * @param null $introduce
+     * @param null $advantage
+     * @param null $location
+     * @param null $phone_num
+     */
+    public function saveBaseInfo($organization_id=0, $name=null, $slogan=null, $introduce=null, $logo=null,
+                                 $advantage=null, $location=null, $phone_num=null){
+        $model = M('Organization');
+        if(!empty($name)){
+            $data['name'] = $name;
+        }
+        if(!empty($slogan)){
+            $data['slogan'] = $slogan;
+        }
+        if(!empty($introduce)){
+            $data['introduce'] = $introduce;
+        }
+        if(!empty($logo)){
+            $data['logo'] = $logo;
+        }
+        if(!empty($advantage)){
+            $data['advantage'] = $advantage;
+        }
+        if(!empty($location)){
+            $data['location'] = $location;
+        }
+        if(!empty($phone_num)){
+            $data['phone_num'] = $phone_num;
+        }
+        if(!empty($organization_id)){  // 新增结构基本信息
+            $result = $model->data($data)->add();
+            if($result){
+                $this->apiSuccess('添加机构基本信息成功');
+            } else {
+                $this->apiError(-1, '添加机构基本信息失败，请重试');
+            }
+        } else {  // 修改机构基本信息
+            $result = $model->where('id='.$organization_id)->save($data);
+            if($result){
+                $this->apiSuccess('修改机构基本信息成功');
+            } else {
+                $this->apiError(-1, '修改机构基本信息失败，请重试');
+            }
+        }
+    }
+
+    /**
+     * 获取机构优势标签
+     */
+    public function getAdvantageTags(){
+
+    }
+
     public function isLogin(){
         //session_start();
         session_id($_REQUEST['session_id']);
