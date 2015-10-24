@@ -80,6 +80,42 @@ class InspirationController extends AppController {
     }
 
     /**
+     * 获取灵感图片详情
+     * @param null $pic_id
+     * @param null $uid
+     */
+    public function inspirationDetail($inspiration_id=null, $uid=null, $pic_id=null){
+        if(empty($pic_id)){
+            $this->apiError(-1, '传入图片id为空');
+        }
+        M('Inspiration')->where('id='.$inspiration_id)->setInc('view_count');
+        $pic_url = $this->fetchImage($pic_id);
+        $origin_img_info = getimagesize($pic_url);
+        $src_size = Array();
+        $src_size['width'] = $origin_img_info[0]; // width
+        $src_size['height'] = $origin_img_info[1]; // height
+        $inspira = array(
+            'url'=>$pic_url,
+            'size'=>$src_size
+        );
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Inspiration';
+        $favorite['table'] = 'Inspiration';
+        $favorite['row'] = $pic_id;
+        $favorite['uid'] = $uid;
+        if (D('Favorite')->where($favorite)->count()) {
+            $inspira['isFavorite'] = true;
+        } else {
+            $inspira['isFavorite'] = false;
+        }
+        $extra['data'] = $inspira;
+        $this->apiSuccess('获取灵感详情成功', null, $extra);
+    }
+
+    /**
      * 收藏灵感图片
      * @param int $uid
      * @param int $pic_id
@@ -158,8 +194,10 @@ class InspirationController extends AppController {
                     'url'=>$pic_small,
                     'size'=>$thumb_size
                 );
-                unset($inspira['id']);
                 unset($inspira['status']);
+                unset($inspira['pic_id']);
+                unset($inspira['special']);
+                unset($inspira['selection']);
             }
         }
         return $list;

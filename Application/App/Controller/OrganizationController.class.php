@@ -307,6 +307,33 @@ class OrganizationController extends AppController
 
     }
 
+    /**
+     * 获取机构公告
+     * @param int $page
+     * @param int $count
+     */
+    public function getNotice($page=1, $count=10){
+
+    }
+
+    /**
+     * 学生作品添加或删除
+     * @param null $organization_id
+     * @param null $pic_id
+     * @param null $type  'add' or 'delete'
+     */
+    public function studentWorks($organization_id=null, $pic_id=null, $type='add'){
+        if(empty($organization_id)||empty($pic_id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        if('add'==$type){  // 添加学生作品
+
+        } else {  // 删除学生作品
+
+        }
+    }
+
+
     public function isLogin(){
         //session_start();
         session_id($_REQUEST['session_id']);
