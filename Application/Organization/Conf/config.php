@@ -17,6 +17,8 @@ return array(
         '__IMG__'    => __ROOT__ . '/Application/Organization/Content/images',
         '__CSS__'    => __ROOT__ . '/Application/Organization/Content/css',
         '__JS__'     => __ROOT__ . '/Application/Organization/Javascript',
+        '__URL__'    =>'/hisihi-cms/weborg.php',
+
     ),
 
     'LAYOUT_ON'=>true,

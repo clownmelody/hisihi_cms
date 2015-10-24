@@ -24,8 +24,7 @@ class IndexController extends Controller
         $this->name = 'thinkphp2'; // 进行模板变量赋值
         $this->display();
     }
-    public function person(){
-        $this->name = 'thinkphp3'; // 进行模板变量赋值
+    public function teachers(){
         $this->display();
     }
 }
