@@ -27,9 +27,13 @@
 	}
 	.side-item{
 		text-align: center;
-		height:70px;
-		padding-top: 5px;
+		height:80px;
+		padding-top: 15px;
 		display: block;
+		@media (max-height: 730px){ 
+			height:70px;
+			padding-top: 5px;
+		}
 		>span{
 			margin: 0 auto;
 		}
@@ -50,3 +54,5 @@
 		.font-size(16);
 	}
 }
+
+
