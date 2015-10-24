@@ -11,7 +11,7 @@ require.config({
         announcement: 'custom/announcement',
         teacher:'custom/teacher',
         basicinfo:'custom/basicinfo'
-});
+}});
 
 require([
     'jquery',

@@ -1190,6 +1190,7 @@ body {
 .addGroupCon {
   height: 55px;
   cursor: pointer;
+  -moz-user-select: none;
 }
 .addGroupCon:hover {
   -webkit-box-shadow: 0 0 5px #999999;
