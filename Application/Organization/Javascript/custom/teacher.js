@@ -7,6 +7,7 @@
 define(['jquery'],function () {
     var MyTeacher = function ($wrapper) {
         this.$wrapper = $wrapper;
+        this.modelBox=null;
         this.loadData();
         //事件注册
         var that=this;
@@ -21,6 +22,7 @@ define(['jquery'],function () {
         });
         this.$wrapper.on('click','.addGroupCon', $.proxy(this,'controlAddGroupConState'));
         this.$wrapper.on('click','.gAddBtn', $.proxy(this,'addNewGroup'));
+        this.$wrapper.on('click','', $.proxy(this,'showAddNewTeachersModelBox'));
     };
 
     MyTeacher.prototype={
@@ -176,6 +178,42 @@ define(['jquery'],function () {
             $(target).scrollTop(target.scrollHeight+140);
             //$('')
         },
+
+        /*
+        *显示添加老师弹出层
+        */
+        showAddNewTeachersModelBox:function(){
+            var that = this;
+            if(!this.modelBox) {
+                this.modelBox = new Hisihi.modelBox({
+                    headLabel: '主题设置',
+                    boxMainContentForAlert: function () {
+                        return '<div id="cornerThemeSet">' +
+                            '<div class="themeSetWrapper">' +
+                            '<ul>' +
+                                '<li data-theme="default"><div class="radioContainer"></div>深色</li>' +
+                                '<li data-theme="gray"><div class="radioContainer"></div>浅色</li>' +
+                            '</ul>' +
+                            '</div>' +
+                            '<div class="createChaBtnRow" id="themeSetBtns"><div class="createChaCommitBtn">保存</div><div class="createChaCancelBtn">取消</div></div>' +
+                            '<div class="clearFloatStyle"></div>' +
+                            '</div>';
+                    },
+                    initCallback: $.proxy(that, 'initModelBoxCallback'),
+                    closeBoxCallback: $.proxy(that, 'controlStyleAbled'),
+                    boxWidth: '460px',
+                    boxHeight: '240px',
+                    showAtFirst: true
+                });
+            }else{
+                this.modelBox.show();
+            }
+        },
+
+        initModelBoxCallback:function(){
+
+        },
+
     };
 
     var myTeacher=new MyTeacher($('.teachersWrapper'));
