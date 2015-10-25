@@ -22,7 +22,8 @@ define(['jquery'],function () {
         });
         this.$wrapper.on('click','.addGroupCon', $.proxy(this,'controlAddGroupConState'));
         this.$wrapper.on('click','.gAddBtn', $.proxy(this,'addNewGroup'));
-        this.$wrapper.on('click','', $.proxy(this,'showAddNewTeachersModelBox'));
+        this.$wrapper.on('click','#addTeacher', $.proxy(this,'showAddNewTeachersModelBox'));
+        this.$wrapper.on('keydown','#newGroupName',$.proxy(this,'doCommitNewGroup'));
     };
 
     MyTeacher.prototype={
@@ -60,14 +61,6 @@ define(['jquery'],function () {
             }
         },
 
-        /*
-         *显示详细的公告信息
-         * @para
-         * data -{array} 公告数组
-         */
-        showDetailAnnounceInfo:function(){
-
-        },
 
         /*
         *显示所有的分组和组员情况信息
@@ -112,6 +105,7 @@ define(['jquery'],function () {
          */
         controlAddGroupConState:function(){
             this.$wrapper.find('.addGroupDetailCon').toggle(50);
+            this.$wrapper.find('#newGroupName').focus();
         },
 
         /*
@@ -141,6 +135,7 @@ define(['jquery'],function () {
             var validity=this.newNameValidity();
             if(validity.flag){
                 this.$wrapper.find('.addGroupCon').trigger('click');
+                this.$wrapper.find('#newGroupName').val('');
                 var data = [{groupName:validity.name,members:[]}];
                 this.showMembersInfo(data);
             }else{
@@ -154,21 +149,42 @@ define(['jquery'],function () {
         newNameValidity:function(){
             var name=this.$wrapper.find('#newGroupName').val().replace(/(^\s*)|(\s*$)/g,''),
                 $allTitles= this.$wrapper.find('#teacherMainCon li .teacherTitle'),
+                allNameArr = this.getExistGroupName(),
                 flag=true,
                 tip='';
             if(name!='') {
-                $allTitles.each(function () {
-                    if ($(this).text() == name) {
-                        flag = false;
-                        tip='该组别已经存在';
-                        return false;
-                    }
-                });
+                if ($.inArray(name,allNameArr)>=0) {
+                    flag = false;
+                    tip='该组别已经存在';
+                }
             }else{
                 flag=false;
                 tip='名称不能为空';
             }
             return {flag:flag,name:name,tip:tip};
+        },
+
+        /*
+        *得到目前已经拥有的分组
+        * Returns
+        * tempArr - {array}名字数组
+        */
+        getExistGroupName:function(){
+            var $allTitles =this.$wrapper.find('#teacherMainCon li .teacherTitle'),
+                tempArr=[];
+            $allTitles.each(function () {
+                tempArr.push($(this).text());
+            });
+            return tempArr;
+        },
+
+        /*
+        *回车确认添加
+        */
+        doCommitNewGroup:function(e){
+            if(e.keyCode==13){
+                this.$wrapper.find('.gAddBtn').trigger('click');
+            }
         },
 
         /*
@@ -186,14 +202,11 @@ define(['jquery'],function () {
             var that = this;
             if(!this.modelBox) {
                 this.modelBox = new Hisihi.modelBox({
-                    headLabel: '主题设置',
+                    headLabel: '选择或新建分组',
                     boxMainContentForAlert: function () {
-                        return '<div id="cornerThemeSet">' +
-                            '<div class="themeSetWrapper">' +
-                            '<ul>' +
-                                '<li data-theme="default"><div class="radioContainer"></div>深色</li>' +
-                                '<li data-theme="gray"><div class="radioContainer"></div>浅色</li>' +
-                            '</ul>' +
+                        return '<div id="addNewTeacherModelBox">' +
+                            '<div class="addNewTeacherWrapper">' +
+                            '<ul>' + that.getAllGroupNameStrForModelBox.call(that)+'</ul>' +
                             '</div>' +
                             '<div class="createChaBtnRow" id="themeSetBtns"><div class="createChaCommitBtn">保存</div><div class="createChaCancelBtn">取消</div></div>' +
                             '<div class="clearFloatStyle"></div>' +
@@ -210,7 +223,25 @@ define(['jquery'],function () {
             }
         },
 
+        /*
+        *获得添加模态框的 可选组别
+         */
+        getAllGroupNameStrForModelBox:function(){
+            alert();
+            var data=this.getExistGroupName(),
+                str='';
+            for(var i=0;i<data.length;i++){
+                str+='<li><div class="radioContainer">data[i]</div></li>';
+            }
+            return str;
+
+        },
+
         initModelBoxCallback:function(){
+
+        },
+
+        getCurrentGroupsName:function(){
 
         },
 
