@@ -423,10 +423,22 @@ class OrganizationController extends AppController
      * 添加教师到分组
      * @param null $teacher_group_id
      * @param null $uid
+     * @param null $organization_id
      */
-    public function addTeacherToGroup($uid=null, $teacher_group_id=null){
+    public function addTeacherToGroup($uid=null, $organization_id=null, $teacher_group_id=null){
         $this->requireAdminLogin();
-
+        $model = M('OrganizationRelation');
+        $data['uid'] = $uid;
+        $data['teacher_group_id'] = $teacher_group_id;
+        $data['organization_id'] = $organization_id;
+        $data['group'] = 6;
+        $result = $model->add($data);
+        if($result){
+            $extra = $result;
+            $this->apiSuccess("添加成功",null,$extra);
+        }else{
+            $this->apiError(-1, '新增教师到分组失败');
+        }
     }
 
     /**
@@ -436,7 +448,14 @@ class OrganizationController extends AppController
      */
     public function deleteTeacherFromGroup($uid=null, $teacher_group_id=null){
         $this->requireAdminLogin();
-
+        $model = M('OrganizationRelation');
+        $data['status'] = -1;
+        $result = $model->where('group=6 and uid='.$uid.'and teacher_group_id='.$teacher_group_id)->save($data);
+        if($result){
+            $this->apiSuccess('删除成功');
+        } else {
+            $this->apiError(-1, '删除失败');
+        }
     }
 
     /**
@@ -456,7 +475,10 @@ class OrganizationController extends AppController
      */
     public function getAllGroupsTeachers(){
         $this->requireAdminLogin();
-
+        $model = M('OrganizationRelation');
+        $list = $model->field('uid, value')->where('status=1')->select();
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构所有分组成功', null, $extra);
     }
 
     /**
