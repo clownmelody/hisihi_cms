@@ -1,7 +1,7 @@
 ﻿<div class="teachersWrapper">
     <div class="teacherHeader tItems">
         <span class="teacherTitle">我的老师</span>
-        <input type="button" id="addTeacher" class="btn button-variant" value="添加老师"/>
+        <input type="button" id="addTeacher" class="btn brand-info" value="添加老师"/>
         <span class="editTeacher">编辑</span>
     </div>
     <ul id="teacherMainCon" class="list"></ul>
@@ -10,8 +10,9 @@
     </div>
     <div class="teacherHeader tItems addGroupDetailCon" >
         <span>名称</span>
-        <input type="text" id="newGroupName" placeholder="组别名称"/>
-        <input type="button" id="newGroupCommitBtn" class="gAddBtn" value="保存"/>
-        <label id="newGroupCommitCal" class="gAddBtn">取消</label>
+        <input type="text" id="newGroupName" class="form-control" placeholder="组别名称"/>
+        <input type="button" id="newGroupCommitBtn" class="gAddBtn btn brand-info" value="保存"/>
+        <label id="newGroupCommitCal" class="gAddBtn newGroupCommitCal" title="取消">取消</label>
+        <label class="errorInfo" id="newGroupCommitError"></label>
     </div>
 </div>

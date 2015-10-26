@@ -5,8 +5,13 @@
 
 require.config({
     baseUrl:window.urlObject.js,
+    shim: {
+        'jqueryui': ['jquery'],
+    },
     paths: {
         jquery: 'libs/jquery-1.8.2.min',
+        jqueryui:'libs/jquery-ui-1.9.2.custom.min',
+        util:'custom/util',
         menus: 'custom/menus',
         announcement: 'custom/announcement',
         teacher:'custom/teacher',
@@ -15,6 +20,8 @@ require.config({
 
 require([
     'jquery',
+    'util',
+    'jqueryui',
     'menus',
     'teacher',
     'announcement',
