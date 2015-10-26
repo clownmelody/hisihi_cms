@@ -52,13 +52,13 @@ Hisihi.modelBox.prototype = {
     posInfo:null,
 
     //显示隐藏的回调
-    stateChangeCallback: $.noop,
+    stateChangeCallback: null,
 
     //按钮回调方法
-    btnsCallback: $.noop,
+    btnsCallback: null,
 
     //初始化回调方法
-    initCallback: $.noop,
+    initCallback: null,
 
     initialize: function (options) {
         $.extend(this, options);

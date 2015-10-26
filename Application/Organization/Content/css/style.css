@@ -1237,9 +1237,10 @@ body {
   width: 75px;
   line-height: 10px;
 }
-#newGroupCommitCal {
+.newGroupCommitCal {
   color: #848484;
   margin-left: 10px;
+  cursor: pointer;
 }
 #errorInfo {
   font-size: 14px;
@@ -1269,11 +1270,11 @@ body {
   position: absolute;
 }
 .cornerModelBoxHead {
-  width: 100%;
-  height: 65px;
-  line-height: 65px;
+  width: 90%;
+  margin: 0 auto;
+  height: 60px;
+  line-height: 60px;
   font-size: 16px;
-  text-indent: 15px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   position: relative;
@@ -1299,4 +1300,61 @@ body {
   /*height:220px;
   width:100%;*/
   /*padding:20px;*/
+}
+#addNewTeacherModelBox {
+  width: 90%;
+  margin: 10px auto;
+}
+.allGroupNamesList {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.allGroupNamesList li {
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  text-align: center;
+  cursor: pointer;
+  color: #666666;
+  opacity: 0.8;
+}
+.allGroupNamesList li:hover {
+  opacity: 1;
+}
+.allGroupNamesList li.selected {
+  border-color: #f5a623;
+  color: #f5a623;
+}
+.allGroupNamesList li.addNewOne {
+  border-color: #cccccc;
+  border-style: dashed;
+  color: #cccccc;
+}
+.addNewTeacherItem {
+  margin-top: 5px;
+}
+.addNewTeacherItem .addNewTeacherHeader {
+  height: 60px;
+  line-height: 60px;
+}
+#addNewTeacherInput {
+  width: 350px;
+  height: 25px;
+}
+.addTeacherBtnRow {
+  height: 50px;
+  margin-top: 10px;
+}
+#addTeacherCommitBtn {
+  width: 115px;
+  height: 40px;
+  color: #ffffff;
+}
+#addTeacherCalBtn {
+  font-weight: normal;
 }

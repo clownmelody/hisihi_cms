@@ -205,17 +205,26 @@ define(['jquery'],function () {
                     headLabel: '选择或新建分组',
                     boxMainContentForAlert: function () {
                         return '<div id="addNewTeacherModelBox">' +
-                            '<div class="addNewTeacherWrapper">' +
-                            '<ul>' + that.getAllGroupNameStrForModelBox.call(that)+'</ul>' +
-                            '</div>' +
-                            '<div class="createChaBtnRow" id="themeSetBtns"><div class="createChaCommitBtn">保存</div><div class="createChaCancelBtn">取消</div></div>' +
-                            '<div class="clearFloatStyle"></div>' +
+                                    '<div class="addNewTeacherWrapper">' +
+                                        '<ul class="list allGroupNamesList">' + that.getAllGroupNameStrForModelBox.call(that)+'</ul>' +
+                                        '<div class="addNewTeacherItem">'+
+                                            '<div class="addNewTeacherHeader">添加新老师</div>'+
+                                            '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
+                                        '</div>'+
+
+                                    '</div>' +
+                                    '<div class="addTeacherBtnRow">'+
+                                        '<input type="button" id="addTeacherCommitBtn" class="btn .btn-grey" value="确定"/>' +
+                                        '<label id="addTeacherCalBtn" class="newGroupCommitCal" title="取消">取消</lable>'+
+                                    '</div>' +
                             '</div>';
                     },
-                    initCallback: $.proxy(that, 'initModelBoxCallback'),
-                    closeBoxCallback: $.proxy(that, 'controlStyleAbled'),
-                    boxWidth: '460px',
-                    boxHeight: '240px',
+                    initCallback:function(){
+                        that.initModelBoxCallback(this,that);
+                    },
+                    //closeBoxCallback: $.proxy(that, 'close'),
+                    boxWidth: '680px',
+                    boxHeight: '440px',
                     showAtFirst: true
                 });
             }else{
@@ -227,22 +236,67 @@ define(['jquery'],function () {
         *获得添加模态框的 可选组别
          */
         getAllGroupNameStrForModelBox:function(){
-            alert();
-            var data=this.getExistGroupName(),
-                str='';
-            for(var i=0;i<data.length;i++){
-                str+='<li><div class="radioContainer">data[i]</div></li>';
+            var arrData=this.getExistGroupName(),
+                str='',
+                className='';
+            arrData.push('新建分组');
+            var len=arrData.length;
+            for(var i=0;i<len;i++){
+                className='';
+                if(i==0){
+                    className='selected';
+                }
+                if(i==len-1){
+                    className='addNewOne';
+                }
+                str+='<li class="'+className+'"><div class="radioContainer">'+arrData[i]+'</div></li>';
             }
+            str+='<div style="clear: both;"></div>';
             return str;
 
         },
 
-        initModelBoxCallback:function(){
+        /*
+        *模态窗口初始化完成回调方法
+        * Para
+        * modelContext - {object} 模态窗口的上下文对象
+        * myContext - {object} 当前上下文对象
+        */
+        initModelBoxCallback:function(modelContext,myContext){
+            this.modelBoxEventsInit.call(modelContext,myContext);
+        },
+
+        /*
+        *模态窗口的事件注册
+        */
+        modelBoxEventsInit:function(modelContext,myContext){
+            modelContext.$parent.on('click','#addTeacherCommitBtn',function(){
+
+            });
+            modelContext.$parent.on('click','#addTeacherCalBtn',function(){
+                modelContext.hide();
+                myContext.clearAddTeacherInfo(modelContext.$parent);
+            });
+        },
+
+        /*
+        *确定添加老师的必填信息
+        */
+        checkAddTeacherValidity:function(){
 
         },
 
-        getCurrentGroupsName:function(){
-
+        /*
+         *清除添加老师的内容填充
+         */
+        clearAddTeacherInfo:function($parent){
+           $parent.find('#addNewTeacherInput').val('');
+            var $li=$parent.find('.allGroupNamesList li'),
+                $selected=$li.filter('.selected');
+            if($selcted.index()!=0) {
+                $selcted.removeClass('selected');
+            }
+            $li.eq(0).addClass('selected');
         },
 
     };
