@@ -65,7 +65,7 @@ Hisihi.modelBox.prototype = {
         var str = this.createBoxContent();
 
         $('body').append(str);
-        this.initCallback && this.initCallback.call(this.initCallback);
+
         this.$panel = $('.cornerModelBoxBg:last');
 
         this.eventsInit(); //事件注册
@@ -78,6 +78,7 @@ Hisihi.modelBox.prototype = {
         else {
             this.hide(false);
         }
+        this.initCallback && this.initCallback.call(this);
     },
 
     /*事件注册*/
@@ -157,3 +158,5 @@ Hisihi.modelBox.prototype = {
 
     OBJECT_NAME: 'Hisihi.modelBox'
 };
+
+

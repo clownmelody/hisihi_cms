@@ -38,7 +38,7 @@ define(['jquery'],function () {
             //this.getDataAsync(function(data){
             //    data;
             //});
-            this.showMembersInfo(data);
+            this.showMembersInfo(data,0);
         },
         getDataAsync:function(callback){
             var tempObj={
@@ -48,39 +48,27 @@ define(['jquery'],function () {
             $.post('../../',tempObj,callback);
         },
 
-        /*
-        *滚动加载更多的数据
-        * @para:
-        * target - {object} javascript 对象
-        */
-        scrollContainer:function(target){
-            var height = target.scrollHeight - $(target).height();
-            if ($(target).scrollTop() == height) {  //滚动到底部
-                this.loadData();
-                this.$wrapper.find('.loadingData').show().delay(2000).hide(0);
-            }
-        },
-
 
         /*
         *显示所有的分组和组员情况信息
         * @para
         * data -{array} 分组和组员信息数组
+        * type - {int} 调用该方法的来源 直接加载数据为了0，添加组别时调，则为了1
         */
-        showMembersInfo:function(data){
+        showMembersInfo:function(data,type){
             var str='',
                 that=this;
             $.each(data,function(){
-                str+='<li class="tItems">'+
+                str+='<li class="tItems" data-name="'+this.groupName+'">'+
                         '<div class="teacherHeader groupItemHeader"> '+
                             '<span class="teacherTitle">'+this.groupName+'</span>'+
                         '</div>'+
-                        '<ul class="list memberItemUl">'+that.getSomeGroupMembersStr(this.members)+'</ul>'+
+                        '<ul class="list memberItemUl">'+that.getSomeGroupMembersStr(this.members)+'<div style="clear:both;" class="clearForMemberUl"></ul>'+
                       '</li>';
             });
             str+='<div style="clear:both;">';
             this.$wrapper.find('#teacherMainCon').append(str);
-            this.scrollToBottom($('.wrapper')[0]); //滚动到底部
+            type==1 && this.scrollToBottom($('.wrapper')[0]); //滚动到底部
         },
 
         /*
@@ -96,12 +84,12 @@ define(['jquery'],function () {
                     '<div class="memberItemRight"><p class="tname">'+this.name+'</p><p class="trole">'+this.role+'</p></div>'+
                     '</li>';
             });
-            str+='<div style="clear:both;">';
+
             return str;
         },
 
         /*
-         控制容器的高度
+         控制容器的显示和隐藏
          */
         controlAddGroupConState:function(){
             this.$wrapper.find('.addGroupDetailCon').toggle(50);
@@ -137,9 +125,9 @@ define(['jquery'],function () {
                 this.$wrapper.find('.addGroupCon').trigger('click');
                 this.$wrapper.find('#newGroupName').val('');
                 var data = [{groupName:validity.name,members:[]}];
-                this.showMembersInfo(data);
+                this.showMembersInfo(data,1);
             }else{
-                this.$wrapper.find('#errorInfo').text(validity.tip).show().delay(500).hide(0);
+                this.$wrapper.find('#newGroupCommitError').text(validity.tip).show().delay(500).hide(0);
             }
         },
 
@@ -190,15 +178,16 @@ define(['jquery'],function () {
         /*
         *滚动到底部
         **/
-        scrollToBottom:function(target){
-            $(target).scrollTop(target.scrollHeight+140);
-            //$('')
+        scrollToBottom:function(target,callback){
+            //$(target).scrollTop(target.scrollHeight+140);
+            $('html,body').animate({ scrollTop: target.scrollHeight}, 800, callback);
         },
 
         /*
         *显示添加老师弹出层
         */
         showAddNewTeachersModelBox:function(){
+
             var that = this;
             if(!this.modelBox) {
                 this.modelBox = new Hisihi.modelBox({
@@ -210,11 +199,11 @@ define(['jquery'],function () {
                                         '<div class="addNewTeacherItem">'+
                                             '<div class="addNewTeacherHeader">添加新老师</div>'+
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
+                                            '<label class="errorInfo addNewTeacherInput">请选择老师</label>'+
                                         '</div>'+
-
                                     '</div>' +
                                     '<div class="addTeacherBtnRow">'+
-                                        '<input type="button" id="addTeacherCommitBtn" class="btn .btn-grey" value="确定"/>' +
+                                        '<input type="button" id="addTeacherCommitBtn" class="btn btn-grey" value="确定"/>' +
                                         '<label id="addTeacherCalBtn" class="newGroupCommitCal" title="取消">取消</lable>'+
                                     '</div>' +
                             '</div>';
@@ -263,20 +252,91 @@ define(['jquery'],function () {
         * myContext - {object} 当前上下文对象
         */
         initModelBoxCallback:function(modelContext,myContext){
-            this.modelBoxEventsInit.call(modelContext,myContext);
+            this.modelBoxEventsInit(modelContext,myContext);
         },
 
         /*
         *模态窗口的事件注册
         */
         modelBoxEventsInit:function(modelContext,myContext){
-            modelContext.$parent.on('click','#addTeacherCommitBtn',function(){
+            var $txtTarget=modelContext.$panel.find('#addNewTeacherInput'),
+            $btnCommit=modelContext.$panel.find('#addNewTeacherInput');
+
+            /*
+            *确定添加
+             */
+            modelContext.$panel.on('click','#addTeacherCommitBtn',function(){
+                if($txtTarget.val()==''){
+                    modelContext.$panel.find('.addNewTeacherInput').show().delay(500).hide(0);
+                    return;
+                }
+                modelContext.hide();
+
+                //执行真正的添加
+                var groupName=modelContext.$panel.find('.allGroupNamesList .selected').text();
+
+                myContext.execAddNewTeacher.call(myContext,groupName,$txtTarget.val());
+                myContext.clearAddTeacherInfo(modelContext.$panel);
 
             });
-            modelContext.$parent.on('click','#addTeacherCalBtn',function(){
+
+            /*
+            *取消添加
+            */
+            modelContext.$panel.on('click','#addTeacherCalBtn',function(){
                 modelContext.hide();
-                myContext.clearAddTeacherInfo(modelContext.$parent);
+                myContext.clearAddTeacherInfo(modelContext.$panel);
             });
+
+            /*
+            *即时搜索
+             */
+           //var emailTips = new Hisihi.tipEmailUrl($txtTarget,
+           //     { top: '37px', left: '0' },
+           //     { widthInfo: $txtTarget.width() + 5 });
+           //
+           // $txtTarget.on('keyup', function (e) {
+           //     if (e.keyCode == 13) {
+           //         $("#resetPwd").trigger('click');
+           //         this.value = '';
+           //         event.returnValue = false;
+           //     }
+           //     if (e.keyCode == 40 || e.keyCode == 38) {
+           //         emailTips._selectTipsEmailUrl(e.keyCode);
+           //         return;
+           //     }
+           //     emailTips._showTipEmailUrl([{name:'阿信',role:'管理员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'郑钧',role:'成员',imgSrc:window.urlObject.image+'/userImg/app2.png'},{name:'李志',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'阿信',role:'管理员',imgSrc:window.urlObject.image+'/userImg/app1.png'}]);
+           // });
+           //
+           // $txtTarget.blur(function(){
+           //     var isNull=true;
+           //     if(this.value!=''){
+           //         isNull=false;
+           //     }
+           //     $btnCommit[flag?'removeClass':'addClass']('abled');
+           // });
+
+            /*
+            *组别选择
+            */
+            modelContext.$panel.on('click','.allGroupNamesList li',function(){
+                var index=$(this).index();
+                if(index!=$(this).siblings().length-1) {
+                    $(this).addClass('selected').siblings().removeClass('selected');
+                }
+
+                //新建组别
+                else{
+                    modelContext.hide();
+                    myContext.scrollToBottom($('.wrapper')[0],function(){
+                       var $target= myContext.$wrapper.find('.addGroupDetailCon');
+                        if($target.is(':hidden')){
+                            $target.prev().trigger('click');
+                        }
+                    });
+                }
+            });
+
         },
 
         /*
@@ -293,13 +353,122 @@ define(['jquery'],function () {
            $parent.find('#addNewTeacherInput').val('');
             var $li=$parent.find('.allGroupNamesList li'),
                 $selected=$li.filter('.selected');
-            if($selcted.index()!=0) {
-                $selcted.removeClass('selected');
+            if($selected.index()!=0) {
+                $selected.removeClass('selected');
             }
             $li.eq(0).addClass('selected');
         },
 
+        /*
+        *添加老师到相应的分组
+        */
+        execAddNewTeacher:function(groupName,name){
+            var member=[{name:name,role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'}];
+            var str = this.getSomeGroupMembersStr(member),
+                $allLi=this.$wrapper.find('#teacherMainCon .tItems'),
+                $li;
+                $allLi.each(function(){
+                if ($(this).data('name')==groupName){
+                    $li = $(this);
+                    return false;
+                }
+            });
+            $li.find('.memberItemUl .clearForMemberUl').before(str);
+        },
+
     };
+
+
+    /***即时搜索***/
+    Hisihi.tipEmailUrl=function($txtTarget, posStyle,options){
+        $.extend(this,options);
+        this.$txtTarget = $txtTarget;
+        this.posStyle = posStyle;
+        !this.$tipTarget && $txtTarget.after('<div class="tipEmailUrl"></div>');
+        this.$tipTarget = $txtTarget.next();
+        this.controlContainerStyle();
+        this.eventsInit();
+    };
+
+    Hisihi.tipEmailUrl.prototype={
+        /*显示邮箱提示*/
+        _showTipEmailUrl: function (mydata) {
+            var val = this.$txtTarget.val();
+            if (val == '') {
+                this.hideTipEmailUrl();
+                return;
+            }
+            var str = '';
+            this.emailTypeData=mydata;
+            var len = this.emailTypeData.length;
+            for (var i = 0; i < len; i++) {
+                str += '<li class="tipEmailUrlLi">'+this.emailTypeData.name[i] + '</li>';
+            }
+            this.$tipTarget.show().html(str);
+        },
+
+        /*隐藏提示框*/
+        hideTipEmailUrl: function () {
+            this.$tipTarget.hide();
+        },
+
+        /*选择相应的邮箱提示*/
+        _selectTipsEmailUrl: function (codeNum) {
+            var $li =  this.$tipTarget.find('.tipEmailUrlLi');
+            var $liSel = $li.filter('.selected');
+            var index = $liSel.index();
+            if ($li.length > 0) {
+                $li.removeClass('selected');
+                var $lastLi = $li.last();
+                var $firstLi = $li.first();
+                if (codeNum == 40) {//向下
+                    if ($liSel.length == 0 || index == $li.length - 1) {
+                        $firstLi.addClass('selected');
+                    }
+                    else {
+                        $li.eq(index + 1).addClass('selected');
+                    }
+                }
+                else { //38:  //向上
+                    if ($liSel.length == 0 || index == 0) {
+                        $lastLi.addClass('selected');
+                    } else {
+                        $li.eq(index - 1).addClass('selected');
+                    }
+                }
+                this.$txtTarget.val($li.filter('.selected').text());
+            }
+        },
+
+        eventsInit: function () {
+            var that = this;
+            /*从提示中选择相应的邮箱*/
+            this.$tipTarget.on('click', 'li', function (e) {
+                var text = this.innerText;
+                that.$txtTarget.val(text);
+                e.stopPropagation();
+                that.hideTipEmailUrl();
+            });
+
+            /*隐藏邮箱提示信息*/
+            $(document).on('click', function () {
+                that.hideTipEmailUrl();
+            });
+        },
+
+        /**控制框的样式 宽，位置等**/
+        controlContainerStyle: function () {
+            if (!this.widthInfo) {
+                this.widthInfo = this.$txtTarget.width();
+            }
+            this.$tipTarget.css({
+                'top': this.posStyle.top,
+                'left': this.posStyle.left,
+                'width': this.widthInfo
+            });
+        }
+    };
+
 
     var myTeacher=new MyTeacher($('.teachersWrapper'));
     return myTeacher;

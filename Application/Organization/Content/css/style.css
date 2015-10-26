@@ -1242,7 +1242,7 @@ body {
   margin-left: 10px;
   cursor: pointer;
 }
-#errorInfo {
+.errorInfo {
   font-size: 14px;
   color: #F5A623;
   margin-left: 20px;
@@ -1345,15 +1345,55 @@ body {
 #addNewTeacherInput {
   width: 350px;
   height: 25px;
+  display: inline;
 }
 .addTeacherBtnRow {
   height: 50px;
-  margin-top: 10px;
+  margin-top: 90px;
 }
 #addTeacherCommitBtn {
   width: 115px;
   height: 40px;
   color: #ffffff;
+}
+#addTeacherCommitBtn.abled {
+  color: #ffffff !important;
+  background-color: #f7be5b !important;
+  border-color: #f8c873 !important;
+}
+#addTeacherCommitBtn.abled:hover,
+#addTeacherCommitBtn.abled:focus,
+#addTeacherCommitBtn.abled.focus,
+#addTeacherCommitBtn.abled:active,
+#addTeacherCommitBtn.abled.active {
+  color: #ffffff !important;
+  background-color: #f5ab2a !important;
+  border-color: #f5b139 !important;
+}
+#addTeacherCommitBtn.abled:active,
+#addTeacherCommitBtn.abled.active {
+  background-image: none !important;
+}
+#addTeacherCommitBtn.abled.disabled,
+#addTeacherCommitBtn.abled[disabled],
+fieldset[disabled] #addTeacherCommitBtn.abled,
+#addTeacherCommitBtn.abled.disabled:hover,
+#addTeacherCommitBtn.abled[disabled]:hover,
+fieldset[disabled] #addTeacherCommitBtn.abled:hover,
+#addTeacherCommitBtn.abled.disabled:focus,
+#addTeacherCommitBtn.abled[disabled]:focus,
+fieldset[disabled] #addTeacherCommitBtn.abled:focus,
+#addTeacherCommitBtn.abled.disabled.focus,
+#addTeacherCommitBtn.abled[disabled].focus,
+fieldset[disabled] #addTeacherCommitBtn.abled.focus,
+#addTeacherCommitBtn.abled.disabled:active,
+#addTeacherCommitBtn.abled[disabled]:active,
+fieldset[disabled] #addTeacherCommitBtn.abled:active,
+#addTeacherCommitBtn.abled.disabled.active,
+#addTeacherCommitBtn.abled[disabled].active,
+fieldset[disabled] #addTeacherCommitBtn.abled.active {
+  background-color: #f7be5b !important;
+  border-color: #f8c873 !important;
 }
 #addTeacherCalBtn {
   font-weight: normal;

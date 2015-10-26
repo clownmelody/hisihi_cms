@@ -148,7 +148,7 @@
   cursor: pointer;
 }
 
-#errorInfo{
+.errorInfo{
   font-size: 14px;
   color: #F5A623;
   margin-left: 20px;
@@ -262,17 +262,22 @@
 #addNewTeacherInput{
   width:350px;
   height:25px;
+  display: inline;
 }
 
 .addTeacherBtnRow{
   height: 50px;
-  margin-top: 10px;
+  margin-top: 90px;
 }
 
 #addTeacherCommitBtn{
   width:115px;
   height: 40px;
   color: @white-color;
+}
+
+#addTeacherCommitBtn.abled{
+  .brand-info !important;
 }
 #addTeacherCalBtn{
   font-weight:normal;
