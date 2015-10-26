@@ -105,8 +105,14 @@ function ListExperFu (NameDepar,Stime,Etime,Jcontent) {
 
 //ListExper
 function ListExper (NameDepar,Jcontent) {
-    var NameDepar = "<li class='user-company'>"+NameDepar+"</li>";
-    var Time = "<li class='user-time'>"+Jcontent+"</li>";
+    if ((NameDepar.length+Jcontent.length)>15) {
+        var NameDepar = "<li class='user-company'style='width: 100%;'>"+NameDepar+"</li>";
+        var Time = "<li class='user-time' style='width: 100%;text-align: left;'>"+Jcontent+"</li>";
+    }else{
+        var NameDepar = "<li class='user-company'>"+NameDepar+"</li>";
+        var Time = "<li class='user-time'>"+Jcontent+"</li>";
+    }
+
     return "<li><ul class='user-empiric'>"+NameDepar+Time+"</ul></li>";
 }
 
