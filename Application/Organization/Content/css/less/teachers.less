@@ -55,12 +55,35 @@
 }
 .memberItemUl li{
   height:60px;
-  width: 180px;
+  width: 170px;
   position: relative;
   margin: 10px 20px;
   margin-right: 0;
   cursor: pointer;
+  border-radius: 3px;
 }
+.memberItemUl li.normal{
+  background-color: transparent;
+}
+.memberItemUl li.edit{
+  background-color:@edit-pink;
+}
+.memberItemUl li.edit:hover{
+  box-shadow:0 0 13px @md-grey-900;
+}
+.memberItemUl li.edit .deleteTeacher{
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  height: 18px;
+  width: 18px;
+  background: url('../images/tempsprite.png') no-repeat;
+  background-position:2px -32px ;
+}
+.memberItemUl li.edit .deleteTeacher:hover{
+  background-position-x:-15px;
+}
+
 .memberItemUl li .memberItemLeft{
   position: absolute;
   width: 60px;
@@ -70,7 +93,7 @@
   width: 45px;
   height:45px;
   border-radius: 45px;
-  margin: 5px;
+  margin: 8px;
 }
 .memberItemUl li .memberItemLeft img.hover{
   .box-shadow(0px 0 13px @md-grey-900);
@@ -281,5 +304,8 @@
 }
 #addTeacherCalBtn{
   font-weight:normal;
+}
+.sortableplaceholder {
+  border:1px dotted #428BCA !important;
 }
 

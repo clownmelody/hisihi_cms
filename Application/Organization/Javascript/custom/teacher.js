@@ -4,14 +4,16 @@
 
 //我的老师
 
-define(['jquery'],function () {
+define(['jquery','jqueryui'],function () {
     var MyTeacher = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.modelBox=null;
         this.loadData();
+
         //事件注册
         var that=this;
-        this.$wrapper.on('mouseover mouseout','.memberItemUl li',function(e){
+        this.initSortEvents();  //拖动排序
+        this.$wrapper.on('mouseover mouseout','.memberItemUl li.normal',function(e){
             var $target=$(this).find('img'),
                 className='hover';
             if(e.type=='mouseover') {
@@ -20,10 +22,22 @@ define(['jquery'],function () {
                 $target.removeClass(className);
             }
         });
+        this.$wrapper.on('mouseover mouseout','.memberItemUl li.edit',function(e) {
+            var $target=$(this).find('.deleteTeacher'),
+                className='hover';
+            if(e.type=='mouseover') {
+                $target.addClass(className);
+            }else{
+                $target.removeClass(className);
+            }
+        });
+
         this.$wrapper.on('click','.addGroupCon', $.proxy(this,'controlAddGroupConState'));
         this.$wrapper.on('click','.gAddBtn', $.proxy(this,'addNewGroup'));
         this.$wrapper.on('click','#addTeacher', $.proxy(this,'showAddNewTeachersModelBox'));
         this.$wrapper.on('keydown','#newGroupName',$.proxy(this,'doCommitNewGroup'));
+        this.$wrapper.on('click','.editTeacher',$.proxy(this,'showEditTeacherBox'));
+        this.$wrapper.on('click','.deleteTeacher',$.proxy(this,'deleteTeacher'));
     };
 
     MyTeacher.prototype={
@@ -79,9 +93,14 @@ define(['jquery'],function () {
         getSomeGroupMembersStr:function(members){
             var str='';
             $.each(members,function(){
-                str+='<li>'+
-                    '<div class="memberItemLeft"><img src="'+this.imgSrc+'"></div>'+
-                    '<div class="memberItemRight"><p class="tname">'+this.name+'</p><p class="trole">'+this.role+'</p></div>'+
+                var name=this.name;
+                if(name.length>6){
+                    name=name.substr(0,5)+'…'
+                }
+                str+='<li class="normal">'+
+                        '<div class="memberItemLeft"><img src="'+this.imgSrc+'"></div>'+
+                        '<div class="memberItemRight"><p class="tname" title="'+this.name+'">'+name+'</p><p class="trole">'+this.role+'</p></div>'+
+                        '<div class="deleteTeacher" title="删除"></div>'+
                     '</li>';
             });
 
@@ -132,6 +151,32 @@ define(['jquery'],function () {
         },
 
         /*
+        *组员移动事件注册
+        *
+         */
+        initSortEvents:function(){
+            $target = this.$wrapper.find('.memberItemUl');
+
+            //任务拖动
+            $target.sortable({
+                items: ">li",
+                helper: 'clone',
+                delay: 300,
+                cursor: 'move',
+                scroll: true,
+                placeholder: "sortableplaceholder",
+                connectWith: '.memberItemUl',
+                start: function (event, ui) {
+
+                },
+
+                stop: function (event, ui) {
+
+                }
+            });
+        },
+
+        /*
         *名称合法性判断
          */
         newNameValidity:function(){
@@ -172,6 +217,31 @@ define(['jquery'],function () {
         doCommitNewGroup:function(e){
             if(e.keyCode==13){
                 this.$wrapper.find('.gAddBtn').trigger('click');
+            }
+        },
+
+        /*
+        *显示删除老板按钮
+        */
+        showEditTeacherBox:function(e){
+            var $target=$(e.srcElement),
+                flag=$target.text()=='编辑',
+                $li = this.$wrapper.find('.memberItemUl li');
+            if(flag) {
+                $target.text('关闭编辑');
+                $li.removeClass('normal').addClass('edit');
+            }else{
+                $target.text('编辑');
+                $li.removeClass('edit').addClass('normal');
+            }
+        },
+
+        /*
+        *删除老师
+        */
+        deleteTeacher:function(e){
+            if(window.confirm('确定删除该老师么？')) {
+                var $target = $(e.srcElement).parent().remove();
             }
         },
 
