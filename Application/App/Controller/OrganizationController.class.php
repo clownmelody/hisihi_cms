@@ -15,99 +15,8 @@ use Think\Model;
 
 class OrganizationController extends AppController
 {
-    public function _initialize()
-    {
+    public function _initialize(){
         C('SHOW_PAGE_TRACE', false);
-    }
-
-    /**
-     * 获取机构信息
-     * @param int $organization_id
-     */
-    public function info($organization_id=0){
-        if(empty($organization_id)){
-            $this->apiError(-1, '传入机构ID不允许为空');
-        }
-        $this->apiSuccess('ok');
-    }
-
-    /**
-     * 获取机构的教师信息
-     * @param int $organization_id
-     */
-    public function teachers_info($organization_id=0){
-        if(empty($organization_id)){
-            $this->apiError(-1, '传入机构ID不允许为空');
-        }
-        $this->apiSuccess('ok');
-    }
-
-    /**
-     * 获取机构学生的作品
-     * @param int $organization_id
-     */
-    public function students_works($organization_id=0){
-        if(empty($organization_id)){
-            $this->apiError(-1, '传入机构ID不允许为空');
-        }
-        $this->apiSuccess('ok');
-    }
-
-    /**
-     * 获取机构的课程视频
-     * @param int $organization_id
-     */
-    public function courses($organization_id=0){
-        if(empty($organization_id)){
-            $this->apiError(-1, '传入机构ID不允许为空');
-        }
-        $this->apiSuccess('ok');
-    }
-
-    /**
-     * 获取机构的学生信息
-     * @param int $organization_id
-     */
-    public function students_info($organization_id=0){
-        if(empty($organization_id)){
-            $this->apiError(-1, '传入机构ID不允许为空');
-        }
-        $this->apiSuccess('ok');
-    }
-
-    /**
-     * 获取机构的环境图片信息
-     * @param int $organization_id
-     */
-    public function environment($organization_id=0){
-        if(empty($organization_id)){
-            $this->apiError(-1, '传入机构ID不允许为空');
-        }
-        $this->apiSuccess('ok');
-    }
-
-    /**
-     * 用户对机构加关注或取消关注
-     * @param int $organization_id
-     * @param int $uid
-     */
-    public function user_follow($organization_id=0, $uid=0, $follow=true){
-        if(empty($organization_id)||empty($uid)){
-            $this->apiError(-1, '传入机构ID和UID不允许为空');
-        }
-        $this->apiSuccess('ok');
-    }
-
-    /**
-     * 用户评论
-     * @param int $organization_id
-     * @param int $uid
-     */
-    public function comment($organization_id=0, $uid=0){
-        if(empty($organization_id)||empty($uid)){
-            $this->apiError(-1, '传入机构ID和UID不允许为空');
-        }
-        $this->apiSuccess('ok');
     }
 
     /**
@@ -144,9 +53,8 @@ class OrganizationController extends AppController
     /**
      * web和app用户注册
      * @param $mobile
-     * @param $sms
-     * @param $password
-     * @param $org_name
+     * @param $sms_code
+     * @param null $password
      */
     public function register($mobile, $sms_code, $password=null){
         if(empty($mobile)||empty($sms_code)||empty($password)){
@@ -266,6 +174,7 @@ class OrganizationController extends AppController
      * @param null $name
      * @param null $slogan
      * @param null $introduce
+     * @param null $logo
      * @param null $advantage
      * @param null $location
      * @param null $phone_num
@@ -312,9 +221,20 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 获取机构优势标签
+     * 获取机构通用优势标签
      */
-    public function getAdvantageTags(){
+    public function getCommonAdvantageTags(){
+        $model = M('OrganizationConfig');
+        $list = $model->field('id, value')->where('type=2 and status=1')->select();
+        $extra['totalCount'] = count($list);
+        $extra['data'] = $list;
+        $this->apiSuccess('获取推荐优势标签成功', null, $extra);
+    }
+
+    /**
+     * 获取机构之间的标签
+     */
+    public function getOrganizationAdvantageTags(){
 
     }
 
@@ -324,7 +244,31 @@ class OrganizationController extends AppController
      * @param int $count
      */
     public function getNotice($page=1, $count=10){
+        $model = M('OrganizationNotice');
+        $totoalCount = $model->where('status=1')->count();
+        $list = $model->where('status=1')->page($page, $count)->select();
+        foreach($list as &$notice){
+            $notice['detail_url'] = 'http://115.28.72.197/api.php?s/organization/noticedetail/id/'.$notice['id'];
+            unset($notice['content']);
+            unset($notice['status']);
+        }
+        $extra['totalCount'] = $totoalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取公告信息列表成功', null, $extra);
+    }
 
+    /**
+     * 机构公告详情
+     * @param int $id
+     */
+    public function noticeDetail($id=0){
+        if(empty($id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $model = M('OrganizationNotice');
+        $notice = $model->where('id='.$id)->find();
+        $this->assign('notice', $notice);
+        $this->display('noticedetail');
     }
 
     /**
@@ -368,7 +312,61 @@ class OrganizationController extends AppController
 
     }
 
-    public function teachersGroup($organization_id=null, $group_name=null, $type='add'){
+    /**
+     * 新增老师分组
+     * @param null $organization_id
+     * @param null $group_name
+     */
+    public function addTeachersGroup($organization_id=null, $group_name=null){
+
+    }
+
+    /**
+     * 修改老师分组名称
+     * @param null $teacher_group_id
+     * @param null $group_name
+     */
+    public function updateTeachersGroup($teacher_group_id=null, $group_name=null){
+
+    }
+
+    /**
+     * 删除老师分组
+     * @param null $teacher_group_id
+     */
+    public function deleteTeachersGroup($teacher_group_id=null){
+
+    }
+
+    /**
+     * 添加教师到分组
+     * @param null $teacher_group_id
+     * @param null $uid
+     */
+    public function addTeacherToGroup($uid=null, $teacher_group_id=null){
+
+    }
+
+    /**
+     * 从分组中移除老师
+     * @param null $uid
+     * @param null $teacher_group_id
+     */
+    public function deleteTeacherFromGroup($uid=null, $teacher_group_id=null){
+
+    }
+
+    /**
+     * 获取当前机构所有分组信息
+     */
+    public function getAllGroups(){
+
+    }
+
+    /**
+     * 获取所有分组和老师信息
+     */
+    public function getAllGroupsTeachers(){
 
     }
 

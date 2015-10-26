@@ -6,7 +6,7 @@
  * Time: 15:02
  */
 
-namespace Organization\Model;
+namespace Admin\Model;
 use Think\Model;
 
 class OrganizationTypeModel extends Model

@@ -25,12 +25,12 @@ class OrganizationController extends AdminController
 
     function _initialize()
     {
-        $this->organizationModel = D('Organization/Organization');
-        $this->organization_relationModel = D('Organization/OrganizationRelation');
-        $this->organization_worksModel = D('Organization/OrganizationWorks');
-        $this->organization_resourceModel = D('Organization/OrganizationResource');
-        $this->organization_commentModel = D('Organization/OrganizationComment');
-        $this->organization_configModel = D('Organization/OrganizationConfig');
+        $this->organizationModel = D('Admin/Organization');
+        $this->organization_relationModel = D('Admin/OrganizationRelation');
+        $this->organization_worksModel = D('Admin/OrganizationWorks');
+        $this->organization_resourceModel = D('Admin/OrganizationResource');
+        $this->organization_commentModel = D('Admin/OrganizationComment');
+        $this->organization_configModel = D('Admin/OrganizationConfig');
         parent::_initialize();
     }
 
@@ -122,7 +122,6 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                //$this->success('添加成功', Cookie('__forward__'));
                 $this->success('添加成功', 'index.php?s=/admin/organization/index');
             } else {
                 //$model = D('Organization');
@@ -133,7 +132,6 @@ class OrganizationController extends AdminController
                 if($picid){
                     $this->uploadLogoPicToOSS($picid);
                 }
-                //$this->success('更新成功', Cookie('__forward__'));
                 $this->success('更新成功', 'index.php?s=/admin/organization/index');
             }
         } else {

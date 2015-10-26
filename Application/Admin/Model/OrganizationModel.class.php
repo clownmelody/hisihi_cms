@@ -6,7 +6,7 @@
  * Time: 15:00
  */
 
-namespace Organization\Model;
+namespace Admin\Model;
 use Think\Model;
 use Think\Page;
 

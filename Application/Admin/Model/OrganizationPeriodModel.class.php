@@ -6,7 +6,7 @@
  * Time: 15:06
  */
 
-namespace Organization\Model;
+namespace Admin\Model;
 use Think\Model;
 
 class OrganizationPeriodModel extends Model
