@@ -25,12 +25,12 @@ class OrganizationController extends AdminController
 
     function _initialize()
     {
-        $this->organizationModel = D('Organization/Organization');
-        $this->organization_relationModel = D('Organization/OrganizationRelation');
-        $this->organization_worksModel = D('Organization/OrganizationWorks');
-        $this->organization_resourceModel = D('Organization/OrganizationResource');
-        $this->organization_commentModel = D('Organization/OrganizationComment');
-        $this->organization_configModel = D('Organization/OrganizationConfig');
+        $this->organizationModel = D('Admin/Organization');
+        $this->organization_relationModel = D('Admin/OrganizationRelation');
+        $this->organization_worksModel = D('Admin/OrganizationWorks');
+        $this->organization_resourceModel = D('Admin/OrganizationResource');
+        $this->organization_commentModel = D('Admin/OrganizationComment');
+        $this->organization_configModel = D('Admin/OrganizationConfig');
         parent::_initialize();
     }
 
@@ -122,7 +122,6 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                //$this->success('添加成功', Cookie('__forward__'));
                 $this->success('添加成功', 'index.php?s=/admin/organization/index');
             } else {
                 //$model = D('Organization');
@@ -133,7 +132,6 @@ class OrganizationController extends AdminController
                 if($picid){
                     $this->uploadLogoPicToOSS($picid);
                 }
-                //$this->success('更新成功', Cookie('__forward__'));
                 $this->success('更新成功', 'index.php?s=/admin/organization/index');
             }
         } else {
@@ -367,6 +365,111 @@ class OrganizationController extends AdminController
      */
     public function certificateUpdate(){
 
+    }
+
+    /**
+     * 机构公告列表
+     */
+    public  function notice(){
+        $model = D('OrganizationNotice');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['title'] = array('like','%'.$name.'%');
+            $map['status'] = 1;
+            $list = $model->where($map)->order('update_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where('status=1')->order('update_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","机构公告列表");
+        $this->display();
+    }
+
+    /**
+     * 机构公告新增
+     */
+    public function notice_add(){
+        $this->display();
+    }
+
+    /**
+     * 机构公告更新
+     */
+    public  function notice_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationNotice');
+            $cid = $_POST["cid"];
+            $data["title"] = $_POST["title"];
+            $data["content"] = $_POST["content"];
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/organization/notice');
+            } else {
+                $data["update_time"] = time();
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                $this->success('更新成功', 'index.php?s=/admin/organization/notice');
+            }
+        } else {
+            $this->display('notice_add');
+        }
+    }
+
+    /**编辑公告信息
+     * @param $id
+     */
+    public function notice_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationNotice');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $this->assign('info', $data);
+        $this->meta_title = '编辑机构公告信息';
+        $this->display();
+    }
+
+    /**删除公告信息
+     * @param $id
+     */
+    public function notice_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationNotice');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/notice');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
     }
 
     /**上传图片到OSS

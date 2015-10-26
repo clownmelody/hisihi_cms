@@ -23,9 +23,9 @@ class IndexController extends HiworksController
         $modal = M('qr_scan');
 
         $data = $modal->where($map)->field('scan_uid')->find();
-        if(empty($data)){
+        /*if(empty($data)){
             $this->apiError(-1,"非法请求！");
-        }
+        }*/
 
         if(!D('Home/Member')->login($data['scan_uid'])){
             $this->apiError(401,"需要登录！");

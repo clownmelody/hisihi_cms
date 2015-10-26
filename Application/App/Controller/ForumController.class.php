@@ -259,6 +259,8 @@ class ForumController extends AppController
      */
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime', $show_adv=false, $post_type=1)
     {
+        $start_time = time();
+        \Think\Log::write("android test request success!");
         $field_type = intval($field_type);
         $page = intval($page);
         $count = intval($count);
@@ -312,7 +314,10 @@ class ForumController extends AppController
                 $list[$len] = $adv;
             }
         }
-
+        $end_time = time();
+        $t = $end_time - $start_time;
+        \Think\Log::write("android test response success!");
+        \Think\Log::write("处理时常：".$t.'毫秒');
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
@@ -1638,10 +1643,12 @@ class ForumController extends AppController
                     if($post_info){
                         $content_list = M('Autoreply')->where(array('forum_id' => $post_info['forum_id'], 'status' => 1))->select();
                         $count = count($content_list);
-                        $index = rand(1, $count);
-                        $uid = rand(70, 90);
-                        $model = D('Forum/ForumPostReply');
-                        $model->addAutoReply($uid, $post_id, $content_list[$index]['content']);
+                        if($count!=0){
+                            $index = rand(1, $count);
+                            $uid = rand(70, 90);
+                            $model = D('Forum/ForumPostReply');
+                            $model->addAutoReply($uid, $post_id, $content_list[$index]['content']);
+                        }
                         $reply_count = $reply_count - 1;
                     }
                 }

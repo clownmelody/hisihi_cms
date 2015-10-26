@@ -73,10 +73,61 @@ class InspirationController extends AppController {
                 $list = $model->where($map)->order('view_count desc')->page($page, $count)->select();
                 break;
         }
+
         $list = $this->formatList($list);
         $extra['totalCount'] = $total_count;
         $extra['data'] = $list;
         $this->apiSuccess('获取灵感图片列表成功', null, $extra);
+    }
+
+    /**
+     * 获取灵感图片详情
+     * @param null $inspiration_id
+     * @param null $uid
+     */
+    public function inspirationDetail($inspiration_id=null, $uid=null){
+        M('Inspiration')->where('id='.$inspiration_id)->setInc('view_count');
+        $inspirationInfo = M('Inspiration')->where('id='.$inspiration_id)->find();
+        $pic_id = $inspirationInfo['pic_id'];
+        $inspira = array(
+            'id'=>$inspirationInfo['id'],
+            'description'=>$inspirationInfo['description'],
+            'view_count'=>$inspirationInfo['view_count'],
+            'favorite_count'=>$inspirationInfo['favorite_count'],
+            'create_time'=>$inspirationInfo['create_time']
+        );
+        $pic_url = $this->fetchImage($pic_id);
+        $origin_img_info = getimagesize($pic_url);
+        $src_size = Array();
+        $src_size['width'] = $origin_img_info[0]; // width
+        $src_size['height'] = $origin_img_info[1]; // height
+        $inspira['picture'] = array(
+            'url'=>$pic_url,
+            'size'=>$src_size
+        );
+        $pic_small = getThumbImageById($pic_id, 280, 160);
+        $thumb_img_info = getimagesize($pic_small);
+        $thumb_size = Array();
+        $thumb_size['width'] = $thumb_img_info[0]; // width
+        $thumb_size['height'] = $thumb_img_info[1]; // height
+        $inspira['thumb'] = array(
+            'url'=>$pic_small,
+            'size'=>$thumb_size
+        );
+        if(empty($uid)){
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Inspiration';
+        $favorite['table'] = 'Inspiration';
+        $favorite['row'] = $pic_id;
+        $favorite['uid'] = $uid;
+        if (D('Favorite')->where($favorite)->count()) {
+            $inspira['isFavorite'] = true;
+        } else {
+            $inspira['isFavorite'] = false;
+        }
+        $extra['data'] = $inspira;
+        $this->apiSuccess('获取灵感详情成功', null, $extra);
     }
 
     /**
@@ -103,6 +154,33 @@ class InspirationController extends AppController {
             $favorite['create_time'] = time();
             if (D('Favorite')->where($favorite)->add($favorite)) {
                 $this->apiSuccess('感谢您的支持');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消收藏灵感图片
+     * @param int $uid
+     * @param int $pic_id
+     */
+    public function undoFavorite($uid=0,$pic_id=0){
+        if(empty($pic_id)){
+            $this->apiError(-1, '传入图片id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Inspiration';
+        $favorite['table'] = 'Inspiration';
+        $favorite['row'] = $pic_id;
+        $favorite['uid'] = $uid;
+        if (!D('Favorite')->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有收藏，不能取消收藏!');
+        } else {
+            if (D('Favorite')->where($favorite)->delete()) {
+                $this->apiSuccess('取消收藏成功');
             } else {
                 $this->apiError(-101,'写入数据库失败!');
             }
@@ -158,8 +236,20 @@ class InspirationController extends AppController {
                     'url'=>$pic_small,
                     'size'=>$thumb_size
                 );
-                unset($inspira['id']);
+                $uid = is_login();
+                $favorite['appname'] = 'Inspiration';
+                $favorite['table'] = 'Inspiration';
+                $favorite['row'] = $pic_id;
+                $favorite['uid'] = $uid;
+                if (D('Favorite')->where($favorite)->count()) {
+                    $inspira['isFavorite'] = true;
+                } else {
+                    $inspira['isFavorite'] = false;
+                }
                 unset($inspira['status']);
+                unset($inspira['special']);
+                unset($inspira['selection']);
+                unset($inspira['category_id']);
             }
         }
         return $list;
@@ -179,7 +269,9 @@ class InspirationController extends AppController {
             $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
             if($isExist){
                 $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
-            }
+            }/*else{
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            }*/
         }
         return $picUrl;
     }

@@ -868,7 +868,7 @@ class UserController extends AppController
             $map['uid'] = is_login();
 
         } else {
-            $this->error('请先登录！');
+            $this->apiError('请先登录！');
         }
         foreach ($field_setting_list as $val) {
             $map['field_id'] = $val['id'];
@@ -1546,23 +1546,32 @@ class UserController extends AppController
         $this->apiSuccess('获取个人作品成功', null, $extra);
     }
 
-    /**
-     * 保存用户的工作经历
+    /**保存用户的工作经历
      * @param int $uid
-     * @param $position
-     * @param $company_name
-     * @param $start_time
-     * @param $end_time
-     * @param $department
-     * @param $job_content
+     * @param int $id
+     * @param null $position
+     * @param null $company_name
+     * @param null $start_time
+     * @param null $end_time
+     * @param string $department
+     * @param string $job_content
      */
-    public function saveWorkExperience($uid=0,$id=0, $position, $company_name, $start_time, $end_time, $department, $job_content){
+    public function saveWorkExperience($uid=0,$id=0, $position=null, $company_name=null, $start_time=null, $end_time=null, $department='', $job_content=''){
         if (!$uid) {
             $this->requireLogin();
             $uid = $this->getUid();
         }
         $workExperienceModel = D('User/UserWorkExperience');
         $data['uid'] = $uid;
+        if(empty($position)){
+            $this->apiError(-3,"职位类别不能为空");
+        }
+        if(empty($company_name)){
+            $this->apiError(-3,"公司名字不能为空");
+        }
+        if(empty($start_time) || empty($end_time)){
+            $this->apiError(-3,"任职时间不能为空");
+        }
         $data['position'] = $position;
         $data['company_name'] = $company_name;
         $data['start_time'] = $start_time;
@@ -1608,10 +1617,9 @@ class UserController extends AppController
         }
     }
 
-    /**获取个人工作经历
+    /**
+     * 获取个人工作经历
      * @param int $uid
-     * @param int $page
-     * @param int $count
      */
     public function getWorkExperience($uid=0){
         if (!$uid) {
@@ -1663,22 +1671,27 @@ class UserController extends AppController
         foreach($ids as $v){
             $picId = $v;
             $this->uploadLogoPicToOSS($picId);
+            getThumbImageById($picId, 280, 160);//上传时生成缩略图
             $user_works_data['uid'] = is_login();
             $user_works_data['forum_id'] = 1001;
             $user_works_data['post_id'] = 0;
             $user_works_data['picture_id'] = $picId;
             $user_works_data['create_time'] = NOW_TIME;
             $user_works_model = D('User/UserWorks');
-            $user_works_model->add($user_works_data);
+            $works_id = $user_works_model->add($user_works_data);
+            if($works_id){
+                $workid[] = $works_id;
+            }
         }
-        $this->apiSuccess("上传成功");
+        $extra['works'] = $workid;
+        $this->apiSuccess("上传成功",null,$extra);
     }
 
     /**
      * 获取用户用于简历的作品
      * @param $uid
      */
-    public function userProfileWorks($uid, $page=1, $count=6){
+    public function userProfileWorks($uid=0, $page=1, $count=6){
         if($uid==0){
             $this->apiError(-1, '传入用户ID为空异常');
         }
@@ -1686,7 +1699,7 @@ class UserController extends AppController
         $tem = $model->query('select count(*) as count from hisihi_user_works where status=1 and uid='.$uid);
         $totalCount = $tem[0]['count'];
         $index = ($page - 1) * $count;
-        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and uid='.$uid.' order by create_time desc limit '.$index.','.$count);
+        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and forum_id=1001 and uid='.$uid.' order by create_time asc limit '.$index.','.$count);
         foreach ($pic_list as &$picinfo) {
             $pic_id = $picinfo['picture_id'];
             $picDetail= $model->query("select path from hisihi_picture where id=".$pic_id);

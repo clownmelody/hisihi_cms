@@ -207,7 +207,7 @@ class MemberModel extends Model
             $token = build_auth_key();
             $user1 = D('user_token')->where('uid=' . $user['uid'])->find();
             $data['token'] = $token;
-            $data['time'] = time();;
+            $data['time'] = time();
             if ($user1 == null) {
                 $data['uid'] = $user['uid'];
                 D('user_token')->add($data);

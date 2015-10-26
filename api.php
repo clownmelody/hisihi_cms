@@ -21,6 +21,7 @@ if ($_REQUEST['client'] && $_REQUEST['client'] == 'pc') {
     ini_set("session.use_cookies", 0);
     ini_set("session.use_trans_sid", 1);
 }
+
 if ($_REQUEST['session_id']) {
     session_id($_REQUEST['session_id']);
     session_start();

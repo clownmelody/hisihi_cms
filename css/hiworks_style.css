@@ -256,3 +256,4 @@ body {
 .pagination li{
   margin: 0 2px;
 }
+.list-picture .list-item{overflow: hidden;}
