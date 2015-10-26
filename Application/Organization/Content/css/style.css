@@ -324,6 +324,33 @@
   width: 100%;
   overflow: hidden;
 }
+/*删除小叉叉*/
+.list-data-ul li {
+  position: relative;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.list-data-ul li.normal {
+  background-color: transparent;
+}
+.list-data-ul li.edit {
+  background-color: #f8efe6;
+}
+.list-data-ul li.edit:hover {
+  box-shadow: 0 0 13px #999999;
+}
+.list-data-ul li.edit .delete-item-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  height: 18px;
+  width: 18px;
+  background: url('../images/tempsprite.png') no-repeat;
+  background-position: 2px -32px;
+}
+.list-data-ul li.edit .delete-item-btn:hover {
+  background-position-x: -15px;
+}
 table {
   background-color: transparent;
   border-collapse: collapse;
@@ -1077,7 +1104,7 @@ body {
   background-position: -290px -7px;
 }
 .anWrapper {
-  background-color: #FAFAFA;
+  background-color: #ffffff;
   padding-left: 35px;
   padding-right: 35px;
 }
@@ -1228,17 +1255,17 @@ body {
 .basicinfo-body .form-group textarea {
   width: 694px;
 }
-.teachersWrapper {
+.normalPageWrapper {
   padding-left: 35px;
   padding-right: 35px;
   min-width: 700px;
   min-height: 400px;
 }
-.teachersWrapper * {
+.normalPageWrapper * {
   font-family: "microsoft yahei";
   font-size: 14px;
 }
-.teachersWrapper .tItems {
+.normalPageWrapper .tItems {
   width: 100%;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -1254,7 +1281,7 @@ body {
   font-size: 16px;
   padding-left: 20px;
 }
-#addTeacher {
+.headerAddBtn {
   margin-left: 80px;
   height: 32px;
   width: 82px;
@@ -1280,29 +1307,6 @@ body {
   position: relative;
   margin: 10px 20px;
   margin-right: 0;
-  cursor: pointer;
-  border-radius: 3px;
-}
-.memberItemUl li.normal {
-  background-color: transparent;
-}
-.memberItemUl li.edit {
-  background-color: #f8efe6;
-}
-.memberItemUl li.edit:hover {
-  box-shadow: 0 0 13px #999999;
-}
-.memberItemUl li.edit .deleteTeacher {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  height: 18px;
-  width: 18px;
-  background: url('../images/tempsprite.png') no-repeat;
-  background-position: 2px -32px;
-}
-.memberItemUl li.edit .deleteTeacher:hover {
-  background-position-x: -15px;
 }
 .memberItemUl li .memberItemLeft {
   position: absolute;
@@ -1550,4 +1554,8 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 }
 .sortableplaceholder {
   border: 1px dotted #428BCA !important;
+}
+#lessonsMainCon li {
+  width: 300px;
+  height: 200px;
 }

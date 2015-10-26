@@ -77,7 +77,7 @@ define(['jquery','jqueryui'],function () {
                         '<div class="teacherHeader groupItemHeader"> '+
                             '<span class="teacherTitle">'+this.groupName+'</span>'+
                         '</div>'+
-                        '<ul class="list memberItemUl">'+that.getSomeGroupMembersStr(this.members)+'<div style="clear:both;" class="clearForMemberUl"></ul>'+
+                        '<ul class="list memberItemUl list-data-ul">'+that.getSomeGroupMembersStr(this.members)+'<div style="clear:both;" class="clearForMemberUl"></ul>'+
                       '</li>';
             });
             str+='<div style="clear:both;">';
@@ -100,7 +100,7 @@ define(['jquery','jqueryui'],function () {
                 str+='<li class="normal">'+
                         '<div class="memberItemLeft"><img src="'+this.imgSrc+'"></div>'+
                         '<div class="memberItemRight"><p class="tname" title="'+this.name+'">'+name+'</p><p class="trole">'+this.role+'</p></div>'+
-                        '<div class="deleteTeacher" title="删除"></div>'+
+                        '<div class="deleteTeacher delete-item-btn" title="删除"></div>'+
                     '</li>';
             });
 

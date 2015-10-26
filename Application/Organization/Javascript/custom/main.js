@@ -15,10 +15,10 @@ require.config({
         jquerycookie:'libs/jquery.cookie',
         util:'custom/util',
         menus: 'custom/home',
-        menus: 'custom/menus',
         announcement: 'custom/announcement',
         teacher:'custom/teacher',
-        basicinfo:'custom/basicinfo'
+        basicinfo:'custom/basicinfo',
+        video:'custom/video'
 }});
 
 require([
@@ -28,7 +28,8 @@ require([
     'menus',
     'teacher',
     'announcement',
-    'basicinfo'
+    'basicinfo',
+    'video'
 ]);
 
 
