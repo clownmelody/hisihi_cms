@@ -1,5 +1,6 @@
 @label-default-bg:            #CDCDCD;
 @label-primary-bg:            @brand-bule;
+@label-primary-top:           #8DBAEF;
 @label-color:                 #fff;
 @label-link-hover-color:      #fff;
 //
@@ -27,7 +28,6 @@
 
 .label-variant(@color) {
   background-color: @color;
-
   &[href] {
     &:hover,
     &:focus {
@@ -53,6 +53,34 @@
 
 }
 
+.label-variant(@color1,@color2) {
+  background-color: @color1; 
+  background-image: linear-gradient(to bottom, @color2, @color1);
+  &[href] {
+    &:hover,
+    &:focus {
+      background-color: darken(@color1, 10%);
+    }
+  }
+  
+  >a{
+  border-left: 1px solid @white-color;
+  margin-left:5px;
+  padding: .3em .7em;
+  margin-right: -9px;
+  line-height: 1;
+  border-radius: 0px 3px 3px 0px;
+  color: @white-color;
+  background-color: @color1;
+  .font-size(12);
+  &:hover,
+  &:focus {
+    background-color: darken(@color1, 10%);
+  }
+  }
+
+}
+
 // Colors
 .label-default {
   .label-variant(@label-default-bg);
@@ -60,5 +88,5 @@
 
 .label-primary {
 	margin-right: 5px;
-  .label-variant(@label-primary-bg);
+  .label-variant(@label-primary-bg,@label-primary-top);
 }

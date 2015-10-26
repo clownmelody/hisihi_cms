@@ -9,12 +9,13 @@
 @md-grey-300:     #333;
 @md-grey-333:     #333644;
 @md-grey-666:     #666;
+@md-grey-78:      #787878;
 @md-grey-84:      #848484;
 @md-grey-900:     #999;
 @md-grey-CCC:     #ccc;
 @white-color:     #fff;
 @brand-primary:   #F5A623;
-@brand-bule:      #6D9DD4;
+@brand-bule:      #6B9AD1;
 @brand-info:      #F7BE5B;
 @brand-grey:      #AAA;  
 
@@ -84,4 +85,70 @@ body{
 		text-align: center;
 		width: 100%;
 	}
+}
+
+//grid
+.col-1,.col-2,.col-label{
+	float: left;
+	display: inherit;
+	min-height: 1px;
+	position: relative;
+	margin: 0 10px;
+}
+.col-label{
+	width: 80px;
+}
+.col-1{
+	width: 720px;
+}
+.col-2{
+	width: 352px;
+}
+
+//text-align
+.t_l{
+	text-align: left !important;
+}
+.t_c{
+	text-align: center !important;
+}
+.t_r{
+	text-align: right !important;
+}
+//blod
+.blod{
+	font-weight: bold !important;
+	color: @md-grey-666;
+}
+
+//margin
+.m_5{
+	margin-top: 5px;
+}
+.m_10{
+	margin-top: 10px;
+}
+.m_15{
+	margin-top: 15px;
+}
+.m_20{
+	margin-top: 20px;
+}
+.m_110{
+	margin-left: 110px;
+}
+
+//error-txt
+.error-txt{
+	line-height: 30px;
+	font-size: 14px;
+	padding-left: 10px;
+}
+
+//font-color
+.text-danger{
+	color: #a94442;
+}
+.text-success{
+	color: #3c763d;
 }
