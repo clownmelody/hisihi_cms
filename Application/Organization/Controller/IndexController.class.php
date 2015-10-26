@@ -17,7 +17,11 @@ class IndexController extends Controller
     }
     /* -- 添加自定义function -- */
     public function index(){
-        $this->display('Index/announcement');
+        layout(false);
+        $this->display('Index/home');
+    }
+    public function announcement(){
+        $this->display();
     }
 
     public function basicinfo(){

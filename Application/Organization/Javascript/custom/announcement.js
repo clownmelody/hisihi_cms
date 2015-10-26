@@ -62,7 +62,6 @@ define(['jquery'],function () {
                 type: "GET",
                 url: url,
                 data: null,
-                dataType: 'jsonp',
                 success: callback
             });
             //$.post(window.urlObject.apiUrl+'/api.php?s=/Organization/getNotice',tempObj,callback);

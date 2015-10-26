@@ -3,7 +3,7 @@
 	var last = url[url.length - 1];
 	var index=null;
 	switch (last) {
-		case "index":
+		case "announcement":
 				index=1;
 			break;
 		case "basicinfo":
