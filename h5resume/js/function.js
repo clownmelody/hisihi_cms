@@ -179,7 +179,7 @@ function userAge (DataAge) {
 //技能
 function userSkills (DataSkills) {
     for (var i = DataSkills.length - 1; i >= 0; i--) {
-        $(".user-tool").append("<img src="+"'img/tool/"+DataSkills[i].value+".png'"+"alt=''>");
+        $(".user-tool").append("<img src="+"'h5resume/img/tool/"+DataSkills[i].value+".png'"+">");
     };
     
 }

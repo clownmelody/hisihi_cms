@@ -8,6 +8,7 @@
 
 namespace App\Controller;
 
+use Addons\Avatar\AvatarAddon;
 use Think\Controller;
 use Think\Exception;
 use Think\Model;
@@ -131,6 +132,7 @@ class OrganizationController extends AppController
      * 机构相关图片上传
      */
     public function uploadPicture(){
+        $this->requireAdminLogin();
         $Picture = D('Admin/Picture');
         $pic_driver = C('PICTURE_UPLOAD_DRIVER');
         $info = $Picture->upload(
@@ -155,6 +157,7 @@ class OrganizationController extends AppController
      * @param int $pic_id
      */
     public function updateLogo($organization_id=0, $pic_id=0){
+        $this->requireAdminLogin();
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
@@ -181,6 +184,7 @@ class OrganizationController extends AppController
      */
     public function saveBaseInfo($organization_id=0, $name=null, $slogan=null, $introduce=null, $logo=null,
                                  $advantage=null, $location=null, $phone_num=null){
+        $this->requireAdminLogin();
         $model = M('Organization');
         if(!empty($name)){
             $data['name'] = $name;
@@ -232,10 +236,40 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 获取机构之间的标签
+     * 获取机构自己的标签
+     * @param null $organization_id
      */
-    public function getOrganizationAdvantageTags(){
+    public function getOrganizationAdvantageTags($organization_id=null){
+        $this->requireAdminLogin();
+        $model = M('Organization');
+        $res = $model->field('advantage')->where('id='.$organization_id)->find();
+        if($res){
+            $advantage = $res['advantage'];
+            $advantage = explode("#", $advantage);
+            $advantage_array = array();
+            $t_model = M('OrganizationConfig');
+            foreach($advantage as &$advantage_id){
+                $markarr = $t_model->field('id, value')->where('status=1 and id='.$advantage_id)->find();
+                array_push($advantage_array, $markarr);
+            }
+            $extra['data'] = $advantage_array;
+            $this->apiSuccess('获取机构优势标签成功', null, $extra);
+        } else {
+            $this->apiError(-1, '获取数据异常');
+        }
+    }
 
+    /**
+     * 保存机构优势标签
+     * @param null $organization_id
+     * @param null $advantage
+     */
+    public function saveOrganizationAdvantageTags($organization_id=null, $advantage=null){
+        $this->requireAdminLogin();
+        $model = M('Organization');
+        $data['advantage'] = $advantage;
+        $model->where('id='.$organization_id)->save($data);
+        $this->apiSuccess('保存机构优势标签成功');
     }
 
     /**
@@ -244,6 +278,7 @@ class OrganizationController extends AppController
      * @param int $count
      */
     public function getNotice($page=1, $count=10){
+        $this->requireAdminLogin();
         $model = M('OrganizationNotice');
         $totoalCount = $model->where('status=1')->count();
         $list = $model->where('status=1')->page($page, $count)->select();
@@ -278,6 +313,7 @@ class OrganizationController extends AppController
      * @param null $type  'add' or 'delete'
      */
     public function studentWorks($organization_id=null, $pic_id=null, $type='add'){
+        $this->requireAdminLogin();
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
@@ -295,6 +331,7 @@ class OrganizationController extends AppController
      * @param string $type
      */
     public function organizationEnvironment($organization_id=null, $pic_id=null, $type='add'){
+        $this->requireAdminLogin();
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
@@ -308,8 +345,24 @@ class OrganizationController extends AppController
     /**
      * 获取所有老师列表
      */
-    public function teachersList(){
-
+    public function teachersList($page=1, $count=10){
+        $model = M('AuthGroupAccess');
+        $list = $model->where('group_id=6')->page($page, $count)->select();
+        $teacher_list = array();
+        foreach($list as $access){
+            $uid = $access['uid'];
+            $user = D('User/Member')->where(array('uid' => $uid))->find();
+            $nickname = $user['nickname'];
+            $avatar = new AvatarAddon();
+            $avatar_path = $avatar->getAvatarPath($uid);
+            $avatar128_path = getThumbImage($avatar_path, 128);
+            $teacher['uid'] = $uid;
+            $teacher['nickname'] = $nickname;
+            $teacher['avatar'] = $avatar128_path['src'];
+            array_push($teacher_list, $teacher);
+        }
+        $extra['data'] = $teacher_list;
+        $this->apiSuccess('获取老师列表成功', null, $extra);
     }
 
     /**
@@ -318,7 +371,19 @@ class OrganizationController extends AppController
      * @param null $group_name
      */
     public function addTeachersGroup($organization_id=null, $group_name=null){
-
+        $this->requireAdminLogin();
+        $model = M('OrganizationConfig');
+        $data['organization_id'] = $organization_id;
+        $data['type'] = 1001;
+        $data['value'] = $group_name;
+        $data['create_time'] = time();
+        $result = $model->data($data)->add();
+        if($result){
+            $extra['id'] = $result;
+            $this->apiSuccess('新增分组成功', null, $extra);
+        } else {
+            $this->apiError(-1, '新增分组失败');
+        }
     }
 
     /**
@@ -327,7 +392,15 @@ class OrganizationController extends AppController
      * @param null $group_name
      */
     public function updateTeachersGroup($teacher_group_id=null, $group_name=null){
-
+        $this->requireAdminLogin();
+        $model = M('OrganizationConfig');
+        $data['value'] = $group_name;
+        $result = $model->where('id='.$teacher_group_id)->save($data);
+        if($result){
+            $this->apiSuccess('修改成功');
+        } else {
+            $this->apiError(-1, '修改失败');
+        }
     }
 
     /**
@@ -335,7 +408,15 @@ class OrganizationController extends AppController
      * @param null $teacher_group_id
      */
     public function deleteTeachersGroup($teacher_group_id=null){
-
+        $this->requireAdminLogin();
+        $model = M('OrganizationConfig');
+        $data['status'] = -1;
+        $result = $model->where('id='.$teacher_group_id)->save($data);
+        if($result){
+            $this->apiSuccess('删除成功');
+        } else {
+            $this->apiError(-1, '删除失败');
+        }
     }
 
     /**
@@ -344,6 +425,7 @@ class OrganizationController extends AppController
      * @param null $uid
      */
     public function addTeacherToGroup($uid=null, $teacher_group_id=null){
+        $this->requireAdminLogin();
 
     }
 
@@ -353,20 +435,27 @@ class OrganizationController extends AppController
      * @param null $teacher_group_id
      */
     public function deleteTeacherFromGroup($uid=null, $teacher_group_id=null){
+        $this->requireAdminLogin();
 
     }
 
     /**
      * 获取当前机构所有分组信息
+     * @param null $organization_id
      */
-    public function getAllGroups(){
-
+    public function getAllGroups($organization_id=null){
+        //$this->requireAdminLogin();
+        $model = M('OrganizationConfig');
+        $list = $model->field('id, value')->where('status=1 and type=1001 and organization_id='.$organization_id)->select();
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构所有分组成功', null, $extra);
     }
 
     /**
      * 获取所有分组和老师信息
      */
     public function getAllGroupsTeachers(){
+        $this->requireAdminLogin();
 
     }
 

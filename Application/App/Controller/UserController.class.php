@@ -1617,7 +1617,8 @@ class UserController extends AppController
         }
     }
 
-    /**获取个人工作经历
+    /**
+     * 获取个人工作经历
      * @param int $uid
      */
     public function getWorkExperience($uid=0){

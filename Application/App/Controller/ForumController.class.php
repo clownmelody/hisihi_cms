@@ -259,6 +259,8 @@ class ForumController extends AppController
      */
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime', $show_adv=false, $post_type=1)
     {
+        $start_time = time();
+        \Think\Log::write("android test request success!");
         $field_type = intval($field_type);
         $page = intval($page);
         $count = intval($count);
@@ -312,7 +314,10 @@ class ForumController extends AppController
                 $list[$len] = $adv;
             }
         }
-
+        $end_time = time();
+        $t = $end_time - $start_time;
+        \Think\Log::write("android test response success!");
+        \Think\Log::write("处理时常：".$t.'毫秒');
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
