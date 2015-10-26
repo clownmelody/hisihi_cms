@@ -88,6 +88,41 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 重置密码
+     * @param null $mobile
+     * @param null $sms_code
+     * @param null $password
+     */
+    public function resetPassword($mobile=null, $sms_code=null, $password=null){
+        if(empty($mobile)||empty($sms_code)||empty($password)){
+            $this->apiError(-1, '传入参数不完整');
+        }
+        $url = C('bmob_verify_smscode_url').$sms_code;
+        $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
+        $headers['X-Bmob-REST-API-Key'] = C('bmob_api_key');
+        $headers['Content-Type'] = 'application/json';
+        $headerArr = array();
+        foreach( $headers as $n => $v ) {
+            $headerArr[] = $n .':' . $v;
+        }
+        $post_data = array('mobilePhoneNumber'=>urlencode($mobile));
+        $post_data = json_encode($post_data);
+        $result = $this->request_by_curl($url, $headerArr, $post_data);
+        if($result){
+            $map['mobile'] = $mobile;
+            $data['password'] = md5($password);
+            $result = M('OrganizationAdmin')->where($map)->save($data);
+            if($result){
+                $this->apiSuccess('重置密码成功');
+            } else {
+                $this->apiError(-2, '重置密码失败');
+            }
+        } else {
+            $this->apiError(-1, '验证码校验失败');
+        }
+    }
+
+    /**
      * 用户登陆
      * @param null $mobile
      * @param null $password
@@ -426,15 +461,18 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function addTeacherToGroup($uid=null, $organization_id=null, $teacher_group_id=null){
-        $this->requireAdminLogin();
+        //$this->requireAdminLogin();
         $model = M('OrganizationRelation');
         $data['uid'] = $uid;
         $data['teacher_group_id'] = $teacher_group_id;
         $data['organization_id'] = $organization_id;
         $data['group'] = 6;
+        if($model->where($data)->count()){
+            $this->apiError(-2, '该老师已经添加过了');
+        }
         $result = $model->add($data);
         if($result){
-            $extra = $result;
+            $extra['teacher_id'] = $result;
             $this->apiSuccess("添加成功",null,$extra);
         }else{
             $this->apiError(-1, '新增教师到分组失败');
@@ -450,6 +488,9 @@ class OrganizationController extends AppController
         $this->requireAdminLogin();
         $model = M('OrganizationRelation');
         $data['status'] = -1;
+        if(!$model->where('group=6 and uid='.$uid.'and teacher_group_id='.$teacher_group_id)->count()){
+            $this->apiError(-2, '该老师不存在');
+        }
         $result = $model->where('group=6 and uid='.$uid.'and teacher_group_id='.$teacher_group_id)->save($data);
         if($result){
             $this->apiSuccess('删除成功');
@@ -463,7 +504,7 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function getAllGroups($organization_id=null){
-        //$this->requireAdminLogin();
+        $this->requireAdminLogin();
         $model = M('OrganizationConfig');
         $list = $model->field('id, value')->where('status=1 and type=1001 and organization_id='.$organization_id)->select();
         $extra['data'] = $list;
@@ -472,13 +513,43 @@ class OrganizationController extends AppController
 
     /**
      * 获取所有分组和老师信息
+     * @param null $organization_id
      */
-    public function getAllGroupsTeachers(){
-        $this->requireAdminLogin();
-        $model = M('OrganizationRelation');
-        $list = $model->field('uid, value')->where('status=1')->select();
-        $extra['data'] = $list;
-        $this->apiSuccess('获取机构所有分组成功', null, $extra);
+    public function getAllGroupsTeachers($organization_id=null){
+        //$this->requireAdminLogin();
+        $model = M('OrganizationConfig');
+        $list = $model->field('id, value')->where('status=1 and type=1001 and organization_id='.$organization_id)->select();
+        $t_model = M('OrganizationRelation');
+        $all_list = array();
+        foreach($list as &$group){
+            $id = $group['id'];
+            $map['group'] = 6;
+            $map['status'] = 1;
+            $map['organization_id'] = $organization_id;
+            $map['teacher_group_id'] = $id;
+            $u_list = $t_model->field('uid')->where($map)->select();
+            $teacher_list = array();
+            foreach ($u_list as $user) {
+                $uid = $user['uid'];
+                $user = D('User/Member')->where(array('uid' => $uid))->find();
+                $nickname = $user['nickname'];
+                $avatar = new AvatarAddon();
+                $avatar_path = $avatar->getAvatarPath($uid);
+                $avatar128_path = getThumbImage($avatar_path, 128);
+                $teacher['uid'] = $uid;
+                $teacher['nickname'] = $nickname;
+                $teacher['avatar'] = $avatar128_path['src'];
+                array_push($teacher_list, $teacher);
+            }
+            $obj['group_info'] = array(
+                'group_id' => $group['id'],
+                'group_name'=> $group['value']
+            );
+            $obj['teachers'] = $teacher_list;
+            array_push($all_list, $obj);
+        }
+        $extra['data'] = $all_list;
+        $this->apiSuccess('获取机构所有分组教师列表', null, $extra);
     }
 
     /**
