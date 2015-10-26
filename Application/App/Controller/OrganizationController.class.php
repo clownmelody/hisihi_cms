@@ -88,6 +88,41 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 重置密码
+     * @param null $mobile
+     * @param null $sms_code
+     * @param null $password
+     */
+    public function resetPassword($mobile=null, $sms_code=null, $password=null){
+        if(empty($mobile)||empty($sms_code)||empty($password)){
+            $this->apiError(-1, '传入参数不完整');
+        }
+        $url = C('bmob_verify_smscode_url').$sms_code;
+        $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
+        $headers['X-Bmob-REST-API-Key'] = C('bmob_api_key');
+        $headers['Content-Type'] = 'application/json';
+        $headerArr = array();
+        foreach( $headers as $n => $v ) {
+            $headerArr[] = $n .':' . $v;
+        }
+        $post_data = array('mobilePhoneNumber'=>urlencode($mobile));
+        $post_data = json_encode($post_data);
+        $result = $this->request_by_curl($url, $headerArr, $post_data);
+        if($result){
+            $map['mobile'] = $mobile;
+            $data['password'] = md5($password);
+            $result = M('OrganizationAdmin')->where($map)->save($data);
+            if($result){
+                $this->apiSuccess('重置密码成功');
+            } else {
+                $this->apiError(-2, '重置密码失败');
+            }
+        } else {
+            $this->apiError(-1, '验证码校验失败');
+        }
+    }
+
+    /**
      * 用户登陆
      * @param null $mobile
      * @param null $password
