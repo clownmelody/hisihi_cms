@@ -16,13 +16,10 @@
  	$(".recommend-box .box-tag .label").bind("click", function () {
  		var txt = $(this).html();
  		$(this).remove();
- 		$(".tag-open").append("<span class='label label-primary'>"+txt+"<a href='javaScript: void(0);' class='box-add'><span class='icon-add'>&#215;</span></a></span>");
+ 		$(".tag-open").append("<span class='label label-primary'>"+txt+"<a href='javaScript: void(0);' onclick='$(this).parent().remove();' class='box-add' id='box-add'><span class='icon-add'>&#215;</span></a></span>");
  	});
 
- 	$(".tag-open span .box-add").bind("click", function () {
- 		console.log(this);
- 		$(this).parent().remove();
- 	});
+ 	
 
 
  	BasicInfo.prototype={
