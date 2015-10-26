@@ -67,7 +67,7 @@ class InspirationController extends AdminController {
                     }else{
                         $id = $res;
                         //上传图片到OSS
-                        $picid = $model->where('id='.$id)->getField('picture');
+                        $picid = $model->where('id='.$id)->getField('pic_id');
                         if($picid){
                             $this->uploadLogoPicToOSS($picid);
                         }
@@ -83,7 +83,7 @@ class InspirationController extends AdminController {
                 }
                 $model->updateData($cid, $data);
                 //上传图片到OSS
-                $picid = $model->where('id='.$cid)->getField('picture');
+                $picid = $model->where('id='.$cid)->getField('pic_id');
                 if($picid){
                     $this->uploadLogoPicToOSS($picid);
                 }
