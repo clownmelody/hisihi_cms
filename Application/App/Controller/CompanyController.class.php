@@ -26,6 +26,8 @@ class CompanyController extends AppController {
      *
      */
     public function alllist($uid=0, $page=1, $count=5, $id=0, $name=''){
+        $start_time = time();
+        \Think\Log::write("android-company request in: ".$start_time);
         if (!$uid) {
             //$this->requireLogin();
             $uid = $this->getUid();
@@ -87,6 +89,8 @@ class CompanyController extends AppController {
         }
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $result;
+        $end_time = time();
+        \Think\Log::write("android-company resposne success: ".$end_time);
         $this->apiSuccess('获取公司列表成功', null, $extra);
     }
 

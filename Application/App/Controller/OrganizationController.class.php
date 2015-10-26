@@ -444,7 +444,7 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function getAllGroups($organization_id=null){
-        //$this->requireAdminLogin();
+        $this->requireAdminLogin();
         $model = M('OrganizationConfig');
         $list = $model->field('id, value')->where('status=1 and type=1001 and organization_id='.$organization_id)->select();
         $extra['data'] = $list;
@@ -453,10 +453,43 @@ class OrganizationController extends AppController
 
     /**
      * 获取所有分组和老师信息
+     * @param null $organization_id
      */
-    public function getAllGroupsTeachers(){
-        $this->requireAdminLogin();
-
+    public function getAllGroupsTeachers($organization_id=null){
+        //$this->requireAdminLogin();
+        $model = M('OrganizationConfig');
+        $list = $model->field('id, value')->where('status=1 and type=1001 and organization_id='.$organization_id)->select();
+        $t_model = M('OrganizationRelation');
+        $all_list = array();
+        foreach($list as &$group){
+            $id = $group['id'];
+            $map['group'] = 6;
+            $map['status'] = 1;
+            $map['organization_id'] = $organization_id;
+            $map['teacher_group_id'] = $id;
+            $u_list = $t_model->field('uid')->where($map)->select();
+            $teacher_list = array();
+            foreach ($u_list as $user) {
+                $uid = $user['uid'];
+                $user = D('User/Member')->where(array('uid' => $uid))->find();
+                $nickname = $user['nickname'];
+                $avatar = new AvatarAddon();
+                $avatar_path = $avatar->getAvatarPath($uid);
+                $avatar128_path = getThumbImage($avatar_path, 128);
+                $teacher['uid'] = $uid;
+                $teacher['nickname'] = $nickname;
+                $teacher['avatar'] = $avatar128_path['src'];
+                array_push($teacher_list, $teacher);
+            }
+            $obj['group_info'] = array(
+                'group_id' => $group['id'],
+                'group_name'=> $group['value']
+            );
+            $obj['teachers'] = $teacher_list;
+            array_push($all_list, $obj);
+        }
+        $extra['data'] = $all_list;
+        $this->apiSuccess('获取机构所有分组教师列表', null, $extra);
     }
 
     /**
