@@ -488,14 +488,20 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function addTeacherToGroup($uid=null, $organization_id=null, $teacher_group_id=null){
-        $this->requireAdminLogin();
+        //$this->requireAdminLogin();
+        if(!is_numeric($uid) || !is_numeric($organization_id) || !is_numeric($teacher_group_id)){
+            $this->apiError(-4, '请求参数错误');
+        }
         $model = M('OrganizationRelation');
         $data['uid'] = $uid;
         $data['teacher_group_id'] = $teacher_group_id;
         $data['organization_id'] = $organization_id;
         $data['group'] = 6;
         $data['status'] = 1;
-        if($model->where($data)->count()){
+        if(!M('Member')->where('uid='.$uid)->count()){
+            $this->apiError(-3, '该老师不存在');
+        }
+        if($model->where('`status`=1 and `group`=6 and `uid`='.$uid)->count()){
             $this->apiError(-2, '该老师已经添加过了');
         }
         $result = $model->add($data);
@@ -553,16 +559,18 @@ class OrganizationController extends AppController
             $map['status'] = 1;
             $map['organization_id'] = $organization_id;
             $map['teacher_group_id'] = $id;
-            $u_list = $t_model->field('uid')->where($map)->select();
+            $u_list = $t_model->field('id,uid')->where($map)->select();
             $teacher_list = array();
             foreach ($u_list as $user) {
                 $uid = $user['uid'];
+                $relation_id = $user['id'];
                 $user = D('User/Member')->where(array('uid' => $uid))->find();
                 $nickname = $user['nickname'];
                 $avatar = new AvatarAddon();
                 $avatar_path = $avatar->getAvatarPath($uid);
                 $avatar128_path = getThumbImage($avatar_path, 128);
                 $teacher['uid'] = $uid;
+                $teacher['relation_id'] = $relation_id;
                 $teacher['nickname'] = $nickname;
                 $teacher['avatar'] = $avatar128_path['src'];
                 array_push($teacher_list, $teacher);
