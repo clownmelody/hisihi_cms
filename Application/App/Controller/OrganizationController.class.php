@@ -579,6 +579,20 @@ class OrganizationController extends AppController
     }
 
     /**
+     *获取视频分类
+     */
+    public function getVideoCategory(){
+        $model = M("OrganizationConfig");
+        $result = $model->where('status=1 and type=1002')->field('id,value')->select();
+        if($result){
+            $extra['data'] = $result;
+            $this->apiSuccess('获取视频分类列表成功', null, $extra);
+        }else{
+            $this->apiError(-1,"获取视频分类列表失败");
+        }
+    }
+
+    /**
      * 当前用户登录状态检测
      */
     private function requireAdminLogin(){
