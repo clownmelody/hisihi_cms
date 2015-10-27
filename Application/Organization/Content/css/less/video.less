@@ -1,4 +1,78 @@
-#lessonsMainCon li{
-  width: 300px;
-  height: 200px;
+
+.normalPageWrapper {
+  .normal-page-header {
+    height: 55px;
+    line-height: 55px;
+    .header-title{
+      margin-left: 35px;
+      font-size: 16px;
+    }
+  }
+}
+
+.list-data-ul li{
+  border-radius: 5px;
+  .box-shadow(0 0 6px @md-grey-CCC;);
+  margin: 10px;
+  position: relative;
+}
+#lessonsMainCon {
+  padding: 25px;
+  li {
+    width: 300px;
+    height: 198px;
+
+    .videoItemHeader {
+      height: 130px;
+      img {
+        height: 130px;
+        width: 100%;
+      }
+    }
+
+    .videoItemBottom{
+      width: 90%;
+      margin: 8px;
+      height: 68px;
+      .videoItemDesc{
+        height: 37px;
+        p{
+          color: @md-grey-666;
+        }
+      }
+
+      .videoIcon{
+        float: left;
+        height: 14px;
+        width: 14px;
+        background:url('../images/tempsprite.png') no-repeat;
+        display: inline-block;
+        &.videoClock{
+          background-position:-31px -50px ;
+        }
+        &.videoViewedTimes{
+          background-position:-46px -51px ;
+        }
+      }
+    }
+    .videoFooter{
+       padding-top: 2px;
+      .videoFooterLeft{
+        width: 47%;
+        float: left;
+      }
+      .videoFooterRight{
+        width: 47%;
+        float: right;
+        text-align: right;
+      }
+      span{
+        float: left;
+        color: @md-grey-900;
+        font-size: 12px;
+        margin-left: 4px;
+        line-height: 15px;
+      }
+    }
+  }
 }

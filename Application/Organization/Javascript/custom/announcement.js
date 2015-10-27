@@ -16,7 +16,6 @@ define(['jquery'],function () {
         var that=this;
         this.$wrapper.on('#announcesContainer ul li','click', $.proxy(this,'showDetailAnnounceInfo'));
         this.$wrapper.parent().scroll(function(){
-            alert();
             that.scrollContainer.call(that,this);
         });
 

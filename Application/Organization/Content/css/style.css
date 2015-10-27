@@ -1256,8 +1256,6 @@ body {
   width: 694px;
 }
 .normalPageWrapper {
-  padding-left: 35px;
-  padding-right: 35px;
   min-width: 700px;
   min-height: 400px;
 }
@@ -1555,7 +1553,76 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 .sortableplaceholder {
   border: 1px dotted #428BCA !important;
 }
+.normalPageWrapper .normal-page-header {
+  height: 55px;
+  line-height: 55px;
+}
+.normalPageWrapper .normal-page-header .header-title {
+  margin-left: 35px;
+  font-size: 16px;
+}
+.list-data-ul li {
+  border-radius: 5px;
+  -webkit-box-shadow: 0 0 6px #cccccc;
+  -moz-box-shadow: 0 0 6px #cccccc;
+  box-shadow: 0 0 6px #cccccc;
+  margin: 10px;
+  position: relative;
+}
+#lessonsMainCon {
+  padding: 25px;
+}
 #lessonsMainCon li {
   width: 300px;
-  height: 200px;
+  height: 198px;
+}
+#lessonsMainCon li .videoItemHeader {
+  height: 130px;
+}
+#lessonsMainCon li .videoItemHeader img {
+  height: 130px;
+  width: 100%;
+}
+#lessonsMainCon li .videoItemBottom {
+  width: 90%;
+  margin: 8px;
+  height: 68px;
+}
+#lessonsMainCon li .videoItemBottom .videoItemDesc {
+  height: 37px;
+}
+#lessonsMainCon li .videoItemBottom .videoItemDesc p {
+  color: #666666;
+}
+#lessonsMainCon li .videoItemBottom .videoIcon {
+  float: left;
+  height: 14px;
+  width: 14px;
+  background: url('../images/tempsprite.png') no-repeat;
+  display: inline-block;
+}
+#lessonsMainCon li .videoItemBottom .videoIcon.videoClock {
+  background-position: -31px -50px;
+}
+#lessonsMainCon li .videoItemBottom .videoIcon.videoViewedTimes {
+  background-position: -46px -51px;
+}
+#lessonsMainCon li .videoFooter {
+  padding-top: 2px;
+}
+#lessonsMainCon li .videoFooter .videoFooterLeft {
+  width: 47%;
+  float: left;
+}
+#lessonsMainCon li .videoFooter .videoFooterRight {
+  width: 47%;
+  float: right;
+  text-align: right;
+}
+#lessonsMainCon li .videoFooter span {
+  float: left;
+  color: #999999;
+  font-size: 12px;
+  margin-left: 4px;
+  line-height: 15px;
 }

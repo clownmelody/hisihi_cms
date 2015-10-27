@@ -14,7 +14,7 @@ $(function(){
                     }
                 },
                 error:function(e){
-                    alert(e);
+                    alert('登录失败');
                 }
             });
 

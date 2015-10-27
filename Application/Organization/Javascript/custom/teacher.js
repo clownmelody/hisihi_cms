@@ -77,7 +77,7 @@ define(['jquery','jqueryui'],function () {
                     callback.call(that, data);
                 },
                 error:function(e){
-                    alert(e);
+                    //alert("获取失败");
                 }
             });
         },
