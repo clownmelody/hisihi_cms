@@ -8,7 +8,9 @@ define(['jquery','jqueryui'],function () {
     var MyTeacher = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.modelBox=null;
-        this.sectionId=JSON.parse($.cookie('hisihi-org')).session_id,
+        this.sectionId=JSON.parse($.cookie('hisihi-org')).session_id;
+        this.organization_id=20;
+        this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
         this.loadData();
 
         //事件注册
@@ -63,17 +65,13 @@ define(['jquery','jqueryui'],function () {
             var tempObj={
                 $page:1,
                 $count:1000000,
+                organization_id:this.organization_id,
                 session_id:this.sectionId
                 },
 
                 that=this;
-            //$.post(window.urlObject.apiUrl+'/api.php?s=/Organization/teachersList',
-            //    tempObj,
-            //    function(data) {
-            //        callback.call(that, data);
-            //    });
             $.ajax({
-                url:window.urlObject.apiUrl+'/api.php?s=/Organization/getAllGroupsTeachers',
+                url:this.basicApiUrl+'/getAllGroupsTeachers',
                 data:tempObj,
                 success:function(data){
                     callback.call(that, data);
@@ -95,11 +93,12 @@ define(['jquery','jqueryui'],function () {
             var str='',
                 that=this;
             $.each(data,function(){
-                str+='<li class="tItems" data-name="'+this.groupName+'">'+
+                var groupInfo=this.group_info;
+                str+='<li class="tItems" data-name="'+groupInfo.group_name+'" data-id="'+groupInfo.group_id+'">'+
                         '<div class="teacherHeader groupItemHeader"> '+
-                            '<span class="teacherTitle">'+this.groupName+'</span>'+
+                            '<span class="teacherTitle">'+groupInfo.group_name+'</span>'+
                         '</div>'+
-                        '<ul class="list memberItemUl list-data-ul">'+that.getSomeGroupMembersStr(this.members)+'<div style="clear:both;" class="clearForMemberUl"></ul>'+
+                        '<ul class="list memberItemUl list-data-ul">'+that.getSomeGroupMembersStr(this.teachers)+'<div style="clear:both;" class="clearForMemberUl"></ul>'+
                       '</li>';
             });
             str+='<div style="clear:both;">';
@@ -165,21 +164,25 @@ define(['jquery','jqueryui'],function () {
             if(validity.flag){
                 this.$wrapper.find('.addGroupCon').trigger('click');
                 this.$wrapper.find('#newGroupName').val('');
-                var data = {organization_id:'',group_name:validity.name, session_id:this.sectionId},
-                url=window.urlObject.apiUrl+'/api.php?s=/Organization/addTeachersGroup',
+                var data = {
+                        organization_id:this.organization_id,
+                        group_name:validity.name,
+                        session_id:this.sectionId
+                    },
+                url=this.basicApiUrl+'/addTeachersGroup',
                     that=this;
                 $.post(url,data,function(data){
-                    that.showMembersInfo.call(that,data,1);
+                    if(data.success) {
+                        var tempData=[{
+                            group_info:{group_name: validity.name,group_id:data.id},
+                            teachers:[]
+                        }];
+                        that.showMembersInfo.call(that, tempData, 1);
+                    }
+                    else{
+                        alert('添加失败！')
+                    }
                 });
-                //$.ajax({
-                //
-                //    success:function(data){
-                //        callback.call(that, data);
-                //    },
-                //    error:function(e){
-                //        alert(e);
-                //    }
-                //});
 
             }else{
                 this.$wrapper.find('#newGroupCommitError').text(validity.tip).show().delay(500).hide(0);
@@ -239,10 +242,13 @@ define(['jquery','jqueryui'],function () {
         * tempArr - {array}名字数组
         */
         getExistGroupName:function(){
-            var $allTitles =this.$wrapper.find('#teacherMainCon li .teacherTitle'),
+            var $allTitles =this.$wrapper.find('#teacherMainCon>li'),
                 tempArr=[];
             $allTitles.each(function () {
-                tempArr.push($(this).text());
+                tempArr.push({
+                    id:$(this).data('id'),
+                    name:$(this).data('name')
+                });
             });
             return tempArr;
         },
@@ -257,7 +263,7 @@ define(['jquery','jqueryui'],function () {
         },
 
         /*
-        *显示删除老板按钮
+        *显示删除老师按钮
         */
         showEditTeacherBox:function(e){
             var $target=$(e.srcElement),
@@ -277,7 +283,17 @@ define(['jquery','jqueryui'],function () {
         */
         deleteTeacher:function(e){
             if(window.confirm('确定删除该老师么？')) {
-                var $target = $(e.srcElement).parent().remove();
+                var tempData = {
+                        organization_id:this.organization_id,
+                        uid:teacherInfo.uid,
+                        teacher_group_id:groupInfo.groupId,
+                        session_id:this.sectionId
+                    },
+                    url=this.basicApiUrl+'/deleteTeacherFromGroup',
+                    that=this;
+                $.post(url,tempData,function(data) {
+                    var $target = $(e.srcElement).parent().remove();
+                });
             }
         },
 
@@ -334,9 +350,10 @@ define(['jquery','jqueryui'],function () {
             var arrData=this.getExistGroupName(),
                 str='',
                 className='';
-            arrData.push('新建分组');
+            arrData.push({name:'新建分组',id:''});
             var len=arrData.length;
             for(var i=0;i<len;i++){
+                var item=arrData[i];
                 className='';
                 if(i==0){
                     className='selected';
@@ -344,7 +361,7 @@ define(['jquery','jqueryui'],function () {
                 if(i==len-1){
                     className='addNewOne';
                 }
-                str+='<li class="'+className+'"><div class="radioContainer">'+arrData[i]+'</div></li>';
+                str+='<li data-id='+item.id+' class="'+className+'"><div class="radioContainer">'+item.name+'</div></li>';
             }
             str+='<div style="clear: both;"></div>';
             return str;
@@ -379,9 +396,14 @@ define(['jquery','jqueryui'],function () {
                 modelContext.hide();
 
                 //执行真正的添加
-                var groupName=modelContext.$panel.find('.allGroupNamesList .selected').text();
-
-                myContext.execAddNewTeacher.call(myContext,groupName,$txtTarget.val());
+                var $li=modelContext.$panel.find('.allGroupNamesList .selected'),
+                    groupInfo={groupId:$li.data('id'),groupName:$li.text()},
+                    teacherInfo={
+                        uid: 72,
+                        nickname:'Leslie',
+                        avatar: 'http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/2015-03-26/551369fe8358c-05505543_256_256.jpg'
+                    };
+                myContext.execAddNewTeacher.call(myContext,groupInfo,teacherInfo);
                 myContext.clearAddTeacherInfo(modelContext.$panel);
 
             });
@@ -468,18 +490,42 @@ define(['jquery','jqueryui'],function () {
         /*
         *添加老师到相应的分组
         */
-        execAddNewTeacher:function(groupName,name){
-            var member=[{name:name,role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'}];
-            var str = this.getSomeGroupMembersStr(member),
-                $allLi=this.$wrapper.find('#teacherMainCon .tItems'),
-                $li;
-                $allLi.each(function(){
-                if ($(this).data('name')==groupName){
-                    $li = $(this);
-                    return false;
+        execAddNewTeacher:function(groupInfo,teacherInfo){
+            var tempData = {
+                    organization_id:this.organization_id,
+                    uid:teacherInfo.uid,
+                    teacher_group_id:groupInfo.groupId,
+                    session_id:this.sectionId
+                },
+                url=this.basicApiUrl+'/addTeacherToGroup',
+                that=this;
+            $.post(url,tempData,function(data){
+                if(data.success){
+                    var member=[{
+                        nickname:teacherInfo.nickname,
+                        role:'成员',
+                        uid:teacherInfo.uid,
+                        avatar:teacherInfo.avatar
+                    }];
+                    var str = that.getSomeGroupMembersStr(member),
+                        $allLi=that.$wrapper.find('#teacherMainCon .tItems'),
+                        $li;
+                    $allLi.each(function(){
+                        if ($(this).data('name')==groupInfo.groupName){
+                            $li = $(this);
+                            return false;
+                        }
+                    });
+                    $li.find('.memberItemUl .clearForMemberUl').before(str);
+                }
+                else{
+                    if(data.error_code==-2){
+                        alert('该老师已经添加过了');
+                    }else {
+                        alert('添加失败');
+                    }
                 }
             });
-            $li.find('.memberItemUl .clearForMemberUl').before(str);
         },
 
     };
