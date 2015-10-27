@@ -23,6 +23,8 @@ require.config({
 
 require([
     'jquery',
+    'jqueryform',
+    'jquerycookie',
     'util',
     'jqueryui',
     'menus',

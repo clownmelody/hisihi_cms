@@ -4,13 +4,14 @@
 $(function(){
     $('#login').on('click',function(){
             $('#loginForm').ajaxSubmit({
-                type:'post',
-                //url:'http://115.28.72.197/api.php?s=/Organization/login&mobile=1850755434&password=976499',
-                url:'http://localhost/hisihi-cms/api.php?s=/Organization/login',
-                //url:'http://localhost/my/welcome.php',
-                data:{mobile:1850755434,password:976499 },
+                //type:'post',
+                //url:'http://127.0.0.1:8080/hisihi-cms/api.php?s=/Organization/login',
+                url:window.urlObject.apiUrl+'/api.php?s=/Organization/login',
                 success:function(data){
-                    window.location.href =window.urlObject.ctl + "/Index/announcement";
+                    if(data.success && data.message=='登陆成功') {
+                        $.cookie('hisihi-org',JSON.stringify(data),{expires:7});
+                        window.location.href = window.urlObject.ctl + "/Index/announcement";
+                    }
                 },
                 error:function(e){
                     alert(e);
@@ -18,6 +19,5 @@ $(function(){
             });
 
         });
-        return false;
 });
 

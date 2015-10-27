@@ -36,6 +36,11 @@ Date.prototype.format = function (format) {
     return format;
 }
 
+Hisihi.getLocalTime=function(nS,format) {
+    var daa = new Date(1230999938);
+    return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+};
+
 /***********创建模态窗口**************/
 Hisihi.modelBox = function (options) {
     return (this instanceof Hisihi.modelBox) ? this.initialize(options) : new Hisihi.modelBox;

@@ -8,6 +8,7 @@ define(['jquery','jqueryui'],function () {
     var MyTeacher = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.modelBox=null;
+        this.sectionId=JSON.parse($.cookie('hisihi-org')).session_id,
         this.loadData();
 
         //事件注册
@@ -49,17 +50,38 @@ define(['jquery','jqueryui'],function () {
                 {groupName:'游戏设计',members:[{name:'干死那个石家庄人',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'},{name:'后海大鲨鱼',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'}]},
                 {groupName:'网页设计',members:[]}
             ];
-            //this.getDataAsync(function(data){
-            //    data;
-            //});
-            this.showMembersInfo(data,0);
+            this.getDataAsync(function(data){
+                if(data.success) {
+                    data = data.data;
+                    this.showMembersInfo(data,0);
+                }else{
+                    alert('数据加载失败！');
+                }
+            });
         },
         getDataAsync:function(callback){
             var tempObj={
-                pageIndex:this.pageIndex,
-                count:this.perPageSize
-            };
-            $.post('../../',tempObj,callback);
+                $page:1,
+                $count:1000000,
+                session_id:this.sectionId
+                },
+
+                that=this;
+            //$.post(window.urlObject.apiUrl+'/api.php?s=/Organization/teachersList',
+            //    tempObj,
+            //    function(data) {
+            //        callback.call(that, data);
+            //    });
+            $.ajax({
+                url:window.urlObject.apiUrl+'/api.php?s=/Organization/getAllGroupsTeachers',
+                data:tempObj,
+                success:function(data){
+                    callback.call(that, data);
+                },
+                error:function(e){
+                    alert(e);
+                }
+            });
         },
 
 
@@ -93,13 +115,13 @@ define(['jquery','jqueryui'],function () {
         getSomeGroupMembersStr:function(members){
             var str='';
             $.each(members,function(){
-                var name=this.name;
+                var name=this.nickname;
                 if(name.length>6){
                     name=name.substr(0,5)+'…'
                 }
-                str+='<li class="normal">'+
-                        '<div class="memberItemLeft"><img src="'+this.imgSrc+'"></div>'+
-                        '<div class="memberItemRight"><p class="tname" title="'+this.name+'">'+name+'</p><p class="trole">'+this.role+'</p></div>'+
+                str+='<li class="normal" data-id="'+this.uid+'">'+
+                        '<div class="memberItemLeft"><img src="'+this.avatar+'"></div>'+
+                        '<div class="memberItemRight"><p class="tname" title="'+this.nickname +'">'+name+'</p><p class="trole">'+this.role+'</p></div>'+
                         '<div class="deleteTeacher delete-item-btn" title="删除"></div>'+
                     '</li>';
             });
@@ -143,8 +165,22 @@ define(['jquery','jqueryui'],function () {
             if(validity.flag){
                 this.$wrapper.find('.addGroupCon').trigger('click');
                 this.$wrapper.find('#newGroupName').val('');
-                var data = [{groupName:validity.name,members:[]}];
-                this.showMembersInfo(data,1);
+                var data = {organization_id:'',group_name:validity.name, session_id:this.sectionId},
+                url=window.urlObject.apiUrl+'/api.php?s=/Organization/addTeachersGroup',
+                    that=this;
+                $.post(url,data,function(data){
+                    that.showMembersInfo.call(that,data,1);
+                });
+                //$.ajax({
+                //
+                //    success:function(data){
+                //        callback.call(that, data);
+                //    },
+                //    error:function(e){
+                //        alert(e);
+                //    }
+                //});
+
             }else{
                 this.$wrapper.find('#newGroupCommitError').text(validity.tip).show().delay(500).hide(0);
             }
