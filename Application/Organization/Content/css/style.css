@@ -1569,6 +1569,11 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   margin: 10px;
   position: relative;
 }
+.list-data-ul li:hover {
+  -webkit-box-shadow: 0 0 6px #848484;
+  -moz-box-shadow: 0 0 6px #848484;
+  box-shadow: 0 0 6px #848484;
+}
 #lessonsMainCon {
   padding: 25px;
 }
