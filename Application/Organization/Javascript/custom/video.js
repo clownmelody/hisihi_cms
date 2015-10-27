@@ -58,6 +58,38 @@ define(['jquery','jqueryui'],function () {
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
                     imgSrc: window.urlObject.image + '/video/5.png'
+                },
+                {
+                    id:6,
+                    typeName: 'Photoshop',
+                    title: '大圣归来手绘原稿',
+                    uploadTime: '2015.02.14 12:00',
+                    viewedTime:12154546,
+                    imgSrc: window.urlObject.image + '/video/6.png'
+                },
+                {
+                    id:7,
+                    typeName: 'Photoshop',
+                    title: '大圣归来手绘原稿',
+                    uploadTime: '2015.02.14 12:00',
+                    viewedTime:12154546,
+                    imgSrc: window.urlObject.image + '/video/7.png'
+                },
+                {
+                    id:8,
+                    typeName: 'Photoshop',
+                    title: '大圣归来手绘原稿',
+                    uploadTime: '2015.02.14 12:00',
+                    viewedTime:12154546,
+                    imgSrc: window.urlObject.image + '/video/8.png'
+                },
+                {
+                    id:9,
+                    typeName: 'Photoshop',
+                    title: '大圣归来手绘原稿',
+                    uploadTime: '2015.02.14 12:00',
+                    viewedTime:12154546,
+                    imgSrc: window.urlObject.image + '/video/9.png'
                 }
             ];
             //this.getDataAsync(function(data){
