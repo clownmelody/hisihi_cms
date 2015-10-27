@@ -401,6 +401,33 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 根据教师名字进行模糊搜索
+     * @param null $name
+     */
+    public function teachersFilter($name=null){
+        if(empty($name)){
+            $this->apiError(-1, '传入参数为空');
+        }
+        $map['nickname'] = array('like', '%'.$name.'%');
+        $list = D('User/Member')->field('uid, nickname')->where($map)->select();
+        $a_model = M('AuthGroupAccess');
+        $t_list = array();
+        foreach($list as &$user){
+            $uid = $user['uid'];
+            $r_res = $a_model->where('group_id=6 and uid='.$uid)->find();
+            if($r_res){
+                $avatar = new AvatarAddon();
+                $avatar_path = $avatar->getAvatarPath($uid);
+                $avatar128_path = getThumbImage($avatar_path, 128);
+                $user['avatar'] = $avatar128_path['src'];
+                array_push($t_list, $user);
+            }
+        }
+        $extra['data'] = $t_list;
+        $this->apiSuccess('搜索教师成功', null, $extra);
+    }
+
+    /**
      * 新增老师分组
      * @param null $organization_id
      * @param null $group_name
@@ -458,20 +485,44 @@ class OrganizationController extends AppController
      * 添加教师到分组
      * @param null $teacher_group_id
      * @param null $uid
+     * @param null $organization_id
      */
-    public function addTeacherToGroup($uid=null, $teacher_group_id=null){
+    public function addTeacherToGroup($uid=null, $organization_id=null, $teacher_group_id=null){
         $this->requireAdminLogin();
-
+        $model = M('OrganizationRelation');
+        $data['uid'] = $uid;
+        $data['teacher_group_id'] = $teacher_group_id;
+        $data['organization_id'] = $organization_id;
+        $data['group'] = 6;
+        $data['status'] = 1;
+        if($model->where($data)->count()){
+            $this->apiError(-2, '该老师已经添加过了');
+        }
+        $result = $model->add($data);
+        if($result){
+            $extra['relation_id'] = $result;
+            $this->apiSuccess("添加成功",null,$extra);
+        }else{
+            $this->apiError(-1, '新增教师到分组失败');
+        }
     }
 
-    /**
-     * 从分组中移除老师
-     * @param null $uid
-     * @param null $teacher_group_id
+    /**从分组中移除老师
+     * @param $relation_id
      */
-    public function deleteTeacherFromGroup($uid=null, $teacher_group_id=null){
+    public function deleteTeacherFromGroup($relation_id=null){
         $this->requireAdminLogin();
-
+        $model = M('OrganizationRelation');
+        $data['status'] = -1;
+        if(!$model->where('status=1 and id='.$relation_id)->count()){
+            $this->apiError(-2, '该老师不存在');
+        }
+        $result = $model->where('id='.$relation_id)->save($data);
+        if($result){
+            $this->apiSuccess('删除成功');
+        } else {
+            $this->apiError(-1, '删除失败');
+        }
     }
 
     /**

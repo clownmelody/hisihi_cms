@@ -47,7 +47,7 @@ class InspirationController extends AppController {
      * @param int $page
      * @param int $count
      */
-    public function inspirationImgList($category_id=0, $filter_type=1, $page=1, $count=10){
+    public function inspirationImgList($category_id=0, $filter_type=1, $page=1, $count=10,$uid=0){
         $model = D('Admin/Inspiration');
         $map['status'] = 1;
         if($category_id!=0){
@@ -74,7 +74,7 @@ class InspirationController extends AppController {
                 break;
         }
 
-        $list = $this->formatList($list);
+        $list = $this->formatList($list,$uid);
         $extra['totalCount'] = $total_count;
         $extra['data'] = $list;
         $this->apiSuccess('获取灵感图片列表成功', null, $extra);
@@ -119,7 +119,7 @@ class InspirationController extends AppController {
         }
         $favorite['appname'] = 'Inspiration';
         $favorite['table'] = 'Inspiration';
-        $favorite['row'] = $pic_id;
+        $favorite['row'] = $inspirationInfo['id'];
         $favorite['uid'] = $uid;
         if (D('Favorite')->where($favorite)->count()) {
             $inspira['isFavorite'] = true;
@@ -133,10 +133,10 @@ class InspirationController extends AppController {
     /**
      * 收藏灵感图片
      * @param int $uid
-     * @param int $pic_id
+     * @param int $id
      */
-    public function doFavorite($uid=0, $pic_id=0){
-        if(empty($pic_id)){
+    public function doFavorite($uid=0, $id=0){
+        if(empty($id)){
             $this->apiError(-1, '传入图片id为空');
         }
         if(empty($uid)){
@@ -145,7 +145,7 @@ class InspirationController extends AppController {
         }
         $favorite['appname'] = 'Inspiration';
         $favorite['table'] = 'Inspiration';
-        $favorite['row'] = $pic_id;
+        $favorite['row'] = $id;
         $favorite['uid'] = $uid;
 
         if (D('Favorite')->where($favorite)->count()) {
@@ -162,10 +162,10 @@ class InspirationController extends AppController {
 
     /**取消收藏灵感图片
      * @param int $uid
-     * @param int $pic_id
+     * @param int $id
      */
-    public function undoFavorite($uid=0,$pic_id=0){
-        if(empty($pic_id)){
+    public function undoFavorite($uid=0,$id=0){
+        if(empty($id)){
             $this->apiError(-1, '传入图片id为空');
         }
         if(empty($uid)){
@@ -174,12 +174,13 @@ class InspirationController extends AppController {
         }
         $favorite['appname'] = 'Inspiration';
         $favorite['table'] = 'Inspiration';
-        $favorite['row'] = $pic_id;
+        $favorite['row'] = $id;
         $favorite['uid'] = $uid;
         if (!D('Favorite')->where($favorite)->count()) {
             $this->apiError(-102,'您还没有收藏，不能取消收藏!');
         } else {
             if (D('Favorite')->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
                 $this->apiSuccess('取消收藏成功');
             } else {
                 $this->apiError(-101,'写入数据库失败!');
@@ -190,9 +191,9 @@ class InspirationController extends AppController {
     /**
      * 判断灵感图片是否收藏
      * @param int $uid
-     * @param int $pic_id
+     * @param int $id
      */
-    public function isFavorite($uid=0, $pic_id=0){
+    public function isFavorite($uid=0, $id=0){
         if(empty($pic_id)){
             $this->apiError(-1, '传入图片id为空');
         }
@@ -202,7 +203,7 @@ class InspirationController extends AppController {
         }
         $favorite['appname'] = 'Inspiration';
         $favorite['table'] = 'Inspiration';
-        $favorite['row'] = $pic_id;
+        $favorite['row'] = $id;
         $favorite['uid'] = $uid;
 
         if (D('Favorite')->where($favorite)->count()) {
@@ -214,7 +215,7 @@ class InspirationController extends AppController {
         }
     }
 
-    private function formatList($list=null){
+    private function formatList($list=null,$uid=0){
         if(!empty($list)){
             foreach($list as &$inspira){
                 $pic_id = $inspira['pic_id'];
@@ -236,10 +237,13 @@ class InspirationController extends AppController {
                     'url'=>$pic_small,
                     'size'=>$thumb_size
                 );
-                $uid = is_login();
+                if(!$uid){
+                    $uid = is_login();
+                }
+
                 $favorite['appname'] = 'Inspiration';
                 $favorite['table'] = 'Inspiration';
-                $favorite['row'] = $pic_id;
+                $favorite['row'] = $inspira['id'];;
                 $favorite['uid'] = $uid;
                 if (D('Favorite')->where($favorite)->count()) {
                     $inspira['isFavorite'] = true;
@@ -276,5 +280,18 @@ class InspirationController extends AppController {
         return $picUrl;
     }
 
-
+    /**
+     * @param $condition
+     * @auth RFly
+     */
+    private function clearCache($condition,$type='support')
+    {
+        unset($condition['uid']);
+        unset($condition['create_time']);
+        if($type == 'support')
+            $cache_key = "support_count_" . implode('_', $condition);
+        else if($type == 'favorite')
+            $cache_key = "favorite_count_" . implode('_', $condition);
+        S($cache_key, null);
+    }
 }
