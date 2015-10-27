@@ -488,7 +488,7 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function addTeacherToGroup($uid=null, $organization_id=null, $teacher_group_id=null){
-        //$this->requireAdminLogin();
+        $this->requireAdminLogin();
         if(!is_numeric($uid) || !is_numeric($organization_id) || !is_numeric($teacher_group_id)){
             $this->apiError(-4, '请求参数错误');
         }
