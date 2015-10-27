@@ -7,6 +7,8 @@ define(['jquery','jqueryui'],function () {
     var MyLesson = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.loadData();
+        this.$wrapper.on('click','.editVideo',$.proxy(this,'showEditVideoBox'));
+        this.$wrapper.on('click','.deleteTeacher',$.proxy(this,'deleteTeacher'));
     };
     MyLesson.prototype= {
         loadData: function () {
@@ -131,6 +133,18 @@ define(['jquery','jqueryui'],function () {
             });
             str+='<div style="clear:both;">';
             this.$wrapper.find('#lessonsMainCon').append(str);
+        },
+        showEditVideoBox:function(){
+            var $target=$(e.currentTarget),
+                flag=$target.text()=='编辑',
+                $li = this.$wrapper.find('.memberItemUl li');
+            if(flag) {
+                $target.text('关闭编辑');
+                $li.removeClass('normal').addClass('edit');
+            }else{
+                $target.text('编辑');
+                $li.removeClass('edit').addClass('normal');
+            }
         },
     };
 

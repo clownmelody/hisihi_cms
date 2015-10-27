@@ -266,7 +266,7 @@ define(['jquery','jqueryui'],function () {
         *显示删除老师按钮
         */
         showEditTeacherBox:function(e){
-            var $target=$(e.srcElement),
+            var $target=$(e.currentTarget),
                 flag=$target.text()=='编辑',
                 $li = this.$wrapper.find('.memberItemUl li');
             if(flag) {
@@ -292,7 +292,7 @@ define(['jquery','jqueryui'],function () {
                     url=this.basicApiUrl+'/deleteTeacherFromGroup',
                     that=this;
                 $.post(url,tempData,function(data) {
-                    var $target = $(e.srcElement).parent().remove();
+                    var $target = $(e.currenTarget).parent().remove();
                 });
             }
         },

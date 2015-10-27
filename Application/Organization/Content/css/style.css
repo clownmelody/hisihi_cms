@@ -368,6 +368,12 @@
   margin-left: 35px;
   font-size: 16px;
 }
+.normalPageWrapper .normal-page-header .edit-data-item {
+  float: right;
+  margin-right: 20px;
+  color: #f7be5b;
+  cursor: pointer;
+}
 table {
   background-color: transparent;
   border-collapse: collapse;
@@ -1654,12 +1660,18 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   width: 90%;
   margin: 8px;
   height: 44px;
+  overflow: hidden;
 }
-#studentWorksMainCon li .worksItemBottom .worksItemDesc {
-  height: 37px;
-}
-#studentWorksMainCon li .worksItemBottom .worksItemDesc p {
+#studentWorksMainCon li .worksItemBottom p {
   color: #666666;
+}
+#studentWorksMainCon li .worksItemBottom textarea {
+  width: 100%;
+  border: none;
+  resize: none;
+  outline: none;
+  background-color: #F3F6FF;
+  display: none;
 }
 #studentWorksMainCon li .worksFooter {
   padding-top: 2px;
