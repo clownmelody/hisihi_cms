@@ -105,7 +105,7 @@ function ListExperFu (NameDepar,Stime,Etime,Jcontent) {
 
 //ListExper
 function ListExper (NameDepar,Jcontent) {
-    if ((NameDepar.length+Jcontent.length)>15) {
+    if (NameDepar.length > 7 || Jcontent.length >7) {
         var NameDepar = "<li class='user-company'style='width: 100%;'>"+NameDepar+"</li>";
         var Time = "<li class='user-time' style='width: 100%;text-align: left;'>"+Jcontent+"</li>";
     }else{

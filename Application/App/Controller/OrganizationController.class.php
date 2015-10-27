@@ -401,6 +401,33 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 根据教师名字进行模糊搜索
+     * @param null $name
+     */
+    public function teachersFilter($name=null){
+        if(empty($name)){
+            $this->apiError(-1, '传入参数为空');
+        }
+        $map['nickname'] = array('like', '%'.$name.'%');
+        $list = D('User/Member')->field('uid, nickname')->where($map)->select();
+        $a_model = M('AuthGroupAccess');
+        $t_list = array();
+        foreach($list as &$user){
+            $uid = $user['uid'];
+            $r_res = $a_model->where('group_id=6 and uid='.$uid)->find();
+            if($r_res){
+                $avatar = new AvatarAddon();
+                $avatar_path = $avatar->getAvatarPath($uid);
+                $avatar128_path = getThumbImage($avatar_path, 128);
+                $user['avatar'] = $avatar128_path['src'];
+                array_push($t_list, $user);
+            }
+        }
+        $extra['data'] = $t_list;
+        $this->apiSuccess('搜索教师成功', null, $extra);
+    }
+
+    /**
      * 新增老师分组
      * @param null $organization_id
      * @param null $group_name

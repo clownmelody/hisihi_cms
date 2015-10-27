@@ -9,13 +9,14 @@
 namespace App\Controller;
 use App\Exception\ReturnException;
 use Think\Controller;
+use Think\Controller\RestController;
 use User\Api\UserApi;
 //use Addons\Digg\DiggAddon;
 //use Addons\LocalComment\LocalCommentAddon;
 use Addons\Avatar\AvatarAddon;
 require_once(dirname(__FILE__).'/../Common/function.php');
 
-abstract class AppController extends Controller {
+abstract class AppController extends RestController {
     protected $api;
     protected $isInternalCall;
 
@@ -63,7 +64,8 @@ abstract class AppController extends Controller {
         if($this->isInternalCall) {
             throw new ReturnException($result);
         } else if($format == 'json') {
-            echo json_encode($result);
+            $this->response($result,'json');
+            //echo json_encode($result);
             exit;
         } else if($format == 'xml') {
             echo xml_encode($result);
