@@ -485,20 +485,44 @@ class OrganizationController extends AppController
      * 添加教师到分组
      * @param null $teacher_group_id
      * @param null $uid
+     * @param null $organization_id
      */
-    public function addTeacherToGroup($uid=null, $teacher_group_id=null){
+    public function addTeacherToGroup($uid=null, $organization_id=null, $teacher_group_id=null){
         $this->requireAdminLogin();
-
+        $model = M('OrganizationRelation');
+        $data['uid'] = $uid;
+        $data['teacher_group_id'] = $teacher_group_id;
+        $data['organization_id'] = $organization_id;
+        $data['group'] = 6;
+        $data['status'] = 1;
+        if($model->where($data)->count()){
+            $this->apiError(-2, '该老师已经添加过了');
+        }
+        $result = $model->add($data);
+        if($result){
+            $extra['relation_id'] = $result;
+            $this->apiSuccess("添加成功",null,$extra);
+        }else{
+            $this->apiError(-1, '新增教师到分组失败');
+        }
     }
 
-    /**
-     * 从分组中移除老师
-     * @param null $uid
-     * @param null $teacher_group_id
+    /**从分组中移除老师
+     * @param $relation_id
      */
-    public function deleteTeacherFromGroup($uid=null, $teacher_group_id=null){
+    public function deleteTeacherFromGroup($relation_id=null){
         $this->requireAdminLogin();
-
+        $model = M('OrganizationRelation');
+        $data['status'] = -1;
+        if(!$model->where('status=1 and id='.$relation_id)->count()){
+            $this->apiError(-2, '该老师不存在');
+        }
+        $result = $model->where('id='.$relation_id)->save($data);
+        if($result){
+            $this->apiSuccess('删除成功');
+        } else {
+            $this->apiError(-1, '删除失败');
+        }
     }
 
     /**
