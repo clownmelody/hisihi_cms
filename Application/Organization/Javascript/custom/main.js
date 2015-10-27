@@ -18,7 +18,8 @@ require.config({
         announcement: 'custom/announcement',
         teacher:'custom/teacher',
         basicinfo:'custom/basicinfo',
-        video:'custom/video'
+        video:'custom/video',
+        studentworks:'custom/studentworks'
 }});
 
 require([
@@ -31,7 +32,8 @@ require([
     'teacher',
     'announcement',
     'basicinfo',
-    'video'
+    'video',
+    'studentworks'
 ]);
 
 

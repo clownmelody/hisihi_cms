@@ -328,7 +328,16 @@
 .list-data-ul li {
   position: relative;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 0 6px #cccccc;
+  -moz-box-shadow: 0 0 6px #cccccc;
+  box-shadow: 0 0 6px #cccccc;
+  margin: 10px;
+}
+.list-data-ul li:hover {
+  -webkit-box-shadow: 0 0 6px #848484;
+  -moz-box-shadow: 0 0 6px #848484;
+  box-shadow: 0 0 6px #848484;
 }
 .list-data-ul li.normal {
   background-color: transparent;
@@ -350,6 +359,14 @@
 }
 .list-data-ul li.edit .delete-item-btn:hover {
   background-position-x: -15px;
+}
+.normalPageWrapper .normal-page-header {
+  height: 55px;
+  line-height: 55px;
+}
+.normalPageWrapper .normal-page-header .header-title {
+  margin-left: 35px;
+  font-size: 16px;
 }
 table {
   background-color: transparent;
@@ -1553,27 +1570,6 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 .sortableplaceholder {
   border: 1px dotted #428BCA !important;
 }
-.normalPageWrapper .normal-page-header {
-  height: 55px;
-  line-height: 55px;
-}
-.normalPageWrapper .normal-page-header .header-title {
-  margin-left: 35px;
-  font-size: 16px;
-}
-.list-data-ul li {
-  border-radius: 5px;
-  -webkit-box-shadow: 0 0 6px #cccccc;
-  -moz-box-shadow: 0 0 6px #cccccc;
-  box-shadow: 0 0 6px #cccccc;
-  margin: 10px;
-  position: relative;
-}
-.list-data-ul li:hover {
-  -webkit-box-shadow: 0 0 6px #848484;
-  -moz-box-shadow: 0 0 6px #848484;
-  box-shadow: 0 0 6px #848484;
-}
 #lessonsMainCon {
   padding: 25px;
 }
@@ -1634,6 +1630,50 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   text-align: right;
 }
 #lessonsMainCon li .videoFooter span {
+  float: left;
+  color: #999999;
+  font-size: 12px;
+  margin-left: 4px;
+  line-height: 15px;
+}
+#studentWorksMainCon {
+  padding: 25px;
+}
+#studentWorksMainCon li {
+  width: 244px;
+  height: 235px;
+}
+#studentWorksMainCon li .worksItemHeader {
+  height: 183px;
+}
+#studentWorksMainCon li .worksItemHeader img {
+  height: 183px;
+  width: 100%;
+}
+#studentWorksMainCon li .worksItemBottom {
+  width: 90%;
+  margin: 8px;
+  height: 44px;
+}
+#studentWorksMainCon li .worksItemBottom .worksItemDesc {
+  height: 37px;
+}
+#studentWorksMainCon li .worksItemBottom .worksItemDesc p {
+  color: #666666;
+}
+#studentWorksMainCon li .worksFooter {
+  padding-top: 2px;
+}
+#studentWorksMainCon li .worksFooter .videoFooterLeft {
+  width: 47%;
+  float: left;
+}
+#studentWorksMainCon li .worksFooter .videoFooterRight {
+  width: 47%;
+  float: right;
+  text-align: right;
+}
+#studentWorksMainCon li .worksFooter span {
   float: left;
   color: #999999;
   font-size: 12px;
