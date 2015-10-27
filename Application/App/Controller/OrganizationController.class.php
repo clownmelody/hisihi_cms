@@ -484,7 +484,7 @@ class OrganizationController extends AppController
      * @param $relation_id
      */
     public function deleteTeacherFromGroup($relation_id=null){
-        //$this->requireAdminLogin();
+        $this->requireAdminLogin();
         $model = M('OrganizationRelation');
         $data['status'] = -1;
         if(!$model->where('status=1 and id='.$relation_id)->count()){
