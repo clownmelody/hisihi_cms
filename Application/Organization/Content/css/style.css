@@ -1356,6 +1356,10 @@ body {
 .basicinfo-body .form-group textarea {
   width: 694px;
 }
+.basicinfo-body #SubmitBtn {
+  height: 40px;
+  width: 115px;
+}
 #ImgModal .myModal-body-left {
   width: 40%;
   height: 100%;

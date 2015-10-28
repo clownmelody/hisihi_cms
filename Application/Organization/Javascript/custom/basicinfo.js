@@ -29,7 +29,7 @@
  	    var that=this;
  	    this.$wrapper.on('focus','input',$.proxy(this,'getNameFocus'));
  	    //this.$wrapper.on('blur','input',$.proxy(this,'getNameBlur'));
- 	    this.$wrapper.on('click','#SubmitBtn',$.proxy(this,'SubmitInfo'));
+ 	    this.$wrapper.on('click','#SubmitBtn',$.proxy(this,'submitBaseInfo'));
  	    this.$wrapper.on('click','#addtags',$.proxy(this,'AddTags'));
 		$('#dataImportFileInput').change(function (e) {
 			that.uploadNewImg.call(that,e);
@@ -41,11 +41,13 @@
 			$(".tag-open").append("<span class='label label-primary'>"+txt+"<a href='javaScript: void(0);' onclick='$(this).parent().remove();' class='box-add' id='box-add'><span class='icon-add'>&#215;</span></a></span>");
 		});
 
+		//上传头像
 		this.$wrapper.on('click',"#UploadImg", function () {
 			$('#ImgModal').fadeIn(500);
 			that.initializeCrop(that.$wrapper.find('#myPicture'));  //头像裁剪初始化
 		});
 
+		//关闭弹出层
 		this.$wrapper.on("click",".close", $.proxy(that,'cancelCrop'));
 
  	};
@@ -117,10 +119,17 @@
  				$(".tag-open").append("<span class='label label-primary'>"+tagsTxt.val()+"<a href='javaScript: void(0);' onclick='$(this).parent().remove();' class='box-add' id='box-add'><span class='icon-add'>&#215;</span></a></span>");
  				tagsTxt.attr("value","");
  			};
- 		}, 		
+ 		},
 
- 		SubmitInfo:function(){
- 			$('.basicinfoWrapper').submit();
+		submitBaseInfo:function(){
+			this.$wrapper.find('#basicForm').ajaxSubmit({
+				//type:'post',
+				//url:'http://127.0.0.1:8080/hisihi-cms/api.php?s=/Organization/login',
+				url: window.urlObject.apiUrl + '/saveBaseInfo',
+				success: function (data) {
+
+				}
+			});
  		},
 
 		//上传头像图片
