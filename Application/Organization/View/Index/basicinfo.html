@@ -20,7 +20,7 @@
 					</div>
 				</div>
 				<div class="col-2 t_r">
-					<a href="#" class="btn brand-info m_15">点击上传</a>
+					<a href="javaScript: void(0);" id="UploadImg" class="btn brand-info m_15">点击上传</a>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -52,15 +52,15 @@
 			<div class="form-group">
 				<label for="" class="label-txt col-label">优势</label>
 				<div class="col-2">
-					<input  class="form-control" >
+					<input  class="form-control" name="AddTags">
 					<div class="box-tag tag-open">
 					</div>
 				</div>
 				<div class="col-2 recommend-box">
 					<div class="checkbox">
-						<input type="checkbox"> 显示推荐标签
+						<input type="checkbox" checked ='checked'/> 显示推荐标签
 					</div>
-					<a href="#" class="btn brand-info">添加标签</a>
+					<a href="javaScript: void(0);" class="btn brand-info" id="addtags">添加标签</a>
 					<div class="box-tag">
 						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
 						<a href="javaScript: void(0);" class="label label-default">抗高压</a>
@@ -104,3 +104,47 @@
 
 </div>
 <!-- /.box -->
+
+<div class="modal fade" id="ImgModal">
+
+	<div class="modal-container">
+
+		<div class="modal-header">
+			<h4 class="min-title">上传头像<a href="javaScript: void(0);" class="close icon-close">&#215;</a></h4>
+		</div>
+		<!-- /.modal-header -->
+
+		<div class="modal-body">
+			
+			<!-- <table width="500" cellspacing="0" cellpadding="0">
+			    <tr>
+			        <td width="72" id="fileType">
+			        </td>
+			        <td width="242">
+			            <input type="file" name="myFile" id="myFile" />
+			        </td>
+			        <td width="184" id="fileSize" class="fileSize">
+			        </td>
+			    </tr>
+			</table> -->
+
+			
+
+			<div class="jcrop-box">
+				<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" id="element_id" alt="[Jcrop Example]" />
+			</div>
+
+		</div>
+		<!-- /.modal-body -->
+
+		<div class="modal-foot">
+			<a href="#" class="btn btn-grey close">取消</a>
+			<a href="#" class="btn brand-info">确定</a>
+		</div>
+		<!-- /.modal-foot -->
+
+	</div>
+	<!-- /.modal-container -->
+
+</div>
+<!-- /.modal -->
