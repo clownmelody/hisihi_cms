@@ -10,6 +10,7 @@ define(['jquery','jqueryui'],function () {
         this.$wrapper.on('click','.worksItemBottom', $.proxy(this,'worksItemDescEdit'));
         this.$wrapper.on('blur','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
+        this.$wrapper.on('click','.editStudentWorks', $.proxy(this,'showEditVideoBox'));
     };
     StudentWorks.prototype= {
         loadData: function () {
@@ -28,7 +29,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/2.png'
+                    imgSrc: window.urlObject.image + '/studentworks/10.png'
                 },
                 {
                     id:2,
@@ -140,7 +141,23 @@ define(['jquery','jqueryui'],function () {
                 $p=$target.prev();
             $p.show();
             $target.hide();
-        }
+        },
+
+        /*
+        *显示、隐藏删除按钮
+        */
+        showEditVideoBox:function(e){
+            var $target=$(e.currentTarget),
+                flag=$target.text()=='编辑',
+                $li = this.$wrapper.find('.list-data-ul li');
+            if(flag) {
+                $target.text('关闭编辑');
+                $li.removeClass('normal').addClass('edit');
+            }else{
+                $target.text('编辑');
+                $li.removeClass('edit').addClass('normal');
+            }
+        },
 
     };
 

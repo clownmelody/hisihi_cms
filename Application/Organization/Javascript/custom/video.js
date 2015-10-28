@@ -134,10 +134,10 @@ define(['jquery','jqueryui'],function () {
             str+='<div style="clear:both;">';
             this.$wrapper.find('#lessonsMainCon').append(str);
         },
-        showEditVideoBox:function(){
+        showEditVideoBox:function(e){
             var $target=$(e.currentTarget),
                 flag=$target.text()=='编辑',
-                $li = this.$wrapper.find('.memberItemUl li');
+                $li = this.$wrapper.find('.list-data-ul li');
             if(flag) {
                 $target.text('关闭编辑');
                 $li.removeClass('normal').addClass('edit');
