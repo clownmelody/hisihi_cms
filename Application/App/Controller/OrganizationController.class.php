@@ -192,11 +192,6 @@ class OrganizationController extends AppController
      * @author huajie <banhuajie@163.com>
      */
     public function uploadLogo(){
-        //TODO: 用户登录检测
-
-        /* 返回标准数据 */
-        $return  = array('status' => 1, 'info' => '上传成功', 'data' => '');
-
         /* 调用文件上传组件上传文件 */
         $Picture = D('Admin/Picture');
         $pic_driver = C('PICTURE_UPLOAD_DRIVER');
@@ -209,15 +204,17 @@ class OrganizationController extends AppController
 
         /* 记录图片信息 */
         if($info){
-            $return['status'] = 1;
-            $return = array_merge($info['download'], $return);
+            unset($info['picture']['type']);
+            unset($info['picture']['url']);
+            unset($info['picture']['md5']);
+            unset($info['picture']['sha1']);
+            unset($info['picture']['status']);
+            unset($info['picture']['create_time']);
+            $extra = $info['picture'];
+            $this->apiSuccess("上传Logo成功",null,$extra);
         } else {
-            $return['status'] = 0;
-            $return['info']   = $Picture->getError();
+            $this->apiError(-1,"上传Logo失败，".$Picture->getError());
         }
-
-        /* 返回JSON数据 */
-        $this->ajaxReturn($return);
     }
 
     /**
