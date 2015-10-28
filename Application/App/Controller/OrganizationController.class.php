@@ -198,7 +198,7 @@ class OrganizationController extends AppController
         $return  = array('status' => 1, 'info' => '上传成功', 'data' => '');
 
         /* 调用文件上传组件上传文件 */
-        $Picture = D('Picture');
+        $Picture = D('Admin/Picture');
         $pic_driver = C('PICTURE_UPLOAD_DRIVER');
         $info = $Picture->upload(
             $_FILES,
