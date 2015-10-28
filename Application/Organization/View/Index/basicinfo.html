@@ -1,0 +1,145 @@
+<div class="box basicinfoWrapper">
+
+	<div class="box-header">
+		<div class="min-title">填写基本信息</div>
+	</div>
+	<!-- /.box-header -->
+
+	<div class="box-body basicinfo-body">
+
+		<form class="form-horizontal" id="basicForm">
+
+			<div class="form-group">
+				<div class="label-img col-label ">
+					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" alt="" class="">
+				</div>
+				<div class="col-2">
+					<div class="label-box">
+						<p class="title">选择新头像</p>
+						<p class="txt">你可以选择 <span class="blod"> png/jpg </span> 图片作为头像</p>
+					</div>
+				</div>
+				<div class="col-2 t_r">
+					<a href="javaScript: void(0);" id="UploadImg" class="btn brand-info m_15">点击上传</a>
+				</div>
+			</div>
+			<!-- /.form-group -->
+
+			<div class="form-group">
+				<label for="" class="label-txt col-label">名称</label>
+				<div class="col-2">
+					<input  class="form-control" placeholder="名称" value="0" name="organization_id" id="organization_id" />
+					<input  class="form-control" placeholder="名称" value="" name="name" id="name" />
+				</div>
+			</div>
+			<!-- /.form-group -->
+
+			<div class="form-group">
+				<label for="" class="label-txt col-label">签名</label>
+				<div class="col-2">
+					<input  class="form-control" placeholder="签名" value="" name="slogan" id="Signature" >
+				</div>
+			</div>
+			<!-- /.form-group -->
+
+			<div class="form-group">
+				<label for="" class="label-txt col-label">简介</label>
+				<div class="col-1">
+					<textarea class="form-control" rows="5" name="introduce"></textarea>
+				</div>
+			</div>
+			<!-- /.form-group -->
+
+			<div class="form-group">
+				<label for="" class="label-txt col-label">优势</label>
+				<div class="col-2">
+					<input  class="form-control" name="advantage">
+					<div class="box-tag tag-open">
+					</div>
+				</div>
+				<div class="col-2 recommend-box">
+					<div class="checkbox">
+						<input type="checkbox" checked ='checked'/> 显示推荐标签
+					</div>
+					<a href="javaScript: void(0);" class="btn brand-info" id="addtags">添加标签</a>
+					<div class="box-tag">
+						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
+						<a href="javaScript: void(0);" class="label label-default">抗高压</a>
+						<a href="javaScript: void(0);" class="label label-default">刚猛执行力</a>
+						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
+						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
+						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
+					</div>
+				</div>
+			</div>
+			<!-- /.form-group -->
+
+			<div class="form-group">
+				<label for="" class="label-txt col-label">地址</label>
+				<div class="col-2">
+					<input  class="form-control" placeholder="地址" value="" name="location" id="Address" >
+				</div>
+			</div>
+			<!-- /.form-group -->
+
+			<div class="form-group">
+				<label for="" class="label-txt col-label">联系方式</label>
+				<div class="col-2">
+					<input  class="form-control" placeholder="联系方式" value="" name="phone_num" id="Contact" >
+				</div>
+			</div>
+			<!-- /.form-group -->
+
+			<div class="form-group">
+				<div class="col-2 m_110">
+					<input type="button" class="btn btn-grey" id="SubmitBtn" value="保存"/>
+				</div>
+			</div>
+			<!-- /.form-group -->
+
+		</form>
+		<!-- /.form-horizontal -->
+
+	</div>
+	<!-- /.box-body basicinfo-body -->
+
+	<div class="modal fade" id="ImgModal">
+
+		<div class="modal-container">
+
+			<div class="modal-header">
+				<h4 class="min-title">上传头像<a href="javaScript: void(0);" class="close icon-close">&#215;</a></h4>
+			</div>
+			<!-- /.modal-header -->
+
+			<div class="modal-body">
+				<div class="jcrop-box myModal-body-left">
+					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" id="myPicture" alt="[Jcrop Example]" />
+				</div>
+				<div class="myModal-body-right">
+					<form id="userPhotoForm">
+						<input type="button" class="btn brand-info" value="上传头像"/>
+						<input type="file" name="picture" class="dataImportFileInput" id="dataImportFileInput" size="28" accept=".jpg,.png" />
+					</form>
+					<p id="photoErrorInfo"></p>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+			<!-- /.modal-body -->
+
+			<div class="modal-foot">
+				<a href="#" class="btn btn-grey close">取消</a>
+				<a href="#" class="btn brand-info">确定</a>
+			</div>
+			<!-- /.modal-foot -->
+
+		</div>
+		<!-- /.modal-container -->
+
+	</div>
+
+</div>
+<!-- /.box -->
+
+
+<!-- /.modal -->
