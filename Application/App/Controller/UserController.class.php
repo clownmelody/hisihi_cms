@@ -2054,7 +2054,7 @@ class UserController extends AppController
         $result['info']['skills'] = $skills;
         //我的亮点
         $lightspot = $this->_user_lightspot($uid);
-        $result['info']['lightspot'] = $skills;
+        $result['info']['lightspot'] = $lightspot;
         // 用户工作经历
         $workExperienceModel = D('User/UserWorkExperience');
         $experList = $workExperienceModel->getUserWorkExperiences($uid);

@@ -373,7 +373,6 @@ class PublicController extends AppController {
         $Article = D('Blog/Article', 'Logic');
 
         //获取当前分类下的文章
-        //$info = $Document->field('id,title,description,display,view,comment,create_time,update_time,cover_id')->find($id);
         $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
         if(empty($info)){
             $this->apiError(-1, "id不存在");
