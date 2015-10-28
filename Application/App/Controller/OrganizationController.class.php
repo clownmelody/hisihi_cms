@@ -11,6 +11,7 @@ namespace App\Controller;
 use Addons\Avatar\AvatarAddon;
 use Think\Controller;
 use Think\Exception;
+use Think\Hook;
 use Think\Model;
 
 
@@ -626,8 +627,34 @@ class OrganizationController extends AppController
         if($result){
             $extra['data'] = $result;
             $this->apiSuccess('获取视频分类列表成功', null, $extra);
-        }else{
+        } else {
             $this->apiError(-1,"获取视频分类列表失败");
+        }
+    }
+
+    /**
+     * 添加机构课程
+     * @param null $title
+     * @param null $content
+     * @param null $img
+     * @param null $lecturer
+     * @param null $auth
+     */
+    public function addCourse($title=null, $content=null, $img=null, $lecturer=null, $auth=null){
+        $model = M('OrganizationCourse');
+        $data['title'] = $title;
+        $data['content'] = $content;
+        $data['img'] = $img;
+        /*
+         * 需要添加图片到oss
+         */
+        $data['lecturer'] = $lecturer;
+        $data['auth'] = $auth;
+        $result = $model->add($data);
+        if($result){
+            $this->apiSuccess('添加课程成功');
+        } else {
+            $this->apiError(-1, '保存课程信息失败');
         }
     }
 
@@ -665,6 +692,25 @@ class OrganizationController extends AppController
         if($user){
             $extraData['isExist'] = true;
             $this->apiSuccess("该手机号已注册", null, $extraData);
+        }
+    }
+
+    /**
+     * 上传图片到OSS
+     * @param $picID
+     */
+    private function uploadLogoPicToOSS($picID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$picID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            }
         }
     }
 
