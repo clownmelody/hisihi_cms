@@ -22,7 +22,8 @@ require.config({
         basicinfo:'custom/basicinfo',
         video:'custom/video',
         studentworks:'custom/studentworks',
-        addnewlesson:'custom/addnewlesson'
+        addnewlesson:'custom/addnewlesson',
+        certification:'custom/certification'
 }});
 
 require([
@@ -38,7 +39,8 @@ require([
     'basicinfo',
     'video',
     'studentworks',
-    'addnewlesson'
+    'addnewlesson',
+    'certification'
 ]);
 
 
