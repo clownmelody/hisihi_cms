@@ -146,6 +146,7 @@ class OrganizationController extends AppController
             $extra['uid'] = $user['id'];
             $extra['username'] = $user['username'];
             $extra['session_id'] = session_id();
+            $extra['organization_id'] = $user['organization_id'];
             $this->apiSuccess("登陆成功", null, $extra);
         } else {
             $this->apiError(-1, '用户不存在或密码错误');
@@ -184,6 +185,39 @@ class OrganizationController extends AppController
             $this->apiError(-1,"上传机构图片失败".$Picture->getError());
         }
         $this->apiSuccess("上传机构图片成功",null,array('pictures'=>implode(',',$info)));
+    }
+
+    /**
+     * 上传Logo图片
+     * @author huajie <banhuajie@163.com>
+     */
+    public function uploadLogo(){
+        //TODO: 用户登录检测
+
+        /* 返回标准数据 */
+        $return  = array('status' => 1, 'info' => '上传成功', 'data' => '');
+
+        /* 调用文件上传组件上传文件 */
+        $Picture = D('Picture');
+        $pic_driver = C('PICTURE_UPLOAD_DRIVER');
+        $info = $Picture->upload(
+            $_FILES,
+            C('PICTURE_UPLOAD'),
+            C('PICTURE_UPLOAD_DRIVER'),
+            C("UPLOAD_{$pic_driver}_CONFIG")
+        ); //TODO:上传到远程服务器
+
+        /* 记录图片信息 */
+        if($info){
+            $return['status'] = 1;
+            $return = array_merge($info['download'], $return);
+        } else {
+            $return['status'] = 0;
+            $return['info']   = $Picture->getError();
+        }
+
+        /* 返回JSON数据 */
+        $this->ajaxReturn($return);
     }
 
     /**
@@ -548,7 +582,7 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function getAllGroupsTeachers($organization_id=null){
-        //$this->requireAdminLogin();
+        $this->requireAdminLogin();
         $model = M('OrganizationConfig');
         $list = $model->field('id, value')->where('status=1 and type=1001 and organization_id='.$organization_id)->select();
         $t_model = M('OrganizationRelation');
