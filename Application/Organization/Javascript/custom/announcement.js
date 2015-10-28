@@ -49,11 +49,11 @@ define(['jquery'],function () {
             url=window.urlObject.apiUrl+'/api.php?s=/Organization/getNotice',
                 that=this;
             var sectionId =JSON.parse($.cookie('hisihi-org')).session_id;
-            $.ajax({
+            Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {page:1,count:20,session_id:sectionId},
-                success: function(data){
+                data: {page:1,count:20},
+                callback:function(data){
                     callback.call(that,data)
                 }
             });

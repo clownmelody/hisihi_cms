@@ -4,14 +4,10 @@
 //我的老师
 
 define(['jquery','jqueryui'],function () {
-    var MyLesson = function ($wrapper) {
+    var AddNewLesson = function ($wrapper) {
         this.$wrapper = $wrapper;
-        this.loadData();
-        this.initSortEvents();
-        this.$wrapper.on('click','.editVideo',$.proxy(this,'showEditVideoBox'));
-        this.$wrapper.on('click','.deleteTeacher',$.proxy(this,'deleteTeacher'));
     };
-    MyLesson.prototype= {
+    AddNewLesson.prototype= {
         loadData: function () {
             var data = [
                     {
@@ -135,47 +131,10 @@ define(['jquery','jqueryui'],function () {
             str+='<div style="clear:both;">';
             this.$wrapper.find('#lessonsMainCon').append(str);
         },
-        showEditVideoBox:function(e){
-            var $target=$(e.currentTarget),
-                flag=$target.text()=='编辑',
-                $li = this.$wrapper.find('.list-data-ul li');
-            if(flag) {
-                $target.text('关闭编辑');
-                $li.removeClass('normal').addClass('edit');
-            }else{
-                $target.text('编辑');
-                $li.removeClass('edit').addClass('normal');
-            }
-        },
 
-        /*
-         *教程移动事件注册
-         *
-         */
-        initSortEvents:function(){
-            $target = this.$wrapper.find('#lessonsMainCon');
-
-            //任务拖动
-            $target.sortable({
-                items: ">li",
-                helper: 'clone',
-                delay: 300,
-                cursor: 'move',
-                scroll: true,
-                placeholder: "sortableplaceholder",
-                connectWith: '.memberItemUl',
-                start: function (event, ui) {
-
-                },
-
-                stop: function (event, ui) {
-
-                }
-            });
-        },
     };
-    var $wrapper=$('.normalPageWrapper');
+    var $wrapper=$('.addNewLessonWrapper');
     if($wrapper.length>0) {
-         new MyLesson($wrapper);
+         new AddNewLesson($wrapper);
     }
 });

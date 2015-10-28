@@ -164,4 +164,15 @@ Hisihi.modelBox.prototype = {
     OBJECT_NAME: 'Hisihi.modelBox'
 };
 
+/*通用异步请求方法*/
+Hisihi.getDataAsync=function(options){
+   var data=options.data;
+    data.session_id=JSON.parse($.cookie('hisihi-org')).session_id;
+    if(!options.type || options.type=='post'){
+        $.post(options.url,data,options.callback);
+    }else{
+        $.get(options.url,data,options.callback);
+    }
+};
+
 

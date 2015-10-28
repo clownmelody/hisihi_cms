@@ -63,21 +63,18 @@ define(['jquery','jqueryui'],function () {
         },
         getDataAsync:function(callback){
             var tempObj={
-                $page:1,
-                $count:1000000,
-                organization_id:this.organization_id,
-                session_id:this.sectionId
+                    $page:1,
+                    $count:1000000,
+                    organization_id:this.organization_id,
+                    session_id:this.sectionId
                 },
-
                 that=this;
-            $.ajax({
-                url:this.basicApiUrl+'/getAllGroupsTeachers',
-                data:tempObj,
-                success:function(data){
-                    callback.call(that, data);
-                },
-                error:function(e){
-                    //alert("获取失败");
+            Hisihi.getDataAsync({
+                type: "post",
+                url: this.basicApiUrl+'/getAllGroupsTeachers',
+                data: tempObj,
+                callback:function(data){
+                    callback.call(that,data)
                 }
             });
         },
@@ -494,38 +491,69 @@ define(['jquery','jqueryui'],function () {
             var tempData = {
                     organization_id:this.organization_id,
                     uid:teacherInfo.uid,
-                    teacher_group_id:groupInfo.groupId,
-                    session_id:this.sectionId
+                    teacher_group_id:groupInfo.groupId
                 },
                 url=this.basicApiUrl+'/addTeacherToGroup',
                 that=this;
-            $.post(url,tempData,function(data){
-                if(data.success){
-                    var member=[{
-                        nickname:teacherInfo.nickname,
-                        role:'成员',
-                        uid:teacherInfo.uid,
-                        avatar:teacherInfo.avatar
-                    }];
-                    var str = that.getSomeGroupMembersStr(member),
-                        $allLi=that.$wrapper.find('#teacherMainCon .tItems'),
-                        $li;
-                    $allLi.each(function(){
-                        if ($(this).data('name')==groupInfo.groupName){
-                            $li = $(this);
-                            return false;
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: tempData,
+                callback:function(data){
+                    if(data.success){
+                        var member=[{
+                            nickname:teacherInfo.nickname,
+                            role:'成员',
+                            uid:teacherInfo.uid,
+                            avatar:teacherInfo.avatar
+                        }];
+                        var str = that.getSomeGroupMembersStr(member),
+                            $allLi=that.$wrapper.find('#teacherMainCon .tItems'),
+                            $li;
+                        $allLi.each(function(){
+                            if ($(this).data('name')==groupInfo.groupName){
+                                $li = $(this);
+                                return false;
+                            }
+                        });
+                        $li.find('.memberItemUl .clearForMemberUl').before(str);
+                    }
+                    else{
+                        if(data.error_code==-2){
+                            alert('该老师已经添加过了');
+                        }else {
+                            alert('添加失败');
                         }
-                    });
-                    $li.find('.memberItemUl .clearForMemberUl').before(str);
-                }
-                else{
-                    if(data.error_code==-2){
-                        alert('该老师已经添加过了');
-                    }else {
-                        alert('添加失败');
                     }
                 }
             });
+            //$.post(url,tempData,function(data){
+            //    if(data.success){
+            //        var member=[{
+            //            nickname:teacherInfo.nickname,
+            //            role:'成员',
+            //            uid:teacherInfo.uid,
+            //            avatar:teacherInfo.avatar
+            //        }];
+            //        var str = that.getSomeGroupMembersStr(member),
+            //            $allLi=that.$wrapper.find('#teacherMainCon .tItems'),
+            //            $li;
+            //        $allLi.each(function(){
+            //            if ($(this).data('name')==groupInfo.groupName){
+            //                $li = $(this);
+            //                return false;
+            //            }
+            //        });
+            //        $li.find('.memberItemUl .clearForMemberUl').before(str);
+            //    }
+            //    else{
+            //        if(data.error_code==-2){
+            //            alert('该老师已经添加过了');
+            //        }else {
+            //            alert('添加失败');
+            //        }
+            //    }
+            //});
         },
 
     };
