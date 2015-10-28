@@ -1,11 +1,69 @@
 <div class="box addNewLessonWrapper normalPageWrapper">
-    <div class="box-header normal-page-header">
-        <span class="header-title addNewLessonTitle">视频教程/</span>
-        <span class="header-title">课程信息</span>
+    <div class="box-header normal-page-header addNewLessonHeader">
+        <span class="header-title">视频教程&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+        <span class="header-title addNewLessonTitle">课程信息</span>
     </div>
     <div class="box-body">
-        <ul id="addNewLessonsMainCon" class="list list-data-ul"></ul>
-        <div class=""></div>
+        <form class="form-horizontal" id="addNewLessonForm">
+            <div class="form-group">
+                <label for="" class="label-txt col-label">名称</label>
+                <div class="col-2">
+                    <input  class="form-control" placeholder="名称" value="0" name="organization_id" id="organization_id" />
+                    <input  class="form-control" placeholder="名称" value="" name="name" id="name" />
+                </div>
+            </div>
+            <!-- /.form-group -->
+
+            <div class="form-group">
+                <label for="" class="label-txt col-label">签名</label>
+                <div class="col-2">
+                    <input  class="form-control" placeholder="签名" value="" name="slogan" id="Signature" >
+                </div>
+            </div>
+            <!-- /.form-group -->
+
+            <div class="form-group">
+                <label for="" class="label-txt col-label">简介</label>
+                <div class="col-1">
+                    <textarea class="form-control" rows="5" name="introduce"></textarea>
+                </div>
+            </div>
+            <!-- /.form-group -->
+
+            <div class="form-group">
+                <label for="" class="label-txt col-label">优势</label>
+                <div class="col-2">
+                    <input  class="form-control" name="advantage">
+                    <div class="box-tag tag-open">
+                    </div>
+                </div>
+            </div>
+            <!-- /.form-group -->
+
+            <div class="form-group">
+                <label for="" class="label-txt col-label">地址</label>
+                <div class="col-2">
+                    <input  class="form-control" placeholder="地址" value="" name="location" id="Address" >
+                </div>
+            </div>
+            <!-- /.form-group -->
+
+            <div class="form-group">
+                <label for="" class="label-txt col-label">联系方式</label>
+                <div class="col-2">
+                    <input  class="form-control" placeholder="联系方式" value="" name="phone_num" id="Contact" >
+                </div>
+            </div>
+            <!-- /.form-group -->
+
+            <div class="form-group">
+                <div class="col-2 m_110">
+                    <input type="button" class="btn btn-grey" id="SubmitBtn" value="保存"/>
+                </div>
+            </div>
+            <!-- /.form-group -->
+
+        </form>
     </div>
 
 </div>

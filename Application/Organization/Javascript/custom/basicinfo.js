@@ -145,7 +145,7 @@
 				return;
 			}
 			$('#userPhotoForm').ajaxSubmit({
-				url: that.basicApiUrl + '/uploadPicture',
+				url: that.basicApiUrl + '/uploadLogo',
 				type: 'post',
 				beforeSubmit: function () {
 					var ss = '';

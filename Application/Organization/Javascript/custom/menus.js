@@ -13,6 +13,7 @@
 			index=3;
 			break;
 		case "video":
+		case "addnewlesson":
 			index=4;
 			break;
 		case "studentworks":

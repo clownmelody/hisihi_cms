@@ -1806,3 +1806,9 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   margin-left: 4px;
   line-height: 15px;
 }
+.addNewLessonWrapper .addNewLessonHeader span:nth-child(1) {
+  color: #999999;
+}
+.addNewLessonWrapper .addNewLessonHeader span:nth-child(2) {
+  margin-left: 0px;
+}
