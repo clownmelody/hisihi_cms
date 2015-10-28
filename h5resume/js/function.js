@@ -1,5 +1,3 @@
-
-
 $(function () {
     var uid = $('#uid').val();
     getData(uid,true);
@@ -45,7 +43,6 @@ function Judge(data){
         return data;
     }
 }
-
 
 //ext
 function extInfo (DataExt) {
@@ -95,7 +92,6 @@ function UserSpot (userSpot) {
 function NumSpot(data,num){
     var dataNum = data + num;
     if (dataNum > 8) {
-        console.log(dataNum);
         return 0;
     }else{
         return dataNum;
@@ -135,12 +131,13 @@ function MobileEmail (mobile,email) {
     return Judge(mobile)+" "+Judge(email);
 }
 
-function SpanSpot (Spot) {
+function SpanSpot (Spot,num) {
     if (num == 0) {
-            return "<span class='"+ColorClass()+"' style='white-space: nowrap; display: inline;vertical-align: baseline; line-height: 3em;'>"+Spot+"</span></br>";
-        }else{
-            return "<span class='"+ColorClass()+"' style='white-space: nowrap; display: inline;vertical-align: baseline;  line-height: 3em;'>"+Spot+"</span>";
-        }
+        return "<span class='"+ColorClass()+"' style='white-space: nowrap; display: inline;vertical-align: baseline; line-height: 3em;'>"+Spot+"</span></br>";
+    }else{
+        return "<span class='"+ColorClass()+"' style='white-space: nowrap; display: inline;vertical-align: baseline;  line-height: 3em;'>"+Spot+"</span>";
+    }
+    
 }
 
 //ListExper
@@ -159,7 +156,7 @@ function ListExper (NameDepar,Jcontent) {
         var Time = "<li class='user-time' style='width: 100%; text-align: center;'>"+Jcontent+"</li>";
     }else{
         var NameDepar = "<li class='user-company' style='width: 100%;'>"+NameDepar;
-        var Time = "<span class='user-time' style='float: right;'>"+Jcontent+"</span></li>";
+        var Time = "<span class='user-time' style='float: right;color: #999;'>"+Jcontent+"</span></li>";
     }
     return "<li><ul class='user-empiric'>"+NameDepar+Time+"</ul></li>";
 }
@@ -241,8 +238,9 @@ function userSkills (DataSkills) {
         return "";
     }else{
        for (var i = DataSkills.length - 1; i >= 0; i--) {
-           $(".user-tool").append("<img src="+"'h5resume/img/tool/"+DataSkills[i].value+".png'"+">");
-       };
+            $(".user-tool").append("<img src="+"'h5resume/img/tool/"+DataSkills[i].value+".png'"+">");
+        };
     }
-   
+    
+    
 }
