@@ -410,6 +410,52 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 获取学生作品
+     * @param null $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function getStudentWorks($organization_id=null, $page=1, $count=12){
+        $model = M('OrganizationResource');
+        $map['organization_id'] = $organization_id;
+        $map['type'] = 1;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $list = $model->field('pic_id, description, create_time')->where($map)->select();
+        foreach ($list as &$work) {
+            $pic_id = $work['pic_id'];
+            $work['url'] = $this->fetchImage($pic_id);
+            unset($work['pic_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构学生作品成功', null, $extra);
+    }
+
+    /**
+     * 获取机构环境图片
+     * @param null $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function getOrganizationEnvironment($organization_id=null, $page=1, $count=12){
+        $model = M('OrganizationResource');
+        $map['organization_id'] = $organization_id;
+        $map['type'] = 2;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $list = $model->field('pic_id, description, create_time')->where($map)->select();
+        foreach ($list as &$work) {
+            $pic_id = $work['pic_id'];
+            $work['url'] = $this->fetchImage($pic_id);
+            unset($work['pic_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构环境图片成功', null, $extra);
+    }
+
+    /**
      * 获取所有老师列表
      */
     public function teachersList($page=1, $count=10){
@@ -746,6 +792,29 @@ class OrganizationController extends AppController
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
             }
         }
+    }
+
+    /**
+     * 获取图片地址
+     * @param $pic_id
+     * @return null|string
+     */
+    private function fetchImage($pic_id){
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            }
+        }
+        return $picUrl;
     }
 
     /**
