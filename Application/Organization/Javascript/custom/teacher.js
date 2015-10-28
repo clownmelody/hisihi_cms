@@ -322,7 +322,7 @@ define(['jquery','jqueryui'],function () {
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
                                             '<input type="button" id="queryTeacher" class="btn brand-info" value="检索"/>'+
                                             '<label class="errorInfo addNewTeacherInput">请选择老师</label>'+
-                                            '<ul class="selectedBox"></ul>'+
+                                            '<div class="selectedBox" id="queryTeachResult"><ul></ul></div>'+
                                         '</div>'+
                                     '</div>' +
                                     '<div class="addTeacherBtnRow">'+
@@ -450,6 +450,14 @@ define(['jquery','jqueryui'],function () {
            // });
 
             /*
+            *执行搜索
+            */
+            modelContext.$panel.on('click','#queryTeacher',function() {
+                //$.proxy(myContext, 'execQueryTeacher');
+                myContext.execQueryTeacher(modelContext,myContext);
+            });
+
+            /*
             *组别选择
             */
             modelContext.$panel.on('click','.allGroupNamesList li',function(){
@@ -535,6 +543,53 @@ define(['jquery','jqueryui'],function () {
                     }
                 }
             });
+        },
+
+        /*执行模糊查询*/
+        execQueryTeacher:function(modelContext,myContext){
+            var $input = modelContext.$panel.find('#addNewTeacherInput'),
+                val = $input.val().replace(/(^\s*)|(\s*$)/g,'');
+            if (val == '') {
+                modelContext.$panel.find('.addNewTeacherInput').show().delay(500).hide(0);
+                return;
+            } else {
+                var url = myContext.basicApiUrl + '/teachersFilter',
+                    tempData = {
+                        name: val
+                    },
+                    that = this;
+                Hisihi.getDataAsync({
+                    type: "post",
+                    url: url,
+                    data: tempData,
+                    callback: function (data) {
+                        myContext.fillInQueryTeacherResult.call(modelContext,data);
+                    }
+                });
+
+            }
+        },
+
+        /*填充教师搜索结果*/
+        fillInQueryTeacherResult:function(data) {
+            if(data.success) {
+                var $target = this.$panel.find('#queryTeachResult ul'),
+                str='',
+                tempData=data.data,
+                len=tempData.length,
+                item;
+                for(var i=0;i<len;i++){
+                    item=tempData[i];
+                    str+='<li data-uid="'+item.uid+'">'+
+                            '<img src="'+item.avatar+'"/>'+
+                            '<span>'+item.nickname+'</span>'+
+                         '</li>';
+                }
+                str+='<div style="clear:both;"></div>';
+                $target.html(str);
+            }else{
+                alert("查询失败");
+            }
         },
 
     };
