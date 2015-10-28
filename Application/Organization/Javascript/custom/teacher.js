@@ -45,13 +45,6 @@ define(['jquery','jqueryui'],function () {
 
     MyTeacher.prototype={
         loadData:function(){
-            //var data=[
-            //    {groupName:'UI设计',members:[{name:'阿信',role:'管理员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'郑钧',role:'成员',imgSrc:window.urlObject.image+'/userImg/app2.png'},{name:'李志',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'阿信',role:'管理员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'郑钧',role:'成员',imgSrc:window.urlObject.image+'/userImg/app2.png'},{name:'李志',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'}]},
-            //    {groupName:'平面设计',members:[{name:'万晓利',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'},{name:'张玮玮',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'花大爷',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'}]},
-            //    {groupName:'环艺设计',members:[{name:'二手玫瑰',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'},{name:'丢火车',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'}]},
-            //    {groupName:'游戏设计',members:[{name:'干死那个石家庄人',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'},{name:'后海大鲨鱼',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'}]},
-            //    {groupName:'网页设计',members:[]}
-            //];
             this.getDataAsync(function(data){
                 if(data.success) {
                     data = data.data;
@@ -159,28 +152,33 @@ define(['jquery','jqueryui'],function () {
             //名称没有问题
             var validity=this.newNameValidity();
             if(validity.flag){
-                this.$wrapper.find('.addGroupCon').trigger('click');
+                //this.$wrapper.find('.addGroupCon').trigger('click');
                 this.$wrapper.find('#newGroupName').val('');
-                var data = {
+                var tempData = {
                         organization_id:this.organization_id,
                         group_name:validity.name,
                         session_id:this.sectionId
                     },
                 url=this.basicApiUrl+'/addTeachersGroup',
                     that=this;
-                $.post(url,data,function(data){
-                    if(data.success) {
-                        var tempData=[{
-                            group_info:{group_name: validity.name,group_id:data.id},
-                            teachers:[]
-                        }];
-                        that.showMembersInfo.call(that, tempData, 1);
-                    }
-                    else{
-                        alert('添加失败！')
+
+                Hisihi.getDataAsync({
+                    type: "post",
+                    url: url,
+                    data: tempData,
+                    callback:function(data){
+                        if(data.success) {
+                            var tempData=[{
+                                group_info:{group_name: validity.name,group_id:data.id},
+                                teachers:[]
+                            }];
+                            that.showMembersInfo.call(that, tempData, 1);
+                        }
+                        else{
+                            alert('添加失败！')
+                        }
                     }
                 });
-
             }else{
                 this.$wrapper.find('#newGroupCommitError').text(validity.tip).show().delay(500).hide(0);
             }
