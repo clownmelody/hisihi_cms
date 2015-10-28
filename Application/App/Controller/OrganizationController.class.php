@@ -640,8 +640,9 @@ class OrganizationController extends AppController
      * @param null $lecturer
      * @param null $auth
      */
-    public function addCourse($title=null, $content=null, $img=null, $lecturer=null, $auth=null){
+    public function addCourse($organization_id=null, $title=null, $content=null, $img=null, $lecturer=null, $auth=null){
         $model = M('OrganizationCourse');
+        $data['organization_id'] = $organization_id;
         $data['title'] = $title;
         $data['content'] = $content;
         $data['img'] = $img;
@@ -656,6 +657,39 @@ class OrganizationController extends AppController
         } else {
             $this->apiError(-1, '保存课程信息失败');
         }
+    }
+
+    /**
+     * 获取当前机构的所有课程
+     * @param null $organization_id
+     */
+    public function getCourses($organization_id=null){
+        $model = M('OrganizationCourse');
+        $video_model = M('OrganizationVideo');
+        $config_model = M("OrganizationConfig");
+        $member_model = M("Member");
+        $map['organization_id'] = $organization_id;
+        $map['status'] = 1;
+        $course_list = $model->field('id, title, content, img, category_id, lecturer, auth')->where($map)->select();
+        $video_course = array();
+        foreach($course_list as &$course){
+            $category_id = $course['category_id'];
+            $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
+            if($category){
+                $course['category_name'] = $category['value'];
+            }
+            $teacher_id = $course['lecturer'];
+            $teacher = $member_model->where('status=1 and uid='.$teacher_id)->find();
+            $course['teacher_name'] = $teacher['nickname'];
+            $course_id = $course['id'];
+            $v_map['course_id'] = $course_id;
+            $v_map['status'] = 1;
+            $video_list = $video_model->field('id, name, view_count, create_time')->where($v_map)->select();
+            $course['video'] = $video_list;
+            $video_course[] = $course;
+        }
+        $extra['data'] = $video_course;
+        $this->apiSuccess('获取所有课程成功', null, $extra);
     }
 
     /**
