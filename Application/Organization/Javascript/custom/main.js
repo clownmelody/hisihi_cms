@@ -15,15 +15,18 @@ require.config({
         jquerycookie:'libs/jquery.cookie',
         jqueryJcrop:'libs/jquery.Jcrop',
         util:'custom/util',
-        menus: 'custom/home',
+        menus: 'custom/menus',
         announcement: 'custom/announcement',
         teacher:'custom/teacher',
         basicinfo:'custom/basicinfo',
-        video:'custom/video'
+        video:'custom/video',
+        studentworks:'custom/studentworks'
 }});
 
 require([
     'jquery',
+    'jqueryform',
+    'jquerycookie',
     'util',
     'jqueryui',
     'jqueryJcrop',
@@ -31,7 +34,8 @@ require([
     'teacher',
     'announcement',
     'basicinfo',
-    'video'
+    'video',
+    'studentworks'
 ]);
 
 

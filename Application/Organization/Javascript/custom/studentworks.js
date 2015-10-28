@@ -4,13 +4,15 @@
 //我的老师
 
 define(['jquery','jqueryui'],function () {
-    var MyLesson = function ($wrapper) {
+    var StudentWorks = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.loadData();
-        this.$wrapper.on('click','.editVideo',$.proxy(this,'showEditVideoBox'));
-        this.$wrapper.on('click','.deleteTeacher',$.proxy(this,'deleteTeacher'));
+        this.$wrapper.on('click','.worksItemBottom', $.proxy(this,'worksItemDescEdit'));
+        this.$wrapper.on('blur','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
+        this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
+        this.$wrapper.on('click','.editStudentWorks', $.proxy(this,'showEditVideoBox'));
     };
-    MyLesson.prototype= {
+    StudentWorks.prototype= {
         loadData: function () {
             var data = [
                     {
@@ -19,7 +21,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/1.png'
+                    imgSrc: window.urlObject.image + '/studentworks/1.png'
                     },
                 {
                     id:1,
@@ -27,7 +29,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/2.png'
+                    imgSrc: window.urlObject.image + '/studentworks/10.png'
                 },
                 {
                     id:2,
@@ -35,7 +37,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/2.png'
+                    imgSrc: window.urlObject.image + '/studentworks/2.png'
                 },
                 {
                     id:3,
@@ -43,7 +45,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/3.png'
+                    imgSrc: window.urlObject.image + '/studentworks/3.png'
                 },
                 {
                     id:4,
@@ -51,7 +53,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/4.png'
+                    imgSrc: window.urlObject.image + '/studentworks/4.png'
                 },
                 {
                     id:5,
@@ -59,7 +61,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/5.png'
+                    imgSrc: window.urlObject.image + '/studentworks/5.png'
                 },
                 {
                     id:6,
@@ -67,7 +69,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/6.png'
+                    imgSrc: window.urlObject.image + '/studentworks/6.png'
                 },
                 {
                     id:7,
@@ -75,7 +77,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/7.png'
+                    imgSrc: window.urlObject.image + '/studentworks/7.png'
                 },
                 {
                     id:8,
@@ -83,7 +85,7 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/8.png'
+                    imgSrc: window.urlObject.image + '/studentworks/8.png'
                 },
                 {
                     id:9,
@@ -91,15 +93,15 @@ define(['jquery','jqueryui'],function () {
                     title: '大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/video/9.png'
+                    imgSrc: window.urlObject.image + '/studentworks/9.png'
                 }
             ];
             //this.getDataAsync(function(data){
             //    data;
             //});
-            this.showLessonInfo(data);
+            this.showStudentWorksInfo(data);
         },
-        showLessonInfo:function(data){
+        showStudentWorksInfo:function(data){
             var str='',
                 that=this,
                 typeNameAndTile='',
@@ -107,33 +109,43 @@ define(['jquery','jqueryui'],function () {
             $.each(data,function(){
                 typeNameAndTile=this.typeName+' | '+this.title;
                 tempTitle=typeNameAndTile;
-                if(typeNameAndTile.length>42){
-                    tempTitle=typeNameAndTile.substr(0,42)+'…';
+                if(typeNameAndTile.length>33){
+                    tempTitle=typeNameAndTile.substr(0,33)+'…';
                 }
                 str+='<li class="normal" data-id="'+this.id+'">'+
-                        '<div class="videoItemHeader">'+
+                        '<div class="worksItemHeader">'+
                             '<img src="'+this.imgSrc+'">'+
-                            '<i class="playBtn"></i>'+
                         '</div>'+
-                        '<div class="videoItemBottom">'+
-                            '<div class="videoItemDesc"><p class="typeNameAndTitle" title="'+typeNameAndTile+'">'+tempTitle+'</p></div>'+
-                            '<div class="videoFooter">'+
-                                '<div class="videoFooterLeft">'+
-                                    '<i class="videoIcon videoClock"></i>'+
-                                    '<span>'+this.uploadTime+'</span>'+
-                                '</div>'+
-                                '<div class="videoFooterRight">'+
-                                    '<i class="videoIcon videoViewedTimes"></i>'+
-                                    '<span>'+this.viewedTime+'</span>'+
-                                '</div>'+
-                            '</div>'+
+                        '<div class="worksItemBottom">'+
+                            '<p title="'+typeNameAndTile+'">'+tempTitle+'</p>'+
+                            '<textarea>'+typeNameAndTile+'</textarea>'+
                         '</div>'+
                         '<div class="delete-item-btn" title="删除"></div>'+
                     '</li>';
             });
             str+='<div style="clear:both;">';
-            this.$wrapper.find('#lessonsMainCon').append(str);
+            this.$wrapper.find('#studentWorksMainCon').append(str);
         },
+
+        /*显示编辑框*/
+        worksItemDescEdit:function(e){
+           var $target=$(e.currentTarget),
+               $p=$target.find('p'),
+               $textArea=$target.find('textarea');
+            $p.hide();
+            $textArea.show();
+        },
+
+        hideWorksItemDescEdit:function(e){
+            var $target=$(e.currentTarget),
+                $p=$target.prev();
+            $p.show();
+            $target.hide();
+        },
+
+        /*
+        *显示、隐藏删除按钮
+        */
         showEditVideoBox:function(e){
             var $target=$(e.currentTarget),
                 flag=$target.text()=='编辑',
@@ -146,7 +158,8 @@ define(['jquery','jqueryui'],function () {
                 $li.removeClass('edit').addClass('normal');
             }
         },
+
     };
 
-    var myLesson=new MyLesson($('.normalPageWrapper'));
+    var studentWorks=new StudentWorks($('.studentWorksWrapper'));
 });

@@ -405,7 +405,16 @@
 .list-data-ul li {
   position: relative;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 0 6px #cccccc;
+  -moz-box-shadow: 0 0 6px #cccccc;
+  box-shadow: 0 0 6px #cccccc;
+  margin: 10px;
+}
+.list-data-ul li:hover {
+  -webkit-box-shadow: 0 0 6px #848484;
+  -moz-box-shadow: 0 0 6px #848484;
+  box-shadow: 0 0 6px #848484;
 }
 .list-data-ul li.normal {
   background-color: transparent;
@@ -427,6 +436,20 @@
 }
 .list-data-ul li.edit .delete-item-btn:hover {
   background-position-x: -15px;
+}
+.normalPageWrapper .normal-page-header {
+  height: 55px;
+  line-height: 55px;
+}
+.normalPageWrapper .normal-page-header .header-title {
+  margin-left: 35px;
+  font-size: 16px;
+}
+.normalPageWrapper .normal-page-header .edit-data-item {
+  float: right;
+  margin-right: 20px;
+  color: #f7be5b;
+  cursor: pointer;
 }
 table {
   background-color: transparent;
@@ -1333,8 +1356,6 @@ body {
   width: 694px;
 }
 .normalPageWrapper {
-  padding-left: 35px;
-  padding-right: 35px;
   min-width: 700px;
   min-height: 400px;
 }
@@ -1632,7 +1653,119 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 .sortableplaceholder {
   border: 1px dotted #428BCA !important;
 }
+#lessonsMainCon {
+  padding: 25px;
+}
 #lessonsMainCon li {
   width: 300px;
-  height: 200px;
+  height: 198px;
+}
+#lessonsMainCon li .videoItemHeader {
+  height: 130px;
+}
+#lessonsMainCon li .videoItemHeader img {
+  height: 130px;
+  width: 100%;
+}
+#lessonsMainCon li .videoItemHeader .playBtn {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  top: 41px;
+  left: 125px;
+  background: url('../images/tempsprite.png') no-repeat;
+  background-position: -32px -1px;
+}
+#lessonsMainCon li .videoItemBottom {
+  width: 90%;
+  margin: 8px;
+  height: 68px;
+}
+#lessonsMainCon li .videoItemBottom .videoItemDesc {
+  height: 37px;
+}
+#lessonsMainCon li .videoItemBottom .videoItemDesc p {
+  color: #666666;
+}
+#lessonsMainCon li .videoItemBottom .videoIcon {
+  float: left;
+  height: 14px;
+  width: 14px;
+  background: url('../images/tempsprite.png') no-repeat;
+  display: inline-block;
+}
+#lessonsMainCon li .videoItemBottom .videoIcon.videoClock {
+  background-position: -31px -50px;
+}
+#lessonsMainCon li .videoItemBottom .videoIcon.videoViewedTimes {
+  background-position: -46px -51px;
+}
+#lessonsMainCon li .videoFooter {
+  padding-top: 2px;
+}
+#lessonsMainCon li .videoFooter .videoFooterLeft {
+  width: 47%;
+  float: left;
+}
+#lessonsMainCon li .videoFooter .videoFooterRight {
+  width: 47%;
+  float: right;
+  text-align: right;
+}
+#lessonsMainCon li .videoFooter span {
+  float: left;
+  color: #999999;
+  font-size: 12px;
+  margin-left: 4px;
+  line-height: 15px;
+}
+#studentWorksMainCon {
+  padding: 25px;
+}
+#studentWorksMainCon li {
+  width: 244px;
+  height: 235px;
+}
+#studentWorksMainCon li .worksItemHeader {
+  height: 183px;
+}
+#studentWorksMainCon li .worksItemHeader img {
+  height: 183px;
+  width: 100%;
+}
+#studentWorksMainCon li .worksItemBottom {
+  width: 90%;
+  margin: 8px;
+  height: 44px;
+  overflow: hidden;
+}
+#studentWorksMainCon li .worksItemBottom p {
+  color: #666666;
+}
+#studentWorksMainCon li .worksItemBottom textarea {
+  width: 100%;
+  border: none;
+  resize: none;
+  outline: none;
+  background-color: #F3F6FF;
+  display: none;
+}
+#studentWorksMainCon li .worksFooter {
+  padding-top: 2px;
+}
+#studentWorksMainCon li .worksFooter .videoFooterLeft {
+  width: 47%;
+  float: left;
+}
+#studentWorksMainCon li .worksFooter .videoFooterRight {
+  width: 47%;
+  float: right;
+  text-align: right;
+}
+#studentWorksMainCon li .worksFooter span {
+  float: left;
+  color: #999999;
+  font-size: 12px;
+  margin-left: 4px;
+  line-height: 15px;
 }
