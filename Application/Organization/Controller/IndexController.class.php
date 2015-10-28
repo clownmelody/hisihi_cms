@@ -10,22 +10,41 @@ namespace Organization\Controller;
 use Think\Controller;
 
 class IndexController extends Controller
-{
+{   
     public function _initialize()
     {
         C('SHOW_PAGE_TRACE', false);
     }
     /* -- 添加自定义function -- */
     public function index(){
-        $this->display('Index/announcement');
+        layout(false);
+        $this->display('Index/home');
+    }
+    public function announcement(){
+        $this->display();
     }
 
-    public function user(){
-        $this->name = 'thinkphp2'; // 进行模板变量赋值
+    public function basicinfo(){
         $this->display();
     }
-    public function person(){
-        $this->name = 'thinkphp3'; // 进行模板变量赋值
+    public function teachers(){
         $this->display();
     }
+    public function video(){
+        $this->display();
+
+    }
+    public function addnewlesson(){
+        $this->display();
+    }
+    public  function  studentworks(){
+        $this->display();
+    }
+    public  function  teachcondition(){
+        $this->display();
+    }
+    public  function  certification(){
+        $this->display();
+    }
+
 }

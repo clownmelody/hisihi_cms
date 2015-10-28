@@ -1,0 +1,288 @@
+.normalPageWrapper{
+  //padding-left: 35px;
+  //padding-right: 35px;
+  min-width: 700px;
+  min-height: 400px;
+}
+.normalPageWrapper *{
+  font-family: "microsoft yahei";
+  font-size: 14px;
+}
+.normalPageWrapper .tItems{
+  width: 100%;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: @md-grey-FA;
+  margin:10px auto;
+}
+
+.teacherHeader{
+  height:55px;
+  line-height:55px;
+}
+
+.teacherHeader .teacherTitle{
+  font-size: 16px;
+  padding-left: 20px;
+}
+
+.headerAddBtn{
+  margin-left: 80px;
+  height:32px;
+  width: 82px;
+  //border-radius: 3px;
+  //background-color: @brand-info;
+  //border: none;
+  //cursor: pointer;
+  //color: white;
+}
+.editTeacher{
+  float: right;
+  margin-right: 20px;
+  color:@brand-info;
+  cursor: pointer;
+}
+.editTeacher:hover {
+  color:#F0BE67;
+}
+
+.groupItemHeader{
+  border-bottom: 1px solid @md-grey-E2;
+}
+.memberItemUl{
+  min-height: 60px;
+}
+.memberItemUl li {
+  height: 60px;
+  width: 170px;
+  position: relative;
+  margin: 10px 20px;
+  margin-right: 0;
+  box-shadow: none;
+  &:hover{
+    box-shadow: none;
+  }
+  .memberItemLeft {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    img {
+      width: 45px;
+      height: 45px;
+      border-radius: 45px;
+      margin: 8px;
+      &.hover {
+        .box-shadow(0 0 6px @md-grey-84;);
+      }
+    }
+  }
+  .memberItemRight {
+    padding-left: 65px;
+    p {
+      margin-top: 6px;
+      &.tname{
+        font-size: 14px;
+        color: @md-grey-333;
+      }
+      &.trole{
+        font-size: 12px;
+        color: @md-grey-84;
+      }
+    }
+  }
+}
+
+.addGroupCon{
+  height: 55px;
+  cursor: pointer;
+  -moz-user-select:none;
+}
+.addGroupCon:hover{
+  .box-shadow(0 0 5px @md-grey-900;);
+}
+.addGroupCon>div{
+  width: 195px;
+  height: 20px;
+  margin:0 auto;
+  padding-top: 16px;
+  color: @md-grey-666;
+  font-size: 16px;
+  }
+.addGroupCon .addGroupBtn{
+  margin-right: 13px;
+  float:left;
+  height: 20px;
+  width: 20px;
+  border-radius:20px;
+  border: 1px solid @md-grey-666;
+  text-align:center;
+  font-weight: bold;
+}
+.addGroupDetailCon{
+  display: none;
+  height: 50px;
+  line-height: 50px;
+}
+.addGroupDetailCon span {
+  margin-left: 20px;
+}
+.addGroupDetailCon .gAddBtn{
+  cursor:pointer;
+}
+#newGroupName{
+  height: 17px;
+  width: 195px;
+  margin:0 30px 0 10px;
+  display: inline;
+}
+
+#newGroupCommitBtn{
+  height:30px;
+  width: 75px;
+  line-height:10px;
+}
+.newGroupCommitCal{
+  color: @md-grey-84;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.errorInfo{
+  font-size: 14px;
+  color: #F5A623;
+  margin-left: 20px;
+  display: none;
+}
+
+
+/*模态窗口*/
+.cornerModelBoxBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  background: rgba(0, 0, 0, 0);
+  z-index: 20000;
+}
+
+.cornerModelBox {
+  /*width: 544px;*/
+  /*min-height: 318px;*/
+  background-color: #FAFAFA;
+  box-shadow: 0 0 25px #AAAAAA;
+  border-radius: 3px;
+  position: absolute;
+}
+
+.cornerModelBoxHead {
+  width: 90%;
+  margin: 0 auto;
+  height: 60px;
+  line-height: 60px;
+  //background: #efefef;
+  font-size: 16px;
+  //color: #999;
+  //text-indent: 15px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  position: relative;
+  font-weight: 400;
+}
+
+.cornerModelBoxClose {
+  position: absolute;
+  top: 9px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  color: #515151;
+  text-align: center;
+  line-height: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cornerModelBoxClose:hover {
+  color: black;
+}
+
+.cornerModelBoxMain {
+  /*height:220px;
+  width:100%;*/
+  /*padding:20px;*/
+}
+#addNewTeacherModelBox{
+  width: 90%;
+  margin: 10px auto;
+}
+.allGroupNamesList{
+  width:100%;
+  margin:0;
+  padding: 0;
+}
+.allGroupNamesList li{
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  border:1px solid @md-grey-CCC;
+  border-radius: 3px;
+  text-align:center;
+  cursor: pointer;
+  color:@md-grey-666;
+  opacity: 0.8;
+}
+.allGroupNamesList li:hover{
+  opacity:1;
+}
+.allGroupNamesList li.selected{
+  border-color:@brand-primary;
+  color:@brand-primary;
+}
+.allGroupNamesList li.addNewOne{
+  border-color:@md-grey-CCC;
+  border-style:dashed;
+  color:@md-grey-CCC;
+}
+
+.addNewTeacherItem{
+  margin-top: 5px;
+}
+.addNewTeacherItem .addNewTeacherHeader{
+  height: 60px;
+  line-height:60px;;
+}
+#addNewTeacherInput{
+  width:350px;
+  height:25px;
+  display: inline;
+}
+
+.addTeacherBtnRow{
+  height: 50px;
+  margin-top: 90px;
+}
+
+#addTeacherCommitBtn{
+  width:115px;
+  height: 40px;
+  color: @white-color;
+}
+
+#addTeacherCommitBtn.abled{
+  .brand-info !important;
+}
+#addTeacherCalBtn{
+  font-weight:normal;
+}
+.sortableplaceholder {
+  border:1px dotted #428BCA !important;
+}
+

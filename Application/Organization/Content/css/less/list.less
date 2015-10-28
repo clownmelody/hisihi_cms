@@ -40,3 +40,61 @@
 		&.w100{width:100%; overflow:hidden;}
 	}
 }
+
+/*删除小叉叉*/
+.list-data-ul li {
+  position: relative;
+  cursor: pointer;
+  border-radius: 5px;
+  .box-shadow(0 0 6px @md-grey-CCC;);
+  margin: 10px;
+  &:hover{
+	.box-shadow(0 0 6px @md-grey-84;);
+  }
+
+  &.normal {
+	background-color: transparent;
+  }
+  &.edit {
+	background-color: @edit-pink;
+	&:hover{
+	  box-shadow: 0 0 13px @md-grey-900;
+	}
+	.delete-item-btn {
+	  position: absolute;
+	  top: -8px;
+	  right: -8px;
+	  height: 18px;
+	  width: 18px;
+	  background: url('../images/tempsprite.png') no-repeat;
+	  background-position: 2px -32px;
+
+	  &:hover{
+		background-position-x: -15px;
+	  }
+	}
+	}
+
+}
+
+.normalPageWrapper {
+  .normal-page-header {
+	height: 55px;
+	line-height: 55px;
+	.header-title{
+	  margin-left: 35px;
+	  font-size: 16px;
+	}
+	.edit-data-item{
+	  float: right;
+	  margin-right: 20px;
+	  color:@brand-info;
+	  cursor: pointer;
+	  -moz-user-select:none;
+	}
+  }
+}
+
+.list-data-ul li{
+
+}

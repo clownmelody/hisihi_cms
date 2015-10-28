@@ -1,0 +1,153 @@
+@btn-font-weight:                normal;
+@padding-base-vertical:          9px;
+@padding-base-horizontal:        20px;
+@font-size-base:                 14px;
+@line-height-base:               1.428571429;
+@border-radius-base:             5px;
+@btn-min-width:                  60px;
+
+@btn-default-color:              #333;
+@btn-default-bg:                 #fff;
+@btn-default-border:             #ccc;
+
+@btn-grey-color:                 #fff;
+@btn-grey-bg:                    @brand-grey;
+@btn-grey-border:                lighten(@brand-grey, 5%);
+
+@brand-info-color:              #fff;
+@brand-info-bg:                 @brand-info;
+@brand-info-border:             lighten(@brand-info-bg, 5%);
+
+//
+// Buttons
+// --------------------------------------------------
+
+
+// Base styles
+// --------------------------------------------------
+
+.btn {
+  display: inline-block;
+  margin-bottom: 0; // For input.btn
+  min-width: @btn-min-width;
+  font-weight: @btn-font-weight;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @border-radius-base);
+  .user-select(none);
+
+  &,
+  &:active{
+    &:focus,
+    &.focus {
+      .tab-focus();
+    }
+  }
+
+  &:hover,
+  &:focus{
+    color: @btn-default-color;
+    text-decoration: none;
+  }
+
+  &:active{
+    outline: 0;
+    background-image: none;
+    .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    pointer-events: none; 
+    .opacity(.65);
+    .box-shadow(none);
+  }
+}
+
+
+// Alternate buttons
+// --------------------------------------------------
+.btn-default {
+  .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+}
+.btn-grey {
+  .button-variant(@btn-grey-color; @btn-grey-bg; @btn-grey-border);
+}
+.brand-info {
+  .button-variant(@brand-info-color; @brand-info-bg; @brand-info-border);
+}
+
+
+
+
+.button-variant(@color; @background; @border) {
+  color: @color;
+  background-color: @background;
+  border-color: @border;
+
+  &:hover,
+  &:focus,
+  &.focus,
+  &:active,
+  &.active, {
+    color: @color;
+    background-color: darken(@background, 10%);
+        border-color: darken(@border, 12%);
+  }
+  &:active,
+  &.active,{
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: @background;
+          border-color: @border;
+    }
+  }
+}
+
+// Button sizes
+.button-size(@padding-vertical; @padding-horizontal; @font-size; @line-height; @border-radius) {
+  padding: @padding-vertical @padding-horizontal;
+  font-size: @font-size;
+  line-height: @line-height;
+  border-radius: @border-radius;
+}
+
+// User select
+// For selecting text on the page
+
+.user-select(@select) {
+  -webkit-user-select: @select;
+     -moz-user-select: @select;
+      -ms-user-select: @select; // IE10+
+          user-select: @select;
+}
+
+.tab-focus() {
+  // Default
+  outline: thin dotted;
+  // WebKit
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.opacity(@opacity) {
+  opacity: @opacity;
+  // IE8 filter
+  @opacity-ie: (@opacity * 100);
+  filter: ~"alpha(opacity=@{opacity-ie})";
+}

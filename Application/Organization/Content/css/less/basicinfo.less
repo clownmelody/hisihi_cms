@@ -1,0 +1,118 @@
+//@import "jcrop/jquery.Jcrop.less";
+//@import "jcrop/demos.less";
+//@import "jcrop/main.less";
+
+.basicinfo-body{
+  padding: 40px 30px;
+  form{
+    width: 850px;
+  }
+  .form-group{
+    margin-bottom: 40px;
+    overflow: hidden;
+
+    #organization_id{
+      display:none;
+    }
+
+    .label-txt{
+      text-align: center;
+      font-weight: normal;
+      line-height: 39px;
+      color: @md-grey-300;
+      .font-size(14);
+    }
+    .label-img{
+      .size(80px);
+      .border-radius(50%);
+      overflow-y: hidden;
+      img{
+        width: 100%;
+        height: auto;
+      }
+    }
+    .label-box{
+      margin-top: 15px;
+      .title{
+        font-size: 14px;
+        color: @md-grey-666;
+        line-height: 28px;
+        margin-bottom: 5px;
+      }
+      .txt{
+        font-size: 12px;
+        color: @md-grey-900;
+        line-height: 20px;
+      }
+    }
+    .box-tag{
+      margin: 10px 0;
+      line-height: 35px;
+      text-align: left;
+      .box-add{
+        padding: 0.3em;
+        .icon-add{
+          font-size: 18px;
+        }
+      } 
+    }
+    .recommend-box{
+      padding-left: 40px;
+      width: 312px;
+      text-align: right;
+      .checkbox{
+        float: left;
+        line-height: 39px;
+        text-align: left;
+        font-size: 14px;
+        color: @md-grey-78;
+        input{
+          width: 0;
+          margin-right: 13px;
+        }
+      }
+    }
+    input{
+      width: 326px;
+    }
+    textarea{
+      width: 694px;
+    }
+  }
+  #SubmitBtn{
+    height: 40px;
+    width: 115px;
+  }
+}
+
+#ImgModal{
+  .myModal-body-left{
+    width: 40%;
+    height: 100%;
+    float: left;
+    text-align: center;
+  }
+  .myModal-body-right{
+    float: right;
+    width: 50%;
+    height: 100%;
+  }
+
+  #userPhotoForm {
+    width: 83px;
+    position: relative;
+    cursor: pointer;
+    #dataImportFileInput {
+      opacity: 0;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}

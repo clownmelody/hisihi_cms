@@ -1,0 +1,225 @@
+@padding-base-vertical:     6px;
+@padding-base-horizontal:   12px;
+
+@padding-large-vertical:    10px;
+@padding-large-horizontal:  16px;
+
+@padding-small-vertical:    5px;
+@padding-small-horizontal:  10px;
+
+@padding-xs-vertical:       1px;
+@padding-xs-horizontal:     5px;
+
+@line-height-large:         1.3333333; 
+@line-height-small:         1.5;
+@line-height-computed:      12px;
+
+@border-radius-base:        4px;
+@border-radius-large:       6px;
+@border-radius-small:       3px;
+@input-bg:                       #fff;
+@input-bg-disabled:              @gray-lighter;
+
+@input-color:                    @gray;
+@input-border:                   #ccc;
+
+
+@input-border-radius:            @border-radius-base;
+@input-border-radius-large:      @border-radius-large;
+@input-border-radius-small:      @border-radius-small;
+
+@input-border-focus:             #66afe9;
+
+@input-color-placeholder:        #999;
+
+@input-height-base:              25px;
+@input-height-large:             (ceil(@font-size-large * @line-height-large) + (@padding-large-vertical * 2) + 2);
+@input-height-small:             (floor(@font-size-small * @line-height-small) + (@padding-small-vertical * 2) + 2);
+
+@legend-color:                   @gray-dark;
+@legend-border-color:            #e5e5e5;
+
+@input-group-addon-bg:           @gray-lighter;
+@input-group-addon-border-color: @input-border;
+
+@cursor-disabled:                not-allowed;
+// Forms
+// --------------------------------------------------
+
+.form-group{
+  
+}
+
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: @input-height-base; 
+  padding: @padding-base-vertical @padding-base-horizontal;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  color: @input-color;
+  background-color: @input-bg;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 1px solid @input-border;
+  border-radius: @input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
+  .box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+  .transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
+
+  // Customize the `:focus` state to imitate native WebKit styles.
+  .form-control-focus();
+
+  // Placeholder
+  .placeholder();
+
+  &[disabled],
+  &[readonly],
+  fieldset[disabled] & {
+    cursor: @cursor-disabled;
+    background-color: @input-bg-disabled;
+    opacity: 1; // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655
+  }
+
+  // Reset height for `textarea`s
+  textarea& {
+    height: auto;
+  }
+}
+
+.form-control-focus(@color: @input-border) {
+  @color-rgba: rgba(red(@color), green(@color), blue(@color), .6);
+  &:focus {
+    border-color: @color;
+    outline: 0;
+    .box-shadow(~"0 0 5px rgba(0, 0, 0, 0.4)");
+  }
+}
+
+fieldset {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  min-width: 0;
+}
+
+legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: @line-height-computed;
+  font-size: (@font-size-base * 1.5);
+  line-height: inherit;
+  color: @legend-color;
+  border: 0;
+  border-bottom: 1px solid @legend-border-color;
+}
+
+label {
+  display: inline-block;
+  max-width: 100%; // Force IE8 to wrap long content (see https://github.com/twbs/bootstrap/issues/13141)
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="search"] {
+  .box-sizing(border-box);
+}
+
+// Position radios and checkboxes better
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 4px 0 0;
+  margin-top: 1px \9; // IE8-9
+  line-height: normal;
+}
+
+// Set the height of file controls to match text inputs
+input[type="file"] {
+  display: block;
+}
+
+// Make range inputs behave like textual form controls
+input[type="range"] {
+  display: block;
+  width: 100%;
+}
+
+// Make multiple select elements height not fixed
+select[multiple],
+select[size] {
+  height: auto;
+}
+
+// Focus for file, radio, and checkbox
+input[type="file"]:focus,
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+  .tab-focus();
+}
+
+// Adjust output element
+output {
+  display: block;
+  padding-top: (@padding-base-vertical + 1);
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  color: @input-color;
+}
+
+
+input[type="search"] {
+  -webkit-appearance: none;
+}
+
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  input[type="month"] {
+    line-height: @input-height-base;
+
+    &.input-sm,
+    .input-group-sm & {
+      line-height: @input-height-small;
+    }
+
+    &.input-lg,
+    .input-group-lg & {
+      line-height: @input-height-large;
+    }
+  }
+}
+
+
+input[type="radio"],
+input[type="checkbox"] {
+  &[disabled],
+  &.disabled,
+  fieldset[disabled] & {
+    cursor: @cursor-disabled;
+  }
+}
+
+// Box sizing
+.box-sizing(@boxmodel) {
+  -webkit-box-sizing: @boxmodel;
+     -moz-box-sizing: @boxmodel;
+          box-sizing: @boxmodel;
+}
+.transition(@transition) {
+  -webkit-transition: @transition;
+       -o-transition: @transition;
+          transition: @transition;
+}
+
+// Placeholder text
+.placeholder(@color: @input-color-placeholder) {
+  // Firefox
+  &::-moz-placeholder {
+    color: @color;
+    opacity: 1; // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526
+  }
+  &:-ms-input-placeholder { color: @color; } // Internet Explorer 10+
+  &::-webkit-input-placeholder  { color: @color; } // Safari and Chrome
+}

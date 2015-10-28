@@ -11,11 +11,11 @@ define(['jquery'],function () {
         this.pageSize=0;  //总页数
         this.perPageSize=10; //每次加载数目
         this.loadData(0);
-
+        this.controlContainerHeight();
         //事件注册
         var that=this;
-        this.$wrapper.on('#announcesContainer ul li','click', $.proxy(this.showDetailAnnounceInfo));
-        this.$wrapper.find('#announcesContainer').scroll(function(){
+        this.$wrapper.on('#announcesContainer ul li','click', $.proxy(this,'showDetailAnnounceInfo'));
+        this.$wrapper.parent().scroll(function(){
             that.scrollContainer.call(that,this);
         });
 
@@ -23,29 +23,40 @@ define(['jquery'],function () {
 
     TodayAnnoucement.prototype={
         loadData:function(){
-            var data=[{title:'习近平卡梅伦庄园会晤 在酒吧小酌吃炸鱼薯条',date:'2015.10.23',src:''},
-                {title:'巡视组：17家央企均有利益输送 存链条式腐败',date:'2015.10.20',src:''},
-                {title:'交通部专车新规或存法律硬伤 专家建议重制',date:'2015.10.24',src:''},
-                {title:'中英签4000亿大单 李嘉诚被指又快人一步',date:'2015.10.04',src:''},
-                {title:'青岛“天价虾”被宰游客将5万奖金捐重病患儿',date:'2015.10.04',src:''},
-                {title:'陕西夜跑女教师遇害续：警方悬赏5万缉凶',date:'2015.10.14',src:''},
-                {title:'湖南杀师案细节：三名少年作案后淡定上网',date:'2015.09.04',src:''},
-                {title:'青岛“天价虾”被宰游客将5万奖金捐重病患儿',date:'2015.10.04',src:''},
-                {title:'陕西夜跑女教师遇害续：警方悬赏5万缉凶',date:'2015.10.14',src:''},
-                {title:'湖南杀师案细节：三名少年作案后淡定上网',date:'2015.09.04',src:''},
-                {title:'“红海”转为“血海”：小米销量下滑引发业内担忧',date:'2015.08.04',src:''}
-            ];
-            //this.getDataAsync(function(data){
-            //    data;
-            //});
-            this.showShortAnnounceInfo(data);
+            /*data: Array[3]
+            error_code: 0
+            message: "获取公告信息列表成功"
+            success: true
+            totalCount: "3"
+            */
+            this.getDataAsync(function(data){
+                if(data.success) {
+                    data = data.data;
+                    this.showShortAnnounceInfo(data);
+                }else{
+                    alert('数据加载失败！');
+                }
+            });
+
+
         },
+
         getDataAsync:function(callback){
             var tempObj={
                 pageIndex:this.pageIndex,
                 count:this.perPageSize
-            };
-            $.post('../../',tempObj,callback);
+                },
+            url=window.urlObject.apiUrl+'/api.php?s=/Organization/getNotice',
+                that=this;
+            var sectionId =JSON.parse($.cookie('hisihi-org')).session_id;
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {page:1,count:20,session_id:sectionId},
+                success: function(data){
+                    callback.call(that,data)
+                }
+            });
         },
 
         /*
@@ -67,7 +78,7 @@ define(['jquery'],function () {
          * data -{array} 公告数组
          */
         showDetailAnnounceInfo:function(){
-            alert();
+
         },
 
         /*
@@ -76,14 +87,28 @@ define(['jquery'],function () {
         * data -{array} 公告数组
         */
         showShortAnnounceInfo:function(data){
-            var str='';
+            var str='',
+                date;
             $.each(data,function(){
-                str+='<li class="anListItem"><a href="'+this.src+'"> <span>'+this.title+'</span><span>'+this.date+'</span></a></li>';
+                date=new Date(parseFloat(this.update_time)* 1000).format('yyyy.MM.dd');
+                str+='<li class="anListItem" data-id="'+this.id+'"><a href="'+this.detail_url+'"> <span>'+this.title+'</span><span>'+date+'</span></a></li>';
             });
             this.$wrapper.find('#announcesContainer .clearDiv').before(str);
-        }
+        },
+
+        /*
+         控制容器的高度
+         */
+        controlContainerHeight:function(){
+
+        },
+
     };
-    var todayAnnouncement=new TodayAnnoucement($('.anWrapper'));
-    return todayAnnouncement;
+    var $wrapper=$('.anWrapper');
+    if($wrapper.length>0) {
+        new TodayAnnoucement($wrapper);
+    }
+    //var todayAnnouncement=new TodayAnnoucement($('.anWrapper'));
+    //return todayAnnouncement;
 
 });
