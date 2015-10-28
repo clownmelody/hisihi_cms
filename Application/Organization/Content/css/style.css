@@ -450,6 +450,7 @@
   margin-right: 20px;
   color: #f7be5b;
   cursor: pointer;
+  -moz-user-select: none;
 }
 table {
   background-color: transparent;
