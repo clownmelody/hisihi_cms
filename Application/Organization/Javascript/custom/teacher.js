@@ -108,7 +108,7 @@ define(['jquery','jqueryui'],function () {
                 if(name.length>6){
                     name=name.substr(0,5)+'…'
                 }
-                str+='<li class="normal" data-id="'+this.uid+'">'+
+                str+='<li class="normal" data-id="'+this.uid+'" data-relation-id="'+this.relation_id+'">'+
                         '<div class="memberItemLeft"><img src="'+this.avatar+'"></div>'+
                         '<div class="memberItemRight"><p class="tname" title="'+this.nickname +'">'+name+'</p><p class="trole">'+this.role+'</p></div>'+
                         '<div class="deleteTeacher delete-item-btn" title="删除"></div>'+
@@ -277,17 +277,21 @@ define(['jquery','jqueryui'],function () {
         *删除老师
         */
         deleteTeacher:function(e){
+
             if(window.confirm('确定删除该老师么？')) {
-                var tempData = {
-                        organization_id:this.organization_id,
-                        uid:teacherInfo.uid,
-                        teacher_group_id:groupInfo.groupId,
-                        session_id:this.sectionId
+                var $target=$(e.currentTarget).parent(),
+                    tempData = {
+                        relation_id:$target.attr('data-relation-id')
                     },
                     url=this.basicApiUrl+'/deleteTeacherFromGroup',
                     that=this;
-                $.post(url,tempData,function(data) {
-                    var $target = $(e.currenTarget).parent().remove();
+                Hisihi.getDataAsync({
+                    type: "post",
+                    url: url,
+                    data: tempData,
+                    callback:function(data){
+                        $target.remove();
+                    }
                 });
             }
         },
@@ -316,7 +320,9 @@ define(['jquery','jqueryui'],function () {
                                         '<div class="addNewTeacherItem">'+
                                             '<div class="addNewTeacherHeader">添加新老师</div>'+
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
+                                            '<input type="button" id="queryTeacher" class="btn brand-info" value="检索"/>'+
                                             '<label class="errorInfo addNewTeacherInput">请选择老师</label>'+
+                                            '<ul class="selectedBox"></ul>'+
                                         '</div>'+
                                     '</div>' +
                                     '<div class="addTeacherBtnRow">'+
@@ -348,15 +354,19 @@ define(['jquery','jqueryui'],function () {
             arrData.push({name:'新建分组',id:''});
             var len=arrData.length;
             for(var i=0;i<len;i++){
-                var item=arrData[i];
+                var item=arrData[i],
+                    name=item.name;
                 className='';
+                    if(name.length>5){
+                        name=name.substr(0,5)+'…';
+                    }
                 if(i==0){
                     className='selected';
                 }
                 if(i==len-1){
                     className='addNewOne';
                 }
-                str+='<li data-id='+item.id+' class="'+className+'"><div class="radioContainer">'+item.name+'</div></li>';
+                str+='<li data-id='+item.id+' class="'+className+'" title="'+item.name+'"><div class="radioContainer">'+name+'</div></li>';
             }
             str+='<div style="clear: both;"></div>';
             return str;
@@ -525,33 +535,6 @@ define(['jquery','jqueryui'],function () {
                     }
                 }
             });
-            //$.post(url,tempData,function(data){
-            //    if(data.success){
-            //        var member=[{
-            //            nickname:teacherInfo.nickname,
-            //            role:'成员',
-            //            uid:teacherInfo.uid,
-            //            avatar:teacherInfo.avatar
-            //        }];
-            //        var str = that.getSomeGroupMembersStr(member),
-            //            $allLi=that.$wrapper.find('#teacherMainCon .tItems'),
-            //            $li;
-            //        $allLi.each(function(){
-            //            if ($(this).data('name')==groupInfo.groupName){
-            //                $li = $(this);
-            //                return false;
-            //            }
-            //        });
-            //        $li.find('.memberItemUl .clearForMemberUl').before(str);
-            //    }
-            //    else{
-            //        if(data.error_code==-2){
-            //            alert('该老师已经添加过了');
-            //        }else {
-            //            alert('添加失败');
-            //        }
-            //    }
-            //});
         },
 
     };

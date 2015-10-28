@@ -238,6 +238,9 @@
   cursor: pointer;
   color:@md-grey-666;
   opacity: 0.8;
+  .radioContainer{
+    font-size: 14px;
+  }
 }
 .allGroupNamesList li:hover{
   opacity:1;
@@ -252,17 +255,35 @@
   color:@md-grey-CCC;
 }
 
-.addNewTeacherItem{
+.addNewTeacherItem {
+  @myModelBoxWidth: 350px;
   margin-top: 5px;
-}
-.addNewTeacherItem .addNewTeacherHeader{
-  height: 60px;
-  line-height:60px;;
-}
-#addNewTeacherInput{
-  width:350px;
-  height:25px;
-  display: inline;
+  height: 110px;
+  position: relative;
+  .addNewTeacherHeader {
+    height: 60px;
+    line-height: 60px;
+  }
+  .selectedBox {
+    position: absolute;
+    width: @myModelBoxWidth;
+    padding: 12px;
+    height: 110px;
+    background-color:@md-grey-FA;
+    .box-shadow(0 0 6px @md-grey-84;);
+  }
+
+
+  #addNewTeacherInput {
+    width: @myModelBoxWidth;
+    height: 25px;
+    display: inline;
+  }
+  #queryTeacher {
+    height: 35px;
+    width: 83px;
+    margin-left: 15px;
+  }
 }
 
 .addTeacherBtnRow{

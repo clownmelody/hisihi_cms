@@ -1614,6 +1614,9 @@ body {
   color: #666666;
   opacity: 0.8;
 }
+.allGroupNamesList li .radioContainer {
+  font-size: 14px;
+}
 .allGroupNamesList li:hover {
   opacity: 1;
 }
@@ -1628,15 +1631,32 @@ body {
 }
 .addNewTeacherItem {
   margin-top: 5px;
+  height: 110px;
+  position: relative;
 }
 .addNewTeacherItem .addNewTeacherHeader {
   height: 60px;
   line-height: 60px;
 }
-#addNewTeacherInput {
+.addNewTeacherItem .selectedBox {
+  position: absolute;
+  width: 350px;
+  padding: 12px;
+  height: 110px;
+  background-color: #fafafa;
+  -webkit-box-shadow: 0 0 6px #848484;
+  -moz-box-shadow: 0 0 6px #848484;
+  box-shadow: 0 0 6px #848484;
+}
+.addNewTeacherItem #addNewTeacherInput {
   width: 350px;
   height: 25px;
   display: inline;
+}
+.addNewTeacherItem #queryTeacher {
+  height: 35px;
+  width: 83px;
+  margin-left: 15px;
 }
 .addTeacherBtnRow {
   height: 50px;

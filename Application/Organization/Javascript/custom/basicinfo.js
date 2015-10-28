@@ -10,20 +10,8 @@
 		this.sectionId=JSON.parse($.cookie('hisihi-org')).session_id;
 		this.organization_id=20;
 		this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
-		/*jcrop头像裁剪对象*/
-		this.jcrop_api=null;
-		/*jcrop头像裁剪默认范围*/
-		this.jcropRegion={
-			X: 10,
-			Y: 10,
-			Height: 180,
-			Width: 180
-		};
-
-		/*裁剪图片框的最大最小值*/
-		this.imgBoxDefaultInfo={ maxWidth: 605, maxHeight: 370 };
-		this.imgBoxNewInfo={width:231,height:240};
-
+		this.loadBasicData();  //显示基本信息
+		this.initJcropParas();
 
  	    //事件注册
  	    var that=this;
@@ -100,6 +88,10 @@
 
  	BasicInfo.prototype={
 
+		/*显示基本信息*/
+		loadBasicData:function(){
+
+		},
  		getNameFocus:function(){
  			$('input').nextAll('p').remove(".error-txt");
  		},
@@ -221,6 +213,25 @@
 			this.jcrop_api.destroy();  //隐藏裁剪框
 			//清空file之前的内容
 			this.$wrapper.find('#userPhotoForm')[0].reset();
+		},
+
+		/*
+		*设定参数
+		*/
+		initJcropParas:function(){
+			/*jcrop头像裁剪对象*/
+			this.jcrop_api=null;
+			/*jcrop头像裁剪默认范围*/
+			this.jcropRegion={
+				X: 10,
+				Y: 10,
+				Height: 180,
+				Width: 180
+			};
+
+			/*裁剪图片框的最大最小值*/
+			this.imgBoxDefaultInfo={ maxWidth: 605, maxHeight: 370 };
+			this.imgBoxNewInfo={width:231,height:240};
 		},
 
  	};
