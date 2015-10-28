@@ -682,6 +682,23 @@ fieldset[disabled] .brand-info.active {
   background-color: #f7be5b;
   border-color: #f8c873;
 }
+.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #aaaaaa !important;
+  border-color: #b7b7b7 !important;
+  color: #ffffff !important;
+}
+.disabled:hover {
+  background: #aaaaaa !important;
+  color: #ffffff !important;
+  border-color: #b7b7b7 !important;
+}
 .label {
   display: inline;
   padding: .3em .7em;
@@ -958,7 +975,7 @@ body {
 .box > .box-header .min-title {
   font-size: 16px;
   color: #333333;
-  padding-left: 23px;
+  padding-left: 35px;
 }
 .foot {
   padding: 20px 0;
@@ -1839,4 +1856,16 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 .addNewLessonWrapper .uploadCoverImgCon #lessonCoverForm .selectPic {
   height: 40px;
   width: 100px;
+}
+.certification {
+  padding: 35px;
+}
+.certification .certification-box {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.certification .certification-txt {
+  color: #999999;
+  text-align: center;
+  font-size: 14px;
 }

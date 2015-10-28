@@ -82,7 +82,20 @@
 .brand-info {
   .button-variant(@brand-info-color; @brand-info-bg; @brand-info-border);
 }
-
+.disabled{
+  cursor: not-allowed;;
+  pointer-events: none; 
+  .opacity(.65);
+  .box-shadow(none);
+  background:  @btn-grey-bg !important;
+  border-color: @btn-grey-border !important;
+  color: @btn-grey-color !important;
+  &:hover{
+    background:  @btn-grey-bg !important;
+    color: @btn-grey-color !important;
+    border-color: @btn-grey-border !important;
+  }
+}
 
 
 
