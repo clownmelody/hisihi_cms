@@ -167,7 +167,7 @@ class OrganizationController extends AppController
      * 机构相关图片上传
      */
     public function uploadPicture(){
-        $this->requireAdminLogin();
+        //$this->requireAdminLogin();
         $Picture = D('Admin/Picture');
         $pic_driver = C('PICTURE_UPLOAD_DRIVER');
         $info = $Picture->upload(

@@ -7,6 +7,7 @@ require.config({
     baseUrl:window.urlObject.js,
     shim: {
         'jqueryui': ['jquery'],
+        'jqueryJcrop':['jquery']
     },
     paths: {
         jquery: 'libs/jquery-1.8.2.min',

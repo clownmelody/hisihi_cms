@@ -7,27 +7,50 @@
  define(['jquery'],function () {
  	var BasicInfo = function ($wrapper) {
  	    this.$wrapper = $wrapper;
+		this.sectionId=JSON.parse($.cookie('hisihi-org')).session_id;
+		this.organization_id=20;
+		this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
+		/*jcrop头像裁剪对象*/
+		this.jcrop_api=null;
+		/*jcrop头像裁剪默认范围*/
+		this.jcropRegion={
+			X: 10,
+			Y: 10,
+			Height: 180,
+			Width: 180
+		};
+
+		/*裁剪图片框的最大最小值*/
+		this.imgBoxDefaultInfo={ maxWidth: 605, maxHeight: 370 };
+		this.imgBoxNewInfo={width:231,height:240};
+
+
  	    //事件注册
  	    var that=this;
  	    this.$wrapper.on('focus','input',$.proxy(this,'getNameFocus'));
  	    //this.$wrapper.on('blur','input',$.proxy(this,'getNameBlur'));
  	    this.$wrapper.on('click','#SubmitBtn',$.proxy(this,'SubmitInfo'));
  	    this.$wrapper.on('click','#addtags',$.proxy(this,'AddTags'));
+		$('#dataImportFileInput').change(function (e) {
+			that.uploadNewImg.call(that,e);
+		});
+
+		this.$wrapper.on('click',".recommend-box .box-tag .label",function () {
+			var txt = $(this).html();
+			$(this).remove();
+			$(".tag-open").append("<span class='label label-primary'>"+txt+"<a href='javaScript: void(0);' onclick='$(this).parent().remove();' class='box-add' id='box-add'><span class='icon-add'>&#215;</span></a></span>");
+		});
+
+		this.$wrapper.on('click',"#UploadImg", function () {
+			$('#ImgModal').fadeIn(500);
+			that.initializeCrop(that.$wrapper.find('#myPicture'));  //头像裁剪初始化
+		});
+
+		this.$wrapper.on("click",".close", $.proxy(that,'cancelCrop'));
+
  	};
 
- 	$(".recommend-box .box-tag .label").bind("click", function () {
- 		var txt = $(this).html();
- 		$(this).remove();
- 		$(".tag-open").append("<span class='label label-primary'>"+txt+"<a href='javaScript: void(0);' onclick='$(this).parent().remove();' class='box-add' id='box-add'><span class='icon-add'>&#215;</span></a></span>");
- 	});
 
- 	$("#UploadImg").bind("click", function () {
- 		$('#ImgModal').fadeIn(500);
- 	});
-
- 	$(".close").bind("click", function () {
- 		$("#ImgModal").fadeOut(500);
- 	});
 
  	$("#myFile").change(function () {
  	    var filepath = $("input[name='myFile']").val();
@@ -99,6 +122,98 @@
  		SubmitInfo:function(){
  			$('.basicinfoWrapper').submit();
  		},
+
+		//上传头像图片
+		uploadNewImg:function(e){
+
+			/*是否正在上图片*/
+			var $obj = $(e.currentTarget),
+				that=this,
+				value = $obj.val();
+			this.$wrapper.find('#photoErrorInfo').text('').hide();
+			if (value == '') {
+				$('#photoErrorInfo').text('请选择图片！').show();
+				return;
+			}
+			$('#userPhotoForm').ajaxSubmit({
+				url: that.basicApiUrl + '/uploadPicture',
+				type: 'post',
+				beforeSubmit: function () {
+					var ss = '';
+				},
+				complete: function (data) {
+					var text = data.responseText;
+					if ('公有账号只能查看哦' == text) {
+						$('#photoErrorInfo').text(text).show();
+						$('#photoSuggestInfo').hide();
+					}
+					else {
+						data = JSON.parse(data.responseText);
+						if (data.success) {
+							//显示上传图片，并准备裁剪
+							that.uploadPhotoSuccessCallBack.call(that, data);
+						}
+						else {
+							$('#photoErrorInfo').text(data.error).show();
+							$('#photoSuggestInfo').hide();
+						}
+					}
+				},
+				error: function (e) {
+
+				}
+			});
+
+		},
+
+		/*裁剪插件初始化*/
+		initializeCrop: function ($img) {
+			var that = this;
+			$img.Jcrop({
+				//minSize: [50, 50],
+				maxSize: [550, 550],
+				boxWidth: that.imgBoxNewInfo.width,
+				boxHeight: that.imgBoxNewInfo.height,
+				trueSize: [that.imgBoxNewInfo.width, that.imgBoxNewInfo.height],
+				aspectRatio: 1,
+				borderOpacity: 0,
+				bgColor: 'black',  //整个背景色
+				bgOpacity: 0.4,
+				boundary: 0,
+				sideHandles: false,
+				baseClass: "jcrop",
+				onRelease: function () { },
+				onChange: function (c) {
+					that.jcropRegion = {
+						X: c.x,
+						Y: c.y,
+						Height: c.h,
+						Width: c.w
+					};
+				},
+				onSelect: function (c) {
+					that.jcropRegion = {
+						X: c.x,
+						Y: c.y,
+						Height: c.h,
+						Width: c.w
+					};
+				}
+			}, function () {
+				that.jcrop_api = this;
+				/*初始化裁剪框*/
+				//that.initCropBoxInfo.call(that);
+			});
+		},
+
+		/*取消裁剪*/
+		cancelCrop:function() {
+			this.$wrapper.find("#ImgModal").fadeOut(500);
+			this.jcrop_api.destroy();  //隐藏裁剪框
+			//清空file之前的内容
+			this.$wrapper.find('#userPhotoForm')[0].reset();
+		},
+
  	};
 
  	var basicInfo=new BasicInfo($('.basicinfoWrapper'));
