@@ -146,6 +146,8 @@
   color: @md-grey-84;
   margin-left: 10px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
 }
 
 .errorInfo{
@@ -265,12 +267,39 @@
     line-height: 60px;
   }
   .selectedBox {
+    display: none;
     position: absolute;
-    width: @myModelBoxWidth;
-    padding: 12px;
-    height: 110px;
+    width: 374px;
     background-color:@md-grey-FA;
     .box-shadow(0 0 6px @md-grey-84;);
+    height: 185px;
+    overflow: auto;
+    ul {
+        padding: 0px;
+        li {
+          list-style: none;
+          padding: 5px 12px;
+          height: 36px;
+          cursor: pointer;
+          border-bottom: 1px solid @md-grey-CCC;
+          &:hover{
+            background-color: @md-grey-E2;
+          }
+          img {
+            width: 35px;
+            height: 35px;
+            border-radius: 35px;
+            float: left;
+          }
+          span {
+            //color: @md-grey-CCC;
+            font-size: 13px;
+            float: left;
+            margin-left: 10px;
+            line-height: 35px;
+          }
+        }
+      }
   }
 
 
@@ -284,6 +313,11 @@
     width: 83px;
     margin-left: 15px;
   }
+  #hideQueryResult{
+    display: none;
+  }
+
+
 }
 
 .addTeacherBtnRow{
@@ -291,14 +325,13 @@
   margin-top: 90px;
 }
 
-#addTeacherCommitBtn{
-  width:115px;
+#addTeacherCommitBtn {
+  width: 115px;
   height: 40px;
   color: @white-color;
-}
-
-#addTeacherCommitBtn.abled{
-  .brand-info !important;
+  &.abled {
+    .brand-info !important;
+  }
 }
 #addTeacherCalBtn{
   font-weight:normal;

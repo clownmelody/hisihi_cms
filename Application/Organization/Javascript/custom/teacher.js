@@ -321,13 +321,14 @@ define(['jquery','jqueryui'],function () {
                                             '<div class="addNewTeacherHeader">添加新老师</div>'+
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
                                             '<input type="button" id="queryTeacher" class="btn brand-info" value="检索"/>'+
+                                            '<label id="hideQueryResult" class="newGroupCommitCal" title="关闭结果">关闭结果</label>'+
                                             '<label class="errorInfo addNewTeacherInput">请选择老师</label>'+
                                             '<div class="selectedBox" id="queryTeachResult"><ul></ul></div>'+
                                         '</div>'+
                                     '</div>' +
                                     '<div class="addTeacherBtnRow">'+
                                         '<input type="button" id="addTeacherCommitBtn" class="btn btn-grey" value="确定"/>' +
-                                        '<label id="addTeacherCalBtn" class="newGroupCommitCal" title="取消">取消</lable>'+
+                                        '<label id="addTeacherCalBtn" class="newGroupCommitCal" title="取消">取消</label>'+
                                     '</div>' +
                             '</div>';
                     },
@@ -387,21 +388,22 @@ define(['jquery','jqueryui'],function () {
         *模态窗口的事件注册
         */
         modelBoxEventsInit:function(modelContext,myContext){
-            var $txtTarget=modelContext.$panel.find('#addNewTeacherInput'),
-            $btnCommit=modelContext.$panel.find('#addNewTeacherInput');
+            var $modelPanel=modelContext.$panel,
+             $txtTarget=$modelPanel.find('#addNewTeacherInput'),
+            $btnCommit=$modelPanel.find('#addNewTeacherInput');
 
             /*
             *确定添加
              */
-            modelContext.$panel.on('click','#addTeacherCommitBtn',function(){
+            $modelPanel.on('click','#addTeacherCommitBtn',function(){
                 if($txtTarget.val()==''){
-                    modelContext.$panel.find('.addNewTeacherInput').show().delay(500).hide(0);
+                    $modelPanel.find('.addNewTeacherInput').show().delay(500).hide(0);
                     return;
                 }
                 modelContext.hide();
 
                 //执行真正的添加
-                var $li=modelContext.$panel.find('.allGroupNamesList .selected'),
+                var $li=$modelPanel.find('.allGroupNamesList .selected'),
                     groupInfo={groupId:$li.data('id'),groupName:$li.text()},
                     teacherInfo={
                         uid: 72,
@@ -409,14 +411,14 @@ define(['jquery','jqueryui'],function () {
                         avatar: 'http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/2015-03-26/551369fe8358c-05505543_256_256.jpg'
                     };
                 myContext.execAddNewTeacher.call(myContext,groupInfo,teacherInfo);
-                myContext.clearAddTeacherInfo(modelContext.$panel);
+                myContext.clearAddTeacherInfo($modelPanel);
 
             });
 
             /*
             *取消添加
             */
-            modelContext.$panel.on('click','#addTeacherCalBtn',function(){
+            $modelPanel.on('click','#addTeacherCalBtn',function(){
                 modelContext.hide();
                 myContext.clearAddTeacherInfo(modelContext.$panel);
             });
@@ -452,15 +454,20 @@ define(['jquery','jqueryui'],function () {
             /*
             *执行搜索
             */
-            modelContext.$panel.on('click','#queryTeacher',function() {
+            $modelPanel.on('click','#queryTeacher',function() {
                 //$.proxy(myContext, 'execQueryTeacher');
                 myContext.execQueryTeacher(modelContext,myContext);
             });
 
+            //隐藏搜索结果
+            $modelPanel.find('click','#hideQueryResult',function () {
+                $modelPanel.find('#addNewTeacherInput').add($(this)).hide();
+            }),
+
             /*
             *组别选择
             */
-            modelContext.$panel.on('click','.allGroupNamesList li',function(){
+            $modelPanel.on('click','.allGroupNamesList li',function(){
                 var index=$(this).index();
                 if(index!=$(this).siblings().length-1) {
                     $(this).addClass('selected').siblings().removeClass('selected');
@@ -573,7 +580,8 @@ define(['jquery','jqueryui'],function () {
         /*填充教师搜索结果*/
         fillInQueryTeacherResult:function(data) {
             if(data.success) {
-                var $target = this.$panel.find('#queryTeachResult ul'),
+                var $target = this.$panel.find('#queryTeachResult'),
+                $hideBtn= this.$panel.find('#hideQueryResult'),
                 str='',
                 tempData=data.data,
                 len=tempData.length,
@@ -586,7 +594,8 @@ define(['jquery','jqueryui'],function () {
                          '</li>';
                 }
                 str+='<div style="clear:both;"></div>';
-                $target.html(str);
+                $target.find('ul').html(str);
+                $target.add($hideBtn).show();
             }else{
                 alert("查询失败");
             }

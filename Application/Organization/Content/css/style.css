@@ -1067,10 +1067,11 @@ body {
 }
 .navbar-content .nav > .nav-item > .nav-link {
   text-align: center;
-  padding: 0 20px;
+  padding: 0 15px;
   display: block;
   color: #666666;
   transition: all .2s linear;
+  font-size: 14px;
 }
 .navbar-content .nav > .nav-item > .nav-link:hover,
 .navbar-content .nav > .nav-item > .nav-link:active,
@@ -1081,7 +1082,7 @@ body {
 }
 .navbar-content .nav > .nav-item .nav-img {
   float: left;
-  margin-right: 20px;
+  margin-right: 15px;
 }
 .navbar-content .nav > .nav-item.nav-user {
   border-right: 2px solid #ebebeb;
@@ -1107,8 +1108,8 @@ body {
 .navbar-content .nav > .nav-item.nav-user .user-name {
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-left: 60px;
   color: #666666;
+  font-size: 14px;
 }
 .nav-right {
   float: right !important;
@@ -1166,7 +1167,7 @@ body {
 }
 .side-list .item-txt {
   color: #999999;
-  font-size: 16px;
+  font-size: 14px;
 }
 .side-item.active .icon {
   width: 40px;
@@ -1549,6 +1550,8 @@ body {
   color: #848484;
   margin-left: 10px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
 }
 .errorInfo {
   font-size: 14px;
@@ -1656,14 +1659,40 @@ body {
   line-height: 60px;
 }
 .addNewTeacherItem .selectedBox {
+  display: none;
   position: absolute;
-  width: 350px;
-  padding: 12px;
-  height: 110px;
+  width: 374px;
   background-color: #fafafa;
   -webkit-box-shadow: 0 0 6px #848484;
   -moz-box-shadow: 0 0 6px #848484;
   box-shadow: 0 0 6px #848484;
+  height: 185px;
+  overflow: auto;
+}
+.addNewTeacherItem .selectedBox ul {
+  padding: 0px;
+}
+.addNewTeacherItem .selectedBox ul li {
+  list-style: none;
+  padding: 5px 12px;
+  height: 36px;
+  cursor: pointer;
+  border-bottom: 1px solid #cccccc;
+}
+.addNewTeacherItem .selectedBox ul li:hover {
+  background-color: #e2e3e3;
+}
+.addNewTeacherItem .selectedBox ul li img {
+  width: 35px;
+  height: 35px;
+  border-radius: 35px;
+  float: left;
+}
+.addNewTeacherItem .selectedBox ul li span {
+  font-size: 13px;
+  float: left;
+  margin-left: 10px;
+  line-height: 35px;
 }
 .addNewTeacherItem #addNewTeacherInput {
   width: 350px;
@@ -1674,6 +1703,9 @@ body {
   height: 35px;
   width: 83px;
   margin-left: 15px;
+}
+.addNewTeacherItem #hideQueryResult {
+  display: none;
 }
 .addTeacherBtnRow {
   height: 50px;
