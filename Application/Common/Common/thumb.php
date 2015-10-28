@@ -15,7 +15,7 @@ function getImageUrlByPath($path, $size)
     // $thumb['src']=$path;
     $thumb = $thumb['src'];
     if (!is_sae()) {
-        $thumb = getRootUrl() . $thumb;
+        //$thumb = getRootUrl() . $thumb;
     }
     return $thumb;
 }
