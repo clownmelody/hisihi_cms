@@ -937,7 +937,7 @@ body {
   border-bottom: 1px solid #e3e3e3;
 }
 .box > .box-header .min-title {
-  font-size: 20px;
+  font-size: 16px;
   color: #333333;
   padding-left: 23px;
 }
@@ -1240,7 +1240,7 @@ body {
 }
 .anHeader span {
   position: absolute;
-  font-size: 20px;
+  font-size: 16px;
 }
 #announcesContainer {
   width: 100%;
@@ -1287,12 +1287,15 @@ body {
   margin-bottom: 40px;
   overflow: hidden;
 }
+.basicinfo-body .form-group #organization_id {
+  display: none;
+}
 .basicinfo-body .form-group .label-txt {
   text-align: center;
   font-weight: normal;
   line-height: 39px;
   color: #333333;
-  font-size: 18px;
+  font-size: 14px;
 }
 .basicinfo-body .form-group .label-img {
   width: 80px;
@@ -1313,7 +1316,7 @@ body {
   margin-top: 15px;
 }
 .basicinfo-body .form-group .label-box .title {
-  font-size: 18px;
+  font-size: 14px;
   color: #666666;
   line-height: 28px;
   margin-bottom: 5px;
@@ -1438,6 +1441,10 @@ body {
   position: relative;
   margin: 10px 20px;
   margin-right: 0;
+  box-shadow: none;
+}
+.memberItemUl li:hover {
+  box-shadow: none;
 }
 .memberItemUl li .memberItemLeft {
   position: absolute;
@@ -1451,12 +1458,9 @@ body {
   margin: 8px;
 }
 .memberItemUl li .memberItemLeft img.hover {
-  -webkit-box-shadow: 0px 0 13px #999999;
-  -moz-box-shadow: 0px 0 13px #999999;
-  box-shadow: 0px 0 13px #999999;
-}
-.memberItemUl li .memberItemRight {
-  padding-left: 65px;
+  -webkit-box-shadow: 0 0 6px #848484;
+  -moz-box-shadow: 0 0 6px #848484;
+  box-shadow: 0 0 6px #848484;
 }
 .memberItemUl li .memberItemRight {
   padding-left: 65px;
@@ -1464,11 +1468,11 @@ body {
 .memberItemUl li .memberItemRight p {
   margin-top: 6px;
 }
-.memberItemUl li .memberItemRight .tname {
+.memberItemUl li .memberItemRight p.tname {
   font-size: 14px;
   color: #333644;
 }
-.memberItemUl li .memberItemRight .trole {
+.memberItemUl li .memberItemRight p.trole {
   font-size: 12px;
   color: #848484;
 }

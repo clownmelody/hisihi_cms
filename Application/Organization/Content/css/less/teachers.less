@@ -59,40 +59,40 @@
   position: relative;
   margin: 10px 20px;
   margin-right: 0;
+  box-shadow: none;
+  &:hover{
+    box-shadow: none;
+  }
+  .memberItemLeft {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    img {
+      width: 45px;
+      height: 45px;
+      border-radius: 45px;
+      margin: 8px;
+      &.hover {
+        .box-shadow(0 0 6px @md-grey-84;);
+      }
+    }
+  }
+  .memberItemRight {
+    padding-left: 65px;
+    p {
+      margin-top: 6px;
+      &.tname{
+        font-size: 14px;
+        color: @md-grey-333;
+      }
+      &.trole{
+        font-size: 12px;
+        color: @md-grey-84;
+      }
+    }
+  }
 }
 
-.memberItemUl li .memberItemLeft{
-  position: absolute;
-  width: 60px;
-  height:60px;
-}
-.memberItemUl li .memberItemLeft img{
-  width: 45px;
-  height:45px;
-  border-radius: 45px;
-  margin: 8px;
-}
-.memberItemUl li .memberItemLeft img.hover{
-  .box-shadow(0px 0 13px @md-grey-900);
-}
-
-.memberItemUl li .memberItemRight{
-  padding-left: 65px;
-}
-.memberItemUl li .memberItemRight{
-  padding-left: 65px;
-}
-.memberItemUl li .memberItemRight p{
-  margin-top: 6px;
-}
-.memberItemUl li .memberItemRight .tname{
-  font-size: 14px;
-  color: @md-grey-333;
-}
-.memberItemUl li .memberItemRight .trole{
-  font-size: 12px;
-  color: @md-grey-84;
-}
 .addGroupCon{
   height: 55px;
   cursor: pointer;

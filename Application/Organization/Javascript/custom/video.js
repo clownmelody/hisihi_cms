@@ -7,10 +7,15 @@ define(['jquery','jqueryui'],function () {
     var MyLesson = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.loadData();
-        this.$wrapper.on('click','.editVideo',$.proxy(this,'showEditVideoBox'));
-        this.$wrapper.on('click','.deleteTeacher',$.proxy(this,'deleteTeacher'));
+        this.initSortEvents();
+        //编辑
+        this.$wrapper.on('click','.editVideo',$.proxy(this,'showEditLessonBox'));
+        //删除
+        this.$wrapper.on('click','.deleteTeacher',$.proxy(this,'deleteLesson'));
+        this.$wrapper.on('click','#addLessons',$.proxy(this,'addLessons'));
     };
     MyLesson.prototype= {
+        //数据加载
         loadData: function () {
             var data = [
                     {
@@ -99,6 +104,8 @@ define(['jquery','jqueryui'],function () {
             //});
             this.showLessonInfo(data);
         },
+
+        //展示部分教程数据
         showLessonInfo:function(data){
             var str='',
                 that=this,
@@ -134,7 +141,9 @@ define(['jquery','jqueryui'],function () {
             str+='<div style="clear:both;">';
             this.$wrapper.find('#lessonsMainCon').append(str);
         },
-        showEditVideoBox:function(e){
+
+        //显示编辑框
+        showEditLessonBox:function(e){
             var $target=$(e.currentTarget),
                 flag=$target.text()=='编辑',
                 $li = this.$wrapper.find('.list-data-ul li');
@@ -146,7 +155,40 @@ define(['jquery','jqueryui'],function () {
                 $li.removeClass('edit').addClass('normal');
             }
         },
-    };
 
-    var myLesson=new MyLesson($('.normalPageWrapper'));
+        //添加教程
+        addLessons:function(){
+            window.location.href = window.urlObject.ctl + "/Index/addnewlesson";
+        },
+
+        /*
+         *教程移动事件注册
+         *
+         */
+        initSortEvents:function(){
+            $target = this.$wrapper.find('#lessonsMainCon');
+
+            //任务拖动
+            $target.sortable({
+                items: ">li",
+                helper: 'clone',
+                delay: 300,
+                cursor: 'move',
+                scroll: true,
+                placeholder: "sortableplaceholder",
+                connectWith: '.memberItemUl',
+                start: function (event, ui) {
+
+                },
+
+                stop: function (event, ui) {
+
+                }
+            });
+        },
+    };
+    var $wrapper=$('.normalPageWrapper');
+    if($wrapper.length>0) {
+         new MyLesson($wrapper);
+    }
 });

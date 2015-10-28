@@ -21,7 +21,8 @@ require.config({
         teacher:'custom/teacher',
         basicinfo:'custom/basicinfo',
         video:'custom/video',
-        studentworks:'custom/studentworks'
+        studentworks:'custom/studentworks',
+        addnewlesson:'custom/addnewlesson'
 }});
 
 require([
@@ -36,12 +37,13 @@ require([
     'announcement',
     'basicinfo',
     'video',
-    'studentworks'
+    'studentworks',
+    'addnewlesson'
 ]);
 
 
 
-require(['jquery', 'announcement'], function ($, announcement) {
-
-});
+//require(['jquery', 'announcement'], function ($, announcement) {
+//
+//});
 

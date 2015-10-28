@@ -104,7 +104,11 @@ define(['jquery'],function () {
         },
 
     };
-    var todayAnnouncement=new TodayAnnoucement($('.anWrapper'));
-    return todayAnnouncement;
+    var $wrapper=$('.anWrapper');
+    if($wrapper.length>0) {
+        new TodayAnnoucement($wrapper);
+    }
+    //var todayAnnouncement=new TodayAnnoucement($('.anWrapper'));
+    //return todayAnnouncement;
 
 });

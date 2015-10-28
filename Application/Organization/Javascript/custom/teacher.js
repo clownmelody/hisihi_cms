@@ -622,7 +622,11 @@ define(['jquery','jqueryui'],function () {
     };
 
 
-    var myTeacher=new MyTeacher($('.teachersWrapper'));
-    return myTeacher;
+    //var myTeacher=new MyTeacher($('.teachersWrapper'));
+    //return myTeacher;
+    var $wrapper=$('.teachersWrapper');
+    if($wrapper.length>0) {
+        new MyTeacher($wrapper);
+    }
 
 });

@@ -224,8 +224,9 @@
 		},
 
  	};
-
- 	var basicInfo=new BasicInfo($('.basicinfoWrapper'));
- 	return basicInfo;
+	 var $wrapper=$('.basicinfoWrapper');
+	 if($wrapper.length>0) {
+		  new BasicInfo($wrapper);
+	 }
 
  });
