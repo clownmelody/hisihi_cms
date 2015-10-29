@@ -117,10 +117,21 @@
 					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" id="myPicture" alt="[Jcrop Example]" />
 				</div>
 				<div class="myModal-body-right">
-					<form id="userPhotoForm" class="cover-form">
-						<input type="button" class="btn brand-info" value="上传头像"/>
-						<input type="file" name="picture" class="data-import-file" id="dataImportFileInput" size="28" accept=".jpg,.png" />
+					<!--<form id="userPhotoForm" class="cover-form">-->
+						<!--<input type="button" class="btn brand-info" value="上传头像"/>-->
+						<!--<input type="file" name="picture" class="data-import-file" id="dataImportFileInput" size="28" accept=".jpg,.png" />-->
+					<!--</form>-->
+					<form action="http://localhost/hisihi-cms/api.php?s=/Organization/uploadLogo" methon="post"
+						  enctype ="multiparty/form-data">
+						<label for="file">FileName:</label>
+						<input type="file" name="file" id="file"/>
+						<br/>
+						<input type="submit" name="submit" value="Submit"/>
 					</form>
+					<!--<form type="post" action="http://localhost/hisihi-cms/api.php?s=/Organization/uploadLogo">-->
+						<!--<input type="submit" class="btn brand-info" value="上传头像"/>-->
+						<!--<input type="file" name="picture" class="" id="" size="28" accept=".jpg,.png" />-->
+					<!--</form>-->
 					<p id="photoErrorInfo"></p>
 				</div>
 				<div style="clear: both;"></div>

@@ -6,6 +6,9 @@
 define(['jquery','jqueryui'],function () {
     var MyLesson = function ($wrapper) {
         this.$wrapper = $wrapper;
+        this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
+        var cookie=JSON.parse($.cookie('hisihi-org'));
+        this.organization_id=cookie.organization_id;
         this.loadData();
         this.initSortEvents();
         //编辑
@@ -17,21 +20,21 @@ define(['jquery','jqueryui'],function () {
         //教程详情
         this.$wrapper.on('click','#lessonsMainCon>li', function () {
             var id=$(this).data('id');
-            window.location.href = window.urlObject.ctl + "/Index/lessondetailinfo";
+            window.location.href = window.urlObject.ctl + "/Index/lessondetailinfo/id/"+id;
         });
     };
     MyLesson.prototype= {
         //数据加载
         loadData: function () {
             var data = [
-                    {
+                {
                     id:0,
                     typeName: 'Photoshop',
                     title: '大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿',
                     uploadTime: '2015.02.14 12:00',
                     viewedTime:12154546,
                     imgSrc: window.urlObject.image + '/video/1.png'
-                    },
+                },
                 {
                     id:1,
                     typeName: 'Photoshop',
@@ -108,7 +111,16 @@ define(['jquery','jqueryui'],function () {
             //this.getDataAsync(function(data){
             //    data;
             //});
-            this.showLessonInfo(data);
+            var url=this.basicApiUrl+'/getCourses',
+                that=this;
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: {organization_id:this.organization_id},
+                callback:function(data) {
+                    that.showLessonInfo.call(that,data);
+                }
+            });
         },
 
         //展示部分教程数据
@@ -124,24 +136,24 @@ define(['jquery','jqueryui'],function () {
                     tempTitle=typeNameAndTile.substr(0,42)+'…';
                 }
                 str+='<li class="normal" data-id="'+this.id+'">'+
-                        '<div class="videoItemHeader">'+
-                            '<img src="'+this.imgSrc+'">'+
-                            '<i class="playBtn"></i>'+
-                        '</div>'+
-                        '<div class="videoItemBottom">'+
-                            '<div class="videoItemDesc"><p class="typeNameAndTitle" title="'+typeNameAndTile+'">'+tempTitle+'</p></div>'+
-                            '<div class="videoFooter">'+
-                                '<div class="videoFooterLeft">'+
-                                    '<i class="videoIcon videoClock"></i>'+
-                                    '<span>'+this.uploadTime+'</span>'+
-                                '</div>'+
-                                '<div class="videoFooterRight">'+
-                                    '<i class="videoIcon videoViewedTimes"></i>'+
-                                    '<span>'+this.viewedTime+'</span>'+
-                                '</div>'+
-                            '</div>'+
-                        '</div>'+
-                        '<div class="delete-item-btn" title="删除"></div>'+
+                    '<div class="videoItemHeader">'+
+                    '<img src="'+this.imgSrc+'">'+
+                    '<i class="playBtn"></i>'+
+                    '</div>'+
+                    '<div class="videoItemBottom">'+
+                    '<div class="videoItemDesc"><p class="typeNameAndTitle" title="'+typeNameAndTile+'">'+tempTitle+'</p></div>'+
+                    '<div class="videoFooter">'+
+                    '<div class="videoFooterLeft">'+
+                    '<i class="videoIcon videoClock"></i>'+
+                    '<span>'+this.uploadTime+'</span>'+
+                    '</div>'+
+                    '<div class="videoFooterRight">'+
+                    '<i class="videoIcon videoViewedTimes"></i>'+
+                    '<span>'+this.viewedTime+'</span>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="delete-item-btn" title="删除"></div>'+
                     '</li>';
             });
             str+='<div style="clear:both;">';
@@ -195,6 +207,6 @@ define(['jquery','jqueryui'],function () {
     };
     var $wrapper=$('.normalPageWrapper');
     if($wrapper.length>0) {
-         new MyLesson($wrapper);
+        new MyLesson($wrapper);
     }
 });
