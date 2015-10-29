@@ -205,13 +205,10 @@ class OrganizationController extends AppController
 
         /* 记录图片信息 */
         if($info){
-            unset($info['picture']['type']);
-            unset($info['picture']['url']);
-            unset($info['picture']['md5']);
-            unset($info['picture']['sha1']);
-            unset($info['picture']['status']);
-            unset($info['picture']['create_time']);
-            $extra = $info['picture'];
+            $extra['logo'] = array(
+                'id'=>$info['download']['id'],
+                'path'=>$info['download']['path']
+            );
             $this->apiSuccess("上传Logo成功",null,$extra);
         } else {
             $this->apiError(-1,"上传Logo失败，".$Picture->getError());
