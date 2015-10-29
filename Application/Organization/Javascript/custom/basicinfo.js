@@ -37,7 +37,9 @@
 		});
 
 		//关闭弹出层
-		this.$wrapper.on("click",".close", $.proxy(that,'cancelCrop'));
+		this.$wrapper.on("click",".close", function(){
+			that.cancelCrop.call(that,true);
+		});
 
  	};
 
@@ -217,11 +219,14 @@
 		},
 
 		/*取消裁剪*/
-		cancelCrop:function() {
-			this.$wrapper.find("#ImgModal").fadeOut(500);
+		cancelCrop:function(flag) {
+			if(flag) {
+				this.$wrapper.find("#ImgModal").fadeOut(500);
+				//清空file之前的内容
+				this.$wrapper.find('#userPhotoForm')[0].reset();
+			}
 			this.jcrop_api.destroy();  //隐藏裁剪框
-			//清空file之前的内容
-			this.$wrapper.find('#userPhotoForm')[0].reset();
+
 		},
 
 		/*
@@ -263,7 +268,10 @@
 				var data = $.parseJSON(data);
 				var src = '';
 				if (data.success) {
-					$('#myPicture').attr('src','https://www.baidu.com/img/bd_logo1.png');
+					var $img=$('#myPicture');
+					$img.attr({'src':data.logo.path,'data-img-id':data.logo.id});
+					that.cancelCrop(false);
+					that.initializeCrop($img);
 				} else {
 					//(data.info);
 					data.info

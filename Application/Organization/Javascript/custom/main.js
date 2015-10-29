@@ -24,6 +24,7 @@ require.config({
         basicinfo:'custom/basicinfo',
         video:'custom/video',
         studentworks:'custom/studentworks',
+        teachcondition:'custom/teachcondition',
         addnewlesson:'custom/addnewlesson',
         certification:'custom/certification'
 }});
@@ -42,6 +43,7 @@ require([
     'basicinfo',
     'video',
     'studentworks',
+    'teachcondition',
     'addnewlesson',
     'certification'
 ]);
