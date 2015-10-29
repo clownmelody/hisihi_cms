@@ -374,17 +374,38 @@ class OrganizationController extends AppController
      * 学生作品添加或删除
      * @param null $organization_id
      * @param null $pic_id
-     * @param null $type  'add' or 'delete'
+     * @param null $description
+     * @param string $type
      */
-    public function studentWorks($organization_id=null, $pic_id=null, $type='add'){
+    public function studentWorks($organization_id=null, $pic_id=null, $description=null, $type='add'){
         $this->requireAdminLogin();
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
+        $model = M('OrganizationResource');
         if('add'==$type){  // 添加学生作品
-
+            $data['type'] = 1;
+            $data['organization_id'] = $organization_id;
+            $data['pic_id'] = $pic_id;
+            $data['description'] = $description;
+            $data['create_time'] = time();
+            $res = $model->add($data);
+            if($res){
+                $this->apiSuccess('添加学生作品成功');
+            } else {
+                $this->apiError(-1, '添加学生作品失败');
+            }
         } else {  // 删除学生作品
-
+            $data['status'] = -1;
+            $map['type'] = 1;
+            $map['organization_id'] = $organization_id;
+            $map['pic_id'] = $pic_id;
+            $res = $model->where($map)->save($data);
+            if($res){
+                $this->apiSuccess('删除学生作品成功');
+            } else {
+                $this->apiError(-1, '删除学生作品失败');
+            }
         }
     }
 
@@ -392,17 +413,38 @@ class OrganizationController extends AppController
      * 机构环境图片添加或删除
      * @param null $organization_id
      * @param null $pic_id
+     * @param null $description
      * @param string $type
      */
-    public function organizationEnvironment($organization_id=null, $pic_id=null, $type='add'){
+    public function organizationEnvironment($organization_id=null, $pic_id=null, $description=null, $type='add'){
         $this->requireAdminLogin();
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
-        if('add'==$type){  // 添加环境图片
-
-        } else {  // 删除环境图片
-
+        $model = M('OrganizationResource');
+        if('add'==$type){
+            $data['type'] = 2;
+            $data['organization_id'] = $organization_id;
+            $data['pic_id'] = $pic_id;
+            $data['description'] = $description;
+            $data['create_time'] = time();
+            $res = $model->add($data);
+            if($res){
+                $this->apiSuccess('添加机构环境图片成功');
+            } else {
+                $this->apiError(-1, '添加机构环境图片失败');
+            }
+        } else {
+            $data['status'] = -1;
+            $map['type'] = 2;
+            $map['organization_id'] = $organization_id;
+            $map['pic_id'] = $pic_id;
+            $res = $model->where($map)->save($data);
+            if($res){
+                $this->apiSuccess('删除机构环境图片成功');
+            } else {
+                $this->apiError(-1, '删除机构环境图片失败');
+            }
         }
     }
 
@@ -418,7 +460,7 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('pic_id, description, create_time')->where($map)->select();
+        $list = $model->field('pic_id, description, create_time')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $work['url'] = $this->fetchImage($pic_id);
@@ -427,20 +469,6 @@ class OrganizationController extends AppController
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取机构学生作品成功', null, $extra);
-    }
-
-    /**
-     * 删除机构学生作品
-     * @param null $id
-     */
-    public function deleteStudentWorks($id=null){
-        if(empty($id)){
-            $this->apiError(-1, '传入参数不能为空');
-        }
-        $model = M('OrganizationResource');
-        $data['status'] = -1;
-        $model->where('type=1 and id='.$id)->save($data);
-        $this->apiSuccess('删除学生作品成功');
     }
 
     /**
@@ -455,7 +483,7 @@ class OrganizationController extends AppController
         $map['type'] = 2;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('pic_id, description, create_time')->where($map)->select();
+        $list = $model->field('pic_id, description, create_time')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $work['url'] = $this->fetchImage($pic_id);
@@ -467,21 +495,9 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 删除机构环境图片
-     * @param null $id
-     */
-    public function deleteOrganizationEnvironment($id=null){
-        if(empty($id)){
-            $this->apiError(-1, '传入参数不能为空');
-        }
-        $model = M('OrganizationResource');
-        $data['status'] = -1;
-        $model->where('type=2 and id='.$id)->save($data);
-        $this->apiSuccess('删除机构环境图片成功');
-    }
-
-    /**
      * 获取所有老师列表
+     * @param int $page
+     * @param int $count
      */
     public function teachersList($page=1, $count=10){
         $model = M('AuthGroupAccess');
