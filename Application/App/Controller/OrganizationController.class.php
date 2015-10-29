@@ -206,8 +206,8 @@ class OrganizationController extends AppController
         /* 记录图片信息 */
         if($info){
             $extra['logo'] = array(
-                'id'=>$info['picture']['id'],
-                'path'=>$info['picture']['path']
+                'id'=>$info['download']['id'],
+                'path'=>$info['download']['path']
             );
             $this->apiSuccess("上传Logo成功",null,$extra);
         } else {
