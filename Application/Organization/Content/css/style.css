@@ -1032,6 +1032,9 @@ body {
 .m_20 {
   margin-top: 20px;
 }
+.mb_30 {
+  margin-bottom: 30px;
+}
 .m_110 {
   margin-left: 110px;
 }
@@ -1205,6 +1208,12 @@ body {
   height: 30px;
   background-position: -290px -47px;
 }
+.side-item.active .icon.icon-look {
+  width: 16px;
+  height: 8px;
+  margin-right: 10px;
+  background-position: -40px -1;
+}
 .icon {
   width: 40px;
   height: 40px;
@@ -1240,6 +1249,12 @@ body {
   width: 30px;
   height: 30px;
   background-position: -290px -7px;
+}
+.icon.icon-look {
+  width: 16px;
+  height: 8px;
+  margin-right: 10px;
+  background-position: -40px 0;
 }
 .anWrapper {
   background-color: #ffffff;
@@ -1920,4 +1935,161 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   color: #999999;
   text-align: center;
   font-size: 14px;
+}
+.lessondetailinfo .container {
+  width: 720px;
+}
+.lessondetailinfo .box-header {
+  padding-left: 35px;
+  overflow: hidden;
+}
+.lessondetailinfo .box-header .min-title {
+  padding: 0;
+}
+.lessondetailinfo .box-header .up-video {
+  float: right;
+  margin-top: 12px;
+}
+.lessondetailinfo .box-header .editor-btn {
+  float: right;
+  color: #f7be5b;
+  margin-right: 40px;
+  font-size: 16px;
+}
+.lessondetailinfo .box-header .editor-btn:hover {
+  color: #f5a623;
+}
+.lessondetailinfo .box-body {
+  padding: 35px;
+}
+.lessondetailinfo .box-body .viod-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  color: #666666;
+}
+.lessondetailinfo .box-table {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  overflow: hidden;
+  box-shadow: 0 1px 0 #b4b4b4;
+}
+.lessondetailinfo .editor-box {
+  overflow: hidden;
+  width: 400px;
+}
+.lessondetailinfo .list-line > li {
+  display: inline;
+  float: left;
+  font-size: 16px;
+  color: #999999;
+  list-style: outside none none;
+}
+.lessondetailinfo .list-line > li.active {
+  color: #333333;
+}
+.lessondetailinfo .list-line > li + li::before {
+  content: "/ ";
+  color: #ccc;
+  padding: 0 5px 0 10px;
+}
+.lessondetailinfo .list-editor > li {
+  width: 100%;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.lessondetailinfo .list-editor > li > p {
+  color: #333333;
+  font-size: 14px;
+  overflow: hidden;
+}
+.lessondetailinfo .list-editor .item-label {
+  float: left;
+  font-size: 16px;
+  margin-right: 10px;
+  color: #666666;
+}
+.lessondetailinfo .table-info {
+  margin-bottom: 0;
+}
+.lessondetailinfo .table-info > thead > tr {
+  border: 1px solid #e2e3e3;
+}
+.lessondetailinfo .table-info > thead > tr > th {
+  text-align: center;
+  border-width: 0;
+  background: #f7be5b;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 600;
+}
+.lessondetailinfo .table-info > tbody > tr {
+  border: 1px solid #e2e3e3;
+  font-size: 14px;
+  color: #666666;
+}
+.lessondetailinfo .table-info > tbody > tr > th {
+  text-align: center;
+}
+.lessondetailinfo .table-info > tbody > tr > th,
+.lessondetailinfo .table-info > tbody > tr > td {
+  border-top: 1px solid #e2e3e3;
+}
+.lessondetailinfo .table-info > tbody > tr > th,
+.lessondetailinfo .table-info > tbody > tr > td {
+  line-height: 40px;
+}
+.lessondetailinfo .table-info .title {
+  line-height: 20px;
+  color: #333333;
+}
+.lessondetailinfo .table-info .time {
+  color: #666666;
+  text-align: center;
+}
+.lessondetailinfo .icon {
+  width: 45px;
+  height: 45px;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  font: 0/0;
+  background-image: url('../images/tempsprite.png');
+  background-repeat: no-repeat;
+}
+.lessondetailinfo .icon.icon-home {
+  background-position: 0px -2475px;
+}
+.lessondetailinfo .icon.icon-information {
+  background-position: -45px -2475px;
+}
+.lessondetailinfo .icon.icon-teacher {
+  background-position: -90px -2475px;
+}
+.lessondetailinfo .icon.icon-video {
+  background-position: -135px -2475px;
+}
+.lessondetailinfo .icon.icon-imac {
+  background-position: -180px -2475px;
+}
+.lessondetailinfo .icon.icon-works {
+  background-position: -225px -2475px;
+}
+.lessondetailinfo .icon.icon-medal {
+  background-position: -270px -2475px;
+}
+.lessondetailinfo .icon.icon-close {
+  width: 35px;
+  height: 35px;
+  background-position: -325px -2482px;
+}
+.lessondetailinfo .icon.icon-look {
+  width: 16px;
+  height: 8px;
+  margin-right: 10px;
+  background-position: -45px -55px;
 }
