@@ -111,7 +111,7 @@ define(['jquery','jqueryui'],function () {
             //this.getDataAsync(function(data){
             //    data;
             //});
-            var url=this.basicApiUrl+'/getCourses',
+            var url=this.basicApiUrl+'/getVideoCategory',
                 that=this;
             Hisihi.getDataAsync({
                 type: "post",
@@ -206,7 +206,7 @@ define(['jquery','jqueryui'],function () {
             });
         },
     };
-    var $wrapper=$('.normalPageWrapper');
+    var $wrapper=$('.vedioWrapper');
     if($wrapper.length>0) {
         new MyLesson($wrapper);
     }

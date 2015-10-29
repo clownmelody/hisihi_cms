@@ -25,6 +25,7 @@ define(['jquery','jqueryui'],function () {
                 $target.removeClass(className);
             }
         });
+
         this.$wrapper.on('mouseover mouseout','.memberItemUl li.edit',function(e) {
             var $target=$(this).find('.deleteTeacher'),
                 className='hover';

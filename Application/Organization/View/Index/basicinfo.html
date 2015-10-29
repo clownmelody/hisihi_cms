@@ -20,7 +20,7 @@
 					</div>
 				</div>
 				<div class="col-2 t_r">
-					<a href="javaScript: void(0);" id="UploadImg" class="btn brand-info m_15">点击上传</a>
+					<input type="button" id="uploadImg" class="btn brand-info m_15" value="点击上传"/>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -115,13 +115,14 @@
 		<div class="modal-container">
 
 			<div class="modal-header">
-				<h4 class="min-title">上传头像<a href="javaScript: void(0);" class="close icon-close">&#215;</a></h4>
+				<h4 class="min-title">上传头像</h4>
+				<!--<a href="javaScript: void(0);" class="close icon-close">&#215;</a>-->
 			</div>
 			<!-- /.modal-header -->
 
-			<div class="modal-body">
+			<div class="modal-body basicInfoModel">
 				<div class="jcrop-box myModal-body-left">
-					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" id="myPicture" alt="img" />
+					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" id="myNewPicture" alt="img" />
 				</div>
 				<div class="myModal-body-right">
 					<form id="userPhotoForm">
@@ -142,9 +143,9 @@
 			</div>
 			<!-- /.modal-body -->
 
-			<div class="modal-foot">
-				<a href="#" class="btn btn-grey close">取消</a>
-				<a href="#" class="btn brand-info">确定</a>
+			<div class="modal-foot" id="modalFootBts">
+				<a href="javascript:void(0);" class="btn btn-grey">取消</a>
+				<a href="javascript:void(0);" class="btn brand-info">确定</a>
 			</div>
 			<!-- /.modal-foot -->
 

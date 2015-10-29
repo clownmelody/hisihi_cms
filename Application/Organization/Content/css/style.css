@@ -445,6 +445,9 @@
   margin-left: 35px;
   font-size: 16px;
 }
+.normalPageWrapper .normal-page-header .headerAddBtn {
+  margin-left: 100px;
+}
 .normalPageWrapper .normal-page-header .edit-data-item {
   float: right;
   margin-right: 20px;
@@ -1436,6 +1439,10 @@ body {
 .basicinfo-body .form-group #tagExitTips {
   display: none;
 }
+.basicinfo-body .form-group #uploadImg {
+  height: 34px;
+  width: 86px;
+}
 #submitBasicInfoBtn {
   height: 40px;
   width: 115px;
@@ -1452,6 +1459,9 @@ body {
   -webkit-box-shadow: 0 0 6px #848484;
   -moz-box-shadow: 0 0 6px #848484;
   box-shadow: 0 0 6px #848484;
+}
+#ImgModal .basicInfoModel {
+  min-height: 180px;
 }
 #ImgModal .myModal-body-right {
   float: right;
@@ -1917,6 +1927,10 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   height: 40px;
   width: 100px;
 }
+.addNewLessonWrapper #addNewLessonSubmitBtn {
+  height: 40px;
+  width: 115px;
+}
 .certification {
   padding: 35px;
 }
@@ -2152,7 +2166,6 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
   background-color: #FDE5DD !important;
 }
 .uploadify-queue-item .cancel a {
-  background: url('../img/uploadify-cancel.png') 0 0 no-repeat;
   float: right;
   height: 16px;
   text-indent: -9999px;

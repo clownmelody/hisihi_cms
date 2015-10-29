@@ -23,7 +23,6 @@
  	    var that=this;
  	    this.$wrapper.on('focus','input',$.proxy(this,'getNameFocus'));
  	    this.$wrapper.on('click','#submitBasicInfoBtn',$.proxy(this,'submitBaseInfo'));
- 	    this.$wrapper.on('click','#addtags',$.proxy(this,'AddTags'));
 
 		/*添加标签*/
 		this.$wrapper.on('click',".recommendBox a",function () {
@@ -51,14 +50,19 @@
 		this.$wrapper.on('click','#addtags',$.proxy(this,'addNewTags'));
 
 		//上传头像
-		this.$wrapper.on('click',"#UploadImg", function () {
+		this.$wrapper.on('click',"#uploadImg", function () {
 			$('#ImgModal').fadeIn(500);
-			that.initializeCrop(that.$wrapper.find('#myPicture'));  //头像裁剪初始化
+			that.initializeCrop(that.$wrapper.find('#myNewPicture'));  //头像裁剪初始化
 		});
 
 		//关闭弹出层
-		this.$wrapper.on("click",".close", function(){
-			that.cancelCrop.call(that,true);
+		this.$wrapper.on("click","#modalFootBts a", function(){
+			var index=$(this).index();
+			if(index==0){
+				that.cancelCrop.call(that,true);
+			}else{
+				that.updateLogo();
+			}
 		});
 
  	};
@@ -87,7 +91,7 @@
 				$form.find('#Signature').val(data.slogan);
 				$form.find('#Address').val(data.location);
 				$form.find('#orgBasicIntroduce').val(data.introduce);
-				$form.find('#basicInfoLogo').attr({'src':data.logo.url,'data-lid':data.logo.id});
+				$form.find('#basicInfoLogo,#myNewPicture').attr({'src':data.logo.url,'data-lid':data.logo.id});
 
 				//加载优势标签
 				var str =this.loadAdvantage(data.advantage);
@@ -233,6 +237,29 @@
 			}
  		},
 
+		/*更新logo*/
+		updateLogo:function(){
+			var that=this;
+
+			Hisihi.getDataAsync({
+				type: "post",
+				url: this.basicApiUrl + '/updateLogo',
+				data: {pic_id:that.$wrapper.find('#myNewPicture').attr('data-lid')},
+				org: true,
+				callback: function (e) {
+					if(e.success) {
+						var $newPic=that.$wrapper.find('#myNewPicture');
+						that.$wrapper.find('#basicInfoLogo')
+							.add($('#headerLogo'))
+							.attr({'src': $newPic.attr('src'), 'data-lid': $newPic.attr('data-lid')});
+						that.cancelCrop.call(that);
+					}else{
+						alert('头像信息更新失败');
+					}
+				}
+			});
+		},
+
 		getAllMyTagsId:function(){
 			var tempStr='';
 			this.$wrapper.find('#myAdvantage .myAdvantageItem').each(function(){
@@ -338,8 +365,8 @@
 				var data = $.parseJSON(data);
 				var src = '';
 				if (data.success) {
-					var $img=$('#myPicture');
-					$img.attr({'src':data.logo.path,'data-img-id':data.logo.id});
+					var $img=$('#myNewPicture');
+					$img.attr({'src':data.logo.path,'data-lid':data.logo.id});
 					that.cancelCrop(false);
 					that.initializeCrop($img);
 				} else {

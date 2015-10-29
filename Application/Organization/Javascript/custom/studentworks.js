@@ -6,6 +6,7 @@
 define(['jquery','jqueryui'],function () {
     var StudentWorks = function ($wrapper) {
         this.$wrapper = $wrapper;
+        this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
         this.loadData();
         this.$wrapper.on('click','.worksItemBottom', $.proxy(this,'worksItemDescEdit'));
         this.$wrapper.on('blur','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
@@ -96,11 +97,20 @@ define(['jquery','jqueryui'],function () {
                     imgSrc: window.urlObject.image + '/studentworks/9.png'
                 }
             ];
-            //this.getDataAsync(function(data){
-            //    data;
-            //});
-            this.showStudentWorksInfo(data);
+
+            var url=this.basicApiUrl+'/getStudentWorks',
+                that=this;
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: {},
+                org:true,
+                callback:function(data) {
+                    that.showStudentWorksInfo(data);
+                }
+            });
         },
+
         showStudentWorksInfo:function(data){
             var str='',
                 that=this,
