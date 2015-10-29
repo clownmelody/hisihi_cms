@@ -531,8 +531,8 @@ class PublicController extends AppController {
             $topic['logo_pic'] = $this->getSourceLogoPic($did);
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage_other($topic['cover_id']);
-            $topic['content_url'] = 'http://www.hisihi.com/app.php/public/companybanner/id/'.$topic['id'];
-            $topic['share_url'] = 'http://www.hisihi.com/app.php/public/companybanner/id/'.$topic['id'];
+            $topic['content_url'] = 'http://115.28.72.197/app.php/public/companybanner/id/'.$topic['id'];
+            $topic['share_url'] = 'http://115.28.72.197/app.php/public/companybanner/id/'.$topic['id'];
             unset($topic['uid']);
             unset($topic['name']);
             unset($topic['category_id']);
