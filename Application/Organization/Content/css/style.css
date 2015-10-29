@@ -1,3 +1,4 @@
+@import "uploadify.css";
 .font_simsun {
   font-family: SimSun;
 }
@@ -1420,6 +1421,13 @@ body {
   height: 100%;
   float: left;
   text-align: center;
+}
+#ImgModal .myModal-body-left #myPicture {
+  height: 230px;
+  width: 230px;
+  -webkit-box-shadow: 0 0 6px #848484;
+  -moz-box-shadow: 0 0 6px #848484;
+  box-shadow: 0 0 6px #848484;
 }
 #ImgModal .myModal-body-right {
   float: right;

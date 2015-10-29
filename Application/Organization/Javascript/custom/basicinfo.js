@@ -4,7 +4,7 @@
 
  //基本信息
 
- define(['jquery'],function () {
+ define(['jquery','jqueryuploadify'],function () {
  	var BasicInfo = function ($wrapper) {
  	    this.$wrapper = $wrapper;
 		this.sectionId=JSON.parse($.cookie('hisihi-org')).session_id;
@@ -12,6 +12,7 @@
 		this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
 		this.loadBasicData();  //显示基本信息
 		this.initJcropParas();
+		this.initUploadify();  //头像上传插件初始化
 
  	    //事件注册
  	    var that=this;
@@ -90,7 +91,15 @@
 
 		/*显示基本信息*/
 		loadBasicData:function(){
-
+			var url=this.basicApiUrl+'/getCourses',
+				that=this;
+			Hisihi.getDataAsync({
+				type: "post",
+				url: url,
+				data: {},
+				org:true,
+				callback:function(data) {}
+			});
 		},
  		getNameFocus:function(){
  			$('input').nextAll('p').remove(".error-txt");
@@ -233,6 +242,38 @@
 			this.imgBoxDefaultInfo={ maxWidth: 605, maxHeight: 370 };
 			this.imgBoxNewInfo={width:231,height:240};
 		},
+
+		initUploadify:function() {
+			var that=this;
+			$("#upload_company_picture").uploadify({
+				"height": 30,
+				"swf":window.urlObject.js+"/libs/uploadify/uploadify.swf",
+				"fileObjName": "download",
+				"buttonText": "上传图片",
+				"uploader":that.basicApiUrl+'/uploadLogo' ,
+				"width": 120,
+				'removeTimeout': 1,
+				'fileTypeExts': '*.jpg; *.png; *.gif;',
+				"onUploadSuccess": uploadPictureCompany,
+				'onFallback': function () {
+					alert('未检测到兼容版本的Flash.');
+				}
+			});
+			function uploadPictureCompany(file, data) {
+				var data = $.parseJSON(data);
+				var src = '';
+				if (data.success) {
+					$('#myPicture').attr('src','https://www.baidu.com/img/bd_logo1.png');
+				} else {
+					//(data.info);
+					data.info
+					setTimeout(function () {
+
+					}, 1500);
+				}
+			}
+		},
+
 
  	};
 	 var $wrapper=$('.basicinfoWrapper');

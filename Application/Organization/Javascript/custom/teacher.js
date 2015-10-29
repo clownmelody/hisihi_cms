@@ -57,15 +57,14 @@ define(['jquery','jqueryui'],function () {
         getDataAsync:function(callback){
             var tempObj={
                     $page:1,
-                    $count:1000000,
-                    organization_id:this.organization_id,
-                    session_id:this.sectionId
+                    $count:1000000
                 },
                 that=this;
             Hisihi.getDataAsync({
                 type: "post",
                 url: this.basicApiUrl+'/getAllGroupsTeachers',
                 data: tempObj,
+                org:true,
                 callback:function(data){
                     callback.call(that,data)
                 }
@@ -155,9 +154,7 @@ define(['jquery','jqueryui'],function () {
                 //this.$wrapper.find('.addGroupCon').trigger('click');
                 this.$wrapper.find('#newGroupName').val('');
                 var tempData = {
-                        organization_id:this.organization_id,
-                        group_name:validity.name,
-                        session_id:this.sectionId
+                        group_name:validity.name
                     },
                 url=this.basicApiUrl+'/addTeachersGroup',
                     that=this;
@@ -166,6 +163,7 @@ define(['jquery','jqueryui'],function () {
                     type: "post",
                     url: url,
                     data: tempData,
+                    org:true,
                     callback:function(data){
                         if(data.success) {
                             var tempData=[{
@@ -524,7 +522,6 @@ define(['jquery','jqueryui'],function () {
         */
         execAddNewTeacher:function(groupInfo,teacherInfo){
             var tempData = {
-                    organization_id:this.organization_id,
                     uid:teacherInfo.uid,
                     teacher_group_id:groupInfo.groupId
                 },
@@ -534,6 +531,7 @@ define(['jquery','jqueryui'],function () {
                 type: "post",
                 url: url,
                 data: tempData,
+                org:true,
                 callback:function(data){
                     if(data.success){
                         var member=[{

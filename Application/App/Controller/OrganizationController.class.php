@@ -211,7 +211,7 @@ class OrganizationController extends AppController
             unset($info['picture']['status']);
             unset($info['picture']['create_time']);
             $extra = $info['picture'];
-            $this->apiSuccess("上传Logo成功",null,$extra);
+            $this->apiSuccess("上传Logo成功",null,array(pictures=>"http://mengkang.net/183.html"));
         } else {
             $this->apiError(-1,"上传Logo失败，".$Picture->getError());
         }

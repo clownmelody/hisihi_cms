@@ -166,8 +166,12 @@ Hisihi.modelBox.prototype = {
 
 /*通用异步请求方法*/
 Hisihi.getDataAsync=function(options){
-   var data=options.data;
-    data.session_id=JSON.parse($.cookie('hisihi-org')).session_id;
+   var data=options.data,
+       cookie=JSON.parse($.cookie('hisihi-org'));
+    data.session_id=cookie.session_id;
+    if(options.orgId){
+        data.organization_id=cookie.organization_id;
+    }
     if(!options.type || options.type=='post'){
         $.post(options.url,data,options.callback);
     }else{
