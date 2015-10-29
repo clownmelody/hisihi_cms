@@ -38,7 +38,7 @@ class IndexController extends Controller
         $this->display();
     }
     public  function  lessondetailinfo($id){
-        $this->assign('id', $id);
+        $this->assign('id', $id+'123');
         $this->display();
     }
     public  function  studentworks(){
