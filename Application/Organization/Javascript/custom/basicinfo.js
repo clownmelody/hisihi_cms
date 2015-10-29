@@ -7,10 +7,13 @@
  define(['jquery','jqueryuploadify','jqueryvalidate'],function () {
  	var BasicInfo = function ($wrapper) {
  	    this.$wrapper = $wrapper;
-		this.sectionId=JSON.parse($.cookie('hisihi-org')).session_id;
-		this.organization_id=20;
+		var cookie=JSON.parse($.cookie('hisihi-org'));
+		this.sectionId=cookie.session_id;
+		this.organization_id=cookie.organization_id;
 		this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
-		this.loadBasicData();  //显示基本信息
+		if(this.organization_id!=0) {
+			this.loadBasicData();  //显示基本信息
+		}
 		this.loadCommonAdvantageTags();//加载普通的标签
 		this.initJcropParas();
 		this.initUploadify();  //头像上传插件初始化
@@ -90,9 +93,7 @@
 				var str =this.loadAdvantage(data.advantage);
 				this.$wrapper.find('#myAdvantage').html(str);
 				$form.find('#Contact').val(data.phone_num);
-				$form.find('#organization_id').val(data.name);
-				$form.find('#organization_id').val(data.name);
-				$form.find('#organization_id').val(data.name);
+				$form.find('#organization_id').attr('data-org-id',this.organization_id);
 			}else{
 				alert('数据加载失败');
 			}
@@ -201,18 +202,47 @@
 
 		},
 
+		/*确认修改信息*/
 		submitBaseInfo:function(){
 			if(this.validate.form()) {
-				this.$wrapper.find('#basicForm').ajaxSubmit({
-					//type:'post',
-					//url:'http://127.0.0.1:8080/hisihi-cms/api.php?s=/Organization/login',
-					url: window.urlObject.apiUrl + '/saveBaseInfo',
-					success: function (data) {
+				var $form = this.$wrapper.find('#basicForm');
+				var newData= {
+					organization_id:$form.find('#organization_id').attr('data-org-id'),
+					name: $form.find('#name').val(),
+					slogan: $form.find('#Signature').val(),
+					introduce: $form.find('#orgBasicIntroduce').val(),
+					logo: $form.find('#basicInfoLogo').attr('data-lid'),
+					advantage:this.getAllMyTagsId(),
+					location: $form.find('#Address').val(),
+					phone_num:$form.find('#Contact').val()
+				}
 
+				Hisihi.getDataAsync({
+					type: "post",
+					url: this.basicApiUrl + '/saveBaseInfo',
+					data: newData,
+					org:false,
+					callback: function(e){
+						if(e.success) {
+							alert('更新成功');
+						}else{
+							alert('更新失败');
+						}
 					}
 				});
 			}
  		},
+
+		getAllMyTagsId:function(){
+			var tempStr='';
+			this.$wrapper.find('#myAdvantage .myAdvantageItem').each(function(){
+				tempStr+=$(this).attr('data-id')+'#';
+			});
+			if(tempStr.length>0){
+				tempStr=tempStr.substr(0,tempStr.length-1);
+			}
+			return tempStr;
+		},
 
 
 		/*裁剪插件初始化*/
