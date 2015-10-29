@@ -11,7 +11,7 @@
 
 			<div class="form-group">
 				<div class="label-img col-label ">
-					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" alt="" class="">
+					<img id="basicInfoLogo" src="#" alt="" class="">
 				</div>
 				<div class="col-2">
 					<div class="label-box">
@@ -47,7 +47,7 @@
 			<div class="form-group">
 				<label for="" class="label-txt col-label">简介</label>
 				<div class="col-1">
-					<textarea class="form-control" rows="5" name="introduce"></textarea>
+					<textarea class="form-control" rows="5" name="introduce" id="orgBasicIntroduce"></textarea>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -55,23 +55,26 @@
 			<div class="form-group">
 				<label for="" class="label-txt col-label">优势</label>
 				<div class="col-2">
-					<input  class="form-control" name="advantage">
-					<div class="box-tag tag-open">
+					<input  class="form-control" id="myNewAdvantage" name="advantage"/>
+					<div class="box-tag tag-open" id="myAdvantage">
 					</div>
 				</div>
 				<div class="col-2 recommend-box">
 					<div class="checkbox">
-						<input type="checkbox" checked ='checked'/> 显示推荐标签
+						<input type="checkbox" id="showRecommendBox" checked/>
+						<label id="showRecommendBoxLabel" for="showRecommendBox"> 显示推荐标签</label>
+						<span class="basicFormInfoError" id="tagExitTips"><label>&nbsp;&nbsp;标签已经存在</label></span>
 					</div>
 					<a href="javaScript: void(0);" class="btn brand-info" id="addtags">添加标签</a>
-					<div class="box-tag">
-						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
-						<a href="javaScript: void(0);" class="label label-default">抗高压</a>
-						<a href="javaScript: void(0);" class="label label-default">刚猛执行力</a>
-						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
-						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
-						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
+					<div class="box-tag recommendBox" id="recommendBox">
+						<!--<a href="javaScript: void(0);" class="label label-default">经验丰富</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">抗高压</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">刚猛执行力</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">经验丰富</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">经验丰富</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">经验丰富</a>-->
 					</div>
+
 				</div>
 			</div>
 			<!-- /.form-group -->

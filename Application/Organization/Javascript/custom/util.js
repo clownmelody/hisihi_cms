@@ -169,7 +169,7 @@ Hisihi.getDataAsync=function(options){
    var data=options.data,
        cookie=JSON.parse($.cookie('hisihi-org'));
     data.session_id=cookie.session_id;
-    if(options.orgId){
+    if(options.org){
         data.organization_id=cookie.organization_id;
     }
     if(!options.type || options.type=='post'){
