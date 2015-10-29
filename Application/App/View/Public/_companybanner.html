@@ -13,11 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="__CSS__/app.min.css">
     <style>
-        body{
-            margin: 0;
-            background: #eee;
-            font-size: 62.5%; 
-        }
         .app-bottombar {
             z-index: 3000;
             position: fixed;
@@ -78,44 +73,6 @@
         img {
             max-width:100%;height:auto;
         }
-        .headlines-box{
-            margin: 8px;
-            background: #fff;
-            border-radius: 5px;
-            box-shadow: 0 1px 1px #ddd;
-        }
-        .headlines-top{
-            border-bottom: 1px solid #eee;
-            padding: 30px 24px 0;
-        }
-        .headlines-top h2{
-            margin: 10px 0;
-            font-size:1.6em;
-            color: #333;
-            font-weight: normal;
-        }
-        .headlines-time{
-            color: #999;
-            font-size: 1.2em;
-            line-height: 30px;
-            margin: 5px 0 10px;
-        }
-        .headlines-body{
-            padding: 30px 24px;
-        }
-        .headlines-body img{
-            width: 100%;
-            min-width: 100%;
-            margin-bottom: 30px;
-            margin-top: 30px;
-        }
-        .headlines-body p{
-            width: 100%;
-            line-height: 25px;
-            font-size: 1.4em;
-            color: #666;
-            margin: 0 0 5px 0;
-        }
     </style>
 </head>
 
@@ -129,19 +86,21 @@
     <div id="test-agent" style="display:none">user-agent</div>
     <div class="app-content" style="-webkit-box-shadow: none;">
         <div class="app-section" style="margin: 10px 10px 10px 10px">
-
-            <div class="headlines-box">
-                <div class="headlines-top">
+            <div class="info-title">
+                <div style="float:left;margin-top:-10px;width:100%">
                     <h2>{$top_content_info.title}</h2>
-                    <p class="headlines-time">{$top_content_info.create_time|date='m-d H:i',###}</p>
-                </div>
-                <div class="headlines-body">
-                    <p>
-                        {$top_content_info.content}
-                        </p>
                 </div>
             </div>
-            
+            <div class="info-time">
+                <p>{$top_content_info.create_time|date='m-d H:i',###}</p>
+            </div>
+            <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
+            </div>
+            <div>
+            <p>
+                {$top_content_info.content}
+                </p>
+            </div>
         </div>
         <div class="bottomspace"></div>
     </div>
@@ -215,7 +174,10 @@
 
     $("a").removeAttr('href');
 
+    //var userAgent = navigator.userAgent.toLowerCase();
+
     var userAgent = window.location.href;
+    //$("#test-agent").html(userAgent);
     if(userAgent.indexOf("hisihi-app") < 0) {
         $(".app-bottombar").show();
         $(".bottomspace").show();
