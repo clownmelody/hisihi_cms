@@ -396,7 +396,8 @@ define(['jquery','jqueryui'],function () {
             *确定添加
              */
             $modelPanel.on('click','#addTeacherCommitBtn',function(){
-                if($txtTarget.val()==''){
+                var val=$txtTarget.val();
+                if(val==''){
                     $modelPanel.find('.addNewTeacherInput').show().delay(500).hide(0);
                     return;
                 }
@@ -406,9 +407,9 @@ define(['jquery','jqueryui'],function () {
                 var $li=$modelPanel.find('.allGroupNamesList .selected'),
                     groupInfo={groupId:$li.data('id'),groupName:$li.text()},
                     teacherInfo={
-                        uid: 72,
-                        nickname:'Leslie',
-                        avatar: 'http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/2015-03-26/551369fe8358c-05505543_256_256.jpg'
+                        uid: $txtTarget.attr('data-uid'),
+                        nickname:val,
+                        avatar: $txtTarget.attr('data-avatar')
                     };
                 myContext.execAddNewTeacher.call(myContext,groupInfo,teacherInfo);
                 myContext.clearAddTeacherInfo($modelPanel);
@@ -460,8 +461,8 @@ define(['jquery','jqueryui'],function () {
             });
 
             //隐藏搜索结果
-            $modelPanel.find('click','#hideQueryResult',function () {
-                $modelPanel.find('#addNewTeacherInput').add($(this)).hide();
+            $('#hideQueryResult').click(function () {
+                $modelPanel.find('#queryTeachResult').add($(this)).hide();
             }),
 
             /*
@@ -483,6 +484,17 @@ define(['jquery','jqueryui'],function () {
                         }
                     });
                 }
+            });
+
+            /*
+            *搜索结果选择
+            */
+            $modelPanel.on('click','#queryTeachResult>ul>li',function(){
+                //var $input = modelContext.$panel.find('#addNewTeacherInput');
+                var src=$(this).find('img')[0].src;
+                $txtTarget.val($(this).find('span').text())
+                    .attr({'data-uid':$(this).data('uid'),'data-avatar':src});
+                $(this).parents('#queryTeachResult').hide();
             });
 
         },

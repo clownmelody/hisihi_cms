@@ -14,6 +14,7 @@
 			break;
 		case "video":
 		case "addnewlesson":
+		case "lessondetailinfo":
 			index=4;
 			break;
 		case "studentworks":

@@ -37,6 +37,9 @@ class IndexController extends Controller
     public function addnewlesson(){
         $this->display();
     }
+    public  function  lessondetailinfo(){
+        $this->display();
+    }
     public  function  studentworks(){
         $this->display();
     }

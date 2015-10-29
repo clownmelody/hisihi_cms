@@ -12,7 +12,13 @@ define(['jquery','jqueryui'],function () {
         this.$wrapper.on('click','.editVideo',$.proxy(this,'showEditLessonBox'));
         //删除
         this.$wrapper.on('click','.deleteTeacher',$.proxy(this,'deleteLesson'));
+        //添加教程
         this.$wrapper.on('click','#addLessons',$.proxy(this,'addLessons'));
+        //教程详情
+        this.$wrapper.on('click','#lessonsMainCon>li', function () {
+            var id=$(this).data('id');
+            window.location.href = window.urlObject.ctl + "/Index/lessondetailinfo";
+        });
     };
     MyLesson.prototype= {
         //数据加载
