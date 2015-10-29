@@ -420,6 +420,7 @@ class OrganizationController extends AppController
             $data['create_time'] = time();
             $res = $model->add($data);
             if($res){
+                $this->uploadLogoPicToOSS($pic_id);
                 $this->apiSuccess('添加学生作品成功');
             } else {
                 $this->apiError(-1, '添加学生作品失败');
@@ -459,6 +460,7 @@ class OrganizationController extends AppController
             $data['create_time'] = time();
             $res = $model->add($data);
             if($res){
+                $this->uploadLogoPicToOSS($pic_id);
                 $this->apiSuccess('添加机构环境图片成功');
             } else {
                 $this->apiError(-1, '添加机构环境图片失败');
