@@ -137,6 +137,8 @@ class OrganizationController extends AppController
         $map['password'] = md5($password);
         $user = M('OrganizationAdmin')->where($map)->find();
         if($user){
+            /*$org_model = M('Organization');
+            $org_model->where('status=1 and id=')*/
             $auth = array(
                 'uid' => $user['id'],
                 'mobile' => $user['mobile'],
