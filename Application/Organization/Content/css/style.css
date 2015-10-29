@@ -1411,7 +1411,12 @@ body {
 .basicinfo-body .form-group textarea {
   width: 694px;
 }
-.basicinfo-body #SubmitBtn {
+.basicinfo-body .form-group .basicFormInfoError label {
+  font-weight: normal;
+  font-size: 12px;
+  color: #f5a623;
+}
+.basicinfo-body #submitBasicInfo {
   height: 40px;
   width: 115px;
 }
@@ -1457,18 +1462,18 @@ body {
   font-size: 16px;
   padding-left: 20px;
 }
-.headerAddBtn {
+.teacherHeader .headerAddBtn {
   margin-left: 80px;
   height: 32px;
   width: 82px;
 }
-.editTeacher {
+.teacherHeader .editTeacher {
   float: right;
   margin-right: 20px;
   color: #f7be5b;
   cursor: pointer;
 }
-.editTeacher:hover {
+.teacherHeader .editTeacher:hover {
   color: #F0BE67;
 }
 .groupItemHeader {
@@ -1528,14 +1533,6 @@ body {
   -moz-box-shadow: 0 0 5px #999999;
   box-shadow: 0 0 5px #999999;
 }
-.addGroupCon > div {
-  width: 195px;
-  height: 20px;
-  margin: 0 auto;
-  padding-top: 16px;
-  color: #666666;
-  font-size: 16px;
-}
 .addGroupCon .addGroupBtn {
   margin-right: 13px;
   float: left;
@@ -1545,6 +1542,14 @@ body {
   border: 1px solid #666666;
   text-align: center;
   font-weight: bold;
+}
+.addGroupCon > div {
+  width: 195px;
+  height: 20px;
+  margin: 0 auto;
+  padding-top: 16px;
+  color: #666666;
+  font-size: 16px;
 }
 .addGroupDetailCon {
   display: none;
@@ -1557,31 +1562,30 @@ body {
 .addGroupDetailCon .gAddBtn {
   cursor: pointer;
 }
-#newGroupName {
+.addGroupDetailCon #newGroupName {
   height: 17px;
   width: 195px;
   margin: 0 30px 0 10px;
   display: inline;
 }
-#newGroupCommitBtn {
+.addGroupDetailCon #newGroupCommitBtn {
   height: 32px;
   width: 82px;
   line-height: 10px;
 }
-.newGroupCommitCal {
+.addGroupDetailCon .newGroupCommitCal {
   color: #848484;
   margin-left: 10px;
   cursor: pointer;
   font-size: 14px;
   font-weight: normal;
 }
-.errorInfo {
+.addGroupDetailCon .errorInfo {
   font-size: 14px;
   color: #F5A623;
   margin-left: 20px;
   display: none;
 }
-/*模态窗口*/
 .cornerModelBoxBg {
   position: absolute;
   top: 0;
@@ -1595,8 +1599,6 @@ body {
   z-index: 20000;
 }
 .cornerModelBox {
-  /*width: 544px;*/
-  /*min-height: 318px;*/
   background-color: #FAFAFA;
   box-shadow: 0 0 25px #AAAAAA;
   border-radius: 3px;
@@ -1679,42 +1681,6 @@ body {
 .addNewTeacherItem .addNewTeacherHeader {
   height: 60px;
   line-height: 60px;
-}
-.addNewTeacherItem .selectedBox {
-  display: none;
-  position: absolute;
-  width: 374px;
-  background-color: #fafafa;
-  -webkit-box-shadow: 0 0 6px #848484;
-  -moz-box-shadow: 0 0 6px #848484;
-  box-shadow: 0 0 6px #848484;
-  height: 185px;
-  overflow: auto;
-}
-.addNewTeacherItem .selectedBox ul {
-  padding: 0px;
-}
-.addNewTeacherItem .selectedBox ul li {
-  list-style: none;
-  padding: 5px 12px;
-  height: 36px;
-  cursor: pointer;
-  border-bottom: 1px solid #cccccc;
-}
-.addNewTeacherItem .selectedBox ul li:hover {
-  background-color: #e2e3e3;
-}
-.addNewTeacherItem .selectedBox ul li img {
-  width: 35px;
-  height: 35px;
-  border-radius: 35px;
-  float: left;
-}
-.addNewTeacherItem .selectedBox ul li span {
-  font-size: 13px;
-  float: left;
-  margin-left: 10px;
-  line-height: 35px;
 }
 .addNewTeacherItem #addNewTeacherInput {
   width: 350px;
@@ -1849,30 +1815,30 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   margin-left: 4px;
   line-height: 15px;
 }
-#studentWorksMainCon {
+.studentAndTeachCondition {
   padding: 25px;
 }
-#studentWorksMainCon li {
+.studentAndTeachCondition li {
   width: 244px;
   height: 235px;
 }
-#studentWorksMainCon li .worksItemHeader {
+.studentAndTeachCondition li .worksItemHeader {
   height: 183px;
 }
-#studentWorksMainCon li .worksItemHeader img {
+.studentAndTeachCondition li .worksItemHeader img {
   height: 183px;
   width: 100%;
 }
-#studentWorksMainCon li .worksItemBottom {
+.studentAndTeachCondition li .worksItemBottom {
   width: 90%;
   margin: 8px;
   height: 44px;
   overflow: hidden;
 }
-#studentWorksMainCon li .worksItemBottom p {
+.studentAndTeachCondition li .worksItemBottom p {
   color: #666666;
 }
-#studentWorksMainCon li .worksItemBottom textarea {
+.studentAndTeachCondition li .worksItemBottom textarea {
   width: 100%;
   border: none;
   resize: none;
@@ -1880,19 +1846,19 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   background-color: #F3F6FF;
   display: none;
 }
-#studentWorksMainCon li .worksFooter {
+.studentAndTeachCondition li .worksFooter {
   padding-top: 2px;
 }
-#studentWorksMainCon li .worksFooter .videoFooterLeft {
+.studentAndTeachCondition li .worksFooter .videoFooterLeft {
   width: 47%;
   float: left;
 }
-#studentWorksMainCon li .worksFooter .videoFooterRight {
+.studentAndTeachCondition li .worksFooter .videoFooterRight {
   width: 47%;
   float: right;
   text-align: right;
 }
-#studentWorksMainCon li .worksFooter span {
+.studentAndTeachCondition li .worksFooter span {
   float: left;
   color: #999999;
   font-size: 12px;
@@ -2100,10 +2066,41 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   margin-right: 10px;
   background-position: -45px -55px;
 }
+/*
+Uploadify
+Copyright (c) 2012 Reactive Apps, Ronnie Garcia
+Released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
+*/
 .uploadify {
   position: relative;
   margin-bottom: 1em;
 }
+/*.uploadify-button {
+	background-color: #505050;
+	background-image: linear-gradient(bottom, #505050 0%, #707070 100%);
+	background-image: -o-linear-gradient(bottom, #505050 0%, #707070 100%);
+	background-image: -moz-linear-gradient(bottom, #505050 0%, #707070 100%);
+	background-image: -webkit-linear-gradient(bottom, #505050 0%, #707070 100%);
+	background-image: -ms-linear-gradient(bottom, #505050 0%, #707070 100%);
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, #505050),
+		color-stop(1, #707070)
+	);
+	background-position: center top;
+	background-repeat: no-repeat;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	border: 2px solid #808080;
+	color: #FFF;
+	font: bold 12px Arial, Helvetica, sans-serif;
+	text-align: center;
+	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+	width: 100%;
+}*/
 .uploadify:hover .uploadify-button {
   background-color: #606060;
   background-image: linear-gradient(top, #606060 0%, #808080 100%);
