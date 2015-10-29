@@ -153,6 +153,7 @@ class InspirationController extends AppController {
         } else {
             $favorite['create_time'] = time();
             if (D('Favorite')->where($favorite)->add($favorite)) {
+                M('Inspiration')->where('id='.$id)->setInc('favorite_count');
                 $this->apiSuccess('感谢您的支持');
             } else {
                 $this->apiError(-101,'写入数据库失败!');
@@ -180,6 +181,7 @@ class InspirationController extends AppController {
             $this->apiError(-102,'您还没有收藏，不能取消收藏!');
         } else {
             if (D('Favorite')->where($favorite)->delete()) {
+                M('Inspiration')->where('id='.$id)->setDec('favorite_count');
                 $this->clearCache($favorite,'favorite');
                 $this->apiSuccess('取消收藏成功');
             } else {

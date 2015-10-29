@@ -1,5 +1,3 @@
-
-
 $(function () {
     var uid = $('#uid').val();
     getData(uid,true);
@@ -10,7 +8,7 @@ function getData(Uid,Api){
         type: "GET",
         url: "api.php?s=/user/getResumeProfile/uid/" + Uid + "/api/"+Api,
         dataType: "json",
-        success: function(data) {
+        success: function(data) { 
             getDataFu(data.info);
         },    
     });
@@ -37,6 +35,15 @@ function userInfo(DataInfo) {
     info.find(".user-tool").append(userSkills(DataInfo.skills));
 }
 
+//
+function Judge(data){
+    if (data === undefined) {
+        return " ";
+    }else{
+        return data;
+    }
+}
+
 //ext
 function extInfo (DataExt) {
     var College,Major;
@@ -46,6 +53,9 @@ function extInfo (DataExt) {
            College = DataExt[i].field_content;
         }else if(DataExt[i].field_name == "major"){
            Major = DataExt[i].field_content;
+        }else{
+            College = "";
+            Major = "";
         }
     };
     $(".education").append(ListExper(College,Major));
@@ -55,44 +65,79 @@ function extInfo (DataExt) {
 function UserSpot (userSpot) {
     var DateSpot = userSpot.lightspot;
     var DateStrengths = userSpot.extinfo;
-    for (var i = DateSpot.length - 1; i >= 0; i--) {
-        $(".user-spot").append(SpanSpot(DateSpot[i].value));
-    };
-    for (var i = DateStrengths.length - 1; i >= 0; i--) {
-        
-        if (DateStrengths[i].field_name == "my_strengths") {
-           $(".my-strengths").html(DateStrengths[i].field_content);
+    var num = 0;
+    if (DateSpot === undefined) {
+        for (var i = DateStrengths.length - 1; i >= 0; i--) {
+            
+            if (DateStrengths[i].field_name == "my_strengths") {
+               $(".my-strengths").html(DateStrengths[i].field_content);
+            }
+
+        };
+    }else{
+        for (var i = DateSpot.length - 1; i >= 0; i--) {
+            num = NumSpot(DateSpot[i].value.length,num);
+            $(".user-spot").append(SpanSpot(DateSpot[i].value,num));
+        };
+        for (var i = DateStrengths.length - 1; i >= 0; i--) {
+            
+            if (DateStrengths[i].field_name == "my_strengths") {
+               $(".my-strengths").html(DateStrengths[i].field_content);
+            }
         };
     };
 }
 
+//NumSpot
+function NumSpot(data,num){
+    var dataNum = data + num;
+    if (dataNum > 8) {
+        return 0;
+    }else{
+        return dataNum;
+    }
+}
+
 //Experience
 function Experience (DataExper) {
-    for (var i = DataExper.length - 1; i >= 0; i--) {
-        var namedepar = DataExper[i].company_name+DataExper[i].department;
-        $(".experience").append(ListExperFu(namedepar,DataExper[i].start_time,DataExper[i].end_time,DataExper[i].job_content));
-    };
+    if (DataExper === undefined) {
+        return "";
+    }else{
+        for (var i = DataExper.length - 1; i >= 0; i--) {
+            var namedepar = Judge(DataExper[i].company_name)+Judge(DataExper[i].department);
+            $(".experience").append(ListExperFu(namedepar,Judge(DataExper[i].start_time),Judge(DataExper[i].end_time),Judge(DataExper[i].job_content)));
+        };
+    }
 }
 
 //Works
 function WorksIMG (DataIMG) {
-    for (var i = DataIMG.length - 1; i >= 0; i--) {
-        $(".works-img").append("<img src='"+DataIMG[i].src+"'alt=''>");
-    };
+    if (DataIMG === undefined) {
+        return "";
+    }else{
+        for (var i = DataIMG.length - 1; i >= 0; i--) {
+            $(".works-img").append("<img src='"+DataIMG[i].src+"'alt=''>");
+        };
+    }
 }
 
 //SexAge
 function SexAge (sex,age) {
-    return userSex(sex)+" "+userAge(age)+"岁";
+    return userSex(Judge(sex))+" "+userAge(age);
 }
 
 //MobileEmail
 function MobileEmail (mobile,email) {
-    return mobile+" "+email;
+    return Judge(mobile)+" "+Judge(email);
 }
 
-function SpanSpot (Spot) {
-    return "<span class='"+ColorClass()+"'>"+Spot+"</span>";
+function SpanSpot (Spot,num) {
+    if (num == 0) {
+        return "<span class='"+ColorClass()+"' style='white-space: nowrap; display: inline;vertical-align: baseline; line-height: 3em;'>"+Spot+"</span></br>";
+    }else{
+        return "<span class='"+ColorClass()+"' style='white-space: nowrap; display: inline;vertical-align: baseline;  line-height: 3em;'>"+Spot+"</span>";
+    }
+    
 }
 
 //ListExper
@@ -105,14 +150,14 @@ function ListExperFu (NameDepar,Stime,Etime,Jcontent) {
 
 //ListExper
 function ListExper (NameDepar,Jcontent) {
-    if (NameDepar.length > 7 || Jcontent.length >7) {
-        var NameDepar = "<li class='user-company'style='width: 100%;'>"+NameDepar+"</li>";
-        var Time = "<li class='user-time' style='width: 100%;text-align: left;'>"+Jcontent+"</li>";
-    }else{
-        var NameDepar = "<li class='user-company'>"+NameDepar+"</li>";
-        var Time = "<li class='user-time'>"+Jcontent+"</li>";
-    }
 
+    if ((NameDepar.length + Jcontent.length) >20) {
+        var NameDepar = "<li class='user-company'style='width: 100%; text-align: center;margin-bottom: 1em;'>"+NameDepar+"</li>";
+        var Time = "<li class='user-time' style='width: 100%; text-align: center;'>"+Jcontent+"</li>";
+    }else{
+        var NameDepar = "<li class='user-company' style='width: 100%;'>"+NameDepar;
+        var Time = "<span class='user-time' style='float: right;color: #999;'>"+Jcontent+"</span></li>";
+    }
     return "<li><ul class='user-empiric'>"+NameDepar+Time+"</ul></li>";
 }
 
@@ -151,7 +196,7 @@ function ePosition (Dataposi) {
            return " "+Dataposi[i].field_content;
         };
     };
-    return null;
+    return "";
 }
 
 //性别
@@ -169,23 +214,33 @@ function userSex (DataSex) {
             sex = "女"; 
             break;
         default:
-            return 0;
+            return "";
     }
     return sex;
 }
 //年龄
 function userAge (DataAge) {
-    var timeObject = new Date();
-    var userYear = parseInt(DataAge.substr(0,4));
-    var wYear = timeObject.getFullYear();
-    var sex = wYear-userYear;
-    return sex;
+    if (DataAge === undefined) {
+        return "";
+    }else{
+        var timeObject = new Date();
+        var userYear = parseInt(DataAge.substr(0,4));
+        var wYear = timeObject.getFullYear();
+        var sex = wYear-userYear;
+        return sex+"岁";
+    };
 }
 
 //技能
 function userSkills (DataSkills) {
-    for (var i = DataSkills.length - 1; i >= 0; i--) {
-        $(".user-tool").append("<img src="+"'h5resume/img/tool/"+DataSkills[i].value+".png'"+">");
-    };
+
+    if (DataSkills === undefined) {
+        return "";
+    }else{
+       for (var i = DataSkills.length - 1; i >= 0; i--) {
+            $(".user-tool").append("<img src="+"'h5resume/img/tool/"+DataSkills[i].value+".png'"+">");
+        };
+    }
+    
     
 }

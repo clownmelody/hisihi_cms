@@ -11,6 +11,7 @@ namespace App\Controller;
 use Addons\Avatar\AvatarAddon;
 use Think\Controller;
 use Think\Exception;
+use Think\Hook;
 use Think\Model;
 
 
@@ -204,14 +205,11 @@ class OrganizationController extends AppController
 
         /* 记录图片信息 */
         if($info){
-            unset($info['picture']['type']);
-            unset($info['picture']['url']);
-            unset($info['picture']['md5']);
-            unset($info['picture']['sha1']);
-            unset($info['picture']['status']);
-            unset($info['picture']['create_time']);
-            $extra = $info['picture'];
-            $this->apiSuccess("上传Logo成功",null,array(pictures=>"http://mengkang.net/183.html"));
+            $extra['logo'] = array(
+                'id'=>$info['picture']['id'],
+                'path'=>$info['picture']['path']
+            );
+            $this->apiSuccess("上传Logo成功",null,$extra);
         } else {
             $this->apiError(-1,"上传Logo失败，".$Picture->getError());
         }
@@ -376,17 +374,38 @@ class OrganizationController extends AppController
      * 学生作品添加或删除
      * @param null $organization_id
      * @param null $pic_id
-     * @param null $type  'add' or 'delete'
+     * @param null $description
+     * @param string $type
      */
-    public function studentWorks($organization_id=null, $pic_id=null, $type='add'){
+    public function studentWorks($organization_id=null, $pic_id=null, $description=null, $type='add'){
         $this->requireAdminLogin();
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
+        $model = M('OrganizationResource');
         if('add'==$type){  // 添加学生作品
-
+            $data['type'] = 1;
+            $data['organization_id'] = $organization_id;
+            $data['pic_id'] = $pic_id;
+            $data['description'] = $description;
+            $data['create_time'] = time();
+            $res = $model->add($data);
+            if($res){
+                $this->apiSuccess('添加学生作品成功');
+            } else {
+                $this->apiError(-1, '添加学生作品失败');
+            }
         } else {  // 删除学生作品
-
+            $data['status'] = -1;
+            $map['type'] = 1;
+            $map['organization_id'] = $organization_id;
+            $map['pic_id'] = $pic_id;
+            $res = $model->where($map)->save($data);
+            if($res){
+                $this->apiSuccess('删除学生作品成功');
+            } else {
+                $this->apiError(-1, '删除学生作品失败');
+            }
         }
     }
 
@@ -394,22 +413,91 @@ class OrganizationController extends AppController
      * 机构环境图片添加或删除
      * @param null $organization_id
      * @param null $pic_id
+     * @param null $description
      * @param string $type
      */
-    public function organizationEnvironment($organization_id=null, $pic_id=null, $type='add'){
+    public function organizationEnvironment($organization_id=null, $pic_id=null, $description=null, $type='add'){
         $this->requireAdminLogin();
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
-        if('add'==$type){  // 添加环境图片
-
-        } else {  // 删除环境图片
-
+        $model = M('OrganizationResource');
+        if('add'==$type){
+            $data['type'] = 2;
+            $data['organization_id'] = $organization_id;
+            $data['pic_id'] = $pic_id;
+            $data['description'] = $description;
+            $data['create_time'] = time();
+            $res = $model->add($data);
+            if($res){
+                $this->apiSuccess('添加机构环境图片成功');
+            } else {
+                $this->apiError(-1, '添加机构环境图片失败');
+            }
+        } else {
+            $data['status'] = -1;
+            $map['type'] = 2;
+            $map['organization_id'] = $organization_id;
+            $map['pic_id'] = $pic_id;
+            $res = $model->where($map)->save($data);
+            if($res){
+                $this->apiSuccess('删除机构环境图片成功');
+            } else {
+                $this->apiError(-1, '删除机构环境图片失败');
+            }
         }
     }
 
     /**
+     * 获取学生作品
+     * @param null $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function getStudentWorks($organization_id=null, $page=1, $count=12){
+        $model = M('OrganizationResource');
+        $map['organization_id'] = $organization_id;
+        $map['type'] = 1;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $list = $model->field('pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        foreach ($list as &$work) {
+            $pic_id = $work['pic_id'];
+            $work['url'] = $this->fetchImage($pic_id);
+            unset($work['pic_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构学生作品成功', null, $extra);
+    }
+
+    /**
+     * 获取机构环境图片
+     * @param null $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function getOrganizationEnvironment($organization_id=null, $page=1, $count=12){
+        $model = M('OrganizationResource');
+        $map['organization_id'] = $organization_id;
+        $map['type'] = 2;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $list = $model->field('pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        foreach ($list as &$work) {
+            $pic_id = $work['pic_id'];
+            $work['url'] = $this->fetchImage($pic_id);
+            unset($work['pic_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构环境图片成功', null, $extra);
+    }
+
+    /**
      * 获取所有老师列表
+     * @param int $page
+     * @param int $count
      */
     public function teachersList($page=1, $count=10){
         $model = M('AuthGroupAccess');
@@ -626,9 +714,91 @@ class OrganizationController extends AppController
         if($result){
             $extra['data'] = $result;
             $this->apiSuccess('获取视频分类列表成功', null, $extra);
-        }else{
+        } else {
             $this->apiError(-1,"获取视频分类列表失败");
         }
+    }
+
+    /**
+     * 添加机构课程
+     * @param null $title
+     * @param null $content
+     * @param null $img
+     * @param null $lecturer
+     * @param null $auth
+     */
+    public function addCourse($organization_id=null, $title=null, $content=null, $img=null, $lecturer=null, $auth=null){
+        $model = M('OrganizationCourse');
+        $data['organization_id'] = $organization_id;
+        $data['title'] = $title;
+        $data['content'] = $content;
+        $data['img'] = $img;
+        /*
+         * 需要添加图片到oss
+         */
+        $data['lecturer'] = $lecturer;
+        $data['auth'] = $auth;
+        $result = $model->add($data);
+        if($result){
+            $this->apiSuccess('添加课程成功');
+        } else {
+            $this->apiError(-1, '保存课程信息失败');
+        }
+    }
+
+    /**
+     * 获取当前机构的所有课程
+     * @param null $organization_id
+     */
+    public function getCourses($organization_id=null){
+        $model = M('OrganizationCourse');
+        $config_model = M("OrganizationConfig");
+        $map['organization_id'] = $organization_id;
+        $map['status'] = 1;
+        $course_list = $model->field('id, title, content, img, category_id, lecturer, auth, create_time')->where($map)->select();
+        $video_course = array();
+        foreach($course_list as &$course){
+            $category_id = $course['category_id'];
+            $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
+            if($category){
+                $course['category_name'] = $category['value'];
+            }
+            $course['url'] = $this->fetchImage($course['img']);
+        }
+        $extra['data'] = $video_course;
+        $this->apiSuccess('获取所有课程成功', null, $extra);
+    }
+
+    /**
+     * 获取课程下视频列表
+     * @param null $course_id
+     */
+    public function getCourseVideoList($course_id=null){
+        if(empty($course_id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $model = M('OrganizationCourse');
+        $video_model = M('OrganizationVideo');
+        $config_model = M("OrganizationConfig");
+        $member_model = M("Member");
+        $map['id'] = $course_id;
+        $map['status'] = 1;
+        $course = $model->field('id, title, content, img, category_id, lecturer, auth')->where($map)->find();
+        $category_id = $course['category_id'];
+        $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
+        if($category){
+            $course['category_name'] = $category['value'];
+        }
+        $teacher_id = $course['lecturer'];
+        $teacher = $member_model->where('status=1 and uid='.$teacher_id)->find();
+        $course['teacher_name'] = $teacher['nickname'];
+        $course_id = $course['id'];
+        $v_map['course_id'] = $course_id;
+        $v_map['status'] = 1;
+        $video_list = $video_model->field('id, name, view_count, create_time')->where($v_map)->select();
+        $course['video'] = $video_list;
+        $extra['data'] = $course;
+        $this->apiSuccess('获取课程视频列表成功', null, $extra);
     }
 
     /**
@@ -666,6 +836,48 @@ class OrganizationController extends AppController
             $extraData['isExist'] = true;
             $this->apiSuccess("该手机号已注册", null, $extraData);
         }
+    }
+
+    /**
+     * 上传图片到OSS
+     * @param $picID
+     */
+    private function uploadLogoPicToOSS($picID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$picID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            }
+        }
+    }
+
+    /**
+     * 获取图片地址
+     * @param $pic_id
+     * @return null|string
+     */
+    private function fetchImage($pic_id){
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            }
+        }
+        return $picUrl;
     }
 
     /**

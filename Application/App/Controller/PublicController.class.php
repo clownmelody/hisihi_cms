@@ -373,7 +373,6 @@ class PublicController extends AppController {
         $Article = D('Blog/Article', 'Logic');
 
         //获取当前分类下的文章
-        //$info = $Document->field('id,title,description,display,view,comment,create_time,update_time,cover_id')->find($id);
         $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
         if(empty($info)){
             $this->apiError(-1, "id不存在");
@@ -532,8 +531,8 @@ class PublicController extends AppController {
             $topic['logo_pic'] = $this->getSourceLogoPic($did);
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage_other($topic['cover_id']);
-            $topic['content_url'] = 'http://www.hisihi.com/app.php/public/companybanner/id/'.$topic['id'];
-            $topic['share_url'] = 'http://www.hisihi.com/app.php/public/companybanner/id/'.$topic['id'];
+            $topic['content_url'] = 'http://115.28.72.197/app.php/public/companybanner/id/'.$topic['id'];
+            $topic['share_url'] = 'http://115.28.72.197/app.php/public/companybanner/id/'.$topic['id'];
             unset($topic['uid']);
             unset($topic['name']);
             unset($topic['category_id']);

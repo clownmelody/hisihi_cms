@@ -98,10 +98,11 @@ class PdfUtils
 			}
 		}
 
-		$my_highlights = json_decode(stripslashes($my_highlights), true);
+		//$my_highlights = json_decode(stripslashes($my_highlights), true);
+		$my_highlights = $profile['info']['lightspot'];
 		$highlights = null;
-		foreach($my_highlights as $light) {
-			$str = '<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;">' . $light["value"] . '</span>';
+			foreach($my_highlights as $light) {
+			$str = '<span style="margin-right: 24px;background: #e5e5e5;border-radius: 50px;padding: 3px 8px;color: #666;">' . $light->value . '</span>';
 			$highlights = $highlights . $str . "&nbsp;&nbsp;";
 		}
 
@@ -121,7 +122,7 @@ class PdfUtils
 		$work_list = $profile['info']['works'];     //  用户作品
 		$work_list_ele = null;
 		foreach($work_list as $work){
-			$str =  '<img src="'. $work['src'] .'" style="width:526px;margin-bottom: 20px;">';
+			$str =  '<img src="'. $work['src'] .'" style="width:526px;margin-bottom: 20px;" ><br>';
 			$work_list_ele = $work_list_ele . $str;
 		}
 
@@ -180,9 +181,10 @@ part1;
 <div class="box img" style="padding: 40px 39px;border-bottom: 1px solid #D8D9DB;padding-bottom: 50px;position: relative;">
 			<p class="title" style="font-size: 14px;color: #666;margin-bottom: 24px;font-weight: bold;">作品展示</p>
 part1;
+		$html = $html.$work_list_ele."</div>";
 		$this->pdf->writeHTML($html, true, false, true, true);
 
-		$this->pdf->writeHTML($work_list_ele, true, false, true, true);
+		//$this->pdf->writeHTML($work_list_ele, true, false, true, true);
 
 		$html = <<<part1
 <div class="foot" style="position: absolute; bottom: -60px;left: 0;right: 0;text-align: center;">
