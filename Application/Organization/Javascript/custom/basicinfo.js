@@ -13,22 +13,22 @@
 		this.loadBasicData();  //显示基本信息
 		this.initJcropParas();
 		this.initUploadify();  //头像上传插件初始化
+		this.validate=this.getFormValidity();
 
  	    //事件注册
  	    var that=this;
  	    this.$wrapper.on('focus','input',$.proxy(this,'getNameFocus'));
- 	    //this.$wrapper.on('blur','input',$.proxy(this,'getNameBlur'));
- 	    this.$wrapper.on('click','#SubmitBtn',$.proxy(this,'submitBaseInfo'));
+ 	    this.$wrapper.on('click','#submitBasicInfo',$.proxy(this,'submitBaseInfo'));
  	    this.$wrapper.on('click','#addtags',$.proxy(this,'AddTags'));
-		$('#dataImportFileInput').change(function (e) {
-			that.uploadNewImg.call(that,e);
-		});
 
 		this.$wrapper.on('click',".recommend-box .box-tag .label",function () {
 			var txt = $(this).html();
 			$(this).remove();
 			$(".tag-open").append("<span class='label label-primary'>"+txt+"<a href='javaScript: void(0);' onclick='$(this).parent().remove();' class='box-add' id='box-add'><span class='icon-add'>&#215;</span></a></span>");
 		});
+
+		//机构基本确认提交
+		this.$wrapper.on('click','#addtags',$.proxy(this,'AddTags'));
 
 		//上传头像
 		this.$wrapper.on('click',"#UploadImg", function () {
@@ -42,52 +42,6 @@
 		});
 
  	};
-
-
-
- 	$("#myFile").change(function () {
- 	    var filepath = $("input[name='myFile']").val();
- 	    console.log(filepath);
- 	    var extStart = filepath.lastIndexOf(".");
- 	    console.log(extStart);
- 	    var ext = filepath.substring(extStart, filepath.length).toUpperCase();
- 	    console.log(ext);
- 	    if (ext != ".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG") {
- 	        alert("图片限于bmp,png,gif,jpeg,jpg格式");
- 	        $("#fileType").text("")
- 	        $("#fileSize").text("");
- 	        return false;
- 	    } else { $("#fileType").text(ext) }
- 	    var file_size = 0;
- 	    if ($.browser.msie) {
- 	        var img = new Image();
- 	        img.src = filepath;
- 	        while (true) {
- 	            if (img.fileSize > 0) {
- 	                if (img.fileSize > 3 * 1024 * 1024) {
- 	                    alert("图片不大于100MB。");
- 	                } else {
- 	                    var num03 = img.fileSize / 1024;
- 	                    num04 = num03.toFixed(2)
- 	                    $("#fileSize").text(num04 + "KB");
- 	                }
- 	                break;
- 	            }
- 	        }
- 	    } else {
- 	        file_size = this.files[0].size;
- 	        var size = file_size / 1024;
- 	        if (size > 10240) {
- 	            alert("上传的图片大小不能超过10M！");
- 	        } else {
- 	            var num01 = file_size / 1024;
- 	            num02 = num01.toFixed(2);
- 	            $("#fileSize").text(num02 + " KB");
- 	        }
- 	    }
- 	    return true;
- 	});
-	
 
  	BasicInfo.prototype={
 
@@ -125,58 +79,18 @@
  		},
 
 		submitBaseInfo:function(){
-			this.$wrapper.find('#basicForm').ajaxSubmit({
-				//type:'post',
-				//url:'http://127.0.0.1:8080/hisihi-cms/api.php?s=/Organization/login',
-				url: window.urlObject.apiUrl + '/saveBaseInfo',
-				success: function (data) {
+			if(this.validate.form()) {
+				this.$wrapper.find('#basicForm').ajaxSubmit({
+					//type:'post',
+					//url:'http://127.0.0.1:8080/hisihi-cms/api.php?s=/Organization/login',
+					url: window.urlObject.apiUrl + '/saveBaseInfo',
+					success: function (data) {
 
-				}
-			});
+					}
+				});
+			}
  		},
 
-		//上传头像图片
-		uploadNewImg:function(e){
-
-			/*是否正在上图片*/
-			var $obj = $(e.currentTarget),
-				that=this,
-				value = $obj.val();
-			this.$wrapper.find('#photoErrorInfo').text('').hide();
-			if (value == '') {
-				$('#photoErrorInfo').text('请选择图片！').show();
-				return;
-			}
-			$('#userPhotoForm').ajaxSubmit({
-				url: that.basicApiUrl + '/uploadLogo',
-				type: 'post',
-				beforeSubmit: function () {
-					var ss = '';
-				},
-				complete: function (data) {
-					var text = data.responseText;
-					if ('公有账号只能查看哦' == text) {
-						$('#photoErrorInfo').text(text).show();
-						$('#photoSuggestInfo').hide();
-					}
-					else {
-						data = JSON.parse(data.responseText);
-						if (data.success) {
-							//显示上传图片，并准备裁剪
-							that.uploadPhotoSuccessCallBack.call(that, data);
-						}
-						else {
-							$('#photoErrorInfo').text(data.error).show();
-							$('#photoSuggestInfo').hide();
-						}
-					}
-				},
-				error: function (e) {
-
-				}
-			});
-
-		},
 
 		/*裁剪插件初始化*/
 		initializeCrop: function ($img) {
@@ -248,6 +162,9 @@
 			this.imgBoxNewInfo={width:231,height:240};
 		},
 
+		/*
+		*初始化头像上传插件
+		 */
 		initUploadify:function() {
 			var that=this;
 			$("#upload_company_picture").uploadify({
@@ -282,8 +199,45 @@
 			}
 		},
 
+		//表单验证
+		getFormValidity:function(){
+			return $("#basicForm").validate({
+				rules: {
+					name: {
+						required: true,
+					},
+					slogan: {
+						required: true,
+					},
+					location: {
+						required: true,
+					},
+					phone_num:{
+						required: true,
+					}
+				},
+				messages: {
+					name: "请输入姓名",
+					email: {
+						required: "签名不能为空",
+					},
+					location: {
+						required: "地址不能为空",
+					},
+					phone_num:{
+						required: "联系方式不能为空",
+					}
+				},
+				errorPlacement: function (error, element) {
+					error.appendTo(element.next('.basicFormInfoError'));
+				}
+			});
+		},
+
 
  	};
+
+
 	 var $wrapper=$('.basicinfoWrapper');
 	 if($wrapper.length>0) {
 		  new BasicInfo($wrapper);

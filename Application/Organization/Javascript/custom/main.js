@@ -9,6 +9,7 @@ require.config({
         'jqueryui': ['jquery'],
         'jqueryJcrop':['jquery'],
         'jqueryuploadify':['jquery'],
+        'jqueryvalidate':['jquery'],
     },
     paths: {
         jquery: 'libs/jquery-1.8.2.min',
@@ -17,6 +18,7 @@ require.config({
         jquerycookie:'libs/jquery.cookie',
         jqueryJcrop:'libs/jquery.Jcrop',
         jqueryuploadify:'libs/uploadify/jquery.uploadify.min',
+        jqueryvalidate:'libs/jquery.validate',
         util:'custom/util',
         menus: 'custom/menus',
         announcement: 'custom/announcement',
@@ -34,6 +36,7 @@ require([
     'jqueryform',
     'jquerycookie',
     'jqueryuploadify',
+    'jqueryvalidate',
     'util',
     'jqueryui',
     'jqueryJcrop',
