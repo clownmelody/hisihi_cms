@@ -229,6 +229,7 @@ class OrganizationController extends AppController
         $data['logo'] = $pic_id;
         $result = $model->where('id='.$organization_id)->save($data);
         if($result){
+            $this->uploadLogoPicToOSS($pic_id);
             $this->apiSuccess('修改机构logo成功');
         } else {
             $this->apiError(-1, '修改机构logo失败，请重试');
@@ -261,6 +262,7 @@ class OrganizationController extends AppController
         }
         if(!empty($logo)){
             $data['logo'] = $logo;
+            $this->uploadLogoPicToOSS($logo);
         }
         if(!empty($advantage)){
             $data['advantage'] = $advantage;
@@ -285,6 +287,33 @@ class OrganizationController extends AppController
             } else {
                 $this->apiError(-1, '修改机构基本信息失败，请重试');
             }
+        }
+    }
+
+    /**获取机构基本信息
+     * @param $organization_id
+     */
+    public function getBaseInfo($organization_id){
+        //$this->requireAdminLogin();
+        $model=M("Organization");
+        $result = $model->where(array('id'=>$organization_id))
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
+        if($result){
+            $logo_id = $result['logo'];
+            $result['logo']=array(
+                'id'=>$logo_id,
+                'url'=>$this->fetchImage($logo_id)
+            );
+            $advantage = explode("#",$result['advantage']);
+            $map['type']=2;
+            $map['status']=1;
+            $map['id'] = array('in',$advantage);
+            $list = M('OrganizationConfig')->field('id, value')->where($map)->select();
+            $result['advantage']=$list;
+            $extra['data'] = $result;
+            $this->apiSuccess("获取机构信息成功",null,$extra);
+        }else{
+            $this->apiError(-1,"获取机构信息失败");
         }
     }
 
