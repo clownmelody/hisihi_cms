@@ -433,6 +433,20 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 删除机构学生作品
+     * @param null $id
+     */
+    public function deleteStudentWorks($id=null){
+        if(empty($id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $model = M('OrganizationResource');
+        $data['status'] = -1;
+        $model->where('type=1 and id='.$id)->save($data);
+        $this->apiSuccess('删除学生作品成功');
+    }
+
+    /**
      * 获取机构环境图片
      * @param null $organization_id
      * @param int $page
@@ -453,6 +467,20 @@ class OrganizationController extends AppController
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取机构环境图片成功', null, $extra);
+    }
+
+    /**
+     * 删除机构环境图片
+     * @param null $id
+     */
+    public function deleteOrganizationEnvironment($id=null){
+        if(empty($id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $model = M('OrganizationResource');
+        $data['status'] = -1;
+        $model->where('type=2 and id='.$id)->save($data);
+        $this->apiSuccess('删除机构环境图片成功');
     }
 
     /**
@@ -711,12 +739,10 @@ class OrganizationController extends AppController
      */
     public function getCourses($organization_id=null){
         $model = M('OrganizationCourse');
-        $video_model = M('OrganizationVideo');
         $config_model = M("OrganizationConfig");
-        $member_model = M("Member");
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
-        $course_list = $model->field('id, title, content, img, category_id, lecturer, auth')->where($map)->select();
+        $course_list = $model->field('id, title, content, img, category_id, lecturer, auth, create_time')->where($map)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -724,18 +750,42 @@ class OrganizationController extends AppController
             if($category){
                 $course['category_name'] = $category['value'];
             }
-            $teacher_id = $course['lecturer'];
-            $teacher = $member_model->where('status=1 and uid='.$teacher_id)->find();
-            $course['teacher_name'] = $teacher['nickname'];
-            $course_id = $course['id'];
-            $v_map['course_id'] = $course_id;
-            $v_map['status'] = 1;
-            $video_list = $video_model->field('id, name, view_count, create_time')->where($v_map)->select();
-            $course['video'] = $video_list;
-            $video_course[] = $course;
+            $course['url'] = $this->fetchImage($course['img']);
         }
         $extra['data'] = $video_course;
         $this->apiSuccess('获取所有课程成功', null, $extra);
+    }
+
+    /**
+     * 获取课程下视频列表
+     * @param null $course_id
+     */
+    public function getCourseVideoList($course_id=null){
+        if(empty($course_id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $model = M('OrganizationCourse');
+        $video_model = M('OrganizationVideo');
+        $config_model = M("OrganizationConfig");
+        $member_model = M("Member");
+        $map['id'] = $course_id;
+        $map['status'] = 1;
+        $course = $model->field('id, title, content, img, category_id, lecturer, auth')->where($map)->find();
+        $category_id = $course['category_id'];
+        $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
+        if($category){
+            $course['category_name'] = $category['value'];
+        }
+        $teacher_id = $course['lecturer'];
+        $teacher = $member_model->where('status=1 and uid='.$teacher_id)->find();
+        $course['teacher_name'] = $teacher['nickname'];
+        $course_id = $course['id'];
+        $v_map['course_id'] = $course_id;
+        $v_map['status'] = 1;
+        $video_list = $video_model->field('id, name, view_count, create_time')->where($v_map)->select();
+        $course['video'] = $video_list;
+        $extra['data'] = $course;
+        $this->apiSuccess('获取课程视频列表成功', null, $extra);
     }
 
     /**
