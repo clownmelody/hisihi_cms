@@ -114,24 +114,21 @@
 
 			<div class="modal-body">
 				<div class="jcrop-box myModal-body-left">
-					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" id="myPicture" alt="[Jcrop Example]" />
+					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" id="myPicture" alt="img" />
 				</div>
 				<div class="myModal-body-right">
-					<!--<form id="userPhotoForm" class="cover-form">-->
+					<form id="userPhotoForm">
 						<!--<input type="button" class="btn brand-info" value="上传头像"/>-->
 						<!--<input type="file" name="picture" class="data-import-file" id="dataImportFileInput" size="28" accept=".jpg,.png" />-->
-					<!--</form>-->
-					<form action="http://localhost/hisihi-cms/api.php?s=/Organization/uploadLogo" methon="post"
-						  enctype ="multiparty/form-data">
-						<label for="file">FileName:</label>
-						<input type="file" name="file" id="file"/>
-						<br/>
-						<input type="submit" name="submit" value="Submit"/>
+
+						<input type="file" id="upload_company_picture" class="btn brand-info" value="上传头像">
+						<input type="hidden" name="picture" id="cover_id_company"/>
+						<!--<div class="upload-img-box">-->
+							<!--<notempty name="data[$field['name']]">-->
+								<!--<div class="upload-pre-item"></div>-->
+							<!--</notempty>-->
+						<!--</div>-->
 					</form>
-					<!--<form type="post" action="http://localhost/hisihi-cms/api.php?s=/Organization/uploadLogo">-->
-						<!--<input type="submit" class="btn brand-info" value="上传头像"/>-->
-						<!--<input type="file" name="picture" class="" id="" size="28" accept=".jpg,.png" />-->
-					<!--</form>-->
 					<p id="photoErrorInfo"></p>
 				</div>
 				<div style="clear: both;"></div>

@@ -7,7 +7,8 @@ require.config({
     baseUrl:window.urlObject.js,
     shim: {
         'jqueryui': ['jquery'],
-        'jqueryJcrop':['jquery']
+        'jqueryJcrop':['jquery'],
+        'jqueryuploadify':['jquery'],
     },
     paths: {
         jquery: 'libs/jquery-1.8.2.min',
@@ -15,6 +16,7 @@ require.config({
         jqueryform:'libs/jquery.form',
         jquerycookie:'libs/jquery.cookie',
         jqueryJcrop:'libs/jquery.Jcrop',
+        jqueryuploadify:'libs/uploadify/jquery.uploadify.min',
         util:'custom/util',
         menus: 'custom/menus',
         announcement: 'custom/announcement',
@@ -30,6 +32,7 @@ require([
     'jquery',
     'jqueryform',
     'jquerycookie',
+    'jqueryuploadify',
     'util',
     'jqueryui',
     'jqueryJcrop',

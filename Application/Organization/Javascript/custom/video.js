@@ -116,7 +116,8 @@ define(['jquery','jqueryui'],function () {
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {organization_id:this.organization_id},
+                data: {},
+                org:true,
                 callback:function(data) {
                     that.showLessonInfo.call(that,data);
                 }
