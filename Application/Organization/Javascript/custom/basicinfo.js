@@ -4,7 +4,7 @@
 
  //基本信息
 
- define(['jquery','jqueryuploadify'],function () {
+ define(['jquery','jqueryuploadify','jqueryvalidate'],function () {
  	var BasicInfo = function ($wrapper) {
  	    this.$wrapper = $wrapper;
 		this.sectionId=JSON.parse($.cookie('hisihi-org')).session_id;
@@ -18,7 +18,7 @@
  	    //事件注册
  	    var that=this;
  	    this.$wrapper.on('focus','input',$.proxy(this,'getNameFocus'));
- 	    this.$wrapper.on('click','#submitBasicInfo',$.proxy(this,'submitBaseInfo'));
+ 	    this.$wrapper.on('click','#submitBasicInfoBtn',$.proxy(this,'submitBaseInfo'));
  	    this.$wrapper.on('click','#addtags',$.proxy(this,'AddTags'));
 
 		this.$wrapper.on('click',".recommend-box .box-tag .label",function () {

@@ -1416,7 +1416,7 @@ body {
   font-size: 12px;
   color: #f5a623;
 }
-.basicinfo-body #submitBasicInfo {
+#submitBasicInfoBtn {
   height: 40px;
   width: 115px;
 }
