@@ -33,7 +33,7 @@ define(['jquery','util','jqueryuploadify'],function () {
                 if(data.success) {
                     data = data.data;
                     that.$wrapper.cornerLoading('hideLoading');
-                    var str = that.showAllVideosInfo([data]);
+                    var str = that.showAllVideosInfo(data);
                     this.$wrapper.find('#allLessonVideoCon').html(str);
                 }else{
                     alert('数据加载失败！');
@@ -77,19 +77,24 @@ define(['jquery','util','jqueryuploadify'],function () {
          */
         showAllVideosInfo:function(data){
             var str='',
-                date,title='';
-            $.each(data,function(index){
-                date=new Date(parseFloat(this.update_time)* 1000).format('yyyy.MM.dd');
-                title=this.title;
+                date,title='',
+                allTitle=data.category_name + ' '+data.title;
+            if(allTitle.length>25){
+                allTitle=allTitle.substr(0,24)+'……';
+            }
+            this.$wrapper.find('#lessonDetailTitle').text(allTitle);
+            $.each(data.video,function(index){
+                date=new Date(parseFloat(this.create_time)* 1000).format('yyyy.MM.dd');
+                title=this.name;
                 if(title.length>27){
                     title=title.substr(0,26)+'……';
                 }
                 str+='<tr>'+
-                        '<th>'+parseInt(index+1)+'</th>'+
-                        '<td class="title" title="'+this.title+'">'+title+'</td>'+
-                        '<td class="time">2015-03-24-18:24</td>'+
+                        '<th>'+ parseInt(index+1)+'</th>'+
+                        '<td class="title" title="'+this.name+'">'+title+'</td>'+
+                        '<td class="time">'+date+'</td>'+
                         '<td>'+
-                        '<span class="icon icon-look"></span>' + Hisihi.getRandomNum(1024*2)+
+                            '<span class="icon icon-look"></span>' + this.view_count +
                         '</td>'+
                     '</tr>';
             });

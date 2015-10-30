@@ -140,6 +140,7 @@ define(['jquery','jqueryui','util'],function () {
                 that=this,
                 typeNameAndTile='',
                 tempTitle='';
+
             $.each(data,function(){
                 typeNameAndTile=this.typeName+' | '+this.title;
                 tempTitle=typeNameAndTile;
