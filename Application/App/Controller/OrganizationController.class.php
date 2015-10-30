@@ -137,6 +137,8 @@ class OrganizationController extends AppController
         $map['password'] = md5($password);
         $user = M('OrganizationAdmin')->where($map)->find();
         if($user){
+            /*$org_model = M('Organization');
+            $org_model->where('status=1 and id=')*/
             $auth = array(
                 'uid' => $user['id'],
                 'mobile' => $user['mobile'],
@@ -237,6 +239,36 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 裁剪图片
+     */
+    public function tailorPicture(){
+        /* 调用文件上传组件上传文件 */
+        $Picture = D('Admin/Picture');
+        $pic_driver = C('PICTURE_UPLOAD_DRIVER');
+        $info = $Picture->upload(
+            $_FILES,
+            C('PICTURE_UPLOAD'),
+            C('PICTURE_UPLOAD_DRIVER'),
+            C("UPLOAD_{$pic_driver}_CONFIG")
+        ); //TODO:上传到远程服务器
+        $path = $info['download']['path'];
+        $image = new \Think\Image();
+        $org_path = '.'. substr($path,11);
+        $image->open($org_path);
+        $crop_path = substr($org_path,0,strlen($org_path)-4).'_crop'.substr($org_path,-4);
+        $image->crop(50, 50,20,20)->save($crop_path);
+        //原图片路径
+        $info['org_path'] = $path;
+        //裁剪后图片路径
+        $info['crop_path'] = $crop_path;
+        $crop_md5 = md5_file($crop_path);
+        $crop_sha1 = sha1_file($crop_path);
+        //图片ID
+        $info['pic_id'] = $info['download']['id'];
+        $this->apiSuccess("裁剪成功",null,$info);
+    }
+
+    /**
      * 新增或修改机构基本信息
      * @param int $organization_id
      * @param null $name
@@ -273,7 +305,7 @@ class OrganizationController extends AppController
         if(!empty($phone_num)){
             $data['phone_num'] = $phone_num;
         }
-        if(!empty($organization_id)){  // 新增结构基本信息
+        if(!$organization_id){  // 新增结构基本信息
             $result = $model->data($data)->add();
             if($result){
                 $this->apiSuccess('添加机构基本信息成功');
@@ -294,7 +326,7 @@ class OrganizationController extends AppController
      * @param $organization_id
      */
     public function getBaseInfo($organization_id){
-        //$this->requireAdminLogin();
+        $this->requireAdminLogin();
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id))
             ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();

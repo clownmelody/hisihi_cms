@@ -427,8 +427,9 @@ class ForumController extends AdminController
         $builder = new AdminConfigBuilder();
         $builder->title('添加论坛置顶帖')
             ->keyId()->keyTitle()->keyEditor('content', '内容')
-            /*->keyRadio('is_top', '置顶', '选择置顶形式', array(0 => '不置顶', 1 => '本版置顶', 2 => '全局置顶'))*/
             ->keyText('top_type', '类型', '填写置顶或加精等')
+            ->keyRadio('is_out_link', '外链', '是否是展示外链', array(0 => 0, 1 => 1))
+            ->keyText('link_url', '外链链接', '填写跳转的外链链接')
             ->buttonSubmit(U('saveTopPost'))->buttonBack()
             ->display();
     }
@@ -437,13 +438,16 @@ class ForumController extends AdminController
      * 置顶帖保存
      * @param string $title
      * @param string $content
-     * @param string $type
+     * @param string $top_type
      * @param int $is_top
+     * @param int $is_out_link
+     * @param null $link_url
      */
-    public function saveTopPost($title = '', $content = '', $top_type = '置顶', $is_top = 1){
+    public function saveTopPost($title = '', $content = '', $top_type = '置顶', $is_top = 1, $is_out_link=0, $link_url=null){
         //写入数据库
         $model = D('Forum/ForumPost');
-        $data = array('title' => $title, 'content' => $content, 'type' => $top_type, 'is_top' => $is_top);
+        $data = array('title' => $title, 'content' => $content, 'type' => $top_type, 'is_top' => $is_top,
+            'is_out_link' => $is_out_link, 'link_url' => $link_url);
         $result = $model->createPost($data);
         //如果写入不成功，则报错
         if (!$result) {

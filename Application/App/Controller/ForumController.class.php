@@ -1353,10 +1353,16 @@ class ForumController extends AppController
 
     /**
      * 获取论坛置顶帖
+     * @param string $version
      */
-    public function forumTopPost(){
-        $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1')
-            ->order('create_time desc')->page(1, 3)->select();
+    public function forumTopPost($version='1.0'){
+        if((float)$version>=2.1){
+            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1')
+                ->order('create_time desc')->page(1, 3)->select();
+        } else {
+            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and is_out_link=0 and status=1')
+                ->order('create_time desc')->page(1, 3)->select();
+        }
         foreach($list as &$value){
             $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
             unset($value['uid']);
