@@ -29,7 +29,10 @@ class EmailUtils
     }
 
     function sendMail($email=null, $value=null){
-        if(!$value || !$email){
+		if(!$email){//简历统一发送到嘿设汇指定邮箱，再由人工手动发送到各公司
+			$email = "receive_resume@hisihi.com";
+		}
+        if(!$value){
             return false;
         }
         $this->mail->addAddress($email);
@@ -177,7 +180,7 @@ EOF;
 		<p class="main-txt">来自嘿设汇平台的设计师 <span class="blod">'.$value['nickname'].'</span> 向贵公司投递了一封 <span class="blod">'.$value['expected_position'].'</span> 职位的求职简历，相关简历详情请参考附件。</p>
 		<div class="user-resume">
 			<p class="resume-title">'.$value['nickname'].'的简历</p>
-			<p>'.$value['nickname'].' | '.$value['sex'].' | '.$value['age'].' | '.$value['expected_position'].'</p>
+			<p>'.$value['nickname'].' | '.$value['sex'].' | '.$value['age'].'岁 | '.$value['expected_position'].'</p>
 			<p>教育经历: '.$value['college'].'</p>
 			<p>联系方式: '.$value['mobile'].' | '.$value['email'].'</p>
 		</div>

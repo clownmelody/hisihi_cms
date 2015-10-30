@@ -12,7 +12,7 @@ function getData(Uid,Api){
             getDataFu(data.info);
         },    
     });
-};
+}; 
 
 //头像
 function  getDataFu(Data) {
@@ -37,7 +37,7 @@ function userInfo(DataInfo) {
 
 //
 function Judge(data){
-    if (data === undefined) {
+    if (data === undefined || data == null) {
         return " ";
     }else{
         return data;
@@ -66,7 +66,7 @@ function UserSpot (userSpot) {
     var DateSpot = userSpot.lightspot;
     var DateStrengths = userSpot.extinfo;
     var num = 0;
-    if (DateSpot === undefined) {
+    if (DateSpot === undefined || DateSpot == null) {
         for (var i = DateStrengths.length - 1; i >= 0; i--) {
             
             if (DateStrengths[i].field_name == "my_strengths") {
@@ -100,7 +100,7 @@ function NumSpot(data,num){
 
 //Experience
 function Experience (DataExper) {
-    if (DataExper === undefined) {
+    if (DataExper === undefined || DataExper == null )  {
         return "";
     }else{
         for (var i = DataExper.length - 1; i >= 0; i--) {
@@ -112,11 +112,11 @@ function Experience (DataExper) {
 
 //Works
 function WorksIMG (DataIMG) {
-    if (DataIMG === undefined) {
+    if (DataIMG === undefined || DataIMG == null ) {
         return "";
     }else{
         for (var i = DataIMG.length - 1; i >= 0; i--) {
-            $(".works-img").append("<img src='"+DataIMG[i].src+"'alt=''>");
+            $(".works-img").append("<img src='"+DataIMG[i].src+"'alt=''><br/>");
         };
     }
 }
@@ -220,7 +220,7 @@ function userSex (DataSex) {
 }
 //年龄
 function userAge (DataAge) {
-    if (DataAge === undefined) {
+    if (DataAge === undefined || DataAge == null ) {
         return "";
     }else{
         var timeObject = new Date();
@@ -234,7 +234,7 @@ function userAge (DataAge) {
 //技能
 function userSkills (DataSkills) {
 
-    if (DataSkills === undefined) {
+    if (DataSkills === undefined || DataSkills == null ) {
         return "";
     }else{
        for (var i = DataSkills.length - 1; i >= 0; i--) {
