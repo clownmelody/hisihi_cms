@@ -30,7 +30,8 @@ require.config({
         studentworks:'custom/studentworks',
         teachcondition:'custom/teachcondition',
         addnewlesson:'custom/addnewlesson',
-        certification:'custom/certification'
+        certification:'custom/certification',
+        detaillessoninfo:'custom/detaillessoninfo'
 }});
 
 require([
@@ -51,7 +52,8 @@ require([
     'studentworks',
     'teachcondition',
     'addnewlesson',
-    'certification'
+    'certification',
+    'detaillessoninfo'
 ]);
 
 
