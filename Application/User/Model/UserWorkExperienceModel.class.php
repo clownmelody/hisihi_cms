@@ -17,8 +17,8 @@ class UserWorkExperienceModel extends Model
     public function getUserWorkExperiences($uid){
         $result = $this->where('status=1 and uid='.$uid)->select();
         foreach($result as $key=>$value){
-            $value['start_time'] = time_format($value['start_time'],'Y年m月');
-            $value['end_time'] = time_format($value['end_time'],'Y年m月');
+            $value['start_time'] = time_format($value['start_time'],'Y年');
+            $value['end_time'] = time_format($value['end_time'],'Y年');
             $result[$key] = $value;
         }
         return $result;

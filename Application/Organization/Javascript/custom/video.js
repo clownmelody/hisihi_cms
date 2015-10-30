@@ -123,9 +123,13 @@ define(['jquery','jqueryui','util'],function () {
                 url: url,
                 data: {},
                 org:true,
-                callback:function(data) {
+                callback:function(result) {
                     that.$wrapper.cornerLoading('hideLoading');
-                    that.showLessonInfo.call(that,data);
+                    if(result.success) {
+                        that.showLessonInfo.call(that, result.data);
+                    }else{
+                        alert('数据加载失败');
+                    }
                 }
             });
         },
@@ -144,7 +148,7 @@ define(['jquery','jqueryui','util'],function () {
                 }
                 str+='<li class="normal" data-id="'+this.id+'">'+
                     '<div class="videoItemHeader">'+
-                    '<img src="'+this.imgSrc+'">'+
+                    '<img src="'+this.url+'">'+
                     '<i class="playBtn"></i>'+
                     '</div>'+
                     '<div class="videoItemBottom">'+
@@ -156,7 +160,7 @@ define(['jquery','jqueryui','util'],function () {
                     '</div>'+
                     '<div class="videoFooterRight">'+
                     '<i class="videoIcon videoViewedTimes"></i>'+
-                    '<span>'+this.viewedTime+'</span>'+
+                    '<span>'+ Hisihi.getRandomNum(1024*5)+'</span>'+
                     '</div>'+
                     '</div>'+
                     '</div>'+

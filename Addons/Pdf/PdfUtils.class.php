@@ -66,7 +66,7 @@ class PdfUtils
 		$cm=date('n');
 		$cd=date('j');
 		$age=date('Y')-$by-1;
-		if ($cm>$bm || $cm==$bm && $cd>$bd) $age++;
+		if ($cm>$bm || $cm==$bm && $cd>=$bd) $age++;
 
 		$extinfo_list = $profile['info']['extinfo'];
 		foreach($extinfo_list as $extinfo){
@@ -109,8 +109,10 @@ class PdfUtils
 		$experience_list = $profile['info']['experience'];  //  工作经历
 		$experience_list_ele = null;
 		foreach ($experience_list as &$experience) {
-			$start_time = date('Y-m-d', $experience['start_time']);
-			$end_time = date('Y-m-d', $experience['end_time']);
+//			$start_time = date('Y年', $experience['start_time']);
+//			$end_time = date('Y年', $experience['end_time']);
+			$start_time = $experience['start_time'];
+			$end_time = $experience['end_time'];
 			$time = $start_time.'--'.$end_time;
 			$str = '<p class="txt word" style="font-size: 12px;margin-bottom: 10px;font-weight: bold;color: #666;"><span>'.$time.'  </span><span>'.$experience["company_name"].'   '.$experience["department"].'</span></p><p class="txt" style="font-size: 12px;color: #999;">'.$experience['job_content'].'</p>';
 			$experience_list_ele = $experience_list_ele . $str;
@@ -135,7 +137,7 @@ class PdfUtils
         <td style="width: 18%;" rowspan="3"><img src="$avatar" alt="" class="user-img" style="width: 200px;margin-top:-10px;"></td>
     </tr>
     <tr style="line-height: 25px;text-align:justify;">
-        <td colspan="2" style="font-size: 12px;color: #666;margin-bottom: 24px;">$sex&nbsp;&nbsp;&nbsp;$age&nbsp;&nbsp;&nbsp;$expected_position</td>
+        <td colspan="2" style="font-size: 12px;color: #666;margin-bottom: 24px;">$sex&nbsp;&nbsp;&nbsp;$age&nbsp;岁&nbsp;&nbsp;&nbsp;$expected_position</td>
     </tr>
     <tr style="line-height: 30px;text-align:justify;">
        <td colspan="3" style="font-size: 12px;color: #666;margin-bottom: 24px;font-family:Arial,Verdana,Sans-serif;">$mobile&nbsp;&nbsp;&nbsp;$email</td>

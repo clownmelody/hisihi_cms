@@ -180,6 +180,16 @@ define(['jquery'],function () {
         }
     };
 
+    /*得到随机的整数*/
+    Hisihi.getRandomNum=function(max,min){
+        if(!min){
+            min=0;
+        }
+        var rand=max-min,
+            num=(Math.random()*rand)+min;
+        return Math.round(num);
+    };
+
 
 //提示等待插件
     ;

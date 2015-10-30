@@ -7,7 +7,7 @@ require.config({
     baseUrl:window.urlObject.js,
     shim: {
         'jqueryui': ['jquery'],
-        'jqueryJcrop':['jquery'],
+        //'jqueryJcrop':['jquery'],
         'jqueryuploadify':['jquery'],
         'jqueryvalidate':['jquery'],
         'util':['jquery'],
@@ -17,7 +17,7 @@ require.config({
         jqueryui:'libs/jquery-ui-1.9.2.custom.min',
         jqueryform:'libs/jquery.form',
         jquerycookie:'libs/jquery.cookie',
-        jqueryJcrop:'libs/jquery.Jcrop',
+        //jqueryJcrop:'libs/jquery.Jcrop',
         jqueryuploadify:'libs/uploadify/jquery.uploadify.min',
         jqueryvalidate:'libs/jquery.validate',
         util:'custom/util',
@@ -30,7 +30,8 @@ require.config({
         studentworks:'custom/studentworks',
         teachcondition:'custom/teachcondition',
         addnewlesson:'custom/addnewlesson',
-        certification:'custom/certification'
+        certification:'custom/certification',
+        detaillessoninfo:'custom/detaillessoninfo'
 }});
 
 require([
@@ -41,7 +42,7 @@ require([
     'jqueryvalidate',
     'util',
     'jqueryui',
-    'jqueryJcrop',
+    //'jqueryJcrop',
     'menus',
     'header',
     'teacher',
@@ -51,7 +52,8 @@ require([
     'studentworks',
     'teachcondition',
     'addnewlesson',
-    'certification'
+    'certification',
+    'detaillessoninfo'
 ]);
 
 

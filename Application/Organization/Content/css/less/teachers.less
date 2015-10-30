@@ -265,6 +265,42 @@
     margin-left: 10px;
     display: none;
   }
+
+  #queryTeachResult{
+    width: 375px;
+    max-height: 158px;
+    min-height: 50px;
+    overflow: auto;
+    .box-shadow(0 0 5px @md-grey-900;);
+    background-color: @white-color;
+    display:none;
+  }
+   ul{
+     li{
+       list-style:none;
+       height:50px;
+       border-bottom: 1px solid @md-grey-E3;
+       cursor: pointer;
+       &:hover{
+         background-color:@md-grey-E3;
+       }
+       img{
+         margin-left: 10px;
+         margin-top: 5px;
+         .size(40px,40px);
+         .border-radius(50%);
+         float: left;
+       }
+       span{
+         font-size: 14px;
+         color: @md-grey-78;
+         float: left;
+         margin-left: 10px;
+         line-height: 50px;
+       }
+
+     }
+   }
 }
 
 .addTeacherBtnRow{
