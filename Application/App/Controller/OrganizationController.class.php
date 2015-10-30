@@ -785,15 +785,17 @@ class OrganizationController extends AppController
         }
     }
 
-    /**
-     * 添加机构课程
+    /**添加机构课程
+     * @param null $organization_id
      * @param null $title
      * @param null $content
+     * @param null $category_id
      * @param null $img
      * @param null $lecturer
      * @param null $auth
      */
-    public function addCourse($organization_id=null, $title=null, $content=null,$category_id=null, $img=null, $lecturer=null, $auth=null){
+    public function addCourse($organization_id=null, $title=null, $content=null,$category_id=null, $img=null, $lecturer=null, $auth=1){
+        $this->requireAdminLogin();
         $model = M('OrganizationCourse');
         $data['organization_id'] = $organization_id;
         $data['title'] = $title;
@@ -802,6 +804,8 @@ class OrganizationController extends AppController
         $data['category_id']=$category_id;
         $data['lecturer'] = $lecturer;
         $data['auth'] = $auth;
+        $data['create_time'] = time();
+        $data['update_time'] = time();
         $result = $model->add($data);
         if($result){
             $this->uploadLogoPicToOSS($img);
@@ -816,6 +820,7 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function getCourses($organization_id=null){
+        $this->requireAdminLogin();
         $model = M('OrganizationCourse');
         $config_model = M("OrganizationConfig");
         $map['organization_id'] = $organization_id;
@@ -829,6 +834,7 @@ class OrganizationController extends AppController
                 $course['category_name'] = $category['value'];
             }
             $course['url'] = $this->fetchImage($course['img']);
+            $video_course[] = $course;
         }
         $extra['data'] = $video_course;
         $this->apiSuccess('获取所有课程成功', null, $extra);
