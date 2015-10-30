@@ -111,6 +111,11 @@ define(['jquery','jqueryui'],function () {
             //this.getDataAsync(function(data){
             //    data;
             //});
+            if (this.$wrapper.data('cornerLoading')) {
+                this.$wrapper.cornerLoading('showLoading');
+            } else {
+                this.$wrapper.cornerLoading();
+            }
             var url=this.basicApiUrl+'/getVideoCategory',
                 that=this;
             Hisihi.getDataAsync({
@@ -119,6 +124,7 @@ define(['jquery','jqueryui'],function () {
                 data: {},
                 org:true,
                 callback:function(data) {
+                    that.$wrapper.cornerLoading('hideLoading');
                     that.showLessonInfo.call(that,data);
                 }
             });

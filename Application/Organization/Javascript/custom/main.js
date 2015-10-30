@@ -10,6 +10,7 @@ require.config({
         'jqueryJcrop':['jquery'],
         'jqueryuploadify':['jquery'],
         'jqueryvalidate':['jquery'],
+        'util':['jquery'],
     },
     paths: {
         jquery: 'libs/jquery-1.8.2.min',
@@ -21,6 +22,7 @@ require.config({
         jqueryvalidate:'libs/jquery.validate',
         util:'custom/util',
         menus: 'custom/menus',
+        header: 'custom/header',
         announcement: 'custom/announcement',
         teacher:'custom/teacher',
         basicinfo:'custom/basicinfo',
@@ -41,6 +43,7 @@ require([
     'jqueryui',
     'jqueryJcrop',
     'menus',
+    'header',
     'teacher',
     'announcement',
     'basicinfo',

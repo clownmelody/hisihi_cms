@@ -157,3 +157,35 @@ body{
 .text-success{
 	color: #3c763d;
 }
+
+/**加载等待**/
+
+.cornerLoadingBox {
+  width:180px;
+  height:90px;
+  position:absolute;
+  /*border:1px solid red;*/
+  z-index:99999;
+}
+.cornerLoadingItem {
+  margin-top:10px;
+}
+
+.cornerLoadingImg {
+  margin:10px auto;
+  width: 40px;
+  height: 40px;
+  background: url(../images/tempsprite.png) no-repeat;
+  background-position: -84px -1px;
+  animation: spin 800ms infinite linear;
+}
+
+@keyframes spin {
+  0%   { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.cornerLoadingText {
+  text-align:center;
+  color: @brand-primary;
+}

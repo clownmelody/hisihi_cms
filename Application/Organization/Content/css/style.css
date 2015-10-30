@@ -1052,6 +1052,37 @@ body {
 .text-success {
   color: #3c763d;
 }
+/**加载等待**/
+.cornerLoadingBox {
+  width: 180px;
+  height: 90px;
+  position: absolute;
+  /*border:1px solid red;*/
+  z-index: 99999;
+}
+.cornerLoadingItem {
+  margin-top: 10px;
+}
+.cornerLoadingImg {
+  margin: 10px auto;
+  width: 40px;
+  height: 40px;
+  background: url(../images/tempsprite.png) no-repeat;
+  background-position: -84px -1px;
+  animation: spin 800ms infinite linear;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+.cornerLoadingText {
+  text-align: center;
+  color: #f5a623;
+}
 .header {
   height: 54px;
   background: #fafafa;
@@ -1064,6 +1095,7 @@ body {
 }
 .navbar-content {
   overflow: hidden;
+  min-width: 600px;
 }
 .navbar-content .nav > .nav-item {
   float: left;
@@ -1109,7 +1141,8 @@ body {
   overflow: hidden;
 }
 .navbar-content .nav > .nav-item.nav-user .user-img > img {
-  width: 100%;
+  width: 40px;
+  height: 40px;
 }
 .navbar-content .nav > .nav-item.nav-user .user-name {
   text-overflow: ellipsis;
@@ -1353,8 +1386,8 @@ body {
   font-size: 14px;
 }
 .basicinfo-body .form-group .label-img {
-  width: 80px;
-  height: 80px;
+  width: 75px;
+  height: 75px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
@@ -1364,8 +1397,8 @@ body {
   overflow-y: hidden;
 }
 .basicinfo-body .form-group .label-img img {
-  width: 100%;
-  height: auto;
+  width: 75px;
+  height: 75px;
 }
 .basicinfo-body .form-group .label-box {
   margin-top: 15px;
@@ -1453,7 +1486,7 @@ body {
   float: left;
   text-align: center;
 }
-#ImgModal .myModal-body-left #myPicture {
+#ImgModal .myModal-body-left #myNewPicture {
   height: 230px;
   width: 230px;
   -webkit-box-shadow: 0 0 6px #848484;
@@ -1546,6 +1579,7 @@ body {
   margin-top: 6px;
 }
 .memberItemUl li .memberItemRight p.tname {
+  margin-top: 20px;
   font-size: 14px;
   color: #333644;
 }

@@ -46,8 +46,15 @@ define(['jquery','jqueryui'],function () {
 
     MyTeacher.prototype={
         loadData:function(){
+            if (this.$wrapper.data('cornerLoading')) {
+                this.$wrapper.cornerLoading('showLoading');
+            } else {
+                this.$wrapper.cornerLoading();
+            }
+            var that=this;
             this.getDataAsync(function(data){
                 if(data.success) {
+                    that.$wrapper.cornerLoading('hideLoading');
                     data = data.data;
                     this.showMembersInfo(data,0);
                 }else{
@@ -110,7 +117,10 @@ define(['jquery','jqueryui'],function () {
                 }
                 str+='<li class="normal" data-id="'+this.uid+'" data-relation-id="'+this.relation_id+'">'+
                         '<div class="memberItemLeft"><img src="'+this.avatar+'"></div>'+
-                        '<div class="memberItemRight"><p class="tname" title="'+this.nickname +'">'+name+'</p><p class="trole">'+this.role+'</p></div>'+
+                        '<div class="memberItemRight">'+
+                            '<p class="tname" title="'+this.nickname +'">'+name+'</p>'+
+                            //'<p class="trole">'+this.role+'</p>'+
+                        '</div>'+
                         '<div class="deleteTeacher delete-item-btn" title="删除"></div>'+
                     '</li>';
             });
@@ -616,98 +626,95 @@ define(['jquery','jqueryui'],function () {
 
 
     /***即时搜索***/
-    Hisihi.tipEmailUrl=function($txtTarget, posStyle,options){
-        $.extend(this,options);
-        this.$txtTarget = $txtTarget;
-        this.posStyle = posStyle;
-        !this.$tipTarget && $txtTarget.after('<div class="tipEmailUrl"></div>');
-        this.$tipTarget = $txtTarget.next();
-        this.controlContainerStyle();
-        this.eventsInit();
-    };
+    //Hisihi.tipEmailUrl=function($txtTarget, posStyle,options){
+    //    $.extend(this,options);
+    //    this.$txtTarget = $txtTarget;
+    //    this.posStyle = posStyle;
+    //    !this.$tipTarget && $txtTarget.after('<div class="tipEmailUrl"></div>');
+    //    this.$tipTarget = $txtTarget.next();
+    //    this.controlContainerStyle();
+    //    this.eventsInit();
+    //};
+    //
+    //Hisihi.tipEmailUrl.prototype={
+    //    /*显示邮箱提示*/
+    //    _showTipEmailUrl: function (mydata) {
+    //        var val = this.$txtTarget.val();
+    //        if (val == '') {
+    //            this.hideTipEmailUrl();
+    //            return;
+    //        }
+    //        var str = '';
+    //        this.emailTypeData=mydata;
+    //        var len = this.emailTypeData.length;
+    //        for (var i = 0; i < len; i++) {
+    //            str += '<li class="tipEmailUrlLi">'+this.emailTypeData.name[i] + '</li>';
+    //        }
+    //        this.$tipTarget.show().html(str);
+    //    },
+    //
+    //    /*隐藏提示框*/
+    //    hideTipEmailUrl: function () {
+    //        this.$tipTarget.hide();
+    //    },
+    //
+    //    /*选择相应的邮箱提示*/
+    //    _selectTipsEmailUrl: function (codeNum) {
+    //        var $li =  this.$tipTarget.find('.tipEmailUrlLi');
+    //        var $liSel = $li.filter('.selected');
+    //        var index = $liSel.index();
+    //        if ($li.length > 0) {
+    //            $li.removeClass('selected');
+    //            var $lastLi = $li.last();
+    //            var $firstLi = $li.first();
+    //            if (codeNum == 40) {//向下
+    //                if ($liSel.length == 0 || index == $li.length - 1) {
+    //                    $firstLi.addClass('selected');
+    //                }
+    //                else {
+    //                    $li.eq(index + 1).addClass('selected');
+    //                }
+    //            }
+    //            else { //38:  //向上
+    //                if ($liSel.length == 0 || index == 0) {
+    //                    $lastLi.addClass('selected');
+    //                } else {
+    //                    $li.eq(index - 1).addClass('selected');
+    //                }
+    //            }
+    //            this.$txtTarget.val($li.filter('.selected').text());
+    //        }
+    //    },
+    //
+    //    eventsInit: function () {
+    //        var that = this;
+    //        /*从提示中选择相应的邮箱*/
+    //        this.$tipTarget.on('click', 'li', function (e) {
+    //            var text = this.innerText;
+    //            that.$txtTarget.val(text);
+    //            e.stopPropagation();
+    //            that.hideTipEmailUrl();
+    //        });
+    //
+    //        /*隐藏邮箱提示信息*/
+    //        $(document).on('click', function () {
+    //            that.hideTipEmailUrl();
+    //        });
+    //    },
+    //
+    //    /**控制框的样式 宽，位置等**/
+    //    controlContainerStyle: function () {
+    //        if (!this.widthInfo) {
+    //            this.widthInfo = this.$txtTarget.width();
+    //        }
+    //        this.$tipTarget.css({
+    //            'top': this.posStyle.top,
+    //            'left': this.posStyle.left,
+    //            'width': this.widthInfo
+    //        });
+    //    }
+    //};
 
-    Hisihi.tipEmailUrl.prototype={
-        /*显示邮箱提示*/
-        _showTipEmailUrl: function (mydata) {
-            var val = this.$txtTarget.val();
-            if (val == '') {
-                this.hideTipEmailUrl();
-                return;
-            }
-            var str = '';
-            this.emailTypeData=mydata;
-            var len = this.emailTypeData.length;
-            for (var i = 0; i < len; i++) {
-                str += '<li class="tipEmailUrlLi">'+this.emailTypeData.name[i] + '</li>';
-            }
-            this.$tipTarget.show().html(str);
-        },
-
-        /*隐藏提示框*/
-        hideTipEmailUrl: function () {
-            this.$tipTarget.hide();
-        },
-
-        /*选择相应的邮箱提示*/
-        _selectTipsEmailUrl: function (codeNum) {
-            var $li =  this.$tipTarget.find('.tipEmailUrlLi');
-            var $liSel = $li.filter('.selected');
-            var index = $liSel.index();
-            if ($li.length > 0) {
-                $li.removeClass('selected');
-                var $lastLi = $li.last();
-                var $firstLi = $li.first();
-                if (codeNum == 40) {//向下
-                    if ($liSel.length == 0 || index == $li.length - 1) {
-                        $firstLi.addClass('selected');
-                    }
-                    else {
-                        $li.eq(index + 1).addClass('selected');
-                    }
-                }
-                else { //38:  //向上
-                    if ($liSel.length == 0 || index == 0) {
-                        $lastLi.addClass('selected');
-                    } else {
-                        $li.eq(index - 1).addClass('selected');
-                    }
-                }
-                this.$txtTarget.val($li.filter('.selected').text());
-            }
-        },
-
-        eventsInit: function () {
-            var that = this;
-            /*从提示中选择相应的邮箱*/
-            this.$tipTarget.on('click', 'li', function (e) {
-                var text = this.innerText;
-                that.$txtTarget.val(text);
-                e.stopPropagation();
-                that.hideTipEmailUrl();
-            });
-
-            /*隐藏邮箱提示信息*/
-            $(document).on('click', function () {
-                that.hideTipEmailUrl();
-            });
-        },
-
-        /**控制框的样式 宽，位置等**/
-        controlContainerStyle: function () {
-            if (!this.widthInfo) {
-                this.widthInfo = this.$txtTarget.width();
-            }
-            this.$tipTarget.css({
-                'top': this.posStyle.top,
-                'left': this.posStyle.left,
-                'width': this.widthInfo
-            });
-        }
-    };
-
-
-    //var myTeacher=new MyTeacher($('.teachersWrapper'));
-    //return myTeacher;
     var $wrapper=$('.teachersWrapper');
     if($wrapper.length>0) {
         new MyTeacher($wrapper);

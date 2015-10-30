@@ -98,14 +98,20 @@ define(['jquery','jqueryui'],function () {
                 }
             ];
 
+            if (this.$wrapper.data('cornerLoading')) {
+                this.$wrapper.cornerLoading('showLoading');
+            } else {
+                this.$wrapper.cornerLoading();
+            }
             var url=this.basicApiUrl+'/getStudentWorks',
-                that=this;
+            that=this;
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
                 data: {},
                 org:true,
                 callback:function(data) {
+                    that.$wrapper.cornerLoading('hideLoading');
                     that.showStudentWorksInfo(data);
                 }
             });
