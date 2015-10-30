@@ -66,17 +66,49 @@
 	>li{
 		width: 100/2%;
 		height: 80px;
+		position: relative;
+	}
+	>li{
+		.item-body{
+			display: none;
+			text-align: center;
+			position: absolute;
+			top: 70px;
+			right: 0;
+			background: @white-color;
+			.opacity(.3);
+			padding: 10px;
+			.border-radius(4px);
+			.size(172px-20px,180px-20px);
+			transition: all .5s linear;
+			>p{
+				.font-size(14);
+				color: @md-grey-666;
+				line-height: 20px;
+			}
+			>img{
+				margin-top: 8px;
+				.size(115px);
+			}
+		}
+		&:hover{
+			.icon-wx,.icon-weibo{
+				fill: @brand-primary;
+				transition: all .3s linear;
+			}
+			.item-body{
+				display: block;
+				.opacity(1);
+				transition: all .5s linear;
+			}
+		}
 	}
 	.item-icon{
 		.size(45px);
 		margin: 15px auto 0;
 		.icon-wx,.icon-weibo{
 			fill: @white-color;
-		}
-		&:hover{
-			.icon-wx,.icon-weibo{
-				fill: @brand-primary;
-			}
+			transition: all .3s linear;
 		}
 	}
 }
@@ -89,6 +121,7 @@
 	background-position: center center;
 	background-repeat:no-repeat;
 	background-size: cover;
+	padding: 200px 0 0 0; 
 	&.item1{
 		
 		background-image:url('@{img-path}bg1.jpg');
