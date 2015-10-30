@@ -15,7 +15,7 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
 
         }
         this.loadAllTeachers();  //加载所有老师
-
+        this.loadAllClass(); //加载所有分类
         //事件注册
         this.$wrapper.on('click','#addNewLessonSubmitBtn', $.proxy(this,'addNewLesson'));
     };
@@ -49,28 +49,28 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
 
         /*加载所有分类*/
         loadAllClass:function(){
-            var url=this.basicApiUrl+'/teachersList',
+            var url=this.basicApiUrl+'/getVideoCategory',
                 that=this;
-            var strss='<option value="69">Rfly</option> <option value="70">qwert123</option> <option value="72">Leslie</option> <option value="75">hldw123</option> <option value="77">小Y</option> <option value="81">你猜我叫什么</option> <option value="82">阿当</option> <option value="91">good2good</option> <option value="92">15871752300</option> <option value="93">fjlkaejf</option> <option value="104">melodytest</option> <option value="519">Quan</option> <option value="520">聚光设计vx</option> <option value="521">武汉顾美设计有限公司</option> <option value="522">新美工作室</option> <option value="523">思优游戏设计</option> <option value="524">艺创梦续</option> <option value="525">设计师里默默</option> <option value="526">嫣希</option> <option value="527">一文创意</option> <option value="528">曹博雨</option> <option value="529">LEE</option> <option value="530">Teige</option> <option value="531">王广</option> <option value="532">老齐</option> <option value="533">玮蓝刘老师</option> <option value="534">周飞</option> <option value="535">lennie</option> <option value="536">Mouri</option> <option value="537">Herron</option> <option value="538">沉海哥</option> <option value="539">邦克传媒</option> <option value="540">梁煜辉</option> <option value="541">老孙</option> <option value="542">Frankie</option> <option value="543">Use</option> <option value="544">将讯佳</option> <option value="545">锐意设计</option> <option value="546">先创老刘</option> <option value="547">鹿鼎装饰</option> <option value="548">北京创元设计</option> <option value="550">張君雅</option>';
-            that.$wrapper.find('#newLessonTeacher').html(strss);
-            //Hisihi.getDataAsync({
-            //    type: "post",
-            //    url: url,
-            //    data: {page:1,count:100},
-            //    org:true,
-            //    callback:function(result){
-            //        if(result.success){
-            //            var data=result.data,
-            //            str='',len=data.length;
-            //            for(var i=0;i<len;i++){
-            //                str+=' <option value="'+data[i].uid+'">'+data[i].nickname+'</option>';
-            //            }
-            //            that.$wrapper.find('#newLessonTeacher').html(str);
-            //        }
-            //
-            //
-            //    }
-            //});
+            //var strss='<option value="69">Rfly</option> <option value="70">qwert123</option> <option value="72">Leslie</option> <option value="75">hldw123</option> <option value="77">小Y</option> <option value="81">你猜我叫什么</option> <option value="82">阿当</option> <option value="91">good2good</option> <option value="92">15871752300</option> <option value="93">fjlkaejf</option> <option value="104">melodytest</option> <option value="519">Quan</option> <option value="520">聚光设计vx</option> <option value="521">武汉顾美设计有限公司</option> <option value="522">新美工作室</option> <option value="523">思优游戏设计</option> <option value="524">艺创梦续</option> <option value="525">设计师里默默</option> <option value="526">嫣希</option> <option value="527">一文创意</option> <option value="528">曹博雨</option> <option value="529">LEE</option> <option value="530">Teige</option> <option value="531">王广</option> <option value="532">老齐</option> <option value="533">玮蓝刘老师</option> <option value="534">周飞</option> <option value="535">lennie</option> <option value="536">Mouri</option> <option value="537">Herron</option> <option value="538">沉海哥</option> <option value="539">邦克传媒</option> <option value="540">梁煜辉</option> <option value="541">老孙</option> <option value="542">Frankie</option> <option value="543">Use</option> <option value="544">将讯佳</option> <option value="545">锐意设计</option> <option value="546">先创老刘</option> <option value="547">鹿鼎装饰</option> <option value="548">北京创元设计</option> <option value="550">張君雅</option>';
+            //that.$wrapper.find('#newLessonTeacher').html(strss);
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: {},
+                org:false,
+                callback:function(result){
+                    if(result.success){
+                        var data=result.data,
+                        str='',len=data.length;
+                        for(var i=0;i<len;i++){
+                            str+=' <option value="'+data[i].id+'">'+data[i].value+'</option>';
+                        }
+                        that.$wrapper.find('#newLessonType').html(str);
+                    }
+
+
+                }
+            });
         },
 
         /*
@@ -127,6 +127,7 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
                     content: $form.find('#newLessonContent').val(),
                     img: $form.find('#myLessonCoverImg img').attr('data-lid'),
                     lecturer: this.getSelectedInfo($form.find('#newLessonTeacher')).val,
+                    category_id:this.getSelectedInfo($form.find('#newLessonType')).val,
                     auth :this.getSelectedInfo($form.find('#newLessonAuth')).val
                 };
 
@@ -137,7 +138,7 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
                     org:true,
                     callback: function(e){
                         if(e.success) {
-                            alert('更新成功');
+                            alert('操作成功');
                         }else{
                             alert('更新失败');
                         }
