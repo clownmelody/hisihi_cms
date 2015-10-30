@@ -2138,7 +2138,8 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   line-height: 40px;
 }
 .lessondetailinfo .table-info .title {
-  line-height: 20px;
+  text-align: center;
+  line-height: 38px;
   color: #333333;
 }
 .lessondetailinfo .table-info .time {

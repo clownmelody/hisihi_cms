@@ -7,8 +7,8 @@
 define(['jquery','util','jqueryuploadify'],function () {
     var LessonDetailInfo = function ($wrapper) {
         this.$wrapper = $wrapper;
-        this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization/';
-        this.course_id=this.$wrapper.data('id');
+        this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
+        this.course_id=this.$wrapper.data('cid');
         this.loadData();
         //事件注册
         var that=this;
@@ -33,7 +33,7 @@ define(['jquery','util','jqueryuploadify'],function () {
                 if(data.success) {
                     data = data.data;
                     that.$wrapper.cornerLoading('hideLoading');
-                    var str = that.showAllVideosInfo(data);
+                    var str = that.showAllVideosInfo([data]);
                     this.$wrapper.find('#allLessonVideoCon').html(str);
                 }else{
                     alert('数据加载失败！');
@@ -77,15 +77,19 @@ define(['jquery','util','jqueryuploadify'],function () {
          */
         showAllVideosInfo:function(data){
             var str='',
-                date;
+                date,title='';
             $.each(data,function(index){
                 date=new Date(parseFloat(this.update_time)* 1000).format('yyyy.MM.dd');
+                title=this.title;
+                if(title.length>27){
+                    title=title.substr(0,26)+'……';
+                }
                 str+='<tr>'+
-                        '<th>'+index+'</th>'+
-                        '<td class="title">Photoshop 大圣归来手绘板原稿</td>'+
+                        '<th>'+parseInt(index+1)+'</th>'+
+                        '<td class="title" title="'+this.title+'">'+title+'</td>'+
                         '<td class="time">2015-03-24-18:24</td>'+
                         '<td>'+
-                        '<span class="icon icon-look"></span>'+
+                        '<span class="icon icon-look"></span>' + Hisihi.getRandomNum(1024*2)+
                         '</td>'+
                     '</tr>';
             });
