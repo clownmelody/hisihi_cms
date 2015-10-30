@@ -331,7 +331,7 @@ class OrganizationController extends AppController
     public function getBaseInfo($organization_id){
         $this->requireAdminLogin();
         $model=M("Organization");
-        $result = $model->where(array('id'=>$organization_id))
+        $result = $model->where(array('id'=>$organization_id,'status'=>1))
             ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
         if($result){
             $logo_id = $result['logo'];
