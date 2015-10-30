@@ -1,0 +1,781 @@
+.font_simsun {
+  font-family: SimSun;
+}
+.ov_visibel {
+  overflow: visible !important;
+}
+.ov_hide {
+  overflow: hidden !important;
+}
+.ws_normal {
+  white-space: normal !important;
+}
+.ws_break {
+  word-wrap: break-word !important;
+  word-break: normal !important;
+}
+.ws_prewrap {
+  white-space: pre-wrap !important;
+}
+.ws_hide {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.t_l {
+  text-align: left !important;
+}
+.t_c {
+  text-align: center !important;
+}
+.t_r {
+  text-align: right !important;
+}
+.block {
+  display: block !important;
+  visibility: visible;
+}
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+.fl_l {
+  float: left !important;
+}
+.fl_r {
+  float: right !important;
+}
+.fl_n {
+  float: none !important;
+}
+.mar0 {
+  margin: 0;
+}
+.mar_auto {
+  margin: auto;
+}
+.mar10 {
+  margin: 10px;
+}
+.mar20 {
+  margin: 20px;
+}
+.mt_5 {
+  margin-top: 5px;
+}
+.mt_10 {
+  margin-top: 10px;
+}
+.mt_20 {
+  margin-top: 20px;
+}
+.mt_30 {
+  margin-top: 30px;
+}
+.mt_35 {
+  margin-top: 35px;
+}
+.mb_5 {
+  margin-bottom: 5px;
+}
+.mb_10 {
+  margin-bottom: 10px;
+}
+.mb_20 {
+  margin-bottom: 20px;
+}
+.mb_30 {
+  margin-bottom: 30px;
+}
+.ml_4 {
+  margin-left: 4px;
+}
+.ml_5 {
+  margin-left: 5px;
+}
+.ml_10 {
+  margin-left: 10px;
+}
+.ml_20 {
+  margin-left: 20px;
+}
+.ml_30 {
+  margin-left: 30px;
+}
+.mr_5 {
+  margin-right: 5px;
+}
+.mr_10 {
+  margin-right: 10px;
+}
+.mr_20 {
+  margin-right: 20px;
+}
+.mr_30 {
+  margin-right: 30px;
+}
+.po_ab {
+  position: absolute;
+}
+.po_re {
+  position: relative;
+}
+.col1 {
+  display: inline;
+  float: left;
+  width: 100%;
+}
+.col2 {
+  display: inline;
+  float: left;
+  width: 50%;
+}
+.col3 {
+  display: inline;
+  float: left;
+  width: 33.33333333%;
+}
+.col4 {
+  display: inline;
+  float: left;
+  width: 25%;
+}
+.col5 {
+  display: inline;
+  float: left;
+  width: 20%;
+}
+.col6 {
+  display: inline;
+  float: left;
+  width: 16.66666667%;
+}
+.col7 {
+  display: inline;
+  float: left;
+  width: 14.28571429%;
+}
+.col8 {
+  display: inline;
+  float: left;
+  width: 12.5%;
+}
+.col9 {
+  display: inline;
+  float: left;
+  width: 11.11111111%;
+}
+.fixed-top {
+  position: fixed;
+  bottom: auto;
+  top: 0px;
+}
+.fixed-bottom {
+  position: fixed;
+  bottom: 0px;
+  top: auto;
+}
+.fixed-left {
+  position: fixed;
+  right: auto;
+  left: 0px;
+}
+.fixed-right {
+  position: fixed;
+  right: 0px;
+  left: auto;
+}
+#ie6,
+#ie6 body {
+  background-image: url(about:blank);
+  background-attachment: fixed;
+}
+#ie6 .fixed-top {
+  position: absolute;
+  bottom: auto;
+  top: expression(eval(document.documentElement.scrollTop));
+}
+#ie6 .fixed-right {
+  position: absolute;
+  right: auto;
+  left: expression(eval(document.documentElement.scrollLeft+document.documentElement.clientWidth-this.offsetWidth)-(parseInt(this.currentStyle.marginLeft,10)||0)-(parseInt(this.currentStyle.marginRight,10)||0));
+}
+#ie6 .fixed-bottom {
+  position: absolute;
+  bottom: auto;
+  top: expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop,10)||0)-(parseInt(this.currentStyle.marginBottom,10)||0)));
+}
+#ie6 .fixed-left {
+  position: absolute;
+  right: auto;
+  left: expression(eval(document.documentElement.scrollLeft));
+}
+/*----------------------------------------------------------------*\
+ * 1、使用LESS定义一个mixin,名叫.msgrid，定义方法类似定义一个类
+ * 2、 @column定义列
+ * 3、 @row定义行
+ * 4、 @colspan跨越的列
+ * 5、 @rowspan跨越的行
+ \*----------------------------------------------------------------*/
+.list dt {
+  text-align: center;
+  font-weight: bold;
+  background: #71829E;
+  color: #fff;
+  line-height: 30px;
+}
+.list dd {
+  clear: both;
+  padding: 10px;
+}
+.list dd .tags {
+  height: 25px;
+  padding: 0 10px;
+  background: #f4f4f4;
+  line-height: 25px;
+  color: #666;
+}
+.list dd.odd {
+  background: #fff;
+}
+.list li {
+  display: inline;
+  float: left;
+  width: 10%;
+  list-style: none;
+}
+.list li.wd5 {
+  width: 5%;
+  overflow: hidden;
+}
+.list li.w1 {
+  width: 10%;
+  overflow: hidden;
+}
+.list li.w1d5 {
+  width: 15%;
+  overflow: hidden;
+}
+.list li.w2 {
+  width: 20%;
+  overflow: hidden;
+}
+.list li.w2d5 {
+  width: 25%;
+  overflow: hidden;
+}
+.list li.w3 {
+  width: 30%;
+  overflow: hidden;
+}
+.list li.w3d5 {
+  width: 35%;
+  overflow: hidden;
+}
+.list li.w4 {
+  width: 40%;
+  overflow: hidden;
+}
+.list li.w4d5 {
+  width: 45%;
+  overflow: hidden;
+}
+.list li.w5 {
+  width: 50%;
+  overflow: hidden;
+}
+.list li.w5d5 {
+  width: 55%;
+  overflow: hidden;
+}
+.list li.w6 {
+  width: 60%;
+  overflow: hidden;
+}
+.list li.w6d5 {
+  width: 65%;
+  overflow: hidden;
+}
+.list li.w7 {
+  width: 70%;
+  overflow: hidden;
+}
+.list li.w7d5 {
+  width: 75%;
+  overflow: hidden;
+}
+.list li.w8 {
+  width: 80%;
+  overflow: hidden;
+}
+.list li.w8d5 {
+  width: 85%;
+  overflow: hidden;
+}
+.list li.w9 {
+  width: 90%;
+  overflow: hidden;
+}
+.list li.w9d5 {
+  width: 95%;
+  overflow: hidden;
+}
+.list li.w100 {
+  width: 100%;
+  overflow: hidden;
+}
+/*删除小叉叉*/
+.list-data-ul li {
+  position: relative;
+  cursor: pointer;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 0 6px #cccccc;
+  -moz-box-shadow: 0 0 6px #cccccc;
+  box-shadow: 0 0 6px #cccccc;
+  margin: 10px;
+}
+.list-data-ul li:hover {
+  -webkit-box-shadow: 0 0 6px #848484;
+  -moz-box-shadow: 0 0 6px #848484;
+  box-shadow: 0 0 6px #848484;
+}
+.list-data-ul li.normal {
+  background-color: transparent;
+}
+.list-data-ul li.edit {
+  background-color: #f8efe6;
+}
+.list-data-ul li.edit:hover {
+  box-shadow: 0 0 13px #999999;
+}
+.list-data-ul li.edit .delete-item-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  height: 18px;
+  width: 18px;
+  background: url('../images/tempsprite.png') no-repeat;
+  background-position: 2px -32px;
+}
+.list-data-ul li.edit .delete-item-btn:hover {
+  background-position-x: -15px;
+}
+.normalPageWrapper .normal-page-header {
+  height: 55px;
+  line-height: 55px;
+}
+.normalPageWrapper .normal-page-header .header-title {
+  margin-left: 35px;
+  font-size: 16px;
+}
+.normalPageWrapper .normal-page-header .headerAddBtn {
+  margin-left: 100px;
+}
+.normalPageWrapper .normal-page-header .edit-data-item {
+  float: right;
+  margin-right: 20px;
+  color: #f7be5b;
+  cursor: pointer;
+  -moz-user-select: none;
+}
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  min-width: 60px;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 9px 20px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 5px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.btn:focus,
+.btn:active:focus,
+.btn.focus,
+.btn:active.focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.btn:active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.btn-default {
+  color: #333333;
+  background-color: #ffffff;
+  border-color: #cccccc;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default.focus,
+.btn-default:active,
+.btn-default.active {
+  color: #333333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-default:active,
+.btn-default.active {
+  background-image: none;
+}
+.btn-default.disabled,
+.btn-default[disabled],
+fieldset[disabled] .btn-default,
+.btn-default.disabled:hover,
+.btn-default[disabled]:hover,
+fieldset[disabled] .btn-default:hover,
+.btn-default.disabled:focus,
+.btn-default[disabled]:focus,
+fieldset[disabled] .btn-default:focus,
+.btn-default.disabled.focus,
+.btn-default[disabled].focus,
+fieldset[disabled] .btn-default.focus,
+.btn-default.disabled:active,
+.btn-default[disabled]:active,
+fieldset[disabled] .btn-default:active,
+.btn-default.disabled.active,
+.btn-default[disabled].active,
+fieldset[disabled] .btn-default.active {
+  background-color: #ffffff;
+  border-color: #cccccc;
+}
+.btn-grey {
+  color: #ffffff;
+  background-color: #aaaaaa;
+  border-color: #b7b7b7;
+}
+.btn-grey:hover,
+.btn-grey:focus,
+.btn-grey.focus,
+.btn-grey:active,
+.btn-grey.active {
+  color: #ffffff;
+  background-color: #919191;
+  border-color: #989898;
+}
+.btn-grey:active,
+.btn-grey.active {
+  background-image: none;
+}
+.btn-grey.disabled,
+.btn-grey[disabled],
+fieldset[disabled] .btn-grey,
+.btn-grey.disabled:hover,
+.btn-grey[disabled]:hover,
+fieldset[disabled] .btn-grey:hover,
+.btn-grey.disabled:focus,
+.btn-grey[disabled]:focus,
+fieldset[disabled] .btn-grey:focus,
+.btn-grey.disabled.focus,
+.btn-grey[disabled].focus,
+fieldset[disabled] .btn-grey.focus,
+.btn-grey.disabled:active,
+.btn-grey[disabled]:active,
+fieldset[disabled] .btn-grey:active,
+.btn-grey.disabled.active,
+.btn-grey[disabled].active,
+fieldset[disabled] .btn-grey.active {
+  background-color: #aaaaaa;
+  border-color: #b7b7b7;
+}
+.brand-info {
+  color: #ffffff;
+  background-color: #f7be5b;
+  border-color: #f8c873;
+}
+.brand-info:hover,
+.brand-info:focus,
+.brand-info.focus,
+.brand-info:active,
+.brand-info.active {
+  color: #ffffff;
+  background-color: #f5ab2a;
+  border-color: #f5b139;
+}
+.brand-info:active,
+.brand-info.active {
+  background-image: none;
+}
+.brand-info.disabled,
+.brand-info[disabled],
+fieldset[disabled] .brand-info,
+.brand-info.disabled:hover,
+.brand-info[disabled]:hover,
+fieldset[disabled] .brand-info:hover,
+.brand-info.disabled:focus,
+.brand-info[disabled]:focus,
+fieldset[disabled] .brand-info:focus,
+.brand-info.disabled.focus,
+.brand-info[disabled].focus,
+fieldset[disabled] .brand-info.focus,
+.brand-info.disabled:active,
+.brand-info[disabled]:active,
+fieldset[disabled] .brand-info:active,
+.brand-info.disabled.active,
+.brand-info[disabled].active,
+fieldset[disabled] .brand-info.active {
+  background-color: #f7be5b;
+  border-color: #f8c873;
+}
+.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #aaaaaa !important;
+  border-color: #b7b7b7 !important;
+  color: #ffffff !important;
+}
+.disabled:hover {
+  background: #aaaaaa !important;
+  color: #ffffff !important;
+  border-color: #b7b7b7 !important;
+}
+* {
+  padding: 0;
+  margin: 0;
+}
+a:link,
+a:hover,
+a:active,
+a:visited {
+  text-decoration: none;
+}
+a:focus {
+  outline: none;
+  -moz-outline: none;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  background: #ebebeb;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+.wrapper {
+  margin-left: 160px;
+  height: 100%;
+}
+.frame-content {
+  padding: 84px 30px 30px;
+  min-height: 600px;
+  /*Fallback for browsers that don't support the calc() function*/
+  min-height: -moz-calc(100% - 202px);
+  min-height: -webkit-calc(100% - 202px);
+  min-height: calc(100% - 202px);
+}
+.box {
+  background: #ffffff;
+  box-shadow: 0 0 4px #d2d2d2;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.box > .box-header {
+  line-height: 60px;
+  border-bottom: 1px solid #e3e3e3;
+}
+.box > .box-header .min-title {
+  font-size: 16px;
+  color: #333333;
+  padding-left: 35px;
+}
+.foot {
+  padding: 20px 0;
+}
+.foot > p {
+  color: #a1a1a1;
+  font-size: 12px;
+  line-height: 24px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+}
+.col-1,
+.col-2,
+.col-label {
+  float: left;
+  display: inherit;
+  min-height: 1px;
+  position: relative;
+  margin: 0 10px;
+}
+.col-label {
+  width: 80px;
+}
+.col-1 {
+  width: 720px;
+}
+.col-2 {
+  width: 352px;
+}
+.t_l {
+  text-align: left !important;
+}
+.t_c {
+  text-align: center !important;
+}
+.t_r {
+  text-align: right !important;
+}
+.blod {
+  font-weight: bold !important;
+  color: #666666;
+}
+.m_5 {
+  margin-top: 5px;
+}
+.m_10 {
+  margin-top: 10px;
+}
+.m_15 {
+  margin-top: 15px;
+}
+.m_20 {
+  margin-top: 20px;
+}
+.mb_30 {
+  margin-bottom: 30px;
+}
+.m_110 {
+  margin-left: 110px;
+}
+.error-txt {
+  line-height: 30px;
+  font-size: 14px;
+  padding-left: 10px;
+}
+.text-danger {
+  color: #a94442;
+}
+.text-success {
+  color: #3c763d;
+}
+.home {
+  font-family: "Roboto Medium", Microsoft YaHei, SimHei;
+}
+.home .container {
+  width: 1200px;
+  margin: 0 auto;
+}
+.nav {
+  background: rgba(0, 0, 0, 0.3);
+  height: 80px;
+  width: 100%;
+  line-height: 80px;
+  position: fixed;
+  top: 0;
+  color: #ffffff;
+  z-index: 1;
+}
+.nav .nav-left {
+  float: left;
+  width: 85%;
+}
+.nav .nav-right {
+  float: right;
+  width: 15%;
+}
+.nav .logo-box {
+  width: 115px;
+  height: 45px;
+  margin-top: 15px;
+  float: left;
+}
+.nav .logo-box .icon-logo {
+  fill: #ffffff;
+}
+.nav .logo-title {
+  font-size: 24px;
+  padding-left: 139px;
+  line-height: 70px;
+}
+.nav .logo-title > .span-link {
+  background: #ff5a00;
+  width: 1px;
+  height: 24px;
+  display: block;
+  float: left;
+  margin: 25px 24px 0 0;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+.list-attention > li {
+  width: 50%;
+  height: 80px;
+}
+.list-attention .item-icon {
+  width: 45px;
+  height: 45px;
+  margin: 15px auto 0;
+}
+.list-attention .item-icon .icon-wx,
+.list-attention .item-icon .icon-weibo {
+  fill: #ffffff;
+}
+.list-attention .item-icon:hover .icon-wx,
+.list-attention .item-icon:hover .icon-weibo {
+  fill: #ff5a00;
+}
+.item-box {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  max-height: 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.item-box.item1 {
+  background-image: url('../images/home/bg1.jpg');
+}
+.item-box.item2 {
+  background-image: url('../images/home/bg4.jpg');
+}
+.item-box.item3 {
+  background-image: url('../images/home/bg5.jpg');
+}
+.item-box.item4 {
+  background-image: url('../images/home/bg6.jpg');
+}
+.item-box.item5 {
+  background-image: url('../images/home/bg7.jpg');
+}

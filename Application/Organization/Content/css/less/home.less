@@ -1,0 +1,117 @@
+@import "base.less";
+@import "mixin.less";
+@import "list.less";
+@import "buttons.less";
+@import "variables.less";
+  
+@import "public.less";
+
+//img
+@img-path:         "../images/home/"; 
+
+//color
+@brand-primary:    #ff5a00;
+
+.home{
+	font-family: "Roboto Medium",Microsoft YaHei,SimHei; 
+	.container{
+		width: 1200px;
+		margin: 0 auto;
+	}
+}
+
+.nav{
+	background: rgba(0, 0, 0, 0.3);
+	height: 80px;
+	width: 100%;
+	line-height: 80px;
+	position: fixed;
+	top: 0;
+	color: @white-color;
+	z-index: 1;
+	.nav-left{
+		float: left;
+		width: 85%;
+	}
+	.nav-right{
+		float: right;
+		width: 15%;
+	}
+	.logo-box{
+		width: 115px;
+		height: 45px;
+		margin-top: 15px;
+		float: 	left;
+		.icon-logo{
+			fill:@white-color;
+		}
+	}
+	.logo-title{
+		.font-size(24);
+		padding-left: 115px+24px;
+		line-height: 70px;
+		>.span-link{
+			background: @brand-primary;
+			width: 1px;
+			height: 24px;
+			display: block;
+			float: left;
+			margin: 25px 24px 0 0;
+			.opacity(.5);
+		}
+	}
+}
+
+.list-attention{
+	>li{
+		width: 100/2%;
+		height: 80px;
+	}
+	.item-icon{
+		.size(45px);
+		margin: 15px auto 0;
+		.icon-wx,.icon-weibo{
+			fill: @white-color;
+		}
+		&:hover{
+			.icon-wx,.icon-weibo{
+				fill: @brand-primary;
+			}
+		}
+	}
+}
+
+.item-box{
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	max-height: 100%;
+	background-position: center center;
+	background-repeat:no-repeat;
+	background-size: cover;
+	&.item1{
+		
+		background-image:url('@{img-path}bg1.jpg');
+		
+	}
+	&.item2{
+		
+		background-image:url('@{img-path}bg4.jpg');
+		
+	}
+	&.item3{
+		
+		background-image:url('@{img-path}bg5.jpg');
+		
+	}
+	&.item4{
+		
+		background-image:url('@{img-path}bg6.jpg');
+		
+	}
+	&.item5{
+		
+		background-image:url('@{img-path}bg7.jpg');
+		
+	}
+}
