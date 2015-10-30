@@ -793,19 +793,18 @@ class OrganizationController extends AppController
      * @param null $lecturer
      * @param null $auth
      */
-    public function addCourse($organization_id=null, $title=null, $content=null, $img=null, $lecturer=null, $auth=null){
+    public function addCourse($organization_id=null, $title=null, $content=null,$category_id=null, $img=null, $lecturer=null, $auth=null){
         $model = M('OrganizationCourse');
         $data['organization_id'] = $organization_id;
         $data['title'] = $title;
         $data['content'] = $content;
         $data['img'] = $img;
-        /*
-         * 需要添加图片到oss
-         */
+        $data['category_id']=$category_id;
         $data['lecturer'] = $lecturer;
         $data['auth'] = $auth;
         $result = $model->add($data);
         if($result){
+            $this->uploadLogoPicToOSS($img);
             $this->apiSuccess('添加课程成功');
         } else {
             $this->apiError(-1, '保存课程信息失败');
