@@ -702,6 +702,13 @@ fieldset[disabled] .brand-info.active {
   color: #ffffff !important;
   border-color: #b7b7b7 !important;
 }
+.btnCommitCal {
+  color: #848484;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
+}
 .label {
   display: inline;
   padding: .3em .7em;
@@ -926,6 +933,11 @@ fieldset[disabled] input[type="checkbox"] {
   outline: none;
   cursor: pointer;
 }
+.basicFormInfoError label {
+  font-weight: normal;
+  font-size: 12px;
+  color: #f5a623;
+}
 * {
   padding: 0;
   margin: 0;
@@ -1052,6 +1064,37 @@ body {
 .text-success {
   color: #3c763d;
 }
+/**加载等待**/
+.cornerLoadingBox {
+  width: 180px;
+  height: 90px;
+  position: absolute;
+  /*border:1px solid red;*/
+  z-index: 99999;
+}
+.cornerLoadingItem {
+  margin-top: 10px;
+}
+.cornerLoadingImg {
+  margin: 10px auto;
+  width: 40px;
+  height: 40px;
+  background: url(../images/tempsprite.png) no-repeat;
+  background-position: -84px -1px;
+  animation: spin 800ms infinite linear;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+.cornerLoadingText {
+  text-align: center;
+  color: #f5a623;
+}
 .header {
   height: 54px;
   background: #fafafa;
@@ -1064,6 +1107,7 @@ body {
 }
 .navbar-content {
   overflow: hidden;
+  min-width: 600px;
 }
 .navbar-content .nav > .nav-item {
   float: left;
@@ -1109,7 +1153,8 @@ body {
   overflow: hidden;
 }
 .navbar-content .nav > .nav-item.nav-user .user-img > img {
-  width: 100%;
+  width: 40px;
+  height: 40px;
 }
 .navbar-content .nav > .nav-item.nav-user .user-name {
   text-overflow: ellipsis;
@@ -1353,8 +1398,8 @@ body {
   font-size: 14px;
 }
 .basicinfo-body .form-group .label-img {
-  width: 80px;
-  height: 80px;
+  width: 75px;
+  height: 75px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
@@ -1364,8 +1409,8 @@ body {
   overflow-y: hidden;
 }
 .basicinfo-body .form-group .label-img img {
-  width: 100%;
-  height: auto;
+  width: 75px;
+  height: 75px;
 }
 .basicinfo-body .form-group .label-box {
   margin-top: 15px;
@@ -1431,11 +1476,6 @@ body {
 .basicinfo-body .form-group textarea {
   width: 694px;
 }
-.basicinfo-body .form-group .basicFormInfoError label {
-  font-weight: normal;
-  font-size: 12px;
-  color: #f5a623;
-}
 .basicinfo-body .form-group #tagExitTips {
   display: none;
 }
@@ -1453,7 +1493,7 @@ body {
   float: left;
   text-align: center;
 }
-#ImgModal .myModal-body-left #myPicture {
+#ImgModal .myModal-body-left #myNewPicture {
   height: 230px;
   width: 230px;
   -webkit-box-shadow: 0 0 6px #848484;
@@ -1546,6 +1586,7 @@ body {
   margin-top: 6px;
 }
 .memberItemUl li .memberItemRight p.tname {
+  margin-top: 20px;
   font-size: 14px;
   color: #333644;
 }
@@ -1602,13 +1643,6 @@ body {
   height: 32px;
   width: 82px;
   line-height: 10px;
-}
-.addGroupDetailCon .newGroupCommitCal {
-  color: #848484;
-  margin-left: 10px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: normal;
 }
 .addGroupDetailCon .errorInfo {
   font-size: 14px;
@@ -1725,6 +1759,10 @@ body {
 .addNewTeacherItem #hideQueryResult {
   display: none;
 }
+.addNewTeacherItem #selectTeacherError {
+  margin-left: 10px;
+  display: none;
+}
 .addTeacherBtnRow {
   height: 50px;
   margin-top: 90px;
@@ -1775,6 +1813,7 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 }
 #addTeacherCalBtn {
   font-weight: normal;
+  margin-left: 10px;
 }
 .sortableplaceholder {
   border: 1px dotted #428BCA !important;
@@ -1921,7 +1960,7 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 }
 .addNewLessonWrapper .uploadCoverImgCon #lessonCoverForm {
   width: 82px;
-  margin: 10px auto;
+  opacity: 0;
 }
 .addNewLessonWrapper .uploadCoverImgCon #lessonCoverForm .selectPic {
   height: 40px;
@@ -2109,41 +2148,94 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
   position: relative;
   margin-bottom: 1em;
 }
-/*.uploadify-button {
-	background-color: #505050;
-	background-image: linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -o-linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -moz-linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -webkit-linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -ms-linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0, #505050),
-		color-stop(1, #707070)
-	);
-	background-position: center top;
-	background-repeat: no-repeat;
-	-webkit-border-radius: 30px;
-	-moz-border-radius: 30px;
-	border-radius: 30px;
-	border: 2px solid #808080;
-	color: #FFF;
-	font: bold 12px Arial, Helvetica, sans-serif;
-	text-align: center;
-	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
-	width: 100%;
-}*/
-.uploadify:hover .uploadify-button {
-  background-color: #606060;
-  background-image: linear-gradient(top, #606060 0%, #808080 100%);
-  background-image: -o-linear-gradient(top, #606060 0%, #808080 100%);
-  background-image: -moz-linear-gradient(top, #606060 0%, #808080 100%);
-  background-image: -webkit-linear-gradient(top, #606060 0%, #808080 100%);
-  background-image: -ms-linear-gradient(top, #606060 0%, #808080 100%);
-  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #606060), color-stop(1, #808080));
-  background-position: center bottom;
+.uploadify-button {
+  display: inline-block;
+  margin-bottom: 0;
+  min-width: 60px;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #ffffff;
+  background-color: #f7be5b;
+  border-color: #f8c873;
+  width: 100%;
+}
+.uploadify-button:focus,
+.uploadify-button:active:focus,
+.uploadify-button.focus,
+.uploadify-button:active.focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.uploadify-button:hover,
+.uploadify-button:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.uploadify-button:active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.uploadify-button.disabled,
+.uploadify-button[disabled],
+fieldset[disabled] .uploadify-button {
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.uploadify-button:hover,
+.uploadify-button:focus,
+.uploadify-button.focus,
+.uploadify-button:active,
+.uploadify-button.active {
+  color: #ffffff;
+  background-color: #f5ab2a;
+  border-color: #f5b139;
+}
+.uploadify-button:active,
+.uploadify-button.active {
+  background-image: none;
+}
+.uploadify-button.disabled,
+.uploadify-button[disabled],
+fieldset[disabled] .uploadify-button,
+.uploadify-button.disabled:hover,
+.uploadify-button[disabled]:hover,
+fieldset[disabled] .uploadify-button:hover,
+.uploadify-button.disabled:focus,
+.uploadify-button[disabled]:focus,
+fieldset[disabled] .uploadify-button:focus,
+.uploadify-button.disabled.focus,
+.uploadify-button[disabled].focus,
+fieldset[disabled] .uploadify-button.focus,
+.uploadify-button.disabled:active,
+.uploadify-button[disabled]:active,
+fieldset[disabled] .uploadify-button:active,
+.uploadify-button.disabled.active,
+.uploadify-button[disabled].active,
+fieldset[disabled] .uploadify-button.active {
+  background-color: #f7be5b;
+  border-color: #f8c873;
 }
 .uploadify-button.disabled {
   background-color: #D0D0D0;

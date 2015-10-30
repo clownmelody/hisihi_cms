@@ -4,7 +4,7 @@
 
 //今天公告
 
-define(['jquery'],function () {
+define(['jquery','util'],function () {
     var TodayAnnoucement = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.pageIndex=0;  //当前页
@@ -29,10 +29,17 @@ define(['jquery'],function () {
             success: true
             totalCount: "3"
             */
+            if (this.$wrapper.data('cornerLoading')) {
+                this.$wrapper.cornerLoading('showLoading');
+            } else {
+                this.$wrapper.cornerLoading();
+            }
+            var that=this;
             this.getDataAsync(function(data){
                 if(data.success) {
                     data = data.data;
-                    this.showShortAnnounceInfo(data);
+                    that.showShortAnnounceInfo(data);
+                    that.$wrapper.cornerLoading('hideLoading');
                 }else{
                     alert('数据加载失败！');
                 }
@@ -104,7 +111,7 @@ define(['jquery'],function () {
         },
 
     };
-    var $wrapper=$('.anWrapper');
+    var $wrapper=$('#announcesWrapper');
     if($wrapper.length>0) {
         new TodayAnnoucement($wrapper);
     }

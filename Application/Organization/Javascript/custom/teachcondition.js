@@ -3,7 +3,7 @@
  */
 //我的老师
 
-define(['jquery','jqueryui'],function () {
+define(['jquery','jqueryui','util'],function () {
     var TeachCondition = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.loadData();
@@ -99,6 +99,12 @@ define(['jquery','jqueryui'],function () {
             //this.getDataAsync(function(data){
             //    data;
             //});
+            if (this.$wrapper.data('cornerLoading')) {
+                this.$wrapper.cornerLoading('showLoading');
+            } else {
+                this.$wrapper.cornerLoading();
+            }
+            this.$wrapper.cornerLoading('hideLoading');
             this.showStudentWorksInfo(data);
         },
         showStudentWorksInfo:function(data){

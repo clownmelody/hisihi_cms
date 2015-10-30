@@ -12,11 +12,10 @@
 		case "teachers":
 			index=3;
 			break;
-		case "video":
-		case "addnewlesson":
-		case "lessondetailinfo":
-			index=4;
+		case "certification":
+			index=7;
 			break;
+
 		case "studentworks":
 			index=5;
 			break;
@@ -24,9 +23,20 @@
 			index=6;
 			break;
 		default :
-			index=7;
+			index=dealWithLessonUrl(url);
 			break;
 
+	}
+
+	function dealWithLessonUrl(url) {
+		var flag1= $.inArray('video',url)>=0;
+		var flag2= $.inArray('addnewlesson',url)>=0;
+		var flag3= $.inArray('lessondetailinfo',url)>=0;
+		if(flag1 || flag2||flag3){
+			return 4;
+		}else{
+			return 100;
+		}
 	}
 	(function(){
 		$(".side-item").eq(index - 1).addClass('active')

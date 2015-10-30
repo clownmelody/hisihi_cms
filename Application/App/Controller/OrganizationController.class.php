@@ -137,8 +137,9 @@ class OrganizationController extends AppController
         $map['password'] = md5($password);
         $user = M('OrganizationAdmin')->where($map)->find();
         if($user){
-            /*$org_model = M('Organization');
-            $org_model->where('status=1 and id=')*/
+            $org_model = M('Organization');
+            $orginfo = $org_model->where('status=1 and id='.$user['organization_id'])->find();
+            $logo = $this->fetchImage($orginfo['logo']);
             $auth = array(
                 'uid' => $user['id'],
                 'mobile' => $user['mobile'],
@@ -150,6 +151,8 @@ class OrganizationController extends AppController
             $extra['username'] = $user['username'];
             $extra['session_id'] = session_id();
             $extra['organization_id'] = $user['organization_id'];
+            $extra['organization_name'] = $orginfo['name'];
+            $extra['organization_logo'] = $logo;
             $this->apiSuccess("登陆成功", null, $extra);
         } else {
             $this->apiError(-1, '用户不存在或密码错误');

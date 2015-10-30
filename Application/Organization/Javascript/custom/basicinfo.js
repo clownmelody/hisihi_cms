@@ -4,7 +4,7 @@
 
  //基本信息
 
- define(['jquery','jqueryuploadify','jqueryvalidate'],function () {
+ define(['jquery','jqueryuploadify','jqueryvalidate','util'],function () {
  	var BasicInfo = function ($wrapper) {
  	    this.$wrapper = $wrapper;
 		var cookie=JSON.parse($.cookie('hisihi-org'));
@@ -52,7 +52,7 @@
 		//上传头像
 		this.$wrapper.on('click',"#uploadImg", function () {
 			$('#ImgModal').fadeIn(500);
-			that.initializeCrop(that.$wrapper.find('#myNewPicture'));  //头像裁剪初始化
+			//that.initializeCrop(that.$wrapper.find('#myNewPicture'));  //头像裁剪初始化
 		});
 
 		//关闭弹出层
@@ -71,6 +71,11 @@
 
 		/*显示基本信息*/
 		loadBasicData:function(){
+			if (this.$wrapper.data('cornerLoading')) {
+				this.$wrapper.cornerLoading('showLoading');
+			} else {
+				this.$wrapper.cornerLoading();
+			}
 			var url=this.basicApiUrl+'/getBaseInfo',
 				that=this;
 			Hisihi.getDataAsync({
@@ -84,6 +89,7 @@
 
 		/*填充机构基本信息*/
 		fillInOrgBasicInfo:function(result){
+			this.$wrapper.cornerLoading('hideLoading');
 			if(result.success) {
 				var data=result.data,
 				 $form = this.$wrapper.find('#basicForm');
@@ -91,7 +97,8 @@
 				$form.find('#Signature').val(data.slogan);
 				$form.find('#Address').val(data.location);
 				$form.find('#orgBasicIntroduce').val(data.introduce);
-				$form.find('#basicInfoLogo,#myNewPicture').attr({'src':data.logo.url,'data-lid':data.logo.id});
+				$newImg = this.$wrapper.find('#myNewPicture');
+				$form.find('#basicInfoLogo').add($newImg).attr({'src':data.logo.url,'data-lid':data.logo.id});
 
 				//加载优势标签
 				var str =this.loadAdvantage(data.advantage);
@@ -252,7 +259,7 @@
 						that.$wrapper.find('#basicInfoLogo')
 							.add($('#headerLogo'))
 							.attr({'src': $newPic.attr('src'), 'data-lid': $newPic.attr('data-lid')});
-						that.cancelCrop.call(that);
+						that.cancelCrop.call(that,true);
 					}else{
 						alert('头像信息更新失败');
 					}
@@ -315,7 +322,7 @@
 		/*取消裁剪*/
 		cancelCrop:function(flag) {
 			if(flag) {
-				this.$wrapper.find("#ImgModal").fadeOut(500);
+				this.$wrapper.find("#ImgModal").hide();
 				//清空file之前的内容
 				this.$wrapper.find('#userPhotoForm')[0].reset();
 			}
@@ -368,7 +375,7 @@
 					var $img=$('#myNewPicture');
 					$img.attr({'src':data.logo.path,'data-lid':data.logo.id});
 					that.cancelCrop(false);
-					that.initializeCrop($img);
+					//that.initializeCrop($img);
 				} else {
 					//(data.info);
 					data.info
