@@ -330,7 +330,7 @@ define(['jquery','jqueryui','util'],function () {
                                             '<div class="addNewTeacherHeader">添加新老师</div>'+
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
                                             '<input type="button" id="queryTeacher" class="btn brand-info" value="检索"/>'+
-                                            '<label id="hideQueryResult" class="newGroupCommitCal" title="关闭结果">关闭结果</label>'+
+                                            '<label id="hideQueryResult" class="btnCommitCal" title="关闭结果">关闭结果</label>'+
                                             '<span class="basicFormInfoError" id="selectTeacherError"><label>请选择老师</label></span>'+
                                             '<div class="selectedBox" id="queryTeachResult"><ul></ul></div>'+
                                         '</div>'+
@@ -586,6 +586,7 @@ define(['jquery','jqueryui','util'],function () {
                         name: val
                     },
                     that = this;
+
                 Hisihi.getDataAsync({
                     type: "post",
                     url: url,

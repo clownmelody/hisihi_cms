@@ -1763,6 +1763,45 @@ body {
   margin-left: 10px;
   display: none;
 }
+.addNewTeacherItem #queryTeachResult {
+  width: 375px;
+  height: 158px;
+  overflow: auto;
+  -webkit-box-shadow: 0 0 5px #999999;
+  -moz-box-shadow: 0 0 5px #999999;
+  box-shadow: 0 0 5px #999999;
+  background-color: #ffffff;
+  display: none;
+}
+.addNewTeacherItem ul li {
+  list-style: none;
+  height: 50px;
+  border-bottom: 1px solid #e3e3e3;
+  cursor: pointer;
+}
+.addNewTeacherItem ul li:hover {
+  background-color: #e3e3e3;
+}
+.addNewTeacherItem ul li img {
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 40px;
+  height: 40px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  float: left;
+}
+.addNewTeacherItem ul li span {
+  font-size: 14px;
+  color: #787878;
+  float: left;
+  margin-left: 10px;
+  line-height: 50px;
+}
 .addTeacherBtnRow {
   height: 50px;
   margin-top: 90px;
