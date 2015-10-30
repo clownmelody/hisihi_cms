@@ -3,7 +3,7 @@
  */
 //我的老师
 
-define(['jquery','jqueryui'],function () {
+define(['jquery','jqueryui','util'],function () {
     var StudentWorks = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';

@@ -3,7 +3,7 @@
  */
 //我的老师
 
-define(['jquery','jqueryui'],function () {
+define(['jquery','jqueryui','util'],function () {
     var MyLesson = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
@@ -116,7 +116,7 @@ define(['jquery','jqueryui'],function () {
             } else {
                 this.$wrapper.cornerLoading();
             }
-            var url=this.basicApiUrl+'/getVideoCategory',
+            var url=this.basicApiUrl+'/getCourses',
                 that=this;
             Hisihi.getDataAsync({
                 type: "post",
@@ -183,7 +183,7 @@ define(['jquery','jqueryui'],function () {
 
         //添加教程
         addLessons:function(){
-            window.location.href = window.urlObject.ctl + "/Index/addnewlesson";
+            window.location.href = window.urlObject.ctl + "/Index/addnewlesson/id/"+0;
         },
 
         /*

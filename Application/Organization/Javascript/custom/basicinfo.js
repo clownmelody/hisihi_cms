@@ -4,7 +4,7 @@
 
  //基本信息
 
- define(['jquery','jqueryuploadify','jqueryvalidate'],function () {
+ define(['jquery','jqueryuploadify','jqueryvalidate','util'],function () {
  	var BasicInfo = function ($wrapper) {
  	    this.$wrapper = $wrapper;
 		var cookie=JSON.parse($.cookie('hisihi-org'));
@@ -52,7 +52,7 @@
 		//上传头像
 		this.$wrapper.on('click',"#uploadImg", function () {
 			$('#ImgModal').fadeIn(500);
-			that.initializeCrop(that.$wrapper.find('#myNewPicture'));  //头像裁剪初始化
+			//that.initializeCrop(that.$wrapper.find('#myNewPicture'));  //头像裁剪初始化
 		});
 
 		//关闭弹出层
@@ -375,7 +375,7 @@
 					var $img=$('#myNewPicture');
 					$img.attr({'src':data.logo.path,'data-lid':data.logo.id});
 					that.cancelCrop(false);
-					that.initializeCrop($img);
+					//that.initializeCrop($img);
 				} else {
 					//(data.info);
 					data.info

@@ -4,7 +4,7 @@
 
 //我的老师
 
-define(['jquery','jqueryui'],function () {
+define(['jquery','jqueryui','util'],function () {
     var MyTeacher = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.modelBox=null;
@@ -331,13 +331,13 @@ define(['jquery','jqueryui'],function () {
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
                                             '<input type="button" id="queryTeacher" class="btn brand-info" value="检索"/>'+
                                             '<label id="hideQueryResult" class="newGroupCommitCal" title="关闭结果">关闭结果</label>'+
-                                            '<label class="errorInfo addNewTeacherInput">请选择老师</label>'+
+                                            '<span class="basicFormInfoError" id="selectTeacherError"><label>请选择老师</label></span>'+
                                             '<div class="selectedBox" id="queryTeachResult"><ul></ul></div>'+
                                         '</div>'+
                                     '</div>' +
                                     '<div class="addTeacherBtnRow">'+
                                         '<input type="button" id="addTeacherCommitBtn" class="btn btn-grey" value="确定"/>' +
-                                        '<label id="addTeacherCalBtn" class="newGroupCommitCal" title="取消">取消</label>'+
+                                        '<label id="addTeacherCalBtn" class="btnCommitCal" title="取消">取消</label>'+
                                     '</div>' +
                             '</div>';
                     },
@@ -578,7 +578,7 @@ define(['jquery','jqueryui'],function () {
             var $input = modelContext.$panel.find('#addNewTeacherInput'),
                 val = $input.val().replace(/(^\s*)|(\s*$)/g,'');
             if (val == '') {
-                modelContext.$panel.find('.addNewTeacherInput').show().delay(500).hide(0);
+                modelContext.$panel.find('#selectTeacherError').show().delay(500).hide(0);
                 return;
             } else {
                 var url = myContext.basicApiUrl + '/teachersFilter',
