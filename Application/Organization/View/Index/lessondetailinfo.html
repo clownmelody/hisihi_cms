@@ -7,8 +7,8 @@
 			<div class="container">
 
 				<ul class="list-line">
-					<li>视频教程</li>
-					<li>课程信息</li>
+					<li><a href="__URL__/Index/video">视频教程</a></li>
+					<li><a href="__URL__/Index/addnewlesson/id/{$id}">课程信息</a></li>
 					<li class="active">上传视频</li>
 				</ul>
 				<!-- /.list-line -->
@@ -23,7 +23,7 @@
 		<div class="box-body">
 
 			<div class="container">
-				<h2 class="viod-title" id="lessonDetailTitle">Photoshop大圣归来手绘板yuangao</h2>
+				<h2 class="viod-title" id="lessonDetailTitle"></h2>
 				<div class="box-table">
 					<table class="table table-info">
 						<thead>
@@ -34,53 +34,7 @@
 								<th>热度</th>
 							</tr>
 						</thead>
-						<tbody id="allLessonVideoCon">
-							<tr>
-								<th>1</th>
-								<td class="title">Photoshop 大圣归来手绘板原稿Photoshop 大圣 归来手绘板原稿</td>
-								<td class="time">2015-03-24-18:24</td>
-								<td>
-									<span class="icon icon-look"></span>
-									12,345
-								</td>
-							</tr>
-							<tr>
-								<th>2</th>
-								<td class="title">Photoshop 大圣归来手绘板原稿</td>
-								<td class="time">2015-03-24-18:24</td>
-								<td>
-									<span class="icon icon-look"></span>
-									12,345
-								</td>
-							</tr>
-							<tr>
-								<th>3</th>
-								<td class="title">Photoshop 大圣归来手绘板原稿</td>
-								<td class="time">2015-03-24-18:24</td>
-								<td>
-									<span class="icon icon-look"></span>
-									12,345,125
-								</td>
-							</tr>
-							<tr>
-								<th>4</th>
-								<td class="title">Photoshop 大圣归来手绘板原稿</td>
-								<td class="time">2015-03-24-18:24</td>
-								<td>
-									<span class="icon icon-look"></span>
-									12,345
-								</td>
-							</tr>
-							<tr>
-								<th>5</th>
-								<td class="title">Photoshop 大圣归来手绘板原稿</td>
-								<td class="time">2015-03-24-18:24</td>
-								<td>
-									<span class="icon icon-look"></span>
-									12,345
-								</td>
-							</tr>
-						</tbody>
+						<tbody id="allLessonVideoCon"></tbody>
 					</table>
 				</div>
 				<!-- /.box-table -->
@@ -108,23 +62,23 @@
 				<ul class="list list-editor">
 					<li>
 						<span class="item-label">标题: </span>
-						<p>大圣归来手绘板原稿</p>
+						<p id="lessonDetailTitleBox">大圣归来手绘板原稿</p>
 					</li>
 					<li>
 						<span class="item-label">简介: </span>
-						<p>本课程是手绘板手绘原画基础课程，为大家讲解以大圣归来的原画稿为例重点讲解了手绘过程中该如何描绘出暗部、亮部的层次感以及环境光等。</p>
+						<p id="lessonDetailContentBox">本课程是手绘板手绘原画基础课程，为大家讲解以大圣归来的原画稿为例重点讲解了手绘过程中该如何描绘出暗部、亮部的层次感以及环境光等。</p>
 					</li>
 					<li>
 						<span class="item-label">分类: </span>
-						<p>Photoshop</p>
+						<p id="lessonDetailCategoryBox">Photoshop</p>
 					</li>
 					<li>
 						<span class="item-label">讲师: </span>
-						<p>李格</p>
+						<p id="teacherBox">SB</p>
 					</li>
 					<li>
 						<span class="item-label">权限: </span>
-						<p>公开</p>
+						<p id="authType">公开</p>
 					</li>
 				</ul>
 				<!-- /.list list-editor -->

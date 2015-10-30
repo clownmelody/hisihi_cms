@@ -180,7 +180,12 @@ define(['jquery'],function () {
         }
     };
 
-    /*得到随机的整数*/
+    /*
+    *得到随机的整数
+    *para
+    * max - {num} 最大值
+    * min - {num} 最小值 默认为0
+    */
     Hisihi.getRandomNum=function(max,min){
         if(!min){
             min=0;
@@ -188,6 +193,32 @@ define(['jquery'],function () {
         var rand=max-min,
             num=(Math.random()*rand)+min;
         return Math.round(num);
+    };
+
+    /*
+    *从时间戳 得到 时间
+    * para
+    * dateInfo - {num} 时间戳
+    * dateFormat - {string} 时间格式 默认为'yyyy.MM.dd'
+    */
+    Hisihi.getTimeFromTimestamp=function(dateInfo,dateFormat) {
+        if(!dateFormat){
+            dateFormat ='yyyy.MM.dd';
+        }
+       return new Date(parseFloat(dateInfo) * 1000).format(dateFormat);
+    }
+
+     /*
+     *字符串截取
+     * para
+     * str - {string} 目标字符串
+     * len - {int} 最大长度
+     */
+    Hisihi.substrLongStr=function(str,len){
+        if(str.length>len){
+            str=str.substr(0,parseInt(len-1))+'……';
+        }
+        return str;
     };
 
 

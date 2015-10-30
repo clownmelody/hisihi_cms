@@ -34,7 +34,8 @@ define(['jquery','util','jqueryuploadify'],function () {
                     data = data.data;
                     that.$wrapper.cornerLoading('hideLoading');
                     var str = that.showAllVideosInfo(data);
-                    this.$wrapper.find('#allLessonVideoCon').html(str);
+                    this.$wrapper.find('#allLessonVideoCon').html(str);   //填充视频列表
+                    that.fillInBottomBoxInfo(data); //填充基本信息
                 }else{
                     alert('数据加载失败！');
                 }
@@ -55,6 +56,20 @@ define(['jquery','util','jqueryuploadify'],function () {
                     callback.call(that,data)
                 }
             });
+        },
+
+        /*填充下方展示框的内容*/
+        fillInBottomBoxInfo:function(data){
+            var title=Hisihi.substrLongStr(this.title,26),
+                content=Hisihi.substrLongStr(this.content,56),
+                category=Hisihi.substrLongStr(this.category_name,20),
+                authType=this.auth=='1'?'公开':'私有';
+           this.$wrapper.find('#lessonDetailTitleBox').text(title);
+           this.$wrapper.find('#lessonDetailContentBox').text(content);
+           this.$wrapper.find('#lessonDetailCategoryBox').text(category);
+           this.$wrapper.find('#teacherBox').text('sb');
+
+           this.$wrapper.find('#authType').text(authType);
         },
 
         /*
@@ -84,11 +99,8 @@ define(['jquery','util','jqueryuploadify'],function () {
             }
             this.$wrapper.find('#lessonDetailTitle').text(allTitle);
             $.each(data.video,function(index){
-                date=new Date(parseFloat(this.create_time)* 1000).format('yyyy.MM.dd');
-                title=this.name;
-                if(title.length>27){
-                    title=title.substr(0,26)+'……';
-                }
+                date=Hisihi.getTimeFromTimestamp(this.create_time);
+                title=Hisihi.substrLongStr(this.name,26);
                 str+='<tr>'+
                         '<th>'+ parseInt(index+1)+'</th>'+
                         '<td class="title" title="'+this.name+'">'+title+'</td>'+
