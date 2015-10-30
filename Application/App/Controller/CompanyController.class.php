@@ -260,7 +260,7 @@ class CompanyController extends AppController {
         }
         $email = $result[0]['hr_email'];
         $returnData['company_name'] = $result[0]['name'];
-        if($emailUtils->sendMail($email, $returnData)){
+        if($emailUtils->sendMail(null, $returnData)){//简历发送至嘿设汇指定邮箱
             $model = D('User/ResumeDelivery');
             $data['uid'] = $uid;
             $data['company_id'] = $companyId;
