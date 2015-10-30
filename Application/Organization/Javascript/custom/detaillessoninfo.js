@@ -60,10 +60,10 @@ define(['jquery','util','jqueryuploadify'],function () {
 
         /*填充下方展示框的内容*/
         fillInBottomBoxInfo:function(data){
-            var title=Hisihi.substrLongStr(this.title,26),
-                content=Hisihi.substrLongStr(this.content,56),
-                category=Hisihi.substrLongStr(this.category_name,20),
-                authType=this.auth=='1'?'公开':'私有';
+            var title=Hisihi.substrLongStr(data.title,26),
+                content=Hisihi.substrLongStr(data.content,56),
+                category=Hisihi.substrLongStr(data.category_name,20),
+                authType=data.auth=='1'?'公开':'私有';
            this.$wrapper.find('#lessonDetailTitleBox').text(title);
            this.$wrapper.find('#lessonDetailContentBox').text(content);
            this.$wrapper.find('#lessonDetailCategoryBox').text(category);
@@ -98,6 +98,9 @@ define(['jquery','util','jqueryuploadify'],function () {
                 allTitle=allTitle.substr(0,24)+'……';
             }
             this.$wrapper.find('#lessonDetailTitle').text(allTitle);
+            if(!data.video){
+                return '';
+            }
             $.each(data.video,function(index){
                 date=Hisihi.getTimeFromTimestamp(this.create_time);
                 title=Hisihi.substrLongStr(this.name,26);

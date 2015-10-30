@@ -7,9 +7,9 @@
  define(['jquery','jqueryuploadify','jqueryvalidate','util'],function () {
  	var BasicInfo = function ($wrapper) {
  	    this.$wrapper = $wrapper;
-		var cookie=JSON.parse($.cookie('hisihi-org'));
-		this.sectionId=cookie.session_id;
-		this.organization_id=cookie.organization_id;
+		this.cookie=JSON.parse($.cookie('hisihi-org'));
+		this.sectionId=this.cookie.session_id;
+		this.organization_id=this.cookie.organization_id;
 		this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
 		if(this.organization_id!=0) {
 			this.loadBasicData();  //显示基本信息
@@ -215,18 +215,22 @@
 
 		/*确认修改信息*/
 		submitBaseInfo:function(){
+
 			if(this.validate.form()) {
-				var $form = this.$wrapper.find('#basicForm');
-				var newData= {
+				var $form = this.$wrapper.find('#basicForm'),
+					$label=this.$wrapper.find('#basicInfoResultLabel'),
+					that=this;
+					name=$form.find('#name').val(),
+					newData= {
 					organization_id:$form.find('#organization_id').attr('data-org-id'),
-					name: $form.find('#name').val(),
+					name: name,
 					slogan: $form.find('#Signature').val(),
 					introduce: $form.find('#orgBasicIntroduce').val(),
 					logo: $form.find('#basicInfoLogo').attr('data-lid'),
 					advantage:this.getAllMyTagsId(),
 					location: $form.find('#Address').val(),
 					phone_num:$form.find('#Contact').val()
-				}
+				};
 
 				Hisihi.getDataAsync({
 					type: "post",
@@ -234,11 +238,15 @@
 					data: newData,
 					org:false,
 					callback: function(e){
+						var tempStr='更新成功';
 						if(e.success) {
-							alert('更新成功');
+							that.updateCookie.call(that,'organization_name',name);
+							var tempName=Hisihi.substrLongStr(name,9);
+							$('#headOrgName').attr('title',name).text(tempName);
 						}else{
-							alert('更新失败');
+							tempStr='更新失败';
 						}
+						$label.text('更新成功').show().delay(1000).hide(0);
 					}
 				});
 			}
@@ -255,10 +263,12 @@
 				org: true,
 				callback: function (e) {
 					if(e.success) {
-						var $newPic=that.$wrapper.find('#myNewPicture');
+						var $newPic=that.$wrapper.find('#myNewPicture'),
+							src=$newPic.attr('src');
 						that.$wrapper.find('#basicInfoLogo')
 							.add($('#headerLogo'))
-							.attr({'src': $newPic.attr('src'), 'data-lid': $newPic.attr('data-lid')});
+							.attr({'src': src, 'data-lid': $newPic.attr('data-lid')});
+						that.updateCookie.call(that,'organization_logo',src);
 						that.cancelCrop.call(that,true);
 					}else{
 						alert('头像信息更新失败');
@@ -276,6 +286,14 @@
 				tempStr=tempStr.substr(0,tempStr.length-1);
 			}
 			return tempStr;
+		},
+
+		/*重新设置cookie*/
+		updateCookie:function(keyName,val){
+			this.cookie[keyName]=val;
+			$.cookie('hisihi-org',null);
+			$.cookie('hisihi-org',JSON.stringify(this.cookie),{expires:7});
+
 		},
 
 
