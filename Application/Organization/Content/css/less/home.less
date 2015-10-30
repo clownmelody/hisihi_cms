@@ -1,6 +1,7 @@
 @import "base.less";
 @import "mixin.less";
 @import "list.less";
+@import "forms.less";
 @import "buttons.less";
 @import "variables.less";
   
@@ -11,12 +12,22 @@
 
 //color
 @brand-primary:    #ff5a00;
+@brand-caveat:     #CF4646;
+@md-grey-CD:       #CDCFD2;
+
+@brand-primary-color:              #fff;
+@brand-primary-bg:                 @brand-primary;
+@brand-primary-border:             lighten(@brand-primary-bg, 5%);
 
 .home{
 	font-family: "Roboto Medium",Microsoft YaHei,SimHei; 
 	.container{
 		width: 1200px;
 		margin: 0 auto;
+	}
+	.row{
+		position: relative;
+		z-index: 1;
 	}
 }
 
@@ -28,7 +39,7 @@
 	position: fixed;
 	top: 0;
 	color: @white-color;
-	z-index: 1;
+	z-index: 100;
 	.nav-left{
 		float: left;
 		width: 85%;
@@ -121,7 +132,7 @@
 	background-position: center center;
 	background-repeat:no-repeat;
 	background-size: cover;
-	padding: 200px 0 0 0; 
+	//padding: 200px 0 0 0; 
 	&.item1{
 		
 		background-image:url('@{img-path}bg1.jpg');
@@ -146,5 +157,234 @@
 		
 		background-image:url('@{img-path}bg7.jpg');
 		
+	}
+	.home-item-title{
+		.font-size(60);
+		font-weight: 100;
+		line-height: 1.3;
+		margin-bottom: 20px;
+	}
+	.home-item-txt{
+		.font-size(24);
+		font-weight: 100;
+		line-height: 1.6;
+	}
+}
+
+.column{
+	float: left;
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	position: relative;
+	z-index: 1;
+	max-height: 1024px;
+	min-height: 600px;
+	.content-copy{
+		margin-top: 30px;
+		position: relative;
+		text-align: left;
+		top: 50%;
+		transform: translateY(-50%);
+		.copy-container{
+		    letter-spacing: 1px;
+		    line-height: 1.1;
+		    color: @white-color;
+		    font-weight: 100;
+		}
+	}
+	.content-hardware{
+		margin-top: 39px;
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+		.hardware-container{
+			pointer-events: auto;
+			overflow: hidden;
+			.image-music-phone{
+				margin-left: auto;
+				margin-right: 0;
+				position: relative;
+				transform-origin: center bottom 0;
+			}
+		}
+	}
+	&.large-1{
+		width: 100/12%;
+	}
+	&.large-2{
+		width: 100/12*2%;
+	}
+	&.large-3{
+		width: 100/12*3%;
+	}
+	&.large-4{
+		width: 100/12*4%;
+	}
+	&.large-5{
+		width: 100/12*5%;
+	}
+	&.large-6{
+		width: 100/12*6%;
+	}
+	&.large-7{
+		width: 100/12*7%;
+	}
+	&.large-8{
+		width: 100/12*8%;
+	}
+	&.large-9{
+		width: 100/12*9%;
+	}
+	&.large-10{
+		width: 100/12*10%;
+	}
+	&.large-11{
+		width: 100/12*11%;
+	}
+	&.large-12{
+		width: 100/12*12%;
+	}
+}
+
+.item1{
+	.home-item-title{
+		.font-size(60);
+		font-weight: 100;
+		line-height: 1.8;
+	}
+	.form-box{
+		width: 380px-80px;
+		margin: 0 auto;
+		padding: 30px 40px;
+		background: rgba(0, 0, 0, 0.6);
+		.border-radius(4px);
+		.from-title{
+			color: @md-grey-CD;
+			text-align: left;
+			.font-size(24);
+			margin: 10px 0 24px;
+		}
+		.form-group{
+			margin-bottom: 18px;
+			.form-control{
+				width: 260px;
+				.border-radius(2px);
+				background-clip: inherit;
+				background-color: @md-grey-CD;
+			}
+			.basicFormInfoError{
+				line-height: 30px;
+				color: @brand-caveat;
+			}
+			.btn-primary{
+				width: 100%;
+				.font-size(16);
+				.border-radius(2px);
+				background-clip: inherit;
+				.button-variant(@brand-primary-color; @brand-primary-bg; @brand-primary-border);
+			}
+			&.forget-pass{
+				text-align: right;
+				>a{
+					.font-size(14);
+					color: @md-grey-CD;
+					&:hover{
+						color: @brand-primary;
+					}
+				}
+			}
+		}
+		.signup-title{
+			color: @white-color;
+			.font-size(14);
+			>a{
+				color: @brand-primary;
+				&:hover{
+					color: darken(@brand-primary, 10%);
+				}
+			}
+		}
+	}
+	.data-box{
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		height: 77px;
+		z-index: 50;
+		background-color: rgba(0, 0, 0, 0.5);
+		.list-data{
+			>li{
+				width: 100/4%;
+				>p{
+					color: @white-color;
+					text-align: center;
+				}
+			}
+			.data-num{
+				.font-size(28);
+				margin-top: 10px;
+				letter-spacing:5px;
+			}
+			.data-txt{
+				.font-size(14);
+			}
+		}
+	}
+}
+
+.item2{
+	.image-music-phone{
+		background-image: url('@{img-path}iphone_jigou.png');
+		background-repeat: no-repeat;
+		background-size: 519px 890px;
+		height: 890px;
+		width: 519px;
+		bottom: -120px;
+	}
+}
+.item3{
+	.content-hardware{
+		margin-top: 37px;
+	}
+	.image-music-phone{
+		background-image: url('@{img-path}iphone_shequ.png');
+		background-repeat: no-repeat;
+		background-size: 572px 893px;
+		height: 893px;
+		width: 572px;
+		bottom: -140px;
+	}
+}
+.item4{
+	.content-hardware{
+		margin-top: 33px;
+	}
+	.image-music-phone{
+		background-image: url('@{img-path}iphone_tongzhi.png');
+		background-repeat: no-repeat;
+		background-size: 435px 901px;
+		height: 901px;
+		width: 435px;
+		bottom: -110px;
+	}
+}
+.item5{
+	.hero-headline{
+		height: 100vh;
+	    min-height: 600px;
+	    max-height: 1024px;
+	    position: relative;
+	    pointer-events: auto;
+	    z-index: 2;
+	    .section-content{
+	    	margin: auto;
+		    position: relative;
+		    text-align: center;
+		    top: 15%;
+		    transform: translateY(-15%);
+		    width: 980px;
+		    color: @white-color;
+	    }
 	}
 }
