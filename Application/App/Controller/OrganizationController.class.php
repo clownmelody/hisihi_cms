@@ -799,7 +799,7 @@ class OrganizationController extends AppController
      * @param null $auth
      */
     public function addCourse($id = null,$organization_id=null, $title=null, $content=null,$category_id=null, $img=null, $lecturer=null, $auth=1){
-        //$this->requireAdminLogin();
+        $this->requireAdminLogin();
         $model = M('OrganizationCourse');
         if(!empty($id)){
             $data['organization_id'] = $organization_id;
