@@ -10,11 +10,10 @@ define(['jquery','jqueryui','util'],function () {
         this.loadData();
         this.initUploadify();
         this.$wrapper.on('click','.worksItemBottom', $.proxy(this,'worksItemDescEdit'));
-        this.$wrapper.on('blur','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
+        this.$wrapper.on('focusout','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('click','.editStudentWorks', $.proxy(this,'showEditVideoBox'));
         this.$wrapper.on('click','.deleteStudentWorks', $.proxy(this,'deleteStudentWorks'));
-
     };
     StudentWorks.prototype= {
         loadData: function () {
@@ -124,7 +123,7 @@ define(['jquery','jqueryui','util'],function () {
                 callback: function (result) {
                     if (result.success) {
                         //添加到列表中
-                        that.getStudentWorksInfoStr.call(that, [{id: logo.id, url: logo.path, description: ''}]);
+                        that.getStudentWorksInfoStr.call(that, [{url: logo.path, description: '',id:result.works_id}]);
                     } else {
                         alert('作品上传失败');
                     }

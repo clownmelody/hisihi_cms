@@ -25,7 +25,7 @@ define(['jquery','jqueryui','util'],function () {
             } else {
                 this.$wrapper.cornerLoading();
             }
-            var url=this.basicApiUrl+'/getOrganizationEnvironment ',
+            var url=this.basicApiUrl+'/getOrganizationEnvironment',
                 that=this;
             Hisihi.getDataAsync({
                 type: "post",
@@ -126,7 +126,7 @@ define(['jquery','jqueryui','util'],function () {
                 callback: function (result) {
                     if (result.success) {
                         //添加到列表中
-                        that.getStudentWorksInfoStr.call(that, [{id: logo.id, url: logo.path, description: ''}]);
+                        that.getStudentWorksInfoStr.call(that, [{id: result.environment_id, url: logo.path, description: ''}]);
                     } else {
                         alert('作品上传失败');
                     }
