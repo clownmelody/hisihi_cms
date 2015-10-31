@@ -325,6 +325,88 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 环境图片新增
+     */
+    public function environment_add(){
+        $this->display();
+    }
+
+    /**
+     * 环境图片更新
+     */
+    public  function environment_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationResource');
+            $cid = $_POST["cid"];
+            $data["title"] = $_POST["title"];
+            $data["content"] = $_POST["content"];
+
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/organization/notice');
+            } else {
+                $data["update_time"] = time();
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                $this->success('更新成功', 'index.php?s=/admin/organization/notice');
+            }
+        } else {
+            $this->display('notice_add');
+        }
+    }
+
+    /**编辑环境图片
+     * @param $id
+     */
+    public function environment_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationResource');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $this->assign('info', $data);
+        $this->meta_title = '编辑机构公告信息';
+        $this->display();
+    }
+
+    /**删除环境图片
+     * @param $id
+     */
+    public function environment_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationResource');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/notice');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+
+    /**
      * 机构视频列表
      */
     public function video(){
