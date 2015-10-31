@@ -63,12 +63,12 @@ define(['jquery','util','jqueryuploadify'],function () {
             var title=Hisihi.substrLongStr(data.title,26),
                 content=Hisihi.substrLongStr(data.content,56),
                 category=Hisihi.substrLongStr(data.category_name,20),
+                teacherName=Hisihi.substrLongStr(data.teacher_name,20),
                 authType=data.auth=='1'?'公开':'私有';
            this.$wrapper.find('#lessonDetailTitleBox').text(title);
            this.$wrapper.find('#lessonDetailContentBox').text(content);
            this.$wrapper.find('#lessonDetailCategoryBox').text(category);
-           this.$wrapper.find('#teacherBox').text('sb');
-
+           this.$wrapper.find('#teacherBox').text(teacherName);
            this.$wrapper.find('#authType').text(authType);
         },
 

@@ -1487,6 +1487,10 @@ body {
   height: 40px;
   width: 115px;
 }
+#basicInfoResultLabel {
+  display: none;
+  margin-left: 20px;
+}
 #ImgModal .myModal-body-left {
   width: 40%;
   height: 100%;
@@ -1974,8 +1978,12 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   margin-left: 4px;
   line-height: 15px;
 }
-.addNewLessonWrapper .addNewLessonHeader span:nth-child(1) {
-  color: #999999;
+.addNewLessonWrapper .addNewLessonHeader span:nth-child(1) a {
+  color: #666666;
+  font-size: 16px;
+}
+.addNewLessonWrapper .addNewLessonHeader span:nth-child(1) a:hover {
+  text-decoration: underline;
 }
 .addNewLessonWrapper .addNewLessonHeader span:nth-child(2) {
   margin-left: 0px;
@@ -2085,6 +2093,12 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 }
 .lessondetailinfo .list-line > li.active {
   color: #333333;
+}
+.lessondetailinfo .list-line > li a {
+  color: #666666;
+}
+.lessondetailinfo .list-line > li a:hover {
+  text-decoration: underline;
 }
 .lessondetailinfo .list-line > li + li::before {
   content: "/ ";

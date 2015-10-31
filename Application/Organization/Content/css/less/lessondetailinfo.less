@@ -50,12 +50,19 @@
       &.active{
         color: @md-grey-300;
       }
+      a{
+        color: @md-grey-666;
+      }
+      a:hover{
+        text-decoration: underline;
+      }
     }
     >li + li::before{
       content: "/ ";
       color: #ccc;
       padding: 0 5px 0 10px;
     }
+
 
   }
   .list-editor{
@@ -68,6 +75,7 @@
         .font-size(14);
         overflow: hidden;
       }
+
     }
     .item-label{
       float: left;

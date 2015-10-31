@@ -9,7 +9,8 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
         this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
         this.initUploadify();
         this.validate=this.getFormValidity();
-        if(this.$wrapper.data('lid')!=0) {
+        this.course_id=this.$wrapper.data('lid');
+        if(this.course_id!=0) {
             this.loadLessonBasicInfo();
         }else{
 
@@ -82,15 +83,12 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
             } else {
                 this.$wrapper.cornerLoading();
             }
-
-
-            var url=this.basicApiUrl+'/getBaseInfo',
+            url=this.basicApiUrl+'/getCourseVideoList',
                 that=this;
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {},
-                org:true,
+                data: {course_id:this.course_id},
                 callback: $.proxy(this,'fillInLessonBasicInfo')
             });
         },
@@ -100,13 +98,10 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
             this.$wrapper.cornerLoading('hideLoading');
             if(result.success) {
                 var data=result.data,
-                    $form = this.$wrapper.find('#basicForm');
-                $form.find('#name').val(data.name);
-                $form.find('#Signature').val(data.slogan);
-                $form.find('#Address').val(data.location);
-                $form.find('#orgBasicIntroduce').val(data.introduce);
-                $newImg = this.$wrapper.find('#myNewPicture');
-                $form.find('#basicInfoLogo').add($newImg).attr({'src':data.logo.url,'data-lid':data.logo.id});
+                    $form = this.$wrapper.find('#addNewLessonForm');
+                $form.find('#newLessonTitle').val(data.name);
+                $form.find('#newLessonContent').val(data.slogan);
+                $form.find('#myLessonCoverImg img').attr(src,data.location);
 
                 //加载优势标签
                 var str =this.loadAdvantage(data.advantage);
