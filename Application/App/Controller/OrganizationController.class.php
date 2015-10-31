@@ -137,8 +137,9 @@ class OrganizationController extends AppController
         $map['password'] = md5($password);
         $user = M('OrganizationAdmin')->where($map)->find();
         if($user){
-            /*$org_model = M('Organization');
-            $org_model->where('status=1 and id=')*/
+            $org_model = M('Organization');
+            $orginfo = $org_model->where('status=1 and id='.$user['organization_id'])->find();
+            $logo = $this->fetchImage($orginfo['logo']);
             $auth = array(
                 'uid' => $user['id'],
                 'mobile' => $user['mobile'],
@@ -150,6 +151,8 @@ class OrganizationController extends AppController
             $extra['username'] = $user['username'];
             $extra['session_id'] = session_id();
             $extra['organization_id'] = $user['organization_id'];
+            $extra['organization_name'] = $orginfo['name'];
+            $extra['organization_logo'] = $logo;
             $this->apiSuccess("登陆成功", null, $extra);
         } else {
             $this->apiError(-1, '用户不存在或密码错误');
@@ -328,7 +331,7 @@ class OrganizationController extends AppController
     public function getBaseInfo($organization_id){
         $this->requireAdminLogin();
         $model=M("Organization");
-        $result = $model->where(array('id'=>$organization_id))
+        $result = $model->where(array('id'=>$organization_id,'status'=>1))
             ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
         if($result){
             $logo_id = $result['logo'];
@@ -433,18 +436,19 @@ class OrganizationController extends AppController
 
     /**
      * 学生作品添加或删除
+     * @param null id
      * @param null $organization_id
      * @param null $pic_id
      * @param null $description
      * @param string $type
      */
-    public function studentWorks($organization_id=null, $pic_id=null, $description=null, $type='add'){
+    public function studentWorks($id=null, $organization_id=null, $pic_id=null, $description=null, $type='add'){
         $this->requireAdminLogin();
-        if(empty($organization_id)||empty($pic_id)){
-            $this->apiError(-1, '传入参数不能为空');
-        }
         $model = M('OrganizationResource');
         if('add'==$type){  // 添加学生作品
+            if(empty($organization_id)||empty($pic_id)){
+                $this->apiError(-1, '传入参数不能为空');
+            }
             $data['type'] = 1;
             $data['organization_id'] = $organization_id;
             $data['pic_id'] = $pic_id;
@@ -458,10 +462,11 @@ class OrganizationController extends AppController
                 $this->apiError(-1, '添加学生作品失败');
             }
         } else {  // 删除学生作品
+            if(empty($id)){
+                $this->apiError(-1, '传入id参数不能为空');
+            }
             $data['status'] = -1;
-            $map['type'] = 1;
-            $map['organization_id'] = $organization_id;
-            $map['pic_id'] = $pic_id;
+            $map['id'] = $id;
             $res = $model->where($map)->save($data);
             if($res){
                 $this->apiSuccess('删除学生作品成功');
@@ -473,18 +478,19 @@ class OrganizationController extends AppController
 
     /**
      * 机构环境图片添加或删除
+     * @param null $id
      * @param null $organization_id
      * @param null $pic_id
      * @param null $description
      * @param string $type
      */
-    public function organizationEnvironment($organization_id=null, $pic_id=null, $description=null, $type='add'){
+    public function organizationEnvironment($id=null, $organization_id=null, $pic_id=null, $description=null, $type='add'){
         $this->requireAdminLogin();
-        if(empty($organization_id)||empty($pic_id)){
-            $this->apiError(-1, '传入参数不能为空');
-        }
         $model = M('OrganizationResource');
         if('add'==$type){
+            if(empty($organization_id)||empty($pic_id)){
+                $this->apiError(-1, '传入参数不能为空');
+            }
             $data['type'] = 2;
             $data['organization_id'] = $organization_id;
             $data['pic_id'] = $pic_id;
@@ -498,10 +504,11 @@ class OrganizationController extends AppController
                 $this->apiError(-1, '添加机构环境图片失败');
             }
         } else {
+            if(empty($id)){
+                $this->apiError(-1, '传入id参数不能为空');
+            }
             $data['status'] = -1;
-            $map['type'] = 2;
-            $map['organization_id'] = $organization_id;
-            $map['pic_id'] = $pic_id;
+            $map['id'] = $id;
             $res = $model->where($map)->save($data);
             if($res){
                 $this->apiSuccess('删除机构环境图片成功');
@@ -523,7 +530,7 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $work['url'] = $this->fetchImage($pic_id);
@@ -546,7 +553,7 @@ class OrganizationController extends AppController
         $map['type'] = 2;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $work['url'] = $this->fetchImage($pic_id);
@@ -782,27 +789,30 @@ class OrganizationController extends AppController
         }
     }
 
-    /**
-     * 添加机构课程
+    /**添加机构课程
+     * @param null $organization_id
      * @param null $title
      * @param null $content
+     * @param null $category_id
      * @param null $img
      * @param null $lecturer
      * @param null $auth
      */
-    public function addCourse($organization_id=null, $title=null, $content=null, $img=null, $lecturer=null, $auth=null){
+    public function addCourse($organization_id=null, $title=null, $content=null,$category_id=null, $img=null, $lecturer=null, $auth=1){
+        $this->requireAdminLogin();
         $model = M('OrganizationCourse');
         $data['organization_id'] = $organization_id;
         $data['title'] = $title;
         $data['content'] = $content;
         $data['img'] = $img;
-        /*
-         * 需要添加图片到oss
-         */
+        $data['category_id']=$category_id;
         $data['lecturer'] = $lecturer;
         $data['auth'] = $auth;
+        $data['create_time'] = time();
+        $data['update_time'] = time();
         $result = $model->add($data);
         if($result){
+            $this->uploadLogoPicToOSS($img);
             $this->apiSuccess('添加课程成功');
         } else {
             $this->apiError(-1, '保存课程信息失败');
@@ -814,6 +824,7 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function getCourses($organization_id=null){
+        $this->requireAdminLogin();
         $model = M('OrganizationCourse');
         $config_model = M("OrganizationConfig");
         $map['organization_id'] = $organization_id;
@@ -827,6 +838,7 @@ class OrganizationController extends AppController
                 $course['category_name'] = $category['value'];
             }
             $course['url'] = $this->fetchImage($course['img']);
+            $video_course[] = $course;
         }
         $extra['data'] = $video_course;
         $this->apiSuccess('获取所有课程成功', null, $extra);
@@ -837,6 +849,7 @@ class OrganizationController extends AppController
      * @param null $course_id
      */
     public function getCourseVideoList($course_id=null){
+        $this->requireAdminLogin();
         if(empty($course_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
