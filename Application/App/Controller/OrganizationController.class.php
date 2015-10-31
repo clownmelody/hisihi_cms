@@ -849,7 +849,7 @@ class OrganizationController extends AppController
      * @param null $course_id
      */
     public function getCourseVideoList($course_id=null){
-        $this->requireAdminLogin();
+        //$this->requireAdminLogin();
         if(empty($course_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
@@ -865,6 +865,7 @@ class OrganizationController extends AppController
         if($category){
             $course['category_name'] = $category['value'];
         }
+        $course['img_url'] = $this->fetchImage($course['img']);
         $teacher_id = $course['lecturer'];
         $teacher = $member_model->where('status=1 and uid='.$teacher_id)->find();
         $course['teacher_name'] = $teacher['nickname'];
