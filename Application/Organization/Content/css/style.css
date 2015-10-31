@@ -1937,6 +1937,7 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 }
 .studentAndTeachCondition li .worksItemHeader {
   height: 183px;
+  border-bottom: 1px solid #f5a623;
 }
 .studentAndTeachCondition li .worksItemHeader img {
   height: 183px;
