@@ -139,13 +139,16 @@ define(['jquery','jqueryui','util'],function () {
             var str='',
                 that=this,
                 typeNameAndTile='',
-                tempTitle='';
+                tempTitle='',
+                date=null;
+
             $.each(data,function(){
-                typeNameAndTile=this.typeName+' | '+this.title;
+                typeNameAndTile=this.category_name+' | '+this.title;
                 tempTitle=typeNameAndTile;
                 if(typeNameAndTile.length>42){
                     tempTitle=typeNameAndTile.substr(0,42)+'…';
                 }
+                date=Hisihi.getTimeFromTimestamp(this.create_time);
                 str+='<li class="normal" data-id="'+this.id+'">'+
                     '<div class="videoItemHeader">'+
                     '<img src="'+this.url+'">'+
@@ -156,7 +159,7 @@ define(['jquery','jqueryui','util'],function () {
                     '<div class="videoFooter">'+
                     '<div class="videoFooterLeft">'+
                     '<i class="videoIcon videoClock"></i>'+
-                    '<span>'+this.uploadTime+'</span>'+
+                    '<span>'+date+'</span>'+
                     '</div>'+
                     '<div class="videoFooterRight">'+
                     '<i class="videoIcon videoViewedTimes"></i>'+

@@ -33,8 +33,9 @@ define(['jquery','util','jqueryuploadify'],function () {
                 if(data.success) {
                     data = data.data;
                     that.$wrapper.cornerLoading('hideLoading');
-                    var str = that.showAllVideosInfo([data]);
-                    this.$wrapper.find('#allLessonVideoCon').html(str);
+                    var str = that.showAllVideosInfo(data);
+                    this.$wrapper.find('#allLessonVideoCon').html(str);   //填充视频列表
+                    that.fillInBottomBoxInfo(data); //填充基本信息
                 }else{
                     alert('数据加载失败！');
                 }
@@ -57,6 +58,20 @@ define(['jquery','util','jqueryuploadify'],function () {
             });
         },
 
+        /*填充下方展示框的内容*/
+        fillInBottomBoxInfo:function(data){
+            var title=Hisihi.substrLongStr(data.title,26),
+                content=Hisihi.substrLongStr(data.content,56),
+                category=Hisihi.substrLongStr(data.category_name,20),
+                teacherName=Hisihi.substrLongStr(data.teacher_name,20),
+                authType=data.auth=='1'?'公开':'私有';
+           this.$wrapper.find('#lessonDetailTitleBox').text(title);
+           this.$wrapper.find('#lessonDetailContentBox').text(content);
+           this.$wrapper.find('#lessonDetailCategoryBox').text(category);
+           this.$wrapper.find('#teacherBox').text(teacherName);
+           this.$wrapper.find('#authType').text(authType);
+        },
+
         /*
         *滚动加载更多的数据
         * @para:
@@ -77,19 +92,24 @@ define(['jquery','util','jqueryuploadify'],function () {
          */
         showAllVideosInfo:function(data){
             var str='',
-                date,title='';
-            $.each(data,function(index){
-                date=new Date(parseFloat(this.update_time)* 1000).format('yyyy.MM.dd');
-                title=this.title;
-                if(title.length>27){
-                    title=title.substr(0,26)+'……';
-                }
+                date,title='',
+                allTitle=data.category_name + ' '+data.title;
+            if(allTitle.length>25){
+                allTitle=allTitle.substr(0,24)+'……';
+            }
+            this.$wrapper.find('#lessonDetailTitle').text(allTitle);
+            if(!data.video){
+                return '';
+            }
+            $.each(data.video,function(index){
+                date=Hisihi.getTimeFromTimestamp(this.create_time);
+                title=Hisihi.substrLongStr(this.name,26);
                 str+='<tr>'+
-                        '<th>'+parseInt(index+1)+'</th>'+
-                        '<td class="title" title="'+this.title+'">'+title+'</td>'+
-                        '<td class="time">2015-03-24-18:24</td>'+
+                        '<th>'+ parseInt(index+1)+'</th>'+
+                        '<td class="title" title="'+this.name+'">'+title+'</td>'+
+                        '<td class="time">'+date+'</td>'+
                         '<td>'+
-                        '<span class="icon icon-look"></span>' + Hisihi.getRandomNum(1024*2)+
+                            '<span class="icon icon-look"></span>' + this.view_count +
                         '</td>'+
                     '</tr>';
             });

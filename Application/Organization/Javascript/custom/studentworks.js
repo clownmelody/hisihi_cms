@@ -15,89 +15,6 @@ define(['jquery','jqueryui','util'],function () {
     };
     StudentWorks.prototype= {
         loadData: function () {
-            var data = [
-                    {
-                    id:0,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/1.png'
-                    },
-                {
-                    id:1,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/10.png'
-                },
-                {
-                    id:2,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/2.png'
-                },
-                {
-                    id:3,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/3.png'
-                },
-                {
-                    id:4,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/4.png'
-                },
-                {
-                    id:5,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/5.png'
-                },
-                {
-                    id:6,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/6.png'
-                },
-                {
-                    id:7,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/7.png'
-                },
-                {
-                    id:8,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/8.png'
-                },
-                {
-                    id:9,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/9.png'
-                }
-            ];
-
             if (this.$wrapper.data('cornerLoading')) {
                 this.$wrapper.cornerLoading('showLoading');
             } else {
@@ -110,37 +27,39 @@ define(['jquery','jqueryui','util'],function () {
                 url: url,
                 data: {},
                 org:true,
-                callback:function(data) {
+                callback:function(result) {
                     that.$wrapper.cornerLoading('hideLoading');
-                    that.showStudentWorksInfo(data);
+                    if(result.success) {
+                        var str = that.getStudentWorksInfoStr(result.data);
+                        that.$wrapper.find('#studentWorksMainCon>div').before(str);
+                    }else{
+                        alert('学生作品加载失败');
+                    }
                 }
             });
         },
 
-        showStudentWorksInfo:function(data){
+        /*
+        *展示学生作品
+        */
+        getStudentWorksInfoStr:function(data){
             var str='',
                 that=this,
-                typeNameAndTile='',
-                tempTitle='';
+                title='';
             $.each(data,function(){
-                typeNameAndTile=this.typeName+' | '+this.title;
-                tempTitle=typeNameAndTile;
-                if(typeNameAndTile.length>33){
-                    tempTitle=typeNameAndTile.substr(0,33)+'…';
-                }
+                title=this.description;
                 str+='<li class="normal" data-id="'+this.id+'">'+
                         '<div class="worksItemHeader">'+
-                            '<img src="'+this.imgSrc+'">'+
+                            '<img src="'+this.url+'">'+
                         '</div>'+
                         '<div class="worksItemBottom">'+
-                            '<p title="'+typeNameAndTile+'">'+tempTitle+'</p>'+
-                            '<textarea>'+typeNameAndTile+'</textarea>'+
+                            '<p title="'+title+'">'+Hisihi.substrLongStr(title,33)+'</p>'+
+                            '<textarea>'+title+'</textarea>'+
                         '</div>'+
                         '<div class="delete-item-btn" title="删除"></div>'+
                     '</li>';
             });
-            str+='<div style="clear:both;">';
-            this.$wrapper.find('#studentWorksMainCon').append(str);
+            return str;
         },
 
         /*显示编辑框*/

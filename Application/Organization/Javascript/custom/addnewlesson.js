@@ -3,19 +3,19 @@
  */
 //我的老师
 
-define(['jquery','jqueryui','jqueryvalidate',],function () {
+define(['jquery','jqueryui','jqueryvalidate','util'],function () {
     var AddNewLesson = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
         this.initUploadify();
-        this.validate=this.getFormValidity();
-        if(this.$wrapper.data('lid')!=0) {
-            this.loadLessonBasicInfo();
-        }else{
-
-        }
+        this.validity=this.getFormValidity();
+        this.course_id=this.$wrapper.data('lid');
         this.loadAllTeachers();  //加载所有老师
         this.loadAllClass(); //加载所有分类
+        if(this.course_id!=0) {
+            this.loadLessonBasicInfo();
+            this.$wrapper.find('#myLessonCoverImg').show();
+        }
         //事件注册
         this.$wrapper.on('click','#addNewLessonSubmitBtn', $.proxy(this,'addNewLesson'));
     };
@@ -82,37 +82,30 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
             } else {
                 this.$wrapper.cornerLoading();
             }
-
-
-            var url=this.basicApiUrl+'/getBaseInfo',
+            url=this.basicApiUrl+'/getCourseVideoList',
                 that=this;
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {},
-                org:true,
+                data: {course_id:this.course_id},
                 callback: $.proxy(this,'fillInLessonBasicInfo')
             });
         },
 
-        /*填充机构基本信息*/
+        /*填充教程基本信息*/
         fillInLessonBasicInfo:function(result){
             this.$wrapper.cornerLoading('hideLoading');
             if(result.success) {
                 var data=result.data,
-                    $form = this.$wrapper.find('#basicForm');
-                $form.find('#name').val(data.name);
-                $form.find('#Signature').val(data.slogan);
-                $form.find('#Address').val(data.location);
-                $form.find('#orgBasicIntroduce').val(data.introduce);
-                $newImg = this.$wrapper.find('#myNewPicture');
-                $form.find('#basicInfoLogo').add($newImg).attr({'src':data.logo.url,'data-lid':data.logo.id});
+                    $form = this.$wrapper.find('#addNewLessonForm');
+                $form.find('#newLessonTitle').val(data.title);
+                $form.find('#newLessonContent').val(data.content);
+                $form.find('#myLessonCoverImg img').attr('src',data.location);
 
-                //加载优势标签
-                var str =this.loadAdvantage(data.advantage);
-                this.$wrapper.find('#myAdvantage').html(str);
-                $form.find('#Contact').val(data.phone_num);
-                $form.find('#organization_id').attr('data-org-id',this.organization_id);
+                //控制下拉框的默认值
+                this.setSelectedInfo($('#newLessonTeacher'),data.lecturer);
+                this.setSelectedInfo($('#newLessonType'),data.category_id);
+                this.setSelectedInfo($('#newLessonAuth'),data.auth);
             }else{
                 alert('数据加载失败');
             }
@@ -120,7 +113,7 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
 
         /*添加新的教程*/
         addNewLesson:function(){
-            if(this.validate.form()) {
+            if(this.validity.form()) {
                 var $form = this.$wrapper.find('#addNewLessonForm');
                 var newData= {
                     title: $form.find('#newLessonTitle').val(),
@@ -158,6 +151,21 @@ define(['jquery','jqueryui','jqueryvalidate',],function () {
                 txt:$option.text(),
                 val:$option.val()
             }
+        },
+
+        /*
+         *控制下拉框的内容
+         * para
+         * $sel-{jquery对象}下拉框对象
+         * val - {string} 默认值
+         */
+        setSelectedInfo:function($sel,val){
+            $sel.find('option').each(function(){
+                if($(this).val()==val){
+                    $(this).attr('selected',true);
+                    return false;
+                }
+            });
         },
 
         //表单验证
