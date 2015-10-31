@@ -822,14 +822,17 @@ class OrganizationController extends AppController
     /**
      * 获取当前机构的所有课程
      * @param null $organization_id
+     * @param int $page
+     * @param int $count
      */
-    public function getCourses($organization_id=null){
+    public function getCourses($organization_id=null, $page=1, $count=9){
         $this->requireAdminLogin();
         $model = M('OrganizationCourse');
         $config_model = M("OrganizationConfig");
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
-        $course_list = $model->field('id, title, content, img, category_id, lecturer, auth, create_time')->where($map)->select();
+        $totalCount = $model->where($map)->count();
+        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, create_time')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -840,6 +843,7 @@ class OrganizationController extends AppController
             $course['url'] = $this->fetchImage($course['img']);
             $video_course[] = $course;
         }
+        $extra['totalCount'] = $totalCount;
         $extra['data'] = $video_course;
         $this->apiSuccess('获取所有课程成功', null, $extra);
     }
