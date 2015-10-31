@@ -98,7 +98,7 @@ define(['jquery','util'],function () {
                 date;
             $.each(data,function(){
                 date=new Date(parseFloat(this.update_time)* 1000).format('yyyy.MM.dd');
-                str+='<li class="anListItem" data-id="'+this.id+'"><a href="'+this.detail_url+'"> <span>'+this.title+'</span><span>'+date+'</span></a></li>';
+                str+='<li class="anListItem" data-id="'+this.id+'"><a href="'+this.detail_url+'" target="_blank"> <span>'+this.title+'</span><span>'+date+'</span></a></li>';
             });
             this.$wrapper.find('#announcesContainer .clearDiv').before(str);
         },

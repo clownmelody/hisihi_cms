@@ -181,45 +181,77 @@ define(['jquery'],function () {
     };
 
     /*
-    *得到随机的整数
-    *para
-    * max - {num} 最大值
-    * min - {num} 最小值 默认为0
-    */
-    Hisihi.getRandomNum=function(max,min){
-        if(!min){
-            min=0;
+     *得到随机的整数
+     *para
+     * max - {num} 最大值
+     * min - {num} 最小值 默认为0
+     */
+    Hisihi.getRandomNum = function (max, min) {
+        if (!min) {
+            min = 0;
         }
-        var rand=max-min,
-            num=(Math.random()*rand)+min;
+        var rand = max - min,
+            num = (Math.random() * rand) + min;
         return Math.round(num);
     };
 
     /*
-    *从时间戳 得到 时间
-    * para
-    * dateInfo - {num} 时间戳
-    * dateFormat - {string} 时间格式 默认为'yyyy.MM.dd'
-    */
-    Hisihi.getTimeFromTimestamp=function(dateInfo,dateFormat) {
-        if(!dateFormat){
-            dateFormat ='yyyy.MM.dd';
+     *从时间戳 得到 时间
+     * para
+     * dateInfo - {num} 时间戳
+     * dateFormat - {string} 时间格式 默认为'yyyy.MM.dd'
+     */
+    Hisihi.getTimeFromTimestamp = function (dateInfo, dateFormat) {
+        if (!dateFormat) {
+            dateFormat = 'yyyy.MM.dd';
         }
-       return new Date(parseFloat(dateInfo) * 1000).format(dateFormat);
+        return new Date(parseFloat(dateInfo) * 1000).format(dateFormat);
     }
 
-     /*
+    /*
      *字符串截取
      * para
      * str - {string} 目标字符串
      * len - {int} 最大长度
      */
-    Hisihi.substrLongStr=function(str,len){
-        if(str.length>len){
-            str=str.substr(0,parseInt(len-1))+'……';
+    Hisihi.substrLongStr = function (str, len) {
+        if (str.length > len) {
+            str = str.substr(0, parseInt(len - 1)) + '……';
         }
         return str;
     };
+
+    /*
+     *文件上传
+     */
+    Hisihi.initUploadify = function ($object,callback,options) {
+        var defaultPara={
+            "height": 40,
+            "swf": window.urlObject.js + "/libs/uploadify/uploadify.swf",
+            "fileObjName": "download",
+            "buttonText": "上传图片",
+            "uploader": window.urlObject.apiUrl+'/api.php?s=/Organization/uploadLogo',
+            "width": 100,
+            'removeTimeout': 1,
+            'fileTypeExts': '*.jpg; *.png; *.gif;',
+            'queueID':'',
+            'onFallback': function () {
+                alert('未检测到兼容版本的Flash.');
+            }
+        };
+        for(var item in options){
+            var val=options[item];
+            if(val){
+                defaultPara[item]=val;
+            }
+        }
+        defaultPara.onUploadSuccess=function(file, data){
+            var data = $.parseJSON(data);
+            callback(file,data);
+        };
+        $object.uploadify(defaultPara);
+    };
+
 
 
 //提示等待插件
