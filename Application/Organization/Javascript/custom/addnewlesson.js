@@ -15,6 +15,8 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
         if(this.course_id!=0) {
             this.loadLessonBasicInfo();
             this.$wrapper.find('#myLessonCoverImg').show();
+        }else{
+            this.course_id=null;
         }
         //事件注册
         this.$wrapper.on('click','#addNewLessonSubmitBtn', $.proxy(this,'addNewLesson'));
@@ -116,14 +118,16 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
             if(this.validity.form()) {
                 var $form = this.$wrapper.find('#addNewLessonForm'),
                     $result=this.$wrapper.find('#addNewLessonSubmitResult label'),
+                    that=this,
                     newData= {
-                    title: $form.find('#newLessonTitle').val(),
-                    content: $form.find('#newLessonContent').val(),
-                    img: $form.find('#myLessonCoverImg img').attr('data-lid'),
-                    lecturer: this.getSelectedInfo($form.find('#newLessonTeacher')).val,
-                    category_id:this.getSelectedInfo($form.find('#newLessonType')).val,
-                    auth :this.getSelectedInfo($form.find('#newLessonAuth')).val
-                };
+                        id:this.course_id,
+                        title: $form.find('#newLessonTitle').val(),
+                        content: $form.find('#newLessonContent').val(),
+                        img: $form.find('#myLessonCoverImg img').attr('data-lid'),
+                        lecturer: this.getSelectedInfo($form.find('#newLessonTeacher')).val,
+                        category_id:this.getSelectedInfo($form.find('#newLessonType')).val,
+                        auth :this.getSelectedInfo($form.find('#newLessonAuth')).val
+                    };
 
                 Hisihi.getDataAsync({
                     type: "post",
@@ -131,9 +135,10 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
                     data: newData,
                     org:true,
                     callback: function(e){
-                        var txt='操作成功';
-                        if(!e.success) {
-                            txt='更新失败';
+                        var txt='操作失败';
+                        if(e.success) {
+                            txt='操作成功';
+                            //TODO添加课程id
                         }
                         $result.text(txt).parent().show().delay(1000).hide(0);
                     }
@@ -171,13 +176,6 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
 
         //表单验证
         getFormValidity:function(){
-
-            //$organization_id    机构 id
-            //$title              课程视频
-            //$content            课程介绍
-            //$img                课程封面id
-            //$lecturer           课程讲师id
-            //$auth               课程权限
             return $("#addNewLessonForm").validate({
                 rules: {
                     title: {
