@@ -809,12 +809,12 @@ class OrganizationController extends AppController
             $data['category_id']=$category_id;
             $data['lecturer'] = $lecturer;
             $data['auth'] = $auth;
-            $data['create_time'] = time();
             $data['update_time'] = time();
             $result = $model->where(array('id'=>$id))->save($data);
             if($result){
                 $this->uploadLogoPicToOSS($img);
-                $this->apiSuccess('修改课程成功');
+                $extra['courses_id'] = $id;
+                $this->apiSuccess('修改课程成功',null,$extra);
             } else {
                 $this->apiError(-1, '修改课程信息失败');
             }
@@ -831,7 +831,8 @@ class OrganizationController extends AppController
             $result = $model->add($data);
             if($result){
                 $this->uploadLogoPicToOSS($img);
-                $this->apiSuccess('添加课程成功');
+                $extra['courses_id'] = $result;
+                $this->apiSuccess('添加课程成功',null,$extra);
             } else {
                 $this->apiError(-1, '添加课程信息失败');
             }
@@ -865,6 +866,25 @@ class OrganizationController extends AppController
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $video_course;
         $this->apiSuccess('获取所有课程成功', null, $extra);
+    }
+
+    /**删除课程
+     * @param int $id
+     */
+    public function deleteCourses($id=0){
+        $this->requireAdminLogin();
+        if(!$id){
+            $this->apiError(-1,"参数不能为空");
+        }else{
+            $model = M('OrganizationCourse');
+            $data['status'] = -1;
+            $result = $model->where(array('id'=>$id))->save($data);
+            if($result){
+                $this->apiSuccess("删除成功");
+            }else{
+                $this->apiError(-1,"删除失败");
+            }
+        }
     }
 
     /**
