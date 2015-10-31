@@ -344,7 +344,7 @@
 				//清空file之前的内容
 				this.$wrapper.find('#userPhotoForm')[0].reset();
 			}
-			this.jcrop_api.destroy();  //隐藏裁剪框
+			//this.jcrop_api.destroy();  //隐藏裁剪框
 
 		},
 

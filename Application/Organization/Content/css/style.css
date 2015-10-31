@@ -1538,7 +1538,7 @@ body {
 }
 .teacherHeader .headerAddBtn {
   margin-left: 80px;
-  height: 32px;
+  height: 34px;
   width: 82px;
 }
 .teacherHeader .editTeacher {
@@ -1981,9 +1981,12 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 }
 .studentWorksAndConditionForm {
   width: 103px;
-  height: 50px;
+  height: 40px;
   display: inline-block;
-  margin-top: 10px;
+  margin-left: 100px;
+}
+.studentWorksAndConditionForm.uploadProcess {
+  width: 400px;
 }
 .addNewLessonWrapper .addNewLessonHeader span:nth-child(1) a {
   color: #666666;

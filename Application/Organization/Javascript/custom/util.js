@@ -224,27 +224,32 @@ define(['jquery'],function () {
     /*
      *文件上传
      */
-    Hisihi.initUploadify = function ($object,callback,url) {
-        if(!url){
-            url=window.urlObject.apiUrl+'/api.php?s=/Organization/uploadLogo';
-        }
-        $object.uploadify({
+    Hisihi.initUploadify = function ($object,callback,options) {
+        var defaultPara={
             "height": 40,
             "swf": window.urlObject.js + "/libs/uploadify/uploadify.swf",
             "fileObjName": "download",
             "buttonText": "上传图片",
-            "uploader": url,
+            "uploader": window.urlObject.apiUrl+'/api.php?s=/Organization/uploadLogo',
             "width": 100,
             'removeTimeout': 1,
             'fileTypeExts': '*.jpg; *.png; *.gif;',
-            "onUploadSuccess": function(file, data){
-                var data = $.parseJSON(data);
-                callback(file,data);
-            },
+            'queueID':'',
             'onFallback': function () {
                 alert('未检测到兼容版本的Flash.');
             }
-        });
+        };
+        for(var item in options){
+            var val=options[item];
+            if(val){
+                defaultPara[item]=val;
+            }
+        }
+        defaultPara.onUploadSuccess=function(file, data){
+            var data = $.parseJSON(data);
+            callback(file,data);
+        };
+        $object.uploadify(defaultPara);
     };
 
 

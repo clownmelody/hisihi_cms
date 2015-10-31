@@ -1,7 +1,7 @@
 /**
  * Created by Jimmy on 2015/10/27.
  */
-//我的老师
+//学生作品
 
 define(['jquery','jqueryui','util'],function () {
     var StudentWorks = function ($wrapper) {
@@ -13,6 +13,8 @@ define(['jquery','jqueryui','util'],function () {
         this.$wrapper.on('blur','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('click','.editStudentWorks', $.proxy(this,'showEditVideoBox'));
+        this.$wrapper.on('click','.deleteStudentWorks', $.proxy(this,'deleteStudentWorks'));
+
     };
     StudentWorks.prototype= {
         loadData: function () {
@@ -31,8 +33,7 @@ define(['jquery','jqueryui','util'],function () {
                 callback:function(result) {
                     that.$wrapper.cornerLoading('hideLoading');
                     if(result.success) {
-                        var str = that.getStudentWorksInfoStr(result.data);
-                        that.$wrapper.find('#studentWorksMainCon>div').before(str);
+                        that.getStudentWorksInfoStr(result.data);
                     }else{
                         alert('学生作品加载失败');
                     }
@@ -57,10 +58,10 @@ define(['jquery','jqueryui','util'],function () {
                             '<p title="'+title+'">'+Hisihi.substrLongStr(title,33)+'</p>'+
                             '<textarea>'+title+'</textarea>'+
                         '</div>'+
-                        '<div class="delete-item-btn" title="删除"></div>'+
+                        '<div class="delete-item-btn deleteStudentWorks" title="删除"></div>'+
                     '</li>';
             });
-            return str;
+            that.$wrapper.find('#studentWorksMainCon>div').before(str);
         },
 
         /*显示编辑框*/
@@ -103,11 +104,54 @@ define(['jquery','jqueryui','util'],function () {
             Hisihi.initUploadify($("#uploadStudentWorks"),function(file, data){
                 var src = '';
                 if (data.success) {
-
+                    var logo=data.logo;
+                    that.execAddStudentWorks.call(that,logo);
                 } else {
-                    alert('头像上传失败');
+                    alert('作品上传失败');
+                }
+            },{height:34,width:82,'queueID':'uploadProConForSWorkd'});
+        },
+
+        /*添加学生作品*/
+        execAddStudentWorks:function(logo){
+            var url=this.basicApiUrl+'/studentWorks',
+                that=this;
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: {pic_id: logo.id,description:''},
+                org: true,
+                callback: function (result) {
+                    if (result.success) {
+                        //添加到列表中
+                        that.getStudentWorksInfoStr.call(that, [{id: logo.id, url: logo.path, description: ''}]);
+                    } else {
+                        alert('作品上传失败');
+                    }
                 }
             });
+        },
+
+        /*删除学生作品*/
+        deleteStudentWorks:function(e){
+            e.stopPropagation();
+            if(window.confirm('确定删除该作品么？')) {
+                var $parent = $(e.currentTarget).closest('li'),
+                    url = this.basicApiUrl + '/studentWorks',
+                    that = this;
+                Hisihi.getDataAsync({
+                    url: url,
+                    data: {id: $parent.data('id'),type:'delete'},
+                    org: false,
+                    callback: function (data) {
+                        if (data.success) {
+                            $parent.remove();
+                        } else {
+                            alert('删除失败');
+                        }
+                    }
+                });
+            }
         },
 
     };

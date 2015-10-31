@@ -14,7 +14,7 @@ define(['jquery','jqueryui','util'],function () {
         //编辑
         this.$wrapper.on('click','.editVideo',$.proxy(this,'showEditLessonBox'));
         //删除
-        this.$wrapper.on('click','.deleteTeacher',$.proxy(this,'deleteLesson'));
+        this.$wrapper.on('click','.deleteLesson',$.proxy(this,'deleteLesson'));
         //添加教程
         this.$wrapper.on('click','#addLessons',$.proxy(this,'addLessons'));
         //教程详情
@@ -83,7 +83,7 @@ define(['jquery','jqueryui','util'],function () {
                     '</div>'+
                     '</div>'+
                     '</div>'+
-                    '<div class="delete-item-btn" title="删除"></div>'+
+                    '<div class="delete-item-btn deleteLesson" title="删除"></div>'+
                     '</li>';
             });
             str+='<div style="clear:both;">';
@@ -111,12 +111,24 @@ define(['jquery','jqueryui','util'],function () {
 
         /*删除教程*/
         deleteLesson:function(e){
-            var $parent=$(e.currentTarget).closest('li'),
-                url=this.basicApiUrl+'/getCourses',
-                that=this;
-            Hisihi.getDataAsync({
-
-            });
+            e.stopPropagation();
+            if(window.confirm('确定删除该教程么？')) {
+                var $parent = $(e.currentTarget).closest('li'),
+                    url = this.basicApiUrl + '/deleteCourses',
+                    that = this;
+                Hisihi.getDataAsync({
+                    url: url,
+                    data: {id: $parent.data('id')},
+                    org: false,
+                    callback: function (data) {
+                        if (data.success) {
+                            $parent.remove();
+                        } else {
+                            alert('删除失败');
+                        }
+                    }
+                });
+            }
         },
 
         /*

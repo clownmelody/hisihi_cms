@@ -134,11 +134,12 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
                     url: this.basicApiUrl + '/addCourse',
                     data: newData,
                     org:true,
-                    callback: function(e){
+                    callback: function(result){
                         var txt='操作失败';
-                        if(e.success) {
+                        if(result.success) {
                             txt='操作成功';
-                            //TODO添加课程id
+                            that.$wrapper.attr('data-lid',result.courses_id);
+                            that.course_id=result.courses_id;
                         }
                         $result.text(txt).parent().show().delay(1000).hide(0);
                     }
