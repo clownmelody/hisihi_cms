@@ -8,6 +8,7 @@ define(['jquery','jqueryui','util'],function () {
         this.$wrapper = $wrapper;
         this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
         this.loadData();
+        this.initUploadify();
         this.$wrapper.on('click','.worksItemBottom', $.proxy(this,'worksItemDescEdit'));
         this.$wrapper.on('blur','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
@@ -92,6 +93,21 @@ define(['jquery','jqueryui','util'],function () {
                 $target.text('编辑');
                 $li.removeClass('edit').addClass('normal');
             }
+        },
+
+        /*
+         *初始化头像上传插件
+         */
+        initUploadify:function() {
+            var that=this;
+            Hisihi.initUploadify($("#uploadStudentWorks"),function(file, data){
+                var src = '';
+                if (data.success) {
+
+                } else {
+                    alert('头像上传失败');
+                }
+            });
         },
 
     };

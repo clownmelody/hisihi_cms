@@ -16,7 +16,7 @@
 		}
 		this.loadCommonAdvantageTags();//加载普通的标签
 		this.initJcropParas();
-		this.initUploadify();  //头像上传插件初始化
+		Hisihi.initUploadify($("#upload_company_picture"), $.proxy(this,'updateOrgLogoCallback'));  //头像上传插件初始化
 		this.validate=this.getFormValidity();
 
  	    //事件注册
@@ -368,41 +368,20 @@
 		},
 
 		/*
-		*初始化头像上传插件
+		 *头像上传成功回调
 		 */
-		initUploadify:function() {
-			var that=this;
-			$("#upload_company_picture").uploadify({
-				"height": 30,
-				"swf":window.urlObject.js+"/libs/uploadify/uploadify.swf",
-				"fileObjName": "download",
-				"buttonText": "上传图片",
-				"uploader":that.basicApiUrl+'/uploadLogo' ,
-				"width": 120,
-				'removeTimeout': 1,
-				'fileTypeExts': '*.jpg; *.png; *.gif;',
-				"onUploadSuccess": uploadPictureCompany,
-				'onFallback': function () {
-					alert('未检测到兼容版本的Flash.');
-				}
-			});
-			function uploadPictureCompany(file, data) {
-				var data = $.parseJSON(data);
-				var src = '';
-				if (data.success) {
-					var $img=$('#myNewPicture');
-					$img.attr({'src':data.logo.path,'data-lid':data.logo.id});
-					that.cancelCrop(false);
-					//that.initializeCrop($img);
-				} else {
-					//(data.info);
-					data.info
-					setTimeout(function () {
+		updateOrgLogoCallback:function(file, data) {
+		 if (data.success) {
+			 var $img=$('#myNewPicture');
+			 $img.attr({'src':data.logo.path,'data-lid':data.logo.id});
+			 this.cancelCrop(false);
+			 //that.initializeCrop($img);
+		 } else {
+			 //(data.info);
+			 alert('头像上传失败');
+		 }
+	 	},
 
-					}, 1500);
-				}
-			}
-		},
 
 		//表单验证
 		getFormValidity:function(){

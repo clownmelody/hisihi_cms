@@ -100,7 +100,7 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
                     $form = this.$wrapper.find('#addNewLessonForm');
                 $form.find('#newLessonTitle').val(data.title);
                 $form.find('#newLessonContent').val(data.content);
-                $form.find('#myLessonCoverImg img').attr('src',data.location);
+                $form.find('#myLessonCoverImg img').attr({'src':data.img_url,'data-lid':data.img});
 
                 //控制下拉框的默认值
                 this.setSelectedInfo($('#newLessonTeacher'),data.lecturer);
@@ -114,8 +114,9 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
         /*添加新的教程*/
         addNewLesson:function(){
             if(this.validity.form()) {
-                var $form = this.$wrapper.find('#addNewLessonForm');
-                var newData= {
+                var $form = this.$wrapper.find('#addNewLessonForm'),
+                    $result=this.$wrapper.find('#addNewLessonSubmitResult label'),
+                    newData= {
                     title: $form.find('#newLessonTitle').val(),
                     content: $form.find('#newLessonContent').val(),
                     img: $form.find('#myLessonCoverImg img').attr('data-lid'),
@@ -130,11 +131,11 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
                     data: newData,
                     org:true,
                     callback: function(e){
-                        if(e.success) {
-                            alert('操作成功');
-                        }else{
-                            alert('更新失败');
+                        var txt='操作成功';
+                        if(!e.success) {
+                            txt='更新失败';
                         }
+                        $result.text(txt).parent().show().delay(1000).hide(0);
                     }
                 });
             }
@@ -209,39 +210,24 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
          */
         initUploadify:function() {
             var that=this;
-            this.$wrapper.find('#lessonCoverForm').css('opacity',1);
-            $("#uploadLessonPic").uploadify({
-                "height": 30,
-                "swf":window.urlObject.js+"/libs/uploadify/uploadify.swf",
-                "fileObjName": "download",
-                "buttonText": "上传图片",
-                "uploader":that.basicApiUrl+'/uploadLogo' ,
-                "width": 120,
-                'removeTimeout': 1,
-                'fileTypeExts': '*.jpg; *.png; *.gif;',
-                "onUploadSuccess": uploadPictureCompany,
-                'onFallback': function () {
-                    alert('未检测到兼容版本的Flash.');
-                }
-            });
-            function uploadPictureCompany(file, data) {
-                var data = $.parseJSON(data);
+            Hisihi.initUploadify($("#uploadLessonPic"),function(file, data){
                 var src = '';
                 if (data.success) {
                     var $img=that.$wrapper.find('#myLessonCoverImg img');
                     $img.attr({'src':data.logo.path,'data-lid':data.logo.id});
                 } else {
+                    alert('头像上传失败');
                     //(data.info);
-                    data.info
-                    setTimeout(function () {
-
-                    }, 1500);
+                    //data.info
+                    //setTimeout(function () {
+                    //
+                    //}, 1500);
                 }
-            }
+            });
         },
-
-
     };
+
+
     var $wrapper=$('.addNewLessonWrapper');
     if($wrapper.length>0) {
          new AddNewLesson($wrapper);
