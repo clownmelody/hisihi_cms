@@ -853,7 +853,7 @@ class OrganizationController extends AppController
      * @param null $course_id
      */
     public function getCourseVideoList($course_id=null){
-        //$this->requireAdminLogin();
+        $this->requireAdminLogin();
         if(empty($course_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
