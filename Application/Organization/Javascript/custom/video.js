@@ -37,7 +37,7 @@ define(['jquery','jqueryui','util'],function () {
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {},
+                data: {page:1,count:30},
                 org:true,
                 callback:function(result) {
                     that.$wrapper.cornerLoading('hideLoading');

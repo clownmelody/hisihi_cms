@@ -1344,6 +1344,7 @@ body {
 }
 #announcesContainer {
   width: 100%;
+  min-height: 40px;
   height: -webkit-calc(100% - 80px);
   height: -moz-calc(100% - 80px);
   height: calc(100% - 80px);
