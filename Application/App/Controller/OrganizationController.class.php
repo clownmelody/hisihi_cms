@@ -457,7 +457,8 @@ class OrganizationController extends AppController
             $res = $model->add($data);
             if($res){
                 $this->uploadLogoPicToOSS($pic_id);
-                $this->apiSuccess('添加学生作品成功');
+                $extra['works_id'] = $res;
+                $this->apiSuccess('添加学生作品成功',null,$extra);
             } else {
                 $this->apiError(-1, '添加学生作品失败');
             }
@@ -499,7 +500,8 @@ class OrganizationController extends AppController
             $res = $model->add($data);
             if($res){
                 $this->uploadLogoPicToOSS($pic_id);
-                $this->apiSuccess('添加机构环境图片成功');
+                $extra['environment_id'] = $res;
+                $this->apiSuccess('添加机构环境图片成功',null,$extra);
             } else {
                 $this->apiError(-1, '添加机构环境图片失败');
             }
@@ -515,6 +517,27 @@ class OrganizationController extends AppController
             } else {
                 $this->apiError(-1, '删除机构环境图片失败');
             }
+        }
+    }
+
+    /**更新图片描述
+     * @param int $id
+     * @param string $description
+     */
+    public function updatePictureDescription($id=0,$description=''){
+        $this->requireAdminLogin();
+        if(!$id){
+            $this->apiError(-1,"参数ID不能为空");
+        }
+        $model = M('OrganizationResource');
+        $data['description'] = $description;
+        $map['status'] = 1;
+        $map['id'] = $id;
+        $result = $model->where($map)->save($data);
+        if($result){
+            $this->apiSuccess("修改成功");
+        }else{
+            $this->apiError(-1,"修改失败");
         }
     }
 
@@ -810,7 +833,7 @@ class OrganizationController extends AppController
             $data['lecturer'] = $lecturer;
             $data['auth'] = $auth;
             $data['update_time'] = time();
-            $result = $model->where(array('id'=>$id))->save($data);
+            $result = $model->where(array('id'=>$id,'status'=>1))->save($data);
             if($result){
                 $this->uploadLogoPicToOSS($img);
                 $extra['courses_id'] = $id;
