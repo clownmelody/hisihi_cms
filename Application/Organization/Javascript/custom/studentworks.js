@@ -123,7 +123,7 @@ define(['jquery','jqueryui','util'],function () {
                 callback: function (result) {
                     if (result.success) {
                         //添加到列表中
-                        that.getStudentWorksInfoStr.call(that, [{url: logo.path, description: '',id:result.works_id}]);
+                        that.getStudentWorksInfoStr.call(that, [{id: result.works_id, url: logo.path, description: ''}]);
                     } else {
                         alert('作品上传失败');
                     }

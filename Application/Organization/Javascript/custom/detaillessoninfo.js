@@ -12,6 +12,7 @@ define(['jquery','util','jqueryuploadify'],function () {
         this.loadData();
         //事件注册
         var that=this;
+        this.initUploadify();
 
     };
     //
@@ -114,6 +115,34 @@ define(['jquery','util','jqueryuploadify'],function () {
                     '</tr>';
             });
             return str;
+        },
+
+        /*
+         *初始化头像上传插件
+         */
+        initUploadify:function() {
+            var that=this;
+            url='http://121.42.44.208:8082/MIS/addOrganizationVideo',
+                options={
+                    height:34,
+                    width:82,
+                    buttonText:'上传视频',
+                    queueID:'uploadProConForVideo',
+                    uploader:url,
+                    formData:{course_id:this.course_id},
+                    fileSizeLimit: '100MB',//上传文件大小限制
+                    fileTypeDesc: '视频文件',
+                    fileTypeExts: '*.avi; *.mp4; *.mov; *.wmv'//文件类型过滤
+                };
+            Hisihi.initUploadify($("#uploadVideoBtn"),function(file, data){
+                var src = '';
+                if (data.success) {
+                    //var logo=data.logo;
+                    //that.execAddStudentWorks.call(that,logo);
+                } else {
+                    alert('作品上传失败');
+                }
+            },options);
         },
 
 

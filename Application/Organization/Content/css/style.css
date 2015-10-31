@@ -2075,6 +2075,9 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 .lessondetailinfo .box-header .editor-btn:hover {
   color: #f5a623;
 }
+.lessondetailinfo .box-header #uploadProConForVideo {
+  width: 160px;
+}
 .lessondetailinfo .box-body {
   padding: 35px;
 }
