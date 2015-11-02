@@ -929,7 +929,7 @@ body {
   color: #ff5a00;
 }
 .home {
-  font-family: "Source Han Sans CN Medium", Microsoft YaHei, SimHei;
+  font-family: "Source Han Sans CN Medium", Microsoft YaHei, SimHei, "微软雅黑", "黑体";
   height: 100%;
 }
 .home .container {
@@ -1411,14 +1411,20 @@ fieldset[disabled] .item1 .form-box .form-group .btn-primary.active {
         width: 720px;
       }*/
 }
-@media (min-width: 981px) and (max-width: 1280px) {
+@media (max-width: 1280px) {
   .home .container {
-    width: 960px;
+    width: 1000px;
   }
 }
 @media (min-width: 1281px) {
   .home .container {
     width: 1200px;
+  }
+}
+@media (max-width: 1000px) {
+  .item-box,
+  .foot {
+    width: 1000px;
   }
 }
 @media (max-height: 600px) {
