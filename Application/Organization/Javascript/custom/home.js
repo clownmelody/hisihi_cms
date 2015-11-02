@@ -27,7 +27,14 @@ $(function(){
                     if(data) {
                         if (data.success) {
                             if (data.message == '登陆成功') {
-                                setCookie(data);
+                                setCookie({
+                                    organization_id: data.organization_id,
+                                    organization_logo:data.organization_logo,
+                                    organization_name:data.organization_name,
+                                    session_id:data.session_id,
+                                    uid: data.uid,
+                                    username:data.username
+                                });
                             }
                             else {
                                 alert('登录失败');
@@ -66,7 +73,11 @@ $(function(){
                         session_id: data.session_id,
                         organization_id:null,
                         organization_name:null,
-                        uid:data.uid
+                        uid:data.uid,
+                        organization_logo:'',
+                        username:''
+
+
                     });
                 }else{
                     alert(data.message);
@@ -103,8 +114,8 @@ $(function(){
     *写入cookie，并页面跳转
     */
     function setCookie(data){
-        $.cookie('hisihi-org',null);
-        $.cookie('hisihi-org',JSON.stringify(data),{expires:7});
+        $.cookie('hisihi-org',null,{path:"/"});
+        $.cookie('hisihi-org',JSON.stringify(data),{expires:7,path:'/'});
         window.location.href = window.urlObject.ctl + "/Index/announcement";
     }
 

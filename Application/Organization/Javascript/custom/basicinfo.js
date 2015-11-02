@@ -161,6 +161,7 @@
 
 		/*显示该机构的优势标签*/
 		loadAdvantage:function(data){
+			if(!data){return '';}
 			var str='',
 				len=data.length,item,name='';
 			for(var i=0;i<len;i++){
@@ -242,9 +243,22 @@
 					data: newData,
 					org:false,
 					callback: function(e){
-						var tempStr='操作成功';
+						var tempStr='操作成功',
+							tempArrData=null;
 						if(e.success) {
-							that.updateCookie.call(that,[{keyName:'organization_name',val:name}]);
+							if(!newData.organization_id){
+								tempArrData=[
+									{keyName:'organization_name',val: e.name},
+									{keyName:'organization_id',val: e.organization_id},
+									{keyName:'organization_logo',val: e.logo}
+								];
+							}else{
+								tempArrData=[
+									{keyName:'organization_name',val: name},
+									{keyName:'organization_logo',val: $form.find('#basicInfoLogo').attr('src')}
+								];
+							}
+							that.updateCookie.call(that,tempArrData);
 							var tempName=Hisihi.substrLongStr(name,9);
 							$('#headOrgName').attr('title',name).text(tempName);
 							$('#orgLogoAndName').show();
@@ -302,15 +316,15 @@
 				tempStr=tempStr.substr(0,tempStr.length-1);
 			}
 			return tempStr;
-		},
 
+	},
 		/*重新设置cookie*/
 		updateCookie:function(arr){
 			for(var i =0;i<arr.length;i++) {
 				this.cookie[arr[i].keyName] = arr[i].val;
 			}
-			$.cookie('hisihi-org',null);
-			$.cookie('hisihi-org',JSON.stringify(this.cookie),{expires:7});
+			$.cookie('hisihi-org',null,{path:"/"});
+			$.cookie('hisihi-org',JSON.stringify(this.cookie),{expires:7,path:'/'});
 		},
 
 

@@ -1,7 +1,6 @@
 ﻿define(['jquery'],function () {
 	fillInHeadBasicInfo();
 	function fillInHeadBasicInfo(){
-		var sfsaff=$('#orgLogoAndName');
 		var cookie = cookie=JSON.parse($.cookie('hisihi-org'));
 		orgImgSrc=cookie.organization_logo,
 			orgName=cookie.organization_name,
