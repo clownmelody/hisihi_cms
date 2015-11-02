@@ -193,10 +193,10 @@ $(function(){
 
     //首页数据加载效果
     if($('.data-box').length>0 && $('.data-box').is(':visible') ){
-      $('#num_problem').animateNumber({ number: 52414 },3000);
-      $('#num_student').animateNumber({ number: 20779 },2000);
-      $('#num_file').animateNumber({ number: 12886 },2000);
-      $('#num_design').animateNumber({ number: 2019 },2000);
+      $('#num_problem').animateNumber({ number: 825199 },3000);
+      $('#num_student').animateNumber({ number: 414072 },2000);
+      $('#num_file').animateNumber({ number: 2030 },2000);
+      $('#num_design').animateNumber({ number: 287 },2000);
     }
 
 
