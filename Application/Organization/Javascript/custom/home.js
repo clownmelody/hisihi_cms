@@ -24,13 +24,17 @@ $(function(){
             $('#loginForm').ajaxSubmit({
                 url: baseUrl + '/login',
                 success: function (data) {
-                    if (data.success) {
-                        if (data.message == '登陆成功') {
-                            setCookie(data);
+                    if(data) {
+                        if (data.success) {
+                            if (data.message == '登陆成功') {
+                                setCookie(data);
+                            }
+                            else {
+                                alert('登录失败');
+                            }
                         }
-                        else {
-                            alert('登录失败');
-                        }
+                    }else{
+                        alert('登录失败');
                     }
                 },
                 error: function (e) {
@@ -57,8 +61,13 @@ $(function(){
             //sms_code  短信验证码
             //password
             $.post(baseUrl+'/register',tempData,function(data){
-                if(data.suceess) {
-                    setCookie();
+                if(data.success) {
+                    setCookie({
+                        session_id: data.session_id,
+                        organization_id:null,
+                        organization_name:null,
+                        uid:data.uid
+                    });
                 }else{
                     alert(data.message);
                 }
