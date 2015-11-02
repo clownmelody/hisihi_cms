@@ -1138,9 +1138,6 @@ body {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-#registerBox{
-  display: none;
-}
 .item1 .form-box .from-title {
   color: #cdcfd2;
   text-align: left;
@@ -1304,9 +1301,10 @@ fieldset[disabled] .item1 .form-box .form-group .btn-primary.active {
   overflow-y: hidden;
 }
 .security-box > .form-control {
-  width: 51% !important;
+  width: 44% !important;
   float: left !important;
   border-radius: 0 !important;
+  margin-right: 20px;
 }
 .security-box > .btn {
   width: 35% !important;
@@ -1314,6 +1312,17 @@ fieldset[disabled] .item1 .form-box .form-group .btn-primary.active {
   padding: 8px 10px !important;
   border-radius: 0 !important;
   font-size: 14px !important;
+}
+.jump-link {
+  color: #ff5a00;
+}
+.jump-link:hover {
+  color: #cc4800;
+  cursor: pointer;
+}
+#registerBox,
+#forgetBox {
+  display: none;
 }
 .foot {
   background: #ffffff;
