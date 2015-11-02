@@ -345,7 +345,7 @@ define(['jquery','jqueryui','util'],function () {
                                         '</div>'+
                                     '</div>' +
                                     '<div class="addTeacherBtnRow">'+
-                                        '<input type="button" id="addTeacherCommitBtn" class="btn btn-grey" value="确定"/>' +
+                                        '<input type="button" id="addTeacherCommitBtn" class="btn brand-info" value="确定"/>' +
                                         '<label id="addTeacherCalBtn" class="btnCommitCal" title="取消">取消</label>'+
                                     '</div>' +
                             '</div>';
