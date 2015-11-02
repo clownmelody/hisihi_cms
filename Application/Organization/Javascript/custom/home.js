@@ -20,29 +20,31 @@ $(function(){
     });
 
     $('#login').on('click',function(){
-        $('#loginForm').ajaxSubmit({
-            url:baseUrl+'/login',
-            success:function(data){
-                if(data.success) {
-                    if (data.message == '登陆成功') {
-                        setCookie(data);
+        if(loginValidity.form()) {
+            $('#loginForm').ajaxSubmit({
+                url: baseUrl + '/login',
+                success: function (data) {
+                    if (data.success) {
+                        if (data.message == '登陆成功') {
+                            setCookie(data);
+                        }
+                        else {
+                            alert('登录失败');
+                        }
                     }
-                    else{
-                        alert('登录失败');
-                    }
+                },
+                error: function (e) {
+                    alert('登录失败');
                 }
-            },
-            error:function(e){
-                alert('登录失败');
-            }
-        });
+            });
+        }
     });
 
     $('#register').on('click',function(){
         if(registerValidity.form()) {
-            var number = $('#number').val(),
+            var number = $('#registerMobile').val(),
                 pwd=$('#registerPassword').val(),
-                checkCode=$('#checkCode').val();
+                checkCode=$('#registerCheckCode').val();
                 tempData={
                     mobile:number,
                     sms_code:pwd,
@@ -66,7 +68,7 @@ $(function(){
 
     //获取手机验证码
     $('#sendCheckCode').on('click',function(){
-        var tel = $("#mobileNumber").val(); //获取手机号
+        var tel = $("#registerMobile").val(); //获取手机号
         var telReg = !!tel.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/);
 
         //如果手机号码不能通过验证
@@ -120,22 +122,22 @@ $(function(){
     function setValidityForRegister(){
         return $("#registerForm").validate({
                 rules: {
-                    phoneNum: {
+                    registerMobile: {
                         required: true,
                     },
                     registerPassword: {
                         required: true,
                     },
-                    checkNum:{
+                    registerCheckCode:{
                         required: true,
                     }
                 },
                 messages: {
-                    phoneNum: "请输入姓名",
+                    registerMobile: "请输入姓名",
                     registerPassword: {
                         required: "请输入密码",
                     },
-                    checkNum:{
+                    registerCheckCode:{
                         required: "请输入手机验证码",
                     }
                 },
@@ -143,6 +145,29 @@ $(function(){
                     error.appendTo(element.next('.basicFormInfoError'));
                 }
             });
+    }
+
+    /*表单必填项控制*/
+    function setValidityForLogin(){
+        return $("#registerForm").validate({
+            rules: {
+                mobile: {
+                    required: true,
+                },
+                password: {
+                    required: true,
+                }
+            },
+            messages: {
+                phoneNum: "请输入手机号",
+                registerPassword: {
+                    required: "请输入密码",
+                }
+            },
+            errorPlacement: function (error, element) {
+                error.appendTo(element.next('.basicFormInfoError'));
+            }
+        });
     }
 
     /*$(".item-box").stellar({
