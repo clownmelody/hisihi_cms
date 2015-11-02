@@ -3,7 +3,9 @@
  */
 $(function(){
     var baseUrl=window.urlObject.apiUrl+'/api.php?s=/Organization',
-        timeInterval=null;
+        timeInterval=null,
+        registerValidity=setValidityForRegister(),
+        loginValidity=setValidityForLogin();
     $('#showRegisterBox').on('click',function(){
         $('#loginBox').hide();
         $('#registerBox').show();
@@ -17,10 +19,13 @@ $(function(){
         $('#loginForm').ajaxSubmit({
             url:baseUrl+'/login',
             success:function(data){
-                if(data.success && data.message=='登陆成功') {
-                    $.cookie('hisihi-org',null);
-                    $.cookie('hisihi-org',JSON.stringify(data),{expires:7});
-                    window.location.href = window.urlObject.ctl + "/Index/announcement";
+                if(data.success) {
+                    if (data.message == '登陆成功') {
+                        setCookie(data);
+                    }
+                    else{
+                        alert('登录失败');
+                    }
                 }
             },
             error:function(e){
@@ -30,10 +35,29 @@ $(function(){
     });
 
     $('#register').on('click',function(){
-        var number=$('#number').val();
-        //mobile    用户手机号
-        //sms_code  短信验证码
-        //password
+        if(registerValidity.form()) {
+            var number = $('#number').val(),
+                pwd=$('#registerPassword').val(),
+                checkCode=$('#checkCode').val();
+                tempData={
+                    mobile:number,
+                    sms_code:pwd,
+                    password:checkCode
+                };
+            tempData.each(function(item){
+                tempData[item]=tempData[item].replace(/(^\s*)|(\s*$)/g,'');
+            });
+            //mobile    用户手机号
+            //sms_code  短信验证码
+            //password
+            $.post(baseUrl+'/register',tempData,function(data){
+                if(data.suceess) {
+                    setCookie();
+                }else{
+                    alert(data.message);
+                }
+            });
+        }
     });
 
     //获取手机验证码
@@ -61,6 +85,15 @@ $(function(){
     });
 
     /*
+    *写入cookie，并页面跳转
+    */
+    function setCookie(data){
+        $.cookie('hisihi-org',null);
+        $.cookie('hisihi-org',JSON.stringify(data),{expires:7});
+        window.location.href = window.urlObject.ctl + "/Index/announcement";
+    }
+
+    /*
     *更新时间
      */
     function updateTimeShowInfo(){
@@ -77,6 +110,35 @@ $(function(){
             $target.text(left);
         }
 
+    }
+
+    /*表单必填项控制*/
+    function setValidityForRegister(){
+        return $("#registerForm").validate({
+                rules: {
+                    phoneNum: {
+                        required: true,
+                    },
+                    registerPassword: {
+                        required: true,
+                    },
+                    checkNum:{
+                        required: true,
+                    }
+                },
+                messages: {
+                    phoneNum: "请输入姓名",
+                    registerPassword: {
+                        required: "请输入密码",
+                    },
+                    checkNum:{
+                        required: "请输入手机验证码",
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.next('.basicFormInfoError'));
+                }
+            });
     }
 
     /*$(".item-box").stellar({
