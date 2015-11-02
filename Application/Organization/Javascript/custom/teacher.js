@@ -182,7 +182,13 @@ define(['jquery','jqueryui','util'],function () {
                                 teachers:[]
                             }];
                             that.showMembersInfo.call(that, tempData, 1);
-                            //if($(''))
+
+                            //添加到模态窗口中
+                            if(that.modelBox){
+                                var name=Hisihi.substrLongStr(validity.name,5);
+                                var str='<li data-id='+data.id+' class="" title="'+validity.name+'"><div class="radioContainer">'+name+'</div></li>';
+                                that.modelBox.$panel.find('.allGroupNamesList>li:last').before(str);
+                            }
                         }
                         else{
                             alert('添加失败！')
