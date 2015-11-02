@@ -4,7 +4,7 @@
 
 //我的老师
 
-define(['jquery','jqueryui'],function () {
+define(['jquery','jqueryui','util'],function () {
     var MyTeacher = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.modelBox=null;
@@ -25,6 +25,7 @@ define(['jquery','jqueryui'],function () {
                 $target.removeClass(className);
             }
         });
+
         this.$wrapper.on('mouseover mouseout','.memberItemUl li.edit',function(e) {
             var $target=$(this).find('.deleteTeacher'),
                 className='hover';
@@ -45,15 +46,15 @@ define(['jquery','jqueryui'],function () {
 
     MyTeacher.prototype={
         loadData:function(){
-            //var data=[
-            //    {groupName:'UI设计',members:[{name:'阿信',role:'管理员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'郑钧',role:'成员',imgSrc:window.urlObject.image+'/userImg/app2.png'},{name:'李志',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'阿信',role:'管理员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'郑钧',role:'成员',imgSrc:window.urlObject.image+'/userImg/app2.png'},{name:'李志',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'}]},
-            //    {groupName:'平面设计',members:[{name:'万晓利',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'},{name:'张玮玮',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'},{name:'花大爷',role:'成员',imgSrc:window.urlObject.image+'/userImg/app1.png'}]},
-            //    {groupName:'环艺设计',members:[{name:'二手玫瑰',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'},{name:'丢火车',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'}]},
-            //    {groupName:'游戏设计',members:[{name:'干死那个石家庄人',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'},{name:'后海大鲨鱼',role:'成员',imgSrc:window.urlObject.image+'/userImg/app3.png'}]},
-            //    {groupName:'网页设计',members:[]}
-            //];
+            if (this.$wrapper.data('cornerLoading')) {
+                this.$wrapper.cornerLoading('showLoading');
+            } else {
+                this.$wrapper.cornerLoading();
+            }
+            var that=this;
             this.getDataAsync(function(data){
                 if(data.success) {
+                    that.$wrapper.cornerLoading('hideLoading');
                     data = data.data;
                     this.showMembersInfo(data,0);
                 }else{
@@ -63,21 +64,17 @@ define(['jquery','jqueryui'],function () {
         },
         getDataAsync:function(callback){
             var tempObj={
-                $page:1,
-                $count:1000000,
-                organization_id:this.organization_id,
-                session_id:this.sectionId
+                    $page:1,
+                    $count:1000000
                 },
-
                 that=this;
-            $.ajax({
-                url:this.basicApiUrl+'/getAllGroupsTeachers',
-                data:tempObj,
-                success:function(data){
-                    callback.call(that, data);
-                },
-                error:function(e){
-                    //alert("获取失败");
+            Hisihi.getDataAsync({
+                type: "post",
+                url: this.basicApiUrl+'/getAllGroupsTeachers',
+                data: tempObj,
+                org:true,
+                callback:function(data){
+                    callback.call(that,data)
                 }
             });
         },
@@ -118,9 +115,12 @@ define(['jquery','jqueryui'],function () {
                 if(name.length>6){
                     name=name.substr(0,5)+'…'
                 }
-                str+='<li class="normal" data-id="'+this.uid+'">'+
+                str+='<li class="normal" data-id="'+this.uid+'" data-relation-id="'+this.relation_id+'">'+
                         '<div class="memberItemLeft"><img src="'+this.avatar+'"></div>'+
-                        '<div class="memberItemRight"><p class="tname" title="'+this.nickname +'">'+name+'</p><p class="trole">'+this.role+'</p></div>'+
+                        '<div class="memberItemRight">'+
+                            '<p class="tname" title="'+this.nickname +'">'+name+'</p>'+
+                            //'<p class="trole">'+this.role+'</p>'+
+                        '</div>'+
                         '<div class="deleteTeacher delete-item-btn" title="删除"></div>'+
                     '</li>';
             });
@@ -162,28 +162,32 @@ define(['jquery','jqueryui'],function () {
             //名称没有问题
             var validity=this.newNameValidity();
             if(validity.flag){
-                this.$wrapper.find('.addGroupCon').trigger('click');
+                //this.$wrapper.find('.addGroupCon').trigger('click');
                 this.$wrapper.find('#newGroupName').val('');
-                var data = {
-                        organization_id:this.organization_id,
-                        group_name:validity.name,
-                        session_id:this.sectionId
+                var tempData = {
+                        group_name:validity.name
                     },
                 url=this.basicApiUrl+'/addTeachersGroup',
                     that=this;
-                $.post(url,data,function(data){
-                    if(data.success) {
-                        var tempData=[{
-                            group_info:{group_name: validity.name,group_id:data.id},
-                            teachers:[]
-                        }];
-                        that.showMembersInfo.call(that, tempData, 1);
-                    }
-                    else{
-                        alert('添加失败！')
+
+                Hisihi.getDataAsync({
+                    type: "post",
+                    url: url,
+                    data: tempData,
+                    org:true,
+                    callback:function(data){
+                        if(data.success) {
+                            var tempData=[{
+                                group_info:{group_name: validity.name,group_id:data.id},
+                                teachers:[]
+                            }];
+                            that.showMembersInfo.call(that, tempData, 1);
+                        }
+                        else{
+                            alert('添加失败！')
+                        }
                     }
                 });
-
             }else{
                 this.$wrapper.find('#newGroupCommitError').text(validity.tip).show().delay(500).hide(0);
             }
@@ -282,17 +286,21 @@ define(['jquery','jqueryui'],function () {
         *删除老师
         */
         deleteTeacher:function(e){
+
             if(window.confirm('确定删除该老师么？')) {
-                var tempData = {
-                        organization_id:this.organization_id,
-                        uid:teacherInfo.uid,
-                        teacher_group_id:groupInfo.groupId,
-                        session_id:this.sectionId
+                var $target=$(e.currentTarget).parent(),
+                    tempData = {
+                        relation_id:$target.attr('data-relation-id')
                     },
                     url=this.basicApiUrl+'/deleteTeacherFromGroup',
                     that=this;
-                $.post(url,tempData,function(data) {
-                    var $target = $(e.currenTarget).parent().remove();
+                Hisihi.getDataAsync({
+                    type: "post",
+                    url: url,
+                    data: tempData,
+                    callback:function(data){
+                        $target.remove();
+                    }
                 });
             }
         },
@@ -321,12 +329,15 @@ define(['jquery','jqueryui'],function () {
                                         '<div class="addNewTeacherItem">'+
                                             '<div class="addNewTeacherHeader">添加新老师</div>'+
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
-                                            '<label class="errorInfo addNewTeacherInput">请选择老师</label>'+
+                                            '<input type="button" id="queryTeacher" class="btn brand-info" value="检索"/>'+
+                                            '<label id="hideQueryResult" class="btnCommitCal" title="关闭结果">关闭结果</label>'+
+                                            '<span class="basicFormInfoError" id="selectTeacherError"><label>请选择老师</label></span>'+
+                                            '<div class="selectedBox" id="queryTeachResult"><ul></ul></div>'+
                                         '</div>'+
                                     '</div>' +
                                     '<div class="addTeacherBtnRow">'+
                                         '<input type="button" id="addTeacherCommitBtn" class="btn btn-grey" value="确定"/>' +
-                                        '<label id="addTeacherCalBtn" class="newGroupCommitCal" title="取消">取消</lable>'+
+                                        '<label id="addTeacherCalBtn" class="btnCommitCal" title="取消">取消</label>'+
                                     '</div>' +
                             '</div>';
                     },
@@ -353,15 +364,19 @@ define(['jquery','jqueryui'],function () {
             arrData.push({name:'新建分组',id:''});
             var len=arrData.length;
             for(var i=0;i<len;i++){
-                var item=arrData[i];
+                var item=arrData[i],
+                    name=item.name;
                 className='';
+                    if(name.length>5){
+                        name=name.substr(0,5)+'…';
+                    }
                 if(i==0){
                     className='selected';
                 }
                 if(i==len-1){
                     className='addNewOne';
                 }
-                str+='<li data-id='+item.id+' class="'+className+'"><div class="radioContainer">'+item.name+'</div></li>';
+                str+='<li data-id='+item.id+' class="'+className+'" title="'+item.name+'"><div class="radioContainer">'+name+'</div></li>';
             }
             str+='<div style="clear: both;"></div>';
             return str;
@@ -382,36 +397,38 @@ define(['jquery','jqueryui'],function () {
         *模态窗口的事件注册
         */
         modelBoxEventsInit:function(modelContext,myContext){
-            var $txtTarget=modelContext.$panel.find('#addNewTeacherInput'),
-            $btnCommit=modelContext.$panel.find('#addNewTeacherInput');
+            var $modelPanel=modelContext.$panel,
+             $txtTarget=$modelPanel.find('#addNewTeacherInput'),
+            $btnCommit=$modelPanel.find('#addNewTeacherInput');
 
             /*
             *确定添加
              */
-            modelContext.$panel.on('click','#addTeacherCommitBtn',function(){
-                if($txtTarget.val()==''){
-                    modelContext.$panel.find('.addNewTeacherInput').show().delay(500).hide(0);
+            $modelPanel.on('click','#addTeacherCommitBtn',function(){
+                var val=$txtTarget.val();
+                if(val==''){
+                    $modelPanel.find('.addNewTeacherInput').show().delay(500).hide(0);
                     return;
                 }
                 modelContext.hide();
 
                 //执行真正的添加
-                var $li=modelContext.$panel.find('.allGroupNamesList .selected'),
+                var $li=$modelPanel.find('.allGroupNamesList .selected'),
                     groupInfo={groupId:$li.data('id'),groupName:$li.text()},
                     teacherInfo={
-                        uid: 72,
-                        nickname:'Leslie',
-                        avatar: 'http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/2015-03-26/551369fe8358c-05505543_256_256.jpg'
+                        uid: $txtTarget.attr('data-uid'),
+                        nickname:val,
+                        avatar: $txtTarget.attr('data-avatar')
                     };
                 myContext.execAddNewTeacher.call(myContext,groupInfo,teacherInfo);
-                myContext.clearAddTeacherInfo(modelContext.$panel);
+                myContext.clearAddTeacherInfo($modelPanel);
 
             });
 
             /*
             *取消添加
             */
-            modelContext.$panel.on('click','#addTeacherCalBtn',function(){
+            $modelPanel.on('click','#addTeacherCalBtn',function(){
                 modelContext.hide();
                 myContext.clearAddTeacherInfo(modelContext.$panel);
             });
@@ -445,9 +462,22 @@ define(['jquery','jqueryui'],function () {
            // });
 
             /*
+            *执行搜索
+            */
+            $modelPanel.on('click','#queryTeacher',function() {
+                //$.proxy(myContext, 'execQueryTeacher');
+                myContext.execQueryTeacher(modelContext,myContext);
+            });
+
+            //隐藏搜索结果
+            $('#hideQueryResult').click(function () {
+                $modelPanel.find('#queryTeachResult').add($(this)).hide();
+            }),
+
+            /*
             *组别选择
             */
-            modelContext.$panel.on('click','.allGroupNamesList li',function(){
+            $modelPanel.on('click','.allGroupNamesList li',function(){
                 var index=$(this).index();
                 if(index!=$(this).siblings().length-1) {
                     $(this).addClass('selected').siblings().removeClass('selected');
@@ -463,6 +493,17 @@ define(['jquery','jqueryui'],function () {
                         }
                     });
                 }
+            });
+
+            /*
+            *搜索结果选择
+            */
+            $modelPanel.on('click','#queryTeachResult>ul>li',function(){
+                //var $input = modelContext.$panel.find('#addNewTeacherInput');
+                var src=$(this).find('img')[0].src;
+                $txtTarget.val($(this).find('span').text())
+                    .attr({'data-uid':$(this).data('uid'),'data-avatar':src});
+                $(this).parents('#queryTeachResult').hide();
             });
 
         },
@@ -492,138 +533,189 @@ define(['jquery','jqueryui'],function () {
         */
         execAddNewTeacher:function(groupInfo,teacherInfo){
             var tempData = {
-                    organization_id:this.organization_id,
                     uid:teacherInfo.uid,
-                    teacher_group_id:groupInfo.groupId,
-                    session_id:this.sectionId
+                    teacher_group_id:groupInfo.groupId
                 },
                 url=this.basicApiUrl+'/addTeacherToGroup',
                 that=this;
-            $.post(url,tempData,function(data){
-                if(data.success){
-                    var member=[{
-                        nickname:teacherInfo.nickname,
-                        role:'成员',
-                        uid:teacherInfo.uid,
-                        avatar:teacherInfo.avatar
-                    }];
-                    var str = that.getSomeGroupMembersStr(member),
-                        $allLi=that.$wrapper.find('#teacherMainCon .tItems'),
-                        $li;
-                    $allLi.each(function(){
-                        if ($(this).data('name')==groupInfo.groupName){
-                            $li = $(this);
-                            return false;
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: tempData,
+                org:true,
+                callback:function(data){
+                    if(data.success){
+                        var member=[{
+                            nickname:teacherInfo.nickname,
+                            role:'成员',
+                            uid:teacherInfo.uid,
+                            avatar:teacherInfo.avatar
+                        }];
+                        var str = that.getSomeGroupMembersStr(member),
+                            $allLi=that.$wrapper.find('#teacherMainCon .tItems'),
+                            $li;
+                        $allLi.each(function(){
+                            if ($(this).data('name')==groupInfo.groupName){
+                                $li = $(this);
+                                return false;
+                            }
+                        });
+                        $li.find('.memberItemUl .clearForMemberUl').before(str);
+                    }
+                    else{
+                        if(data.error_code==-2){
+                            alert('该老师已经添加过了');
+                        }else {
+                            alert('添加失败');
                         }
-                    });
-                    $li.find('.memberItemUl .clearForMemberUl').before(str);
-                }
-                else{
-                    if(data.error_code==-2){
-                        alert('该老师已经添加过了');
-                    }else {
-                        alert('添加失败');
                     }
                 }
             });
+        },
+
+        /*执行模糊查询*/
+        execQueryTeacher:function(modelContext,myContext){
+            var $input = modelContext.$panel.find('#addNewTeacherInput'),
+                val = $input.val().replace(/(^\s*)|(\s*$)/g,'');
+            if (val == '') {
+                modelContext.$panel.find('#selectTeacherError').show().delay(500).hide(0);
+                return;
+            } else {
+                var url = myContext.basicApiUrl + '/teachersFilter',
+                    tempData = {
+                        name: val
+                    },
+                    that = this;
+
+                Hisihi.getDataAsync({
+                    type: "post",
+                    url: url,
+                    data: tempData,
+                    callback: function (data) {
+                        myContext.fillInQueryTeacherResult.call(modelContext,data);
+                    }
+                });
+
+            }
+        },
+
+        /*填充教师搜索结果*/
+        fillInQueryTeacherResult:function(data) {
+            if(data.success) {
+                var $target = this.$panel.find('#queryTeachResult'),
+                $hideBtn= this.$panel.find('#hideQueryResult'),
+                str='',
+                tempData=data.data,
+                len=tempData.length,
+                item;
+                for(var i=0;i<len;i++){
+                    item=tempData[i];
+                    str+='<li data-uid="'+item.uid+'">'+
+                            '<img src="'+item.avatar+'"/>'+
+                            '<span>'+item.nickname+'</span>'+
+                         '</li>';
+                }
+                str+='<div style="clear:both;"></div>';
+                $target.find('ul').html(str);
+                $target.add($hideBtn).show();
+            }else{
+                alert("查询失败");
+            }
         },
 
     };
 
 
     /***即时搜索***/
-    Hisihi.tipEmailUrl=function($txtTarget, posStyle,options){
-        $.extend(this,options);
-        this.$txtTarget = $txtTarget;
-        this.posStyle = posStyle;
-        !this.$tipTarget && $txtTarget.after('<div class="tipEmailUrl"></div>');
-        this.$tipTarget = $txtTarget.next();
-        this.controlContainerStyle();
-        this.eventsInit();
-    };
+    //Hisihi.tipEmailUrl=function($txtTarget, posStyle,options){
+    //    $.extend(this,options);
+    //    this.$txtTarget = $txtTarget;
+    //    this.posStyle = posStyle;
+    //    !this.$tipTarget && $txtTarget.after('<div class="tipEmailUrl"></div>');
+    //    this.$tipTarget = $txtTarget.next();
+    //    this.controlContainerStyle();
+    //    this.eventsInit();
+    //};
+    //
+    //Hisihi.tipEmailUrl.prototype={
+    //    /*显示邮箱提示*/
+    //    _showTipEmailUrl: function (mydata) {
+    //        var val = this.$txtTarget.val();
+    //        if (val == '') {
+    //            this.hideTipEmailUrl();
+    //            return;
+    //        }
+    //        var str = '';
+    //        this.emailTypeData=mydata;
+    //        var len = this.emailTypeData.length;
+    //        for (var i = 0; i < len; i++) {
+    //            str += '<li class="tipEmailUrlLi">'+this.emailTypeData.name[i] + '</li>';
+    //        }
+    //        this.$tipTarget.show().html(str);
+    //    },
+    //
+    //    /*隐藏提示框*/
+    //    hideTipEmailUrl: function () {
+    //        this.$tipTarget.hide();
+    //    },
+    //
+    //    /*选择相应的邮箱提示*/
+    //    _selectTipsEmailUrl: function (codeNum) {
+    //        var $li =  this.$tipTarget.find('.tipEmailUrlLi');
+    //        var $liSel = $li.filter('.selected');
+    //        var index = $liSel.index();
+    //        if ($li.length > 0) {
+    //            $li.removeClass('selected');
+    //            var $lastLi = $li.last();
+    //            var $firstLi = $li.first();
+    //            if (codeNum == 40) {//向下
+    //                if ($liSel.length == 0 || index == $li.length - 1) {
+    //                    $firstLi.addClass('selected');
+    //                }
+    //                else {
+    //                    $li.eq(index + 1).addClass('selected');
+    //                }
+    //            }
+    //            else { //38:  //向上
+    //                if ($liSel.length == 0 || index == 0) {
+    //                    $lastLi.addClass('selected');
+    //                } else {
+    //                    $li.eq(index - 1).addClass('selected');
+    //                }
+    //            }
+    //            this.$txtTarget.val($li.filter('.selected').text());
+    //        }
+    //    },
+    //
+    //    eventsInit: function () {
+    //        var that = this;
+    //        /*从提示中选择相应的邮箱*/
+    //        this.$tipTarget.on('click', 'li', function (e) {
+    //            var text = this.innerText;
+    //            that.$txtTarget.val(text);
+    //            e.stopPropagation();
+    //            that.hideTipEmailUrl();
+    //        });
+    //
+    //        /*隐藏邮箱提示信息*/
+    //        $(document).on('click', function () {
+    //            that.hideTipEmailUrl();
+    //        });
+    //    },
+    //
+    //    /**控制框的样式 宽，位置等**/
+    //    controlContainerStyle: function () {
+    //        if (!this.widthInfo) {
+    //            this.widthInfo = this.$txtTarget.width();
+    //        }
+    //        this.$tipTarget.css({
+    //            'top': this.posStyle.top,
+    //            'left': this.posStyle.left,
+    //            'width': this.widthInfo
+    //        });
+    //    }
+    //};
 
-    Hisihi.tipEmailUrl.prototype={
-        /*显示邮箱提示*/
-        _showTipEmailUrl: function (mydata) {
-            var val = this.$txtTarget.val();
-            if (val == '') {
-                this.hideTipEmailUrl();
-                return;
-            }
-            var str = '';
-            this.emailTypeData=mydata;
-            var len = this.emailTypeData.length;
-            for (var i = 0; i < len; i++) {
-                str += '<li class="tipEmailUrlLi">'+this.emailTypeData.name[i] + '</li>';
-            }
-            this.$tipTarget.show().html(str);
-        },
-
-        /*隐藏提示框*/
-        hideTipEmailUrl: function () {
-            this.$tipTarget.hide();
-        },
-
-        /*选择相应的邮箱提示*/
-        _selectTipsEmailUrl: function (codeNum) {
-            var $li =  this.$tipTarget.find('.tipEmailUrlLi');
-            var $liSel = $li.filter('.selected');
-            var index = $liSel.index();
-            if ($li.length > 0) {
-                $li.removeClass('selected');
-                var $lastLi = $li.last();
-                var $firstLi = $li.first();
-                if (codeNum == 40) {//向下
-                    if ($liSel.length == 0 || index == $li.length - 1) {
-                        $firstLi.addClass('selected');
-                    }
-                    else {
-                        $li.eq(index + 1).addClass('selected');
-                    }
-                }
-                else { //38:  //向上
-                    if ($liSel.length == 0 || index == 0) {
-                        $lastLi.addClass('selected');
-                    } else {
-                        $li.eq(index - 1).addClass('selected');
-                    }
-                }
-                this.$txtTarget.val($li.filter('.selected').text());
-            }
-        },
-
-        eventsInit: function () {
-            var that = this;
-            /*从提示中选择相应的邮箱*/
-            this.$tipTarget.on('click', 'li', function (e) {
-                var text = this.innerText;
-                that.$txtTarget.val(text);
-                e.stopPropagation();
-                that.hideTipEmailUrl();
-            });
-
-            /*隐藏邮箱提示信息*/
-            $(document).on('click', function () {
-                that.hideTipEmailUrl();
-            });
-        },
-
-        /**控制框的样式 宽，位置等**/
-        controlContainerStyle: function () {
-            if (!this.widthInfo) {
-                this.widthInfo = this.$txtTarget.width();
-            }
-            this.$tipTarget.css({
-                'top': this.posStyle.top,
-                'left': this.posStyle.left,
-                'width': this.widthInfo
-            });
-        }
-    };
-
-
-    //var myTeacher=new MyTeacher($('.teachersWrapper'));
-    //return myTeacher;
     var $wrapper=$('.teachersWrapper');
     if($wrapper.length>0) {
         new MyTeacher($wrapper);

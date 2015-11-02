@@ -4,7 +4,7 @@
 
 //今天公告
 
-define(['jquery'],function () {
+define(['jquery','util'],function () {
     var TodayAnnoucement = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.pageIndex=0;  //当前页
@@ -29,10 +29,17 @@ define(['jquery'],function () {
             success: true
             totalCount: "3"
             */
+            if (this.$wrapper.data('cornerLoading')) {
+                this.$wrapper.cornerLoading('showLoading');
+            } else {
+                this.$wrapper.cornerLoading();
+            }
+            var that=this;
             this.getDataAsync(function(data){
                 if(data.success) {
                     data = data.data;
-                    this.showShortAnnounceInfo(data);
+                    that.showShortAnnounceInfo(data);
+                    that.$wrapper.cornerLoading('hideLoading');
                 }else{
                     alert('数据加载失败！');
                 }
@@ -49,11 +56,11 @@ define(['jquery'],function () {
             url=window.urlObject.apiUrl+'/api.php?s=/Organization/getNotice',
                 that=this;
             var sectionId =JSON.parse($.cookie('hisihi-org')).session_id;
-            $.ajax({
+            Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {page:1,count:20,session_id:sectionId},
-                success: function(data){
+                data: {page:1,count:20},
+                callback:function(data){
                     callback.call(that,data)
                 }
             });
@@ -91,7 +98,7 @@ define(['jquery'],function () {
                 date;
             $.each(data,function(){
                 date=new Date(parseFloat(this.update_time)* 1000).format('yyyy.MM.dd');
-                str+='<li class="anListItem" data-id="'+this.id+'"><a href="'+this.detail_url+'"> <span>'+this.title+'</span><span>'+date+'</span></a></li>';
+                str+='<li class="anListItem" data-id="'+this.id+'"><a href="'+this.detail_url+'" target="_blank"> <span>'+this.title+'</span><span>'+date+'</span></a></li>';
             });
             this.$wrapper.find('#announcesContainer .clearDiv').before(str);
         },
@@ -104,7 +111,7 @@ define(['jquery'],function () {
         },
 
     };
-    var $wrapper=$('.anWrapper');
+    var $wrapper=$('#announcesWrapper');
     if($wrapper.length>0) {
         new TodayAnnoucement($wrapper);
     }

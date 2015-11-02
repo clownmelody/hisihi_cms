@@ -1,105 +1,109 @@
-.normalPageWrapper{
-  //padding-left: 35px;
-  //padding-right: 35px;
+.normalPageWrapper {
   min-width: 700px;
   min-height: 400px;
-}
-.normalPageWrapper *{
-  font-family: "microsoft yahei";
-  font-size: 14px;
-}
-.normalPageWrapper .tItems{
-  width: 100%;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  background-color: @md-grey-FA;
-  margin:10px auto;
+  * {
+    font-family: "microsoft yahei";
+    font-size: 14px;
+  }
+  .tItems {
+    width: 100%;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: @md-grey-FA;
+    margin: 10px auto;
+  }
+
 }
 
-.teacherHeader{
-  height:55px;
-  line-height:55px;
-}
+.teacherHeader {
+  height: 55px;
+  line-height: 55px;
+  .teacherTitle {
+    font-size: 16px;
+    padding-left: 20px;
+  }
 
-.teacherHeader .teacherTitle{
-  font-size: 16px;
-  padding-left: 20px;
-}
-
-.headerAddBtn{
-  margin-left: 80px;
-  height:32px;
-  width: 82px;
-  //border-radius: 3px;
-  //background-color: @brand-info;
-  //border: none;
-  //cursor: pointer;
-  //color: white;
-}
-.editTeacher{
-  float: right;
-  margin-right: 20px;
-  color:@brand-info;
-  cursor: pointer;
-}
-.editTeacher:hover {
-  color:#F0BE67;
+  .headerAddBtn {
+    margin-left: 80px;
+    height: 34px;
+    width: 82px;
+  }
+  .editTeacher{
+    float: right;
+    margin-right: 20px;
+    color:@brand-info;
+    cursor: pointer;
+  &:hover {
+    color: #F0BE67;
+    }
+  }
 }
 
 .groupItemHeader{
   border-bottom: 1px solid @md-grey-E2;
 }
-.memberItemUl{
+.memberItemUl {
   min-height: 60px;
-}
-.memberItemUl li {
-  height: 60px;
-  width: 170px;
-  position: relative;
-  margin: 10px 20px;
-  margin-right: 0;
-  box-shadow: none;
-  &:hover{
-    box-shadow: none;
-  }
-  .memberItemLeft {
-    position: absolute;
-    width: 60px;
+  li {
     height: 60px;
-    img {
-      width: 45px;
-      height: 45px;
-      border-radius: 45px;
-      margin: 8px;
-      &.hover {
-        .box-shadow(0 0 6px @md-grey-84;);
+    width: 170px;
+    position: relative;
+    margin: 10px 20px;
+    margin-right: 0;
+    box-shadow: none;
+    &:hover {
+      box-shadow: none;
+    }
+    .memberItemLeft {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      img {
+        width: 45px;
+        height: 45px;
+        border-radius: 45px;
+        margin: 8px;
+        &.hover {
+          .box-shadow(0 0 6px @md-grey-84;);
+        }
       }
     }
-  }
-  .memberItemRight {
-    padding-left: 65px;
-    p {
-      margin-top: 6px;
-      &.tname{
-        font-size: 14px;
-        color: @md-grey-333;
-      }
-      &.trole{
-        font-size: 12px;
-        color: @md-grey-84;
+    .memberItemRight {
+      padding-left: 65px;
+      p {
+        margin-top: 6px;
+        &.tname {
+          margin-top: 20px;
+          font-size: 14px;
+          color: @md-grey-333;
+        }
+        &.trole {
+          font-size: 12px;
+          color: @md-grey-84;
+        }
       }
     }
   }
 }
-
+//
 .addGroupCon{
   height: 55px;
   cursor: pointer;
   -moz-user-select:none;
-}
-.addGroupCon:hover{
-  .box-shadow(0 0 5px @md-grey-900;);
+  &:hover {
+    .box-shadow(0 0 5px @md-grey-900;);
+  }
+  .addGroupBtn{
+      margin-right: 13px;
+      float:left;
+      height: 20px;
+      width: 20px;
+      border-radius:20px;
+      border: 1px solid @md-grey-666;
+      text-align:center;
+      font-weight: bold;
+    }
 }
 .addGroupCon>div{
   width: 195px;
@@ -109,54 +113,38 @@
   color: @md-grey-666;
   font-size: 16px;
   }
-.addGroupCon .addGroupBtn{
-  margin-right: 13px;
-  float:left;
-  height: 20px;
-  width: 20px;
-  border-radius:20px;
-  border: 1px solid @md-grey-666;
-  text-align:center;
-  font-weight: bold;
-}
-.addGroupDetailCon{
+.addGroupDetailCon {
   display: none;
   height: 50px;
   line-height: 50px;
-}
-.addGroupDetailCon span {
-  margin-left: 20px;
-}
-.addGroupDetailCon .gAddBtn{
-  cursor:pointer;
-}
-#newGroupName{
-  height: 17px;
-  width: 195px;
-  margin:0 30px 0 10px;
-  display: inline;
+  span {
+    margin-left: 20px;
+  }
+  .gAddBtn {
+    cursor: pointer;
+  }
+  #newGroupName {
+    height: 17px;
+    width: 195px;
+    margin: 0 30px 0 10px;
+    display: inline;
+  }
+
+  #newGroupCommitBtn {
+    height: 32px;
+    width: 82px;
+    line-height: 10px;
+  }
+
+  .errorInfo{
+    font-size: 14px;
+    color: #F5A623;
+    margin-left: 20px;
+    display: none;
+  }
 }
 
-#newGroupCommitBtn{
-  height:30px;
-  width: 75px;
-  line-height:10px;
-}
-.newGroupCommitCal{
-  color: @md-grey-84;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-.errorInfo{
-  font-size: 14px;
-  color: #F5A623;
-  margin-left: 20px;
-  display: none;
-}
-
-
-/*模态窗口*/
+///*模态窗口*/
 .cornerModelBoxBg {
   position: absolute;
   top: 0;
@@ -171,8 +159,6 @@
 }
 
 .cornerModelBox {
-  /*width: 544px;*/
-  /*min-height: 318px;*/
   background-color: #FAFAFA;
   box-shadow: 0 0 25px #AAAAAA;
   border-radius: 3px;
@@ -184,10 +170,7 @@
   margin: 0 auto;
   height: 60px;
   line-height: 60px;
-  //background: #efefef;
   font-size: 16px;
-  //color: #999;
-  //text-indent: 15px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   position: relative;
@@ -238,6 +221,9 @@
   cursor: pointer;
   color:@md-grey-666;
   opacity: 0.8;
+  .radioContainer{
+    font-size: 14px;
+  }
 }
 .allGroupNamesList li:hover{
   opacity:1;
@@ -252,37 +238,88 @@
   color:@md-grey-CCC;
 }
 
-.addNewTeacherItem{
+.addNewTeacherItem {
+  @myModelBoxWidth: 350px;
   margin-top: 5px;
-}
-.addNewTeacherItem .addNewTeacherHeader{
-  height: 60px;
-  line-height:60px;;
-}
-#addNewTeacherInput{
-  width:350px;
-  height:25px;
-  display: inline;
+  height: 110px;
+  position: relative;
+  .addNewTeacherHeader {
+    height: 60px;
+    line-height: 60px;
+  }
+
+  #addNewTeacherInput {
+    width: @myModelBoxWidth;
+    height: 25px;
+    display: inline;
+  }
+  #queryTeacher {
+    height: 35px;
+    width: 83px;
+    margin-left: 15px;
+  }
+  #hideQueryResult{
+    display: none;
+  }
+  #selectTeacherError{
+    margin-left: 10px;
+    display: none;
+  }
+
+  #queryTeachResult{
+    width: 375px;
+    max-height: 158px;
+    min-height: 50px;
+    overflow: auto;
+    .box-shadow(0 0 5px @md-grey-900;);
+    background-color: @white-color;
+    display:none;
+  }
+   ul{
+     li{
+       list-style:none;
+       height:50px;
+       border-bottom: 1px solid @md-grey-E3;
+       cursor: pointer;
+       &:hover{
+         background-color:@md-grey-E3;
+       }
+       img{
+         margin-left: 10px;
+         margin-top: 5px;
+         .size(40px,40px);
+         .border-radius(50%);
+         float: left;
+       }
+       span{
+         font-size: 14px;
+         color: @md-grey-78;
+         float: left;
+         margin-left: 10px;
+         line-height: 50px;
+       }
+
+     }
+   }
 }
 
 .addTeacherBtnRow{
   height: 50px;
   margin-top: 90px;
 }
-
-#addTeacherCommitBtn{
-  width:115px;
-  height: 40px;
-  color: @white-color;
-}
-
-#addTeacherCommitBtn.abled{
-  .brand-info !important;
+// 
+#addTeacherCommitBtn {
+ width: 115px;
+ height: 40px;
+ color: @white-color;
+ &.abled {
+   .brand-info !important;
+ }
 }
 #addTeacherCalBtn{
   font-weight:normal;
+  margin-left: 10px;
 }
 .sortableplaceholder {
   border:1px dotted #428BCA !important;
 }
-

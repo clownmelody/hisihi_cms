@@ -7,38 +7,53 @@ require.config({
     baseUrl:window.urlObject.js,
     shim: {
         'jqueryui': ['jquery'],
-        'jqueryJcrop':['jquery']
+        //'jqueryJcrop':['jquery'],
+        'jqueryuploadify':['jquery'],
+        'jqueryvalidate':['jquery'],
+        'util':['jquery'],
     },
     paths: {
         jquery: 'libs/jquery-1.8.2.min',
         jqueryui:'libs/jquery-ui-1.9.2.custom.min',
         jqueryform:'libs/jquery.form',
         jquerycookie:'libs/jquery.cookie',
-        jqueryJcrop:'libs/jquery.Jcrop',
+        //jqueryJcrop:'libs/jquery.Jcrop',
+        jqueryuploadify:'libs/uploadify/jquery.uploadify.min',
+        jqueryvalidate:'libs/jquery.validate',
         util:'custom/util',
         menus: 'custom/menus',
+        header: 'custom/header',
         announcement: 'custom/announcement',
         teacher:'custom/teacher',
         basicinfo:'custom/basicinfo',
         video:'custom/video',
         studentworks:'custom/studentworks',
-        addnewlesson:'custom/addnewlesson'
+        teachcondition:'custom/teachcondition',
+        addnewlesson:'custom/addnewlesson',
+        certification:'custom/certification',
+        detaillessoninfo:'custom/detaillessoninfo'
 }});
 
 require([
     'jquery',
     'jqueryform',
     'jquerycookie',
+    'jqueryuploadify',
+    'jqueryvalidate',
     'util',
     'jqueryui',
-    'jqueryJcrop',
+    //'jqueryJcrop',
     'menus',
+    'header',
     'teacher',
     'announcement',
     'basicinfo',
     'video',
     'studentworks',
-    'addnewlesson'
+    'teachcondition',
+    'addnewlesson',
+    'certification',
+    'detaillessoninfo'
 ]);
 
 

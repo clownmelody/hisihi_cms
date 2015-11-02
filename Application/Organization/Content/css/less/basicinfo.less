@@ -1,7 +1,3 @@
-//@import "jcrop/jquery.Jcrop.less";
-//@import "jcrop/demos.less";
-//@import "jcrop/main.less";
-
 .basicinfo-body{
   padding: 40px 30px;
   form{
@@ -18,17 +14,16 @@
     .label-txt{
       text-align: center;
       font-weight: normal;
-      line-height: 39px;
+      line-height: 30px;
       color: @md-grey-300;
       .font-size(14);
     }
     .label-img{
-      .size(80px);
+      .size(75px);
       .border-radius(50%);
       overflow-y: hidden;
       img{
-        width: 100%;
-        height: auto;
+        .size(75px);
       }
     }
     .label-box{
@@ -54,7 +49,13 @@
         .icon-add{
           font-size: 18px;
         }
-      } 
+      }
+      .myAdvantageItem{
+        display: inline-block;
+      }
+      a{
+        margin-left: 5px;
+      }
     }
     .recommend-box{
       padding-left: 40px;
@@ -70,6 +71,17 @@
           width: 0;
           margin-right: 13px;
         }
+        #showRecommendBox{
+          margin-top: 13px;
+          width: 15px;
+          height:15px;
+          float: left;
+          cursor:pointer;
+        }
+        #showRecommendBoxLabel{
+          float: left;
+          cursor:pointer;
+        }
       }
     }
     input{
@@ -78,11 +90,24 @@
     textarea{
       width: 694px;
     }
+    #tagExitTips{
+      display:none;
+    }
+    #uploadImg{
+      height: 34px;
+      width: 86px;
+    }
   }
-  #SubmitBtn{
-    height: 40px;
-    width: 115px;
-  }
+}
+
+#submitBasicInfoBtn{
+  height: 40px;
+  width: 115px;
+}
+
+#basicInfoResultLabel{
+  display: none;
+  margin-left: 20px;
 }
 
 #ImgModal{
@@ -91,28 +116,18 @@
     height: 100%;
     float: left;
     text-align: center;
+    #myNewPicture{
+      height: 230px;
+      width: 230px;
+      .box-shadow(0 0 6px @md-grey-84;);
+    }
+  }
+  .basicInfoModel{
+    min-height: 180px;
   }
   .myModal-body-right{
     float: right;
     width: 50%;
     height: 100%;
-  }
-
-  #userPhotoForm {
-    width: 83px;
-    position: relative;
-    cursor: pointer;
-    #dataImportFileInput {
-      opacity: 0;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      outline: none;
-      cursor: pointer;
-    }
   }
 }

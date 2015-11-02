@@ -1,0 +1,98 @@
+<div class="lessondetailinfo" id="lessonDetailInfoWrapper" data-cid="{$id}">
+
+	<div class="box mb_30">
+
+		<div class="box-header">
+
+			<div class="container">
+
+				<ul class="list-line">
+					<li><a href="__URL__/Index/video">视频教程</a></li>
+					<li><a href="__URL__/Index/addnewlesson/id/{$id}">课程信息</a></li>
+					<li class="active">上传视频</li>
+				</ul>
+				<!-- /.list-line -->
+				<div class="studentWorksAndConditionForm">
+					<input type="file" id="uploadVideoBtn" class="btn brand-info" value="上传头像">
+				</div>
+				<div class="studentWorksAndConditionForm uploadProcess" id="uploadProConForVideo"></div>
+			</div>
+			<!-- /.container -->
+
+		</div>
+		<!-- /.box-header -->
+
+		<div class="box-body">
+
+			<div class="container">
+				<h2 class="viod-title" id="lessonDetailTitle"></h2>
+				<div class="box-table">
+					<table class="table table-info">
+						<thead>
+							<tr>
+								<th width="60px">排序</th>
+								<th width="300px">视频</th>
+								<th>添加时间</th>
+								<th>热度</th>
+							</tr>
+						</thead>
+						<tbody id="allLessonVideoCon"></tbody>
+					</table>
+				</div>
+				<!-- /.box-table -->
+				
+			</div>
+			<!-- /.container -->
+
+		</div>
+		<!-- /.box-body -->
+
+	</div>
+	<!-- /.box -->
+
+	<div class="box">
+
+		<div class="box-header">
+			<div class="min-title">课程信息<a href="__URL__/Index/addnewlesson/id/{$id}" class="editor-btn">编辑</a></div>
+		</div>
+		<!-- /.box-header -->
+
+		<div class="box-body">
+
+			<div class="editor-box">
+
+				<ul class="list list-editor">
+					<li>
+						<span class="item-label">标题: </span>
+						<p id="lessonDetailTitleBox"></p>
+					</li>
+					<li>
+						<span class="item-label">简介: </span>
+						<p id="lessonDetailContentBox"></p>
+					</li>
+					<li>
+						<span class="item-label">分类: </span>
+						<p id="lessonDetailCategoryBox"></p>
+					</li>
+					<li>
+						<span class="item-label">讲师: </span>
+						<p id="teacherBox"></p>
+					</li>
+					<li>
+						<span class="item-label">权限: </span>
+						<p id="authType"></p>
+					</li>
+				</ul>
+				<!-- /.list list-editor -->
+
+			</div>
+			<!-- /.editor-box -->
+			
+		</div>
+		<!-- /.box-body -->
+
+	</div>
+	<!-- /.box -->
+
+</div>
+

@@ -4,8 +4,10 @@
 @md-grey-E2:      #E2E3E3;
 @md-grey-E3: 	  #E3E3E3;
 @md-grey-EB:      #EBEBEB;
+@md-grey-B4:      #B4B4B4;
 @md-grey-D2:      #D2D2D2;
 @md-grey-202:     #20212A;
+@md-grey-21:      #212121;
 @md-grey-300:     #333;
 @md-grey-333:     #333644;
 @md-grey-666:     #666;
@@ -69,7 +71,7 @@ body{
 		.min-title{
 			.font-size(16);
 			color: @md-grey-300;
-			padding-left: 23px;
+			padding-left: 35px;
 		}
 	}
 }
@@ -135,6 +137,9 @@ body{
 .m_20{
 	margin-top: 20px;
 }
+.mb_30{
+	margin-bottom: 30px;
+}
 .m_110{
 	margin-left: 110px;
 }
@@ -152,4 +157,36 @@ body{
 }
 .text-success{
 	color: #3c763d;
+}
+
+/**加载等待**/
+
+.cornerLoadingBox {
+  width:180px;
+  height:90px;
+  position:absolute;
+  /*border:1px solid red;*/
+  z-index:99999;
+}
+.cornerLoadingItem {
+  margin-top:10px;
+}
+
+.cornerLoadingImg {
+  margin:10px auto;
+  width: 40px;
+  height: 40px;
+  background: url(../images/tempsprite.png) no-repeat;
+  background-position: -84px -1px;
+  animation: spin 800ms infinite linear;
+}
+
+@keyframes spin {
+  0%   { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.cornerLoadingText {
+  text-align:center;
+  color: @brand-primary;
 }

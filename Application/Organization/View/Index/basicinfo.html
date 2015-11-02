@@ -11,7 +11,7 @@
 
 			<div class="form-group">
 				<div class="label-img col-label ">
-					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" alt="" class="">
+					<img id="basicInfoLogo" src="#" alt="" class="">
 				</div>
 				<div class="col-2">
 					<div class="label-box">
@@ -20,7 +20,7 @@
 					</div>
 				</div>
 				<div class="col-2 t_r">
-					<a href="javaScript: void(0);" id="UploadImg" class="btn brand-info m_15">点击上传</a>
+					<input type="button" id="uploadImg" class="btn brand-info m_15" value="点击上传"/>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -30,6 +30,7 @@
 				<div class="col-2">
 					<input  class="form-control" placeholder="名称" value="0" name="organization_id" id="organization_id" />
 					<input  class="form-control" placeholder="名称" value="" name="name" id="name" />
+					<span class="basicFormInfoError"></span>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -38,6 +39,7 @@
 				<label for="" class="label-txt col-label">签名</label>
 				<div class="col-2">
 					<input  class="form-control" placeholder="签名" value="" name="slogan" id="Signature" >
+					<span class="basicFormInfoError"></span>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -45,7 +47,7 @@
 			<div class="form-group">
 				<label for="" class="label-txt col-label">简介</label>
 				<div class="col-1">
-					<textarea class="form-control" rows="5" name="introduce"></textarea>
+					<textarea class="form-control" rows="5" name="introduce" id="orgBasicIntroduce"></textarea>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -53,23 +55,26 @@
 			<div class="form-group">
 				<label for="" class="label-txt col-label">优势</label>
 				<div class="col-2">
-					<input  class="form-control" name="advantage">
-					<div class="box-tag tag-open">
+					<input  class="form-control" id="myNewAdvantage" name="advantage"/>
+					<div class="box-tag tag-open" id="myAdvantage">
 					</div>
 				</div>
 				<div class="col-2 recommend-box">
 					<div class="checkbox">
-						<input type="checkbox" checked ='checked'/> 显示推荐标签
+						<input type="checkbox" id="showRecommendBox" checked/>
+						<label id="showRecommendBoxLabel" for="showRecommendBox"> 显示推荐标签</label>
+						<span class="basicFormInfoError" id="tagExitTips"><label>&nbsp;&nbsp;标签已经存在</label></span>
 					</div>
 					<a href="javaScript: void(0);" class="btn brand-info" id="addtags">添加标签</a>
-					<div class="box-tag">
-						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
-						<a href="javaScript: void(0);" class="label label-default">抗高压</a>
-						<a href="javaScript: void(0);" class="label label-default">刚猛执行力</a>
-						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
-						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
-						<a href="javaScript: void(0);" class="label label-default">经验丰富</a>
+					<div class="box-tag recommendBox" id="recommendBox">
+						<!--<a href="javaScript: void(0);" class="label label-default">经验丰富</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">抗高压</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">刚猛执行力</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">经验丰富</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">经验丰富</a>-->
+						<!--<a href="javaScript: void(0);" class="label label-default">经验丰富</a>-->
 					</div>
+
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -78,6 +83,7 @@
 				<label for="" class="label-txt col-label">地址</label>
 				<div class="col-2">
 					<input  class="form-control" placeholder="地址" value="" name="location" id="Address" >
+					<span class="basicFormInfoError"></span>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -86,13 +92,15 @@
 				<label for="" class="label-txt col-label">联系方式</label>
 				<div class="col-2">
 					<input  class="form-control" placeholder="联系方式" value="" name="phone_num" id="Contact" >
+					<span class="basicFormInfoError"></span>
 				</div>
 			</div>
 			<!-- /.form-group -->
 
 			<div class="form-group">
 				<div class="col-2 m_110">
-					<input type="button" class="btn btn-grey" id="SubmitBtn" value="保存"/>
+					<input type="button" class="btn btn-grey" id="submitBasicInfoBtn" value="保存"/>
+					<span class="basicFormInfoError"><label id="basicInfoResultLabel"></label></span>
 				</div>
 			</div>
 			<!-- /.form-group -->
@@ -108,18 +116,18 @@
 		<div class="modal-container">
 
 			<div class="modal-header">
-				<h4 class="min-title">上传头像<a href="javaScript: void(0);" class="close icon-close">&#215;</a></h4>
+				<h4 class="min-title">上传头像</h4>
+				<!--<a href="javaScript: void(0);" class="close icon-close">&#215;</a>-->
 			</div>
 			<!-- /.modal-header -->
 
-			<div class="modal-body">
+			<div class="modal-body basicInfoModel">
 				<div class="jcrop-box myModal-body-left">
-					<img src="http://pic.yupoo.com/sayhelloto/DuglltE4/small.jpg" id="myPicture" alt="[Jcrop Example]" />
+					<img src="" id="myNewPicture" alt="img" />
 				</div>
 				<div class="myModal-body-right">
 					<form id="userPhotoForm">
-						<input type="button" class="btn brand-info" value="上传头像"/>
-						<input type="file" name="picture" class="dataImportFileInput" id="dataImportFileInput" size="28" accept=".jpg,.png" />
+						<input type="file" id="upload_company_picture" class="btn brand-info" value="上传头像">
 					</form>
 					<p id="photoErrorInfo"></p>
 				</div>
@@ -127,9 +135,9 @@
 			</div>
 			<!-- /.modal-body -->
 
-			<div class="modal-foot">
-				<a href="#" class="btn btn-grey close">取消</a>
-				<a href="#" class="btn brand-info">确定</a>
+			<div class="modal-foot" id="modalFootBts">
+				<a href="javascript:void(0);" class="btn btn-grey">取消</a>
+				<a href="javascript:void(0);" class="btn brand-info">确定</a>
 			</div>
 			<!-- /.modal-foot -->
 

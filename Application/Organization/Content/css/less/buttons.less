@@ -82,7 +82,20 @@
 .brand-info {
   .button-variant(@brand-info-color; @brand-info-bg; @brand-info-border);
 }
-
+.disabled{
+  cursor: not-allowed;;
+  pointer-events: none; 
+  .opacity(.65);
+  .box-shadow(none);
+  background:  @btn-grey-bg !important;
+  border-color: @btn-grey-border !important;
+  color: @btn-grey-color !important;
+  &:hover{
+    background:  @btn-grey-bg !important;
+    color: @btn-grey-color !important;
+    border-color: @btn-grey-border !important;
+  }
+}
 
 
 
@@ -150,4 +163,12 @@
   // IE8 filter
   @opacity-ie: (@opacity * 100);
   filter: ~"alpha(opacity=@{opacity-ie})";
+}
+
+.btnCommitCal {
+  color: @md-grey-84;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
 }

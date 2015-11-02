@@ -1,0 +1,136 @@
+.lessondetailinfo{
+  .container{
+    width: 720px;
+  }
+  .box-header{
+     padding-left: 35px;
+     overflow: hidden;
+    .min-title{
+      padding: 0;
+     }
+    .up-video{
+      float: right;
+      margin-top: 12px;
+    }
+    .editor-btn{
+      float: right;
+      color: @brand-info;
+      margin-right: 40px;
+      .font-size(16);
+      &:hover{
+        color: @brand-primary;
+      }
+    }
+    #uploadProConForVideo{
+      width: 160px;
+    }
+  }
+  .box-body{
+    padding: 35px;
+    .viod-title{
+      .font-size(16);
+      font-weight: 500;
+      margin-bottom: 18px;
+      color: @md-grey-666;
+    }
+  }
+  .box-table{
+    .border-radius(5px);
+    overflow: hidden;
+    box-shadow: 0 1px 0 @md-grey-B4;
+  }
+  .editor-box{
+    overflow:  hidden;
+    width: 400px;
+  }
+  .list-line{
+    >li{
+      display: inline;
+      float: left;
+      .font-size(16);
+      color: @md-grey-900;
+      list-style: outside none none;
+      &.active{
+        color: @md-grey-300;
+      }
+      a{
+        color: @md-grey-666;
+      }
+      a:hover{
+        text-decoration: underline;
+      }
+    }
+    >li + li::before{
+      content: "/ ";
+      color: #ccc;
+      padding: 0 5px 0 10px;
+    }
+
+
+  }
+  .list-editor{
+    >li{
+      width: 100%;
+      font-size: 14px;
+      margin-bottom: 10px;
+      >p{
+        color: @md-grey-300;
+        .font-size(14);
+        overflow: hidden;
+      }
+
+    }
+    .item-label{
+      float: left;
+      .font-size(16);
+      margin-right: 10px;
+      color: @md-grey-666;
+    }
+  }
+  .table-info{
+    margin-bottom: 0;
+    > thead > tr{
+      border: 1px solid @md-grey-E2;
+    }
+    > thead > tr > th {
+      text-align: center;
+      border-width: 0;
+      background: @brand-info;
+      .font-size(16);
+      color: @white-color;
+      font-weight: 600;
+    }
+    > tbody > tr {
+        border: 1px solid @md-grey-E2;
+        .font-size(14);
+        color: @md-grey-666;
+        >th{
+          text-align: center;
+        }
+    }
+    > tbody {
+      > tr {
+        > th,
+        > td {
+          border-top: 1px solid @md-grey-E2;
+        }
+      }
+    }
+    > tbody > tr >th,
+    > tbody > tr >td{
+        line-height: 40px;
+    }
+    .title{
+      text-align: center;
+      line-height: 38px;
+      color: @md-grey-300;
+    }
+    .time{
+      color: @md-grey-666;
+      text-align: center;
+    }
+  }
+  .icon{
+    .icon(45px,55px,'@{img-path}tempsprite.png'); 
+  }
+}
