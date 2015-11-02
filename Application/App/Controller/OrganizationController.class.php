@@ -313,7 +313,16 @@ class OrganizationController extends AppController
         if(!$organization_id){  // 新增结构基本信息
             $result = $model->data($data)->add();
             if($result){
-                $this->apiSuccess('添加机构基本信息成功');
+                $uid = is_login();
+                $res = M('OrganizationAdmin')->where(array('id'=>$uid,'status'=>1))->save(array('organization_id'=>$result));
+                if($res){
+                    $extra['organization_id'] = $result;
+                    $extra['organization_name'] = $name;
+                    $extra['logo'] = $this->fetchImage($logo);
+                    $this->apiSuccess('添加机构基本信息成功',null,$extra);
+                }else{
+                    $this->apiError(-2, '关联机构信息到管理员失败，请重试');
+                }
             } else {
                 $this->apiError(-1, '添加机构基本信息失败，请重试');
             }
