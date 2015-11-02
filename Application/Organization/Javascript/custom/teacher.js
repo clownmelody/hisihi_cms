@@ -182,6 +182,13 @@ define(['jquery','jqueryui','util'],function () {
                                 teachers:[]
                             }];
                             that.showMembersInfo.call(that, tempData, 1);
+
+                            //添加到模态窗口中
+                            if(that.modelBox){
+                                var name=Hisihi.substrLongStr(validity.name,5);
+                                var str='<li data-id='+data.id+' class="" title="'+validity.name+'"><div class="radioContainer">'+name+'</div></li>';
+                                that.modelBox.$panel.find('.allGroupNamesList>li:last').before(str);
+                            }
                         }
                         else{
                             alert('添加失败！')
@@ -325,7 +332,9 @@ define(['jquery','jqueryui','util'],function () {
                     boxMainContentForAlert: function () {
                         return '<div id="addNewTeacherModelBox">' +
                                     '<div class="addNewTeacherWrapper">' +
-                                        '<ul class="list allGroupNamesList">' + that.getAllGroupNameStrForModelBox.call(that)+'</ul>' +
+                                        '<div class="allGroupNamesListCon">'+
+                                            '<ul class="list allGroupNamesList">' + that.getAllGroupNameStrForModelBox.call(that)+'</ul>' +
+                                        '</div>'+
                                         '<div class="addNewTeacherItem">'+
                                             '<div class="addNewTeacherHeader">添加新老师</div>'+
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
@@ -336,7 +345,7 @@ define(['jquery','jqueryui','util'],function () {
                                         '</div>'+
                                     '</div>' +
                                     '<div class="addTeacherBtnRow">'+
-                                        '<input type="button" id="addTeacherCommitBtn" class="btn btn-grey" value="确定"/>' +
+                                        '<input type="button" id="addTeacherCommitBtn" class="btn brand-info" value="确定"/>' +
                                         '<label id="addTeacherCalBtn" class="btnCommitCal" title="取消">取消</label>'+
                                     '</div>' +
                             '</div>';

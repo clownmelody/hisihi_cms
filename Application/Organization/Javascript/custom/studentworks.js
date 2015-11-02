@@ -5,13 +5,17 @@
 
 define(['jquery','jqueryui','util'],function () {
     var StudentWorks = function ($wrapper) {
+        var that=this;
         this.$wrapper = $wrapper;
         this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
         this.loadData();
         this.initUploadify();
         this.$wrapper.on('click','.worksItemBottom', $.proxy(this,'worksItemDescEdit'));
-        this.$wrapper.on('focusout','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
+        this.$wrapper.on('focusout','.worksItemBottom textarea', function(){
+            that.hideWorksItemDescEdit.call(that,$(this).closest('li'));
+        });
         this.$wrapper.on('keydown','.worksItemBottom textarea', $.proxy(this,'dealWithWorksItemDescEdit'));
+        this.$wrapper.on('click','.worksItemBottom p', function(e){e.stopPropagation();});
         //this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('click','.editStudentWorks', $.proxy(this,'showEditVideoBox'));
         this.$wrapper.on('click','.deleteStudentWorks', $.proxy(this,'deleteStudentWorks'));
@@ -73,11 +77,11 @@ define(['jquery','jqueryui','util'],function () {
             $textArea.show();
         },
 
-        hideWorksItemDescEdit:function(e){
-            var $target=$(e.currentTarget),
-                $p=$target.prev();
-            $p.show();
-            $target.hide();
+        /*隐藏编辑框*/
+        hideWorksItemDescEdit:function($li){
+
+            $li.find('p').show();
+            $li.find('textarea').hide();
         },
 
         /*
@@ -155,30 +159,31 @@ define(['jquery','jqueryui','util'],function () {
         },
 
         dealWithWorksItemDescEdit:function(e){
+            var $li=$(e.currentTarget).closest('li');
             if(e.keyCode==13){
                 event.returnValue = false;
-                this.updateStudentWorks($(e.currentTarget).closest('li'));
+                this.updateStudentWorks($li);
             }
             if(e.keyCode==27){
-                this.hideWorksItemDescEdit(e);
+                this.hideWorksItemDescEdit($li);
             }
         },
 
         /*更新学生作品描述信息*/
         updateStudentWorks:function($li){
-            var url=this.basicApiUrl+'/updatePicturesDescription',
+            var url=this.basicApiUrl+'/updatePictureDescription',
                 that=this,
                 newVal=$li.find('textarea').val();
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
                 data: {id:$li.data('id'),description:newVal},
-                org: true,
+                org: false,
                 callback: function (result) {
                     if (result.success) {
                         //更新图片描述
-                        $parent.find('p').text(newVal);
-                        that.hideWorksItemDescEdit();
+                        $li.find('p').text(newVal);
+                        that.hideWorksItemDescEdit($li);
                     } else {
                         alert('作品描述更新失败');
                     }

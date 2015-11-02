@@ -17,8 +17,8 @@ return array(
         '__IMG__'    => __ROOT__ . '/Application/Organization/Content/images',
         '__CSS__'    => __ROOT__ . '/Application/Organization/Content/css',
         '__JS__'     => __ROOT__ . '/Application/Organization/Javascript',
-        '__URL__'    =>'/index.php',
-        '__API__'    =>'http://jg.hisihi.com/',
+        '__URL__'    =>'/hisihi-cms/weborg.php',
+        '__API__'    =>'http://localhost/hisihi-cms',
 
     ),
 

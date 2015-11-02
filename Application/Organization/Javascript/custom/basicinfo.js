@@ -11,7 +11,7 @@
 		this.sectionId=this.cookie.session_id;
 		this.organization_id=this.cookie.organization_id;
 		this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
-		if(this.organization_id!=0) {
+		if(this.organization_id && this.organization_id!='0') {
 			this.loadBasicData();  //显示基本信息
 		}
 		this.loadCommonAdvantageTags();//加载普通的标签
@@ -120,9 +120,13 @@
 				data: {},
 				org:false,
 				callback: function (result) {
-					if(result.success) {
-						var str=that.fillInCommonAdvantageTags.call(that, result.data);
-						that.$wrapper.find('#recommendBox').html(str);
+					if (result) {
+						if (result.success) {
+							var str = that.fillInCommonAdvantageTags.call(that, result.data);
+							that.$wrapper.find('#recommendBox').html(str);
+						} else {
+							alert(result.message);
+						}
 					}else{
 						alert('数据获取失败');
 					}
@@ -157,6 +161,7 @@
 
 		/*显示该机构的优势标签*/
 		loadAdvantage:function(data){
+			if(!data){return '';}
 			var str='',
 				len=data.length,item,name='';
 			for(var i=0;i<len;i++){
@@ -238,15 +243,29 @@
 					data: newData,
 					org:false,
 					callback: function(e){
-						var tempStr='更新成功';
+						var tempStr='操作成功',
+							tempArrData=null;
 						if(e.success) {
-							that.updateCookie.call(that,'organization_name',name);
+							if(!newData.organization_id){
+								tempArrData=[
+									{keyName:'organization_name',val: e.name},
+									{keyName:'organization_id',val: e.organization_id},
+									{keyName:'organization_logo',val: e.logo}
+								];
+							}else{
+								tempArrData=[
+									{keyName:'organization_name',val: name},
+									{keyName:'organization_logo',val: $form.find('#basicInfoLogo').attr('src')}
+								];
+							}
+							that.updateCookie.call(that,tempArrData);
 							var tempName=Hisihi.substrLongStr(name,9);
 							$('#headOrgName').attr('title',name).text(tempName);
+							$('#orgLogoAndName').show();
 						}else{
-							tempStr='更新失败';
+							tempStr= e.message;
 						}
-						$label.text('更新成功').show().delay(1000).hide(0);
+						$label.text(tempStr).show().delay(1000).hide(0);
 					}
 				});
 			}
@@ -255,26 +274,37 @@
 		/*更新logo*/
 		updateLogo:function(){
 			var that=this;
-
-			Hisihi.getDataAsync({
-				type: "post",
-				url: this.basicApiUrl + '/updateLogo',
-				data: {pic_id:that.$wrapper.find('#myNewPicture').attr('data-lid')},
-				org: true,
-				callback: function (e) {
-					if(e.success) {
-						var $newPic=that.$wrapper.find('#myNewPicture'),
-							src=$newPic.attr('src');
-						that.$wrapper.find('#basicInfoLogo')
-							.add($('#headerLogo'))
-							.attr({'src': src, 'data-lid': $newPic.attr('data-lid')});
-						that.updateCookie.call(that,'organization_logo',src);
-						that.cancelCrop.call(that,true);
-					}else{
-						alert('头像信息更新失败');
+			if(this.organization_id && this.organization_id!='0')
+			{
+				Hisihi.getDataAsync({
+					type: "post",
+					url: this.basicApiUrl + '/updateLogo',
+					data: {pic_id: that.$wrapper.find('#myNewPicture').attr('data-lid')},
+					org: true,
+					callback: function (e) {
+						if (e.success) {
+							that.fillInNewLogo.call(that);
+						} else {
+							alert('头像信息更新失败');
+						}
 					}
-				}
-			});
+				});
+			}else{
+				that.fillInNewLogo.call(that);
+			}
+		},
+
+		/*
+		*更新logo
+		*/
+		fillInNewLogo:function(){
+			var $newPic = this.$wrapper.find('#myNewPicture'),
+				src = $newPic.attr('src');
+			this.$wrapper.find('#basicInfoLogo')
+				.add($('#headerLogo'))
+				.attr({'src': src, 'data-lid': $newPic.attr('data-lid')});
+			this.updateCookie.call(this, [{keyName:'organization_logo',val:src}]);
+			this.cancelCrop.call(this, true);
 		},
 
 		getAllMyTagsId:function(){
@@ -286,14 +316,15 @@
 				tempStr=tempStr.substr(0,tempStr.length-1);
 			}
 			return tempStr;
-		},
 
+	},
 		/*重新设置cookie*/
-		updateCookie:function(keyName,val){
-			this.cookie[keyName]=val;
-			$.cookie('hisihi-org',null);
-			$.cookie('hisihi-org',JSON.stringify(this.cookie),{expires:7});
-
+		updateCookie:function(arr){
+			for(var i =0;i<arr.length;i++) {
+				this.cookie[arr[i].keyName] = arr[i].val;
+			}
+			$.cookie('hisihi-org',null,{path:"/"});
+			$.cookie('hisihi-org',JSON.stringify(this.cookie),{expires:7,path:'/'});
 		},
 
 

@@ -1,7 +1,6 @@
 ﻿define(['jquery'],function () {
 	fillInHeadBasicInfo();
 	function fillInHeadBasicInfo(){
-		var sfsaff=$('#orgLogoAndName');
 		var cookie = cookie=JSON.parse($.cookie('hisihi-org'));
 		orgImgSrc=cookie.organization_logo,
 			orgName=cookie.organization_name,
@@ -28,7 +27,7 @@
 			org:true,
 			callback:function(data) {
 				if (data.success) {
-					$.cookie('the_cookie', null);
+					$.cookie('the_cookie', null,{path:"/"});
 					window.location.href = window.urlObject.ctl + "/Index/home";
 				}
 			}

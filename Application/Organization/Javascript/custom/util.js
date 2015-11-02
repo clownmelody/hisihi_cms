@@ -253,7 +253,6 @@ define(['jquery'],function () {
     };
 
 
-
 //提示等待插件
     ;
     (function ($) {

@@ -11,6 +11,7 @@ require.config({
         'jqueryuploadify':['jquery'],
         'jqueryvalidate':['jquery'],
         'util':['jquery'],
+
     },
     paths: {
         jquery: 'libs/jquery-1.8.2.min',
