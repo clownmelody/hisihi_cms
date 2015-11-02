@@ -40,6 +40,9 @@ $(function(){
                                 alert('登录失败');
                             }
                         }
+                        else{
+                            alert(data.message);
+                        }
                     }else{
                         alert('登录失败');
                     }
