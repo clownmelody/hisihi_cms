@@ -411,7 +411,7 @@ class OrganizationController extends AppController
         $totoalCount = $model->where('status=1')->count();
         $list = $model->where('status=1')->page($page, $count)->select();
         foreach($list as &$notice){
-            $notice['detail_url'] = 'http://hisihi.com/api.php?s/organization/noticedetail/id/'.$notice['id'];
+            $notice['detail_url'] = 'http://hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
             unset($notice['content']);
             unset($notice['status']);
         }
