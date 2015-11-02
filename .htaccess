@@ -1,0 +1,9 @@
+# BEGIN
+#<IfModule mod_rewrite.c>
+#RewriteEngine on
+#RewriteBase /
+#RewriteRule .*$ http://tencent.com
+#RewriteCond %{HTTP_HOST} ^org.ycjmbp.com [NC]
+#RewriteRule ^(.*) http://www.163.com/ [L]
+#</IfModule>
+#END
