@@ -122,14 +122,20 @@ define(['jquery','util','jqueryuploadify'],function () {
          */
         initUploadify:function() {
             var that=this;
-            url='http://121.42.44.208:8082/MIS/addOrganizationVideo',
+            //url='http://121.42.44.208:8082/MIS/addOrganizationVideo',
+            url='http://localhost/uploadify/uploadify.php',
                 options={
                     height:34,
                     width:82,
                     buttonText:'上传视频',
                     queueID:'uploadProConForVideo',
                     uploader:url,
-                    formData:{course_id:this.course_id},
+                    //formData:{course_id:this.course_id},
+                    //formData:{course_id:this.course_id},
+                    formData: {
+                        'timestamp' : '123123',
+                        'token'     : '1313113'
+                    },
                     fileSizeLimit: '100MB',//上传文件大小限制
                     fileTypeDesc: '视频文件',
                     fileTypeExts: '*.avi; *.mp4; *.mov; *.wmv'//文件类型过滤
