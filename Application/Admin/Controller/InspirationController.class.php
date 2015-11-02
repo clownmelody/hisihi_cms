@@ -70,6 +70,7 @@ class InspirationController extends AdminController {
                         $picid = $model->where('id='.$id)->getField('pic_id');
                         if($picid){
                             $this->uploadLogoPicToOSS($picid);
+                            getThumbImageById($picid, 280, 160);
                         }
                     }
                 } catch (Exception $e) {
