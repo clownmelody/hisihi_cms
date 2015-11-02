@@ -445,6 +445,9 @@
   margin-left: 35px;
   font-size: 16px;
 }
+.normalPageWrapper .normal-page-header .headerAddBtn {
+  margin-left: 100px;
+}
 .normalPageWrapper .normal-page-header .edit-data-item {
   float: right;
   margin-right: 20px;
@@ -682,6 +685,30 @@ fieldset[disabled] .brand-info.active {
   background-color: #f7be5b;
   border-color: #f8c873;
 }
+.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #aaaaaa !important;
+  border-color: #b7b7b7 !important;
+  color: #ffffff !important;
+}
+.disabled:hover {
+  background: #aaaaaa !important;
+  color: #ffffff !important;
+  border-color: #b7b7b7 !important;
+}
+.btnCommitCal {
+  color: #848484;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
+}
 .label {
   display: inline;
   padding: .3em .7em;
@@ -746,7 +773,7 @@ fieldset[disabled] .brand-info.active {
 .form-control {
   display: block;
   width: 100%;
-  height: 25px;
+  height: 20px;
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
@@ -788,6 +815,8 @@ fieldset[disabled] .form-control {
 }
 textarea.form-control {
   height: auto;
+  outline: none;
+  resize: none;
 }
 fieldset {
   padding: 0;
@@ -856,7 +885,7 @@ input[type="search"] {
   input[type="time"],
   input[type="datetime-local"],
   input[type="month"] {
-    line-height: 25px;
+    line-height: 20px;
   }
   input[type="date"].input-sm,
   input[type="time"].input-sm,
@@ -886,6 +915,28 @@ input[type="checkbox"].disabled,
 fieldset[disabled] input[type="radio"],
 fieldset[disabled] input[type="checkbox"] {
   cursor: not-allowed;
+}
+.cover-form {
+  width: 83px;
+  position: relative;
+  cursor: pointer;
+}
+.cover-form .data-import-file {
+  opacity: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  outline: none;
+  cursor: pointer;
+}
+.basicFormInfoError label {
+  font-weight: normal;
+  font-size: 12px;
+  color: #f5a623;
 }
 * {
   padding: 0;
@@ -939,7 +990,7 @@ body {
 .box > .box-header .min-title {
   font-size: 16px;
   color: #333333;
-  padding-left: 23px;
+  padding-left: 35px;
 }
 .foot {
   padding: 20px 0;
@@ -996,6 +1047,9 @@ body {
 .m_20 {
   margin-top: 20px;
 }
+.mb_30 {
+  margin-bottom: 30px;
+}
 .m_110 {
   margin-left: 110px;
 }
@@ -1010,6 +1064,37 @@ body {
 .text-success {
   color: #3c763d;
 }
+/**加载等待**/
+.cornerLoadingBox {
+  width: 180px;
+  height: 90px;
+  position: absolute;
+  /*border:1px solid red;*/
+  z-index: 99999;
+}
+.cornerLoadingItem {
+  margin-top: 10px;
+}
+.cornerLoadingImg {
+  margin: 10px auto;
+  width: 40px;
+  height: 40px;
+  background: url(../images/tempsprite.png) no-repeat;
+  background-position: -84px -1px;
+  animation: spin 800ms infinite linear;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+.cornerLoadingText {
+  text-align: center;
+  color: #f5a623;
+}
 .header {
   height: 54px;
   background: #fafafa;
@@ -1022,6 +1107,7 @@ body {
 }
 .navbar-content {
   overflow: hidden;
+  min-width: 600px;
 }
 .navbar-content .nav > .nav-item {
   float: left;
@@ -1031,10 +1117,11 @@ body {
 }
 .navbar-content .nav > .nav-item > .nav-link {
   text-align: center;
-  padding: 0 20px;
+  padding: 0 15px;
   display: block;
   color: #666666;
   transition: all .2s linear;
+  font-size: 14px;
 }
 .navbar-content .nav > .nav-item > .nav-link:hover,
 .navbar-content .nav > .nav-item > .nav-link:active,
@@ -1045,7 +1132,7 @@ body {
 }
 .navbar-content .nav > .nav-item .nav-img {
   float: left;
-  margin-right: 20px;
+  margin-right: 15px;
 }
 .navbar-content .nav > .nav-item.nav-user {
   border-right: 2px solid #ebebeb;
@@ -1066,13 +1153,14 @@ body {
   overflow: hidden;
 }
 .navbar-content .nav > .nav-item.nav-user .user-img > img {
-  width: 100%;
+  width: 40px;
+  height: 40px;
 }
 .navbar-content .nav > .nav-item.nav-user .user-name {
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-left: 60px;
   color: #666666;
+  font-size: 14px;
 }
 .nav-right {
   float: right !important;
@@ -1130,7 +1218,7 @@ body {
 }
 .side-list .item-txt {
   color: #999999;
-  font-size: 16px;
+  font-size: 14px;
 }
 .side-item.active .icon {
   width: 40px;
@@ -1168,6 +1256,12 @@ body {
   height: 30px;
   background-position: -290px -47px;
 }
+.side-item.active .icon.icon-look {
+  width: 16px;
+  height: 8px;
+  margin-right: 10px;
+  background-position: -40px -1;
+}
 .icon {
   width: 40px;
   height: 40px;
@@ -1203,6 +1297,12 @@ body {
   width: 30px;
   height: 30px;
   background-position: -290px -7px;
+}
+.icon.icon-look {
+  width: 16px;
+  height: 8px;
+  margin-right: 10px;
+  background-position: -40px 0;
 }
 .anWrapper {
   background-color: #ffffff;
@@ -1244,6 +1344,7 @@ body {
 }
 #announcesContainer {
   width: 100%;
+  min-height: 40px;
   height: -webkit-calc(100% - 80px);
   height: -moz-calc(100% - 80px);
   height: calc(100% - 80px);
@@ -1293,13 +1394,13 @@ body {
 .basicinfo-body .form-group .label-txt {
   text-align: center;
   font-weight: normal;
-  line-height: 39px;
+  line-height: 30px;
   color: #333333;
   font-size: 14px;
 }
 .basicinfo-body .form-group .label-img {
-  width: 80px;
-  height: 80px;
+  width: 75px;
+  height: 75px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
@@ -1309,8 +1410,8 @@ body {
   overflow-y: hidden;
 }
 .basicinfo-body .form-group .label-img img {
-  width: 100%;
-  height: auto;
+  width: 75px;
+  height: 75px;
 }
 .basicinfo-body .form-group .label-box {
   margin-top: 15px;
@@ -1337,6 +1438,12 @@ body {
 .basicinfo-body .form-group .box-tag .box-add .icon-add {
   font-size: 18px;
 }
+.basicinfo-body .form-group .box-tag .myAdvantageItem {
+  display: inline-block;
+}
+.basicinfo-body .form-group .box-tag a {
+  margin-left: 5px;
+}
 .basicinfo-body .form-group .recommend-box {
   padding-left: 40px;
   width: 312px;
@@ -1353,15 +1460,37 @@ body {
   width: 0;
   margin-right: 13px;
 }
+.basicinfo-body .form-group .recommend-box .checkbox #showRecommendBox {
+  margin-top: 13px;
+  width: 15px;
+  height: 15px;
+  float: left;
+  cursor: pointer;
+}
+.basicinfo-body .form-group .recommend-box .checkbox #showRecommendBoxLabel {
+  float: left;
+  cursor: pointer;
+}
 .basicinfo-body .form-group input {
   width: 326px;
 }
 .basicinfo-body .form-group textarea {
   width: 694px;
 }
-.basicinfo-body #SubmitBtn {
+.basicinfo-body .form-group #tagExitTips {
+  display: none;
+}
+.basicinfo-body .form-group #uploadImg {
+  height: 34px;
+  width: 86px;
+}
+#submitBasicInfoBtn {
   height: 40px;
   width: 115px;
+}
+#basicInfoResultLabel {
+  display: none;
+  margin-left: 20px;
 }
 #ImgModal .myModal-body-left {
   width: 40%;
@@ -1369,27 +1498,20 @@ body {
   float: left;
   text-align: center;
 }
+#ImgModal .myModal-body-left #myNewPicture {
+  height: 230px;
+  width: 230px;
+  -webkit-box-shadow: 0 0 6px #848484;
+  -moz-box-shadow: 0 0 6px #848484;
+  box-shadow: 0 0 6px #848484;
+}
+#ImgModal .basicInfoModel {
+  min-height: 180px;
+}
 #ImgModal .myModal-body-right {
   float: right;
   width: 50%;
   height: 100%;
-}
-#ImgModal #userPhotoForm {
-  width: 83px;
-  position: relative;
-  cursor: pointer;
-}
-#ImgModal #userPhotoForm #dataImportFileInput {
-  opacity: 0;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  outline: none;
-  cursor: pointer;
 }
 .normalPageWrapper {
   min-width: 700px;
@@ -1415,18 +1537,18 @@ body {
   font-size: 16px;
   padding-left: 20px;
 }
-.headerAddBtn {
+.teacherHeader .headerAddBtn {
   margin-left: 80px;
-  height: 32px;
+  height: 34px;
   width: 82px;
 }
-.editTeacher {
+.teacherHeader .editTeacher {
   float: right;
   margin-right: 20px;
   color: #f7be5b;
   cursor: pointer;
 }
-.editTeacher:hover {
+.teacherHeader .editTeacher:hover {
   color: #F0BE67;
 }
 .groupItemHeader {
@@ -1469,6 +1591,7 @@ body {
   margin-top: 6px;
 }
 .memberItemUl li .memberItemRight p.tname {
+  margin-top: 20px;
   font-size: 14px;
   color: #333644;
 }
@@ -1486,14 +1609,6 @@ body {
   -moz-box-shadow: 0 0 5px #999999;
   box-shadow: 0 0 5px #999999;
 }
-.addGroupCon > div {
-  width: 195px;
-  height: 20px;
-  margin: 0 auto;
-  padding-top: 16px;
-  color: #666666;
-  font-size: 16px;
-}
 .addGroupCon .addGroupBtn {
   margin-right: 13px;
   float: left;
@@ -1503,6 +1618,14 @@ body {
   border: 1px solid #666666;
   text-align: center;
   font-weight: bold;
+}
+.addGroupCon > div {
+  width: 195px;
+  height: 20px;
+  margin: 0 auto;
+  padding-top: 16px;
+  color: #666666;
+  font-size: 16px;
 }
 .addGroupDetailCon {
   display: none;
@@ -1515,29 +1638,23 @@ body {
 .addGroupDetailCon .gAddBtn {
   cursor: pointer;
 }
-#newGroupName {
+.addGroupDetailCon #newGroupName {
   height: 17px;
   width: 195px;
   margin: 0 30px 0 10px;
   display: inline;
 }
-#newGroupCommitBtn {
-  height: 30px;
-  width: 75px;
+.addGroupDetailCon #newGroupCommitBtn {
+  height: 32px;
+  width: 82px;
   line-height: 10px;
 }
-.newGroupCommitCal {
-  color: #848484;
-  margin-left: 10px;
-  cursor: pointer;
-}
-.errorInfo {
+.addGroupDetailCon .errorInfo {
   font-size: 14px;
   color: #F5A623;
   margin-left: 20px;
   display: none;
 }
-/*模态窗口*/
 .cornerModelBoxBg {
   position: absolute;
   top: 0;
@@ -1551,8 +1668,6 @@ body {
   z-index: 20000;
 }
 .cornerModelBox {
-  /*width: 544px;*/
-  /*min-height: 318px;*/
   background-color: #FAFAFA;
   box-shadow: 0 0 25px #AAAAAA;
   border-radius: 3px;
@@ -1612,6 +1727,9 @@ body {
   color: #666666;
   opacity: 0.8;
 }
+.allGroupNamesList li .radioContainer {
+  font-size: 14px;
+}
 .allGroupNamesList li:hover {
   opacity: 1;
 }
@@ -1626,15 +1744,69 @@ body {
 }
 .addNewTeacherItem {
   margin-top: 5px;
+  height: 110px;
+  position: relative;
 }
 .addNewTeacherItem .addNewTeacherHeader {
   height: 60px;
   line-height: 60px;
 }
-#addNewTeacherInput {
+.addNewTeacherItem #addNewTeacherInput {
   width: 350px;
   height: 25px;
   display: inline;
+}
+.addNewTeacherItem #queryTeacher {
+  height: 35px;
+  width: 83px;
+  margin-left: 15px;
+}
+.addNewTeacherItem #hideQueryResult {
+  display: none;
+}
+.addNewTeacherItem #selectTeacherError {
+  margin-left: 10px;
+  display: none;
+}
+.addNewTeacherItem #queryTeachResult {
+  width: 375px;
+  max-height: 158px;
+  min-height: 50px;
+  overflow: auto;
+  -webkit-box-shadow: 0 0 5px #999999;
+  -moz-box-shadow: 0 0 5px #999999;
+  box-shadow: 0 0 5px #999999;
+  background-color: #ffffff;
+  display: none;
+}
+.addNewTeacherItem ul li {
+  list-style: none;
+  height: 50px;
+  border-bottom: 1px solid #e3e3e3;
+  cursor: pointer;
+}
+.addNewTeacherItem ul li:hover {
+  background-color: #e3e3e3;
+}
+.addNewTeacherItem ul li img {
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 40px;
+  height: 40px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  float: left;
+}
+.addNewTeacherItem ul li span {
+  font-size: 14px;
+  color: #787878;
+  float: left;
+  margin-left: 10px;
+  line-height: 50px;
 }
 .addTeacherBtnRow {
   height: 50px;
@@ -1686,6 +1858,7 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 }
 #addTeacherCalBtn {
   font-weight: normal;
+  margin-left: 10px;
 }
 .sortableplaceholder {
   border: 1px dotted #428BCA !important;
@@ -1756,30 +1929,31 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   margin-left: 4px;
   line-height: 15px;
 }
-#studentWorksMainCon {
+.studentAndTeachCondition {
   padding: 25px;
 }
-#studentWorksMainCon li {
+.studentAndTeachCondition li {
   width: 244px;
   height: 235px;
 }
-#studentWorksMainCon li .worksItemHeader {
+.studentAndTeachCondition li .worksItemHeader {
   height: 183px;
+  border-bottom: 1px solid #f5a623;
 }
-#studentWorksMainCon li .worksItemHeader img {
+.studentAndTeachCondition li .worksItemHeader img {
   height: 183px;
   width: 100%;
 }
-#studentWorksMainCon li .worksItemBottom {
+.studentAndTeachCondition li .worksItemBottom {
   width: 90%;
   margin: 8px;
   height: 44px;
   overflow: hidden;
 }
-#studentWorksMainCon li .worksItemBottom p {
+.studentAndTeachCondition li .worksItemBottom p {
   color: #666666;
 }
-#studentWorksMainCon li .worksItemBottom textarea {
+.studentAndTeachCondition li .worksItemBottom textarea {
   width: 100%;
   border: none;
   resize: none;
@@ -1787,28 +1961,399 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
   background-color: #F3F6FF;
   display: none;
 }
-#studentWorksMainCon li .worksFooter {
+.studentAndTeachCondition li .worksFooter {
   padding-top: 2px;
 }
-#studentWorksMainCon li .worksFooter .videoFooterLeft {
+.studentAndTeachCondition li .worksFooter .videoFooterLeft {
   width: 47%;
   float: left;
 }
-#studentWorksMainCon li .worksFooter .videoFooterRight {
+.studentAndTeachCondition li .worksFooter .videoFooterRight {
   width: 47%;
   float: right;
   text-align: right;
 }
-#studentWorksMainCon li .worksFooter span {
+.studentAndTeachCondition li .worksFooter span {
   float: left;
   color: #999999;
   font-size: 12px;
   margin-left: 4px;
   line-height: 15px;
 }
-.addNewLessonWrapper .addNewLessonHeader span:nth-child(1) {
-  color: #999999;
+.studentWorksAndConditionForm {
+  width: 103px;
+  height: 40px;
+  display: inline-block;
+  margin-left: 100px;
+}
+.studentWorksAndConditionForm.uploadProcess {
+  width: 400px;
+}
+.addNewLessonWrapper .addNewLessonHeader span:nth-child(1) a {
+  color: #666666;
+  font-size: 16px;
+}
+.addNewLessonWrapper .addNewLessonHeader span:nth-child(1) a:hover {
+  text-decoration: underline;
 }
 .addNewLessonWrapper .addNewLessonHeader span:nth-child(2) {
   margin-left: 0px;
+}
+.addNewLessonWrapper .lessonType {
+  height: 35px;
+}
+.addNewLessonWrapper .uploadCoverImgCon {
+  height: 150px;
+  width: 320px;
+  border-radius: 4px;
+  border: 2px dashed #cccccc;
+  float: left;
+  margin-right: 10px;
+}
+.addNewLessonWrapper .uploadCoverImgCon p {
+  margin-top: 10px;
+  text-align: center;
+  color: #999999;
+  line-height: 23px;
+}
+.addNewLessonWrapper .uploadCoverImgCon p span {
+  color: #333644;
+}
+.addNewLessonWrapper .uploadCoverImgCon #lessonCoverForm {
+  width: 82px;
+  margin: 10px 100px;
+}
+.addNewLessonWrapper .uploadCoverImgCon #lessonCoverForm .selectPic {
+  height: 40px;
+  width: 100px;
+}
+.addNewLessonWrapper .uploadCoverImgCon img {
+  height: 130px;
+  width: 300px;
+  margin: 10px;
+}
+.addNewLessonWrapper #addNewLessonSubmitBtn {
+  height: 40px;
+  width: 115px;
+}
+.addNewLessonWrapper #addNewLessonSubmitResult {
+  display: none;
+  margin-left: 20px;
+}
+.certification {
+  padding: 35px;
+}
+.certification .certification-box {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.certification .certification-txt {
+  color: #999999;
+  text-align: center;
+  font-size: 14px;
+}
+.lessondetailinfo .container {
+  width: 720px;
+}
+.lessondetailinfo .box-header {
+  padding-left: 35px;
+  overflow: hidden;
+}
+.lessondetailinfo .box-header .min-title {
+  padding: 0;
+}
+.lessondetailinfo .box-header .up-video {
+  float: right;
+  margin-top: 12px;
+}
+.lessondetailinfo .box-header .editor-btn {
+  float: right;
+  color: #f7be5b;
+  margin-right: 40px;
+  font-size: 16px;
+}
+.lessondetailinfo .box-header .editor-btn:hover {
+  color: #f5a623;
+}
+.lessondetailinfo .box-header #uploadProConForVideo {
+  width: 160px;
+}
+.lessondetailinfo .box-body {
+  padding: 35px;
+}
+.lessondetailinfo .box-body .viod-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  color: #666666;
+}
+.lessondetailinfo .box-table {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  overflow: hidden;
+  box-shadow: 0 1px 0 #b4b4b4;
+}
+.lessondetailinfo .editor-box {
+  overflow: hidden;
+  width: 400px;
+}
+.lessondetailinfo .list-line > li {
+  display: inline;
+  float: left;
+  font-size: 16px;
+  color: #999999;
+  list-style: outside none none;
+}
+.lessondetailinfo .list-line > li.active {
+  color: #333333;
+}
+.lessondetailinfo .list-line > li a {
+  color: #666666;
+}
+.lessondetailinfo .list-line > li a:hover {
+  text-decoration: underline;
+}
+.lessondetailinfo .list-line > li + li::before {
+  content: "/ ";
+  color: #ccc;
+  padding: 0 5px 0 10px;
+}
+.lessondetailinfo .list-editor > li {
+  width: 100%;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.lessondetailinfo .list-editor > li > p {
+  color: #333333;
+  font-size: 14px;
+  overflow: hidden;
+}
+.lessondetailinfo .list-editor .item-label {
+  float: left;
+  font-size: 16px;
+  margin-right: 10px;
+  color: #666666;
+}
+.lessondetailinfo .table-info {
+  margin-bottom: 0;
+}
+.lessondetailinfo .table-info > thead > tr {
+  border: 1px solid #e2e3e3;
+}
+.lessondetailinfo .table-info > thead > tr > th {
+  text-align: center;
+  border-width: 0;
+  background: #f7be5b;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 600;
+}
+.lessondetailinfo .table-info > tbody > tr {
+  border: 1px solid #e2e3e3;
+  font-size: 14px;
+  color: #666666;
+}
+.lessondetailinfo .table-info > tbody > tr > th {
+  text-align: center;
+}
+.lessondetailinfo .table-info > tbody > tr > th,
+.lessondetailinfo .table-info > tbody > tr > td {
+  border-top: 1px solid #e2e3e3;
+}
+.lessondetailinfo .table-info > tbody > tr > th,
+.lessondetailinfo .table-info > tbody > tr > td {
+  line-height: 40px;
+}
+.lessondetailinfo .table-info .title {
+  text-align: center;
+  line-height: 38px;
+  color: #333333;
+}
+.lessondetailinfo .table-info .time {
+  color: #666666;
+  text-align: center;
+}
+.lessondetailinfo .icon {
+  width: 45px;
+  height: 45px;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  font: 0/0;
+  background-image: url('../images/tempsprite.png');
+  background-repeat: no-repeat;
+}
+.lessondetailinfo .icon.icon-home {
+  background-position: 0px -2475px;
+}
+.lessondetailinfo .icon.icon-information {
+  background-position: -45px -2475px;
+}
+.lessondetailinfo .icon.icon-teacher {
+  background-position: -90px -2475px;
+}
+.lessondetailinfo .icon.icon-video {
+  background-position: -135px -2475px;
+}
+.lessondetailinfo .icon.icon-imac {
+  background-position: -180px -2475px;
+}
+.lessondetailinfo .icon.icon-works {
+  background-position: -225px -2475px;
+}
+.lessondetailinfo .icon.icon-medal {
+  background-position: -270px -2475px;
+}
+.lessondetailinfo .icon.icon-close {
+  width: 35px;
+  height: 35px;
+  background-position: -325px -2482px;
+}
+.lessondetailinfo .icon.icon-look {
+  width: 16px;
+  height: 8px;
+  margin-right: 10px;
+  background-position: -45px -55px;
+}
+/*
+Uploadify
+Copyright (c) 2012 Reactive Apps, Ronnie Garcia
+Released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
+*/
+.uploadify {
+  position: relative;
+  margin-bottom: 1em;
+}
+.uploadify-button {
+  display: inline-block;
+  margin-bottom: 0;
+  min-width: 60px;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #ffffff;
+  background-color: #f7be5b;
+  border-color: #f8c873;
+  width: 100%;
+  padding: 0;
+}
+.uploadify-button:focus,
+.uploadify-button:active:focus,
+.uploadify-button.focus,
+.uploadify-button:active.focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.uploadify-button:hover,
+.uploadify-button:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.uploadify-button:active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.uploadify-button.disabled,
+.uploadify-button[disabled],
+fieldset[disabled] .uploadify-button {
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.uploadify-button:hover,
+.uploadify-button:focus,
+.uploadify-button.focus,
+.uploadify-button:active,
+.uploadify-button.active {
+  color: #ffffff;
+  background-color: #f5ab2a;
+  border-color: #f5b139;
+}
+.uploadify-button:active,
+.uploadify-button.active {
+  background-image: none;
+}
+.uploadify-button.disabled,
+.uploadify-button[disabled],
+fieldset[disabled] .uploadify-button,
+.uploadify-button.disabled:hover,
+.uploadify-button[disabled]:hover,
+fieldset[disabled] .uploadify-button:hover,
+.uploadify-button.disabled:focus,
+.uploadify-button[disabled]:focus,
+fieldset[disabled] .uploadify-button:focus,
+.uploadify-button.disabled.focus,
+.uploadify-button[disabled].focus,
+fieldset[disabled] .uploadify-button.focus,
+.uploadify-button.disabled:active,
+.uploadify-button[disabled]:active,
+fieldset[disabled] .uploadify-button:active,
+.uploadify-button.disabled.active,
+.uploadify-button[disabled].active,
+fieldset[disabled] .uploadify-button.active {
+  background-color: #f7be5b;
+  border-color: #f8c873;
+}
+.uploadify-button.disabled {
+  background-color: #D0D0D0;
+  color: #808080;
+}
+.uploadify-queue {
+  margin-bottom: 1em;
+}
+.uploadify-queue-item {
+  background-color: #F5F5F5;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font: 11px Verdana, Geneva, sans-serif;
+  margin-top: 5px;
+  max-width: 350px;
+  padding: 10px;
+}
+.uploadify-error {
+  background-color: #FDE5DD !important;
+}
+.uploadify-queue-item .cancel a {
+  float: right;
+  height: 16px;
+  text-indent: -9999px;
+  width: 16px;
+}
+.uploadify-queue-item.completed {
+  background-color: #E5E5E5;
+}
+.uploadify-progress {
+  background-color: #E5E5E5;
+  margin-top: 10px;
+  width: 100%;
+}
+.uploadify-progress-bar {
+  background-color: #0099FF;
+  height: 3px;
+  width: 1px;
 }

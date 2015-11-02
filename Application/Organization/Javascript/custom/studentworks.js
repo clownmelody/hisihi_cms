@@ -1,130 +1,67 @@
 /**
  * Created by Jimmy on 2015/10/27.
  */
-//我的老师
+//学生作品
 
-define(['jquery','jqueryui'],function () {
+define(['jquery','jqueryui','util'],function () {
     var StudentWorks = function ($wrapper) {
         this.$wrapper = $wrapper;
+        this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
         this.loadData();
+        this.initUploadify();
         this.$wrapper.on('click','.worksItemBottom', $.proxy(this,'worksItemDescEdit'));
-        this.$wrapper.on('blur','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
-        this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
+        this.$wrapper.on('focusout','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
+        this.$wrapper.on('keydown','.worksItemBottom textarea', $.proxy(this,'dealWithWorksItemDescEdit'));
+        //this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('click','.editStudentWorks', $.proxy(this,'showEditVideoBox'));
+        this.$wrapper.on('click','.deleteStudentWorks', $.proxy(this,'deleteStudentWorks'));
     };
     StudentWorks.prototype= {
         loadData: function () {
-            var data = [
-                    {
-                    id:0,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/1.png'
-                    },
-                {
-                    id:1,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/10.png'
-                },
-                {
-                    id:2,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/2.png'
-                },
-                {
-                    id:3,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/3.png'
-                },
-                {
-                    id:4,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/4.png'
-                },
-                {
-                    id:5,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/5.png'
-                },
-                {
-                    id:6,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/6.png'
-                },
-                {
-                    id:7,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/7.png'
-                },
-                {
-                    id:8,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/8.png'
-                },
-                {
-                    id:9,
-                    typeName: 'Photoshop',
-                    title: '大圣归来手绘原稿',
-                    uploadTime: '2015.02.14 12:00',
-                    viewedTime:12154546,
-                    imgSrc: window.urlObject.image + '/studentworks/9.png'
+            if (this.$wrapper.data('cornerLoading')) {
+                this.$wrapper.cornerLoading('showLoading');
+            } else {
+                this.$wrapper.cornerLoading();
+            }
+            var url=this.basicApiUrl+'/getStudentWorks',
+            that=this;
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: {},
+                org:true,
+                callback:function(result) {
+                    that.$wrapper.cornerLoading('hideLoading');
+                    if(result.success) {
+                        that.getStudentWorksInfoStr(result.data);
+                    }else{
+                        alert('学生作品加载失败');
+                    }
                 }
-            ];
-            //this.getDataAsync(function(data){
-            //    data;
-            //});
-            this.showStudentWorksInfo(data);
+            });
         },
-        showStudentWorksInfo:function(data){
+
+        /*
+        *展示学生作品
+        */
+        getStudentWorksInfoStr:function(data){
             var str='',
                 that=this,
-                typeNameAndTile='',
-                tempTitle='';
+                title='';
             $.each(data,function(){
-                typeNameAndTile=this.typeName+' | '+this.title;
-                tempTitle=typeNameAndTile;
-                if(typeNameAndTile.length>33){
-                    tempTitle=typeNameAndTile.substr(0,33)+'…';
-                }
+                title=this.description;
                 str+='<li class="normal" data-id="'+this.id+'">'+
                         '<div class="worksItemHeader">'+
-                            '<img src="'+this.imgSrc+'">'+
+                            '<img src="'+this.url+'">'+
                         '</div>'+
                         '<div class="worksItemBottom">'+
-                            '<p title="'+typeNameAndTile+'">'+tempTitle+'</p>'+
-                            '<textarea>'+typeNameAndTile+'</textarea>'+
+                            '<p title="'+title+'">'+Hisihi.substrLongStr(title,33)+'</p>'+
+                            '<textarea>'+title+'</textarea>'+
                         '</div>'+
-                        '<div class="delete-item-btn" title="删除"></div>'+
+                        '<div class="delete-item-btn deleteStudentWorks" title="删除"></div>'+
                     '</li>';
             });
-            str+='<div style="clear:both;">';
-            this.$wrapper.find('#studentWorksMainCon').append(str);
+            that.$wrapper.find('#studentWorksMainCon>div').before(str);
         },
 
         /*显示编辑框*/
@@ -157,6 +94,96 @@ define(['jquery','jqueryui'],function () {
                 $target.text('编辑');
                 $li.removeClass('edit').addClass('normal');
             }
+        },
+
+        /*
+         *初始化头像上传插件
+         */
+        initUploadify:function() {
+            var that=this;
+            Hisihi.initUploadify($("#uploadStudentWorks"),function(file, data){
+                var src = '';
+                if (data.success) {
+                    var logo=data.logo;
+                    that.execAddStudentWorks.call(that,logo);
+                } else {
+                    alert('作品上传失败');
+                }
+            },{height:34,width:82,'queueID':'uploadProConForSWorkd'});
+        },
+
+        /*添加学生作品*/
+        execAddStudentWorks:function(logo){
+            var url=this.basicApiUrl+'/studentWorks',
+                that=this;
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: {pic_id: logo.id,description:''},
+                org: true,
+                callback: function (result) {
+                    if (result.success) {
+                        //添加到列表中
+                        that.getStudentWorksInfoStr.call(that, [{id: result.works_id, url: logo.path, description: ''}]);
+                    } else {
+                        alert('作品上传失败');
+                    }
+                }
+            });
+        },
+
+        /*删除学生作品*/
+        deleteStudentWorks:function(e){
+            e.stopPropagation();
+            if(window.confirm('确定删除该作品么？')) {
+                var $parent = $(e.currentTarget).closest('li'),
+                    url = this.basicApiUrl + '/studentWorks',
+                    that = this;
+                Hisihi.getDataAsync({
+                    url: url,
+                    data: {id: $parent.data('id'),type:'delete'},
+                    org: false,
+                    callback: function (data) {
+                        if (data.success) {
+                            $parent.remove();
+                        } else {
+                            alert('删除失败');
+                        }
+                    }
+                });
+            }
+        },
+
+        dealWithWorksItemDescEdit:function(e){
+            if(e.keyCode==13){
+                event.returnValue = false;
+                this.updateStudentWorks($(e.currentTarget).closest('li'));
+            }
+            if(e.keyCode==27){
+                this.hideWorksItemDescEdit(e);
+            }
+        },
+
+        /*更新学生作品描述信息*/
+        updateStudentWorks:function($li){
+            var url=this.basicApiUrl+'/updatePicturesDescription',
+                that=this,
+                newVal=$li.find('textarea').val();
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: {id:$li.data('id'),description:newVal},
+                org: true,
+                callback: function (result) {
+                    if (result.success) {
+                        //更新图片描述
+                        $parent.find('p').text(newVal);
+                        that.hideWorksItemDescEdit();
+                    } else {
+                        alert('作品描述更新失败');
+                    }
+                }
+            });
         },
 
     };

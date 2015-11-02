@@ -1,23 +1,32 @@
-<div class="box addNewLessonWrapper normalPageWrapper">
+<div class="box addNewLessonWrapper normalPageWrapper" data-lid="{$id}">
     <div class="box-header normal-page-header addNewLessonHeader">
-        <span class="header-title">视频教程&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+        <span class="header-title"><a href="__URL__/Index/video">视频教程</a>&nbsp;&nbsp;/&nbsp;&nbsp;</span>
         <span class="header-title addNewLessonTitle">课程信息</span>
     </div>
-    <div class="box-body">
+    <div class="box-body basicinfo-body">
         <form class="form-horizontal" id="addNewLessonForm">
             <div class="form-group">
-                <label for="" class="label-txt col-label">名称</label>
+                <label for="" class="label-txt col-label">标题</label>
                 <div class="col-2">
-                    <input  class="form-control" placeholder="名称" value="0" name="organization_id" id="organization_id" />
-                    <input  class="form-control" placeholder="名称" value="" name="name" id="name" />
+                    <input  class="form-control" placeholder="请输入标题" value="" name="title" id="newLessonTitle" />
+                    <span class="basicFormInfoError"></span>
                 </div>
             </div>
             <!-- /.form-group -->
 
             <div class="form-group">
-                <label for="" class="label-txt col-label">签名</label>
-                <div class="col-2">
-                    <input  class="form-control" placeholder="签名" value="" name="slogan" id="Signature" >
+                <label for="" class="label-txt col-label">封面</label>
+                <div class="col-1">
+                    <div class="uploadCoverImgCon">
+                        <p>请添加&nbsp;<span>png/jpg</span>&nbsp;格式</p>
+                        <p>建议大小为300×130的图片</p>
+                        <div id="lessonCoverForm" class="cover-form">
+                            <input type="file" id="uploadLessonPic" class="btn brand-info" value="选择图片">
+                        </div>
+                    </div>
+                    <div class="uploadCoverImgCon" id="myLessonCoverImg">
+                        <img src="#"/>
+                    </div>
                 </div>
             </div>
             <!-- /.form-group -->
@@ -25,40 +34,53 @@
             <div class="form-group">
                 <label for="" class="label-txt col-label">简介</label>
                 <div class="col-1">
-                    <textarea class="form-control" rows="5" name="introduce"></textarea>
+                    <textarea class="form-control" rows="5" name="content" id="newLessonContent"></textarea>
+                    <span class="basicFormInfoError"></span>
                 </div>
             </div>
             <!-- /.form-group -->
 
             <div class="form-group">
-                <label for="" class="label-txt col-label">优势</label>
+                <label for="" class="label-txt col-label">分类</label>
                 <div class="col-2">
-                    <input  class="form-control" name="advantage">
-                    <div class="box-tag tag-open">
-                    </div>
+                    <select  class="form-control lessonType" name="advantage" id="newLessonType">
+                        <option value="14">UI设计</option>
+                        <option value="15">平面设计</option>
+                        <option value="lol">lol</option>
+                        <option value="轰炸设计师">轰炸设计师</option>
+                    </select>
                 </div>
             </div>
             <!-- /.form-group -->
 
             <div class="form-group">
-                <label for="" class="label-txt col-label">地址</label>
+                <label for="" class="label-txt col-label">讲师</label>
                 <div class="col-2">
-                    <input  class="form-control" placeholder="地址" value="" name="location" id="Address" >
+                    <select  class="form-control lessonType" name="lecturer" id="newLessonTeacher">
+                        <!--<option value="424">讲师12</option>-->
+                        <!--<option value="342">讲师90</option>-->
+                        <!--<option value="545">讲师830</option>-->
+                    </select>
+                    <span class="basicFormInfoError"></span>
                 </div>
             </div>
             <!-- /.form-group -->
 
             <div class="form-group">
-                <label for="" class="label-txt col-label">联系方式</label>
+                <label for="" class="label-txt col-label">权限</label>
                 <div class="col-2">
-                    <input  class="form-control" placeholder="联系方式" value="" name="phone_num" id="Contact" >
+                    <select  class="form-control lessonType"  name="auth" id="newLessonAuth">
+                        <option value="1">公开</option>
+                        <option value="2">私有</option>
+                    </select>
                 </div>
             </div>
             <!-- /.form-group -->
 
             <div class="form-group">
                 <div class="col-2 m_110">
-                    <input type="button" class="btn btn-grey" id="SubmitBtn" value="保存"/>
+                    <input type="button" class="btn btn-grey" id="addNewLessonSubmitBtn" value="保存"/>
+                    <span class="basicFormInfoError" id="addNewLessonSubmitResult"><label>操作成功</label></span>
                 </div>
             </div>
             <!-- /.form-group -->

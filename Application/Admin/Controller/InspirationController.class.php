@@ -56,6 +56,8 @@ class InspirationController extends AdminController {
             $data['selection'] = $_POST['selection'];
             $data["pic_id"] = $_POST["pic_id"];
             $data["create_time"] = time();
+            $data["view_count"] = rand(1000, 3000);
+            $data["favorite_count"] = rand(100, 300);
             if(empty($cid)){
                 try {
                     if(!$model->create($data)){

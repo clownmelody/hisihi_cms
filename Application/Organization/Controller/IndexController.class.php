@@ -34,7 +34,12 @@ class IndexController extends Controller
         $this->display();
 
     }
-    public function addnewlesson(){
+    public function addnewlesson($id){
+        $this->assign('id', $id);
+        $this->display();
+    }
+    public  function  lessondetailinfo($id){
+        $this->assign('id', $id);
         $this->display();
     }
     public  function  studentworks(){
