@@ -25,7 +25,7 @@ class OrganizationController extends AppController
      * 获取短信验证码
      * @param $mobile
      */
-    public function getSMS($mobile=null){
+    public function getSMS($mobile=null,$type='register'){
         if(empty($mobile)){
             $this->apiError(-1, '传入手机号为空');
         } else {
@@ -33,7 +33,7 @@ class OrganizationController extends AppController
                 $this->apiError(-2, '传入手机号不符合格式');
             }
         }
-        $this->isMobileExist($mobile);
+        $this->isMobileExist($mobile,$type);
         $url = C('bmob_send_sms_url');
         $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
         $headers['X-Bmob-REST-API-Key'] = C('bmob_api_key');
@@ -979,7 +979,7 @@ class OrganizationController extends AppController
      * 检查手机号是否已经被注册
      * @param $mobile
      */
-    private function isMobileExist($mobile){
+    private function isMobileExist($mobile,$type){
         if(empty($mobile)){
             $this->apiError(-1, "传入参数为空");
         }
@@ -987,8 +987,15 @@ class OrganizationController extends AppController
         $map['mobile'] = $mobile;
         $user = M('OrganizationAdmin')->where($map)->find();
         if($user){
-            $extraData['isExist'] = true;
-            $this->apiSuccess("该手机号已注册", null, $extraData);
+            if($type == 'register'){
+                $extraData['isExist'] = true;
+                $this->apiSuccess("该手机号已注册", null, $extraData);
+            }
+        }else{
+            if($type != 'register'){
+                $extraData['isExist'] = false;
+                $this->apiSuccess("该手机号未注册", null, $extraData);
+            }
         }
     }
 
