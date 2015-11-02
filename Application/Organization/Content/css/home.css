@@ -1421,6 +1421,12 @@ fieldset[disabled] .item1 .form-box .form-group .btn-primary.active {
     width: 1200px;
   }
 }
+.nav {
+  width: 100%;
+}
+.nav > .container {
+  width: 100%;
+}
 @media (max-width: 1000px) {
   .item-box,
   .foot {
