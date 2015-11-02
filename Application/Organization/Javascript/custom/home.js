@@ -109,6 +109,7 @@ $(function(){
             //password
             $.post(baseUrl+'/resetPassword',tempData,function(data){
                 if(data.success) {
+                    alert('密码更改成功，请使用新密码登录');
                     window.location.href = window.urlObject.ctl + "/Index/home";
                 }else{
                     alert(data.message);
@@ -127,18 +128,23 @@ $(function(){
             alert('手机号码不正确，请重新输入');
             return;
         }
-        $targetBtn.attr('disabled','disabled').css('opacity','0.7');
-        timeInterval = window.setInterval(function(){
-            updateTimeShowInfo($targetBtn);
-        },60*1000);
-        //mobile
-        $.post(baseUrl+'/getSMS',{mobile:tel},function(data){
-            if(data.success){
-
-            }else{
-                alert('验证码获取失败，请重新获取');
-            }
-        });
+        else {
+            $targetBtn.val('重新获取(60)');
+            $targetBtn.attr('disabled', 'disabled').css('opacity', '0.7');
+            timeInterval = window.setInterval(function () {
+                updateTimeShowInfo($targetBtn);
+            }, 1000);
+            //mobile
+            $.post(baseUrl + '/getSMS', {mobile: tel}, function (data) {
+                if (data.success) {
+                    if (data.isExist) {
+                        alert(data.message);
+                    }
+                } else {
+                    alert('验证码获取失败，请重新获取');
+                }
+            });
+        }
     });
 
     //获取手机验证码 忘记密码
@@ -150,19 +156,23 @@ $(function(){
         if(telReg == false){
             alert('手机号码不正确，请重新输入');
             return;
+        }else {
+            $targetBtn.attr('disabled', 'disabled').css('opacity', '0.7');
+            $targetBtn.val('重新获取(60)');
+            timeIntervalForget = window.setInterval(function () {
+                updateTimeShowInfo($targetBtn);
+            }, 1000);
+            //mobile
+            $.post(baseUrl + '/getSMS', {mobile: tel, type: 'reset'}, function (data) {
+                if (data.success) {
+                    if (!data.isExist) {
+                        alert(data.message);
+                    }
+                } else {
+                    alert('验证码获取失败，请重新获取');
+                }
+            });
         }
-        $targetBtn.attr('disabled','disabled').css('opacity','0.7');
-        timeIntervalForget = window.setInteval(function(){
-            updateTimeShowInfo($targetBtn);
-        },60*1000);
-        //mobile
-        $.post(baseUrl+'/getSMS',{mobile:tel},function(data){
-            if(data.success){
-
-            }else{
-                alert('验证码获取失败，请重新获取');
-            }
-        });
     });
 
     /*
@@ -178,7 +188,7 @@ $(function(){
     *更新时间
      */
     function updateTimeShowInfo($target){
-        var leftTime=$target.text().split('(')[1].split(')')[0],
+        var leftTime=$target.val().split('(')[1].split(')')[0],
             leftTime=parseInt(leftTime);
         if(leftTime==0){
             //按钮的初始状态
@@ -189,7 +199,7 @@ $(function(){
         }else{
             leftTime--;
             var text='重新获取('+leftTime+')';
-            $target.text(text);
+            $target.val(text);
         }
 
     }
