@@ -211,6 +211,17 @@ $(function(){
           }
     });
 
+    var __IMG__ = "/hisihi-cms/Application/Organization/Content/images/home/";
+    $('.item1').bgStretcher({
+      images: [__IMG__+'bg1.jpg', __IMG__+'bg2.jpg', __IMG__+'bg3.jpg'],
+      imageWidth: 1024, 
+      imageHeight: 768,
+      slideDirection: 'N',
+      slideShowSpeed: 1000,
+      transitionEffect: 'fade',
+      sequenceMode: 'normal',
+    });
+
     //首页数据加载效果
     if($('.data-box').length>0 && $('.data-box').is(':visible') ){
       $('#num_problem').animateNumber({ number: 825199 },3000);
