@@ -11,7 +11,8 @@ define(['jquery','jqueryui','util'],function () {
         this.initUploadify();
         this.$wrapper.on('click','.worksItemBottom', $.proxy(this,'worksItemDescEdit'));
         this.$wrapper.on('focusout','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
-        this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
+        this.$wrapper.on('keydown','.worksItemBottom textarea', $.proxy(this,'dealWithWorksItemDescEdit'));
+        //this.$wrapper.on('keyDown','.worksItemBottom textarea', $.proxy(this,'hideWorksItemDescEdit'));
         this.$wrapper.on('click','.editStudentWorks', $.proxy(this,'showEditVideoBox'));
         this.$wrapper.on('click','.deleteStudentWorks', $.proxy(this,'deleteStudentWorks'));
     };
@@ -151,6 +152,38 @@ define(['jquery','jqueryui','util'],function () {
                     }
                 });
             }
+        },
+
+        dealWithWorksItemDescEdit:function(e){
+            if(e.keyCode==13){
+                event.returnValue = false;
+                this.updateStudentWorks($(e.currentTarget).closest('li'));
+            }
+            if(e.keyCode==27){
+                this.hideWorksItemDescEdit(e);
+            }
+        },
+
+        /*更新学生作品描述信息*/
+        updateStudentWorks:function($li){
+            var url=this.basicApiUrl+'/updatePicturesDescription',
+                that=this,
+                newVal=$li.find('textarea').val();
+            Hisihi.getDataAsync({
+                type: "post",
+                url: url,
+                data: {id:$li.data('id'),description:newVal},
+                org: true,
+                callback: function (result) {
+                    if (result.success) {
+                        //更新图片描述
+                        $parent.find('p').text(newVal);
+                        that.hideWorksItemDescEdit();
+                    } else {
+                        alert('作品描述更新失败');
+                    }
+                }
+            });
         },
 
     };
