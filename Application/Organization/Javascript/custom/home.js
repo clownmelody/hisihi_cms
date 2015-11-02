@@ -5,6 +5,7 @@ $(function(){
     var baseUrl=window.urlObject.apiUrl+'/api.php?s=/Organization',
         timeInterval=null,
         registerValidity=setValidityForRegister(),
+        forgetValidity=setValidityForForget(),
         loginValidity=setValidityForLogin();
     $('#showRegisterBox').on('click',function(){
         $('#loginBox').hide();
@@ -89,7 +90,33 @@ $(function(){
         }
     });
 
-    //获取手机验证码
+    $('#forgetSubmit').on('click',function(){
+        if(forgetValidity.form()) {
+            var number = $('#forgetMobile').val(),
+                pwd=$('#forgetPassword').val(),
+                checkCode=$('#forgetCheckCode').val();
+            tempData={
+                mobile:number,
+                password:pwd,
+                sms_code:checkCode
+            };
+            for(var item in tempData) {
+                tempData[item] = tempData[item].replace(/(^\s*)|(\s*$)/g, '');
+            }
+            //mobile    用户手机号
+            //sms_code  短信验证码
+            //password
+            $.post(baseUrl+'/resetPassword',tempData,function(data){
+                if(data.success) {
+                    window.location.href = window.urlObject.ctl + "/Index/home";
+                }else{
+                    alert(data.message);
+                }
+            });
+        }
+    });
+
+    //获取手机验证码  注册
     $('#sendCheckCode').on('click',function(){
         var tel = $("#registerMobile").val(); //获取手机号
         var telReg = !!tel.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/);
@@ -105,7 +132,31 @@ $(function(){
             if(data.success){
                 $(this).attr('disabled','disabled');
                 timeInterval = window.setInteval(function(){
-                    updateTimeShowInfo();
+                    //updateTimeShowInfo();
+                },60*1000);
+            }else{
+                alert('验证码获取失败，请重新获取');
+            }
+        });
+    });
+
+    //获取手机验证码 忘记密码
+    $('#getForgetCheckCode').on('click',function(){
+        var tel = $("#forgetMobile").val(); //获取手机号
+        var telReg = !!tel.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/);
+
+        //如果手机号码不能通过验证
+        if(telReg == false){
+            alert('手机号码不正确，请重新输入');
+            return;
+        }
+
+        //mobile
+        $.post(baseUrl+'/getSMS',{mobile:tel},function(data){
+            if(data.success){
+                $(this).attr('disabled','disabled');
+                timeInterval = window.setInteval(function(){
+                    //updateTimeShowInfo();
                 },60*1000);
             }else{
                 alert('验证码获取失败，请重新获取');
@@ -141,7 +192,7 @@ $(function(){
 
     }
 
-    /*表单必填项控制*/
+    /*注册表单必填项控制*/
     function setValidityForRegister(){
         return $("#registerForm").validate({
                 rules: {
@@ -170,7 +221,7 @@ $(function(){
             });
     }
 
-    /*表单必填项控制*/
+    /*登录表单必填项控制*/
     function setValidityForLogin(){
         return $("#registerForm").validate({
             rules: {
@@ -184,6 +235,35 @@ $(function(){
             messages: {
                 phoneNum: "请输入手机号",
                 registerPassword: {
+                    required: "请输入密码",
+                }
+            },
+            errorPlacement: function (error, element) {
+                error.appendTo(element.next('.basicFormInfoError'));
+            }
+        });
+    }
+
+    /*找回密码表单必填项控制*/
+    function setValidityForForget(){
+        return $("#forgetForm").validate({
+            rules: {
+                forgetMobile: {
+                    required: true,
+                },
+                forgetCheckCode: {
+                    required: true,
+                },
+                forgetPassword: {
+                    required: true,
+                }
+            },
+            messages: {
+                forgetMobile: "请输入手机号",
+                forgetCheckCode: {
+                    required: '请输入验证码',
+                },
+                forgetPassword: {
                     required: "请输入密码",
                 }
             },
