@@ -47,12 +47,12 @@ $(function(){
                 checkCode=$('#registerCheckCode').val();
                 tempData={
                     mobile:number,
-                    sms_code:pwd,
-                    password:checkCode
+                    password:pwd,
+                    sms_code:checkCode
                 };
-            tempData.each(function(item){
-                tempData[item]=tempData[item].replace(/(^\s*)|(\s*$)/g,'');
-            });
+            for(var item in tempData) {
+                tempData[item] = tempData[item].replace(/(^\s*)|(\s*$)/g, '');
+            }
             //mobile    用户手机号
             //sms_code  短信验证码
             //password

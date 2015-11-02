@@ -79,7 +79,9 @@ class OrganizationController extends AppController
             $data['create_time'] = time();
             $result = M('OrganizationAdmin')->data($data)->add();
             if($result){
-                $this->apiSuccess('注册成功');
+                $extra['uid'] = $result;
+                $extra['session_id'] = session_id();
+                $this->apiSuccess('注册成功',null,$extra);
             } else {
                 $this->apiError(-2, '注册失败');
             }
@@ -411,7 +413,7 @@ class OrganizationController extends AppController
         $totoalCount = $model->where('status=1')->count();
         $list = $model->where('status=1')->page($page, $count)->select();
         foreach($list as &$notice){
-            $notice['detail_url'] = 'http://localhost/hisihi-cms/api.php?s=/organization/noticedetail/id/'.$notice['id'];
+            $notice['detail_url'] = 'http://hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
             unset($notice['content']);
             unset($notice['status']);
         }

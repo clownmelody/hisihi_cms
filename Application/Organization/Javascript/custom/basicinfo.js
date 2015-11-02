@@ -243,6 +243,7 @@
 							that.updateCookie.call(that,'organization_name',name);
 							var tempName=Hisihi.substrLongStr(name,9);
 							$('#headOrgName').attr('title',name).text(tempName);
+							$('#orgLogoAndName').show();
 						}else{
 							tempStr='更新失败';
 						}
