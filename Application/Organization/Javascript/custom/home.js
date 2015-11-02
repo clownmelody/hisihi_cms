@@ -18,13 +18,25 @@ $(function(){
         });
     });
 
-    $(".item-box").stellar({
+    /*$(".item-box").stellar({
         horizontalScrolling: false,
               horizontalOffset: 40,//水平偏移
                verticalOffset: 150,//垂直偏移
-        hideElement: function($elem) { $elem.hide(); },
-        showElement: function($elem) { $elem.show(); }
+          showElement: function($element){
+            $element.fadeIn(2000);
+          },
+          hideElement: function($element){
+            $element.fadeOut(2000);
+          }
+    });*/
 
+    $.stellar({
+          showElement: function($element){
+            $element.show();
+          },
+          hideElement: function($element){
+            $element.hide();
+          }
     });
 
     //首页数据加载效果

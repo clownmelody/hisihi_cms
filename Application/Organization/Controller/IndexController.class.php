@@ -20,6 +20,10 @@ class IndexController extends Controller
         layout(false);
         $this->display('Index/home');
     }
+    public function register(){
+        layout(false);
+        $this->display('Index/register');
+    }
     public function announcement(){
         $this->display();
     }
