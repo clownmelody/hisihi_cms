@@ -11,6 +11,10 @@ $(function(){
         $('#loginBox').show();
         $('#registerBox').hide();
     });
+    $('#showForgetBox').on('click',function(){
+        $('#forgetBox').show();
+        $('#loginBox').hide();
+    });
 
     $('#login').on('click',function(){
         $('#loginForm').ajaxSubmit({
