@@ -4,6 +4,7 @@
 $(function(){
     var baseUrl=window.urlObject.apiUrl+'/api.php?s=/Organization',
         timeInterval=null,
+        timeIntervalForget=null,
         registerValidity=setValidityForRegister(),
         forgetValidity=setValidityForForget(),
         loginValidity=setValidityForLogin();
@@ -120,20 +121,20 @@ $(function(){
     $('#sendCheckCode').on('click',function(){
         var tel = $("#registerMobile").val(); //获取手机号
         var telReg = !!tel.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/);
-
+        var $targetBtn=$(this);
         //如果手机号码不能通过验证
         if(telReg == false){
             alert('手机号码不正确，请重新输入');
             return;
         }
-
+        $targetBtn.attr('disabled','disabled').css('opacity','0.7');
+        timeInterval = window.setInterval(function(){
+            updateTimeShowInfo($targetBtn);
+        },60*1000);
         //mobile
         $.post(baseUrl+'/getSMS',{mobile:tel},function(data){
             if(data.success){
-                $(this).attr('disabled','disabled');
-                timeInterval = window.setInteval(function(){
-                    //updateTimeShowInfo();
-                },60*1000);
+
             }else{
                 alert('验证码获取失败，请重新获取');
             }
@@ -144,20 +145,20 @@ $(function(){
     $('#getForgetCheckCode').on('click',function(){
         var tel = $("#forgetMobile").val(); //获取手机号
         var telReg = !!tel.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/);
-
+        var $targetBtn=$(this);
         //如果手机号码不能通过验证
         if(telReg == false){
             alert('手机号码不正确，请重新输入');
             return;
         }
-
+        $targetBtn.attr('disabled','disabled').css('opacity','0.7');
+        timeIntervalForget = window.setInteval(function(){
+            updateTimeShowInfo($targetBtn);
+        },60*1000);
         //mobile
         $.post(baseUrl+'/getSMS',{mobile:tel},function(data){
             if(data.success){
-                $(this).attr('disabled','disabled');
-                timeInterval = window.setInteval(function(){
-                    //updateTimeShowInfo();
-                },60*1000);
+
             }else{
                 alert('验证码获取失败，请重新获取');
             }
@@ -176,18 +177,19 @@ $(function(){
     /*
     *更新时间
      */
-    function updateTimeShowInfo(){
-        var $target=$('#leftTime'),
-            leftTime=parseInt($target.text());
+    function updateTimeShowInfo($target){
+        var leftTime=$target.text().split('(')[1].split(')')[0],
+            leftTime=parseInt(leftTime);
         if(leftTime==0){
             //按钮的初始状态
-            $('#sendCheckCode').removeAttr('disabled');
-            $target.text('60');
+            $target.removeAttr('disabled').css('opacity','1');
+            $target.val('获得验证码');
             window.clearInterval(timeInterval);
 
         }else{
-            left--;
-            $target.text(left);
+            leftTime--;
+            var text='重新获取('+leftTime+')';
+            $target.text(text);
         }
 
     }
