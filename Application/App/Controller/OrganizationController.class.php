@@ -79,7 +79,9 @@ class OrganizationController extends AppController
             $data['create_time'] = time();
             $result = M('OrganizationAdmin')->data($data)->add();
             if($result){
-                $this->apiSuccess('注册成功');
+                $extra['uid'] = $result;
+                $extra['session_id'] = session_id();
+                $this->apiSuccess('注册成功',null,$extra);
             } else {
                 $this->apiError(-2, '注册失败');
             }
