@@ -182,6 +182,7 @@ define(['jquery','jqueryui','util'],function () {
                                 teachers:[]
                             }];
                             that.showMembersInfo.call(that, tempData, 1);
+                            //if($(''))
                         }
                         else{
                             alert('添加失败！')
@@ -325,7 +326,9 @@ define(['jquery','jqueryui','util'],function () {
                     boxMainContentForAlert: function () {
                         return '<div id="addNewTeacherModelBox">' +
                                     '<div class="addNewTeacherWrapper">' +
-                                        '<ul class="list allGroupNamesList">' + that.getAllGroupNameStrForModelBox.call(that)+'</ul>' +
+                                        '<div class="allGroupNamesListCon">'+
+                                            '<ul class="list allGroupNamesList">' + that.getAllGroupNameStrForModelBox.call(that)+'</ul>' +
+                                        '</div>'+
                                         '<div class="addNewTeacherItem">'+
                                             '<div class="addNewTeacherHeader">添加新老师</div>'+
                                             '<input type="text" id="addNewTeacherInput" class="form-control" placeholder="输入账号或者名字来查找老师"/>'+
