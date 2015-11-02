@@ -57,12 +57,12 @@ class InspirationController extends AppController {
             case 1:
                 $map['special'] = 1;
                 $total_count = $model->where($map)->count();
-                $list = $model->where($map)->page($page, $count)->select();
+                $list = $model->where($map)->order('create_time desc')->page($page, $count)->select();
                 break;
             case 2:
                 $map['selection'] = 1;
                 $total_count = $model->where($map)->count();
-                $list = $model->where($map)->page($page, $count)->select();
+                $list = $model->where($map)->order('create_time desc')->page($page, $count)->select();
                 break;
             case 3:
                 $total_count = $model->where($map)->count();
