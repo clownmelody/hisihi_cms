@@ -2,6 +2,16 @@
  * Created by Jimmy on 2015/10/26.
  */
 $(function(){
+
+    $('#showRegisterBox').on('click',function(){
+        $('#loginBox').hide();
+        $('#registerBox').show();
+    });
+    $('#showLoginBox').on('click',function(){
+        $('#loginBox').show();
+        $('#registerBox').hide();
+    });
+
     $('#login').on('click',function(){
         $('#loginForm').ajaxSubmit({
             url:window.urlObject.apiUrl+'/api.php?s=/Organization/login',
@@ -16,6 +26,15 @@ $(function(){
                 alert('登录失败');
             }
         });
+    });
+
+    $('#register').on('click',function(){
+
+    });
+
+    //获取手机验证码
+    $('#sendCheckCode').on('click',function(){
+        
     });
 
     /*$(".item-box").stellar({

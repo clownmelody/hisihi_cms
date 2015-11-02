@@ -1138,6 +1138,9 @@ body {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
+#registerBox{
+  display: none;
+}
 .item1 .form-box .from-title {
   color: #cdcfd2;
   text-align: left;
