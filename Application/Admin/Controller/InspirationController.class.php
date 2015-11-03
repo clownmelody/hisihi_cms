@@ -200,10 +200,12 @@ class InspirationController extends AdminController {
                 foreach($id as $val){
                     $map['id'] = $val;
                     $res = $model->where($map)->save($data);
+                    M('Inspiration')->where(array('category_id'=>$val))->save($data);
                 }
             }else{
                 $map['id'] = $id;
                 $res = $model->where($map)->save($data);
+                M('Inspiration')->where(array('category_id'=>$id))->save($data);
             }
             if(!$res){
                 $this->error("删除数据失败");

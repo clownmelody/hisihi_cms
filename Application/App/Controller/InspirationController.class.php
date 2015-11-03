@@ -56,26 +56,27 @@ class InspirationController extends AppController {
         switch($filter_type){
             case 1:
                 $map['special'] = 1;
-                $total_count = $model->where($map)->count();
+                //$total_count = $model->where($map)->count();
                 $list = $model->where($map)->order('create_time desc')->page($page, $count)->select();
                 break;
             case 2:
                 $map['selection'] = 1;
-                $total_count = $model->where($map)->count();
+                //$total_count = $model->where($map)->count();
                 $list = $model->where($map)->order('create_time desc')->page($page, $count)->select();
                 break;
             case 3:
-                $total_count = $model->where($map)->count();
+                //$total_count = $model->where($map)->count();
                 $list = $model->where($map)->order('favorite_count desc')->page($page, $count)->select();
                 break;
             case 4:
-                $total_count = $model->where($map)->count();
+                //$total_count = $model->where($map)->count();
                 $list = $model->where($map)->order('view_count desc')->page($page, $count)->select();
                 break;
         }
 
         $list = $this->formatList($list,$uid);
-        $extra['totalCount'] = $total_count;
+        //$extra['totalCount'] = $total_count;
+        $extra['totalCount'] = count($list);
         $extra['data'] = $list;
         $this->apiSuccess('获取灵感图片列表成功', null, $extra);
     }
@@ -219,9 +220,13 @@ class InspirationController extends AppController {
 
     private function formatList($list=null,$uid=0){
         if(!empty($list)){
+            $img_list = array();
             foreach($list as &$inspira){
                 $pic_id = $inspira['pic_id'];
                 $pic_url = $this->fetchImage($pic_id);
+                if(!$pic_url){
+                    continue;
+                }
                 $origin_img_info = getimagesize($pic_url);
                 $src_size = Array();
                 $src_size['width'] = $origin_img_info[0]; // width
@@ -231,6 +236,9 @@ class InspirationController extends AppController {
                     'size'=>$src_size
                 );
                 $pic_small = getThumbImageById($pic_id, 280, 160);
+                if(!$pic_small){
+                    continue;
+                }
                 $thumb_img_info = getimagesize($pic_small);
                 $thumb_size = Array();
                 $thumb_size['width'] = $thumb_img_info[0]; // width
@@ -242,7 +250,6 @@ class InspirationController extends AppController {
                 if(!$uid){
                     $uid = is_login();
                 }
-
                 $favorite['appname'] = 'Inspiration';
                 $favorite['table'] = 'Inspiration';
                 $favorite['row'] = $inspira['id'];;
@@ -256,9 +263,10 @@ class InspirationController extends AppController {
                 unset($inspira['special']);
                 unset($inspira['selection']);
                 unset($inspira['category_id']);
+                $img_list[] = $inspira;
             }
         }
-        return $list;
+        return $img_list;
     }
 
     private function fetchImage($pic_id)
@@ -272,12 +280,12 @@ class InspirationController extends AppController {
             $objKey = substr($path, 17);
             $param["bucketName"] = "hisihi-other";
             $param['objectKey'] = $objKey;
-            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
-            if($isExist){
-                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
-            }/*else{
-                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
-            }*/
+            if(file_exists('.'.$path)){
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                }
+            }
         }
         return $picUrl;
     }
