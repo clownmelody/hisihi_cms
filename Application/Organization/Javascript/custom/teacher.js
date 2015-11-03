@@ -53,12 +53,12 @@ define(['jquery','jqueryui','util'],function () {
             }
             var that=this;
             this.getDataAsync(function(data){
+                that.$wrapper.cornerLoading('hideLoading');
                 if(data.success) {
-                    that.$wrapper.cornerLoading('hideLoading');
                     data = data.data;
                     this.showMembersInfo(data,0);
                 }else{
-                    alert('数据加载失败！');
+                    alert(data.message);
                 }
             });
         },
@@ -191,7 +191,7 @@ define(['jquery','jqueryui','util'],function () {
                             }
                         }
                         else{
-                            alert('添加失败！')
+                            alert(data.message);
                         }
                     }
                 });
@@ -573,9 +573,9 @@ define(['jquery','jqueryui','util'],function () {
                     }
                     else{
                         if(data.error_code==-2){
-                            alert('该老师已经添加过了');
+                            alert(data.message);
                         }else {
-                            alert('添加失败');
+                            alert(data.message);
                         }
                     }
                 }
@@ -596,11 +596,14 @@ define(['jquery','jqueryui','util'],function () {
                     },
                     that = this;
 
+                myContext.$wrapper.cornerLoading();
+
                 Hisihi.getDataAsync({
                     type: "post",
                     url: url,
                     data: tempData,
                     callback: function (data) {
+                        myContext.$wrapper.cornerLoading('hideLoading');
                         myContext.fillInQueryTeacherResult.call(modelContext,data);
                     }
                 });
@@ -628,7 +631,7 @@ define(['jquery','jqueryui','util'],function () {
                 $target.find('ul').html(str);
                 $target.add($hideBtn).show();
             }else{
-                alert("查询失败");
+                alert(data.message);
             }
         },
 

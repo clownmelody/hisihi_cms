@@ -8,13 +8,13 @@ $(function(){
         registerValidity=setValidityForRegister(),
         forgetValidity=setValidityForForget(),
         loginValidity=setValidityForLogin();
-    $('#showRegisterBox').on('click',function(){
-        $('#loginBox').hide();
-        $('#registerBox').show();
-    });
-    $('#showLoginBox').on('click',function(){
+    //$('#showRegisterBox').on('click',function(){
+    //    $('#loginBox').hide();
+    //    $('#registerBox').show();
+    //});
+    $('.showLoginBox').on('click',function(){
         $('#loginBox').show();
-        $('#registerBox').hide();
+        $(this).parents('.form-box').hide();
     });
     $('#showForgetBox').on('click',function(){
         $('#forgetBox').show();
@@ -46,7 +46,7 @@ $(function(){
                             alert(data.message);
                         }
                     }else{
-                        alert('登录失败');
+                        alert(data.message);
                     }
                 },
                 error: function (e) {
@@ -56,40 +56,40 @@ $(function(){
         }
     });
 
-    $('#register').on('click',function(){
-        if(registerValidity.form()) {
-            var number = $('#registerMobile').val(),
-                pwd=$('#registerPassword').val(),
-                checkCode=$('#registerCheckCode').val();
-                tempData={
-                    mobile:number,
-                    password:pwd,
-                    sms_code:checkCode
-                };
-            for(var item in tempData) {
-                tempData[item] = tempData[item].replace(/(^\s*)|(\s*$)/g, '');
-            }
-            //mobile    用户手机号
-            //sms_code  短信验证码
-            //password
-            $.post(baseUrl+'/register',tempData,function(data){
-                if(data.success) {
-                    setCookie({
-                        session_id: data.session_id,
-                        organization_id:null,
-                        organization_name:null,
-                        uid:data.uid,
-                        organization_logo:'',
-                        username:''
-
-
-                    });
-                }else{
-                    alert(data.message);
-                }
-            });
-        }
-    });
+    //$('#register').on('click',function(){
+    //    if(registerValidity.form()) {
+    //        var number = $('#registerMobile').val(),
+    //            pwd=$('#registerPassword').val(),
+    //            checkCode=$('#registerCheckCode').val();
+    //            tempData={
+    //                mobile:number,
+    //                password:pwd,
+    //                sms_code:checkCode
+    //            };
+    //        for(var item in tempData) {
+    //            tempData[item] = tempData[item].replace(/(^\s*)|(\s*$)/g, '');
+    //        }
+    //        //mobile    用户手机号
+    //        //sms_code  短信验证码
+    //        //password
+    //        $.post(baseUrl+'/register',tempData,function(data){
+    //            if(data.success) {
+    //                setCookie({
+    //                    session_id: data.session_id,
+    //                    organization_id:null,
+    //                    organization_name:null,
+    //                    uid:data.uid,
+    //                    organization_logo:'',
+    //                    username:''
+    //
+    //
+    //                });
+    //            }else{
+    //                alert(data.message);
+    //            }
+    //        });
+    //    }
+    //});
 
     $('#forgetSubmit').on('click',function(){
         if(forgetValidity.form()) {
@@ -119,33 +119,33 @@ $(function(){
     });
 
     //获取手机验证码  注册
-    $('#sendCheckCode').on('click',function(){
-        var tel = $("#registerMobile").val(); //获取手机号
-        var telReg = !!tel.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/);
-        var $targetBtn=$(this);
-        //如果手机号码不能通过验证
-        if(telReg == false){
-            alert('手机号码不正确，请重新输入');
-            return;
-        }
-        else {
-            $targetBtn.val('重新获取(60)');
-            $targetBtn.attr('disabled', 'disabled').css('opacity', '0.7');
-            timeInterval = window.setInterval(function () {
-                updateTimeShowInfo($targetBtn);
-            }, 1000);
-            //mobile
-            $.post(baseUrl + '/getSMS', {mobile: tel}, function (data) {
-                if (data.success) {
-                    if (data.isExist) {
-                        alert(data.message);
-                    }
-                } else {
-                    alert('验证码获取失败，请重新获取');
-                }
-            });
-        }
-    });
+    //$('#sendCheckCode').on('click',function(){
+    //    var tel = $("#registerMobile").val(); //获取手机号
+    //    var telReg = !!tel.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/);
+    //    var $targetBtn=$(this);
+    //    //如果手机号码不能通过验证
+    //    if(telReg == false){
+    //        alert('手机号码不正确，请重新输入');
+    //        return;
+    //    }
+    //    else {
+    //        $targetBtn.val('重新获取(60)');
+    //        $targetBtn.attr('disabled', 'disabled').css('opacity', '0.7');
+    //        timeInterval = window.setInterval(function () {
+    //            updateTimeShowInfo($targetBtn);
+    //        }, 1000);
+    //        //mobile
+    //        $.post(baseUrl + '/getSMS', {mobile: tel}, function (data) {
+    //            if (data.success) {
+    //                if (data.isExist) {
+    //                    alert(data.message);
+    //                }
+    //            } else {
+    //                alert('验证码获取失败，请重新获取');
+    //            }
+    //        });
+    //    }
+    //});
 
     //获取手机验证码 忘记密码
     $('#getForgetCheckCode').on('click',function(){
@@ -169,7 +169,7 @@ $(function(){
                         alert(data.message);
                     }
                 } else {
-                    alert('验证码获取失败，请重新获取');
+                    alert(data.message);
                 }
             });
         }

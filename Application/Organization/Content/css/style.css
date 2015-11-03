@@ -1082,8 +1082,35 @@ body {
   background: url(../images/tempsprite.png) no-repeat;
   background-position: -84px -1px;
   animation: spin 800ms infinite linear;
+  -webkit-animation: spin 800ms infinite linear;
+  -moz-animation: spin 800ms infinite linear;
+  -o-animation: spin 800ms infinite linear;
 }
 @keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@-moz-keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@-o-keyframes spin {
   0% {
     transform: rotate(360deg);
   }
@@ -1094,6 +1121,12 @@ body {
 .cornerLoadingText {
   text-align: center;
   color: #f5a623;
+}
+.noDataForQuery {
+  margin-top: 10px;
+  color: #f5a623;
+  text-align: center;
+  font-size: 14px;
 }
 .header {
   height: 54px;

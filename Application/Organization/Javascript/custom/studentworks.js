@@ -39,7 +39,7 @@ define(['jquery','jqueryui','util'],function () {
                     if(result.success) {
                         that.getStudentWorksInfoStr(result.data);
                     }else{
-                        alert('学生作品加载失败');
+                        alert(result.message);
                     }
                 }
             });
@@ -52,19 +52,23 @@ define(['jquery','jqueryui','util'],function () {
             var str='',
                 that=this,
                 title='';
-            $.each(data,function(){
-                title=this.description;
-                str+='<li class="normal" data-id="'+this.id+'">'+
-                        '<div class="worksItemHeader">'+
-                            '<img src="'+this.url+'">'+
-                        '</div>'+
-                        '<div class="worksItemBottom">'+
-                            '<p title="'+title+'">'+Hisihi.substrLongStr(title,33)+'</p>'+
-                            '<textarea>'+title+'</textarea>'+
-                        '</div>'+
-                        '<div class="delete-item-btn deleteStudentWorks" title="删除"></div>'+
-                    '</li>';
-            });
+            if(data) {
+                $.each(data, function () {
+                    title = this.description;
+                    str += '<li class="normal" data-id="' + this.id + '">' +
+                        '<div class="worksItemHeader">' +
+                        '<img src="' + this.url + '">' +
+                        '</div>' +
+                        '<div class="worksItemBottom">' +
+                        '<p title="' + title + '">' + Hisihi.substrLongStr(title, 33) + '</p>' +
+                        '<textarea>' + title + '</textarea>' +
+                        '</div>' +
+                        '<div class="delete-item-btn deleteStudentWorks" title="删除"></div>' +
+                        '</li>';
+                });
+            }else{
+                str='<span class="basicFormInfoError">没有学生作品，快点上传吧。</span>';
+            }
             that.$wrapper.find('#studentWorksMainCon>div').before(str);
         },
 
@@ -111,7 +115,7 @@ define(['jquery','jqueryui','util'],function () {
                     var logo=data.logo;
                     that.execAddStudentWorks.call(that,logo);
                 } else {
-                    alert('作品上传失败');
+                    alert(data.message);
                 }
             },{height:34,width:82,'queueID':'uploadProConForSWorkd'});
         },
@@ -130,7 +134,7 @@ define(['jquery','jqueryui','util'],function () {
                         //添加到列表中
                         that.getStudentWorksInfoStr.call(that, [{id: result.works_id, url: logo.path, description: ''}]);
                     } else {
-                        alert('作品上传失败');
+                        alert(result.message);
                     }
                 }
             });
@@ -151,7 +155,7 @@ define(['jquery','jqueryui','util'],function () {
                         if (data.success) {
                             $parent.remove();
                         } else {
-                            alert('删除失败');
+                            alert(data.message);
                         }
                     }
                 });
@@ -185,7 +189,7 @@ define(['jquery','jqueryui','util'],function () {
                         $li.find('p').text(newVal);
                         that.hideWorksItemDescEdit($li);
                     } else {
-                        alert('作品描述更新失败');
+                        alert(result.message);
                     }
                 }
             });

@@ -106,7 +106,7 @@
 				$form.find('#Contact').val(data.phone_num);
 				$form.find('#organization_id').attr('data-org-id',this.organization_id);
 			}else{
-				alert('数据加载失败');
+				alert(result.message);
 			}
 		},
 
@@ -128,7 +128,7 @@
 							alert(result.message);
 						}
 					}else{
-						alert('数据获取失败');
+						alert(result.message);
 					}
 				}
 			});
@@ -285,7 +285,7 @@
 						if (e.success) {
 							that.fillInNewLogo.call(that);
 						} else {
-							alert('头像信息更新失败');
+							alert(e.message);
 						}
 					}
 				});

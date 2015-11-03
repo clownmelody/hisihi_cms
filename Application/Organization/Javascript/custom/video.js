@@ -44,7 +44,7 @@ define(['jquery','jqueryui','util'],function () {
                     if(result.success) {
                         that.showLessonInfo.call(that, result.data);
                     }else{
-                        alert('数据加载失败');
+                        alert(result.message);
                     }
                 }
             });
@@ -124,7 +124,7 @@ define(['jquery','jqueryui','util'],function () {
                         if (data.success) {
                             $parent.remove();
                         } else {
-                            alert('删除失败');
+                            alert(data.message);
                         }
                     }
                 });

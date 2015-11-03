@@ -37,7 +37,7 @@ define(['jquery','jqueryui','util'],function () {
                     if(result.success) {
                         that.getStudentWorksInfoStr(result.data);
                     }else{
-                        alert('学生作品加载失败');
+                        alert(result.message);
                     }
                 }
             });
@@ -109,7 +109,7 @@ define(['jquery','jqueryui','util'],function () {
                     var logo=data.logo;
                     that.execAddStudentWorks.call(that,logo);
                 } else {
-                    alert('教学环境图片上传失败');
+                    alert(data.message);
                 }
             },{height:34,width:82,'queueID':'uploadProConForCondition'});
         },
@@ -128,7 +128,7 @@ define(['jquery','jqueryui','util'],function () {
                         //添加到列表中
                         that.getStudentWorksInfoStr.call(that, [{id: result.environment_id, url: logo.path, description: ''}]);
                     } else {
-                        alert('作品上传失败');
+                        alert(result.message);
                     }
                 }
             });

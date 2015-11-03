@@ -109,7 +109,7 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
                 this.setSelectedInfo($('#newLessonType'),data.category_id);
                 this.setSelectedInfo($('#newLessonAuth'),data.auth);
             }else{
-                alert('数据加载失败');
+                alert(result.message);
             }
         },
 
@@ -215,7 +215,7 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
                     var $img=that.$wrapper.find('#myLessonCoverImg img');
                     $img.attr({'src':data.logo.path,'data-lid':data.logo.id});
                 } else {
-                    alert('头像上传失败');
+                    alert(data.message);
                     //(data.info);
                     //data.info
                     //setTimeout(function () {

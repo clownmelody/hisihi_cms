@@ -29,6 +29,8 @@
 				if (data.success) {
 					$.cookie('the_cookie', null,{path:"/"});
 					window.location.href = window.urlObject.ctl + "/Index/home";
+				}else{
+					alert(data.message);
 				}
 			}
 		});
