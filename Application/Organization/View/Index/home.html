@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>嘿设汇-诚信机构</title>
+    <link rel="shortcut icon" href="__IMG__/sitelogo.ico"/>
     <script>
         window.urlObject= {
             js: "__JS__",
             css: "__CSS__",
-            image: "__IMG__", 
+            image: "__IMG__",
             ctl:'__URL__',
-            apiUrl:'__API__'
+            apiUrl:'__API__',
+            defaultImg:{
+                logo:'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png',
+                cover:'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/lessonCover.png'
+            }
         }
     </script>
     <script type="text/javascript" src="__JS__/libs/jquery-1.8.2.min.js"></script>
@@ -199,8 +204,8 @@
                                     </div>
                                     <!-- /.form-group -->
 
-                                    <div class="form-group forget-pass" id="showForgetBox">
-                                        <span class="jump-link">忘记密码?</span>
+                                    <div class="form-group forget-pass">
+                                        <span class="jump-link" id="showForgetBox" title="忘记密码">忘记密码?</span>
                                     </div>
                                     <!-- /.form-group -->
 
@@ -210,9 +215,9 @@
                                     </div>
                                     <!-- /.form-group -->
                                     
-                                    <p class="signup-title" id="showRegisterBox">
-                                        还没有账号？<span class="jump-link"> 立即注册</span>
-                                    </p>
+                                    <!--<p class="signup-title">-->
+                                        <!--还没有账号？<span id="showRegisterBox" class="jump-link"> 立即注册</span>-->
+                                    <!--</p>-->
                                     <!-- /.signup-title -->
 
                                 </form>
@@ -252,8 +257,8 @@
                                     </div>
                                     <!-- /.form-group -->
 
-                                    <p class="signup-title" id="showLoginBox">
-                                        已有账号？<span class="jump-link"> 立即登录</span>
+                                    <p class="signup-title" >
+                                        已有账号？<span class="jump-link showLoginBox" title="立即登录">立即登录</span>
                                     </p>
                                     <!-- /.signup-title -->
 
@@ -277,14 +282,16 @@
                                         <div class="security-box">
                                             <input type="text" class="form-control" autocomplete="off" placeholder="输入验证码" id="forgetCheckCode" name="forgetCheckCode"/>
                                             <input type="button" name="submit" id="getForgetCheckCode" class="btn btn-primary" value="发送验证码"/>
+                                            <div style="clear: both"></div>
+                                            <span class="basicFormInfoError"></span>
                                         </div>
-                                        <span class="basicFormInfoError"></span>
+
                                     </div>
                                     <!-- /.form-group -->
 
                                     <div class="form-group">
                                         <!-- <label for="" class="label-txt col-label">密码</label> -->
-                                        <input type="password" class="form-control" id="forgetPassword" name="forgetPassword" placeholder="设置密码"/>
+                                        <input type="password" class="form-control" id="forgetPassword" name="forgetPassword" placeholder="设置密码6-12位密码"/>
                                         <span class="basicFormInfoError"></span>
                                     </div>
                                     <!-- /.form-group -->
@@ -295,6 +302,10 @@
                                         <input type="button" name="submit" id="forgetSubmit" class="btn btn-primary" value="立即提交"/>
                                         <span class="basicFormInfoError"></span>
                                     </div>
+
+                                    <p class="signup-title" >
+                                        <span class="jump-link showLoginBox" title="返回登录">返回登录</span>
+                                    </p>
                                     <!-- /.form-group -->
 
                                 </form>

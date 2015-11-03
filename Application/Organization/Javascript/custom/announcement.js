@@ -36,16 +36,14 @@ define(['jquery','util'],function () {
             }
             var that=this;
             this.getDataAsync(function(data){
+                that.$wrapper.cornerLoading('hideLoading');
                 if(data.success) {
                     data = data.data;
                     that.showShortAnnounceInfo(data);
-                    that.$wrapper.cornerLoading('hideLoading');
                 }else{
-                    alert('数据加载失败！');
+                    alert(data.message);
                 }
             });
-
-
         },
 
         getDataAsync:function(callback){
@@ -55,11 +53,10 @@ define(['jquery','util'],function () {
                 },
             url=window.urlObject.apiUrl+'/api.php?s=/Organization/getNotice',
                 that=this;
-            var sectionId =JSON.parse($.cookie('hisihi-org')).session_id;
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {page:1,count:20},
+                data: {page:1,count:50},
                 callback:function(data){
                     callback.call(that,data)
                 }
@@ -79,14 +76,6 @@ define(['jquery','util'],function () {
             }
         },
 
-        /*
-         *显示详细的公告信息
-         * @para
-         * data -{array} 公告数组
-         */
-        showDetailAnnounceInfo:function(){
-
-        },
 
         /*
         *显示简要的公告信息
@@ -96,10 +85,14 @@ define(['jquery','util'],function () {
         showShortAnnounceInfo:function(data){
             var str='',
                 date;
-            $.each(data,function(){
-                date=new Date(parseFloat(this.update_time)* 1000).format('yyyy.MM.dd');
-                str+='<li class="anListItem" data-id="'+this.id+'"><a href="'+this.detail_url+'" target="_blank"> <span>'+this.title+'</span><span>'+date+'</span></a></li>';
-            });
+            if(data) {
+                $.each(data, function () {
+                    date = new Date(parseFloat(this.update_time) * 1000).format('yyyy.MM.dd');
+                    str += '<li class="anListItem" data-id="' + this.id + '"><a href="' + this.detail_url + '" target="_blank"> <span>' + this.title + '</span><span>' + date + '</span></a></li>';
+                });
+            }else{
+                str='<p class="noDataForQuery">暂时没有公告信息</p>';
+            }
             this.$wrapper.find('#announcesContainer .clearDiv').before(str);
         },
 

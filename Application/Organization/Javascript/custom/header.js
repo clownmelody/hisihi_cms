@@ -1,4 +1,4 @@
-﻿define(['jquery'],function () {
+﻿define(['jquery','jquerycookie'],function () {
 	fillInHeadBasicInfo();
 	function fillInHeadBasicInfo(){
 		var cookie = cookie=JSON.parse($.cookie('hisihi-org'));
@@ -8,8 +8,11 @@
 			$target=$('#orgLogoAndName');
 		if(!orgId){
 			$target.hide();
+			//$target.find('#headerLogo').attr('src','http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png');
+
 		}else{
 			$target.find('#headerLogo').attr('src',orgImgSrc);
+			orgName=orgName || '';
 			var tempName=orgName;
 			if(orgName.length>9) {
 				tempName=orgName.substr(0,8)+'…';
@@ -29,6 +32,8 @@
 				if (data.success) {
 					$.cookie('the_cookie', null,{path:"/"});
 					window.location.href = window.urlObject.ctl + "/Index/home";
+				}else{
+					alert(data.message);
 				}
 			}
 		});
