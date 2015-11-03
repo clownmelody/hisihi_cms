@@ -42,12 +42,14 @@ class AliyunOssController extends AddonsController{
         if(isset($objectKey)){
             try {
                 $content_length = filesize("./Uploads/Picture/$objectKey");
-                $this->oss_client->putObject(array(
-                    'Bucket' => 'forum-pic',
-                    'Key' => $objectKey,
-                    'Content' => fopen("./Uploads/Picture/$objectKey", 'r'),
-                    'ContentLength' => $content_length,
-                ));
+                if($content_length){
+                    $this->oss_client->putObject(array(
+                        'Bucket' => 'forum-pic',
+                        'Key' => $objectKey,
+                        'Content' => fopen("./Uploads/Picture/$objectKey", 'r'),
+                        'ContentLength' => $content_length,
+                    ));
+                }
             } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
                 \Think\Log::write("AliYun OSS Service Upload Resource Exception: ".$ex.getErrorCode(), "ERR");
             }

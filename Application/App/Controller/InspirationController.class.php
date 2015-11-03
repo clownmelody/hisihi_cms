@@ -56,27 +56,26 @@ class InspirationController extends AppController {
         switch($filter_type){
             case 1:
                 $map['special'] = 1;
-                //$total_count = $model->where($map)->count();
+                $total_count = $model->where($map)->count();
                 $list = $model->where($map)->order('create_time desc')->page($page, $count)->select();
                 break;
             case 2:
                 $map['selection'] = 1;
-                //$total_count = $model->where($map)->count();
+                $total_count = $model->where($map)->count();
                 $list = $model->where($map)->order('create_time desc')->page($page, $count)->select();
                 break;
             case 3:
-                //$total_count = $model->where($map)->count();
+                $total_count = $model->where($map)->count();
                 $list = $model->where($map)->order('favorite_count desc')->page($page, $count)->select();
                 break;
             case 4:
-                //$total_count = $model->where($map)->count();
+                $total_count = $model->where($map)->count();
                 $list = $model->where($map)->order('view_count desc')->page($page, $count)->select();
                 break;
         }
 
         $list = $this->formatList($list,$uid);
-        //$extra['totalCount'] = $total_count;
-        $extra['totalCount'] = count($list);
+        $extra['totalCount'] = $total_count;
         $extra['data'] = $list;
         $this->apiSuccess('获取灵感图片列表成功', null, $extra);
     }
@@ -227,6 +226,9 @@ class InspirationController extends AppController {
                 if(!$pic_url){
                     continue;
                 }
+                if(!preg_match("/^http:\/\//",$pic_url)){
+                    continue;
+                }
                 $origin_img_info = getimagesize($pic_url);
                 $src_size = Array();
                 $src_size['width'] = $origin_img_info[0]; // width
@@ -235,8 +237,15 @@ class InspirationController extends AppController {
                     'url'=>$pic_url,
                     'size'=>$src_size
                 );
-                $pic_small = getThumbImageById($pic_id, 280, 160);
+                try{
+                    $pic_small = getThumbImageById($pic_id, 280, 160);
+                }catch (Exception $e){
+                    continue;
+                }
                 if(!$pic_small){
+                    continue;
+                }
+                if(!preg_match("/^http:\/\//",$pic_small)){
                     continue;
                 }
                 $thumb_img_info = getimagesize($pic_small);
