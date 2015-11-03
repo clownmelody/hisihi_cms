@@ -792,7 +792,7 @@ body {
 }
 body {
   background: #ebebeb;
-  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  font-family: "Source Han Sans CN Medium", "Microsoft Yahei", "黑体", "宋体", sans-serif;
 }
 .wrapper {
   margin-left: 160px;
@@ -929,7 +929,6 @@ body {
   color: #ff5a00;
 }
 .home {
-  font-family: "Source Han Sans CN Medium", Microsoft YaHei, SimHei, "微软雅黑", "黑体";
   height: 100%;
 }
 .home .container {
