@@ -14,9 +14,10 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
         this.loadAllClass(); //加载所有分类
         if(this.course_id!=0) {
             this.loadLessonBasicInfo();
-            this.$wrapper.find('#myLessonCoverImg').show();
+            //this.$wrapper.find('#myLessonCoverImg').show();
         }else{
             this.course_id=null;
+            this.$wrapper.find('#myLessonCoverImg img').attr('src',window.urlObject.defaultImg.cover);
         }
         //事件注册
         this.$wrapper.on('click','#addNewLessonSubmitBtn', $.proxy(this,'addNewLesson'));
@@ -99,10 +100,13 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
             this.$wrapper.cornerLoading('hideLoading');
             if(result.success) {
                 var data=result.data,
-                    $form = this.$wrapper.find('#addNewLessonForm');
+                    $form = this.$wrapper.find('#addNewLessonForm'),
+                    url=data.img_url;
+                url =url || window.urlObject.defaultImg.cover;
                 $form.find('#newLessonTitle').val(data.title);
                 $form.find('#newLessonContent').val(data.content);
-                $form.find('#myLessonCoverImg img').attr({'src':data.img_url,'data-lid':data.img});
+
+                $form.find('#myLessonCoverImg img').attr({'src':url,'data-lid':data.img});
 
                 //控制下拉框的默认值
                 this.setSelectedInfo($('#newLessonTeacher'),data.lecturer);

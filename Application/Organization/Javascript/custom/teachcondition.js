@@ -50,19 +50,23 @@ define(['jquery','jqueryui','util'],function () {
             var str='',
                 that=this,
                 title='';
-            $.each(data,function(){
-                title=this.description;
-                str+='<li class="normal" data-id="'+this.id+'">'+
-                    '<div class="worksItemHeader">'+
-                    '<img src="'+this.url+'">'+
-                    '</div>'+
-                    '<div class="worksItemBottom">'+
-                    '<p title="'+title+'">'+Hisihi.substrLongStr(title,33)+'</p>'+
-                    '<textarea>'+title+'</textarea>'+
-                    '</div>'+
-                    '<div class="delete-item-btn deleteStudentWorks" title="删除"></div>'+
-                    '</li>';
-            });
+            if(data) {
+                $.each(data, function () {
+                    title = this.description;
+                    str += '<li class="normal" data-id="' + this.id + '">' +
+                        '<div class="worksItemHeader">' +
+                        '<img src="' + this.url + '">' +
+                        '</div>' +
+                        '<div class="worksItemBottom">' +
+                        '<p title="' + title + '">' + Hisihi.substrLongStr(title, 33) + '</p>' +
+                        '<textarea>' + title + '</textarea>' +
+                        '</div>' +
+                        '<div class="delete-item-btn deleteStudentWorks" title="删除"></div>' +
+                        '</li>';
+                });
+            }else{
+                str='<p class="noDataForQuery">教学环境图片暂无，快点上传吧。</p>';
+            }
             that.$wrapper.find('#teacheConditionMainCon>div').before(str);
         },
 

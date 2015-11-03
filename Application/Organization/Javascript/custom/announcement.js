@@ -56,7 +56,7 @@ define(['jquery','util'],function () {
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {page:1,count:20},
+                data: {page:1,count:50},
                 callback:function(data){
                     callback.call(that,data)
                 }
@@ -76,14 +76,6 @@ define(['jquery','util'],function () {
             }
         },
 
-        /*
-         *显示详细的公告信息
-         * @para
-         * data -{array} 公告数组
-         */
-        showDetailAnnounceInfo:function(){
-
-        },
 
         /*
         *显示简要的公告信息

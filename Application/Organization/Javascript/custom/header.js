@@ -1,4 +1,4 @@
-﻿define(['jquery'],function () {
+﻿define(['jquery','jquerycookie'],function () {
 	fillInHeadBasicInfo();
 	function fillInHeadBasicInfo(){
 		var cookie = cookie=JSON.parse($.cookie('hisihi-org'));
@@ -8,6 +8,8 @@
 			$target=$('#orgLogoAndName');
 		if(!orgId){
 			$target.hide();
+			//$target.find('#headerLogo').attr('src','http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png');
+
 		}else{
 			$target.find('#headerLogo').attr('src',orgImgSrc);
 			var tempName=orgName;

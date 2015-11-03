@@ -29,9 +29,11 @@ $(function(){
                     if(data) {
                         if (data.success) {
                             if (data.message == '登陆成功') {
+                                var url=data.organization_logo;
+                                url=url|| window.urlObject.defaultImg.logo;
                                 setCookie({
                                     organization_id: data.organization_id,
-                                    organization_logo:data.organization_logo,
+                                    organization_logo:url,
                                     organization_name:data.organization_name,
                                     session_id:data.session_id,
                                     uid: data.uid,
@@ -132,7 +134,7 @@ $(function(){
     //        $targetBtn.val('重新获取(60)');
     //        $targetBtn.attr('disabled', 'disabled').css('opacity', '0.7');
     //        timeInterval = window.setInterval(function () {
-    //            updateTimeShowInfo($targetBtn);
+    //            updateTimeShowInfo($targetBtn,timeInterval);
     //        }, 1000);
     //        //mobile
     //        $.post(baseUrl + '/getSMS', {mobile: tel}, function (data) {
@@ -160,7 +162,7 @@ $(function(){
             $targetBtn.attr('disabled', 'disabled').css('opacity', '0.7');
             $targetBtn.val('重新获取(60)');
             timeIntervalForget = window.setInterval(function () {
-                updateTimeShowInfo($targetBtn);
+                updateTimeShowInfo($targetBtn,timeIntervalForget);
             }, 1000);
             //mobile
             $.post(baseUrl + '/getSMS', {mobile: tel, type: 'reset'}, function (data) {
@@ -187,14 +189,14 @@ $(function(){
     /*
     *更新时间
      */
-    function updateTimeShowInfo($target){
+    function updateTimeShowInfo($target,interval){
         var leftTime=$target.val().split('(')[1].split(')')[0],
             leftTime=parseInt(leftTime);
         if(leftTime==0){
             //按钮的初始状态
             $target.removeAttr('disabled').css('opacity','1');
             $target.val('获得验证码');
-            window.clearInterval(timeInterval);
+            window.clearInterval(interval);
 
         }else{
             leftTime--;

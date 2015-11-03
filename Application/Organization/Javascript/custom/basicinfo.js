@@ -13,6 +13,8 @@
 		this.basicApiUrl=window.urlObject.apiUrl+'/api.php?s=/Organization';
 		if(this.organization_id && this.organization_id!='0') {
 			this.loadBasicData();  //显示基本信息
+		}else{
+
 		}
 		this.loadCommonAdvantageTags();//加载普通的标签
 		this.initJcropParas();
@@ -97,8 +99,10 @@
 				$form.find('#Signature').val(data.slogan);
 				$form.find('#Address').val(data.location);
 				$form.find('#orgBasicIntroduce').val(data.introduce);
-				$newImg = this.$wrapper.find('#myNewPicture');
-				$form.find('#basicInfoLogo').add($newImg).attr({'src':data.logo.url,'data-lid':data.logo.id});
+				var $newImg = this.$wrapper.find('#myNewPicture'),
+					logoUrl=data.logo.url || window.urlObject.defaultImg.logo;
+
+				$form.find('#basicInfoLogo').add($newImg).attr({'src':logoUrl,'data-lid':data.logo.id});
 
 				//加载优势标签
 				var str =this.loadAdvantage(data.advantage);

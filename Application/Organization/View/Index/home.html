@@ -8,9 +8,13 @@
         window.urlObject= {
             js: "__JS__",
             css: "__CSS__",
-            image: "__IMG__", 
+            image: "__IMG__",
             ctl:'__URL__',
-            apiUrl:'__API__'
+            apiUrl:'__API__',
+            defaultImg:{
+                logo:'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png',
+                cover:'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/lessonCover.png'
+            }
         }
     </script>
     <script type="text/javascript" src="__JS__/libs/jquery-1.8.2.min.js"></script>
@@ -201,7 +205,7 @@
                                     <!-- /.form-group -->
 
                                     <div class="form-group forget-pass">
-                                        <span class="jump-link" id="showForgetBox">忘记密码?</span>
+                                        <span class="jump-link" id="showForgetBox" title="忘记密码">忘记密码?</span>
                                     </div>
                                     <!-- /.form-group -->
 
@@ -254,7 +258,7 @@
                                     <!-- /.form-group -->
 
                                     <p class="signup-title" >
-                                        已有账号？<span class="jump-link showLoginBox"> 立即登录</span>
+                                        已有账号？<span class="jump-link showLoginBox" title="立即登录">立即登录</span>
                                     </p>
                                     <!-- /.signup-title -->
 
@@ -298,7 +302,7 @@
                                     </div>
 
                                     <p class="signup-title" >
-                                        <span class="jump-link showLoginBox">返回登录</span>
+                                        <span class="jump-link showLoginBox" title="返回登录">返回登录</span>
                                     </p>
                                     <!-- /.form-group -->
 

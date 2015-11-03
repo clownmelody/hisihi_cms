@@ -32,7 +32,7 @@ define(['jquery','jqueryui','util'],function () {
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {},
+                data: {page:1,count:50},
                 org:true,
                 callback:function(result) {
                     that.$wrapper.cornerLoading('hideLoading');
@@ -67,7 +67,7 @@ define(['jquery','jqueryui','util'],function () {
                         '</li>';
                 });
             }else{
-                str='<span class="basicFormInfoError">没有学生作品，快点上传吧。</span>';
+                str='<p class="noDataForQuery">学生作品暂无，快点上传吧。</p>';
             }
             that.$wrapper.find('#studentWorksMainCon>div').before(str);
         },

@@ -37,7 +37,7 @@ define(['jquery','jqueryui','util'],function () {
             Hisihi.getDataAsync({
                 type: "post",
                 url: url,
-                data: {page:1,count:30},
+                data: {page:1,count:50},
                 org:true,
                 callback:function(result) {
                     that.$wrapper.cornerLoading('hideLoading');
@@ -57,36 +57,42 @@ define(['jquery','jqueryui','util'],function () {
                 typeNameAndTile='',
                 tempTitle='',
                 date=null;
+            if(data.length>0) {
+                $.each(data, function (){
+                var url=this.url;
+                url =url || window.urlObject.defaultImg.cover;
+                    typeNameAndTile = this.category_name + ' | ' + this.title;
+                    tempTitle = typeNameAndTile;
+                    if (typeNameAndTile.length > 42) {
+                        tempTitle = typeNameAndTile.substr(0, 42) + '…';
+                    }
+                    date = Hisihi.getTimeFromTimestamp(this.create_time);
+                    str += '<li class="normal" data-id="' + this.id + '">' +
+                        '<div class="videoItemHeader">' +
+                        '<img src="' + url + '">' +
+                        '<i class="playBtn"></i>' +
+                        '</div>' +
+                        '<div class="videoItemBottom">' +
+                        '<div class="videoItemDesc"><p class="typeNameAndTitle" title="' + typeNameAndTile + '">' + tempTitle + '</p></div>' +
+                        '<div class="videoFooter">' +
+                        '<div class="videoFooterLeft">' +
+                        '<i class="videoIcon videoClock"></i>' +
+                        '<span>' + date + '</span>' +
+                        '</div>' +
+                        '<div class="videoFooterRight">' +
+                        '<i class="videoIcon videoViewedTimes"></i>' +
+                        '<span>' + Hisihi.getRandomNum(1024 * 5) + '</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="delete-item-btn deleteLesson" title="删除"></div>' +
+                        '</li>';
+                });
+            }else {
+                str='<p class="noDataForQuery">视频教程暂无，快点上传吧。</p>';
+            }
+            str += '<div style="clear:both;">';
 
-            $.each(data,function(){
-                typeNameAndTile=this.category_name+' | '+this.title;
-                tempTitle=typeNameAndTile;
-                if(typeNameAndTile.length>42){
-                    tempTitle=typeNameAndTile.substr(0,42)+'…';
-                }
-                date=Hisihi.getTimeFromTimestamp(this.create_time);
-                str+='<li class="normal" data-id="'+this.id+'">'+
-                    '<div class="videoItemHeader">'+
-                    '<img src="'+this.url+'">'+
-                    '<i class="playBtn"></i>'+
-                    '</div>'+
-                    '<div class="videoItemBottom">'+
-                    '<div class="videoItemDesc"><p class="typeNameAndTitle" title="'+typeNameAndTile+'">'+tempTitle+'</p></div>'+
-                    '<div class="videoFooter">'+
-                    '<div class="videoFooterLeft">'+
-                    '<i class="videoIcon videoClock"></i>'+
-                    '<span>'+date+'</span>'+
-                    '</div>'+
-                    '<div class="videoFooterRight">'+
-                    '<i class="videoIcon videoViewedTimes"></i>'+
-                    '<span>'+ Hisihi.getRandomNum(1024*5)+'</span>'+
-                    '</div>'+
-                    '</div>'+
-                    '</div>'+
-                    '<div class="delete-item-btn deleteLesson" title="删除"></div>'+
-                    '</li>';
-            });
-            str+='<div style="clear:both;">';
             this.$wrapper.find('#lessonsMainCon').append(str);
         },
 
