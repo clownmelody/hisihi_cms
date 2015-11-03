@@ -122,7 +122,7 @@ class OrganizationController extends AppController
             $map['mobile'] = $mobile;
             $data['password'] = md5($password);
             $result = M('OrganizationAdmin')->where($map)->save($data);
-            if($result){
+            if($result!==false){
                 $this->apiSuccess('重置密码成功');
             } else {
                 $this->apiError(-2, '重置密码失败');
