@@ -306,7 +306,7 @@ $(function(){
           }
     });
 
-    var __IMG__ = "/hisihi-cms/Application/Organization/Content/images/home/";
+    var __IMG__ = "/Application/Organization/Content/images/home/";
     $('.item1').bgStretcher({
       images: [__IMG__+'bg1.jpg', __IMG__+'bg2.jpg', __IMG__+'bg3.jpg'],
       imageWidth: 1024, 
