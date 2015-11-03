@@ -79,6 +79,13 @@ class OrganizationController extends AppController
             $data['create_time'] = time();
             $result = M('OrganizationAdmin')->data($data)->add();
             if($result){
+                $auth = array(
+                    'uid' => $result,
+                    'mobile' => $mobile,
+                    'organization_id' => 0
+                );
+                session('user_auth', $auth);
+                session('user_auth_sign', data_auth_sign($auth));
                 $extra['uid'] = $result;
                 $extra['session_id'] = session_id();
                 $this->apiSuccess('注册成功',null,$extra);

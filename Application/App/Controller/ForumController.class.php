@@ -644,47 +644,14 @@ class ForumController extends AppController
 
             //解析并成立图片数据
             $reply['img'] = $this->match_img($reply['content']);
-            /*
-            $tmpImgArr = array();
-            preg_match_all("/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.png]))[\'|\"].*?[\/]?>/",  $reply['content'], $tmpImgArr); //匹配所有的图片
-            $imgArr = $tmpImgArr[1];
-            if(!empty($imgArr)){
-                $dm = "http://$_SERVER[HTTP_HOST]" . __ROOT__; //前缀图片多余截取
-                $dmip = "http://$_SERVER[SERVER_ADDR]" . __ROOT__; //前缀图片多余截取
-                foreach($imgArr as &$v1){
-                    if(strstr($v1,$dm))
-                        $v1 = mb_substr($v1, strlen($dm), strlen($v1) - strlen($dm));
-                    else if(strstr($v1,$dmip)){
-                        $v1 = mb_substr($v1, strlen($dmip), strlen($v1) - strlen($dmip));
-                    }
-                }
-                $reply['img'] = $imgArr;
-            }
-            */
 
             $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
-            /*
-            $sound = D('ForumSound')->where(array('fid' => $reply['reply_id'],'ftype' => 1))->find();
-            if($sound) {
-                $root = C('DOWNLOAD_UPLOAD.rootPath');
-                $sound = $root.$sound['savepath'].$sound['savename'];
-                if(!is_file($sound)){
-                    $sound = null;
-                }
-            }
-            $reply['sound'] = $sound;
-            */
 
             $reply['content'] = op_t($reply['content']);
-            //$reply['userinfo']['nickname'] = $reply['user']['nickname'];
-            //$reply['userinfo']['avatar128'] = $reply['user']['avatar128'];
 
             unset($reply['user']);
             $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc',$page,$limit,false);
             foreach ($lzlList as &$lzl) {
-                //unset($lzl['userInfo']['icons_html']);
-                //unset($lzl['userInfo']['uid']);
-                //unset($lzl['userInfo']['space_url']);
                 $lzl['lzl_id'] = $lzl['id'];
                 unset($lzl['id']);
                 $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
@@ -702,17 +669,6 @@ class ForumController extends AppController
                 $lzl['img'] = $this->match_img($lzl['content']);
                 $lzl['content'] = op_t($lzl['content']);
                 $lzl['sound'] = $this->fetchSound($lzl['lzl_id'],2);
-                /*
-                $sound = D('ForumSound')->where(array('fid' => $lzl['lzl_id'],'ftype' => 2))->find();
-                if($sound) {
-                    $root = C('DOWNLOAD_UPLOAD.rootPath');
-                    $sound = $root.$sound['savepath'].$sound['savename'];
-                    if(!is_file($sound)){
-                        $sound = null;
-                    }
-                }
-                $lzl['sound'] = $sound;
-                */
             }
             $reply['lzlList'] = $lzlList;
         }
@@ -728,6 +684,35 @@ class ForumController extends AppController
         }
         else
             $this->apiSuccess("获取提问内容成功", null, array('isBookmark' => $isBookmark, 'replyTotalCount' =>  $replyTotalCount, 'post' => $post, 'replyList' => $replyList, 'showMainPost' => $showMainPost));
+    }
+
+    /**
+     *
+     */
+    public function getSupportDetailList(){
+
+    }
+
+    /**
+     * 获取讲师回答列表
+     * @param $post_id
+     * @param int $page
+     * @param int $count
+     * @param string $type
+     */
+    public function teacherReplyList($post_id, $page = 1, $count = 10, $type = ''){
+
+    }
+
+    /**
+     * 获取学生回答列表
+     * @param $post_id
+     * @param int $page
+     * @param int $count
+     * @param string $type
+     */
+    public function studentReplyList($post_id, $page = 1, $count = 10, $type = ''){
+
     }
 
     /**

@@ -199,6 +199,13 @@
 	width:100/@column *1%;
 }
 
+.transform(@p:preserve-3d){
+   -webkit-transform: @p;
+    -moz-transform: @p;
+    -ms-transform: @p;
+    -o-transform: @p;
+    transform: @p;
+}
 
 .transform-style(@p:preserve-3d){
 	 -webkit-transform-style: @p;
@@ -206,7 +213,7 @@
     -ms-transform-style: @p;
     -o-transform-style: @p;
     transform-style: @p;
-}
+} 
 
 .backface-visibility(@see:hidden){
 	-webkit-backface-visibility: @see;

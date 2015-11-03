@@ -304,4 +304,16 @@ class InspirationController extends AppController {
             $cache_key = "favorite_count_" . implode('_', $condition);
         S($cache_key, null);
     }
+
+    public function changeCount(){
+        $list = M('Inspiration')->where('status=1')->select();
+        foreach ($list as $inspira) {
+            $id = $inspira['id'];
+            $data['view_count'] = rand(1000, 3000);
+            $data['favorite_count'] = rand(100, 300);
+            M('Inspiration')->where('id='.$id)->save($data);
+        }
+        $this->apiSuccess('ok');
+    }
+
 }

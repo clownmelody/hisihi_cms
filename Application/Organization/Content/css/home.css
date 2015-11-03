@@ -738,6 +738,39 @@ fieldset[disabled] .brand-info.active {
   font-size: 14px;
   font-weight: normal;
 }
+/*
+	Background Stretcher jQuery Plugin
+	� 2011 ajaxBlender.com
+	For any questions please visit www.ajaxblender.com 
+	or email us at support@ajaxblender.com
+*/
+.bgstretcher-area {
+  text-align: left;
+}
+.bgstretcher,
+.bgstretcher UL,
+.bgstretcher UL LI {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.bgstretcher UL,
+.bgstretcher UL LI {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bgstretcher {
+  background: black;
+  overflow: hidden;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+  _position: absolute;
+  /*IE6 doesn't support fixed positioning*/
+  top: 0;
+  left: 0;
+}
 * {
   padding: 0;
   margin: 0;
@@ -896,7 +929,8 @@ body {
   color: #ff5a00;
 }
 .home {
-  font-family: "Source Han Sans CN Medium", Microsoft YaHei, SimHei;
+  font-family: "Source Han Sans CN Medium", Microsoft YaHei, SimHei, "微软雅黑", "黑体";
+  height: 100%;
 }
 .home .container {
   width: 1200px;
@@ -1006,8 +1040,9 @@ body {
 .item-box {
   position: relative;
   width: 100%;
-  height: 100vh;
-  max-height: 100%;
+  height: 100%;
+  max-height: 1024px;
+  min-height: 600px;
   background-position: center center !important;
   background-repeat: no-repeat;
   background-size: cover;
@@ -1060,7 +1095,15 @@ body {
   position: relative;
   text-align: left;
   top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
   transform: translateY(-50%);
+  /*transform: translateY(-50%);
+		-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);*/
 }
 .column .content-copy .copy-container {
   letter-spacing: 1px;
@@ -1072,11 +1115,18 @@ body {
   margin-top: 39px;
   position: relative;
   top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
   transform: translateY(-50%);
+  /*transform: translateY(-50%);
+		-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);*/
 }
 .column .content-hardware .hardware-container {
   pointer-events: auto;
-  overflow: hidden;
 }
 .column .content-hardware .hardware-container .image-music-phone {
   margin-left: auto;
@@ -1296,6 +1346,33 @@ fieldset[disabled] .item1 .form-box .form-group .btn-primary.active {
   width: 980px;
   color: #ffffff;
 }
+.security-box {
+  overflow-y: hidden;
+}
+.security-box > .form-control {
+  width: 44% !important;
+  float: left !important;
+  border-radius: 0 !important;
+  margin-right: 20px;
+}
+.security-box > .btn {
+  width: 35% !important;
+  float: left !important;
+  padding: 8px 10px !important;
+  border-radius: 0 !important;
+  font-size: 14px !important;
+}
+.jump-link {
+  color: #ff5a00;
+}
+.jump-link:hover {
+  color: #cc4800;
+  cursor: pointer;
+}
+#registerBox,
+#forgetBox {
+  display: none;
+}
 .foot {
   background: #ffffff;
   height: 160px;
@@ -1334,14 +1411,36 @@ fieldset[disabled] .item1 .form-box .form-group .btn-primary.active {
         width: 720px;
       }*/
 }
-@media (min-width: 981px) and (max-width: 1280px) {
+@media (max-width: 1280px) {
   .home .container {
-    width: 960px;
+    width: 1000px;
   }
 }
 @media (min-width: 1281px) {
   .home .container {
     width: 1200px;
+  }
+}
+.nav {
+  width: 100%;
+}
+.nav > .container {
+  width: 100%;
+}
+@media (min-width: 1000px) and (max-width: 1280px) {
+  .nav > .container {
+    width: 1000px;
+  }
+}
+@media (min-width: 1281px) {
+  .nav > .container {
+    width: 1200px;
+  }
+}
+@media (max-width: 1000px) {
+  .item-box,
+  .foot {
+    width: 1000px;
   }
 }
 @media (max-height: 600px) {
