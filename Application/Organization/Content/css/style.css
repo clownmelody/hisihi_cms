@@ -2026,6 +2026,10 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 .studentWorksAndConditionForm.uploadProcess {
   width: 400px;
 }
+.studentWorksAndConditionForm #uploadStudentWorks,
+.studentWorksAndConditionForm #uploadTeachCondition {
+  opacity: 0;
+}
 .addNewLessonWrapper .addNewLessonHeader span:nth-child(1) a {
   color: #666666;
   font-size: 16px;
@@ -2288,7 +2292,6 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
   color: #ffffff;
   background-color: #f7be5b;
   border-color: #f8c873;
-  width: 100%;
   padding: 0;
 }
 .uploadify-button:focus,

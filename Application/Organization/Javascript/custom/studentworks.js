@@ -109,6 +109,7 @@ define(['jquery','jqueryui','util'],function () {
          */
         initUploadify:function() {
             var that=this;
+
             Hisihi.initUploadify($("#uploadStudentWorks"),function(file, data){
                 var src = '';
                 if (data.success) {
@@ -118,6 +119,7 @@ define(['jquery','jqueryui','util'],function () {
                     alert(data.message);
                 }
             },{height:34,width:82,'queueID':'uploadProConForSWorkd'});
+            $("#uploadStudentWorks").css('opacity',1);
         },
 
         /*添加学生作品*/

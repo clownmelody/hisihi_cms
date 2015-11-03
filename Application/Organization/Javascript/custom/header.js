@@ -12,6 +12,7 @@
 
 		}else{
 			$target.find('#headerLogo').attr('src',orgImgSrc);
+			orgName=orgName || '';
 			var tempName=orgName;
 			if(orgName.length>9) {
 				tempName=orgName.substr(0,8)+'…';

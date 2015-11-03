@@ -14,7 +14,6 @@ define(['jquery','jqueryui','jqueryvalidate','util'],function () {
         this.loadAllClass(); //加载所有分类
         if(this.course_id!=0) {
             this.loadLessonBasicInfo();
-            //this.$wrapper.find('#myLessonCoverImg').show();
         }else{
             this.course_id=null;
             this.$wrapper.find('#myLessonCoverImg img').attr('src',window.urlObject.defaultImg.cover);

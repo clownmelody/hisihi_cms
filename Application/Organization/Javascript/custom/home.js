@@ -17,8 +17,10 @@ $(function(){
         $(this).parents('.form-box').hide();
     });
     $('#showForgetBox').on('click',function(){
-        $('#forgetBox').show();
+        var $forgetBox=$('#forgetBox');
+        $forgetBox.show();
         $('#loginBox').hide();
+        $forgetBox.find('#forgetMobile,#forgetCheckCode,#forgetPassword').val('');
     });
 
     $('#login').on('click',function(){
@@ -215,6 +217,8 @@ $(function(){
                     },
                     registerPassword: {
                         required: true,
+                        rangelength:[6,12]
+
                     },
                     registerCheckCode:{
                         required: true,
@@ -224,13 +228,14 @@ $(function(){
                     registerMobile: "请输入姓名",
                     registerPassword: {
                         required: "请输入密码",
+                        rangelength:'密码长度为：6-12'
                     },
                     registerCheckCode:{
                         required: "请输入手机验证码",
                     }
                 },
                 errorPlacement: function (error, element) {
-                    error.appendTo(element.next('.basicFormInfoError'));
+                    error.appendTo(element.parent().find('.basicFormInfoError'));
                 }
             });
     }
@@ -253,7 +258,7 @@ $(function(){
                 }
             },
             errorPlacement: function (error, element) {
-                error.appendTo(element.next('.basicFormInfoError'));
+                error.appendTo(element.parent().find('.basicFormInfoError'));
             }
         });
     }
@@ -270,6 +275,8 @@ $(function(){
                 },
                 forgetPassword: {
                     required: true,
+                    rangelength:[6,12]
+
                 }
             },
             messages: {
@@ -279,10 +286,11 @@ $(function(){
                 },
                 forgetPassword: {
                     required: "请输入密码",
+                    rangelength:'密码长度为：6-12'
                 }
             },
             errorPlacement: function (error, element) {
-                error.appendTo(element.next('.basicFormInfoError'));
+                error.appendTo(element.parent().find('.basicFormInfoError'));
             }
         });
     }
@@ -308,7 +316,7 @@ $(function(){
           }
     });
 
-    var __IMG__ = "/hisihi-cms/Application/Organization/Content/images/home/";
+    var __IMG__ = window.urlObject.image+'/home/';
     $('.item1').bgStretcher({
       images: [__IMG__+'bg1.jpg', __IMG__+'bg2.jpg', __IMG__+'bg3.jpg'],
       imageWidth: 1024, 

@@ -116,6 +116,7 @@ define(['jquery','jqueryui','util'],function () {
                     alert(data.message);
                 }
             },{height:34,width:82,'queueID':'uploadProConForCondition'});
+            $("#uploadTeachCondition").css('opacity',1);
         },
 
         /*添加学生作品*/
