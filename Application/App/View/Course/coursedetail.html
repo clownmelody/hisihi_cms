@@ -169,12 +169,10 @@
         bottom: 0;
         height: 60px;
         width: 100%;
-        display: none;
         background: url("__IMG__/bg.png");
     }
     .bottomspace {
         height: 55px;
-        display: none;
     }
     .bottom-icon {
         float: left;
@@ -412,9 +410,9 @@
     });
 
     var userAgent = window.location.href;
-    if(userAgent.indexOf("hisihi-app") < 0) {
-        $(".app-bottombar").show();
-        $(".bottomspace").show();
+    if(userAgent.indexOf("hisihi-app") > 0) {
+        $(".app-bottombar").hide();
+        $(".bottomspace").hide();
     }
 </script>
 </body>

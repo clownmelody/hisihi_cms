@@ -161,6 +161,7 @@ class CompanyController extends AppController {
             $this->apiError(-1, "传入参数不能为空");
         }
         $model = D('CompanyRecruit');
+        $totalCount = $model->where(array('company_id'=>$id,'status'=>1))->count();
         $result = $model->field('id, job, salary, requirement, skills,work_city,create_time,end_time')
             ->where('status<>-1 and company_id='.$id)
             ->order('create_time desc')->page($page, $count)->select();
@@ -182,7 +183,7 @@ class CompanyController extends AppController {
             $recruit['requirement'] = $markarray;
         }
 
-        $extra['totalCount'] = count($result);
+        $extra['totalCount'] = $totalCount;
         $extra['data'] = $result;
         $this->apiSuccess('获取公司招聘信息成功', null, $extra);
     }

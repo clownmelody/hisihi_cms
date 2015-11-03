@@ -316,7 +316,11 @@ $(function(){
           }
     });
 
+<<<<<<< HEAD
     var __IMG__ = window.urlObject.image+'/home/';
+=======
+    var __IMG__ = "/Application/Organization/Content/images/home/";
+>>>>>>> v2
     $('.item1').bgStretcher({
       images: [__IMG__+'bg1.jpg', __IMG__+'bg2.jpg', __IMG__+'bg3.jpg'],
       imageWidth: 1024, 

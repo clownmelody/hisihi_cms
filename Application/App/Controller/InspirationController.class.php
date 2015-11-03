@@ -219,9 +219,16 @@ class InspirationController extends AppController {
 
     private function formatList($list=null,$uid=0){
         if(!empty($list)){
+            $img_list = array();
             foreach($list as &$inspira){
                 $pic_id = $inspira['pic_id'];
                 $pic_url = $this->fetchImage($pic_id);
+                if(!$pic_url){
+                    continue;
+                }
+                if(!preg_match("/^http:\/\//",$pic_url)){
+                    continue;
+                }
                 $origin_img_info = getimagesize($pic_url);
                 $src_size = Array();
                 $src_size['width'] = $origin_img_info[0]; // width
@@ -230,7 +237,17 @@ class InspirationController extends AppController {
                     'url'=>$pic_url,
                     'size'=>$src_size
                 );
-                $pic_small = getThumbImageById($pic_id, 280, 160);
+                try{
+                    $pic_small = getThumbImageById($pic_id, 280, 160);
+                }catch (Exception $e){
+                    continue;
+                }
+                if(!$pic_small){
+                    continue;
+                }
+                if(!preg_match("/^http:\/\//",$pic_small)){
+                    continue;
+                }
                 $thumb_img_info = getimagesize($pic_small);
                 $thumb_size = Array();
                 $thumb_size['width'] = $thumb_img_info[0]; // width
@@ -242,7 +259,6 @@ class InspirationController extends AppController {
                 if(!$uid){
                     $uid = is_login();
                 }
-
                 $favorite['appname'] = 'Inspiration';
                 $favorite['table'] = 'Inspiration';
                 $favorite['row'] = $inspira['id'];;
@@ -256,9 +272,10 @@ class InspirationController extends AppController {
                 unset($inspira['special']);
                 unset($inspira['selection']);
                 unset($inspira['category_id']);
+                $img_list[] = $inspira;
             }
         }
-        return $list;
+        return $img_list;
     }
 
     private function fetchImage($pic_id)
@@ -272,12 +289,12 @@ class InspirationController extends AppController {
             $objKey = substr($path, 17);
             $param["bucketName"] = "hisihi-other";
             $param['objectKey'] = $objKey;
-            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
-            if($isExist){
-                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
-            }/*else{
-                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
-            }*/
+            if(file_exists('.'.$path)){
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                }
+            }
         }
         return $picUrl;
     }
@@ -296,4 +313,16 @@ class InspirationController extends AppController {
             $cache_key = "favorite_count_" . implode('_', $condition);
         S($cache_key, null);
     }
+
+    public function changeCount(){
+        $list = M('Inspiration')->where('status=1')->select();
+        foreach ($list as $inspira) {
+            $id = $inspira['id'];
+            $data['view_count'] = rand(1000, 3000);
+            $data['favorite_count'] = rand(100, 300);
+            M('Inspiration')->where('id='.$id)->save($data);
+        }
+        $this->apiSuccess('ok');
+    }
+
 }

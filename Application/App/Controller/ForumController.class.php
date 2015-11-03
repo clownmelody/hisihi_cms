@@ -644,47 +644,14 @@ class ForumController extends AppController
 
             //解析并成立图片数据
             $reply['img'] = $this->match_img($reply['content']);
-            /*
-            $tmpImgArr = array();
-            preg_match_all("/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.png]))[\'|\"].*?[\/]?>/",  $reply['content'], $tmpImgArr); //匹配所有的图片
-            $imgArr = $tmpImgArr[1];
-            if(!empty($imgArr)){
-                $dm = "http://$_SERVER[HTTP_HOST]" . __ROOT__; //前缀图片多余截取
-                $dmip = "http://$_SERVER[SERVER_ADDR]" . __ROOT__; //前缀图片多余截取
-                foreach($imgArr as &$v1){
-                    if(strstr($v1,$dm))
-                        $v1 = mb_substr($v1, strlen($dm), strlen($v1) - strlen($dm));
-                    else if(strstr($v1,$dmip)){
-                        $v1 = mb_substr($v1, strlen($dmip), strlen($v1) - strlen($dmip));
-                    }
-                }
-                $reply['img'] = $imgArr;
-            }
-            */
 
             $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
-            /*
-            $sound = D('ForumSound')->where(array('fid' => $reply['reply_id'],'ftype' => 1))->find();
-            if($sound) {
-                $root = C('DOWNLOAD_UPLOAD.rootPath');
-                $sound = $root.$sound['savepath'].$sound['savename'];
-                if(!is_file($sound)){
-                    $sound = null;
-                }
-            }
-            $reply['sound'] = $sound;
-            */
 
             $reply['content'] = op_t($reply['content']);
-            //$reply['userinfo']['nickname'] = $reply['user']['nickname'];
-            //$reply['userinfo']['avatar128'] = $reply['user']['avatar128'];
 
             unset($reply['user']);
             $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc',$page,$limit,false);
             foreach ($lzlList as &$lzl) {
-                //unset($lzl['userInfo']['icons_html']);
-                //unset($lzl['userInfo']['uid']);
-                //unset($lzl['userInfo']['space_url']);
                 $lzl['lzl_id'] = $lzl['id'];
                 unset($lzl['id']);
                 $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
@@ -702,17 +669,6 @@ class ForumController extends AppController
                 $lzl['img'] = $this->match_img($lzl['content']);
                 $lzl['content'] = op_t($lzl['content']);
                 $lzl['sound'] = $this->fetchSound($lzl['lzl_id'],2);
-                /*
-                $sound = D('ForumSound')->where(array('fid' => $lzl['lzl_id'],'ftype' => 2))->find();
-                if($sound) {
-                    $root = C('DOWNLOAD_UPLOAD.rootPath');
-                    $sound = $root.$sound['savepath'].$sound['savename'];
-                    if(!is_file($sound)){
-                        $sound = null;
-                    }
-                }
-                $lzl['sound'] = $sound;
-                */
             }
             $reply['lzlList'] = $lzlList;
         }
@@ -728,6 +684,276 @@ class ForumController extends AppController
         }
         else
             $this->apiSuccess("获取提问内容成功", null, array('isBookmark' => $isBookmark, 'replyTotalCount' =>  $replyTotalCount, 'post' => $post, 'replyList' => $replyList, 'showMainPost' => $showMainPost));
+    }
+
+    /**
+     * 获取点赞详情
+     * @param null $uid
+     * @param null $post_id
+     * @param int $page
+     * @param int $count
+     */
+    public function getSupportDetailList($uid=null, $post_id=null, $page=1, $count=10){
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = is_login();
+        }
+        if(empty($post_id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $map_support['appname'] = 'Forum';
+        $map_support['table'] = 'post';
+        $map_support['row'] = $post_id;
+        $totalCount = M('Support')->where($map_support)->count();
+        $list = M('Support')->field('uid')->where($map_support)->page($page, $count)->select();
+        foreach($list as &$user){
+            $c_uid = $user['uid'];
+            $user['info'] = query_user(array('avatar256', 'avatar128', 'extinfo', 'nickname'), $c_uid);
+            $isfollowing = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$c_uid))->find();
+            if($isfollowing){
+                $user['info']['isfollowing'] = true;
+            } else {
+                $user['info']['isfollowing'] = false;
+            }
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取点赞详情成功', null, $extra);
+    }
+
+    /**
+     * 获取贴子详情
+     * @param null $post_id
+     */
+    public function getPostDetail($post_id=null){
+        if(empty($post_id)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $post = $this->getPostInfo($post_id);
+        unset($post['reply_count']);
+        $map['post_id'] = $post_id;
+        $map['status'] = array('in','1,3');
+        $model = M('AuthGroupAccess');
+        $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
+        $teacherReplyTotalCount = 0;
+        $studentReplyTotalCount = 0;
+        foreach($replyTotalList as $t_reply){
+            $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
+            if($identify){
+                $teacherReplyTotalCount++;
+            } else {
+                $studentReplyTotalCount++;
+            }
+        }
+        $post['teacherReplyCount'] = $teacherReplyTotalCount;
+        $post['studentReplyTotalCount'] = $studentReplyTotalCount;
+        $extra['data'] = $post;
+        $this->apiSuccess('获取帖子详情成功', null, $extra);
+    }
+
+
+    /**
+     * 获取讲师回答列表
+     * @param $post_id
+     * @param int $page
+     * @param int $count
+     */
+    public function teacherReplyList($post_id, $page = 1, $count = 10){
+        $id = intval($post_id);
+        $page = intval($page);
+        $count = intval($count);
+
+        $this->requirePostExists($id);
+
+        //读取回复列表
+        $map['post_id'] = $id;
+        $map['status'] = array('in','1,3');
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status desc,create_time', $page, $count);
+
+        $model = M('AuthGroupAccess');
+        $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
+        $replyTotalCount = 0;
+        foreach($replyTotalList as $t_reply){
+            $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
+            if($identify){
+                $replyTotalCount++;
+            }
+        }
+
+        $teacherReplyList = array();
+        foreach ($replyList as &$reply) {
+            $reply_uid = $reply['uid'];
+            $access_list = $model->where('group_id=6 and uid='.$reply_uid)->find();  // 只显示老师的回复
+            if(empty($access_list)){
+                continue;
+            }
+            $reply['reply_id'] = $reply['id'];
+            unset($reply['id']);
+            $map_pos['type'] = 1;
+            $map_pos['id'] = $reply['reply_id'];
+            $pos = $this->getForumPos($map_pos);
+            $reply['pos'] = $pos['pos'];
+
+            $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+
+            $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$reply['uid']))->find();
+            $isfans = D('Follow')->where(array('who_follow'=>$reply['uid'],'follow_who'=>get_uid()))->find();
+            $isfollowing = $isfollowing ? 2:0;
+            $isfans = $isfans ? 1:0;
+            $reply['userInfo']['relationship'] = $isfollowing | $isfans;
+
+            unset($reply['uid']);
+
+            unset($pos);
+            unset($map_pos);
+
+            $map_support['table'] = 'reply';
+            $map_support['row'] = $reply['reply_id'];
+
+            $supportCount = $this->getSupportCountCache($map_support);
+
+            $map_supported = array_merge($map_support, array('uid' => is_login()));
+            $supported = D('Support')->where($map_supported)->count();
+
+            $reply['supportCount'] = $supportCount;
+            $reply['isSupportd'] = $supported;
+
+            //解析并成立图片数据
+            $reply['img'] = $this->match_img($reply['content']);
+
+            $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
+
+            $reply['content'] = op_t($reply['content']);
+
+            unset($reply['user']);
+            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc', $page, $limit, false);
+            foreach ($lzlList as &$lzl) {
+                $lzl['lzl_id'] = $lzl['id'];
+                unset($lzl['id']);
+                $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
+                unset($lzl['uid']);
+
+                $map_pos['type'] = 2;
+                $map_pos['id'] = $lzl['lzl_id'];
+                $pos = $this->getForumPos($map_pos);
+                $lzl['pos'] = $pos['pos'];
+
+                unset($pos);
+                unset($map_pos);
+
+                $lzl['img'] = $this->match_img($lzl['content']);
+                $lzl['content'] = op_t($lzl['content']);
+                $lzl['sound'] = $this->fetchSound($lzl['lzl_id'],2);
+            }
+            $reply['lzlList'] = $lzlList;
+            $teacherReplyList[] = $reply;
+        }
+        unset($reply);
+        unset($replyList);
+        $this->apiSuccess("获取讲师回复内容成功", null, array('replyTotalCount' =>  $replyTotalCount,
+            'replyList' => $teacherReplyList));
+    }
+
+    /**
+     * 获取学生回答列表
+     * @param $post_id
+     * @param int $page
+     * @param int $count
+     */
+    public function studentReplyList($post_id=null, $page = 1, $count = 10){
+        $id = intval($post_id);
+        $page = intval($page);
+        $count = intval($count);
+
+        $this->requirePostExists($id);
+
+        //读取回复列表
+        $map['post_id'] = $id;
+        $map['status'] = array('in','1,3');
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status desc,create_time', $page, $count);
+
+        $model = M('AuthGroupAccess');
+        $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
+        $replyTotalCount = 0;
+        foreach($replyTotalList as $t_reply){
+            $identify = $model->where('group_id=5 and uid='.$t_reply['uid'])->find();  // 判断老师身份
+            if($identify){
+                $replyTotalCount++;
+            }
+        }
+
+        $studentReplyList = array();
+        foreach ($replyList as &$reply) {
+            $reply_uid = $reply['uid'];
+            $access_list = $model->where('group_id=5 and uid='.$reply_uid)->find();  // 只显示老师的回复
+            if(empty($access_list)){
+                continue;
+            }
+            $reply['reply_id'] = $reply['id'];
+            unset($reply['id']);
+            $map_pos['type'] = 1;
+            $map_pos['id'] = $reply['reply_id'];
+            $pos = $this->getForumPos($map_pos);
+            $reply['pos'] = $pos['pos'];
+
+            $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+
+            $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$reply['uid']))->find();
+            $isfans = D('Follow')->where(array('who_follow'=>$reply['uid'],'follow_who'=>get_uid()))->find();
+            $isfollowing = $isfollowing ? 2:0;
+            $isfans = $isfans ? 1:0;
+            $reply['userInfo']['relationship'] = $isfollowing | $isfans;
+
+            unset($reply['uid']);
+
+            unset($pos);
+            unset($map_pos);
+
+            $map_support['table'] = 'reply';
+            $map_support['row'] = $reply['reply_id'];
+
+            $supportCount = $this->getSupportCountCache($map_support);
+
+            $map_supported = array_merge($map_support, array('uid' => is_login()));
+            $supported = D('Support')->where($map_supported)->count();
+
+            $reply['supportCount'] = $supportCount;
+            $reply['isSupportd'] = $supported;
+
+            //解析并成立图片数据
+            $reply['img'] = $this->match_img($reply['content']);
+
+            $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
+
+            $reply['content'] = op_t($reply['content']);
+
+            unset($reply['user']);
+            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc', $page, $limit=10, false);
+            foreach ($lzlList as &$lzl) {
+                $lzl['lzl_id'] = $lzl['id'];
+                unset($lzl['id']);
+                $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
+                unset($lzl['uid']);
+
+                $map_pos['type'] = 2;
+                $map_pos['id'] = $lzl['lzl_id'];
+                $pos = $this->getForumPos($map_pos);
+                $lzl['pos'] = $pos['pos'];
+
+                unset($pos);
+                unset($map_pos);
+
+                $lzl['img'] = $this->match_img($lzl['content']);
+                $lzl['content'] = op_t($lzl['content']);
+                $lzl['sound'] = $this->fetchSound($lzl['lzl_id'],2);
+            }
+            $reply['lzlList'] = $lzlList;
+            $studentReplyList[] = $reply;
+        }
+        unset($reply);
+        unset($replyList);
+        $this->apiSuccess("获取学生回复内容成功", null, array('replyTotalCount' =>  $replyTotalCount,
+            'replyList' => $studentReplyList));
     }
 
     /**
