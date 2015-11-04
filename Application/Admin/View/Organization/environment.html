@@ -3,12 +3,20 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>机构环境列表</h2>
+        <h2>机构环境列表(共：{$total|default=0} 张)</h2>
     </div>
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/environment_delete',array('status'=>-1))}">删 除</button>
+            </div>
+        </div>
+
+        <!-- 高级搜索 -->
+        <div class="search-form fr cf">
+            <div class="sleft">
+                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入图片描述">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('organization/environment')}"><i class="btn-search"></i></a>
             </div>
         </div>
     </div>
@@ -21,6 +29,7 @@
                 <th class="">ID</th>
                 <th class="">机构名称</th>
                 <th class="">图片ID</th>
+                <th class="">图片描述</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -32,14 +41,16 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.organization_id}</td>
-                        <td>{$vo.resource_id}</td>
+                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.pic_id}</td>
+                        <td>{$vo.description}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                             </if>
                         </td>
                         <td>
+                            <a href="{:U('Organization/environment_edit?id='.$vo['id'])}" >编辑</a>
                             <a href="{:U('Organization/environment_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
@@ -93,6 +104,6 @@
             }
         });
         //导航高亮
-        highlight_subnav("{:U('User/index')}");
+        highlight_subnav("{:U('Organization/environment')}");
     </script>
 </block>
