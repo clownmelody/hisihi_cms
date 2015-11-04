@@ -695,7 +695,6 @@ class ForumController extends AppController
      */
     public function getSupportDetailList($uid=null, $post_id=null, $page=1, $count=10){
         if(empty($uid)){
-            $this->requireLogin();
             $uid = is_login();
         }
         if(empty($post_id)){
