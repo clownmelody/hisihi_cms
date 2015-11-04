@@ -150,15 +150,19 @@ function ListExperFu (NameDepar,Stime,Etime,Jcontent) {
 
 //ListExper
 function ListExper (NameDepar,Jcontent) {
-
-    if ((NameDepar.length + Jcontent.length) >20) {
-        var NameDepar = "<li class='user-company'style='width: 100%; text-align: center;margin-bottom: 1em;'>"+NameDepar+"</li>";
-        var Time = "<li class='user-time' style='width: 100%; text-align: center;'>"+Jcontent+"</li>";
-    }else{
-        var NameDepar = "<li class='user-company' style='width: 100%;'>"+NameDepar;
-        var Time = "<span class='user-time' style='float: right;color: #999;'>"+Jcontent+"</span></li>";
+    if(NameDepar && Jcontent) {
+        if ((NameDepar.length + Jcontent.length) > 20) {
+            var NameDepar = "<li class='user-company'style='width: 100%; text-align: center;margin-bottom: 1em;'>" + NameDepar + "</li>";
+            var Time = "<li class='user-time' style='width: 100%; text-align: center;'>" + Jcontent + "</li>";
+        } else {
+            var NameDepar = "<li class='user-company' style='width: 100%;'>" + NameDepar;
+            var Time = "<span class='user-time' style='float: right;color: #999;'>" + Jcontent + "</span></li>";
+        }
+        return "<li><ul class='user-empiric'>"+NameDepar+Time+"</ul></li>";
     }
-    return "<li><ul class='user-empiric'>"+NameDepar+Time+"</ul></li>";
+    else{
+        return "<li><ul class='user-empiric'></ul></li>";
+    }
 }
 
 //color
