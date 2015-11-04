@@ -105,7 +105,7 @@ class OrganizationController extends AppController
      */
     public function resetPassword($mobile=null, $sms_code=null, $password=null){
         if(empty($mobile)||empty($sms_code)||empty($password)){
-            $this->apiError(-1, '传入参数不完整');
+            $this->apiError(-3, '传入参数不完整');
         }
         $url = C('bmob_verify_smscode_url').$sms_code;
         $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
@@ -122,7 +122,7 @@ class OrganizationController extends AppController
             $map['mobile'] = $mobile;
             $data['password'] = md5($password);
             $result = M('OrganizationAdmin')->where($map)->save($data);
-            if($result){
+            if($result!==false){
                 $this->apiSuccess('重置密码成功');
             } else {
                 $this->apiError(-2, '重置密码失败');

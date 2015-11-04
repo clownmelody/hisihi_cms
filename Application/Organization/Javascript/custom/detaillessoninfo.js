@@ -31,14 +31,14 @@ define(['jquery','util','jqueryuploadify'],function () {
             }
             var that=this;
             this.getDataAsync(function(data){
+                that.$wrapper.cornerLoading('hideLoading');
                 if(data.success) {
                     data = data.data;
-                    that.$wrapper.cornerLoading('hideLoading');
                     var str = that.showAllVideosInfo(data);
                     this.$wrapper.find('#allLessonVideoCon').html(str);   //填充视频列表
                     that.fillInBottomBoxInfo(data); //填充基本信息
                 }else{
-                    alert('数据加载失败！');
+                    alert(data.message);
                 }
             });
 
@@ -146,7 +146,7 @@ define(['jquery','util','jqueryuploadify'],function () {
                     //var logo=data.logo;
                     //that.execAddStudentWorks.call(that,logo);
                 } else {
-                    alert('作品上传失败');
+                    alert(data.message);
                 }
             },options);
         },

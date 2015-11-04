@@ -37,7 +37,7 @@ define(['jquery','jqueryui','util'],function () {
                     if(result.success) {
                         that.getStudentWorksInfoStr(result.data);
                     }else{
-                        alert('学生作品加载失败');
+                        alert(result.message);
                     }
                 }
             });
@@ -50,19 +50,23 @@ define(['jquery','jqueryui','util'],function () {
             var str='',
                 that=this,
                 title='';
-            $.each(data,function(){
-                title=this.description;
-                str+='<li class="normal" data-id="'+this.id+'">'+
-                    '<div class="worksItemHeader">'+
-                    '<img src="'+this.url+'">'+
-                    '</div>'+
-                    '<div class="worksItemBottom">'+
-                    '<p title="'+title+'">'+Hisihi.substrLongStr(title,33)+'</p>'+
-                    '<textarea>'+title+'</textarea>'+
-                    '</div>'+
-                    '<div class="delete-item-btn deleteStudentWorks" title="删除"></div>'+
-                    '</li>';
-            });
+            if(data) {
+                $.each(data, function () {
+                    title = this.description;
+                    str += '<li class="normal" data-id="' + this.id + '">' +
+                        '<div class="worksItemHeader">' +
+                        '<img src="' + this.url + '">' +
+                        '</div>' +
+                        '<div class="worksItemBottom">' +
+                        '<p title="' + title + '">' + Hisihi.substrLongStr(title, 33) + '</p>' +
+                        '<textarea>' + title + '</textarea>' +
+                        '</div>' +
+                        '<div class="delete-item-btn deleteStudentWorks" title="删除"></div>' +
+                        '</li>';
+                });
+            }else{
+                str='<p class="noDataForQuery">教学环境图片暂无，快点上传吧。</p>';
+            }
             that.$wrapper.find('#teacheConditionMainCon>div').before(str);
         },
 
@@ -109,9 +113,10 @@ define(['jquery','jqueryui','util'],function () {
                     var logo=data.logo;
                     that.execAddStudentWorks.call(that,logo);
                 } else {
-                    alert('教学环境图片上传失败');
+                    alert(data.message);
                 }
             },{height:34,width:82,'queueID':'uploadProConForCondition'});
+            $("#uploadTeachCondition").css('opacity',1);
         },
 
         /*添加学生作品*/
@@ -128,7 +133,7 @@ define(['jquery','jqueryui','util'],function () {
                         //添加到列表中
                         that.getStudentWorksInfoStr.call(that, [{id: result.environment_id, url: logo.path, description: ''}]);
                     } else {
-                        alert('作品上传失败');
+                        alert(result.message);
                     }
                 }
             });

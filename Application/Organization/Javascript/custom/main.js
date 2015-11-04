@@ -13,6 +13,7 @@ require.config({
         'util':['jquery'],
 
     },
+    waitSeconds: 0,
     paths: {
         jquery: 'libs/jquery-1.8.2.min',
         jqueryui:'libs/jquery-ui-1.9.2.custom.min',

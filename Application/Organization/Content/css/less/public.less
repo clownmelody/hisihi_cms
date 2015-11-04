@@ -45,7 +45,7 @@ html,body{
 
 body{
 	background: @md-grey-EB; 
-	font-family: "Microsoft Yahei","Microsoft YaHei","黑体","宋体",sans-serif;
+	font-family: "Source Han Sans CN Medium","Microsoft Yahei","黑体","宋体",sans-serif;
 }
 
 .wrapper{
@@ -179,9 +179,24 @@ body{
   background: url(../images/tempsprite.png) no-repeat;
   background-position: -84px -1px;
   animation: spin 800ms infinite linear;
+  -webkit-animation: spin 800ms infinite linear;
+  -moz-animation: spin 800ms infinite linear;
+  -o-animation: spin 800ms infinite linear;
 }
 
 @keyframes spin {
+  0%   { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+@-webkit-keyframes spin {
+  0%   { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+@-moz-keyframes spin {
+  0%   { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+@-o-keyframes spin {
   0%   { transform: rotate(360deg); }
   100% { transform: rotate(0deg); }
 }
@@ -189,4 +204,11 @@ body{
 .cornerLoadingText {
   text-align:center;
   color: @brand-primary;
+}
+
+.noDataForQuery {
+  margin-top: 10px;
+  color: @brand-primary;
+  text-align: center;
+  font-size: 14px;
 }

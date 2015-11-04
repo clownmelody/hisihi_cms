@@ -959,7 +959,7 @@ body {
 }
 body {
   background: #ebebeb;
-  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  font-family: "Source Han Sans CN Medium", "Microsoft Yahei", "黑体", "宋体", sans-serif;
 }
 .wrapper {
   margin-left: 160px;
@@ -1082,8 +1082,35 @@ body {
   background: url(../images/tempsprite.png) no-repeat;
   background-position: -84px -1px;
   animation: spin 800ms infinite linear;
+  -webkit-animation: spin 800ms infinite linear;
+  -moz-animation: spin 800ms infinite linear;
+  -o-animation: spin 800ms infinite linear;
 }
 @keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@-moz-keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@-o-keyframes spin {
   0% {
     transform: rotate(360deg);
   }
@@ -1094,6 +1121,12 @@ body {
 .cornerLoadingText {
   text-align: center;
   color: #f5a623;
+}
+.noDataForQuery {
+  margin-top: 10px;
+  color: #f5a623;
+  text-align: center;
+  font-size: 14px;
 }
 .header {
   height: 54px;
@@ -1993,6 +2026,10 @@ fieldset[disabled] #addTeacherCommitBtn.abled.active {
 .studentWorksAndConditionForm.uploadProcess {
   width: 400px;
 }
+.studentWorksAndConditionForm #uploadStudentWorks,
+.studentWorksAndConditionForm #uploadTeachCondition {
+  opacity: 0;
+}
 .addNewLessonWrapper .addNewLessonHeader span:nth-child(1) a {
   color: #666666;
   font-size: 16px;
@@ -2255,7 +2292,6 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
   color: #ffffff;
   background-color: #f7be5b;
   border-color: #f8c873;
-  width: 100%;
   padding: 0;
 }
 .uploadify-button:focus,
