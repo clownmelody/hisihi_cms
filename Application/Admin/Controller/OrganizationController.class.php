@@ -610,6 +610,7 @@ class OrganizationController extends AdminController
             $cid = $_POST["cid"];
             $data["title"] = $_POST["title"];
             $data["content"] = $_POST["content"];
+            $data["update_time"] = time();
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();
@@ -622,7 +623,6 @@ class OrganizationController extends AdminController
                 }
                 $this->success('添加成功', 'index.php?s=/admin/organization/notice');
             } else {
-                $data["update_time"] = time();
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
