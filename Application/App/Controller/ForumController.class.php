@@ -709,11 +709,16 @@ class ForumController extends AppController
         foreach($list as &$user){
             $c_uid = $user['uid'];
             $user['info'] = query_user(array('avatar256', 'avatar128', 'extinfo', 'nickname'), $c_uid);
-            $isfollowing = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$c_uid))->find();
-            if($isfollowing){
-                $user['info']['isfollowing'] = true;
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$c_uid))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$c_uid,'follow_who'=>$uid))->find();
+            if($follow_other&&$be_follow){
+                $user['info']['isfollowing'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $user['info']['isfollowing'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $user['info']['isfollowing'] = 1;
             } else {
-                $user['info']['isfollowing'] = false;
+                $user['info']['isfollowing'] = 0;
             }
         }
         $extra['totalCount'] = $totalCount;
