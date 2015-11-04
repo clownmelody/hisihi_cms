@@ -1,5 +1,7 @@
 $(function () {
     var uid = $('#uid').val();
+    var width=$(document).width();
+    $('body').css('width',$(document).width());
     getData(uid,true);
 });
 
@@ -8,9 +10,9 @@ function getData(Uid,Api){
         type: "GET",
         url: "api.php?s=/user/getResumeProfile/uid/" + Uid + "/api/"+Api,
         dataType: "json",
-        success: function(data) { 
+        success: function(data) {
             getDataFu(data.info);
-        },    
+        },
     });
 }; 
 
