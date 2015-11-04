@@ -180,16 +180,116 @@ class OrganizationController extends AdminController
      * 学生作品管理
      */
     public function works(){
-        $model = D('OrganizationWorks');
-        $count = $model->count();
+        $model = D('OrganizationResource');
+        $count = $model->where('type=2 and status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['description'] = array('like','%'.$name.'%');
+            $map['type']=2;
+            $map['status']=1;
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where('status=1 and type=2')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        foreach($list as &$environment){
+            $organization_id = $environment['organization_id'];
+            $cmodel = M('Organization');
+            $organization_name = $cmodel->where('status=1 and id='.$organization_id)->getField("name");
+            $environment['organization_name'] = $organization_name;
+        }
+
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
-        $this->assign("meta_title","机构评论");
+        $this->assign("meta_title","机构环境");
         $this->display();
+    }
+
+    /**
+     * 环境图片新增
+     */
+    public function works_add(){
+        $this->display();
+    }
+
+    /**
+     * 环境图片更新
+     */
+    public  function works_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationResource');
+            $cid = $_POST["cid"];
+            $data["pic_id"] = $_POST["picture"];
+            $data["description"] = $_POST["description"];
+            $data['organization_id'] = $_POST["organization_id"];
+            $data['type'] = 2;
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->uploadLogoPicToOSS($data["pic_id"]);
+                getThumbImageById($data["pic_id"],280,160);
+                $this->success('添加成功', 'index.php?s=/admin/organization/works');
+            } else {
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                $this->uploadLogoPicToOSS($data["pic_id"]);
+                getThumbImageById($data["pic_id"],280,160);
+                $this->success('更新成功', 'index.php?s=/admin/organization/works');
+            }
+        } else {
+            $this->display('works_add');
+        }
+    }
+
+    /**编辑环境图片
+     * @param $id
+     */
+    public function works_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationResource');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $this->assign('info', $data);
+        $this->display();
+    }
+
+    /**删除环境图片
+     * @param $id
+     */
+    public function works_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationResource');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/works');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
     }
 
     /**
@@ -313,10 +413,26 @@ class OrganizationController extends AdminController
      */
     public function environment(){
         $model = D('OrganizationResource');
-        $count = $model->where('type=1')->count();
+        $count = $model->where('type=1 and status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['description'] = array('like','%'.$name.'%');
+            $map['type']=1;
+            $map['status']=1;
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where('status=1 and type=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        foreach($list as &$environment){
+            $organization_id = $environment['organization_id'];
+            $cmodel = M('Organization');
+            $organization_name = $cmodel->where('status=1 and id='.$organization_id)->getField("name");
+            $environment['organization_name'] = $organization_name;
+        }
+
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -338,10 +454,11 @@ class OrganizationController extends AdminController
         if (IS_POST) { //提交表单
             $model = M('OrganizationResource');
             $cid = $_POST["cid"];
-            $data["title"] = $_POST["title"];
-            $data["content"] = $_POST["content"];
-
-            if(empty($cid)){
+            $data["pic_id"] = $_POST["picture"];
+            $data["description"] = $_POST["description"];
+            $data['organization_id'] = $_POST["organization_id"];
+            $data['type'] = 1;
+                if(empty($cid)){
                 try {
                     $data["create_time"] = time();
                     $res = $model->add($data);
@@ -351,17 +468,20 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/organization/notice');
+                $this->uploadLogoPicToOSS($data["pic_id"]);
+                getThumbImageById($data["pic_id"],280,160);
+                $this->success('添加成功', 'index.php?s=/admin/organization/environment');
             } else {
-                $data["update_time"] = time();
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->success('更新成功', 'index.php?s=/admin/organization/notice');
+                $this->uploadLogoPicToOSS($data["pic_id"]);
+                getThumbImageById($data["pic_id"],280,160);
+                $this->success('更新成功', 'index.php?s=/admin/organization/environment');
             }
         } else {
-            $this->display('notice_add');
+            $this->display('environment_add');
         }
     }
 
@@ -379,7 +499,7 @@ class OrganizationController extends AdminController
             $this->error($Model->getError());
         }
         $this->assign('info', $data);
-        $this->meta_title = '编辑机构公告信息';
+        $this->meta_title = '编辑机构环境图片信息';
         $this->display();
     }
 
@@ -399,7 +519,7 @@ class OrganizationController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('删除成功','index.php?s=/admin/organization/notice');
+            $this->success('删除成功','index.php?s=/admin/organization/environment');
         } else {
             $this->error('未选择要删除的数据');
         }
