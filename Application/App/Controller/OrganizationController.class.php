@@ -149,6 +149,9 @@ class OrganizationController extends AppController
             $org_model = M('Organization');
             $orginfo = $org_model->where('status=1 and id='.$user['organization_id'])->find();
             $logo = $this->fetchImage($orginfo['logo']);
+            if(!$logo){//返回机构默认logo
+                $logo = 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $auth = array(
                 'uid' => $user['id'],
                 'mobile' => $user['mobile'],
@@ -325,7 +328,11 @@ class OrganizationController extends AppController
                 if($res){
                     $extra['organization_id'] = $result;
                     $extra['organization_name'] = $name;
-                    $extra['logo'] = $this->fetchImage($logo);
+                    $url = $this->fetchImage($logo);
+                    if(!$url){
+                        $url = 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+                    }
+                    $extra['logo'] = $url;
                     $this->apiSuccess('添加机构基本信息成功',null,$extra);
                 }else{
                     $this->apiError(-2, '关联机构信息到管理员失败，请重试');
@@ -353,9 +360,13 @@ class OrganizationController extends AppController
             ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
         if($result){
             $logo_id = $result['logo'];
+            $logo = $this->fetchImage($logo_id);
+            if(!$logo){
+                $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $result['logo']=array(
                 'id'=>$logo_id,
-                'url'=>$this->fetchImage($logo_id)
+                'url'=>$logo
             );
             $advantage = explode("#",$result['advantage']);
             $map['type']=2;
