@@ -257,7 +257,7 @@ class ForumController extends AppController
      * @param bool|false $show_adv
      * @param int $post_type  区别公司热门话题和普通论坛
      */
-    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'ctime', $show_adv=false, $post_type=1)
+    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1)
     {
         $start_time = time();
         \Think\Log::write("android test request success!");
