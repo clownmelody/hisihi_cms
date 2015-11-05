@@ -695,7 +695,6 @@ class ForumController extends AppController
      */
     public function getSupportDetailList($uid=null, $post_id=null, $page=1, $count=10){
         if(empty($uid)){
-            $this->requireLogin();
             $uid = is_login();
         }
         if(empty($post_id)){
@@ -750,7 +749,7 @@ class ForumController extends AppController
                 $studentReplyTotalCount++;
             }
         }
-        $post['teacherReplyCount'] = $teacherReplyTotalCount;
+        $post['teacherReplyTotalCount'] = $teacherReplyTotalCount;
         $post['studentReplyTotalCount'] = $studentReplyTotalCount;
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
@@ -933,7 +932,7 @@ class ForumController extends AppController
             $reply['content'] = op_t($reply['content']);
 
             unset($reply['user']);
-            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc', $page, $limit=10, false);
+            /*$lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc', $page, $limit=10, false);
             foreach ($lzlList as &$lzl) {
                 $lzl['lzl_id'] = $lzl['id'];
                 unset($lzl['id']);
@@ -951,8 +950,8 @@ class ForumController extends AppController
                 $lzl['img'] = $this->match_img($lzl['content']);
                 $lzl['content'] = op_t($lzl['content']);
                 $lzl['sound'] = $this->fetchSound($lzl['lzl_id'],2);
-            }
-            $reply['lzlList'] = $lzlList;
+            }*/
+            $reply['lzlList'] = null;
             $studentReplyList[] = $reply;
         }
         unset($reply);
@@ -1257,6 +1256,14 @@ class ForumController extends AppController
         $this->apiSuccess($message,null, $extra);
     }
 
+    /**
+     * 用户普通回复
+     * @param $post_id
+     * @param string $content
+     * @param null $pos
+     * @param null $pictures
+     * @param null $sound
+     */
     public function doReply($post_id, $content = ' ', $pos = null, $pictures = null, $sound = null)
     {
         $this->requireLogin();
@@ -1367,6 +1374,15 @@ class ForumController extends AppController
         }
     }
 
+    /**
+     * 用户楼中楼回复
+     * @param int $to_f_reply_id
+     * @param int $to_f_lzl_id
+     * @param string $content
+     * @param null $pos
+     * @param null $pictures
+     * @param null $sound
+     */
     public function doSendLZLReply($to_f_reply_id = 0, $to_f_lzl_id = 0, $content = ' ', $pos = null, $pictures = null, $sound = null)
     {
         //确认用户已经登录
