@@ -11,7 +11,7 @@
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <button class="btn document_add" url="{:U('add')}">新 增</button>
+                <!--<button class="btn document_add" url="{:U('add')}">新 增</button>-->
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/delete",array("status"=>-1))}">删 除</button>
             </div>
         </div>
@@ -27,13 +27,13 @@
 
     <!-- 数据列表 -->
     <div class="data-table table-striped">
-        <table class="">
+        <table class="table_nowrap">
             <thead>
             <tr>
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
-                <th class="">机构名称</th>
-                <th class="">宣传语</th>
+                <th class="" style="width:100px;">机构名称</th>
+                <th class="" style="width:100px;">宣传语</th>
                 <th class="">地址</th>
                 <th class="">联系电话</th>
                 <th class="">创建时间</th>
@@ -47,9 +47,9 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.name}</td>
-                        <td>{$vo.slogan}</td>
-                        <td>{$vo.location}</td>
+                        <td >{$vo.name}</td>
+                        <td >{$vo.slogan}</td>
+                        <td >{$vo.location}</td>
                         <td>{$vo.phone_num}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
@@ -80,6 +80,10 @@
     <link href="__STATIC__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <style type="text/css">
+        .table_nowrap{table-layout: fixed}
+        .table_nowrap td{white-space: nowrap;  word-break: keep-all;  overflow: hidden;  text-overflow: ellipsis;}
+    </style>
     <script type="text/javascript">
         //导航高亮
         highlight_subnav('{:U('organization/index')}');
