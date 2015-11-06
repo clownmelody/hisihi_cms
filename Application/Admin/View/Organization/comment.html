@@ -11,6 +11,13 @@
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/comment_delete',array('status'=>-1))}">删 除</button>
             </div>
         </div>
+        <!-- 高级搜索 -->
+        <div class="search-form fr cf">
+            <div class="sleft">
+                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入用户名">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('organization/comment')}"><i class="btn-search"></i></a>
+            </div>
+        </div>
     </div>
     <!-- 数据列表 -->
     <div class="data-table table-striped">
@@ -33,8 +40,8 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.organization_id}</td>
-                        <td>{$vo.uid}</td>
+                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.user_name}</td>
                         <td>{$vo.comment}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
@@ -42,6 +49,7 @@
                             </if>
                         </td>
                         <td>
+                            <a href="{:U('Organization/comment_edit?id='.$vo['id'])}" class="confirm">编辑</a>
                             <a href="{:U('Organization/comment_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
@@ -95,6 +103,6 @@
             }
         });
         //导航高亮
-        highlight_subnav("{:U('User/index')}");
+        highlight_subnav("{:U('Organization/comment')}");
     </script>
 </block>

@@ -3,19 +3,19 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>机构师生列表(共：{$total|default=0} 位)</h2>
+        <h2>机构视频课程列表(共：{$total|default=0} 个)</h2>
     </div>
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/relation_delete',array('status'=>-1))}">删 除</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/course_delete',array('status'=>-1))}">删 除</button>
             </div>
         </div>
         <!-- 高级搜索 -->
         <div class="search-form fr cf">
             <div class="sleft">
-                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入用户名称">
-                <a class="sch-btn" href="javascript:;" id="search" url="{:U('organization/relation')}"><i class="btn-search"></i></a>
+                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入课程名称">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('organization/course')}"><i class="btn-search"></i></a>
             </div>
         </div>
     </div>
@@ -27,9 +27,10 @@
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
                 <th class="">机构名称</th>
-                <th class="">用户名称</th>
-                <th class="">所属分组</th>
-                <th class="">类别</th>
+                <th class="">课程名称</th>
+                <th class="">课程分类</th>
+                <th class="">讲师</th>
+                <th class="">课程权限</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -41,18 +42,20 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.organization}</td>
-                        <td>{$vo.user_name}</td>
-                        <td>{$vo.group_name}</td>
-                        <td><eq name="vo['group']" value="6">老师<else/>学生</eq></td>
+                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.title}</td>
+                        <td>{$vo.category}</td>
+                        <td>{$vo.teacher}</td>
+                        <td><eq name="vo['auth']" value="1">公开<else/>私有</eq></td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                             </if>
                         </td>
                         <td>
-                            <a href="{:U('Organization/relation_edit?id='.$vo['id'])}" >编辑</a>
-                            <a href="{:U('Organization/relation_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('Organization/video?id='.$vo['id'])}" >视频列表</a>
+                            <a href="{:U('Organization/course_edit?id='.$vo['id'])}" >编辑</a>
+                            <a href="{:U('Organization/course_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
                 </volist>
@@ -105,6 +108,6 @@
             }
         });
         //导航高亮
-        highlight_subnav("{:U('User/index')}");
+        highlight_subnav("{:U('Organization/course')}");
     </script>
 </block>

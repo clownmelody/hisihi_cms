@@ -1,0 +1,60 @@
+<extend name="Public/base" />
+<block name="body">
+    <div class="main-title cf">
+        <h2>修改机构评论信息</h2>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="tab-wrap">
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('comment_update')}" method="post" class="form-horizontal doc-modal-form">
+                <input type="hidden" name="id" id="id" value="{$comment.id}"/>
+                <input type="hidden" name="organization_id" id="organization_id" value="{$comment.organization_id}"/>
+                <input type="hidden" name="uid" id="uid" value="{$comment.uid}"/>
+                <!-- 基础 -->
+                <div id="tab1" class="tab-pane in tab1">
+                    <div class="form-item cf">
+                        <label class="item-label">评论机构：{$comment.organization_name}</label>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">评论用户：{$comment.user_name}</label>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">评论星级</label>
+                        <div class="controls">
+                            <select name="star">
+                                <option value="1" <if condition="$comment.star eq 1">selected</if>>一星</option>
+                                <option value="2" <if condition="$comment.star eq 2">selected</if>>二星</option>
+                                <option value="3" <if condition="$comment.star eq 3">selected</if>>三星</option>
+                                <option value="4" <if condition="$comment.star eq 4">selected</if>>四星</option>
+                                <option value="5" <if condition="$comment.star eq 5">selected</if>>五星</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">评论内容</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="comment" value="{$comment.comment}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="form-item cf">
+                    <label class="item-label"></label>
+                    <div class="controls edit_sort_btn">
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">确 定</button>
+                        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+
+<script>
+    //导航高亮
+    highlight_subnav('{:U('Organization/comment')}');
+</script>
+
