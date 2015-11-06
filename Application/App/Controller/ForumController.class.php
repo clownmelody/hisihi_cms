@@ -178,17 +178,6 @@ class ForumController extends AppController
         $count = intval($count);
         $order = op_t($order);
 
-//        $count = S('forum_count' . $id);
-//        if (empty($count)) {
-//
-//            $map['status'] = 1;
-//            $count['forum'] = D('Forum')->where($map)->count();
-//            $count['post'] = D('ForumPost')->where($map)->count();
-//            $count['all'] = $count['post'] + D('ForumPostReply')->where($map)->count() + D('ForumLzlReply')->where($map)->count();
-//            S('forum_count', $count, 60);
-//        }
-//        $this->assign('count', $count);
-
         if ($order == 'ctime') {
             $order = 'create_time desc';
         } else if ($order == 'reply') {
@@ -196,19 +185,6 @@ class ForumController extends AppController
         } else {
             $order = 'last_reply_time desc';//默认的
         }
-
-        //$this->requireForumAllowView($id);
-
-//        //读取置顶列表
-//        if ($id == 0) {
-//            $map = array('status' => 1);
-//            $list_top = D('ForumPost')->where(' status=1 AND is_top=' . TOP_ALL)->order($order)->select();
-//        } else {
-//            $map = array('forum_id' => $id, 'status' => 1);
-//            $list_top = D('ForumPost')->where('status=1 AND (is_top=' . TOP_ALL . ') OR (is_top=' . TOP_FORUM . ' AND forum_id=' . intval($id) . ' and status=1)')->order($order)->select();
-//        }
-//
-//        $list_top = $this->formatList($list_top);
 
         //读取帖子列表
         $map = array('status' => 1);
@@ -260,7 +236,6 @@ class ForumController extends AppController
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1)
     {
         $start_time = time();
-        \Think\Log::write("android test request success!");
         $field_type = intval($field_type);
         $page = intval($page);
         $count = intval($count);
@@ -316,8 +291,6 @@ class ForumController extends AppController
         }
         $end_time = time();
         $t = $end_time - $start_time;
-        \Think\Log::write("android test response success!");
-        \Think\Log::write("处理时常：".$t.'毫秒');
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
