@@ -368,12 +368,31 @@ class OrganizationController extends AppController
                 'id'=>$logo_id,
                 'url'=>$logo
             );
-            $advantage = explode("#",$result['advantage']);
-            $map['type']=2;
-            $map['status']=1;
-            $map['id'] = array('in',$advantage);
-            $list = M('OrganizationConfig')->field('id, value')->where($map)->select();
-            $result['advantage']=$list;
+            $advantage = $result['advantage'];
+            $advantage = stripslashes($advantage);
+            $advantage = json_decode($advantage,true);
+            $advantage_array = array();
+            $cmodel = M('OrganizationConfig');
+            foreach($advantage as &$markid){
+                $advantageid = $markid['id'];
+                if(0 == $advantageid){
+                    $markobj = array(
+                        'id'=>(string)$markid['id'],
+                        'value'=>$markid['value']
+                    );
+                    $advantage_array[] = $markobj;
+                }else{
+                    $markarr = $cmodel->field('id,value')->where('type=2 and status=1 and id='.$advantageid)->find();
+                    if($markarr){
+                        $markobj = array(
+                            'id'=>$markarr['id'],
+                            'value'=>$markarr['value']
+                        );
+                        $advantage_array[] = $markobj;
+                    }
+                }
+            }
+            $result['advantage']=$advantage_array;
             $extra['data'] = $result;
             $this->apiSuccess("获取机构信息成功",null,$extra);
         }else{
