@@ -67,7 +67,7 @@
                         <label class="item-label">机构LOGO</label>
                         <div class="controls">
                             <input type="file" id="upload_organization_picture">
-                            <input type="hidden" name="picture" id="cover_id_organization"/>
+                            <input type="hidden" name="picture" id="cover_id_organization" value="{$organization.logo}"/>
                             <div class="upload-img-box">
                                 <notempty name="organization['logo']">
                                     <div class="upload-pre-item"><img src="{$organization['logo']|get_cover='path'}"/></div>
