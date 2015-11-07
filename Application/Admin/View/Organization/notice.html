@@ -3,7 +3,7 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>机构公告信息列表</h2>
+        <h2>机构公告信息列表(共：{$total|default=0} 条)</h2>
     </div>
     <div class="cf">
         <div class="fl">
@@ -15,7 +15,7 @@
         <div class="search-form fr cf">
             <div class="sleft">
                 <input type="text" name="title" class="search-input" value="{:I('title')}"
-                       placeholder="请输入配置值">
+                       placeholder="请输入公告标题">
                 <a class="sch-btn" href="javascript:;" id="search" url="{:U('notice')}"><i class="btn-search"></i></a>
             </div>
         </div>

@@ -7,10 +7,9 @@
  */
 
 namespace Admin\Controller;
-use Admin\Builder\AdminConfigBuilder;
-use Admin\Builder\AdminListBuilder;
-use Admin\Builder\AdminTreeListBuilder;
 
+use Think\Exception;
+use Think\Hook;
 use Think\Model;
 use Think\Page;
 
@@ -988,7 +987,7 @@ class OrganizationController extends AdminController
 
         $this->assign('_list', $list);
         $this->assign('_page', $show);
-        $this->assign("_total", $count);
+        $this->assign("total", $count);
         $this->assign("meta_title","机构公告列表");
         $this->display();
     }
@@ -1088,6 +1087,7 @@ class OrganizationController extends AdminController
             if(!$isExist){
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
             }
+            \Think\Log::write($isExist);
         }
     }
 }
