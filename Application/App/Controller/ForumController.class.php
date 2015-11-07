@@ -745,7 +745,7 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status desc,create_time', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status, create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
@@ -847,7 +847,7 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status desc,create_time', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status, create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
