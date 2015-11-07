@@ -711,12 +711,13 @@ class ForumController extends AppController
         $map['post_id'] = $post_id;
         $map['status'] = array('in','1,3');
         $model = M('AuthGroupAccess');
-        $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
+        $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $teacherReplyTotalCount = 0;
         $studentReplyTotalCount = 0;
         foreach($replyTotalList as $t_reply){
             $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
-            if($identify){
+            $toStudent = $t_reply['reply_to_student'];
+            if($identify&&$toStudent==0){
                 $teacherReplyTotalCount++;
             } else {
                 $studentReplyTotalCount++;
@@ -745,7 +746,7 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status, create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
@@ -760,8 +761,9 @@ class ForumController extends AppController
         $teacherReplyList = array();
         foreach ($replyList as &$reply) {
             $reply_uid = $reply['uid'];
+            $toStudent = $reply['reply_to_student'];
             $access_list = $model->where('group_id=6 and uid='.$reply_uid)->find();  // 只显示老师的回复
-            if(empty($access_list)){
+            if(empty($access_list)||$toStudent==1){
                 continue;
             }
             $reply['reply_id'] = $reply['id'];
@@ -826,7 +828,7 @@ class ForumController extends AppController
             $teacherReplyList[] = $reply;
         }
         unset($reply);
-        unset($replyList);
+        //unset($replyList);
         $this->apiSuccess("获取讲师回复内容成功", null, array('replyTotalCount' =>  $replyTotalCount,
             'replyList' => $teacherReplyList));
     }
@@ -847,7 +849,7 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'status, create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'support_count desc, create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
@@ -862,8 +864,9 @@ class ForumController extends AppController
         $studentReplyList = array();
         foreach ($replyList as &$reply) {
             $reply_uid = $reply['uid'];
-            $access_list = $model->where('group_id=5 and uid='.$reply_uid)->find();  // 只显示老师的回复
-            if(empty($access_list)){
+            $toStudent = $reply['reply_to_student'];
+            $access_list = $model->where('group_id=5 and uid='.$reply_uid)->find();
+            if(empty($access_list)&&$toStudent==0){
                 continue;
             }
             $reply['reply_id'] = $reply['id'];
@@ -1237,7 +1240,7 @@ class ForumController extends AppController
      * @param null $pictures
      * @param null $sound
      */
-    public function doReply($post_id, $content = ' ', $pos = null, $pictures = null, $sound = null)
+    public function doReply($post_id, $content = ' ', $pos = null, $pictures = null, $sound = null, $toStudent=0)
     {
         $this->requireLogin();
 
@@ -1270,7 +1273,7 @@ class ForumController extends AppController
             $model = D('Forum/ForumPostReply');
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
-            $result = $model->addReply($post_id, $content);
+            $result = $model->addReply($post_id, $content, $toStudent);
             if (!$result) {
                 $this->apiError($model->getError(),'回复失败');
             }
@@ -1294,7 +1297,7 @@ class ForumController extends AppController
             $after = getMyScore();
             $tox_money_after = getMyToxMoney();
 	    
-	    //当前用户如果是讲师，则回复需要置顶
+	        //当前用户如果是讲师，则回复需要置顶
             $user = query_user(array('group'),$uid);
             if($user['group'] == 6 && $result)
                 $model->setReplyTop($result);
@@ -1471,12 +1474,13 @@ class ForumController extends AppController
         $this->requireLogin();
 
         if($type == 'post') {
-	    $this->requirePostExists($id);
-            $post_info = D('ForumPost')->where(array('id' => intval($id), 'status' => 1))->field('uid, content')->find();
-            $message_uid = $post_info['uid'];
-            $post_content = $post_info['content'];
+            $this->requirePostExists($id);
+                $post_info = D('ForumPost')->where(array('id' => intval($id), 'status' => 1))->field('uid, content')->find();
+                $message_uid = $post_info['uid'];
+                $post_content = $post_info['content'];
         } else if($type == 'reply') {
             $message_uid = D('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->getField('uid');
+            M('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->setInc('support_count');
         }
         $support['appname'] = 'Forum';
         $support['table'] = $type;
@@ -1550,6 +1554,7 @@ class ForumController extends AppController
             $message_uid = D('ForumPost')->where(array('id' => intval($id), 'status' => 1))->getField('uid');
         } else if($type == 'reply') {
             $message_uid = D('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->getField('uid');
+            M('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->setDec('support_count');
         }
         $support['appname'] = 'Forum';
         $support['table'] = $type;

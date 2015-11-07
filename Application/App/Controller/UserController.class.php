@@ -2123,14 +2123,13 @@ class UserController extends AppController
         return $output;
     }
 
-    // 2732 - 6417 - 2738 - 6415 - 6418 - 6416 - 6419 - 6420 - 81
     public function autoFollow(){
-        $startUid = 115;
-        $count = 400;
+        $startUid = 5500;
+        $count = 517;
         $model = M();
         for ($x=0; $x<$count; $x++) {
             $time = time();
-            $model->execute("INSERT INTO hisihi_follow (follow_who, who_follow, create_time) values(2732, ".$startUid.", ".$time.")");
+            $model->execute("INSERT INTO hisihi_follow (follow_who, who_follow, create_time) values(81, ".$startUid.", ".$time.")");
             $startUid++;
         }
     }
