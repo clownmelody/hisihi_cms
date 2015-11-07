@@ -125,7 +125,6 @@ class OrganizationController extends AdminController
                 }
                 $this->success('添加成功', 'index.php?s=/admin/organization/index');
             } else {
-                //$model = D('Organization');
                 $model = $this->organizationModel;
                 $model->updateOrganization($cid, $data);
                 //上传图片到OSS
@@ -150,10 +149,36 @@ class OrganizationController extends AdminController
                 foreach ($id as $i)
                 {
                     $model->updateOrganization($i, $data);
+                    M('OrganizationRelation')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationCourse')->where(array('organization_id'=>$i))->save($data);
+                    $course = M('OrganizationCourse')->where(array('organization_id'=>$id))->field('id')->select();
+                    if($course){
+                        $course_array = array();
+                        foreach($course as $courseid){
+                            $course_array[] = $courseid['id'];
+                        }
+                        M('OrganizationVideo')->where(array('course_id'=>array('in',$course_array)))->save($data);
+                    }
+                    M('OrganizationResource')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationComment')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationCertification')->where(array('organization_id'=>$i))->save($data);
                 }
             } else {
                 $id = intval($id);
                 $model->updateOrganization($id, $data);
+                M('OrganizationRelation')->where(array('organization_id'=>$id))->save($data);
+                M('OrganizationCourse')->where(array('organization_id'=>$id))->save($data);
+                $course = M('OrganizationCourse')->where(array('organization_id'=>$id))->field('id')->select();
+                if($course){
+                    $course_array = array();
+                    foreach($course as $courseid){
+                        $course_array[] = $courseid['id'];
+                    }
+                    M('OrganizationVideo')->where(array('course_id'=>array('in',$course_array)))->save($data);
+                }
+                M('OrganizationResource')->where(array('organization_id'=>$id))->save($data);
+                M('OrganizationComment')->where(array('organization_id'=>$id))->save($data);
+                M('OrganizationCertification')->where(array('organization_id'=>$id))->save($data);
             }
             $this->success('删除成功','index.php?s=/admin/organization');
         } else {
@@ -164,12 +189,18 @@ class OrganizationController extends AdminController
     /**
      * 机构老师关系列表
      */
-    public function relation(){
+    public function relation($organization_id=0){
         $model = M('OrganizationRelation');
-        $count = $model->where('status=1')->count();
+        $filter_map['status'] = 1;
+        //从机构列表跳转
+        if($organization_id){
+            $filter_map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+        }
+        $count = $model->where($filter_map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        //用于公司名称搜索
+        //用于用户名称搜索
         $name = $_GET["title"];
         if($name){
             $map['nickname'] = array('like','%'.$name.'%');
@@ -180,18 +211,25 @@ class OrganizationController extends AdminController
                 $userid[] = $user_id['uid'];
             }
             $filter_map['uid'] = array('in',$userid);
-            $filter_map['status'] = 1;
             $list = $model->where($filter_map)->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('status=1')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($filter_map)->limit($Page->firstRow.','.$Page->listRows)->select();
         }
+
         foreach($list as &$relation){
             $relation['user_name'] = M('Member')->where(array('uid'=>$relation['uid'],'status'=>1))->getField('nickname');
-            $relation['organization'] = M('Organization')->where(array('id'=>$relation['organization_id'],'status'=>1))->getField('name');
+            if($organization_id){
+                $relation['organization'] = $organization_name;
+            }else{
+                $relation['organization'] = M('Organization')->where(array('id'=>$relation['organization_id'],'status'=>1))->getField('name');
+            }
             $relation['group_name'] = M('OrganizationConfig')->where(array('id'=>$relation['teacher_group_id'],'status'=>1,'type'=>1001))
                 ->getField('value');
         }
-
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
+        }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -282,28 +320,36 @@ class OrganizationController extends AdminController
     /**
      * 学生作品列表
      */
-    public function works(){
+    public function works($organization_id=0){
         $model = D('OrganizationResource');
-        $count = $model->where('type=2 and status=1')->count();
+        $map['type']=2;
+        $map['status']=1;
+        if($organization_id){
+            $map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
+        }
+        $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        //用于公司名称搜索
+        //用于图片描述搜索
         $name = $_GET["title"];
         if($name){
             $map['description'] = array('like','%'.$name.'%');
-            $map['type']=2;
-            $map['status']=1;
             $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('status=1 and type=2')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$environment){
-            $organization_id = $environment['organization_id'];
-            $cmodel = M('Organization');
-            $organization_name = $cmodel->where('status=1 and id='.$organization_id)->getField("name");
-            $environment['organization_name'] = $organization_name;
+            if($organization_id){
+                $environment['organization_name'] = $organization_name;
+            }else{
+                $environment['organization_name'] = M('Organization')->where('status=1 and id='.$environment['organization_id'])->getField("name");
+            }
         }
-
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
+        }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -502,13 +548,18 @@ class OrganizationController extends AdminController
     /**
      * 机构评论列表
      */
-    public function comment()
+    public function comment($organization_id=0)
     {
         $model = D('OrganizationComment');
-        $count = $model->where('status=1')->count();
+        $filter['status'] = 1;
+        if($organization_id){
+            $filter['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
+        }
+        $count = $model->where($filter)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        //用于公司名称搜索
+        //用于用户名搜索
         $name = $_GET["title"];
         if($name){
             $map['nickname'] = array('like','%'.$name.'%');
@@ -519,17 +570,22 @@ class OrganizationController extends AdminController
                 $uid_array[] = $user['uid'];
             }
             $filter['uid'] = array('in',$uid_array);
-            $filter['status'] = 1;
             $list = $model->where($filter)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('status=1')->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($filter)->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$comment){
-            $organization_id = $comment['organization_id'];
-            $cmodel = M('Organization');
-            $organization_name = $cmodel->where('status=1 and id='.$organization_id)->getField("name");
-            $comment['organization_name'] = $organization_name;
+            if($organization_id){
+                $comment['organization_name'] = $organization_name;
+            }else{
+                $comment['organization_name'] = M('Organization')->where('status=1 and id='.$comment['organization_id'])->getField("name");
+            }
             $comment['user_name'] = M('Member')->where(array('uid'=>$comment['uid'],'status'=>1))->getField('nickname');
+        }
+
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
         }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
@@ -606,28 +662,37 @@ class OrganizationController extends AdminController
     /**
      * 机构环境图片列表
      */
-    public function environment(){
+    public function environment($organization_id=0){
         $model = D('OrganizationResource');
-        $count = $model->where('type=1 and status=1')->count();
+        $map['status'] = 1;
+        $map['type'] = 1;
+        if($organization_id){
+            $map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
+        }
+        $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        //用于公司名称搜索
+        //用于图片描述搜索
         $name = $_GET["title"];
         if($name){
             $map['description'] = array('like','%'.$name.'%');
-            $map['type']=1;
-            $map['status']=1;
             $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('status=1 and type=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$environment){
-            $organization_id = $environment['organization_id'];
-            $cmodel = M('Organization');
-            $organization_name = $cmodel->where('status=1 and id='.$organization_id)->getField("name");
-            $environment['organization_name'] = $organization_name;
+            if($organization_id){
+                $environment['organization_name'] = $organization_name;
+            }else{
+                $environment['organization_name'] = M('Organization')->where('status=1 and id='.$environment['organization_id'])->getField("name");
+            }
         }
 
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
+        }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -826,27 +891,37 @@ class OrganizationController extends AdminController
     /**
      * 机构课程列表
      */
-    public function course(){
+    public function course($organization_id=0){
         $model = D('OrganizationCourse');
-        $count = $model->where('status=1')->count();
+        $map['status']=1;
+        if($organization_id){
+            $map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
+        }
+        $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
         //用于课程名称搜索
         $name = $_GET["title"];
         if($name){
             $map['title'] = array('like','%'.$name.'%');
-            $map['status']=1;
             $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$course){
-            $organization_id = $course['organization_id'];
-            $cmodel = M('Organization');
-            $organization_name = $cmodel->where('status=1 and id='.$organization_id)->getField("name");
-            $course['organization_name'] = $organization_name;
+            if($organization_id){
+                $course['organization_name'] = $organization_name;
+            }else{
+                $course['organization_name'] = M('Organization')->where('status=1 and id='.$course['organization_id'])->getField("name");
+            }
             $course['category'] = M('OrganizationConfig')->where(array('id'=>$course['category_id'],'type'=>1002,'status'=>1))->getField('value');
             $course['teacher'] = M('Member')->where(array('uid'=>$course['lecturer']))->getField('nickname');
+        }
+
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
         }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
@@ -928,10 +1003,12 @@ class OrganizationController extends AdminController
                 foreach ($id as $i)
                 {
                     $model->where('id='.$i)->save($data);
+                    M('OrganizationVideo')->where(array('course_id'=>$i))->save($data);
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
+                M('OrganizationVideo')->where(array('course_id'=>$id))->save($data);
             }
             $this->success('删除成功','index.php?s=/admin/organization/course');
         } else {
@@ -946,25 +1023,76 @@ class OrganizationController extends AdminController
     public function certificate(){
         $name = I('name');
         if(!empty($name)){
-            $map['value'] = array('like', '%' . (string)$name . '%');
+            $map['name'] = array('like', '%' . (string)$name . '%');
+        }
+        $status = I('status');
+        if(!empty($status)){
+            $map['status'] = $status;
+        }else{
+            $map['status'] = array('neq',-1);
         }
         $model = D('OrganizationCertificate');
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->where($map)->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
-        $this->assign("meta_title","机构环境");
+        $this->assign("meta_title","机构认证");
         $this->display();
     }
 
     /**
-     * 新增证书或修改
+     * 认证通过
      */
-    public function certificateUpdate(){
+    public function certificate_pass($id){
+        if(!empty($id)){
+            $model = M('OrganizationCertificate');
+            $data['status'] = 2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                    $organization_id = $model->where('id='.$i)->getField('organization_id');
+                    M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>2));
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+                $organization_id = $model->where('id='.$id)->getField('organization_id');
+                M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>2));
+            }
+            $this->success('认证成功','index.php?s=/admin/organization/certificate');
+        } else {
+            $this->error('未选择要认证的数据');
+        }
+    }
 
+    /**
+     * 认证拒绝
+     */
+    public function certificate_refuse($id){
+        if(!empty($id)){
+            $model = M('OrganizationCertificate');
+            $data['status'] = -2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                    $organization_id = $model->where('id='.$i)->getField('organization_id');
+                    M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>-2));
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+                $organization_id = $model->where('id='.$id)->getField('organization_id');
+                M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>-2));
+            }
+            $this->success('拒绝认证成功','index.php?s=/admin/organization/certificate');
+        } else {
+            $this->error('未选择要拒绝认证的数据');
+        }
     }
 
     /**
