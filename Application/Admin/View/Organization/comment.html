@@ -3,7 +3,8 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>机构评论列表</h2>
+        <h2>{$organization_name|default='机构'}-评论列表(共：{$total|default=0} 条)</h2>
+        <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id | default=0}"/>
     </div>
     <div class="cf">
         <div class="fl">
@@ -79,6 +80,10 @@
                 url += '&' + query;
             } else {
                 url += '?' + query;
+            }
+            var organization_id = $("#organization_id").val();
+            if(organization_id != 0){
+                url += '&organization_id=' + organization_id;
             }
             window.location.href = url;
         });

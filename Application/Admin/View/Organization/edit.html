@@ -54,7 +54,7 @@
                             <notempty name="_marks">
                                 <ul class="dowebok" id="advantage_ul">
                                     <volist name="_marks" id="vo">
-                                        <li><input type="checkbox" id="{$vo.id}" <in name="vo['id']" value="$_markarray">checked</in> data-labelauty="{$vo.value}"></li>
+                                        <li><input type="checkbox" id="{$vo.id}" <in name="vo['ischecked']" value="1">checked</in> data-labelauty="{$vo.value}" value="{$vo.value}"></li>&nbsp;
                                     </volist>
                                 </ul>
                                 <else/>
@@ -67,7 +67,7 @@
                         <label class="item-label">机构LOGO</label>
                         <div class="controls">
                             <input type="file" id="upload_organization_picture">
-                            <input type="hidden" name="picture" id="cover_id_organization"/>
+                            <input type="hidden" name="picture" id="cover_id_organization" value="{$organization.logo}"/>
                             <div class="upload-img-box">
                                 <notempty name="organization['logo']">
                                     <div class="upload-pre-item"><img src="{$organization['logo']|get_cover='path'}"/></div>
@@ -159,18 +159,23 @@
         });
 
         function setAdvantage(){
-            var advantage = "";
+            var advantage = [];
             $.each($(".dowebok li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
                 var input = li.find("input");
                 var classattr = span.attr("class");
+                var id = input.attr("id");
+                var value = input.val();
                 if(classattr == "labelauty-checked-image"){
-                    advantage += (input.attr("id") + "#");
+                    var mark = {};
+                    mark['id'] = id;
+                    mark['value'] = value;
+                    advantage.push(mark);
                 }
             });
-            advantage = advantage.substring(0,advantage.length - 1);
-            $("#advantage").val(advantage);
+            var advantage_str = JSON.stringify(advantage);
+            $("#advantage").val(advantage_str);
 
             /*if($("#longitude").val() == "" || $("#latitude").val() == "" ){
                 locationSearch();
