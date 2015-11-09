@@ -21,10 +21,14 @@ use Think\Hook;
 class UserController extends AppController
 {
     //注册 只有手机号
-    public function registerByMobile($mobile, $password, $group=0, $school="") {
+    public function registerByMobile($mobile, $password, $group=0, $school="", $nickname=null) {
+        if(empty($nickname)){
+            $str = $this->getRandChar(8);
+            $nickname = "嘿设汇-".$str;
+        }
         //调用用户中心
         $api = new UserApi();
-        $uid = $api->register($mobile, $mobile, $password, $mobile.'@hisihi.com', $mobile); // 邮箱
+        $uid = $api->register($mobile, $nickname, $password, $mobile.'@hisihi.com', $mobile); // 邮箱
         if($uid <= 0) {
             $message = $this->getRegisterErrorMessage($uid);
             $code = $this->getRegisterErrorCode($uid);
@@ -2121,6 +2125,16 @@ class UserController extends AppController
         $output = curl_exec($ch);
         curl_close($ch);
         return $output;
+    }
+
+    function getRandChar($length){
+        $str = null;
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $max = strlen($strPol)-1;
+        for($i=0;$i<$length;$i++){
+            $str.=$strPol[rand(0,$max)];
+        }
+        return $str;
     }
 
     public function autoFollow(){

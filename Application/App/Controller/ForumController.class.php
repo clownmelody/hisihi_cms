@@ -276,6 +276,7 @@ class ForumController extends AppController
         if($field_type == -4){  // 热门
             $order = "reply_count desc";
         }
+        $map['is_top'] = 0;
         $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
         $list = $this->list_sort_by($list, 'last_reply_time');
         $totalCount = D('ForumPost')->where($map)->count();
@@ -749,7 +750,7 @@ class ForumController extends AppController
         $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
-        $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
+        $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $replyTotalCount = 0;
         foreach($replyTotalList as $t_reply){
             $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
@@ -852,11 +853,12 @@ class ForumController extends AppController
         $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'support_count desc, create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
-        $replyTotalList = D('ForumPostReply')->field('uid')->where($map)->select();
+        $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $replyTotalCount = 0;
         foreach($replyTotalList as $t_reply){
-            $identify = $model->where('group_id=5 and uid='.$t_reply['uid'])->find();  // 判断老师身份
-            if($identify){
+            $identify = $model->where('group_id=5 and uid='.$t_reply['uid'])->find();  // 判断学生身份
+            $toStudent = $t_reply['reply_to_student'];
+            if($identify||$toStudent==1){
                 $replyTotalCount++;
             }
         }
@@ -892,12 +894,12 @@ class ForumController extends AppController
             $map_support['table'] = 'reply';
             $map_support['row'] = $reply['reply_id'];
 
-            $supportCount = $this->getSupportCountCache($map_support);
+            //$supportCount = $this->getSupportCountCache($map_support);
 
             $map_supported = array_merge($map_support, array('uid' => is_login()));
             $supported = D('Support')->where($map_supported)->count();
 
-            $reply['supportCount'] = $supportCount;
+            //$reply['supportCount'] = $supportCount;
             $reply['isSupportd'] = $supported;
 
             //解析并成立图片数据
@@ -908,25 +910,7 @@ class ForumController extends AppController
             $reply['content'] = op_t($reply['content']);
 
             unset($reply['user']);
-            /*$lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc', $page, $limit=10, false);
-            foreach ($lzlList as &$lzl) {
-                $lzl['lzl_id'] = $lzl['id'];
-                unset($lzl['id']);
-                $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
-                unset($lzl['uid']);
 
-                $map_pos['type'] = 2;
-                $map_pos['id'] = $lzl['lzl_id'];
-                $pos = $this->getForumPos($map_pos);
-                $lzl['pos'] = $pos['pos'];
-
-                unset($pos);
-                unset($map_pos);
-
-                $lzl['img'] = $this->match_img($lzl['content']);
-                $lzl['content'] = op_t($lzl['content']);
-                $lzl['sound'] = $this->fetchSound($lzl['lzl_id'],2);
-            }*/
             $reply['lzlList'] = null;
             $studentReplyList[] = $reply;
         }
@@ -1108,13 +1092,16 @@ class ForumController extends AppController
         }
 
         // 写入用户作品表
-        $user_works_data['uid'] = is_login();
-        $user_works_data['forum_id'] = $forum_id;
-        $user_works_data['post_id'] = $post_id;
-        $user_works_data['picture_id'] = $pictures_ids_str;
-        $user_works_data['create_time'] = NOW_TIME;
-        $user_works_model = D('User/UserWorks');
-        $user_works_model->saveWorks($user_works_data);
+        $pictures_ids_list = explode(',',$pictures_ids_str);
+        foreach ($pictures_ids_list as $pic_id) {
+            $user_works_data['uid'] = is_login();
+            $user_works_data['forum_id'] = $forum_id;
+            $user_works_data['post_id'] = $post_id;
+            $user_works_data['picture_id'] = $pic_id;
+            $user_works_data['create_time'] = NOW_TIME;
+            $user_works_model = D('User/UserWorks');
+            $user_works_model->saveWorks($user_works_data);
+        }
 
         /* -- 记录自动回复数据 -- */
         if($at_type == 1){
@@ -1480,7 +1467,6 @@ class ForumController extends AppController
                 $post_content = $post_info['content'];
         } else if($type == 'reply') {
             $message_uid = D('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->getField('uid');
-            M('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->setInc('support_count');
         }
         $support['appname'] = 'Forum';
         $support['table'] = $type;
@@ -1495,6 +1481,7 @@ class ForumController extends AppController
                 $this->clearCache($support);
                 $user = query_user(array('username'));
 
+                M('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->setInc('support_count');
                 // 发送推送通知
                 if($type == 'post'){
                     $source_id = $id;
@@ -1554,7 +1541,6 @@ class ForumController extends AppController
             $message_uid = D('ForumPost')->where(array('id' => intval($id), 'status' => 1))->getField('uid');
         } else if($type == 'reply') {
             $message_uid = D('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->getField('uid');
-            M('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->setDec('support_count');
         }
         $support['appname'] = 'Forum';
         $support['table'] = $type;
@@ -1563,6 +1549,7 @@ class ForumController extends AppController
 
         if (D('Support')->where($support)->count()) {
             if (D('Support')->where($support)->delete()) {
+                M('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->setDec('support_count');
                 $this->clearCache($support);
                 $user = query_user(array('username'));
                 //取消点赞不需要消息
