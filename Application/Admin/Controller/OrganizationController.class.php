@@ -80,9 +80,50 @@ class OrganizationController extends AdminController
             $this->error($Model->getError());
         }
         $marks = M('OrganizationConfig')->where(array('status'=>1,'type'=>2))->field('id,value')->select();
-        $markarray = explode("#",$data['advantage']);
-        $this->assign('_markarray', $markarray);
-        $this->assign('_marks', $marks);
+        //解析json格式的标签
+        $advantage = $data['advantage'];
+        $advantage = stripslashes($advantage);
+        $advantage = json_decode($advantage,true);
+        $advantage_array = array();
+        $cmodel = M('OrganizationConfig');
+        foreach($advantage as &$markid){
+            $advantageid = $markid['id'];
+            if(0 == $advantageid){
+                $markobj = array(
+                    'id'=>(string)$markid['id'],
+                    'value'=>$markid['value'],
+                    'ischecked'=>1
+                );
+                $advantage_array[] = $markobj;
+            }else{
+                $markarr = $cmodel->field('id,value')->where('type=2 and status=1 and id='.$advantageid)->find();
+                if($markarr){
+                    $markobj = array(
+                        'id'=>$markarr['id'],
+                        'value'=>$markarr['value'],
+                        'ischecked'=>1
+                    );
+                    $advantage_array[] = $markobj;
+                }
+            }
+        }
+        //组合公用标签和自定义标签，用ischecked判断
+        $all_marks = $advantage_array;
+        foreach($marks as $mark){
+            $is_exist = false;
+            foreach($advantage_array as $advantage_mark){
+                if($mark['id'] == $advantage_mark['id']){
+                    $is_exist = true;
+                }
+            }
+            if(!$is_exist){
+                $mark['ischecked'] = 0;
+                $all_marks[] = $mark;
+            }
+        }
+
+        $this->assign('_markarray', $advantage_array);
+        $this->assign('_marks', $all_marks);
         $this->assign('organization', $data);
         $this->meta_title = '编辑机构信息';
         $this->display();
@@ -446,17 +487,37 @@ class OrganizationController extends AdminController
     /**
      * 机构配置列表
      */
-    public function config()
+    public function config($organization_id=0)
     {
         $configvalue = I('configvalue');
         if(!empty($configvalue)){
             $map['value'] = array('like', '%' . (string)$configvalue . '%');
         }
         $model = D('OrganizationConfig');
+        if($organization_id){
+            $map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where(array('organization_id'=>$organization_id))->getField('name');
+        }
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
         $list = $model->where($map)->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as $config){
+            if($organization_id){
+                $config['organization_name'] = $organization_name;
+            }else{
+                if($config['organization_id']){
+                    $config['organization_name'] = M('Organization')->where(array('organization_id'=>$config['organization_id']))->getField('name');
+                }else{
+                    $config['organization_name'] = '公用';
+                }
+            }
+        }
+
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
+        }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -520,7 +581,14 @@ class OrganizationController extends AdminController
         $config = D('OrganizationConfig');
         $map = array('id' => array('in', $id) );
         $result = $config->where($map)->save(Array('status'=>-1));
-        if($result){
+        foreach($id as $config_id){
+            $organization_id[] = $config->where(array('id'=>$config_id))->getField('organization_id');
+        }
+        $organization_id = array_unique($organization_id);
+        $filter_map['organization_id'] = array('in',$organization_id);
+        $filter_map['teacher_group_id'] = array('in',$id);
+        $res = M('OrganizationRelation')->where($filter_map)->save(array('status'=>-1));
+        if($result && $res){
             $this->success('删除成功', U('config'));
         } else {
             $this->error('删除失败');

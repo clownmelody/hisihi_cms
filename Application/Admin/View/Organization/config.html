@@ -3,7 +3,8 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>机构配置信息列表(共：{$total|default=0} 条)</h2>
+        <h2>{$organization_name|default='机构'}-配置信息列表(共：{$total|default=0} 条)</h2>
+        <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id | default=0}"/>
     </div>
     <div class="cf">
         <div class="fl">
@@ -32,6 +33,7 @@
                 <th class="">配置类型</th>
                 <th class="">配置值</th>
                 <th class="">创建时间</th>
+                <th class="">所属机构</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
             </tr>
@@ -45,11 +47,13 @@
                         <td>
                             <if condition="$vo.type eq 1">机构认证
                                 <elseif condition="$vo.type eq 2"/>机构优势
+                                <elseif condition="$vo.type eq 1001"/>机构分组
                                 <elseif condition="$vo.type eq 1002"/>视频分类
                                 <else /> 其它
                             </if>
                         </td>
                         <td>{$vo.value}</td>
+                        <td>{$vo.organization_name}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
@@ -86,6 +90,10 @@
                 url += '&' + query;
             } else {
                 url += '?' + query;
+            }
+            var organization_id = $("#organization_id").val();
+            if(organization_id != 0){
+                url += '&organization_id=' + organization_id;
             }
             window.location.href = url;
         });
