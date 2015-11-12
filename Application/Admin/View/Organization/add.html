@@ -26,14 +26,20 @@
                         </div>
                     </div>
                     <div class="form-item cf">
+                        <label class="item-label">所在城市</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="city" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
                         <label class="item-label">机构地址</label>
                         <div class="controls">
                             <input type="text" id="location" class="text input-large" name="location" value="">
-                            <input type="hidden" id="longitude" class="text input-large" name="longitude" value="">
+<!--                            <input type="hidden" id="longitude" class="text input-large" name="longitude" value="">
                             <input type="hidden" id="latitude" class="text input-large" name="latitude" value="">
                             <button class="btn" style="margin-left: 20px;" onclick="javascript:locationSearch();return false;">查  找</button>
                             <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
-                            <div id="allmap"></div>
+                            <div id="allmap"></div>-->
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -43,12 +49,27 @@
                         </div>
                     </div>
                     <div class="form-item cf">
+                        <label class="item-label">机构类型</label>
+                        <div class="controls">
+                            <notempty name="_type">
+                                <ul class="dowebok" id="type_list">
+                                    <volist name="_type" id="vo">
+                                        <li><input type="checkbox" id="{$vo.id}" data-labelauty="{$vo.value}" value="{$vo.value}"></li>
+                                    </volist>
+                                </ul>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                            <input type="hidden" class="text input-large" name="type" id="type" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
                         <label class="item-label">优势标签</label>
                         <div class="controls">
                                 <notempty name="_list">
-                                    <ul class="dowebok">
+                                    <ul class="dowebok" id="advantage_list">
                                     <volist name="_list" id="vo">
-                                        <li><input type="checkbox" id="{$vo.id}" data-labelauty="{$vo.value}"></li>
+                                        <li><input type="checkbox" id="{$vo.id}" data-labelauty="{$vo.value}" value="{$vo.value}"></li>
                                     </volist>
                                     </ul>
                                     <else/>
@@ -61,6 +82,18 @@
                         <label class="item-label">机构基本信息</label>
                         <div class="controls">
                             <input type="text" class="text input-large" name="introduce" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构担保名额（默认200名）</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="guarantee_num" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构浏览量（默认1000）</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="view_count" value="">
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -128,13 +161,13 @@
 <block name="script">
     <link href="__STATIC__/labelauty/jquery-labelauty.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="__STATIC__/labelauty/jquery-labelauty.js"></script>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=fajluFy9hkTUcOBXLZHU5HpK"></script>
-    <!--[if IE 6]>
+<!--    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=fajluFy9hkTUcOBXLZHU5HpK"></script>
+    &lt;!&ndash;[if IE 6]>
     <script type="text/javascript" src="http://dev.baidu.com/wiki/static/map/tuan/js/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix("#float_search_bar");</script>
-    <![endif]-->
+    <![endif]&ndash;&gt;-->
     <style>
-        #allmap{  border: 1px solid #bfd2e1;  width: 500px;  height: 400px;  font-family: Arial, Helvetica, sans-serif,"宋体";  }
+/*        #allmap{  border: 1px solid #bfd2e1;  width: 500px;  height: 400px;  font-family: Arial, Helvetica, sans-serif,"宋体";  }*/
 
         .dowebok{list-style-type: none;}
         .dowebok li{display: inline-block;}
@@ -143,30 +176,50 @@
     </style>
     <script>
         //导航高亮
-        //highlight_subnav('{:U('Organization/organizationinfo')}');
+        highlight_subnav('{:U('Organization/index')}');
         $(function() {
             $(':input').labelauty();
         });
         function setAdvantage(){
             var advantage = "";
-            $.each($(".dowebok li"),function(i,n){
+            $.each($("#advantage_list li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
                 var input = li.find("input");
                 var classattr = span.attr("class");
+                var id = input.attr("id");
+                var value = input.val();
                 if(classattr == "labelauty-checked-image"){
-                    advantage += (input.attr("id") + "#");
+                    var mark = {};
+                    mark['id'] = id;
+                    mark['value'] = value;
+                    advantage.push(mark);
                 }
             });
-            advantage = advantage.substring(0,advantage.length - 1);
-            $("#advantage").val(advantage);
+            var advantage_str = JSON.stringify(advantage);
+            $("#advantage").val(advantage_str);
 
-            if($("#longitude").val() == "" || $("#latitude").val() == "" ){
+            var type = "";
+            $.each($("#type_list li"),function(i,n){
+                var li = $(this);
+                var span = li.find("span:visible");
+                var input = li.find("input");
+                var classattr = span.attr("class");
+                var id = input.attr("id");
+                var value = input.val();
+                if(classattr == "labelauty-checked-image"){
+                    type += (input.attr("id") + "#");
+                }
+            });
+            var type_str = type.substring(0,type.length - 1);
+            $("#type").val(type_str);
+
+            /*if($("#longitude").val() == "" || $("#latitude").val() == "" ){
                 locationSearch();
-            }
+            }*/
         }
 
-        // 百度地图API功能
+/*        // 百度地图API功能
         var map = new BMap.Map("allmap");
         var point = new BMap.Point(116.331398,39.897445);
         map.centerAndZoom(point,12);
@@ -245,7 +298,7 @@
                 onSearchComplete: myFun
             });
             local.search(myValue);
-        }
+        }*/
     </script>
 </block>
 

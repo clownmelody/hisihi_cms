@@ -3,22 +3,22 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>{$organization_name|default='机构'}-配置信息列表(共：{$total|default=0} 条)</h2>
+        <h2>{$organization_name|default='机构'}-认证配置信息列表(共：{$total|default=0} 条)</h2>
         <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id | default=0}"/>
     </div>
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <a class="btn" href="{:U('Organization/config_add')}">新 增</a>
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/config_delete',array('status'=>-1))}">删 除</button>
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/config_restore',array('status'=>1))}">启 用</button>
+                <a class="btn" href="{:U('Organization/authentication_config_add')}">新 增</a>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/authentication_config_delete',array('status'=>-1))}">删 除</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/authentication_config_restore',array('status'=>1))}">启 用</button>
             </div>
         </div>
         <div class="search-form fr cf">
             <div class="sleft">
-                <input type="text" name="configvalue" class="search-input" value="{:I('configvalue')}"
+                <input type="text" name="name" class="search-input" value="{:I('name')}"
                        placeholder="请输入配置值">
-                <a class="sch-btn" href="javascript:;" id="search" url="{:U('config')}"><i class="btn-search"></i></a>
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('authentication_config')}"><i class="btn-search"></i></a>
             </div>
         </div>
     </div>
@@ -30,9 +30,8 @@
             <tr>
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
-                <th class="">配置类型</th>
-                <th class="">配置值</th>
-                <th class="">所属机构</th>
+                <th class="">认证名称</th>
+                <th class="">图片ID</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -44,25 +43,16 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>
-                            <if condition="$vo.type eq 1">机构认证
-                                <elseif condition="$vo.type eq 2"/>机构优势
-                                <elseif condition="$vo.type eq 3"/>机构类型
-                                <elseif condition="$vo.type eq 1001"/>教师分组
-                                <elseif condition="$vo.type eq 1002"/>视频分类
-                                <else /> 其它
-                            </if>
-                        </td>
-                        <td>{$vo.value}</td>
-                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.pic_id}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                             </if>
                         </td>
                         <td>
-                            <a href="{:U('Organization/config_edit?id='.$vo['id'])}" class="confirm">编辑</a>
-                            <a href="{:U('Organization/config_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('Organization/authentication_config_edit?id='.$vo['id'])}" class="confirm">编辑</a>
+                            <a href="{:U('Organization/authentication_config_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
                 </volist>
@@ -119,6 +109,6 @@
             }
         });
         //导航高亮
-        highlight_subnav("{:U('User/index')}");
+        highlight_subnav("{:U('organization/authentication_config')}");
     </script>
 </block>
