@@ -11,7 +11,7 @@
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <!--<button class="btn document_add" url="{:U('add')}">新 增</button>-->
+                <button class="btn document_add" url="{:U('add')}">新 增</button>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/delete",array("status"=>-1))}">删 除</button>
             </div>
         </div>
@@ -35,7 +35,7 @@
                 <th class="" style="width: 100px;">机构名称</th>
                 <th class="" style="width: 100px;">地址</th>
                 <th class="">联系电话</th>
-                <th class="" >认证状态</th>
+                <th class="" >审核状态</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -52,9 +52,9 @@
                         <td>{$vo.phone_num}</td>
                         <td >
                             <if condition="($vo.identification eq 2) "> 已认证
-                                <elseif condition="($vo.identification eq 1)" />申请中
-                                <elseif condition="($vo.identification eq 0)" />未申请
-                                <elseif condition="($vo.identification eq -2)" />已拒绝
+                                <elseif condition="($vo.application_status eq 1)" />申请中
+                                <elseif condition="($vo.application_status eq 2)" />已审核
+                                <elseif condition="($vo.application_status eq -2)" />已拒绝
                             </if>
                         </td>
                         <td><span>{$vo.create_time|time_format}</span></td>
@@ -69,6 +69,8 @@
                             <a href="{:U('organization/works?organization_id='.$vo['id'])}" >作品</a>
                             <a href="{:U('organization/comment?organization_id='.$vo['id'])}" >评论</a>
                             <a href="{:U('organization/config?organization_id='.$vo['id'])}" >配置</a>
+                            <a href="{:U('organization/authentication_add?organization_id='.$vo['id'])}" >认证</a>
+                            <a href="{:U('organization/enroll_add?organization_id='.$vo['id'])}" >报名</a>
                             <a href="{:U('organization/edit?id='.$vo['id'])}" >编辑</a>
                             <a href="{:U('organization/delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>

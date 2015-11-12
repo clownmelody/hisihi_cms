@@ -1,0 +1,52 @@
+<extend name="Public/base" />
+<block name="body">
+    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+    <div class="main-title cf">
+        <h2>新增机构认证信息</h2>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="tab-wrap">
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('authentication_update')}" method="post" class="form-horizontal doc-modal-form">
+                <input type="hidden" name="id" id="id" value=""/>
+                <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id}"/>
+                <!-- 基础 -->
+                <div id="tab1" class="tab-pane in tab1">
+                    <div class="form-item cf">
+                        <label class="item-label">认证机构：{$organization_name}</label>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">认证类型</label>
+                        <div class="controls">
+                            <notempty name="authentication_list">
+                                <select class="text input-large" name="authentication_id" style="height: 30px;width: 400px;">
+                                    <volist name="authentication_list" id="vo">
+                                        <option value="{$vo.id}" >{$vo.name}</option>
+                                    </volist>
+                                </select>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                        </div>
+                    </div>
+
+                <!-- 按钮 -->
+                <div class="form-item cf">
+                    <label class="item-label"></label>
+                    <div class="controls edit_sort_btn">
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">申请</button>
+                        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+
+<script>
+    //导航高亮
+    highlight_subnav('{:U('Organization/authentication')}');
+</script>
+
