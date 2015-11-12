@@ -1,0 +1,73 @@
+<extend name="Public/base" />
+<block name="body">
+    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+    <div class="main-title cf">
+        <h2>新增机构报名信息</h2>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="tab-wrap">
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('enroll_update')}" method="post" class="form-horizontal doc-modal-form">
+                <input type="hidden" name="id" id="id" value="{$info.id}"/>
+                <input type="hidden" name="organization_id" id="organization_id" value="{$info.organization_id}"/>
+                <!-- 基础 -->
+                <div id="tab1" class="tab-pane in tab1">
+                    <div class="form-item cf">
+                        <label class="item-label">报名机构：{$info.organization}</label>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">学生uid：{$info.student_uid}</label>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">学生姓名</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="student_name" value="{$info.student_name}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                       <label class="item-label">学生电话</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="phone_num" value="{$info.phone_num}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">所在大学</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="student_university" value="{$info.student_university}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">选择课程</label>
+                        <div class="controls">
+                            <notempty name="course_list">
+                                <select class="text input-large" name="course_id" style="height: 30px;width: 400px;">
+                                    <volist name="course_list" id="vo">
+                                        <option value="{$vo.id}" <eq name="vo['id']" value="info['course_id']">selected</eq>{$vo.title}</option>
+                                    </volist>
+                                </select>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                        </div>
+                    </div>
+                </div>
+                <!-- 按钮 -->
+                <div class="form-item cf">
+                    <label class="item-label"></label>
+                    <div class="controls edit_sort_btn">
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">报名</button>
+                        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+
+<script>
+    //导航高亮
+    highlight_subnav('{:U('Organization/enroll')}');
+</script>
+

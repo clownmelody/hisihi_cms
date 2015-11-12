@@ -39,15 +39,15 @@ class OrganizationController extends AdminController
     public function index(){
         $model = M('Organization');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 5);
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];
         if($name){
             $map['name'] = array('like','%'.$name.'%');
-            $list = $model->where($map)->where("status=1")->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($map)->where("status=1")->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('status=1')->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
 
         $this->assign('_list', $list);
@@ -62,8 +62,10 @@ class OrganizationController extends AdminController
      */
     public function add(){
         $model = $this->organization_configModel;
-        $list = $model->where("type=2")->order("create_time")->select();
+        $list = $model->where("type=2 and status=1")->order("create_time")->select();
+        $type = $model->where("type=3 and status=1")->order("create_time")->select();
         $this->assign('_list', $list);
+        $this->assign('_type', $type);
         $this->display();
     }
     /**
@@ -79,6 +81,9 @@ class OrganizationController extends AdminController
         if(!$data){
             $this->error($Model->getError());
         }
+        $type_array = M('OrganizationConfig')->where(array('status'=>1,'type'=>3))->field('id,value')->select();
+        $_type_array = explode("#",$data['type']);
+
         $marks = M('OrganizationConfig')->where(array('status'=>1,'type'=>2))->field('id,value')->select();
         //解析json格式的标签
         $advantage = $data['advantage'];
@@ -122,7 +127,8 @@ class OrganizationController extends AdminController
             }
         }
 
-        $this->assign('_markarray', $advantage_array);
+        $this->assign('_type', $type_array);
+        $this->assign('type_array', $_type_array);
         $this->assign('_marks', $all_marks);
         $this->assign('organization', $data);
         $this->meta_title = '编辑机构信息';
@@ -139,13 +145,15 @@ class OrganizationController extends AdminController
             $data["name"] = $_POST["name"];
             $data["slogan"] = $_POST["slogan"];
             $data["location"] = $_POST["location"];
+            $data["city"] = $_POST["city"];
 //            $data["latitude"] = $_POST["latitude"];
 //            $data["longitude"] = $_POST["longitude"];
             $data["phone_num"] = $_POST["phone_num"];
-            //$data["advantage"] = implode("#",$_POST["advantage"]);
+            $data["type"] = $_POST["type"];
             $data["advantage"] = $_POST["advantage"];
             $data["introduce"] = $_POST["introduce"];
-//            $data["certification"] = $_POST["certification"];
+            $data["guarantee_num"] = $_POST["guarantee_num"];
+            $data["view_count"] = $_POST["view_count"];
             $data["logo"] = $_POST["picture"];
             if(empty($cid)){
                 try {
@@ -155,6 +163,15 @@ class OrganizationController extends AdminController
                         $this->error($model->getError());
                     }else{
                         $id = $res;
+                        //添加到机构创建申请
+                        $application = array(
+                            'organization_id'=>$id,
+                            'name'=>$data['name'],
+                            'create_time'=>time(),
+                            'update_time'=>time()
+                        );
+                        M('OrganizationApplication')->add($application);
+
                         //上传图片到OSS
                         $picid = $model->where('id='.$id)->getField('logo');
                         if($picid){
@@ -481,6 +498,520 @@ class OrganizationController extends AdminController
             $this->success('删除成功','index.php?s=/admin/organization/works');
         } else {
             $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 机构报名信息列表
+     */
+    public function enroll($organization_id=0){
+        $model = M('OrganizationEnroll');
+        //根据状态查询
+        $status = I('status');
+        if(!empty($status)){
+            $filter_map['status'] = $status;
+        }else{
+            $filter_map['status'] = array('neq',-1);
+        }
+        //从机构列表跳转
+        if($organization_id){
+            $filter_map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+        }
+        $count = $model->where($filter_map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        //用于机构名称搜索
+        $name = $_GET["title"];
+        if(!$organization_id && $name){
+            $map['name'] = array('like','%'.$name.'%');
+            $map['status']=1;
+            $oid = M('Organization')->where($map)->field('id')->select();
+            $organization_id = array();
+            foreach($oid as $org_id){
+                $organization_id[] = $org_id['id'];
+            }
+            $filter_map['organization_id'] = array('in',$organization_id);
+            $list = $model->where($filter_map)->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where($filter_map)->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+
+        foreach($list as &$enroll){
+            if($organization_id){
+                $enroll['organization'] = $organization_name;
+            }else{
+                $enroll['organization'] = M('Organization')->where(array('id'=>$enroll['organization_id'],'status'=>1))->getField('name');
+            }
+            $enroll['course_name'] = M('OrganizationCourse')
+                ->where(array('id'=>$enroll['course_id'],'status'=>1))->getField('title');
+        }
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构报名信息");
+        $this->display();
+    }
+
+    /**
+     * 添加报名
+     * @param int $organization_id
+     */
+    public function enroll_add($organization_id=0){
+        if($organization_id){
+            $organization = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->field('name,application_status')->find();
+            if($organization['application_status'] != 2){
+                $this->error("该机构未通过审核机构",'index.php?s=/admin/organization/index',1);
+            }
+            $course_list = M('OrganizationCourse')->where('status=1 and organization_id='.$organization_id)->select();
+            $this->assign('organization_id',$organization_id);
+            $this->assign('organization_name',$organization['name']);
+            $this->assign('course_list',$course_list);
+            $this->display();
+        }else{
+            $this->error("未选择机构");
+        }
+    }
+
+    /**
+     * 机构报名信息更新
+     */
+    public  function enroll_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationEnroll');
+            $cid = $_POST["id"];
+            $data["organization_id"] = $_POST["organization_id"];
+            $data['course_id'] = $_POST["course_id"];
+            $data['student_uid'] = $_POST["student_uid"];
+            $data['student_name'] = $_POST["student_name"];
+            $data['phone_num'] = $_POST["phone_num"];
+            $data['student_university'] = $_POST["student_university"];
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('报名成功', 'index.php?s=/admin/organization/enroll');
+            } else {
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                $this->success('修改成功', 'index.php?s=/admin/organization/enroll');
+            }
+        } else {
+            $this->display('enroll_add');
+        }
+    }
+
+    /**
+     * 编辑认证信息
+     * @param $id
+     */
+    public function enroll_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationEnroll');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
+        $course_list = M('OrganizationCourse')->where('status=1 and organization_id='.$data['organization_id'])->select();
+        $this->assign('info', $data);
+        $this->assign('course_list', $course_list);
+        $this->display();
+    }
+
+    /**
+     * 删除机构认证信息
+     * @param $id
+     */
+    public function enroll_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationEnroll');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/enroll');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 认证通过
+     */
+    public function Enroll_pass($id){
+        if(!empty($id)){
+            $model = M('OrganizationEnroll');
+            $data['status'] = 2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('认证通过','index.php?s=/admin/organization/enroll');
+        } else {
+            $this->error('未选择要认证的数据');
+        }
+    }
+
+    /**
+     * 认证拒绝
+     */
+    public function enroll_refuse($id){
+        if(!empty($id)){
+            $model = M('OrganizationEnroll');
+            $data['status'] = -2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('拒绝认证成功','index.php?s=/admin/organization/enroll');
+        } else {
+            $this->error('未选择要拒绝的数据');
+        }
+    }
+
+
+    /**
+     * 机构认证信息列表
+     */
+    public function authentication($organization_id=0){
+        $model = M('OrganizationAuthentication');
+        //根据状态查询
+        $status = I('status');
+        if(!empty($status)){
+            $filter_map['status'] = $status;
+        }else{
+            $filter_map['status'] = array('neq',-1);
+        }
+        //从机构列表跳转
+        if($organization_id){
+            $filter_map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+        }
+        $count = $model->where($filter_map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        //用于用户名称搜索
+        $name = $_GET["title"];
+        if(!$organization_id && $name){
+            $map['name'] = array('like','%'.$name.'%');
+            $map['status']=1;
+            $oid = M('Organization')->where($map)->field('id')->select();
+            $organization_id = array();
+            foreach($oid as $org_id){
+                $organization_id[] = $org_id['id'];
+            }
+            $filter_map['organization_id'] = array('in',$organization_id);
+            $list = $model->where($filter_map)->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where($filter_map)->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+
+        foreach($list as &$authentication){
+            if($organization_id){
+                $authentication['organization'] = $organization_name;
+            }else{
+                $authentication['organization'] = M('Organization')->where(array('id'=>$authentication['organization_id'],'status'=>1))->getField('name');
+            }
+            $authentication['authentication_name'] = M('OrganizationAuthenticationConfig')
+                ->where(array('id'=>$authentication['authentication_id'],'status'=>1))->getField('name');
+        }
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构认证信息");
+        $this->display();
+    }
+
+    public function authentication_add($organization_id=0){
+        if($organization_id){
+
+            $organization = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->field('name,application_status')->find();
+            if($organization['application_status'] != 2){
+                $this->error("该机构未通过审核机构",'index.php?s=/admin/organization/index',1);
+            }
+            $authentication_list = M('OrganizationAuthenticationConfig')->where('status=1')->select();
+            $this->assign('organization_id',$organization_id);
+            $this->assign('organization_name',$organization['name']);
+            $this->assign('authentication_list',$authentication_list);
+            $this->display();
+        }else{
+            $this->error("未选择机构");
+        }
+    }
+
+    /**
+     * 机构认证信息更新
+     */
+    public  function authentication_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationAuthentication');
+            $cid = $_POST["id"];
+            $data["authentication_id"] = $_POST["authentication_id"];
+            $data['organization_id'] = $_POST["organization_id"];
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/organization/authentication');
+            } else {
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                $this->success('更新成功', 'index.php?s=/admin/organization/authentication');
+            }
+        } else {
+            $this->display('authentication_add');
+        }
+    }
+
+    /**
+     * 编辑认证信息
+     * @param $id
+     */
+    public function authentication_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationAuthentication');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
+        $this->assign('info', $data);
+        $this->display();
+    }
+
+    /**
+     * 删除机构认证信息
+     * @param $id
+     */
+    public function authentication_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationAuthentication');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/authentication');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 认证通过
+     */
+    public function authentication_pass($id){
+        if(!empty($id)){
+            $model = M('OrganizationAuthentication');
+            $data['status'] = 2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('认证通过','index.php?s=/admin/organization/authentication');
+        } else {
+            $this->error('未选择要认证的数据');
+        }
+    }
+
+    /**
+     * 认证拒绝
+     */
+    public function authentication_refuse($id){
+        if(!empty($id)){
+            $model = M('OrganizationAuthentication');
+            $data['status'] = -2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('拒绝认证成功','index.php?s=/admin/organization/authentication');
+        } else {
+            $this->error('未选择要拒绝的数据');
+        }
+    }
+
+
+    /**
+     * 认证配置列表
+     */
+    public function authentication_config()
+    {
+        $configvalue = I('name');
+        if(!empty($configvalue)){
+            $map['name'] = array('like', '%' . (string)$configvalue . '%');
+        }
+        $map['status'] = 1;
+        $model = M('OrganizationAuthenticationConfig');
+        $count = $model->where($map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构配置");
+        $this->display();
+    }
+
+    /**
+     * 机构认证配置编辑
+     *
+     */
+    public function authentication_config_add(){
+        $this->display();
+    }
+
+    /**
+     * 机构认证配置编辑
+     * @param $id
+     */
+    public function authentication_config_edit($id){
+        $config = D('OrganizationAuthenticationConfig');
+        $info = $config->where('status=1 and id='.$id)->find();
+        $this->assign('info', $info);
+        $this->meta_title = '编辑机构认证配置';
+        $this->display();
+    }
+
+    /**
+     * 机构认证配置添加和修改
+     */
+    public function authentication_config_update(){
+        if(IS_POST){
+            $Config = M('OrganizationAuthenticationConfig');
+            $id = $_POST['id'];
+            $data['name'] = $_POST['name'];
+            $data['pic_id'] = $_POST['picture'];
+            if(empty($id)){
+                if($data){
+                    $data['create_time'] = time();
+                    $res = $Config->add($data);
+                    if($res){
+                        $this->uploadLogoPicToOSS($res);
+                        $this->success('新增成功', U('authentication_config'));
+                    } else {
+                        $this->error('新增失败');
+                    }
+                } else {
+                    $this->error($Config->getError());
+                }
+            } else {
+                $result = $Config->where('id='.$id)->save($data);
+                if($result){
+                    $this->uploadLogoPicToOSS($data['pic_id']);
+                    $this->success('编辑成功', U('authentication_config'));
+                } else {
+                    $this->error('编辑失败');
+                }
+            }
+        } else {
+            $this->meta_title = '新增配置';
+            $this->assign('info',null);
+            $this->display('authentication_config_add');
+        }
+    }
+
+    /**
+     * 机构认证配置删除
+     * @param $ids
+     */
+    public function authentication_config_delete(){
+        $id = array_unique((array)I('id',0));
+        if (empty($id)) {
+            $this->error('请选择要操作的数据!');
+        }
+        $config = D('OrganizationAuthenticationConfig');
+        $map = array('id' => array('in', $id) );
+        $result = $config->where($map)->save(Array('status'=>-1));
+
+        $filter_map['authentication_id'] = array('in',$id);
+        $res = M('OrganizationAuthentication')->where($filter_map)->save(array('status'=>-1));
+        if($result && $res){
+            $this->success('删除成功', U('authentication_config'));
+        } else {
+            $this->error('删除失败');
+        }
+    }
+
+    /**
+     * 机构配置信息从删除中恢复
+     */
+    public function authentication_config_restore(){
+        $id = array_unique((array)I('id',0));
+        if (empty($id)) {
+            $this->error('请选择要操作的数据!');
+        }
+        $config = D('OrganizationAuthenticationConfig');
+        $map = array('id' => array('in', $id) );
+        $result = $config->where($map)->save(Array('status'=>1));
+        if($result){
+            $this->success('启用成功', U('authentication_config'));
+        } else {
+            $this->error('启用失败');
         }
     }
 
@@ -1081,6 +1612,84 @@ class OrganizationController extends AdminController
             $this->success('删除成功','index.php?s=/admin/organization/course');
         } else {
             $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 机构证书
+     */
+    public function application(){
+        $name = I('name');
+        if(!empty($name)){
+            $map['name'] = array('like', '%' . (string)$name . '%');
+        }
+        $status = I('status');
+        if(!empty($status)){
+            $map['status'] = $status;
+        }else{
+            $map['status'] = array('neq',-1);
+        }
+        $model = D('OrganizationApplication');
+        $count = $model->where($map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构创建申请");
+        $this->display();
+    }
+
+    /**
+     * 审核通过
+     */
+    public function application_pass($id){
+        if(!empty($id)){
+            $model = M('OrganizationApplication');
+            $data['status'] = 2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                    $organization_id = $model->where('id='.$i)->getField('organization_id');
+                    M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>2));
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+                $organization_id = $model->where('id='.$id)->getField('organization_id');
+                M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>2));
+            }
+            $this->success('审核通过','index.php?s=/admin/organization/application');
+        } else {
+            $this->error('未选择要审核的数据');
+        }
+    }
+
+    /**
+     * 认证拒绝
+     */
+    public function application_refuse($id){
+        if(!empty($id)){
+            $model = M('OrganizationApplication');
+            $data['status'] = -2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                    $organization_id = $model->where('id='.$i)->getField('organization_id');
+                    M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>-2));
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+                $organization_id = $model->where('id='.$id)->getField('organization_id');
+                M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>-2));
+            }
+            $this->success('拒绝申请成功','index.php?s=/admin/organization/application');
+        } else {
+            $this->error('未选择要拒绝的数据');
         }
     }
 

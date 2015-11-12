@@ -750,7 +750,9 @@ class OrganizationController extends AppController
         $model = M('OrganizationConfig');
         $data['status'] = -1;
         $result = $model->where('id='.$teacher_group_id)->save($data);
-        if($result){
+        $organization_id = $model->where(array('id'=>$teacher_group_id))->getField('organization_id');
+        $res = M('OrganizationRelation')->where(array('organization_id'=>$organization_id,'teacher_group_id'=>$teacher_group_id))->save($data);
+        if($result && $res){
             $this->apiSuccess('删除成功');
         } else {
             $this->apiError(-1, '删除失败');
@@ -966,7 +968,8 @@ class OrganizationController extends AppController
             $model = M('OrganizationCourse');
             $data['status'] = -1;
             $result = $model->where(array('id'=>$id))->save($data);
-            if($result){
+            $res = M('OrganizationVideo')->where(array('course_id'=>$id))->save($data);
+            if($result && $res){
                 $this->apiSuccess("删除成功");
             }else{
                 $this->apiError(-1,"删除失败");
