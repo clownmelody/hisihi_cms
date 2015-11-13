@@ -53,14 +53,20 @@
             height:6em;
             padding:0.75em;
             border-bottom: 1px solid #bdbdbd;
+        }
+        .newsListContainer li a{
+            width: 100%;
+            height: 100%;
+            display: block;
             position: relative;
         }
         .newsListContainer li .left{
-
-        }
-        .newsListContainer li .left img{
             width: 4.5em;
             height: 4.5em;
+        }
+        .newsListContainer li .left img{
+            width: 100%;
+            height: 100%;
         }
         .newsListContainer li .right{
             position: absolute;
@@ -115,7 +121,7 @@
 </body>
 <script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 <script>
-    var server_url = 'http://' + '{$Think.server.HTTP_HOST}';
+    var server_url = 'http://' + '{$Think.server.HTTP_HOST}'+'/hisihi-cms';
 
     /*
      *拓展Date方法。得到格式化的日期形式 基本是什么格式都支持
@@ -180,7 +186,7 @@
                 if(pageIndex>this.totalPage){
                     return;
                 }
-                $loadinng=this.$wrapper.find('loadingTip').show();
+                $loadinng=this.$wrapper.find('#loadingTip').show();
                 var tempObj = {
                             pageIndex: pageIndex,
                             count: this.pageSize
@@ -208,10 +214,10 @@
              */
             getNewsContent:function(data){
                 var str = '',title, len = data.length, item,dateStr;
-                for (vari = 0; i < len; i++) {
+                for (var i = 0; i < len; i++) {
                     item = data[i];
-                    title=that.substrLongStr(item.title,30);
-                    dateStr=that.getTimeFromTimestamp(item.create_time).split('-');
+                    title=this.substrLongStr(item.title,30);
+                    dateStr=this.getTimeFromTimestamp(item.create_time);
                     str += '<li class="newsLiItem"><a href="'+item.url+'">' +
                                 '<div class="left">' +
                                     '<img src="' + item.pic_url + '"/>' +
@@ -263,7 +269,7 @@
 
         };
 
-        new hisihiNews();
+        new hisihiNews($('.wrapper'));
     });
 </script>
 </html>
