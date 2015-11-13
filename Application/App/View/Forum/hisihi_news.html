@@ -14,15 +14,20 @@
 </head>
 <body>
     <a href="javascript:void(0)">点击调用app的方法</a>
+    </br>
+    </br>
+    app返回的用户id:
+    <lable id="helloweb"></lable>
 </body>
 <script>
     function funFromjs(){
-        document.getElementById("helloweb").innerHTML="我是JS里的方法";
+//        document.getElementById("helloweb").innerHTML="我是JS里的方法";
     }
     var aTag = document.getElementsByTagName('a')[0];
     aTag.addEventListener('click', function(){
         //调用android本地方法
-        AppFunction.show("Js调用show()方法成功！！！！！！");
+        var resutl = AppFunction.show("今天是2015.11.13，过年有年终奖不？！！！！！！");
+        document.getElementById("helloweb").innerHTML=resutl;
         return false;
     }, false);
 </script>
