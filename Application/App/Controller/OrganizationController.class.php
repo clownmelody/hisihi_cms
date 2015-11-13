@@ -1290,12 +1290,11 @@ class OrganizationController extends AppController
         $data['comprehensive_score'] = $comprehensiveScore;
         $data['comment'] = $content;
         $data['create_time'] = time();
-        //$res = $commentModel->add($data);
-        if(1){
+        $res = $commentModel->add($data);
+        if($res){
             unset($data['comprehensive_score']);
             unset($data['comment']);
             $scoreList = json_decode($strScoreList, true);
-            dump($strScoreList);
             foreach($scoreList as $score){
                 $id = $score['id'];
                 $score = $score['score'];
