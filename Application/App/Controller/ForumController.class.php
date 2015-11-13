@@ -1688,12 +1688,12 @@ class ForumController extends AppController
             $objKey = substr($path, 17);
             $param["bucketName"] = "hisihi-other";
             $param['objectKey'] = $objKey;
-            if(file_exists('.'.$path)){
-                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
-                if($isExist){
-                    $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
-                }
+            //if(file_exists('.'.$path)){
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
             }
+            //}
         }
         return $picUrl;
     }
