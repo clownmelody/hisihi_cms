@@ -2,33 +2,268 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="Resource-type" content="Document" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="Resource-type" content="Document"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta http-equiv="Expires" content="0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
     <title>嘿设汇新闻列表</title>
+    <style>
+        *::after, *::before {
+            box-sizing: border-box;
+        }
+
+        ul li {
+            list-style-type: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #ececec;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        .wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            overflow: auto;
+        }
+        .wrapper *{
+            font-size: 1em;
+        }
+        .newsListContainer{
+            margin:0em;
+            width: 100%;
+        }
+        .newsListContainer li{
+            width: 100%;
+            height:6em;
+            padding:0.75em;
+            border-bottom: 1px solid #bdbdbd;
+            position: relative;
+        }
+        .newsListContainer li .left{
+
+        }
+        .newsListContainer li .left img{
+            width: 4.5em;
+            height: 4.5em;
+        }
+        .newsListContainer li .right{
+            position: absolute;
+            padding-left:5.25em ;
+        }
+        .newsListContainer li .right {
+            position: absolute;
+            padding-left: 5.25em;
+        }
+        .newsListContainer li .right .rightHeader{
+            height: 3.25em;
+        }
+        .newsListContainer li .right .rightHeader p{
+            color: #212121;
+        }
+        .newsListContainer li .right .rightBottom{
+            position: absolute;
+            bottom: 0;
+            height:1.25em;
+        }
+        .newsListContainer li .right .rightBottom span{
+            color: #dbdbdb;
+        }
+        .newsListContainer li .right .rightBottom span:nth-child(1){
+            float: left;
+        }
+        .newsListContainer li .right .rightBottom i{
+            background: url('__IMG__/look.png') 0 0 no-repeat;
+            display: inline-block;
+            height: 1em;
+            width: 2em;
+            margin-right:0.25em;
+        }
+        .newsListContainer li .right .rightBottom span:nth-child(2){
+            float: right;
+        }
+        .loadingResultTips{
+            display: none;
+            text-align: center;
+            color: #FF7324;
+            clear:both;
+        }
+    </style>
 </head>
 <body>
-    <a href="javascript:void(0)">点击调用app的方法</a>
-    </br>
-    </br>
-    app返回的用户id:
-    <lable id="helloweb"></lable>
+<div class="wrapper">
+    <ul class="newsListContainer">
+        <div id="loadingTip" class="loadingResultTips">数据加载中……</div>
+        <div id="error" class="loadingResultTips"></div>
+    </ul>
+</div>
 </body>
+<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 <script>
-    function funFromjs(){
-//        document.getElementById("helloweb").innerHTML="我是JS里的方法";
+    var server_url = 'http://' + '{$Think.server.HTTP_HOST}';
+
+    /*
+     *拓展Date方法。得到格式化的日期形式 基本是什么格式都支持
+     *date.format('yyyy-MM-dd')，date.format('yyyy/MM/dd'),date.format('yyyy.MM.dd')
+     *date.format('dd.MM.yy'), date.format('yyyy.dd.MM'), date.format('yyyy-MM-dd HH:mm')   等等都可以
+     *使用方法 如下：
+     *                       var date = new Date();
+     *                       var todayFormat = date.format('yyyy-MM-dd'); //结果为2015-2-3
+     *Parameters:
+     *format - {string} 目标格式 类似('yyyy-MM-dd')
+     *Returns - {string} 格式化后的日期 2015-2-3
+     *
+     */
+    Date.prototype.format = function (format) {
+        format=format || 'yyyy-MM-dd';
+        var o = {
+            "M+": this.getMonth() + 1, //month
+            "d+": this.getDate(), //day
+            "h+": this.getHours(), //hour
+            "m+": this.getMinutes(), //minute
+            "s+": this.getSeconds(), //second
+            "q+": Math.floor((this.getMonth() + 3) / 3), //quarter
+            "S": this.getMilliseconds() //millisecond
+        }
+        if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+                (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o) if (new RegExp("(" + k + ")").test(format))
+            format = format.replace(RegExp.$1,
+                    RegExp.$1.length == 1 ? o[k] :
+                            ("00" + o[k]).substr(("" + o[k]).length));
+        return format;
     }
-    var aTag = document.getElementsByTagName('a')[0];
-    aTag.addEventListener('click', function(){
-        //调用android本地方法
-        var resutl = AppFunction.show("今天是2015.11.13，过年有年终奖不？！！！！！！");
-        document.getElementById("helloweb").innerHTML=resutl;
-        return false;
-    }, false);
+
+    $(function () {
+
+        var hisihiNews = function ($wrapper) {
+            this.$wrapper = $wrapper;
+            this.pageIndex = 1;
+            this.pageSize = 20;
+            this.totalPage=1;
+            this.loadData(1);
+            this.$wrapper.on('scroll',$(this,'scrollContainer'));
+        };
+
+        hisihiNews.prototype = {
+            /*
+            *加载新闻列表数据
+            * para:
+            * pageIndex - {int} 当前的页码数
+            */
+            loadData: function (pageIndex) {
+                var that=this;
+                this.getDataAsync(pageIndex);
+            },
+
+             /*
+             *向服务器请求新闻列表数据，计算总的页码数，并填充内容
+             * para:
+             * pageIndex - {int} 当前的页码数
+             */
+            getDataAsync: function (pageIndex) {
+                if(pageIndex>this.totalPage){
+                    return;
+                }
+                $loadinng=this.$wrapper.find('loadingTip').show();
+                var tempObj = {
+                            pageIndex: pageIndex,
+                            count: this.pageSize
+                        },
+                        url = server_url + '/api.php?s=/forum/newsList',
+                        that = this;
+                $.post(url, tempObj, function (result) {
+                    $loadinng.hide();
+                    if(result.success) {
+                        that.totalPage=Math.ceil(result.totalCount/that.pageSize);
+                        that.pageIndex++;
+                        $loadinng.before(that.getNewsContent(result.data));
+                    }else{
+                        $loadinng.next().text(result.massage).show().delay(2000).hide(0);
+                    }
+                });
+            },
+
+            /*
+             *填充内容
+             * para:
+             * data - {array} 结果数据
+             * return
+             * str - {string} 内容字符串
+             */
+            getNewsContent:function(data){
+                var str = '',title, len = data.length, item,dateStr;
+                for (vari = 0; i < len; i++) {
+                    item = data[i];
+                    title=that.substrLongStr(item.title,30);
+                    dateStr=that.getTimeFromTimestamp(item.create_time).split('-');
+                    str += '<li class="newsLiItem"><a href="'+item.url+'">' +
+                                '<div class="left">' +
+                                    '<img src="' + item.pic_url + '"/>' +
+                                '</div>' +
+                                '<div class="right">' +
+                                    '<div class="rightHeader">' +
+                                        '<p>'+title+'</p>' +
+                                    '</div>' +
+                                    '<div class="rightBottom">'+
+                                        '<span>'+
+                                            '<i class="viewTimesIcon"></i>'+
+                                            '<span>'+item.view_count +'</span>'+
+                                        '</span>'+
+                                        '<span>'+ dateStr + '</span>'+
+                                    '</div>' +
+                                '</div>' +
+                            '</a></li>';
+                }
+                return str;
+            },
+
+            /*
+             *滚动加载更多的数据
+             */
+            scrollContainer:function(){
+                var target= e.currentTarget,
+                    height = target.scrollHeight - $(target).height();
+                if ($(target).scrollTop() == height) {  //滚动到底部
+                    this.loadData(this.pageIndex);
+                }
+            },
+
+            /*
+             *字符串截取
+             * para
+             * str - {string} 目标字符串
+             * len - {int} 最大长度
+             */
+            substrLongStr: function (str, len) {
+                if (str.length > len) {
+                    str = str.substr(0, parseInt(len - 1)) + '……';
+                }
+                return str;
+            },
+            getTimeFromTimestamp:function (dateInfo, dateFormat) {
+                return new Date(parseFloat(dateInfo) * 1000).format(dateFormat);
+            },
+
+
+        };
+
+        new hisihiNews();
+    });
 </script>
 </html>
