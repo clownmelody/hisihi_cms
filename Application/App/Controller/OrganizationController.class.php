@@ -1102,7 +1102,7 @@ class OrganizationController extends AppController
     /**
      * 获取机构列表
      * @param null $city
-     * @param null $category
+     * @param null $type
      * @param int $page
      * @param int $count
      */
@@ -1110,19 +1110,23 @@ class OrganizationController extends AppController
         $model = M('Organization');
         if(!empty($city)&&!empty($type)){
             $org_list = $model->field('id, name, slogan, city, view_count, logo')
-                ->where("application_status=2 and status=1 and city like '%".$city."% and type=".$type)->page($page, $count)->select();
+                ->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->page($page, $count)->select();
+            $totalCount = $model->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->count();
         }
         if(!empty($city)&&empty($type)){
             $org_list = $model->field('id, name, slogan, city, view_count, logo')
-                ->where("application_status=2 and status=1 and city like '%".$city."%")->page($page, $count)->select();
+                ->where("application_status=2 and status=1 and city like '%".$city."%'")->page($page, $count)->select();
+            $totalCount = $model->where("application_status=2 and status=1 and city like '%".$city."%'")->count();
         }
         if(empty($city)&&!empty($type)){
             $org_list = $model->field('id, name, slogan, city, view_count, logo')
                 ->where("application_status=2 and status=1 and type=".$type)->page($page, $count)->select();
+            $totalCount = $model->where("application_status=2 and status=1 and type=".$type)->count();
         }
         if(empty($city)&&empty($type)){
             $org_list = $model->field('id, name, slogan, city, view_count, logo')
                 ->where("application_status=2 and status=1")->page($page, $count)->select();
+            $totalCount = $model->where("application_status=2 and status=1")->count();
         }
         foreach($org_list as &$org){
             $org_id = $org['id'];
@@ -1132,8 +1136,36 @@ class OrganizationController extends AppController
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
         }
+        $data['totalCount'] = $totalCount;
         $data['list'] = $org_list;
         $this->apiSuccess('获取机构列表成功', null, $data);
+    }
+
+    /**
+     * 机构名称搜索
+     * @param null $name
+     * @param int $page
+     * @param int $count
+     */
+    public function searchOrganization($name=null, $page=1, $count=10){
+        if(empty($name)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $model = M('Organization');
+        $org_list = $model->field('id, name, slogan, city, view_count, logo')
+                ->where("application_status=2 and status=1 and name like '%".$name."%'")->page($page, $count)->select();
+        $totalCount = $model->where("application_status=2 and status=1 and name like '%".$name."%'")->count();
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            $logo_id = $org['logo'];
+            $org['logo'] = $this->fetchImage($logo_id);
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getEnrollCount($org_id);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('搜索机构成功', null, $data);
     }
 
     /**
@@ -1193,7 +1225,7 @@ class OrganizationController extends AppController
                 $config['status'] = false;
             }
         }
-        return $config;
+        return $config_list;
     }
 
     /**
