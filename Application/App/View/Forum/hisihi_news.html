@@ -13,7 +13,9 @@
     <title>嘿设汇新闻列表</title>
     <style>
         *::after, *::before {
-            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -o-box-sizing: border-box;
         }
 
         ul li {
@@ -23,10 +25,13 @@
         * {
             margin: 0;
             padding: 0;
+            font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+
         }
 
         body {
             background: #ececec;
+            font-size:1em;
         }
 
         img {
@@ -49,58 +54,70 @@
             width: 100%;
         }
         .newsListContainer li{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -o-box-sizing: border-box;
             width: 100%;
             height:6em;
             padding:0.75em;
-            border-bottom: 1px solid #bdbdbd;
+            border-bottom: 0.0625em solid #bdbdbd;
         }
         .newsListContainer li a{
             width: 100%;
             height: 100%;
             display: block;
             position: relative;
+            text-decoration: none;
         }
         .newsListContainer li .left{
             width: 4.5em;
             height: 4.5em;
+            position: absolute;
         }
         .newsListContainer li .left img{
             width: 100%;
             height: 100%;
         }
         .newsListContainer li .right{
-            position: absolute;
             padding-left:5.25em ;
         }
         .newsListContainer li .right {
-            position: absolute;
             padding-left: 5.25em;
+            height: 100%;
         }
         .newsListContainer li .right .rightHeader{
             height: 3.25em;
+            width: 100%;
         }
         .newsListContainer li .right .rightHeader p{
             color: #212121;
+            text-decoration: none;
         }
         .newsListContainer li .right .rightBottom{
-            position: absolute;
-            bottom: 0;
             height:1.25em;
+            width: 100%;
         }
-        .newsListContainer li .right .rightBottom span{
+        .newsListContainer li .right .rightBottom *{
+            font-size: 0.9em;
+        }
+        .newsListContainer li .right .rightBottom div{
             color: #dbdbdb;
+            display: inline-block;
         }
-        .newsListContainer li .right .rightBottom span:nth-child(1){
+        .newsListContainer li .right .rightBottomLeft{
             float: left;
         }
         .newsListContainer li .right .rightBottom i{
-            background: url('__IMG__/look.png') 0 0 no-repeat;
+            /*background: url('__IMG__/viewTimes.png') 0 0 no-repeat;*/
             display: inline-block;
-            height: 1em;
-            width: 2em;
+            height: 1.2em;
+            width: 1.2em;
             margin-right:0.25em;
         }
-        .newsListContainer li .right .rightBottom span:nth-child(2){
+        .newsListContainer li .right .rightBottom i img{
+            max-width: 100%;
+        }
+        .newsListContainer li .right .rightBottomRight{
             float: right;
         }
         .loadingResultTips{
@@ -163,7 +180,7 @@
             this.pageSize = 20;
             this.totalPage=1;
             this.loadData(1);
-            this.$wrapper.on('scroll',$(this,'scrollContainer'));
+            this.$wrapper.scroll($.proxy(this,'scrollContainer'));
         };
 
         hisihiNews.prototype = {
@@ -193,16 +210,20 @@
                         },
                         url = server_url + '/api.php?s=/forum/newsList',
                         that = this;
-                $.post(url, tempObj, function (result) {
+                window.setTimeout(function() {
                     $loadinng.hide();
-                    if(result.success) {
-                        that.totalPage=Math.ceil(result.totalCount/that.pageSize);
-                        that.pageIndex++;
-                        $loadinng.before(that.getNewsContent(result.data));
-                    }else{
-                        $loadinng.next().text(result.massage).show().delay(2000).hide(0);
-                    }
-                });
+                    $loadinng.before(that.getNewsContent());
+                },2000);
+//                $.post(url, tempObj, function (result) {
+//                    $loadinng.hide();
+//                    if(result.success) {
+//                        that.totalPage=Math.ceil(result.totalCount/that.pageSize);
+//                        that.pageIndex++;
+//                        $loadinng.before(that.getNewsContent(result.data));
+//                    }else{
+//                        $loadinng.next().text(result.massage).show().delay(2000).hide(0);
+//                    }
+//                });
             },
 
             /*
@@ -213,10 +234,11 @@
              * str - {string} 内容字符串
              */
             getNewsContent:function(data){
+                data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"0","is_out_link":"0","link_url":"","url":"http://dev.hisihi.com/app.php/forum/topPostDetail/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"0","is_out_link":"0","link_url":"","url":"http://dev.hisihi.com/app.php/forum/topPostDetail/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
                 var str = '',title, len = data.length, item,dateStr;
                 for (var i = 0; i < len; i++) {
                     item = data[i];
-                    title=this.substrLongStr(item.title,30);
+                    title=this.substrLongStr(item.title,25);
                     dateStr=this.getTimeFromTimestamp(item.create_time);
                     str += '<li class="newsLiItem"><a href="'+item.url+'">' +
                                 '<div class="left">' +
@@ -227,22 +249,25 @@
                                         '<p>'+title+'</p>' +
                                     '</div>' +
                                     '<div class="rightBottom">'+
-                                        '<span>'+
-                                            '<i class="viewTimesIcon"></i>'+
+                                        '<div class="rightBottomLeft">'+
+                                            '<i class="viewTimesIcon"><img src="__IMG__/viewTimes.png"/></i>'+
                                             '<span>'+item.view_count +'</span>'+
-                                        '</span>'+
-                                        '<span>'+ dateStr + '</span>'+
+                                        '</div>'+
+                                        '<div class="rightBottomRight">'+ dateStr + '</div>'+
                                     '</div>' +
                                 '</div>' +
                             '</a></li>';
                 }
+                str+=str;
+                str+=str;
+                str+=str;
                 return str;
             },
 
             /*
              *滚动加载更多的数据
              */
-            scrollContainer:function(){
+            scrollContainer:function(e){
                 var target= e.currentTarget,
                     height = target.scrollHeight - $(target).height();
                 if ($(target).scrollTop() == height) {  //滚动到底部

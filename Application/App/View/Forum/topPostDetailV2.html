@@ -24,6 +24,7 @@
 	}
 	body{
 		background: #ececec;
+		font-size: 100%;
 	}
 	img {
 		width: 100%;
@@ -130,6 +131,25 @@
 		margin: 0 auto;
 		display: none;
 	}
+	#comment-box{
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		height:1em;
+	}
+	#comment-box textarea{
+		padding-right: 2em;
+		height: 100%;
+		border: none;
+		border-bottom: 0.0625em solid #CCCCCC;
+	}
+	#comment-box input{
+		width: 2em;
+		height: 100%;
+		background-color: #003366;
+		position: absolute;
+		right: 0;
+	}
 	</style>
 </head>
 <body>
@@ -200,6 +220,10 @@
 			</svg>
 			<a href="javascript:void(0);" class="box-btn" onclick="getMoreReplay();">点击加载更多</a>
 		</div>
+	</div>
+	<div id="comment-box">
+		<textarea placeholder="写评论"></textarea>
+		<input type="button" value="发送"/>
 	</div>
 	<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 	<script>
