@@ -1169,6 +1169,147 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 获取机构公告头条信息
+     * @param int $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function topPost($organization_id=0, $page=1, $count=10){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构ID不能为空');
+        }
+        $model = M('OrganizationNotice');
+        $totalCount = $model->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->count();
+        $list = $model->field('id, tag, title, create_time')->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
+        foreach($list as &$notice){
+            $notice['detail_url'] = 'http://dev.hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构公告列表成功', null, $extra);
+    }
+
+    /**
+     * 获取用户报名信息
+     * @param int $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function enrollList($organization_id=0, $page=1, $count=3){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构ID不能为空');
+        }
+        $model = M('OrganizationEnroll');
+        $list = $model->field('student_name, create_time')->where('status=1 and organization_id='.$organization_id)
+            ->page($page, $count)->select();
+        foreach($list as &$user){
+            $user['student_name'] = mb_substr($user['student_name'],0,1,'utf-8') . '**';
+        }
+        $extra['data'] = $list;
+        $this->apiSuccess('获取报名列表成功', null, $extra);
+    }
+
+    /**
+     * 获取机构的分数统计
+     * @param int $organization_id
+     */
+    public function fractionalStatistics($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构ID不能为空');
+        }
+        $configModel = M('OrganizationConfig');
+        $commentModel = M('OrganizationComment');
+        $commentStarModel = M('OrganizationCommentStar');
+        $comprehensiveScore = $commentModel->where('status=1 and organization_id='.$organization_id)->avg('comprehensive_score');
+        $configList = $configModel->field('id, value')->where('status=1 and type=5 and organization_id=0')->select();
+        foreach($configList as &$config){
+            $config_id = $config['id'];
+            $score = $commentStarModel->where('status=1 and organization_id='.$organization_id.' and comment_type='.$config_id)
+                ->avg('star');
+            $config['score'] = round($score, 1);
+        }
+        $extra['comprehensiveScore'] = round($comprehensiveScore, 1);
+        $extra['data'] = $configList;
+        $this->apiSuccess('获取评论统计分数成功', null, $extra);
+    }
+
+    /**
+     * 获取机构的评论列表
+     * @param int $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function commentList($organization_id=0, $page=1, $count=10){
+        $model = M('OrganizationComment');
+        $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
+        $list = $model->where('status=1 and organization_id='.$organization_id)->page($page, $count)->select();
+        foreach($list as &$comment){
+            $uid = $comment['uid'];
+            $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
+            unset($comment['id']);
+            unset($comment['organization_id']);
+            unset($comment['uid']);
+            unset($comment['status']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构评论列表成功', null, $extra);
+    }
+
+    /**
+     * 获取机构评分种类的列表
+     */
+    public function getCommentScoreList(){
+        $configModel = M('OrganizationConfig');
+        $configList = $configModel->field('id, value')->where('status=1 and type=5 and organization_id=0')->select();
+        $extra['data'] = $configList;
+        $this->apiSuccess('获取评分种类列表成功', null, $extra);
+    }
+
+    /**
+     * 用户评论机构
+     * @param int $organization_id
+     * @param int $uid
+     * @param int $comprehensiveScore
+     * @param null $content
+     * @param null $strScoreList
+     */
+    public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null, $strScoreList=null){
+        if(empty($content)||empty($strScoreList)||$organization_id==0||$uid==0){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $relationModel = M('OrganizationRelation');
+        $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.$uid)->find();
+        if(!$isExist){
+            $this->apiError(-2, '你不是该机构学员，不允许评论');
+        }
+        $commentModel = M('OrganizationComment');
+        $commentStarModel = M('OrganizationCommentStar');
+        $data['organization_id'] = $organization_id;
+        $data['uid'] = $uid;
+        $data['comprehensive_score'] = $comprehensiveScore;
+        $data['comment'] = $content;
+        $data['create_time'] = time();
+        //$res = $commentModel->add($data);
+        if(1){
+            unset($data['comprehensive_score']);
+            unset($data['comment']);
+            $scoreList = json_decode($strScoreList, true);
+            dump($strScoreList);
+            foreach($scoreList as $score){
+                $id = $score['id'];
+                $score = $score['score'];
+                $data['comment_type'] = $id;
+                $data['star'] = $score;
+                $commentStarModel->add($data);
+            }
+        } else {
+            $this->apiError(-1, '评论失败');
+        }
+        $this->apiSuccess('评论成功');
+    }
+
+    /**
      * @param int $organization_id
      */
     public function followOrganization($organization_id=0){
