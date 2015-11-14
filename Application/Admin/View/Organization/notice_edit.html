@@ -11,6 +11,7 @@
             <!-- 表单 -->
             <form id="form" action="{:U('notice_update')}" method="post" class="form-horizontal doc-modal-form">
                 <input type="hidden" name="cid" id="cid" value="{$info.id}"/>
+                <input type="hidden" name="organization_id" id="organization_id" value="{$info.organization_id}"/>
                 <!-- 基础 -->
                 <div id="tab1" class="tab-pane in tab1">
                     <div class="form-item cf">
@@ -20,12 +21,25 @@
                         </div>
                     </div>
                     <div class="form-item cf">
+                        <label class="item-label">公告标签</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="tag" value="{$info.tag}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
                         <label class="item-label">公告内容</label>
                         <div class="controls">
                             <label class="textarea">
                                 <textarea name="content">{$info.content}</textarea>
                                 {:hook('adminArticleEdit', array('name'=>'content','value'=>$info.content))}
                             </label>
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">是否对APP展示</label>
+                        <div class="controls">
+                            <input type="radio"  name="push_to_organization" value="1" <eq name="info['push_to_organization']" value="1">checked</eq>>是&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="radio"  name="push_to_organization" value="0" <eq name="info['push_to_organization']" value="0">checked</eq>>否
                         </div>
                     </div>
                 </div>

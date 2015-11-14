@@ -52,7 +52,9 @@
                             </if>
                         </td>
                         <td>
-                            <a href="{:U('Organization/relation_edit?id='.$vo['id'])}" >编辑</a>
+                            <eq name="vo['group']" value="6">
+                                <a href="{:U('Organization/relation_edit?id='.$vo['id'])}" >编辑</a>
+                            </eq>
                             <a href="{:U('Organization/relation_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
