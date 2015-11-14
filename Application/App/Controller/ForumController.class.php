@@ -686,7 +686,7 @@ class ForumController extends AppController
         $map_support['table'] = 'post';
         $map_support['row'] = $post_id;
         $totalCount = M('Support')->where($map_support)->count();
-        $list = M('Support')->field('uid')->where($map_support)->page($page, $count)->select();
+        $list = M('Support')->field('uid')->where($map_support)->page($page, $count)->order('create_time desc')->select();
         foreach($list as &$user){
             $c_uid = $user['uid'];
             $user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $c_uid);
@@ -1644,7 +1644,7 @@ class ForumController extends AppController
             ->order('create_time desc')->page($page, $count)->select();
         $totalCount = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')->count();
         foreach($list as &$value){
-            $value['url'] = 'http://dev.hisihi.com/app.php/forum/topPostDetailV2/post_id/'.$value['id'];
+            $value['url'] = 'http://dev.hisihi.com/app.php/forum/toppostdetailv2/post_id/'.$value['id'];
             $value['pic_url'] = $this->fetchImageFromOSS($value['cover_id']);
             unset($value['uid']);
             unset($value['forum_id']);
@@ -1704,7 +1704,7 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function topPostDetailV2($post_id, $page=1, $count=10)
+    public function toppostdetailv2($post_id, $page=1, $count=10)
     {
         //$this->requireLogin();
 
@@ -1811,7 +1811,7 @@ class ForumController extends AppController
         $this->assign('post_img', $post['img']);
         $this->assign('replyList',$replyList);
         $this->setTitle('{$post.title|op_t} — 嘿设汇');
-        $this->display('topPostDetailV2');
+        $this->display('toppostdetailv2');
     }
 
     /**
