@@ -390,7 +390,7 @@
 		 commentObj.prototype={
 
 			controlCommentBoxStatus:function(){
-				if(!this.userInfo.section_id){
+				if(!this.userInfo.session_id){
 					this.$wrapper.hide();
 					return;
 				}
@@ -407,11 +407,11 @@
 					 that.showCommentTips.call(that,'内容为空');
 					 return;
 				 }
-				 if(!this.userInfo.section_id){
+				 if(!this.userInfo.session_id){
 					 return;
 				 }
 				 $target.addClass('disabled');
-				 $.post(this.server_url+'/doReply',{post_id:$('#postid').val(),section_id:this.userInfo.section_id,content:str},function(result){
+				 $.post(this.server_url+'/doReply',{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},function(result){
 					 var tip
 					if(result.success){
 						$textarea.val('');
