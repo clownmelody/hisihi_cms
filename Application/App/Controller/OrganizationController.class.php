@@ -1055,6 +1055,347 @@ class OrganizationController extends AppController
         }
     }
 
+    public function location(){
+        $ip = get_client_ip();
+        $ch = curl_init();
+        $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
+        $header = array(
+            'apikey: e1edb99789e6a40950685b5e3f0ee282',
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch , CURLOPT_URL , $url);
+        $res = curl_exec($ch);
+        $res = json_decode($res);
+        if($res->errNum==0){
+            $data['city'] = $res->retData->content->address_detail->city;
+            $this->apiSuccess('获取位置成功', null, $data);
+        } else {
+            $data['city'] = '武汉';
+            $this->apiSuccess('定位失败，返回默认城市', null, $data);
+        }
+    }
+
+    /**
+     * 获取城市列表数据
+     */
+    public function getCityList(){
+        $list = json_decode('{"list":[{"province":"北京","city":[{"city":"北京", "code":"101010100"}]},{"province":"天津市","市":[{"city":"天津", "code":"101030100"}]},{"province":"上海","市":[{"city":"上海", "code":"101020100"}]},{"province":"河北","市":[{"city":"石家庄","code":"101090101"},{"city":"张家口","code":"101090301"},{"city":"承德","code":"101090402"},{"city":"唐山","code":"101090501"},{"city":"秦皇岛","code":"101091101"},{"city":"沧州","code":"101090701"},{"city":"衡水","code":"101090801"},{"city":"邢台","code":"101090901"},{"city":"邯郸","code":"101091001"},{"city":"保定","code":"101090201"},{"city":"廊坊","code":"101090601"}]},{"province":"河南","市":[{"city":"郑州","code":"101180101"},{"city":"新乡","code":"101180301"},{"city":"许昌","code":"101180401"},{"city":"平顶山","code":"101180501"},{"city":"信阳","code":"101180601"},{"city":"南阳","code":"101180701"},{"city":"开封","code":"101180801"},{"city":"洛阳","code":"101180901"},{"city":"商丘","code":"101181001"},{"city":"焦作","code":"101181101"},{"city":"鹤壁","code":"101181201"},{"city":"濮阳","code":"101181301"},{"city":"周口","code":"101181401"},{"city":"漯河","code":"101181501"},{"city":"驻马店","code":"101181601"},{"city":"三门峡","code":"101181701"},{"city":"济源","code":"101181801"},{"city":"安阳","code":"101180201"}]},{"province":"安徽","市":[{"city":"合肥","code":"101220101"},{"city":"芜湖","code":"101220301"},{"city":"淮南","code":"101220401"},{"city":"马鞍山","code":"101220501"},{"city":"安庆","code":"101220601"},{"city":"宿州","code":"101220701"},{"city":"阜阳","code":"101220801"},{"city":"亳州","code":"101220901"},{"city":"黄山","code":"101221001"},{"city":"滁州","code":"101221101"},{"city":"淮北","code":"101221201"},{"city":"铜陵","code":"101221301"},{"city":"宣城","code":"101221401"},{"city":"六安","code":"101221501"},{"city":"巢湖","code":"101221601"},{"city":"池州","code":"101221701"},{"city":"蚌埠","code":"101220201"}]},{"province":"浙江","市":[{"city":"杭州","code":"101210101"},{"city":"舟山","code":"101211101"},{"city":"湖州","code":"101210201"},{"city":"嘉兴","code":"101210301"},{"city":"金华","code":"101210901"},{"city":"绍兴","code":"101210501"},{"city":"台州","code":"101210601"},{"city":"温州","code":"101210701"},{"city":"丽水","code":"101210801"},{"city":"衢州","code":"101211001"},{"city":"宁波","code":"101210401"}]},{"province":"重庆","市":[{"city":"重庆","code":"101040100"},{"city":"合川","code":"101040300"},{"city":"南川","code":"101040400"},{"city":"江津","code":"101040500"},{"city":"万盛","code":"101040600"},{"city":"渝北","code":"101040700"},{"city":"北碚","code":"101040800"},{"city":"巴南","code":"101040900"},{"city":"长寿","code":"101041000"},{"city":"黔江","code":"101041100"},{"city":"万州天城","code":"101041200"},{"city":"万州龙宝","code":"101041300"},{"city":"涪陵","code":"101041400"},{"city":"开县","code":"101041500"},{"city":"城口","code":"101041600"},{"city":"云阳","code":"101041700"},{"city":"巫溪","code":"101041800"},{"city":"奉节","code":"101041900"},{"city":"巫山","code":"101042000"},{"city":"潼南","code":"101042100"},{"city":"垫江","code":"101042200"},{"city":"梁平","code":"101042300"},{"city":"忠县","code":"101042400"},{"city":"石柱","code":"101042500"},{"city":"大足","code":"101042600"},{"city":"荣昌","code":"101042700"},{"city":"铜梁","code":"101042800"},{"city":"璧山","code":"101042900"},{"city":"丰都","code":"101043000"},{"city":"武隆","code":"101043100"},{"city":"彭水","code":"101043200"},{"city":"綦江","code":"101043300"},{"city":"酉阳","code":"101043400"},{"city":"秀山","code":"101043600"},{"city":"沙坪坝","code":"101043700"},{"city":"永川","code":"101040200"}]},{"province":"福建","市":[{"city":"福州","code":"101230101"},{"city":"泉州","code":"101230501"},{"city":"漳州","code":"101230601"},{"city":"龙岩","code":"101230701"},{"city":"晋江","code":"101230509"},{"city":"南平","code":"101230901"},{"city":"厦门","code":"101230201"},{"city":"宁德","code":"101230301"},{"city":"莆田","code":"101230401"},{"city":"三明","code":"101230801"}]},{"province":"甘肃","市":[{"city":"兰州","code":"101160101"},{"city":"平凉","code":"101160301"},{"city":"庆阳","code":"101160401"},{"city":"武威","code":"101160501"},{"city":"金昌","code":"101160601"},{"city":"嘉峪关","code":"101161401"},{"city":"酒泉","code":"101160801"},{"city":"天水","code":"101160901"},{"city":"武都","code":"101161001"},{"city":"临夏","code":"101161101"},{"city":"合作","code":"101161201"},{"city":"白银","code":"101161301"},{"city":"定西","code":"101160201"},{"city":"张掖","code":"101160701"}]},{"province":"广东","市":[{"city":"广州","code":"101280101"},{"city":"惠州","code":"101280301"},{"city":"梅州","code":"101280401"},{"city":"汕头","code":"101280501"},{"city":"深圳","code":"101280601"},{"city":"珠海","code":"101280701"},{"city":"佛山","code":"101280800"},{"city":"肇庆","code":"101280901"},{"city":"湛江","code":"101281001"},{"city":"江门","code":"101281101"},{"city":"河源","code":"101281201"},{"city":"清远","code":"101281301"},{"city":"云浮","code":"101281401"},{"city":"潮州","code":"101281501"},{"city":"东莞","code":"101281601"},{"city":"中山","code":"101281701"},{"city":"阳江","code":"101281801"},{"city":"揭阳","code":"101281901"},{"city":"茂名","code":"101282001"},{"city":"汕尾","code":"101282101"},{"city":"韶关","code":"101280201"}]},{"province":"广西","市":[{"city":"南宁","code":"101300101"},{"city":"柳州","code":"101300301"},{"city":"来宾","code":"101300401"},{"city":"桂林","code":"101300501"},{"city":"梧州","code":"101300601"},{"city":"防城港","code":"101301401"},{"city":"贵港","code":"101300801"},{"city":"玉林","code":"101300901"},{"city":"百色","code":"101301001"},{"city":"钦州","code":"101301101"},{"city":"河池","code":"101301201"},{"city":"北海","code":"101301301"},{"city":"崇左","code":"101300201"},{"city":"贺州","code":"101300701"}]},{"province":"贵州","市":[{"city":"贵阳","code":"101260101"},{"city":"安顺","code":"101260301"},{"city":"都匀","code":"101260401"},{"city":"兴义","code":"101260906"},{"city":"铜仁","code":"101260601"},{"city":"毕节","code":"101260701"},{"city":"六盘水","code":"101260801"},{"city":"遵义","code":"101260201"},{"city":"凯里","code":"101260501"}]},{"province":"云南","市":[{"city":"昆明","code":"101290101"},{"city":"红河","code":"101290301"},{"city":"文山","code":"101290601"},{"city":"玉溪","code":"101290701"},{"city":"楚雄","code":"101290801"},{"city":"普洱","code":"101290901"},{"city":"昭通","code":"101291001"},{"city":"临沧","code":"101291101"},{"city":"怒江","code":"101291201"},{"city":"香格里拉","code":"101291301"},{"city":"丽江","code":"101291401"},{"city":"德宏","code":"101291501"},{"city":"景洪","code":"101291601"},{"city":"大理","code":"101290201"},{"city":"曲靖","code":"101290401"},{"city":"保山","code":"101290501"}]},{"province":"内蒙古","市":[{"city":"呼和浩特","code":"101080101"},{"city":"乌海","code":"101080301"},{"city":"集宁","code":"101080401"},{"city":"通辽","code":"101080501"},{"city":"阿拉善左旗","code":"101081201"},{"city":"鄂尔多斯","code":"101080701"},{"city":"临河","code":"101080801"},{"city":"锡林浩特","code":"101080901"},{"city":"呼伦贝尔","code":"101081000"},{"city":"乌兰浩特","code":"101081101"},{"city":"包头","code":"101080201"},{"city":"赤峰","code":"101080601"}]},{"province":"江西","市":[{"city":"南昌","code":"101240101"},{"city":"上饶","code":"101240301"},{"city":"抚州","code":"101240401"},{"city":"宜春","code":"101240501"},{"city":"鹰潭","code":"101241101"},{"city":"赣州","code":"101240701"},{"city":"景德镇","code":"101240801"},{"city":"萍乡","code":"101240901"},{"city":"新余","code":"101241001"},{"city":"九江","code":"101240201"},{"city":"吉安","code":"101240601"}]},{"province":"湖北","市":[{"city":"武汉","code":"101200101"},{"city":"黄冈","code":"101200501"},{"city":"荆州","code":"101200801"},{"city":"宜昌","code":"101200901"},{"city":"恩施","code":"101201001"},{"city":"十堰","code":"101201101"},{"city":"神农架","code":"101201201"},{"city":"随州","code":"101201301"},{"city":"荆门","code":"101201401"},{"city":"天门","code":"101201501"},{"city":"仙桃","code":"101201601"},{"city":"潜江","code":"101201701"},{"city":"襄樊","code":"101200201"},{"city":"鄂州","code":"101200301"},{"city":"孝感","code":"101200401"},{"city":"黄石","code":"101200601"},{"city":"咸宁","code":"101200701"}]},{"province":"四川","市":[{"city":"成都","code":"101270101"},{"city":"自贡","code":"101270301"},{"city":"绵阳","code":"101270401"},{"city":"南充","code":"101270501"},{"city":"达州","code":"101270601"},{"city":"遂宁","code":"101270701"},{"city":"广安","code":"101270801"},{"city":"巴中","code":"101270901"},{"city":"泸州","code":"101271001"},{"city":"宜宾","code":"101271101"},{"city":"内江","code":"101271201"},{"city":"资阳","code":"101271301"},{"city":"乐山","code":"101271401"},{"city":"眉山","code":"101271501"},{"city":"凉山","code":"101271601"},{"city":"雅安","code":"101271701"},{"city":"甘孜","code":"101271801"},{"city":"阿坝","code":"101271901"},{"city":"德阳","code":"101272001"},{"city":"广元","code":"101272101"},{"city":"攀枝花","code":"101270201"}]},{"province":"宁夏","市":[{"city":"银川","code":"101170101"},{"city":"中卫","code":"101170501"},{"city":"固原","code":"101170401"},{"city":"石嘴山","code":"101170201"},{"city":"吴忠","code":"101170301"}]},{"province":"青海province","市":[{"city":"西宁","code":"101150101"},{"city":"黄南","code":"101150301"},{"city":"海北","code":"101150801"},{"city":"果洛","code":"101150501"},{"city":"玉树","code":"101150601"},{"city":"海西","code":"101150701"},{"city":"海东","code":"101150201"},{"city":"海南","code":"101150401"}]},{"province":"山东","市":[{"city":"济南","code":"101120101"},{"city":"潍坊","code":"101120601"},{"city":"临沂","code":"101120901"},{"city":"菏泽","code":"101121001"},{"city":"滨州","code":"101121101"},{"city":"东营","code":"101121201"},{"city":"威海","code":"101121301"},{"city":"枣庄","code":"101121401"},{"city":"日照","code":"101121501"},{"city":"莱芜","code":"101121601"},{"city":"聊城","code":"101121701"},{"city":"青岛","code":"101120201"},{"city":"淄博","code":"101120301"},{"city":"德州","code":"101120401"},{"city":"烟台","code":"101120501"},{"city":"济宁","code":"101120701"},{"city":"泰安","code":"101120801"}]},{"province":"陕西province","市":[{"city":"西安","code":"101110101"},{"city":"延安","code":"101110300"},{"city":"榆林","code":"101110401"},{"city":"铜川","code":"101111001"},{"city":"商洛","code":"101110601"},{"city":"安康","code":"101110701"},{"city":"汉中","code":"101110801"},{"city":"宝鸡","code":"101110901"},{"city":"咸阳","code":"101110200"},{"city":"渭南","code":"101110501"}]},{"province":"山西","市":[{"city":"太原","code":"101100101"},{"city":"临汾","code":"101100701"},{"city":"运城","code":"101100801"},{"city":"朔州","code":"101100901"},{"city":"忻州","code":"101101001"},{"city":"长治","code":"101100501"},{"city":"大同","code":"101100201"},{"city":"阳泉","code":"101100301"},{"city":"晋中","code":"101100401"},{"city":"晋城","code":"101100601"},{"city":"吕梁","code":"101101100"}]},{"province":"新疆","市":[{"city":"乌鲁木齐","code":"101130101"},{"city":"石河子","code":"101130301"},{"city":"昌吉","code":"101130401"},{"city":"吐鲁番","code":"101130501"},{"city":"库尔勒","code":"101130601"},{"city":"阿拉尔","code":"101130701"},{"city":"阿克苏","code":"101130801"},{"city":"喀什","code":"101130901"},{"city":"伊宁","code":"101131001"},{"city":"塔城","code":"101131101"},{"city":"哈密","code":"101131201"},{"city":"和田","code":"101131301"},{"city":"阿勒泰","code":"101131401"},{"city":"阿图什","code":"101131501"},{"city":"博乐","code":"101131601"},{"city":"克拉玛依","code":"101130201"}]},{"province":"西藏","市":[{"city":"拉萨","code":"101140101"},{"city":"山南","code":"101140301"},{"city":"阿里","code":"101140701"},{"city":"昌都","code":"101140501"},{"city":"那曲","code":"101140601"},{"city":"日喀则","code":"101140201"},{"city":"林芝","code":"101140401"}]},{"province":"台湾","市":[{"city":"台北县","code":"101340101"},{"city":"高雄","code":"101340201"},{"city":"台中","code":"101340401"}]},{"province":"海南province","市":[{"city":"海口","code":"101310101"},{"city":"三亚","code":"101310201"},{"city":"东方","code":"101310202"},{"city":"临高","code":"101310203"},{"city":"澄迈","code":"101310204"},{"city":"儋州","code":"101310205"},{"city":"昌江","code":"101310206"},{"city":"白沙","code":"101310207"},{"city":"琼中","code":"101310208"},{"city":"定安","code":"101310209"},{"city":"屯昌","code":"101310210"},{"city":"琼海","code":"101310211"},{"city":"文昌","code":"101310212"},{"city":"保亭","code":"101310214"},{"city":"万宁","code":"101310215"},{"city":"陵水","code":"101310216"},{"city":"西沙","code":"101310217"},{"city":"南沙岛","code":"101310220"},{"city":"乐东","code":"101310221"},{"city":"五指山","code":"101310222"},{"city":"琼山","code":"101310102"}]},{"province":"湖南","市":[{"city":"长沙","code":"101250101"},{"city":"株洲","code":"101250301"},{"city":"衡阳","code":"101250401"},{"city":"郴州","code":"101250501"},{"city":"常德","code":"101250601"},{"city":"益阳","code":"101250700"},{"city":"娄底","code":"101250801"},{"city":"邵阳","code":"101250901"},{"city":"岳阳","code":"101251001"},{"city":"张家界","code":"101251101"},{"city":"怀化","code":"101251201"},{"city":"黔阳","code":"101251301"},{"city":"永州","code":"101251401"},{"city":"吉首","code":"101251501"},{"city":"湘潭","code":"101250201"}]},{"province":"江苏","市":[{"city":"南京","code":"101190101"},{"city":"镇江","code":"101190301"},{"city":"苏州","code":"101190401"},{"city":"南通","code":"101190501"},{"city":"扬州","code":"101190601"},{"city":"宿迁","code":"101191301"},{"city":"徐州","code":"101190801"},{"city":"淮安","code":"101190901"},{"city":"连云港","code":"101191001"},{"city":"常州","code":"101191101"},{"city":"泰州","code":"101191201"},{"city":"无锡","code":"101190201"},{"city":"盐城","code":"101190701"}]},{"province":"黑龙江","市":[{"city":"哈尔滨","code":"101050101"},{"city":"牡丹江","code":"101050301"},{"city":"佳木斯","code":"101050401"},{"city":"绥化","code":"101050501"},{"city":"黑河","code":"101050601"},{"city":"双鸭山","code":"101051301"},{"city":"伊春","code":"101050801"},{"city":"大庆","code":"101050901"},{"city":"七台河","code":"101051002"},{"city":"鸡西","code":"101051101"},{"city":"鹤岗","code":"101051201"},{"city":"齐齐哈尔","code":"101050201"},{"city":"大兴安岭","code":"101050701"}]},{"province":"吉林","市":[{"city":"长春","code":"101060101"},{"city":"延吉","code":"101060301"},{"city":"四平","code":"101060401"},{"city":"白山","code":"101060901"},{"city":"白城","code":"101060601"},{"city":"辽源","code":"101060701"},{"city":"松原","code":"101060801"},{"city":"吉林","code":"101060201"},{"city":"通化","code":"101060501"}]},{"province":"辽宁","市":[{"city":"沈阳","code":"101070101"},{"city":"鞍山","code":"101070301"},{"city":"抚顺","code":"101070401"},{"city":"本溪","code":"101070501"},{"city":"丹东","code":"101070601"},{"city":"葫芦岛","code":"101071401"},{"city":"营口","code":"101070801"},{"city":"阜新","code":"101070901"},{"city":"辽阳","code":"101071001"},{"city":"铁岭","code":"101071101"},{"city":"朝阳","code":"101071201"},{"city":"盘锦","code":"101071301"},{"city":"大连","code":"101070201"},{"city":"锦州","code":"101070701"}]}]}');
+        $extra['require_refresh'] = false;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取城市列表成功', null, $extra);
+    }
+
+    /**
+     * 获取热门城市列表
+     */
+    public function getHotCityList(){
+        $model = M('OrganizationConfig');
+        $map['organization_id'] = 0;
+        $map['status'] = 1;
+        $map['type'] = 4;
+        $list = $model->field('value')->where($map)->select();
+        $extra['data'] = $list;
+        $this->apiSuccess('获取城市列表成功', null, $extra);
+    }
+
+    /**
+     * 获取机构列表
+     * @param null $city
+     * @param null $type
+     * @param int $page
+     * @param int $count
+     */
+    public function localOrganizationList($city=null, $type=null, $page=1, $count=10){
+        $model = M('Organization');
+        if(!empty($city)&&!empty($type)){
+            $org_list = $model->field('id, name, slogan, city, view_count, logo')
+                ->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->page($page, $count)->select();
+            $totalCount = $model->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->count();
+        }
+        if(!empty($city)&&empty($type)){
+            $org_list = $model->field('id, name, slogan, city, view_count, logo')
+                ->where("application_status=2 and status=1 and city like '%".$city."%'")->page($page, $count)->select();
+            $totalCount = $model->where("application_status=2 and status=1 and city like '%".$city."%'")->count();
+        }
+        if(empty($city)&&!empty($type)){
+            $org_list = $model->field('id, name, slogan, city, view_count, logo')
+                ->where("application_status=2 and status=1 and type=".$type)->page($page, $count)->select();
+            $totalCount = $model->where("application_status=2 and status=1 and type=".$type)->count();
+        }
+        if(empty($city)&&empty($type)){
+            $org_list = $model->field('id, name, slogan, city, view_count, logo')
+                ->where("application_status=2 and status=1")->page($page, $count)->select();
+            $totalCount = $model->where("application_status=2 and status=1")->count();
+        }
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            $logo_id = $org['logo'];
+            $org['logo'] = $this->fetchImage($logo_id);
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getEnrollCount($org_id);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('获取机构列表成功', null, $data);
+    }
+
+    /**
+     * 机构名称搜索
+     * @param null $name
+     * @param int $page
+     * @param int $count
+     */
+    public function searchOrganization($name=null, $page=1, $count=10){
+        if(empty($name)){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $model = M('Organization');
+        $org_list = $model->field('id, name, slogan, city, view_count, logo')
+                ->where("application_status=2 and status=1 and name like '%".$name."%'")->page($page, $count)->select();
+        $totalCount = $model->where("application_status=2 and status=1 and name like '%".$name."%'")->count();
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            $logo_id = $org['logo'];
+            $org['logo'] = $this->fetchImage($logo_id);
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getEnrollCount($org_id);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('搜索机构成功', null, $data);
+    }
+
+    /**
+     * 获取机构公告头条信息
+     * @param int $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function topPost($organization_id=0, $page=1, $count=10){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构ID不能为空');
+        }
+        $model = M('OrganizationNotice');
+        $totalCount = $model->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->count();
+        $list = $model->field('id, tag, title, create_time')->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
+        foreach($list as &$notice){
+            $notice['detail_url'] = 'http://dev.hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构公告列表成功', null, $extra);
+    }
+
+    /**
+     * 获取用户报名信息
+     * @param int $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function enrollList($organization_id=0, $page=1, $count=3){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构ID不能为空');
+        }
+        $model = M('OrganizationEnroll');
+        $list = $model->field('student_name, create_time')->where('status=1 and organization_id='.$organization_id)
+            ->page($page, $count)->select();
+        foreach($list as &$user){
+            $user['student_name'] = mb_substr($user['student_name'],0,1,'utf-8') . '**';
+        }
+        $extra['data'] = $list;
+        $this->apiSuccess('获取报名列表成功', null, $extra);
+    }
+
+    /**
+     * 获取机构的分数统计
+     * @param int $organization_id
+     */
+    public function fractionalStatistics($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构ID不能为空');
+        }
+        $configModel = M('OrganizationConfig');
+        $commentModel = M('OrganizationComment');
+        $commentStarModel = M('OrganizationCommentStar');
+        $comprehensiveScore = $commentModel->where('status=1 and organization_id='.$organization_id)->avg('comprehensive_score');
+        $configList = $configModel->field('id, value')->where('status=1 and type=5 and organization_id=0')->select();
+        foreach($configList as &$config){
+            $config_id = $config['id'];
+            $score = $commentStarModel->where('status=1 and organization_id='.$organization_id.' and comment_type='.$config_id)
+                ->avg('star');
+            $config['score'] = round($score, 1);
+        }
+        $extra['comprehensiveScore'] = round($comprehensiveScore, 1);
+        $extra['data'] = $configList;
+        $this->apiSuccess('获取评论统计分数成功', null, $extra);
+    }
+
+    /**
+     * 获取机构的评论列表
+     * @param int $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function commentList($organization_id=0, $page=1, $count=10){
+        $model = M('OrganizationComment');
+        $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
+        $list = $model->where('status=1 and organization_id='.$organization_id)->page($page, $count)->select();
+        foreach($list as &$comment){
+            $uid = $comment['uid'];
+            $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
+            unset($comment['id']);
+            unset($comment['organization_id']);
+            unset($comment['uid']);
+            unset($comment['status']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构评论列表成功', null, $extra);
+    }
+
+    /**
+     * 获取机构评分种类的列表
+     */
+    public function getCommentScoreList(){
+        $configModel = M('OrganizationConfig');
+        $configList = $configModel->field('id, value')->where('status=1 and type=5 and organization_id=0')->select();
+        $extra['data'] = $configList;
+        $this->apiSuccess('获取评分种类列表成功', null, $extra);
+    }
+
+    /**
+     * 用户评论机构
+     * @param int $organization_id
+     * @param int $uid
+     * @param int $comprehensiveScore
+     * @param null $content
+     * @param null $strScoreList
+     */
+    public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null, $strScoreList=null){
+        if(empty($content)||empty($strScoreList)||$organization_id==0||$uid==0){
+            $this->apiError(-1, '传入参数不能为空');
+        }
+        $relationModel = M('OrganizationRelation');
+        $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.$uid)->find();
+        if(!$isExist){
+            $this->apiError(-2, '你不是该机构学员，不允许评论');
+        }
+        $commentModel = M('OrganizationComment');
+        $commentStarModel = M('OrganizationCommentStar');
+        $data['organization_id'] = $organization_id;
+        $data['uid'] = $uid;
+        $data['comprehensive_score'] = $comprehensiveScore;
+        $data['comment'] = $content;
+        $data['create_time'] = time();
+        $res = $commentModel->add($data);
+        if($res){
+            unset($data['comprehensive_score']);
+            unset($data['comment']);
+            $scoreList = json_decode($strScoreList, true);
+            foreach($scoreList as $score){
+                $id = $score['id'];
+                $score = $score['score'];
+                $data['comment_type'] = $id;
+                $data['star'] = $score;
+                $commentStarModel->add($data);
+            }
+        } else {
+            $this->apiError(-1, '评论失败');
+        }
+        $this->apiSuccess('评论成功');
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    public function followOrganization($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $this->requireLogin();
+        $model = M('Follow');
+        $data['follow_who'] = $organization_id;
+        $data['who_follow'] = $this->getUid();
+        $data['type'] = 2;
+        $data['create_time'] = time();
+        if($model->add($data)) {
+            $this->apiSuccess("关注成功");
+        } else {
+            $this->apiError(-1, "关注失败");
+        }
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    public function unFollowOrganization($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $this->requireLogin();
+        $model = M('Follow');
+        $data['follow_who'] = $organization_id;
+        $data['who_follow'] = $this->getUid();
+        $data['type'] = 2;
+        if($model->where($data)->delete()) {
+            $this->apiSuccess("取消关注成功");
+        } else {
+            $this->apiError(-1, "取消关注失败");
+        }
+    }
+
+    /**
+     * 获取机构的认证信息
+     * @param $organization_id
+     */
+    private function getAuthenticationInfo($organization_id=0){
+        $model = M('OrganizationAuthenticationConfig');
+        $authModel = M('OrganizationAuthentication');
+        $config_list = $model->field('id, name, pic_id')->where('status=1')->select();
+        foreach($config_list as &$config){
+            $config['pic_url'] = $this->fetchImage($config['pic_id']);
+            $map['organization_id'] = $organization_id;
+            $map['authentication_id'] = $config['id'];
+            if($authModel->where($map)->find()){
+                $config['status'] = true;
+            } else {
+                $config['status'] = false;
+            }
+        }
+        return $config_list;
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    private function getFollowCount($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $model = M('Follow');
+        $data['follow_who'] = $organization_id;
+        $data['type'] = 2;
+        $count = $model->where($data)->count();
+        return $count;
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    private function getEnrollCount($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $model = M('OrganizationEnroll');
+        $data['organization_id'] = $organization_id;
+        $data['status'] = array('in','1,2');
+        $count = $model->where($data)->count();
+        return $count;
+    }
+
     /**
      * 上传图片到OSS
      * @param $picID

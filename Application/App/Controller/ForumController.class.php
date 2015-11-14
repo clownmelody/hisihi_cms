@@ -156,6 +156,14 @@ class ForumController extends AppController
             unset($v['forum']);
             unset($v['parse']);
             unset($v['status']);
+            unset($v['forum_id']);
+            unset($v['is_top']);
+            unset($v['content_md5']);
+            unset($v['post_type']);
+            unset($v['is_out_link']);
+            unset($v['link_url']);
+            unset($v['update_time']);
+            unset($v['title']);
         }
         unset($v);
 
@@ -624,7 +632,7 @@ class ForumController extends AppController
             $reply['content'] = op_t($reply['content']);
 
             unset($reply['user']);
-            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc',$page,$limit,false);
+            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc',$page, $limit,false);
             foreach ($lzlList as &$lzl) {
                 $lzl['lzl_id'] = $lzl['id'];
                 unset($lzl['id']);
@@ -678,20 +686,20 @@ class ForumController extends AppController
         $map_support['table'] = 'post';
         $map_support['row'] = $post_id;
         $totalCount = M('Support')->where($map_support)->count();
-        $list = M('Support')->field('uid')->where($map_support)->page($page, $count)->select();
+        $list = M('Support')->field('uid')->where($map_support)->page($page, $count)->order('create_time desc')->select();
         foreach($list as &$user){
             $c_uid = $user['uid'];
-            $user['info'] = query_user(array('avatar256', 'avatar128', 'extinfo', 'nickname'), $c_uid);
+            $user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $c_uid);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$c_uid))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$c_uid,'follow_who'=>$uid))->find();
             if($follow_other&&$be_follow){
-                $user['info']['isfollowing'] = 3;
+                $user['info']['relationship'] = 3;
             } else if($follow_other&&(!$be_follow)){
-                $user['info']['isfollowing'] = 2;
+                $user['info']['relationship'] = 2;
             } else if((!$follow_other)&&$be_follow){
-                $user['info']['isfollowing'] = 1;
+                $user['info']['relationship'] = 1;
             } else {
-                $user['info']['isfollowing'] = 0;
+                $user['info']['relationship'] = 0;
             }
         }
         $extra['totalCount'] = $totalCount;
@@ -747,7 +755,7 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getNoCacheReplyList($map, 'create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
@@ -850,7 +858,7 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'support_count desc, create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getNoCacheReplyList($map, 'support_count desc, create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
@@ -1568,17 +1576,34 @@ class ForumController extends AppController
      * @param string $version
      */
     public function forumTopPost($version='1.0'){
-        if((float)$version>=2.1){
+        if((float)$version>=2.2){
+            $first_post['id'] = "001";
+            $first_post['title'] = "嘿设汇新闻";
+            $first_post['type'] = "置顶";
+            $first_post['post_type'] = 1;
+            $first_post['is_out_link'] = 0;
+            $first_post['link_url'] = "";
+            $first_post['is_inner'] = 0;
+            $first_post['url'] = "http://dev.hisihi.com/app.php/forum/hisihi_news";
+            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=0')
+                ->order('create_time desc')->page(1, 1)->select();
+            array_unshift($list, $first_post);
+            $list[1]['title'] = "嘿设汇已经解决33212个问题";
+            //$list[2]['title'] = "嘿设汇已经帮7234个学生找到机构";
+        } else if ((float)$version>=2.1){
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1')
                 ->order('create_time desc')->page(1, 3)->select();
-        } else {
+        } else {  //  老版本不展示包含外链的置顶
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and is_out_link=0 and status=1')
                 ->order('create_time desc')->page(1, 3)->select();
         }
         foreach($list as &$value){
-            $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
+            if($value['id']!='001'){
+                $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
+            }
             unset($value['uid']);
             unset($value['forum_id']);
+            unset($value['content_md5']);
             unset($value['parse']);
             unset($value['create_time']);
             unset($value['update_time']);
@@ -1607,6 +1632,186 @@ class ForumController extends AppController
         $result['title'] = $data['title'];
         $result['type'] = $data['type'];
         $this->apiSuccess('获取推送置顶帖信息成功', null, $result);
+    }
+
+    /**
+     * 嘿设汇新闻内页帖子列表
+     * @param int $page
+     * @param int $count
+     */
+    public function newsList($page=1, $count=10){
+        $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')
+            ->order('create_time desc')->page($page, $count)->select();
+        $totalCount = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')->count();
+        foreach($list as &$value){
+            $value['url'] = 'http://dev.hisihi.com/app.php/forum/toppostdetailv2/post_id/'.$value['id'];
+            $value['pic_url'] = $this->fetchImageFromOSS($value['cover_id']);
+            unset($value['uid']);
+            unset($value['forum_id']);
+            unset($value['content_md5']);
+            unset($value['parse']);
+            unset($value['update_time']);
+            unset($value['status']);
+            unset($value['last_reply_time']);
+            unset($value['reply_count']);
+            unset($value['is_top']);
+            unset($value['content']);
+            unset($value['type']);
+            unset($value['post_type']);
+            unset($value['is_inner']);
+            unset($value['cover_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取新闻列表成功', null, $extra);
+    }
+
+    /**
+     * 跳转嘿设汇新闻列表内页
+     */
+    public function hisihi_news(){
+        $this->display('hisihi_news');
+    }
+
+    /**
+     * 从OSS获取图片地址
+     * @param $pic_id
+     * @return null|string
+     */
+    private function fetchImageFromOSS($pic_id){
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            //if(file_exists('.'.$path)){
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            }
+            //}
+        }
+        return $picUrl;
+    }
+
+    /**
+     * 置顶帖详情
+     * @param $post_id
+     * @param int $page
+     * @param int $count
+     */
+    public function toppostdetailv2($post_id, $page=1, $count=10)
+    {
+        //$this->requireLogin();
+
+        $id = intval($post_id);
+        $page = intval($page);
+        $count = intval($count);
+
+        $this->requirePostExists($id);
+
+        //判断是否需要显示1楼
+        if ($page == 1) {
+            $showMainPost = true;
+            $post = $this->getTopPostInfo($id);
+            //增加浏览次数
+            //D('ForumPost')->where(array('id' => $id))->setInc('view_count');
+        } else {
+            $showMainPost = false;
+        }
+
+        //读取回复列表
+        //$map = array('post_id' => $id, 'status' => 1);
+        $map['post_id'] = $id;
+        $map['status'] = array('in','1,3');
+        $replyList = D('Forum/ForumPostReply')->getReplyList($map, 'create_time desc', $page, $count);
+
+        $replyTotalCount = D('Forum/ForumPostReply')->where($map)->count();
+
+        foreach ($replyList as &$reply) {
+            //dump($reply);
+            //$reply['content'] = op_h($reply['content'], 'html');
+            $reply['reply_id'] = $reply['id'];
+            unset($reply['id']);
+            $map_pos['type'] = 1;
+            $map_pos['id'] = $reply['reply_id'];
+            $pos = $this->getForumPos($map_pos);
+            $reply['pos'] = $pos['pos'];
+
+            $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+
+            $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$reply['uid']))->find();
+            $isfans = D('Follow')->where(array('who_follow'=>$reply['uid'],'follow_who'=>get_uid()))->find();
+            $isfollowing = $isfollowing ? 2:0;
+            $isfans = $isfans ? 1:0;
+            $reply['userInfo']['relationship'] = $isfollowing | $isfans;
+
+            unset($reply['uid']);
+
+            unset($pos);
+            unset($map_pos);
+
+            $map_support['table'] = 'reply';
+            $map_support['row'] = $reply['reply_id'];
+
+            $supportCount = $this->getSupportCountCache($map_support);
+
+            $map_supported = array_merge($map_support, array('uid' => is_login()));
+            $supported = D('Support')->where($map_supported)->count();
+
+            $reply['supportCount'] = $supportCount;
+            $reply['isSupportd'] = $supported;
+
+            //解析并成立图片数据
+            $reply['img'] = $this->match_img($reply['content']);
+
+            $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
+
+            $reply['content'] = op_t($reply['content']);
+            unset($reply['user']);
+            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc',$page, $limit,false);
+            foreach ($lzlList as &$lzl) {
+                //unset($lzl['userInfo']['icons_html']);
+                //unset($lzl['userInfo']['uid']);
+                //unset($lzl['userInfo']['space_url']);
+                $lzl['lzl_id'] = $lzl['id'];
+                unset($lzl['id']);
+                $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
+                unset($lzl['uid']);
+                //unset($reply['uid']);
+
+                $map_pos['type'] = 2;
+                $map_pos['id'] = $lzl['lzl_id'];
+                $pos = $this->getForumPos($map_pos);
+                $lzl['pos'] = $pos['pos'];
+
+                unset($pos);
+                unset($map_pos);
+
+                $lzl['img'] = $this->match_img($lzl['content']);
+                $lzl['content'] = op_t($lzl['content']);
+                $lzl['sound'] = $this->fetchSound($lzl['lzl_id'],2);
+            }
+            $reply['lzlList'] = $lzlList;
+        }
+        unset($reply);
+        //判断是否已经收藏
+        $isBookmark = D('Forum/ForumBookmark')->exists(is_login(), $id);
+        if(count($replyList)){
+            $this->assign('isShowReply', true);
+        } else {
+            $this->assign('isShowReply', false);
+        }
+        $this->assign('replyTotalCount', $replyTotalCount);
+        $this->assign('post', $post);
+        $this->assign('post_img', $post['img']);
+        $this->assign('replyList',$replyList);
+        $this->setTitle('{$post.title|op_t} — 嘿设汇');
+        $this->display('toppostdetailv2');
     }
 
     /**
@@ -1684,7 +1889,7 @@ class ForumController extends AppController
 
             $reply['content'] = op_t($reply['content']);
             unset($reply['user']);
-            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc',$page,$limit,false);
+            $lzlList = D('Forum/ForumLzlReply')->getLZLReplyList($reply['reply_id'],'ctime asc',$page, $limit,false);
             foreach ($lzlList as &$lzl) {
                 //unset($lzl['userInfo']['icons_html']);
                 //unset($lzl['userInfo']['uid']);
@@ -2211,6 +2416,7 @@ class ForumController extends AppController
                     $src = substr($img['src'], 16);
                     $img['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
                     $origin_img_info = getimagesize($img['src']);
+                    $src_size = array();
                     $src_size[] = $origin_img_info[0]; // width
                     $src_size[] = $origin_img_info[1]; // height
                     $img['src_size'] = $src_size;
