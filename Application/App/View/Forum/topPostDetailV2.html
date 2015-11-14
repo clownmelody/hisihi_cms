@@ -21,13 +21,24 @@
 	*{
 		margin: 0;
 		padding: 0;
+		font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+		box-sizing: border-box;
 	}
 	body{
 		background: #ececec;
 		font-size: 100%;
+		position: absolute;
+		top:0;
+		bottom: 0;
+		left: 0;
+		right: 0;
 	}
 	img {
 		width: 100%;
+	}
+	input，textarea{
+		resize: none;
+		outline: none;
 	}
 	.detailed-main{
 		padding: 10px;
@@ -132,23 +143,61 @@
 		display: none;
 	}
 	#comment-box{
+		display: none;
 		position: absolute;
 		bottom: 0;
 		width: 100%;
-		height:1em;
+		height:4em;
 	}
-	#comment-box textarea{
-		padding-right: 2em;
-		height: 100%;
-		border: none;
+	.comment-box-header{
+		height: 1.4em;
+		font-size:0.875em;
+		text-align: center;
+		color: #FF6600;
+		opacity: 0;
+	}
+	.comment-box-main{
+		height: 3em;
+		background-color: #FFFFFF;
+		position: relative;
+	}
+	#comment-box .comment-box-left{
+		margin-right: 5em;
+		height: -webkit-calc(100% - 0.5em);
+		height: -moz-calc(100% - 0.5em);
 		border-bottom: 0.0625em solid #CCCCCC;
 	}
+	#comment-box textarea{
+		/*height: -webkit-calc(100% - 0.5em);*/
+		/*height: -moz-calc(100% - 0.5em);*/
+		height:100%;
+		width: 100%;
+		border: none;
+		background-color: #FFFFFF;
+		outline: none;
+		resize: none;
+		padding-left: 0.875em;
+		line-height: 2em;
+		font-size: 1.1em;
+	}
 	#comment-box input{
-		width: 2em;
+		outline: none;
+		resize: none;
+		width: 4em;
 		height: 100%;
-		background-color: #003366;
 		position: absolute;
+		border: none;
+		background-color:transparent;
 		right: 0;
+		top: 0;
+		font-size: 1.25em;
+		color: #333333;
+	}
+	#comment-box input:active{
+		transform: scale(.9);
+	}
+	#comment-box input.disabled{
+		color: #ECECEC !important;
 	}
 	</style>
 </head>
@@ -222,8 +271,13 @@
 		</div>
 	</div>
 	<div id="comment-box">
-		<textarea placeholder="写评论"></textarea>
-		<input type="button" value="发送"/>
+		<p class="comment-box-header">评论成功</p>
+		<div class="comment-box-main">
+			<div class="comment-box-left">
+				<textarea placeholder="写评论"></textarea>
+			</div>
+			<input type="button" value="发送" class="abled"/>
+		</div>
 	</div>
 	<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 	<script>
@@ -310,9 +364,90 @@
 		}
 
 
-		function funFromjs(){
+		/********蒋建明修改 评论框********/
+		 function commentObj($wrapper){
+			this.$wrapper=$wrapper;
+			var info=AppFunction.getUser();
+			if(info) {
+				this.userInfo = JSON.parse(info);
+			}
+
+			var that = this;
+			this.server_url = 'http://dev.hisihi.com/api.php?s=';
+//			this.userInfo = {section_id: data.session_id, name: data.name, pic: data.avatar_url};
+			this.controlCommentBoxStatus();
+			this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
+
+//			$.post(this.server_url+'/user/login',
+//					{username:'18601995231',password:'123456',type:'3',client:'4'},function(data){
+//						if(data.success) {
+//							that.userInfo = {section_id: data.session_id, name: data.name, pic: data.avatar_url};
+//							that.controlCommentBoxStatus();
+//						}
+//					});
+		 }
+
+		 commentObj.prototype={
+
+			controlCommentBoxStatus:function(){
+				if(!this.userInfo.section_id){
+					this.$wrapper.hide();
+					return;
+				}
+				this.$wrapper.show();
+			},
+
+			 /*提交评论*/
+			 commitComment:function(e){
+				 var $textarea=this.$wrapper.find('textarea'),
+				    str=$textarea.val().replace(/(^\s*)|(\s*$)/g,''),
+					that=this,
+					$target=$(e.currentTarget);
+				 if(str==''){
+					 that.showCommentTips.call(that,'内容为空');
+					 return;
+				 }
+				 if(!this.userInfo.section_id){
+					 return;
+				 }
+				 $target.addClass('disabled');
+				 $.post(this.server_url+'/doReply',{post_id:$('#postid').val(),section_id:this.userInfo.section_id,content:str},function(result){
+					 var tip
+					if(result.success){
+						$textarea.val('');
+						tip='评论成功';
+						var str='<li>'+
+									'<img src="'+that.userInfo.pic+'" alt="" class="detailed-item-img">'+
+									'<div class="detailed-item-body">'+
+										'<p class="detailed-item-name">'+that.userInfo.name+'</p>'+
+										'<p class="detailed-item-time">1111</p>'+
+										'<p class="detailed-item-txt">'+str+'</p>'+
+									'</div>'+
+				 				'</li>';
+						that.$wrapper.find('.detailed-list').prepend(str);
+					}else{
+						var tip=result.message;
+						tip =tip||'评论失败';
+					}
+					 that.showCommentTips.call(that,tip);
+				 	 $target.removeClass('disabled');
+				 });
+			 },
+
+			 showCommentTips:function(tip){
+				 var $tip=this.$wrapper.find('.comment-box-header');
+				 $tip.text(tip).css('opacity',1);
+				 window.setTimeout(function(){
+					 $tip.text('').css('opacity',0);
+				 },1500)
+			 },
+		};
+
+		new commentObj($('#comment-box'));
+
+		//function funFromjs(){
 //        document.getElementById("helloweb").innerHTML="我是JS里的方法";
-		}
+	//	}
 //		var aTag = document.getElementsByTagName('a')[0];
 //		aTag.addEventListener('click', function(){
 //			//调用android本地方法

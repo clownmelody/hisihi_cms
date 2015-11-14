@@ -45,6 +45,7 @@
             bottom: 0;
             right: 0;
             overflow: auto;
+            background-color: white;
         }
         .wrapper *{
             font-size: 1em;
@@ -91,6 +92,8 @@
         }
         .newsListContainer li .right .rightHeader p{
             color: #212121;
+            color:#6A6A68;
+            line-height: normal;
             text-decoration: none;
         }
         .newsListContainer li .right .rightBottom{
@@ -138,7 +141,7 @@
 </body>
 <script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 <script>
-    var server_url = 'http://' + '{$Think.server.HTTP_HOST}'+'/hisihi-cms';
+    var server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
 
     /*
      *拓展Date方法。得到格式化的日期形式 基本是什么格式都支持
@@ -208,22 +211,22 @@
                             pageIndex: pageIndex,
                             count: this.pageSize
                         },
-                        url = server_url + '/api.php?s=/forum/newsList',
+                        url = server_url + '/newsList',
                         that = this;
-                window.setTimeout(function() {
-                    $loadinng.hide();
-                    $loadinng.before(that.getNewsContent());
-                },2000);
-//                $.post(url, tempObj, function (result) {
+//                window.setTimeout(function() {
 //                    $loadinng.hide();
-//                    if(result.success) {
-//                        that.totalPage=Math.ceil(result.totalCount/that.pageSize);
-//                        that.pageIndex++;
-//                        $loadinng.before(that.getNewsContent(result.data));
-//                    }else{
-//                        $loadinng.next().text(result.massage).show().delay(2000).hide(0);
-//                    }
-//                });
+//                    $loadinng.before(that.getNewsContent());
+//                },2000);
+                $.post(url, tempObj, function (result) {
+                    $loadinng.hide();
+                    if(result.success) {
+                        that.totalPage=Math.ceil(result.totalCount/that.pageSize);
+                        that.pageIndex++;
+                        $loadinng.before(that.getNewsContent(result.data));
+                    }else{
+                        $loadinng.next().text(result.massage).show().delay(2000).hide(0);
+                    }
+                });
             },
 
             /*
@@ -234,13 +237,13 @@
              * str - {string} 内容字符串
              */
             getNewsContent:function(data){
-                data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"0","is_out_link":"0","link_url":"","url":"http://dev.hisihi.com/app.php/forum/topPostDetail/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"0","is_out_link":"0","link_url":"","url":"http://dev.hisihi.com/app.php/forum/topPostDetail/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
+                data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"0","is_out_link":"0","link_url":"","url":"/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"0","is_out_link":"0","link_url":"","url":"/topPostDetail/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
                 var str = '',title, len = data.length, item,dateStr;
                 for (var i = 0; i < len; i++) {
                     item = data[i];
                     title=this.substrLongStr(item.title,25);
                     dateStr=this.getTimeFromTimestamp(item.create_time);
-                    str += '<li class="newsLiItem"><a href="'+item.url+'">' +
+                    str += '<li class="newsLiItem"><a href="'+server_url+item.url+'">' +
                                 '<div class="left">' +
                                     '<img src="' + item.pic_url + '"/>' +
                                 '</div>' +
@@ -258,9 +261,9 @@
                                 '</div>' +
                             '</a></li>';
                 }
-                str+=str;
-                str+=str;
-                str+=str;
+//                str+=str;
+//                str+=str;
+//                str+=str;
                 return str;
             },
 
