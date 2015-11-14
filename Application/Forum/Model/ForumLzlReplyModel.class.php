@@ -49,8 +49,12 @@ class ForumLzlReplyModel extends Model
             if($reply){
                 $accessModel = M('AuthGroupAccess');
                 $identify = $accessModel->where('group_id=6 and uid='.$reply['uid'])->find();
+                if($identify){
+                    $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p);
+                } else {  //  学生楼中楼插入隐藏标识
+                    $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p, 1);
+                }
             }
-            $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p);
         }
 
         $this->handleAt($post_id, $to_f_reply_id, $content, $p, $map);
@@ -65,7 +69,7 @@ class ForumLzlReplyModel extends Model
      * @param $to_uid
      * @param $result
      */
-    private function sendReplyMessage($uid, $post_id, $content, $to_uid, $to_f_reply_id,$result,$p)
+    private function sendReplyMessage($uid, $post_id, $content, $to_uid, $to_f_reply_id,$result,$p, $hide=0)
     {
 
         $limit = 5;
