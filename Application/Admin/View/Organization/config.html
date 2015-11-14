@@ -9,7 +9,7 @@
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <a class="btn" href="{:U('Organization/config_add')}">新 增</a>
+                <a class="btn" id="add" href="javascript:void(0)">新 增</a>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/config_delete',array('status'=>-1))}">删 除</button>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/config_restore',array('status'=>1))}">启 用</button>
             </div>
@@ -45,9 +45,10 @@
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
                         <td>
-                            <if condition="$vo.type eq 1">机构认证
-                                <elseif condition="$vo.type eq 2"/>机构优势
+                            <if condition="$vo.type eq 2">机构优势
                                 <elseif condition="$vo.type eq 3"/>机构类型
+                                <elseif condition="$vo.type eq 4"/>热门城市
+                                <elseif condition="$vo.type eq 5"/>评分类型
                                 <elseif condition="$vo.type eq 1001"/>教师分组
                                 <elseif condition="$vo.type eq 1002"/>视频分类
                                 <else /> 其它
@@ -98,6 +99,16 @@
             }
             window.location.href = url;
         });
+
+        $("#add").click(function () {
+            var url = '{:U('Organization/config_add')}';
+            var organization_id = $("#organization_id").val();
+            if(organization_id != 0){
+                url += '&organization_id=' + organization_id;
+            }
+            window.location.href = url;
+        });
+
         /* 状态搜索子菜单 */
         $(".search-form").find(".drop-down").hover(function(){
             $("#sub-sch-menu").removeClass("hidden");

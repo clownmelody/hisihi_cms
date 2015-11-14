@@ -9,6 +9,9 @@
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
+                <gt name="organization_id" value="0">
+                    <a id="add" class="btn" href="javascript:void(0)">新 增</a>
+                </gt>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/course_delete',array('status'=>-1))}">删 除</button>
             </div>
         </div>
@@ -93,6 +96,16 @@
             }
             window.location.href = url;
         });
+
+        $("#add").click(function () {
+            var url = '{:U('Organization/course_add')}';
+            var organization_id = $("#organization_id").val();
+            if(organization_id != 0){
+                url += '&organization_id=' + organization_id;
+            }
+            window.location.href = url;
+        });
+
         /* 状态搜索子菜单 */
         $(".search-form").find(".drop-down").hover(function(){
             $("#sub-sch-menu").removeClass("hidden");

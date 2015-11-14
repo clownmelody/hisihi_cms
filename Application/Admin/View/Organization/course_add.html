@@ -2,7 +2,7 @@
 <block name="body">
     <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
     <div class="main-title cf">
-        <h2>编辑视频课程</h2>
+        <h2>新增视频课程</h2>
     </div>
 
     <!-- 标签页导航 -->
@@ -10,14 +10,14 @@
         <div class="tab-content">
             <!-- 表单 -->
             <form id="form" action="{:U('course_update')}" method="post" class="form-horizontal doc-modal-form">
-                <input type="hidden" name="cid" id="cid" value="{$info.id}"/>
-                <input type="hidden" name="organization_id" id="organization_id" value="{$info.organization_id}"/>
+                <input type="hidden" name="cid" id="cid" value=""/>
+                <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id|default=0}"/>
                 <!-- 基础 -->
                 <div id="tab1" class="tab-pane in tab1">
                     <div class="form-item cf">
                         <label class="item-label">课程名称</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="title" value="{$info.title}">
+                            <input type="text" class="text input-large" name="title" value="">
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -26,7 +26,7 @@
                             <notempty name="teacher_list">
                                 <select class="text input-large" name="lecturer" style="height: 30px;width: 400px;">
                                     <volist name="teacher_list" id="vo">
-                                        <option value="{$vo.id}" <eq name="vo['id']" value="$info['lecturer']">selected="selected"</eq>>{$vo.name}</option>
+                                        <option value="{$vo.id}">{$vo.name}</option>
                                     </volist>
                                 </select>
                                 <else/>
@@ -35,12 +35,12 @@
                         </div>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">所属机构：{$info.organization}</label>
+                        <label class="item-label">所属机构：{$organization_name}</label>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">课程简介</label>
                         <div class="controls">
-                            <textarea name="content" style="height: 300px;width: 500px;">{$info.content}</textarea>
+                            <textarea name="content" style="height: 300px;width: 500px;"></textarea>
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -49,7 +49,7 @@
                             <notempty name="category">
                                 <select class="text input-large" name="category_id" style="height: 30px;width: 400px;">
                                     <volist name="category" id="vo">
-                                        <option value="{$vo.id}" <eq name="vo['id']" value="$info['category_id']">selected="selected"</eq>>{$vo.value}</option>
+                                        <option value="{$vo.id}">{$vo.value}</option>
                                     </volist>
                                 </select>
                                 <else/>
@@ -61,8 +61,8 @@
                         <label class="item-label">课程权限</label>
                         <div class="controls">
                             <select class="text input-large" name="auth" style="height: 30px;width: 400px;">
-                                <option value="1" <eq name="info['auth']" value="1">selected="selected"</eq>>公开</option>
-                                <option value="2" <eq name="info['auth']" value="2">selected="selected"</eq>>私有</option>
+                                <option value="1" >公开</option>
+                                <option value="2" >私有</option>
                             </select>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <label class="item-label">课程封面</label>
                         <div class="controls">
                             <input type="file" id="upload_company_picture">
-                            <input type="hidden" name="picture" id="cover_id_company" value="{$info.img}"/>
+                            <input type="hidden" name="picture" id="cover_id_company" value=""/>
                             <div class="upload-img-box">
                                 <notempty name="info['img']">
                                     <div class="upload-pre-item"><img src="{$info['img']|get_cover='path'}"/></div>

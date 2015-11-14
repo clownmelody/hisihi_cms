@@ -3,30 +3,20 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>{$organization_name|default='机构'}-认证信息管理(共：{$total|default=0} 条)</h2>
+        <h2>{$organization_name|default='机构'}-分类评分列表(共：{$total|default=0} 条)</h2>
         <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id | default=0}"/>
     </div>
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <gt name="organization_id" value="0">
-                    <a class="btn" id="add" href="javascript:void(0)">新 增</a>
-                </gt>
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/authentication_restore',array('status'=>1))}">启用</button>
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/authentication_delete',array('status'=>-2))}">删除</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/comment_satr_delete',array('status'=>-1))}">删 除</button>
             </div>
         </div>
+        <!-- 高级搜索 -->
         <div class="search-form fr cf">
             <div class="sleft">
-                <select name="status" id="status">
-                    <option value="1" <if condition="I('status') eq 1">selected</if>>正常</option>
-                    <option value="-1" <if condition="I('status') eq -1">selected</if>>已删除</option>
-                </select>
-            </div>
-            <div class="sleft">
-                <input type="text" name="name" class="search-input" value="{:I('name')}"
-                       placeholder="请输入机构名称">
-                <a class="sch-btn" href="javascript:;" id="search" url="{:U('authentication')}"><i class="btn-search"></i></a>
+                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入用户名">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('organization/comment_star')}"><i class="btn-search"></i></a>
             </div>
         </div>
     </div>
@@ -37,9 +27,10 @@
             <tr>
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
-                <th class="">机构ID</th>
                 <th class="">机构名称</th>
-                <th class="">机构类型</th>
+                <th class="">用户名称</th>
+                <th class="">评分类型</th>
+                <th class="">评分</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -51,17 +42,18 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.organization_id}</td>
-                        <td>{$vo.organization}</td>
-                        <td>{$vo.authentication_name}</td>
+                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.user_name}</td>
+                        <td>{$vo.star_type}</td>
+                        <td>{$vo.star}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                             </if>
                         </td>
                         <td>
-                            <a href="{:U('Organization/authentication_edit?id='.$vo['id'])}" >修改</a>
-                            <a href="{:U('Organization/authentication_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('Organization/comment_star_edit?id='.$vo['id'])}" class="confirm">编辑</a>
+                            <a href="{:U('Organization/comment_star_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
                 </volist>
@@ -91,24 +83,12 @@
             } else {
                 url += '?' + query;
             }
-            var status = $("#status").find('option:selected').val();
-            if(query == ''){
-                url += "status=" + status;
-            }else{
-                url += "&status=" + status;
-            }
-            window.location.href = url;
-        });
-
-        $("#add").click(function () {
-            var url = '{:U('Organization/authentication_add')}';
             var organization_id = $("#organization_id").val();
             if(organization_id != 0){
                 url += '&organization_id=' + organization_id;
             }
             window.location.href = url;
         });
-
         /* 状态搜索子菜单 */
         $(".search-form").find(".drop-down").hover(function(){
             $("#sub-sch-menu").removeClass("hidden");
@@ -130,6 +110,6 @@
             }
         });
         //导航高亮
-        highlight_subnav("{:U('Organization/authentication')}");
+        highlight_subnav("{:U('Organization/comment_star')}");
     </script>
 </block>
