@@ -243,7 +243,7 @@
                     item = data[i];
                     title=this.substrLongStr(item.title,25);
                     dateStr=this.getTimeFromTimestamp(item.create_time);
-                    str += '<li class="newsLiItem"><a href="'+server_url+item.url+'">' +
+                    str += '<li class="newsLiItem"><a href="'+item.url+'">' +
                                 '<div class="left">' +
                                     '<img src="' + item.pic_url + '"/>' +
                                 '</div>' +
