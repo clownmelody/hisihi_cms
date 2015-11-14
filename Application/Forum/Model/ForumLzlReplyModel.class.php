@@ -44,6 +44,12 @@ class ForumLzlReplyModel extends Model
         D('Forum')->where(array('id' => $post['forum_id']))->setField('last_reply_time', time());
 
         if ($send_message) {
+            $replyModel = M('ForumPostReply');
+            $reply = $replyModel->field('uid')->where('id='.$to_f_reply_id)->find();
+            if($reply){
+                $accessModel = M('AuthGroupAccess');
+                $identify = $accessModel->where('group_id=6 and uid='.$reply['uid'])->find();
+            }
             $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p);
         }
 
