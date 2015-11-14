@@ -42,6 +42,7 @@
 	}
 	.detailed-main{
 		padding: 10px;
+		margin-bottom: 3em;
 	}
 	.detailed-box{
 		border:1px solid #eee;
@@ -144,7 +145,7 @@
 	}
 	#comment-box{
 		display: none;
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		width: 100%;
 		height:4em;
@@ -298,6 +299,8 @@
 		var page = 2;
 		var server_url = '{$Think.server.HTTP_HOST}';
 
+		console.log('gb sb');
+
 		var svgloading = '';
 		var repalybtn = '';
 		var detailedlist = '';
@@ -373,8 +376,8 @@
 			}
 
 			var that = this;
-			this.server_url = 'http://dev.hisihi.com/api.php?s=';
-//			this.userInfo = {section_id: data.session_id, name: data.name, pic: data.avatar_url};
+			this.server_url = 'http://'+server_url+'/api.php?s=';
+//			this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
 			this.controlCommentBoxStatus();
 			this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
 
@@ -391,6 +394,7 @@
 
 			controlCommentBoxStatus:function(){
 				if(!this.userInfo.session_id){
+//				if(!this.userInfo.section_id){
 					this.$wrapper.hide();
 					return;
 				}
@@ -408,29 +412,46 @@
 					 return;
 				 }
 				 if(!this.userInfo.session_id){
+//				 if(!this.userInfo.section_id){
 					 return;
 				 }
 				 $target.addClass('disabled');
-				 $.post(this.server_url+'/doReply',{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},function(result){
-					 var tip
-					if(result.success){
-						$textarea.val('');
-						tip='评论成功';
-						var str='<li>'+
-									'<img src="'+that.userInfo.pic+'" alt="" class="detailed-item-img">'+
-									'<div class="detailed-item-body">'+
-										'<p class="detailed-item-name">'+that.userInfo.name+'</p>'+
-										'<p class="detailed-item-time">1111</p>'+
-										'<p class="detailed-item-txt">'+str+'</p>'+
-									'</div>'+
-				 				'</li>';
-						that.$wrapper.find('.detailed-list').prepend(str);
-					}else{
-						var tip=result.message;
-						tip =tip||'评论失败';
-					}
-					 that.showCommentTips.call(that,tip);
-				 	 $target.removeClass('disabled');
+
+				 var ajaxTimeoutTest=$.ajax({
+					 url:this.server_url+'/Forum/doReply',  //请求的URL
+					 timeout : 20000, //超时时间设置，单位毫秒
+					 type : 'post',  //请求方式，get或post
+					 data :{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},  //请求所传参数，json格式
+//					 data :{post_id:$('#postid').val(),session_id:this.userInfo.section_id,content:str},  //请求所传参数，json格式
+					 dataType:'json',//返回的数据格式
+					 success:function(result){ //请求成功的回调函数
+						 var tip;
+						 if(result.success){
+							 $textarea.val('');
+							 tip='评论成功';
+							 var htmlStr='<li>'+
+									 '<img src="'+that.userInfo.pic+'" alt="" class="detailed-item-img">'+
+									 '<div class="detailed-item-body">'+
+									 '<p class="detailed-item-name">'+that.userInfo.name+'</p>'+
+									 '<p class="detailed-item-time">'+new Date().Format("MM-dd hh:mm")+'</p>'+
+									 '<p class="detailed-item-txt">'+str+'</p>'+
+									 '</div>'+
+									 '</li>';
+							 $('.detailed-list').prepend(htmlStr);
+						 }else{
+							 var tip=result.message;
+							 tip =tip||'评论失败';
+						 }
+						 that.showCommentTips.call(that,tip);
+						 $target.removeClass('disabled');
+					 },
+					 complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
+						 if(status=='timeout'){   //超时,status还有success,error等值的情况
+							 ajaxTimeoutTest.abort();
+							 that.showCommentTips.call(that,'请求超时');
+							 $target.removeClass('disabled');
+						 }
+					 }
 				 });
 			 },
 
