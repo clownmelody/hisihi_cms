@@ -518,7 +518,7 @@ class UserController extends AppController
     }
 
     //消息列表
-    public function getMessageList($page = 1, $count = 10, $isRead = -1, $types = null)
+    public function getMessageList($page = 1, $count = 10, $isRead = -1, $types = null, $version=null)
     {
         $this->requireLogin();
 
@@ -534,6 +534,9 @@ class UserController extends AppController
             $map['apptype'] = array('in',$types);
         }
 
+        if((float)$version>=2.2){
+            $map['hide'] = 0;
+        }
         $messages = D('Message')->where($map)->field('id,apptype,is_read,from_uid,create_time,source_id,find_id')->order('create_time desc')->page($page, $count)->select();
         $totalCount = D('Message')->where($map)->order('create_time desc')->count(); //用于分页
 

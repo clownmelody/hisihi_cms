@@ -51,15 +51,18 @@ class ForumLzlReplyModel extends Model
                 $identify = $accessModel->where('group_id=6 and uid='.$reply['uid'])->find();
                 if($identify){
                     $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p);
+                    $resultMap['hide'] = 0;
                 } else {  //  学生楼中楼插入隐藏标识
                     $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p, 1);
+                    $resultMap['hide'] = 1;
                 }
             }
         }
 
         $this->handleAt($post_id, $to_f_reply_id, $content, $p, $map);
         //返回结果
-        return $result;
+        $resultMap['id'] = $result;
+        return $resultMap;
     }
 
     /**
@@ -85,7 +88,7 @@ class ForumLzlReplyModel extends Model
         $url = U('Forum/Index/detail', array('id' => $post_id,'page'=>$p,'sr'=>$to_f_reply_id,'sp'=>$pageCount)).'#'.$to_f_reply_id;
         $from_uid = $uid;
         $type = 2;
-        D('Message')->sendMessage($to_uid, $content, $title, $url, $from_uid, $type, '', 'lzl_reply', $post_id, $result);
+        D('Message')->sendMessage($to_uid, $content, $title, $url, $from_uid, $type, '', 'lzl_reply', $post_id, $result, $hide);
 
     }
 
