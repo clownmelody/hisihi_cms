@@ -734,6 +734,7 @@ class ForumController extends AppController
         }
         $post['teacherReplyTotalCount'] = $teacherReplyTotalCount;
         $post['studentReplyTotalCount'] = $studentReplyTotalCount;
+        $post['reply_count'] = $teacherReplyTotalCount + $studentReplyTotalCount;
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
     }
@@ -755,14 +756,14 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getNoCacheReplyList($map, 'create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getNoCacheTeacherReplyList($map, 'create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $replyTotalCount = 0;
         foreach($replyTotalList as $t_reply){
             $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
-            if($identify){
+            if($identify&&$t_reply['reply_to_student']==0){
                 $replyTotalCount++;
             }
         }
@@ -858,7 +859,7 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getNoCacheReplyList($map, 'support_count desc, create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getNoCacheStudentReplyList($map, 'support_count desc, create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
@@ -2526,5 +2527,11 @@ class ForumController extends AppController
             $model->where('id='.$v['id'])->save($data);
         }
         //$this->apiSuccess('ok', null, $list);
+    }
+
+    public function md5(){
+        $sha = sha1('111222333');
+        $sha = md5($sha.'m:24iyNJ~1$z(^SjGxe&ngorTfA#7EFu<?.c]Yt+');
+        var_dump($sha);
     }
 }
