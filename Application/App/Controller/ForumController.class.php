@@ -1623,7 +1623,9 @@ class ForumController extends AppController
      * @param $id
      */
     public function pushTopPostInfo($id){
-        $data = M('ForumPost')->where('status=1 and is_top=1')->find($id);
+        $map['status'] = array('in',array(1,3));
+        $map['is_top'] = 1;
+        $data = M('ForumPost')->where($map)->find($id);
         if(empty($data)){
             $this->apiError(-1, '传入置顶帖ID无效');
         }
