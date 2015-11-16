@@ -1002,19 +1002,12 @@ class ForumController extends AppController
     public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $at_type=1)
     {
         $this->requireLogin();
-        //dump($content);
-        //include_once './Application/App/Common/emoji.php';
-        //$content = emoji_softbank_to_unified($content);
-        //dump($content);
         $post_id = intval($post_id);
         $forum_id = intval($forum_id);
         $title = op_t($title);
         if(empty($title)){
             $title='标题';
         }
-        // if($content != ' ')
-        //     $content = op_t($content);
-
         if($content == ' ' && $pictures == null && $sound == null)
             $this->apiError(-102,'缺少内容，图片、声音、文字至少其一!');
 
@@ -1219,13 +1212,65 @@ class ForumController extends AppController
         $message = $isEdit ? '编辑成功。' : '提问成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after);
         $extra['post_id'] = $post_id;
         $extra['shareUrl'] = 'app.php/forum/detail/type/view/post_id/'.$post_id;
-        /*$uid = $this->getUid();
-        if(increaseScore($uid, 1)){
-            $extraData['scoreAdd'] = "1";
-            $extraData['scoreTotal'] = getScoreCount($uid);
-            $extra['score'] = $extraData;
-        }*/
+        $uid = $this->getUid();
+        if($this->checkUserDoPostCache($uid)){
+            if(increaseScore($uid, 3)){
+                $extraData['scoreAdd'] = "3";
+                $extraData['scoreTotal'] = getScoreCount($uid);
+                $extra['score'] = $extraData;
+            }
+        }
         $this->apiSuccess($message,null, $extra);
+    }
+
+    /**
+     * 检查用户发帖行为是否还能加积分
+     * @param int $uid
+     * @return bool
+     */
+    public function checkUserDoPostCache($uid=0){
+        $data = S($uid.'_doPost');  //  查询用户收藏缓存
+        if($data){
+            $cacheData['date'] = date('Y-m-d');
+            if(strtotime($cacheData['date'])>strtotime($data['date'])){  // 判断缓存是否是今天的，清空今天以前的缓存
+                S($uid.'_doPost', array('date'=>$cacheData['date'], 'count'=>1));
+                return true;
+            } else {
+                if($data['count']>3){   // 如果今天发帖次数超过3次，禁止再加积分
+                    $count = $data['count'] + 1;
+                    S($uid.'_doPost', array('date'=>$cacheData['date'], 'count'=>$count));
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查用户回复行为是否还能加积分
+     * @param int $uid
+     * @return bool
+     */
+    public function checkUserDoReplyCache($uid=0){
+        $data = S($uid.'_doReply');  //  查询用户收藏缓存
+        if($data){
+            $cacheData['date'] = date('Y-m-d');
+            if(strtotime($cacheData['date'])>strtotime($data['date'])){  // 判断缓存是否是今天的，清空今天以前的缓存
+                S($uid.'_doReply', array('date'=>$cacheData['date'], 'count'=>1));
+                return true;
+            } else {
+                if($data['count']>5){   // 如果今天回复次数超过5次，禁止再加积分
+                    $count = $data['count'] + 1;
+                    S($uid.'_doReply', array('date'=>$cacheData['date'], 'count'=>$count));
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -1335,11 +1380,13 @@ class ForumController extends AppController
             $extra['reply_id'] = $result;
 
             $uid = $this->getUid();
-            /*if(increaseScore($uid, 3)){
-                $extraData['scoreAdd'] = "3";
-                $extraData['scoreTotal'] = getScoreCount($uid);
-                $extra['score'] = $extraData;
-            }*/
+            if($this->checkUserDoReplyCache($uid)){
+                if(increaseScore($uid, 3)){
+                    $extraData['scoreAdd'] = "3";
+                    $extraData['scoreTotal'] = getScoreCount($uid);
+                    $extra['score'] = $extraData;
+                }
+            }
             $this->apiSuccess('回复成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after), null, $extra);
         } else {
             $this->apiError(-101,'请10秒之后再回复');
@@ -1529,11 +1576,11 @@ class ForumController extends AppController
                 }
 
                 D('Message')->sendMessage($message_uid, $user['username'] . '给您点了个赞。', $title =$user['username'] . '赞了您。', '', is_login(), 2, null, 'support_post', $source_id);
-                /*if(increaseScore($message_uid, 1)){
+                if(increaseScore($message_uid, 1)){
                     $extraData['scoreAdd'] = "1";
                     $extraData['scoreTotal'] = getScoreCount($message_uid);
                     $extra['score'] = $extraData;
-                }*/
+                }
                 $this->apiSuccess('感谢您的支持', null, $extra);
             } else {
                 $this->apiError(-101,'写入数据库失败!');
@@ -1626,7 +1673,9 @@ class ForumController extends AppController
      * @param $id
      */
     public function pushTopPostInfo($id){
-        $data = M('ForumPost')->where('status=1 and is_top=1')->find($id);
+        $map['status'] = array('in',array(1,3));
+        $map['is_top'] = 1;
+        $data = M('ForumPost')->where($map)->find($id);
         if(empty($data)){
             $this->apiError(-1, '传入置顶帖ID无效');
         }

@@ -210,20 +210,48 @@ class DocumentController extends AppController {
             $this->apiError(-100,'您已经收藏，不能再收藏了!');
         } else {
             $favorite['create_time'] = time();
-            if (D('Favorite')->where($favorite)->add($favorite)) {
-                $this->clearCache($favorite,'favorite');
-                $uid = $this->getUid();
-                if(increaseScore($uid, 1)){
-                    $extraData['scoreAdd'] = "1";
-                    $extraData['scoreTotal'] = getScoreCount($uid);
-                    $extra['score'] = $extraData;
+            if($this->checkUserDoFavoriteCache($favorite['uid'])){
+                if (D('Favorite')->where($favorite)->add($favorite)) {
+                    $this->clearCache($favorite,'favorite');
+                    $uid = $this->getUid();
+                    if(increaseScore($uid, 1)){
+                        $extraData['scoreAdd'] = "1";
+                        $extraData['scoreTotal'] = getScoreCount($uid);
+                        $extra['score'] = $extraData;
+                    }
+                    $this->apiSuccess('感谢您的支持', null, $extra);
+                } else {
+                    $this->apiError(-101,'写入数据库失败!');
                 }
-                $this->apiSuccess('感谢您的支持', null, $extra);
             } else {
-                $this->apiError(-101,'写入数据库失败!');
+                $this->apiSuccess('感谢您的支持');
             }
-
         }
+    }
+
+    /**
+     * 检查用户收藏行为是否还能加积分
+     * @param int $uid
+     * @return bool
+     */
+    public function checkUserDoFavoriteCache($uid=0){
+        $data = S($uid.'_doFavorite');  //  查询用户收藏缓存
+        if($data){
+            $cacheData['date'] = date('Y-m-d');
+            if(strtotime($cacheData['date'])>strtotime($data['date'])){  // 判断缓存是否是今天的，清空今天以前的缓存
+                S($uid.'_doFavorite', array('date'=>$cacheData['date'], 'count'=>1));
+                return true;
+            } else {
+                if($data['count']>10){   // 如果今天收藏次数超过10次，禁止再加积分
+                    $count = $data['count'] + 1;
+                    S($uid.'_doFavorite', array('date'=>$cacheData['date'], 'count'=>$count));
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 
     /**

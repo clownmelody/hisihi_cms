@@ -161,16 +161,43 @@ class CourseController extends AppController
             $extra['course_share_url'] = 'app.php/course/coursedetail/type/view/id/'.$id;
             $uid = $this->getUid();
             if($uid){
-                if(increaseScore($uid, 1)){
-                    $extraData['scoreAdd'] = "1";
-                    $extraData['scoreTotal'] = getScoreCount($uid);
-                    $extra['score'] = $extraData;
+                if($this->checkUserDoShareCache($uid)){
+                    if(increaseScore($uid, 1)){
+                        $extraData['scoreAdd'] = "1";
+                        $extraData['scoreTotal'] = getScoreCount($uid);
+                        $extra['score'] = $extraData;
+                    }
                 }
             }
             $this->apiSuccess("获取课程分享链接成功", null, $extra);
         }
         else
             $this->apiError(-404, '未找到该课程！');
+    }
+
+    /**
+     * 检查用户分享行为是否还能加积分
+     * @param int $uid
+     * @return bool
+     */
+    public function checkUserDoShareCache($uid=0){
+        $data = S($uid.'_doShare');  //  查询用户收藏缓存
+        if($data){
+            $cacheData['date'] = date('Y-m-d');
+            if(strtotime($cacheData['date'])>strtotime($data['date'])){  // 判断缓存是否是今天的，清空今天以前的缓存
+                S($uid.'_doShare', array('date'=>$cacheData['date'], 'count'=>1));
+                return true;
+            } else {
+                if($data['count']>5){   // 如果今天收藏次数超过10次，禁止再加积分
+                    $count = $data['count'] + 1;
+                    S($uid.'_doShare', array('date'=>$cacheData['date'], 'count'=>$count));
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 
     //获取课程视频URL
@@ -346,20 +373,48 @@ class CourseController extends AppController
             $this->apiError(-100,'您已经收藏，不能再收藏了!');
         } else {
             $favorite['create_time'] = time();
-            if (D('Favorite')->where($favorite)->add($favorite)) {
-                $this->clearCache($favorite,'favorite');
-                $uid = $this->getUid();
-                if(increaseScore($uid, 1)){
-                    $extraData['scoreAdd'] = "1";
-                    $extraData['scoreTotal'] = getScoreCount($uid);
-                    $extra['score'] = $extraData;
+            if($this->checkUserDoFavoriteCache($favorite['uid'])){
+                if (D('Favorite')->where($favorite)->add($favorite)) {
+                    $this->clearCache($favorite,'favorite');
+                    $uid = $this->getUid();
+                    if(increaseScore($uid, 1)){
+                        $extraData['scoreAdd'] = "1";
+                        $extraData['scoreTotal'] = getScoreCount($uid);
+                        $extra['score'] = $extraData;
+                    }
+                    $this->apiSuccess('感谢您的支持', null, $extra);
+                } else {
+                    $this->apiError(-101,'写入数据库失败!');
                 }
-                $this->apiSuccess('感谢您的支持', null, $extra);
             } else {
-                $this->apiError(-101,'写入数据库失败!');
+                $this->apiSuccess('感谢您的支持');
             }
-
         }
+    }
+
+    /**
+     * 检查用户收藏行为是否还能加积分
+     * @param int $uid
+     * @return bool
+     */
+    public function checkUserDoFavoriteCache($uid=0){
+        $data = S($uid.'_doFavorite');  //  查询用户收藏缓存
+        if($data){
+            $cacheData['date'] = date('Y-m-d');
+            if(strtotime($cacheData['date'])>strtotime($data['date'])){  // 判断缓存是否是今天的，清空今天以前的缓存
+                S($uid.'_doFavorite', array('date'=>$cacheData['date'], 'count'=>1));
+                return true;
+            } else {
+                if($data['count']>10){   // 如果今天收藏次数超过10次，禁止再加积分
+                    $count = $data['count'] + 1;
+                    S($uid.'_doFavorite', array('date'=>$cacheData['date'], 'count'=>$count));
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 
     //删除收藏
@@ -375,7 +430,6 @@ class CourseController extends AppController
         if (D('Favorite')->where($favorite)->count()) {
             if (D('Favorite')->where($favorite)->delete()) {
                 $this->clearCache($favorite,'favorite');
-
                 $this->apiSuccess('删除收藏成功！');
             } else {
                 $this->apiError(-101,'写入数据库失败!');
@@ -401,7 +455,6 @@ class CourseController extends AppController
             $support['create_time'] = time();
             if (D('Support')->where($support)->add($support)) {
                 $this->clearCache($support);
-
                 $this->apiSuccess('感谢您的支持');
             } else {
                 $this->apiError(-101,'写入数据库失败!');
@@ -409,6 +462,7 @@ class CourseController extends AppController
 
         }
     }
+
     //取消点赞
     public function unDoSupport($id)
     {

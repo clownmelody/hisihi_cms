@@ -1267,6 +1267,16 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 获取机构的类型列表
+     */
+    public function getTypeList(){
+        $configModel = M('OrganizationConfig');
+        $configList = $configModel->field('id, value')->where('status=1 and type=3 and organization_id=0')->select();
+        $extra['data'] = $configList;
+        $this->apiSuccess('获取机构类型列表成功', null, $extra);
+    }
+
+    /**
      * 用户评论机构
      * @param int $organization_id
      * @param int $uid
