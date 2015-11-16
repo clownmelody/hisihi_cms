@@ -377,24 +377,23 @@
 
 			var that = this;
 			this.server_url = 'http://'+server_url+'/api.php?s=';
-			this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
+//			this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
 			this.controlCommentBoxStatus();
 			this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
 
-			$.post(this.server_url+'/user/login',
-					{username:'18601995231',password:'123456',type:'3',client:'4'},function(data){
-						if(data.success) {
-							that.userInfo = {section_id: data.session_id, name: data.name, pic: data.avatar_url};
-							that.controlCommentBoxStatus();
-						}
-					});
+//			$.post(this.server_url+'/user/login',
+//					{username:'18601995231',password:'123456',type:'3',client:'4'},function(data){
+//						if(data.success) {
+//							that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
+//							that.controlCommentBoxStatus();
+//						}
+//					});
 		 }
 
 		 commentObj.prototype={
 
 			controlCommentBoxStatus:function(){
-//				if(!this.userInfo.session_id){
-				if(!this.userInfo.section_id){
+				if(!this.userInfo.session_id){
 					this.$wrapper.hide();
 					return;
 				}
@@ -411,8 +410,7 @@
 					 that.showCommentTips.call(that,'内容为空');
 					 return;
 				 }
-//				 if(!this.userInfo.session_id){
-				 if(!this.userInfo.section_id){
+				 if(!this.userInfo.session_id){
 					 return;
 				 }
 				 $target.addClass('disabled');
@@ -421,8 +419,7 @@
 					 url:this.server_url+'/Forum/doReply',  //请求的URL
 					 timeout : 20000, //超时时间设置，单位毫秒
 					 type : 'post',  //请求方式，get或post
-//					 data :{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},  //请求所传参数，json格式
-					 data :{post_id:$('#postid').val(),session_id:this.userInfo.section_id,content:str},  //请求所传参数，json格式
+					 data :{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},  //请求所传参数，json格式
 					 dataType:'json',//返回的数据格式
 					 success:function(result){ //请求成功的回调函数
 						 var tip,$targetCon=$('.detailed-list');
