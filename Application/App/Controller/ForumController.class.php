@@ -1771,7 +1771,7 @@ class ForumController extends AppController
             $showMainPost = true;
             $post = $this->getTopPostInfo($id);
             //增加浏览次数
-            //D('ForumPost')->where(array('id' => $id))->setInc('view_count');
+            D('ForumPost')->where(array('id' => $id))->setInc('view_count');
         } else {
             $showMainPost = false;
         }
