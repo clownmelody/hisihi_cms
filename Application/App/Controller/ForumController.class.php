@@ -524,7 +524,7 @@ class ForumController extends AppController
     public function getReplyInfo($reply_id)
     {
         $map['id'] = $reply_id;
-        $reply = D('ForumPostReply')->where($map)->field('uid,create_time,content')->find();
+        $reply = D('ForumPostReply')->where($map)->field('uid, create_time, content, reply_to_student')->find();
         if(!$reply)
             return null;
         $reply['reply_id'] = $reply_id;
@@ -734,6 +734,7 @@ class ForumController extends AppController
         }
         $post['teacherReplyTotalCount'] = $teacherReplyTotalCount;
         $post['studentReplyTotalCount'] = $studentReplyTotalCount;
+        $post['reply_count'] = $teacherReplyTotalCount + $studentReplyTotalCount;
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
     }
@@ -755,14 +756,14 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getNoCacheReplyList($map, 'create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getNoCacheTeacherReplyList($map, 'create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $replyTotalCount = 0;
         foreach($replyTotalList as $t_reply){
             $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
-            if($identify){
+            if($identify&&$t_reply['reply_to_student']==0){
                 $replyTotalCount++;
             }
         }
@@ -858,7 +859,7 @@ class ForumController extends AppController
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getNoCacheReplyList($map, 'support_count desc, create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getNoCacheStudentReplyList($map, 'support_count desc, create_time desc', $page, $count);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
@@ -1407,18 +1408,18 @@ class ForumController extends AppController
         $tox_money_before=getMyToxMoney();
 
         $result = $model->addLZLReply($post_id, $to_f_reply_id, $to_f_lzl_id, $to_uid, $content,$p);
-        if (!$result) {
+        if (!$result['id']) {
             $this->apiError($model->getError(),'追问失败！');
         }
         if($pos != null) {
-            $map_pos['id'] = $result;
+            $map_pos['id'] = $result['id'];
             $map_pos['type'] = 2;
             $map_pos['pos'] = $pos;
             $this->setForumPos($map_pos);
         }
         if($sound != null) {
             $Sound = D('ForumSound');
-            $data = array('fid' => $result,'ftype' => 2);
+            $data = array('fid' => $result['id'],'ftype' => 2);
             $data = $Sound->create($data);
             if (!$data) {
                 $this->apiError(0, $Sound->getError());
@@ -1447,7 +1448,7 @@ class ForumController extends AppController
         $param['alert_info'] = $nickname . '回复了你:' . $tail_content;
         $param['question_id'] = $post_id;
         $param['fans_id'] = $this->getUid();
-        $param['lzl_id'] = $result;
+        $param['lzl_id'] = $result['id'];
         $param['reply_id'] = $to_f_reply_id;
 
         $param['user_id'] = $to_uid;
@@ -1456,11 +1457,13 @@ class ForumController extends AppController
         $param['reg_id'] = $_user['reg_id'];
         $param['production'] = C('APNS_PRODUCTION');
         if($param['fans_id']!=$param['user_id']){
-            Hook::exec('Addons\\JPush\\JPushAddon', 'push_floor_reply', $param);
+            if($result['hide']==0){
+                Hook::exec('Addons\\JPush\\JPushAddon', 'push_floor_reply', $param);
+            }
         }
 
         //显示成功
-        $this->apiSuccess('追问成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after), null, array('lzl_id' => $result));
+        $this->apiSuccess('追问成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after), null, array('lzl_id' => $result['id']));
     }
 
     //点赞
@@ -2528,5 +2531,11 @@ class ForumController extends AppController
             $model->where('id='.$v['id'])->save($data);
         }
         //$this->apiSuccess('ok', null, $list);
+    }
+
+    public function md5(){
+        $sha = sha1('111222333');
+        $sha = md5($sha.'m:24iyNJ~1$z(^SjGxe&ngorTfA#7EFu<?.c]Yt+');
+        var_dump($sha);
     }
 }

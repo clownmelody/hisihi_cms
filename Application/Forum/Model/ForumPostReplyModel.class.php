@@ -124,14 +124,35 @@ class ForumPostReplyModel extends Model
         return $replyList;
     }
 
-    public function getNoCacheReplyList($map, $order, $page, $limit){
-        $replyList = D('ForumPostReply')->where($map)->order($order)->select();
+    public function getNoCacheTeacherReplyList($map, $order, $page, $limit){
+        //$replyList = D('ForumPostReply')->where($map)->order($order)->select();
+        $Model = M('ForumPostReply');
+        $id = $map['post_id'];
+        $replyList = $Model->join('hisihi_auth_group_access ON hisihi_forum_post_reply.uid = hisihi_auth_group_access.uid')
+            ->where('hisihi_auth_group_access.group_id=6 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3)')
+            ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->select();
         foreach ($replyList as &$reply) {
             $reply['user'] = query_user(array('avatar128', 'nickname', 'space_url', 'icons_html', 'rank_link'), $reply['uid']);
             $reply['lzl_count'] = D('forum_lzl_reply')->where('is_del=0 and to_f_reply_id=' . $reply['id'])->count();
         }
         unset($reply);
-        $replyList = getPage($replyList, $limit, $page);
+        //$replyList = getPage($replyList, $limit, $page);
+        return $replyList;
+    }
+
+    public function getNoCacheStudentReplyList($map, $order, $page, $limit){
+        //$replyList = D('ForumPostReply')->where($map)->order($order)->select();
+        $Model = M('ForumPostReply');
+        $id = $map['post_id'];
+        $replyList = $Model->join('LEFT JOIN hisihi_auth_group_access ON hisihi_forum_post_reply.uid = hisihi_auth_group_access.uid')
+            ->where('hisihi_auth_group_access.group_id=5 or hisihi_forum_post_reply.reply_to_student=1 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3)')
+            ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->select();
+        foreach ($replyList as &$reply) {
+            $reply['user'] = query_user(array('avatar128', 'nickname', 'space_url', 'icons_html', 'rank_link'), $reply['uid']);
+            $reply['lzl_count'] = D('forum_lzl_reply')->where('is_del=0 and to_f_reply_id=' . $reply['id'])->count();
+        }
+        unset($reply);
+        //$replyList = getPage($replyList, $limit, $page);
         return $replyList;
     }
 

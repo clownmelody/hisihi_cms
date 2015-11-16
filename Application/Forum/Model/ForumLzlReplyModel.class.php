@@ -44,12 +44,25 @@ class ForumLzlReplyModel extends Model
         D('Forum')->where(array('id' => $post['forum_id']))->setField('last_reply_time', time());
 
         if ($send_message) {
-            $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p);
+            $replyModel = M('ForumPostReply');
+            $reply = $replyModel->field('uid')->where('id='.$to_f_reply_id)->find();
+            if($reply){
+                $accessModel = M('AuthGroupAccess');
+                $identify = $accessModel->where('group_id=6 and uid='.$reply['uid'])->find();
+                if($identify){
+                    $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p);
+                    $resultMap['hide'] = 0;
+                } else {  //  学生楼中楼插入隐藏标识
+                    $this->sendReplyMessage(is_login(), $post_id, $content, $to_uid, $to_f_reply_id,$result,$p, 1);
+                    $resultMap['hide'] = 1;
+                }
+            }
         }
 
         $this->handleAt($post_id, $to_f_reply_id, $content, $p, $map);
         //返回结果
-        return $result;
+        $resultMap['id'] = $result;
+        return $resultMap;
     }
 
     /**
@@ -59,7 +72,7 @@ class ForumLzlReplyModel extends Model
      * @param $to_uid
      * @param $result
      */
-    private function sendReplyMessage($uid, $post_id, $content, $to_uid, $to_f_reply_id,$result,$p)
+    private function sendReplyMessage($uid, $post_id, $content, $to_uid, $to_f_reply_id,$result,$p, $hide=0)
     {
 
         $limit = 5;
@@ -75,7 +88,7 @@ class ForumLzlReplyModel extends Model
         $url = U('Forum/Index/detail', array('id' => $post_id,'page'=>$p,'sr'=>$to_f_reply_id,'sp'=>$pageCount)).'#'.$to_f_reply_id;
         $from_uid = $uid;
         $type = 2;
-        D('Message')->sendMessage($to_uid, $content, $title, $url, $from_uid, $type, '', 'lzl_reply', $post_id, $result);
+        D('Message')->sendMessage($to_uid, $content, $title, $url, $from_uid, $type, '', 'lzl_reply', $post_id, $result, $hide);
 
     }
 
