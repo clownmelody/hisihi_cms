@@ -434,14 +434,17 @@
 									 '<p class="detailed-item-txt">'+str+'</p>'+
 									 '</div>'+
 									 '</li>';
-							 if($targetCon.length==0) {
+							 if($targetCon.length>0) {
+								 $targetCon.prepend(htmlStr);
+							 }
+							 else {
 								 $targetCon=$('.detailed-main');
 								 htmlStr = '<div class="detailed-box detailed-body">'+
 										 		'<p class="detailed-top-title review-top">评论</p>'+
 										 		'<ul class="detailed-list">'+htmlStr+'</ul>'+
 											'</div>';
+								 $targetCon.append(htmlStr);
 							 }
-							 $targetCon.prepend(htmlStr);
 						 }else{
 							 var tip=result.message;
 							 tip =tip||'评论失败';
