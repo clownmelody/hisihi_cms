@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<title>嘿设汇置顶详情</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="Resource-type" content="Document" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<style>
+	*::after, *::before {
+	    box-sizing: border-box;
+	}
+	ul{
+		 list-style-type: none;
+	}
+	*{
+		margin: 0;
+		padding: 0;
+		font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+		box-sizing: border-box;
+	}
+	body{
+		background: #ececec;
+		font-size: 100%;
+		position: absolute;
+		top:0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+	img {
+		width: 100%;
+	}
+	input，textarea{
+		resize: none;
+		outline: none;
+	}
+	.detailed-main{
+		padding: 10px;
+		margin-bottom: 3em;
+	}
+	.detailed-box{
+		border:1px solid #eee;
+		margin-bottom: 10px;
+		background: #fff;
+		box-shadow: 0 0px 1px #ddd;
+	}
+	.detailed-top{
+		padding: 10px;
+		border-bottom: 1px solid #ececec;
+	}
+	.detailed-top-title{
+		color: #333;
+		font-size: 16px;
+		overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    line-height: 35px;
+	}
+	.detailed-time{
+		font-size: 12px;
+		text-align: right;
+		color: #9AA09E;
+	}
+	.detailed-body{
+		padding: 10px;
+	}
+	.detailed-txt{
+		/*font-size: 14px;*/
+		/*color: #8E8A87;*/
+	}
+	.review-top{
+		border-bottom: 1px solid #676767;
+	}
+	.detailed-item-img{
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
+		overflow: hidden;
+		background: #999;
+		/*display: inline-block;*/
+		margin-right: 10px;
+		float: left;
+	}
+	.detailed-item-body{
+		/*display: inline-block;*/
+		padding-left: 60px;
+
+	}
+	.detailed-item-name{
+		color: #6A6A68;
+		font-size: 14px;
+		overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    line-height: 30px;
+	}
+	.detailed-item-time{
+		font-size: 12px;
+		color: #A4A4A4;
+		overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    margin-bottom: 10px;
+	}
+	.detailed-item-txt{
+		font-size: 14px;
+		color: #9C9A9D;
+	}
+	.detailed-list >li{
+		padding: 10px 0;
+		border-bottom: 1px solid #D9D9D9;
+	}
+	.detailed-list >li:nth-last-child(1){
+		border-bottom: 0 solid #D9D9D9;
+	}
+	.line-icon{
+		border: 1px solid #2C3949;
+		color: #2C3949;
+		padding: 1px 5px;
+		border-radius: 2px;
+		margin-right: 5px;
+		font-size: 14px;
+	}
+	.box-btn{
+		text-align: center;
+		text-decoration: none;
+		display: none;
+		padding:  10px;
+		color: #9C9A9D;
+	}
+	.box-btn:hover{
+		text-decoration: none;
+		color: #9C9A9D;
+		background: #f1f1f1;
+	}
+	.svg-loading{
+		margin: 0 auto;
+		display: none;
+	}
+	#comment-box{
+		display: none;
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		height:4em;
+	}
+	.comment-box-header{
+		height: 1.4em;
+		font-size:0.875em;
+		text-align: center;
+		color: #FF6600;
+		opacity: 0;
+	}
+	.comment-box-main{
+		height: 3em;
+		background-color: #FFFFFF;
+		position: relative;
+	}
+	#comment-box .comment-box-left{
+		margin-right: 5em;
+		height: -webkit-calc(100% - 0.5em);
+		height: -moz-calc(100% - 0.5em);
+		border-bottom: 0.0625em solid #CCCCCC;
+	}
+	#comment-box textarea{
+		/*height: -webkit-calc(100% - 0.5em);*/
+		/*height: -moz-calc(100% - 0.5em);*/
+		height:100%;
+		width: 100%;
+		border: none;
+		background-color: #FFFFFF;
+		outline: none;
+		resize: none;
+		padding-left: 0.875em;
+		line-height: 2em;
+		font-size: 1.1em;
+	}
+	#comment-box input{
+		outline: none;
+		resize: none;
+		width: 4em;
+		height: 100%;
+		position: absolute;
+		border: none;
+		background-color:transparent;
+		right: 0;
+		top: 0;
+		font-size: 1.25em;
+		color: #333333;
+	}
+	#comment-box input:active{
+		transform: scale(.9);
+	}
+	#comment-box input.disabled{
+		color: #ECECEC !important;
+	}
+	</style>
+</head>
+<body>
+	
+	<div class="detailed-main">
+		<div class="detailed-box">
+			<input type="hidden" id="postid" value="{$post.post_id}">
+			<input type="hidden" id="replyTotalCount" value="{$replyTotalCount}">
+			<div class="detailed-top">
+				<p class="detailed-top-title">
+					<span class="line-icon">{$post.type}</span>
+					{$post.title}
+				</p>
+				<p class="detailed-time">{$post.create_time|date='m-d H:i',###}</p>
+			</div>
+			<!-- /.detailed-top -->
+
+			<div class="detailed-body">
+				<p class="detailed-txt">
+					{$post.content}
+				</p>
+			</div>
+			<!-- /.detailed-body -->
+
+		</div>
+		<!-- /.detailed-box -->
+
+		<if condition="$isShowReply==1 ">
+			<div class="detailed-box detailed-body">
+					<p class="detailed-top-title review-top">
+						评论
+					</p>
+					<ul class="detailed-list">
+						<volist name="replyList" id="reply">
+							<li>
+								<img src="{$reply.userInfo.avatar128}" alt="" class="detailed-item-img">
+								<div class="detailed-item-body">
+									<p class="detailed-item-name">{$reply.userInfo.nickname}</p>
+									<p class="detailed-item-time">{$reply.create_time|date='m-d H:i',###}</p>
+									<p class="detailed-item-txt">
+										{$reply.content}
+									</p>
+								</div>
+							</li>
+						</volist>
+					</ul>
+			</div>
+		</if>
+		<!-- /.detailed-box -->
+
+		<div class="detailed-box">
+			<svg id="loadingImg1" width="50" height="50" class="svg-loading">
+				<circle cx="40" cy="25" r="3" fill="#000080" >
+					<animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+				</circle>
+				<circle cx="37" cy="16" r="3" fill="rgba(0,0,180,0.8)">
+					<animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+				</circle>
+				<circle cx="30" cy="10" r="3" fill="rgba(0,0,180,0.6)">
+					<animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+				</circle>
+				<circle cx="20" cy="10" r="3" fill="rgba(0,0,180,0.4)">
+					<animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+				</circle>
+				<circle cx="13" cy="16" r="3" fill="rgba(0,0,180,0.2)">
+					<animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+				</circle>
+			</svg>
+			<a href="javascript:void(0);" class="box-btn" onclick="getMoreReplay();">点击加载更多</a>
+		</div>
+	</div>
+	<div id="comment-box">
+		<p class="comment-box-header">评论成功</p>
+		<div class="comment-box-main">
+			<div class="comment-box-left">
+				<textarea placeholder="写评论"></textarea>
+			</div>
+			<input type="button" value="发送" class="abled"/>
+		</div>
+	</div>
+	<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
+	<script>
+		$(function(){
+			totalReplayCount = parseInt($('#replyTotalCount').val());
+			postid = $('#postid').val();
+
+			svgloading = $('svg.svg-loading');
+			repalybtn = $('a.box-btn');
+			detailedlist = $('ul.detailed-list');
+			if(totalReplayCount > 10){
+				repalybtn.css('display','block');
+			}
+		});
+		var totalReplayCount = 0;
+		var curRepalyCount = 10;
+		var postid = 0;
+		var page = 2;
+		var server_url = '{$Think.server.HTTP_HOST}';
+
+		console.log('gb sb');
+
+		var svgloading = '';
+		var repalybtn = '';
+		var detailedlist = '';
+
+		function getMoreReplay(){
+			svgloading.css('display','block');
+			repalybtn.text('正在加载');
+			repalybtn.attr('onclick','return false;');
+			$.ajax({
+				type: 'GET',
+				url: 'http://' + server_url + '/api.php?s=/forum/ajaxPostReplyList/post_id/' + postid +'/page/' + page,
+				dataType: 'json',
+				success: function(data){
+					if(data['error_code'] == 0 && data != null){
+						var replay = data['data'];
+						var replayarray = [];
+						for(var i in replay){
+							var userInfo = replay[i]['userInfo'];
+							replayarray.push('<li>');
+							replayarray.push('<img src="' + userInfo['avatar128'] +'" alt="" class="detailed-item-img">');
+							replayarray.push('<div class="detailed-item-body">');
+							replayarray.push('<p class="detailed-item-name">' + userInfo['nickname'] +'</p>');
+							replayarray.push('<p class="detailed-item-time">' + dateParse(replay[i]['create_time']) +'</p>');
+							replayarray.push('<p class="detailed-item-txt">' + replay[i]['content'] +'</p>');
+							replayarray.push('</div></li>');
+						}
+						svgloading.hide();
+						detailedlist.append(replayarray.join(''));
+						page += 1;
+						curRepalyCount += replay.length;
+						if(curRepalyCount >= totalReplayCount){
+							repalybtn.text('没有更多评论了');
+							repalybtn.attr('onclick','return false;');
+						}else{
+							repalybtn.text('点击加载更多');
+							repalybtn.attr('onclick','getMoreReplay();');
+						}
+					}
+				},
+				error: function(xhr, type){
+					alert('获取评论失败!')
+				}
+			})
+		}
+		function dateParse(date){
+			var newDate = new Date(parseInt(date) * 1000).Format('MM-dd hh:mm');
+			return newDate;
+		}
+
+		Date.prototype.Format = function (fmt) { //author: meizz
+			var o = {
+				"M+": this.getMonth() + 1, //月份
+				"d+": this.getDate(), //日
+				"h+": this.getHours(), //小时
+				"m+": this.getMinutes(), //分
+				"s+": this.getSeconds(), //秒
+				"q+": Math.floor((this.getMonth() + 3) / 3), //季度
+				"S": this.getMilliseconds() //毫秒
+			};
+			if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+			for (var k in o)
+				if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+			return fmt;
+		}
+
+
+		/********蒋建明修改 评论框********/
+		 function commentObj($wrapper){
+			this.$wrapper=$wrapper;
+			var info=AppFunction.getUser();
+			if(info) {
+				this.userInfo = JSON.parse(info);
+			}
+
+			var that = this;
+			this.server_url = 'http://'+server_url+'/api.php?s=';
+//			this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
+			this.controlCommentBoxStatus();
+			this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
+
+//			$.post(this.server_url+'/user/login',
+//					{username:'18601995231',password:'123456',type:'3',client:'4'},function(data){
+//						if(data.success) {
+//							that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
+//							that.controlCommentBoxStatus();
+//						}
+//					});
+		 }
+
+		 commentObj.prototype={
+
+			controlCommentBoxStatus:function(){
+				if(!this.userInfo.session_id){
+					this.$wrapper.hide();
+					return;
+				}
+				this.$wrapper.show();
+			},
+
+			 /*提交评论*/
+			 commitComment:function(e){
+				 var $textarea=this.$wrapper.find('textarea'),
+				    str=$textarea.val().replace(/(^\s*)|(\s*$)/g,''),
+					that=this,
+					$target=$(e.currentTarget);
+				 if(str==''){
+					 that.showCommentTips.call(that,'内容为空');
+					 return;
+				 }
+				 if(!this.userInfo.session_id){
+					 return;
+				 }
+				 $target.addClass('disabled');
+
+				 var ajaxTimeoutTest=$.ajax({
+					 url:this.server_url+'/Forum/doReply',  //请求的URL
+					 timeout : 20000, //超时时间设置，单位毫秒
+					 type : 'post',  //请求方式，get或post
+					 data :{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},  //请求所传参数，json格式
+					 dataType:'json',//返回的数据格式
+					 success:function(result){ //请求成功的回调函数
+						 var tip,$targetCon=$('.detailed-list');
+						 if(result.success){
+							 $textarea.val('');
+							 tip='评论成功';
+							 var htmlStr='<li>'+
+									 '<img src="'+that.userInfo.pic+'" alt="" class="detailed-item-img">'+
+									 '<div class="detailed-item-body">'+
+									 '<p class="detailed-item-name">'+that.userInfo.name+'</p>'+
+									 '<p class="detailed-item-time">'+new Date().Format("MM-dd hh:mm")+'</p>'+
+									 '<p class="detailed-item-txt">'+str+'</p>'+
+									 '</div>'+
+									 '</li>';
+							 if($targetCon.length==0) {
+								 $targetCon=$('.detailed-main');
+								 htmlStr = '<div class="detailed-box detailed-body">'+
+										 		'<p class="detailed-top-title review-top">评论</p>'+
+										 		'<ul class="detailed-list">'+htmlStr+'</ul>'+
+											'</div>';
+							 }
+							 $targetCon.prepend(htmlStr);
+						 }else{
+							 var tip=result.message;
+							 tip =tip||'评论失败';
+						 }
+						 that.showCommentTips.call(that,tip);
+						 $target.removeClass('disabled');
+					 },
+					 complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
+						 if(status=='timeout'){   //超时,status还有success,error等值的情况
+							 ajaxTimeoutTest.abort();
+							 that.showCommentTips.call(that,'请求超时');
+							 $target.removeClass('disabled');
+						 }
+					 }
+				 });
+			 },
+
+			 showCommentTips:function(tip){
+				 var $tip=this.$wrapper.find('.comment-box-header');
+				 $tip.text(tip).css('opacity',1);
+				 window.setTimeout(function(){
+					 $tip.text('').css('opacity',0);
+				 },1500)
+			 },
+		};
+
+		new commentObj($('#comment-box'));
+
+	</script>
+</body>
+</html>
