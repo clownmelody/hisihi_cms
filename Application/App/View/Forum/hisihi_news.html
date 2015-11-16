@@ -91,9 +91,8 @@
             width: 100%;
         }
         .newsListContainer li .right .rightHeader p{
-            color: #212121;
-            color:#6A6A68;
-            line-height: normal;
+            color:#212121;
+            line-height: 1.4em;
             text-decoration: none;
         }
         .newsListContainer li .right .rightBottom{
@@ -102,20 +101,19 @@
         }
         .newsListContainer li .right .rightBottom *{
             font-size: 0.9em;
+            color: #bdbdbd;
         }
         .newsListContainer li .right .rightBottom div{
-            color: #dbdbdb;
             display: inline-block;
         }
         .newsListContainer li .right .rightBottomLeft{
             float: left;
         }
         .newsListContainer li .right .rightBottom i{
-            /*background: url('__IMG__/viewTimes.png') 0 0 no-repeat;*/
             display: inline-block;
             height: 1.2em;
             width: 1.2em;
-            margin-right:0.25em;
+            margin-right:0.35em;
         }
         .newsListContainer li .right .rightBottom i img{
             max-width: 100%;
@@ -128,7 +126,7 @@
             text-align: center;
             color: #9C9A9D;
             clear:both;
-            margin-bottom: 1em;
+            margin: 1em auto;
         }
     </style>
 </head>
@@ -199,7 +197,7 @@
         var hisihiNews = function ($wrapper) {
             this.$wrapper = $wrapper;
             this.server_url = 'http://{$Think.server.HTTP_HOST}/api.php?s=/forum';
-//            this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
+            this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
             this.pageIndex = 1;
             this.pageSize = 20;
             this.totalPage=1;
@@ -238,7 +236,7 @@
                     $loadinng.hide();
                     if(result.success) {
                         that.totalPage=Math.ceil(result.totalCount/that.pageSize);
-//                        that.totalPage=5;
+                        that.totalPage=5;
                         that.pageIndex++;
                         $loadinng.before(that.getNewsContent(result.data));
                     }else{
@@ -255,7 +253,7 @@
              * str - {string} 内容字符串
              */
             getNewsContent:function(data){
-//                data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"0","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"0","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
+                data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
                 var str = '',title, len = data.length, item,dateStr;
                 for (var i = 0; i < len; i++) {
                     item = data[i];
@@ -279,9 +277,9 @@
                                 '</div>' +
                             '</a></li>';
                 }
-//                str+=str;
-//                str+=str;
-//                str+=str;
+                str+=str;
+                str+=str;
+                str+=str;
                 return str;
             },
 
