@@ -425,7 +425,7 @@
 //					 data :{post_id:$('#postid').val(),session_id:this.userInfo.section_id,content:str},  //请求所传参数，json格式
 					 dataType:'json',//返回的数据格式
 					 success:function(result){ //请求成功的回调函数
-						 var tip;
+						 var tip,$targetCon=$('.detailed-list');
 						 if(result.success){
 							 $textarea.val('');
 							 tip='评论成功';
@@ -437,7 +437,14 @@
 									 '<p class="detailed-item-txt">'+str+'</p>'+
 									 '</div>'+
 									 '</li>';
-							 $('.detailed-list').prepend(htmlStr);
+							 if($targetCon.length==0) {
+								 $targetCon=$('.detailed-main');
+								 htmlStr = '<div class="detailed-box detailed-body">'+
+										 		'<p class="detailed-top-title review-top">评论</p>'+
+										 		'<ul class="detailed-list">'+htmlStr+'</ul>'+
+											'</div>';
+							 }
+							 $targetCon.prepend(htmlStr);
 						 }else{
 							 var tip=result.message;
 							 tip =tip||'评论失败';
@@ -465,17 +472,6 @@
 		};
 
 		new commentObj($('#comment-box'));
-
-		//function funFromjs(){
-//        document.getElementById("helloweb").innerHTML="我是JS里的方法";
-	//	}
-//		var aTag = document.getElementsByTagName('a')[0];
-//		aTag.addEventListener('click', function(){
-//			//调用android本地方法
-//			var resutl = AppFunction.show("今天是2015.11.13，过年有年终奖不？！！！！！！");
-//			document.getElementById("helloweb").innerHTML=resutl;
-//			return false;
-//		}, false);
 
 	</script>
 </body>

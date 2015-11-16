@@ -181,7 +181,7 @@ class AdminListBuilder extends AdminBuilder
 
     public function keyStatus($name = 'status', $title = '状态')
     {
-        $map = array(-1 => '删除', 0 => '禁用', 1 => '启用', 2 => '未审核');
+        $map = array(-1 => '删除', 0 => '禁用', 1 => '启用', 2 => '未审核',3=>'隐藏');
         return $this->key($name, $title, 'status', $map);
     }
 
@@ -226,7 +226,7 @@ class AdminListBuilder extends AdminBuilder
         return $this->keyText($name, $title);
     }
 
-    public function keyDoAction($getUrl, $text, $title = '操作')
+    public function keyDoAction($getUrl, $text, $title = '操作',$type=null)
     {
         //获取默认getUrl函数
         if (is_string($getUrl)) {
@@ -255,7 +255,11 @@ class AdminListBuilder extends AdminBuilder
         }
 
         //在DOACTIONS中增加action
-        $doActionKey['opt']['actions'][] = array('text' => $text, 'get_url' => $getUrl);
+        if(!empty($type)){
+            $doActionKey['opt']['actions'][] = array('text' => $text, 'get_url' => $getUrl,'type'=>$type);
+        }else{
+            $doActionKey['opt']['actions'][] = array('text' => $text, 'get_url' => $getUrl);
+        }
         return $this;
     }
 
@@ -272,6 +276,16 @@ class AdminListBuilder extends AdminBuilder
             return $that->addUrlParam($setStatusUrl, array('status' => 1));
         };
         return $this->keyDoAction($getUrl, $text, array('class' => 'ajax-get'));
+    }
+
+    public function keyDoActionHide($text = '隐藏')
+    {
+        $that = $this;
+        $setStatusUrl = $this->_setStatusUrl;
+        $getUrl = function () use ($that, $setStatusUrl) {
+            return $that->addUrlParam($setStatusUrl, array('status' => 3));
+        };
+        return $this->keyDoAction($getUrl, $text, '操作','ajax');
     }
 
     public function keyTruncText($name, $title, $length)
@@ -352,14 +366,21 @@ class AdminListBuilder extends AdminBuilder
         });
 
         //doaction转换为html
-        $this->convertKey('doaction', 'html', function ($value, $key, $item) {
+        $that = $this;
+        $this->convertKey('doaction', 'html', function ($value, $key, $item) use($that){
             $actions = $key['opt']['actions'];
             $result = array();
             foreach ($actions as $action) {
                 $getUrl = $action['get_url'];
                 $linkText = $action['text'];
                 $url = $getUrl($item);
-                $result[] = "<a href=\"$url\">$linkText</a>";
+                if(empty($action['type'])){
+                    $result[] = "<a href=\"$url\">$linkText</a>";
+                }else{
+                    $url = $that->addUrlParam($url, array('ids' => $item['id']));
+                    $result[] = "<a href=\"$url\" class=\"ajax-get\">$linkText</a>";
+                }
+
             }
             return implode(' ', $result);
         });

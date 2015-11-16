@@ -126,15 +126,35 @@
         .loadingResultTips{
             display: none;
             text-align: center;
-            color: #FF7324;
+            color: #9C9A9D;
             clear:both;
+            margin-bottom: 1em;
         }
     </style>
 </head>
 <body>
 <div class="wrapper">
     <ul class="newsListContainer">
-        <div id="loadingTip" class="loadingResultTips">数据加载中……</div>
+        <div id="loadingTip" class="loadingResultTips">
+            <svg width="50" height="50" class="svg-loading">
+            <circle cx="40" cy="25" r="3" fill="#000080" >
+                <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="37" cy="16" r="3" fill="rgba(0,0,180,0.8)">
+                <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="30" cy="10" r="3" fill="rgba(0,0,180,0.6)">
+                <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="20" cy="10" r="3" fill="rgba(0,0,180,0.4)">
+                <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="13" cy="16" r="3" fill="rgba(0,0,180,0.2)">
+                <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
+            </circle>
+        </svg>
+            <p>正在加载</p>
+        </div>
         <div id="error" class="loadingResultTips"></div>
     </ul>
 </div>
@@ -218,6 +238,7 @@
                     $loadinng.hide();
                     if(result.success) {
                         that.totalPage=Math.ceil(result.totalCount/that.pageSize);
+//                        that.totalPage=5;
                         that.pageIndex++;
                         $loadinng.before(that.getNewsContent(result.data));
                     }else{
@@ -234,7 +255,7 @@
              * str - {string} 内容字符串
              */
             getNewsContent:function(data){
-//                data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"0","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"0","is_out_link":"0","link_url":"","url":"/topPostDetail/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
+//                data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"0","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"0","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
                 var str = '',title, len = data.length, item,dateStr;
                 for (var i = 0; i < len; i++) {
                     item = data[i];
