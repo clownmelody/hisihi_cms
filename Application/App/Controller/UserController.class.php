@@ -154,7 +154,7 @@ class UserController extends AppController
         //读取数据库中的用户详细资料
         $map = array('uid' => $uid);
         $user1 = D('Home/Member')->where($map)->find();
-
+        $user2 = D('User/UcenterMember')->where('id='.$uid)->find();
         //获取头像信息
         $avatar = new AvatarAddon();
         $avatar_path = $avatar->getAvatarPath($uid);
@@ -200,6 +200,7 @@ class UserController extends AppController
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
         $extra['timestamp'] = time();
+        $extra['mobile'] = $user2['mobile'];
         $this->apiSuccess("登录成功", null, $extra);
     }
 	
@@ -1983,6 +1984,7 @@ class UserController extends AppController
         //读取数据库中的用户详细资料
         $map = array('uid' => $uid);
         $user1 = D('Home/Member')->where($map)->find();
+        $user2 = D('User/UcenterMember')->where('id='.$uid)->find();
 
         D('Home/Member')->login($uid, false, $client);
         //清除登录缓存
@@ -2026,6 +2028,7 @@ class UserController extends AppController
         $extra['title'] = $title;
         $extra['ischeck'] = $ischeck;
         $extra['timestamp'] = time();
+        $extra['mobile'] = $user2['mobile'];
         if($isNewUser){
             $extra['is_new'] = true;
         } else {

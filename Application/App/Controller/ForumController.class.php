@@ -693,13 +693,13 @@ class ForumController extends AppController
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$c_uid))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$c_uid,'follow_who'=>$uid))->find();
             if($follow_other&&$be_follow){
-                $user['info']['relationship'] = 3;
+                $user['relationship'] = 3;
             } else if($follow_other&&(!$be_follow)){
-                $user['info']['relationship'] = 2;
+                $user['relationship'] = 2;
             } else if((!$follow_other)&&$be_follow){
-                $user['info']['relationship'] = 1;
+                $user['relationship'] = 1;
             } else {
-                $user['info']['relationship'] = 0;
+                $user['relationship'] = 0;
             }
         }
         $extra['totalCount'] = $totalCount;
