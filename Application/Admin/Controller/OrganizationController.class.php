@@ -452,6 +452,7 @@ class OrganizationController extends AdminController
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();
+                    getThumbImageById($data["pic_id"],280,160);
                     $res = $model->add($data);
                     if(!$res){
                         $this->error($model->getError());
@@ -460,15 +461,14 @@ class OrganizationController extends AdminController
                     $this->error($e->getMessage());
                 }
                 $this->uploadLogoPicToOSS($data["pic_id"]);
-                getThumbImageById($data["pic_id"],280,160);
                 $this->success('添加成功', 'index.php?s=/admin/organization/works');
             } else {
+                getThumbImageById($data["pic_id"],280,160);
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
                 $this->uploadLogoPicToOSS($data["pic_id"]);
-                getThumbImageById($data["pic_id"],280,160);
                 $this->success('更新成功', 'index.php?s=/admin/organization/works');
             }
         } else {
@@ -1509,6 +1509,7 @@ class OrganizationController extends AdminController
                 if(empty($cid)){
                 try {
                     $data["create_time"] = time();
+                    getThumbImageById($data["pic_id"],280,160);
                     $res = $model->add($data);
                     if(!$res){
                         $this->error($model->getError());
@@ -1517,15 +1518,14 @@ class OrganizationController extends AdminController
                     $this->error($e->getMessage());
                 }
                 $this->uploadLogoPicToOSS($data["pic_id"]);
-                getThumbImageById($data["pic_id"],280,160);
                 $this->success('添加成功', 'index.php?s=/admin/organization/environment');
             } else {
+                getThumbImageById($data["pic_id"],280,160);
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
                 $this->uploadLogoPicToOSS($data["pic_id"]);
-                getThumbImageById($data["pic_id"],280,160);
                 $this->success('更新成功', 'index.php?s=/admin/organization/environment');
             }
         } else {
