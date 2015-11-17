@@ -148,38 +148,45 @@
 		position: fixed;
 		bottom: 0;
 		width: 100%;
-		height:4em;
+		height:4.5em;
 	}
 	.comment-box-header{
 		height: 1.4em;
-		font-size:0.875em;
+		font-size:0.5em;
 		text-align: center;
 		color: #FF6600;
 		opacity: 0;
 	}
 	.comment-box-main{
-		height: 3em;
-		background-color: #FFFFFF;
+		height: 3.6em;
+		background-color: #e3e3e3;
 		position: relative;
+		padding: 0.65em;
 	}
 	#comment-box .comment-box-left{
-		margin-right: 5em;
-		height: -webkit-calc(100% - 0.5em);
-		height: -moz-calc(100% - 0.5em);
-		border-bottom: 0.0625em solid #CCCCCC;
+		margin-right: 4em;
+		/*height: -webkit-calc(100% - 0.5em);*/
+		/*height: -moz-calc(100% - 0.5em);*/
+		height: 100%;
+
+		-webkit-border-radius: .2em;
+		-moz-border-radius: .3em;
+
 	}
 	#comment-box textarea{
 		/*height: -webkit-calc(100% - 0.5em);*/
 		/*height: -moz-calc(100% - 0.5em);*/
 		height:100%;
 		width: 100%;
-		border: none;
 		background-color: #FFFFFF;
 		outline: none;
 		resize: none;
 		padding-left: 0.875em;
 		line-height: 2em;
 		font-size: 1.1em;
+		border: 0.0625em solid #CCCCCC;
+		border-radius: 0.5em;
+
 	}
 	#comment-box input{
 		outline: none;
@@ -370,24 +377,24 @@
 		/********蒋建明修改 评论框********/
 		 function commentObj($wrapper){
 			this.$wrapper=$wrapper;
-			var info=AppFunction.getUser();
-			if(info) {
-				this.userInfo = JSON.parse(info);
-			}
+//			var info=AppFunction.getUser();
+//			if(info) {
+//				this.userInfo = JSON.parse(info);
+//			}
 
 			var that = this;
 			this.server_url = 'http://'+server_url+'/api.php?s=';
-//			this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
-			this.controlCommentBoxStatus();
+			this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
+//			this.controlCommentBoxStatus();
 			this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
 
-//			$.post(this.server_url+'/user/login',
-//					{username:'18601995231',password:'123456',type:'3',client:'4'},function(data){
-//						if(data.success) {
-//							that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
-//							that.controlCommentBoxStatus();
-//						}
-//					});
+			$.post(this.server_url+'/user/login',
+					{username:'18601995231',password:'123456',type:'3',client:'4'},function(data){
+						if(data.success) {
+							that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
+							that.controlCommentBoxStatus();
+						}
+					});
 		 }
 
 		 commentObj.prototype={
