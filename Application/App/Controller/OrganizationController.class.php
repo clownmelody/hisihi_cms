@@ -1101,12 +1101,16 @@ class OrganizationController extends AppController
 
     /**
      * 获取机构列表
+     * @param int $uid
      * @param null $city
      * @param null $type
      * @param int $page
      * @param int $count
      */
-    public function localOrganizationList($city=null, $type=null, $page=1, $count=10){
+    public function localOrganizationList($uid=0, $city=null, $type=null, $page=1, $count=10){
+        if($uid==0){
+            $uid = is_login();
+        }
         $model = M('Organization');
         if(!empty($city)&&!empty($type)){
             $org_list = $model->field('id, name, slogan, city, view_count, logo')
@@ -1135,6 +1139,19 @@ class OrganizationController extends AppController
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
+
+            $user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $org['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $org['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $org['relationship'] = 1;
+            } else {
+                $org['relationship'] = 0;
+            }
         }
         $data['totalCount'] = $totalCount;
         $data['list'] = $org_list;
