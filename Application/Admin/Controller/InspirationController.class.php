@@ -63,6 +63,7 @@ class InspirationController extends AdminController {
                     if(!$model->create($data)){
                         $this->error($model->getError());
                     }
+                    getThumbImageById($data["pic_id"], 280, 160);
                     $res = $model->saveData($data);
                     if(!$res){
                         $this->error(D('Inspiration')->getError());
@@ -72,7 +73,6 @@ class InspirationController extends AdminController {
                         $picid = $model->where('id='.$id)->getField('pic_id');
                         if($picid){
                             $this->uploadLogoPicToOSS($picid);
-                            getThumbImageById($picid, 280, 160);
                         }
                     }
                 } catch (Exception $e) {
@@ -84,6 +84,7 @@ class InspirationController extends AdminController {
                 if(!$model->create($data)){
                     $this->error($model->getError());
                 }
+                getThumbImageById($data["pic_id"], 280, 160);
                 $model->updateData($cid, $data);
                 //上传图片到OSS
                 $picid = $model->where('id='.$cid)->getField('pic_id');
