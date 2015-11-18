@@ -2154,4 +2154,11 @@ class UserController extends AppController
         }
     }
 
+
+    public function smsTest($code=0){
+        $tianyi = new TianyiAddon;
+        $check = $tianyi->checkMobVerify('18507554340', $code, 'iOS');
+        $this->apiSuccess(json_encode($check));
+    }
+
 }

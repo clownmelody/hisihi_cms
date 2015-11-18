@@ -145,7 +145,7 @@ class ForumPostReplyModel extends Model
         $Model = M('ForumPostReply');
         $id = $map['post_id'];
         $replyList = $Model->join('Left JOIN hisihi_auth_group_access ON hisihi_forum_post_reply.uid = hisihi_auth_group_access.uid')
-            ->where('hisihi_forum_post_reply.reply_to_student=1 or hisihi_auth_group_access.group_id=5 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3)')
+            ->where('(hisihi_forum_post_reply.reply_to_student=1 and hisihi_forum_post_reply.post_id='.$id.') or hisihi_auth_group_access.group_id=5 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3)')
             ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->select();
         foreach ($replyList as &$reply) {
             $reply['user'] = query_user(array('avatar128', 'nickname', 'space_url', 'icons_html', 'rank_link'), $reply['uid']);

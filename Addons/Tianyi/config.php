@@ -57,7 +57,7 @@ return array(
     'app_key_i' => array(
         'title' => 'Mob APPKey for iOS：',
         'type' => 'text',
-        'value' => '',
+        'value' => '62c0e32ee020',
     ),
 
     'api_url' => array(

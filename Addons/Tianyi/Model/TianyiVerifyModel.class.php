@@ -18,7 +18,7 @@ class TianyiVerifyModel extends Model
     private $api = '接口地址';
 
     private $appkey_a = '您的Android appkey';
-    private $appkey_i = '您的iOS appkey';
+    private $appkey_i = '62c0e32ee020';
 
     /**
      * 调用天翼接口前必须调用此方法传入配置信息
