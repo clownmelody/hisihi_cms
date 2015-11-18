@@ -130,7 +130,7 @@
 	.box-btn{
 		text-align: center;
 		text-decoration: none;
-		display: none;
+		display: block;
 		padding:  10px;
 		color: #9C9A9D;
 	}
@@ -143,43 +143,54 @@
 		margin: 0 auto;
 		display: none;
 	}
+	#loadMoreContainer{
+		display: none;
+	}
+
 	#comment-box{
 		display: none;
 		position: fixed;
 		bottom: 0;
 		width: 100%;
-		height:4em;
+		height:4.5em;
 	}
 	.comment-box-header{
 		height: 1.4em;
-		font-size:0.875em;
+		font-size:0.5em;
 		text-align: center;
 		color: #FF6600;
 		opacity: 0;
 	}
 	.comment-box-main{
-		height: 3em;
-		background-color: #FFFFFF;
+		height: 3.6em;
+		background-color: #e3e3e3;
 		position: relative;
+		padding: 0.65em;
 	}
 	#comment-box .comment-box-left{
-		margin-right: 5em;
-		height: -webkit-calc(100% - 0.5em);
-		height: -moz-calc(100% - 0.5em);
-		border-bottom: 0.0625em solid #CCCCCC;
+		margin-right: 4em;
+		/*height: -webkit-calc(100% - 0.5em);*/
+		/*height: -moz-calc(100% - 0.5em);*/
+		height: 100%;
+
+		-webkit-border-radius: .2em;
+		-moz-border-radius: .3em;
+
 	}
 	#comment-box textarea{
 		/*height: -webkit-calc(100% - 0.5em);*/
 		/*height: -moz-calc(100% - 0.5em);*/
 		height:100%;
 		width: 100%;
-		border: none;
 		background-color: #FFFFFF;
 		outline: none;
 		resize: none;
 		padding-left: 0.875em;
 		line-height: 2em;
 		font-size: 1.1em;
+		border: 0.0625em solid #CCCCCC;
+		border-radius: 0.5em;
+
 	}
 	#comment-box input{
 		outline: none;
@@ -194,11 +205,16 @@
 		font-size: 1.25em;
 		color: #333333;
 	}
-	#comment-box input:active{
-		transform: scale(.9);
+
+	#comment-box input.abled{
+		color: #f5a000;
 	}
+	#comment-box input.abled:active{
+			 transform: scale(.9);
+			 color: #ce4611;
+	 }
 	#comment-box input.disabled{
-		color: #ECECEC !important;
+		color: #808080;
 	}
 	</style>
 </head>
@@ -250,7 +266,7 @@
 		</if>
 		<!-- /.detailed-box -->
 
-		<div class="detailed-box">
+		<div class="detailed-box" id="loadMoreContainer">
 			<svg id="loadingImg1" width="50" height="50" class="svg-loading">
 				<circle cx="40" cy="25" r="3" fill="#000080" >
 					<animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" begin="0s" dur="1s" repeatCount="indefinite"/>
@@ -277,11 +293,12 @@
 			<div class="comment-box-left">
 				<textarea placeholder="写评论"></textarea>
 			</div>
-			<input type="button" value="发送" class="abled"/>
+			<input type="button" value="发送" class="disabled"/>
 		</div>
 	</div>
 	<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 	<script>
+		AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮不可用
 		$(function(){
 			totalReplayCount = parseInt($('#replyTotalCount').val());
 			postid = $('#postid').val();
@@ -290,7 +307,7 @@
 			repalybtn = $('a.box-btn');
 			detailedlist = $('ul.detailed-list');
 			if(totalReplayCount > 10){
-				repalybtn.css('display','block');
+				$('#loadMoreContainer').show();
 			}
 		});
 		var totalReplayCount = 0;
@@ -370,6 +387,7 @@
 		/********蒋建明修改 评论框********/
 		 function commentObj($wrapper){
 			this.$wrapper=$wrapper;
+			this.extendStringFn();
 			var info=AppFunction.getUser();
 			if(info) {
 				this.userInfo = JSON.parse(info);
@@ -380,6 +398,17 @@
 //			this.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
 			this.controlCommentBoxStatus();
 			this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
+
+			this.$wrapper.on('input','.comment-box-left textarea',function(){
+				var txt=$(this).val().trim(),
+					$btn=$(this).parent().next(),
+					oc='disabled',nc='abled';
+				if(!txt){
+					oc='abled';
+					nc='disabled';
+				}
+				$btn.removeClass(oc).addClass(nc);
+			});
 
 //			$.post(this.server_url+'/user/login',
 //					{username:'18601995231',password:'123456',type:'3',client:'4'},function(data){
@@ -392,6 +421,9 @@
 
 		 commentObj.prototype={
 
+			 /*
+			 *控制评论框的显示状态，如果用户没有登录， session_id 为空  则不显示
+			 */
 			controlCommentBoxStatus:function(){
 				if(!this.userInfo.session_id){
 					this.$wrapper.hide();
@@ -399,6 +431,10 @@
 				}
 				this.$wrapper.show();
 			},
+
+			 /*
+			 *控制
+			 */
 
 			 /*提交评论*/
 			 commitComment:function(e){
@@ -462,6 +498,11 @@
 				 });
 			 },
 
+			 /*
+			 *显示信息发送结果
+			 *para:
+			 *tip - {string} 内容结果
+			 */
 			 showCommentTips:function(tip){
 				 var $tip=this.$wrapper.find('.comment-box-header');
 				 $tip.text(tip).css('opacity',1);
@@ -469,9 +510,19 @@
 					 $tip.text('').css('opacity',0);
 				 },1500)
 			 },
+
+
+
 		};
 
-		new commentObj($('#comment-box'));
+
+
+		 new commentObj($('#comment-box'));
+
+		/*IOS调用该方法 来传入用户信息*/
+		function setUserInfo(session_id,name,avatar_url){
+			alert('session_id:'+session_id,'name:'+name+'avatar_url:太长了不显示了');
+		}
 
 	</script>
 </body>
