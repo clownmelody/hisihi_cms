@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Created by jimmy on 2015/11/18.
  */
 
@@ -20,7 +20,7 @@ hisihiNews.prototype = {
         var operation=browserType();
         if(operation.mobile){
             if(operation.android){
-                //AppFunction.showShareView(false);  //调用安卓的方法，控制分享按钮不可用
+                AppFunction.showShareView(false);  //调用安卓的方法，控制分享按钮不可用
                 alert('android');
             }
             else if(operation.ios){
