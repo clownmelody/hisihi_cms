@@ -1,16 +1,16 @@
-/**
+ï»¿/**
  * Created by jimmy on 2015/11/18.
  */
 /*
- *ÍØÕ¹Date·½·¨¡£µÃµ½¸ñÊ½»¯µÄÈÕÆÚĞÎÊ½ »ù±¾ÊÇÊ²Ã´¸ñÊ½¶¼Ö§³Ö
- *date.format('yyyy-MM-dd')£¬date.format('yyyy/MM/dd'),date.format('yyyy.MM.dd')
- *date.format('dd.MM.yy'), date.format('yyyy.dd.MM'), date.format('yyyy-MM-dd HH:mm')   µÈµÈ¶¼¿ÉÒÔ
- *Ê¹ÓÃ·½·¨ ÈçÏÂ£º
+ *æ‹“å±•Dateæ–¹æ³•ã€‚å¾—åˆ°æ ¼å¼åŒ–çš„æ—¥æœŸå½¢å¼ åŸºæœ¬æ˜¯ä»€ä¹ˆæ ¼å¼éƒ½æ”¯æŒ
+ *date.format('yyyy-MM-dd')ï¼Œdate.format('yyyy/MM/dd'),date.format('yyyy.MM.dd')
+ *date.format('dd.MM.yy'), date.format('yyyy.dd.MM'), date.format('yyyy-MM-dd HH:mm')   ç­‰ç­‰éƒ½å¯ä»¥
+ *ä½¿ç”¨æ–¹æ³• å¦‚ä¸‹ï¼š
  *                       var date = new Date();
- *                       var todayFormat = date.format('yyyy-MM-dd'); //½á¹ûÎª2015-2-3
+ *                       var todayFormat = date.format('yyyy-MM-dd'); //ç»“æœä¸º2015-2-3
  *Parameters:
- *format - {string} Ä¿±ê¸ñÊ½ ÀàËÆ('yyyy-MM-dd')
- *Returns - {string} ¸ñÊ½»¯ºóµÄÈÕÆÚ 2015-2-3
+ *format - {string} ç›®æ ‡æ ¼å¼ ç±»ä¼¼('yyyy-MM-dd')
+ *Returns - {string} æ ¼å¼åŒ–åçš„æ—¥æœŸ 2015-2-3
  *
  */
 Date.prototype.format = function (format) {
@@ -34,9 +34,28 @@ Date.prototype.format = function (format) {
 }
 
 /*
- *ÍØÕ¹stringµÄ·½·¨£¬È¥³ıÁ½¶Ë¿Õ¸ñ
+ *æ‹“å±•stringçš„æ–¹æ³•ï¼Œå»é™¤ä¸¤ç«¯ç©ºæ ¼
  */
 String.prototype.trim = function () {
     return this.replace(/^\s+|\s+$/g,'');
+};
+
+/*
+*åˆ¤æ–­webviewçš„æ¥æº
+*/
+var browserType=function() {
+    var u = navigator.userAgent, app = navigator.appVersion;
+    return { //ç§»åŠ¨ç»ˆç«¯æµè§ˆå™¨ç‰ˆæœ¬ä¿¡æ¯
+        trident: u.indexOf('Trident') > -1, //IEå†…æ ¸
+        presto: u.indexOf('Presto') > -1, //operaå†…æ ¸
+        webKit: u.indexOf('AppleWebKit') > -1, //è‹¹æœã€è°·æ­Œå†…æ ¸
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //ç«ç‹å†…æ ¸
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //æ˜¯å¦ä¸ºç§»åŠ¨ç»ˆç«¯
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //iosç»ˆç«¯
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //androidç»ˆç«¯æˆ–ucæµè§ˆå™¨
+        iPhone: u.indexOf('iPhone') > -1, //æ˜¯å¦ä¸ºiPhoneæˆ–è€…QQHDæµè§ˆå™¨
+        iPad: u.indexOf('iPad') > -1, //æ˜¯å¦iPad
+        webApp: u.indexOf('Safari') == -1 //æ˜¯å¦webåº”è¯¥ç¨‹åºï¼Œæ²¡æœ‰å¤´éƒ¨ä¸åº•éƒ¨
+    };
 };
 

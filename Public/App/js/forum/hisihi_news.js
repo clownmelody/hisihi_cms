@@ -1,5 +1,6 @@
-ï»¿
+?
 var hisihiNews = function ($wrapper,urlObj) {
+        this.separateOperation();
         this.$wrapper = $wrapper;
         this.urlObj=urlObj;
         this.pageIndex = 1;
@@ -10,10 +11,27 @@ var hisihiNews = function ($wrapper,urlObj) {
     };
 
 hisihiNews.prototype = {
+
+
+    separateOperation:function(){
+        var operation=browserType();
+        if(operation.mobile){
+            if(operation.android){
+                AppFunction.showShareView(false);  //µ÷ÓÃ°²×¿µÄ·½·¨£¬¿ØÖÆ·ÖÏí°´Å¥²»¿ÉÓÃ
+            }
+            else if(operation.ios){
+                alert("IOS");
+            }
+        }
+
+
+
+    },
+
     /*
-     *åŠ è½½æ–°é—»åˆ—è¡¨æ•°æ®
+     *¼ÓÔØĞÂÎÅÁĞ±íÊı¾İ
      * para:
-     * pageIndex - {int} å½“å‰çš„é¡µç æ•°
+     * pageIndex - {int} µ±Ç°µÄÒ³ÂëÊı
      */
     loadData: function (pageIndex) {
         var that=this;
@@ -21,9 +39,9 @@ hisihiNews.prototype = {
     },
 
     /*
-     *å‘æœåŠ¡å™¨è¯·æ±‚æ–°é—»åˆ—è¡¨æ•°æ®ï¼Œè®¡ç®—æ€»çš„é¡µç æ•°ï¼Œå¹¶å¡«å……å†…å®¹
+     *Ïò·şÎñÆ÷ÇëÇóĞÂÎÅÁĞ±íÊı¾İ£¬¼ÆËã×ÜµÄÒ³ÂëÊı£¬²¢Ìî³äÄÚÈİ
      * para:
-     * pageIndex - {int} å½“å‰çš„é¡µç æ•°
+     * pageIndex - {int} µ±Ç°µÄÒ³ÂëÊı
      */
     getDataAsync: function (pageIndex) {
         if(pageIndex>this.totalPage){
@@ -38,12 +56,12 @@ hisihiNews.prototype = {
             that = this;
 
         var ajaxTimeoutTest=$.ajax({
-            url: url,  //è¯·æ±‚çš„URL
-            timeout: 10000, //è¶…æ—¶æ—¶é—´è®¾ç½®ï¼Œå•ä½æ¯«ç§’
-            type: 'post',  //è¯·æ±‚æ–¹å¼ï¼Œgetæˆ–post
+            url: url,  //ÇëÇóµÄURL
+            timeout: 10000, //³¬Ê±Ê±¼äÉèÖÃ£¬µ¥Î»ºÁÃë
+            type: 'post',  //ÇëÇó·½Ê½£¬get»òpost
             data:tempObj,
-            dataType: 'json',//è¿”å›çš„æ•°æ®æ ¼å¼
-            success: function (result) { //è¯·æ±‚æˆåŠŸçš„å›è°ƒå‡½æ•°
+            dataType: 'json',//·µ»ØµÄÊı¾İ¸ñÊ½
+            success: function (result) { //ÇëÇó³É¹¦µÄ»Øµ÷º¯Êı
                 $loadinng.hide();
                 if(result.success) {
                     that.totalPage=Math.ceil(result.totalCount/that.pageSize);
@@ -54,17 +72,17 @@ hisihiNews.prototype = {
                     $loadinng.next().text(result.massage).show().delay(2000).hide(0);
                 }
             },
-            complete : function(XMLHttpRequest,status){    //è¯·æ±‚å®Œæˆåæœ€ç»ˆæ‰§è¡Œå‚æ•°
+            complete : function(XMLHttpRequest,status){    //ÇëÇóÍê³Éºó×îÖÕÖ´ĞĞ²ÎÊı
                 $loadinng.hide();
-                if(status=='timeout'){   //è¶…æ—¶,statusè¿˜æœ‰success,errorç­‰å€¼çš„æƒ…å†µ
+                if(status=='timeout'){   //³¬Ê±,status»¹ÓĞsuccess,errorµÈÖµµÄÇé¿ö
                     ajaxTimeoutTest.abort();
-                    $loadinng.next().text('è¯·æ±‚è¶…æ—¶').show();
+                    $loadinng.next().text('ÇëÇó³¬Ê±').show();
                 }
                 else if(status=='error'){
-                    var tips='ç½‘ç»œé”™è¯¯';
+                    var tips='ÍøÂç´íÎó';
                     ajaxTimeoutTest.abort();
                     if(XMLHttpRequest.status=='404') {
-                        tips='è¯·æ±‚åœ°å€é”™è¯¯';
+                        tips='ÇëÇóµØÖ·´íÎó';
                     }
                     $loadinng.next().text(tips).show();
                 }
@@ -73,14 +91,14 @@ hisihiNews.prototype = {
     },
 
     /*
-     *å¡«å……å†…å®¹
+     *Ìî³äÄÚÈİ
      * para:
-     * data - {array} ç»“æœæ•°æ®
+     * data - {array} ½á¹ûÊı¾İ
      * return
-     * str - {string} å†…å®¹å­—ç¬¦ä¸²
+     * str - {string} ÄÚÈİ×Ö·û´®
      */
     getNewsContent:function(data){
-        data=JSON.parse('[{"id":"5472","title":"å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"æ–°é—»æµ‹è¯•","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
+        data=JSON.parse('[{"id":"5472","title":"ÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔ","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"ĞÂÎÅ²âÊÔ","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
         var str = '',title, len = data.length, item,dateStr;
         for (var i = 0; i < len; i++) {
             item = data[i];
@@ -108,32 +126,39 @@ hisihiNews.prototype = {
     },
 
     /*
-     *æ»šåŠ¨åŠ è½½æ›´å¤šçš„æ•°æ®
+     *¹ö¶¯¼ÓÔØ¸ü¶àµÄÊı¾İ
      */
     scrollContainer:function(e){
         var target= e.currentTarget,
             height = target.scrollHeight - $(target).height();
-        if ($(target).scrollTop() == height) {  //æ»šåŠ¨åˆ°åº•éƒ¨
+        if ($(target).scrollTop() == height) {  //¹ö¶¯µ½µ×²¿
             this.loadData(this.pageIndex);
         }
     },
 
     /*
-     *å­—ç¬¦ä¸²æˆªå–
+     *×Ö·û´®½ØÈ¡
      * para
-     * str - {string} ç›®æ ‡å­—ç¬¦ä¸²
-     * len - {int} æœ€å¤§é•¿åº¦
+     * str - {string} Ä¿±ê×Ö·û´®
+     * len - {int} ×î´ó³¤¶È
      */
     substrLongStr: function (str, len) {
         if (str.length > len) {
-            str = str.substr(0, parseInt(len - 1)) + 'â€¦â€¦';
+            str = str.substr(0, parseInt(len - 1)) + '¡­¡­';
         }
         return str;
     },
+
     getTimeFromTimestamp:function (dateInfo, dateFormat) {
         return new Date(parseFloat(dateInfo) * 1000).format(dateFormat);
     },
 
 
+
+
 };
+
+function getUser_iOS(session_id,name,avatar_url){
+    alert('session_id:'+session_id,'name:'+name+'avatar_url:Ì«³¤ÁË²»ÏÔÊ¾ÁË');
+}
 
