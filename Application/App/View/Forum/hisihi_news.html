@@ -68,6 +68,8 @@
             position: relative;
             text-decoration: none;
             padding:0.75em;
+            padding-left:0em;
+            margin-left: 0.75em;
             border-bottom: 0.0625em solid #bdbdbd;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
@@ -172,7 +174,7 @@
         server_url:'http://{$Think.server.HTTP_HOST}/api.php?s=/forum',
         img_url:'__IMG__'
     };
-//    urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
+    urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
     new hisihiNews($('.wrapper'),urlObj);
 </script>
 </html>
