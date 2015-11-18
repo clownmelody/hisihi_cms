@@ -34,7 +34,18 @@ commentObj.prototype={
             info;
         if(operation.mobile){
             if(operation.android){
-                info=AppFunction.getUser();
+                info=AppFunction.getUser();  //调用安卓的方法，得到用户的基体信息
+                //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
+                //$.ajax({
+                //    url:this.urlObj.server_url+'/user/login',
+                //    data:{username:'18601995231',password:'123456',type:'3',client:'4'},
+                //    async:false,
+                //    success:function(data) {
+                //        if (data.success) {
+                //            that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
+                //        }
+                //    }
+                //});
             }
             else if(operation.ios){
                 info=getUser_iOS();
@@ -84,10 +95,10 @@ commentObj.prototype={
         if(!this.userInfo.session_id){
             return;
         }
-        $target.addClass('disabled');
+        $target.addClass('disabled').removeClass('abled');
 
         var ajaxTimeoutTest=$.ajax({
-            url:this.server_url+'/Forum/doReply',  //请求的URL
+            url:this.urlObj.server_url+'/Forum/doReply',  //请求的URL
             timeout : 20000, //超时时间设置，单位毫秒
             type : 'post',  //请求方式，get或post
             data :{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},  //请求所传参数，json格式
@@ -121,13 +132,13 @@ commentObj.prototype={
                     tip =tip||'评论失败';
                 }
                 that.showCommentTips.call(that,tip);
-                $target.removeClass('disabled');
+                $target.addClass('disabled');
             },
             complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     that.showCommentTips.call(that,'请求超时');
-                    $target.removeClass('disabled');
+                    $target.addClass('disabled');
                 }
             }
         });

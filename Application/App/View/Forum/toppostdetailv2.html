@@ -162,7 +162,7 @@
 		opacity: 0;
 	}
 	.comment-box-main{
-		height: 3.6em;
+		height: 3.7em;
 		background-color: #e3e3e3;
 		position: relative;
 		padding: 0.65em;
@@ -172,25 +172,22 @@
 		/*height: -webkit-calc(100% - 0.5em);*/
 		/*height: -moz-calc(100% - 0.5em);*/
 		height: 100%;
-
 		-webkit-border-radius: .2em;
 		-moz-border-radius: .3em;
-
 	}
 	#comment-box textarea{
 		/*height: -webkit-calc(100% - 0.5em);*/
 		/*height: -moz-calc(100% - 0.5em);*/
-		height:100%;
+		height:90%;
 		width: 100%;
 		background-color: #FFFFFF;
 		outline: none;
 		resize: none;
-		padding-left: 0.875em;
-		line-height: 2em;
+		padding:0.1em 0.875em;
+		line-height: 1.5em;
 		font-size: 1.1em;
 		border: 0.0625em solid #CCCCCC;
 		border-radius: 0.5em;
-
 	}
 	#comment-box input{
 		outline: none;
@@ -210,8 +207,8 @@
 		color: #f5a000;
 	}
 	#comment-box input.abled:active{
-			 transform: scale(.9);
-			 color: #ce4611;
+		transform: scale(.9);
+		color: #ce4611;
 	 }
 	#comment-box input.disabled{
 		color: #808080;
@@ -291,7 +288,7 @@
 		<p class="comment-box-header">评论成功</p>
 		<div class="comment-box-main">
 			<div class="comment-box-left">
-				<textarea placeholder="写评论"></textarea>
+				<textarea placeholder=""></textarea>
 			</div>
 			<input type="button" value="发送" class="disabled"/>
 		</div>
@@ -300,6 +297,7 @@
 	<script type="text/javascript" src="__JS__/forum/hisihi_news_common.js"></script>
 	<script type="text/javascript" src="__JS__/forum/toppostdetailv2.js"></script>
 	<script type="text/javascript">
+		document.documentElement.style.webkitTouchCallout='none'; //禁止长按事件
 		var urlObj={
 			server_url:'http://{$Think.server.HTTP_HOST}',
 			img_url:'__IMG__'
