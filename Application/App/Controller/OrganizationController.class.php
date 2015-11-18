@@ -350,7 +350,8 @@ class OrganizationController extends AppController
         }
     }
 
-    /**获取机构基本信息
+    /**
+     * 获取机构基本信息
      * @param $organization_id
      */
     public function getBaseInfo($organization_id){
@@ -368,6 +369,74 @@ class OrganizationController extends AppController
                 'id'=>$logo_id,
                 'url'=>$logo
             );
+            $advantage = $result['advantage'];
+            $advantage = stripslashes($advantage);
+            $advantage = json_decode($advantage,true);
+            $advantage_array = array();
+            $cmodel = M('OrganizationConfig');
+            foreach($advantage as &$markid){
+                $advantageid = $markid['id'];
+                if(0 == $advantageid){
+                    $markobj = array(
+                        'id'=>(string)$markid['id'],
+                        'value'=>$markid['value']
+                    );
+                    $advantage_array[] = $markobj;
+                }else{
+                    $markarr = $cmodel->field('id,value')->where('type=2 and status=1 and id='.$advantageid)->find();
+                    if($markarr){
+                        $markobj = array(
+                            'id'=>$markarr['id'],
+                            'value'=>$markarr['value']
+                        );
+                        $advantage_array[] = $markobj;
+                    }
+                }
+            }
+            $result['advantage']=$advantage_array;
+            $extra['data'] = $result;
+            $this->apiSuccess("获取机构信息成功",null,$extra);
+        }else{
+            $this->apiError(-1,"获取机构信息失败");
+        }
+    }
+
+    /**
+     * app获取机构基本信息
+     * @param $organization_id
+     */
+    public function appGetBaseInfo($organization_id, $uid=0){
+        if($uid==0){
+            $uid = $this->getUid();
+        }
+        $model=M("Organization");
+        $result = $model->where(array('id'=>$organization_id,'status'=>1))
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
+        if($result){
+            $logo_id = $result['logo'];
+            $logo = $this->fetchImage($logo_id);
+            if(!$logo){
+                $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
+            $result['logo']=array(
+                'url'=>$logo
+            );
+            $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
+            $result['followCount'] = $this->getFollowCount($organization_id);
+            $result['enrollCount'] = $this->getEnrollCount($organization_id);
+
+            $user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$organization_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$organization_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $result['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $result['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $result['relationship'] = 1;
+            } else {
+                $result['relationship'] = 0;
+            }
             $advantage = $result['advantage'];
             $advantage = stripslashes($advantage);
             $advantage = json_decode($advantage,true);
