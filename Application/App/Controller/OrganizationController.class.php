@@ -411,7 +411,7 @@ class OrganizationController extends AppController
         }
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count')->find();
         if($result){
             $logo_id = $result['logo'];
             $logo = $this->fetchImage($logo_id);
@@ -423,7 +423,7 @@ class OrganizationController extends AppController
             );
             $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
             $result['followCount'] = $this->getFollowCount($organization_id);
-            $result['enrollCount'] = $this->getEnrollCount($organization_id);
+            $result['teachersCount'] = $this->getTeachersCount($organization_id);
 
             $user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$organization_id, 'type'=>2))->find();
@@ -1488,6 +1488,21 @@ class OrganizationController extends AppController
         $model = M('OrganizationEnroll');
         $data['organization_id'] = $organization_id;
         $data['status'] = array('in','1,2');
+        $count = $model->where($data)->count();
+        return $count;
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    private function getTeachersCount($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $model = M('OrganizationRelation');
+        $data['organization_id'] = $organization_id;
+        $data['status'] = 1;
+        $data['group'] = 6;
         $count = $model->where($data)->count();
         return $count;
     }
