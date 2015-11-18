@@ -35,15 +35,12 @@ commentObj.prototype={
         if(operation.mobile){
             if(operation.android){
                 info=AppFunction.getUser();
-                if(info) {
-                    this.userInfo = JSON.parse(info);
-                }
             }
             else if(operation.ios){
                 info=getUser_iOS();
-                if(info) {
-                    this.userInfo = JSON.parse(info);
-                }
+            }
+            if(info) {
+                this.userInfo = JSON.parse(info);
             }
         }else{
             $.ajax({
@@ -152,6 +149,13 @@ commentObj.prototype={
 
 
 };
+
+/*
+ *IOS调用  控制分享按钮的可用性
+ */
+function canShare(){
+    return true;
+}
 
 
 
