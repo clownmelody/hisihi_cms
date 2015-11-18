@@ -1,14 +1,17 @@
-?
+/**
+ * Created by jimmy on 2015/11/18.
+ */
+
 var hisihiNews = function ($wrapper,urlObj) {
-        this.separateOperation();
-        this.$wrapper = $wrapper;
-        this.urlObj=urlObj;
-        this.pageIndex = 1;
-        this.pageSize = 20;
-        this.totalPage=1;
-        this.loadData(1);
-        this.$wrapper.scroll($.proxy(this,'scrollContainer'));
-    };
+    this.separateOperation();
+    this.$wrapper = $wrapper;
+    this.urlObj=urlObj;
+    this.pageIndex = 1;
+    this.pageSize = 20;
+    this.totalPage=1;
+    this.loadData(1);
+    this.$wrapper.scroll($.proxy(this,'scrollContainer'));
+};
 
 hisihiNews.prototype = {
 
@@ -17,10 +20,11 @@ hisihiNews.prototype = {
         var operation=browserType();
         if(operation.mobile){
             if(operation.android){
-                AppFunction.showShareView(false);  //µ÷ÓÃ°²×¿µÄ·½·¨£¬¿ØÖÆ·ÖÏí°´Å¥²»¿ÉÓÃ
+                AppFunction.showShareView(false);  //è°ƒç”¨å®‰å“çš„æ–¹æ³•ï¼Œæ§åˆ¶åˆ†äº«æŒ‰é’®ä¸å¯ç”¨
             }
             else if(operation.ios){
-                alert("IOS");
+                var userInfo = getUser_iOS();
+                alert(JSON.stringify(userInfo));
             }
         }
 
@@ -29,9 +33,9 @@ hisihiNews.prototype = {
     },
 
     /*
-     *¼ÓÔØĞÂÎÅÁĞ±íÊı¾İ
+     *åŠ è½½æ–°é—»åˆ—è¡¨æ•°æ®
      * para:
-     * pageIndex - {int} µ±Ç°µÄÒ³ÂëÊı
+     * pageIndex - {int} å½“å‰çš„é¡µç æ•°
      */
     loadData: function (pageIndex) {
         var that=this;
@@ -39,9 +43,9 @@ hisihiNews.prototype = {
     },
 
     /*
-     *Ïò·şÎñÆ÷ÇëÇóĞÂÎÅÁĞ±íÊı¾İ£¬¼ÆËã×ÜµÄÒ³ÂëÊı£¬²¢Ìî³äÄÚÈİ
+     *å‘æœåŠ¡å™¨è¯·æ±‚æ–°é—»åˆ—è¡¨æ•°æ®ï¼Œè®¡ç®—æ€»çš„é¡µç æ•°ï¼Œå¹¶å¡«å……å†…å®¹
      * para:
-     * pageIndex - {int} µ±Ç°µÄÒ³ÂëÊı
+     * pageIndex - {int} å½“å‰çš„é¡µç æ•°
      */
     getDataAsync: function (pageIndex) {
         if(pageIndex>this.totalPage){
@@ -56,12 +60,12 @@ hisihiNews.prototype = {
             that = this;
 
         var ajaxTimeoutTest=$.ajax({
-            url: url,  //ÇëÇóµÄURL
-            timeout: 10000, //³¬Ê±Ê±¼äÉèÖÃ£¬µ¥Î»ºÁÃë
-            type: 'post',  //ÇëÇó·½Ê½£¬get»òpost
+            url: url,  //è¯·æ±‚çš„URL
+            timeout: 10000, //è¶…æ—¶æ—¶é—´è®¾ç½®ï¼Œå•ä½æ¯«ç§’
+            type: 'post',  //è¯·æ±‚æ–¹å¼ï¼Œgetæˆ–post
             data:tempObj,
-            dataType: 'json',//·µ»ØµÄÊı¾İ¸ñÊ½
-            success: function (result) { //ÇëÇó³É¹¦µÄ»Øµ÷º¯Êı
+            dataType: 'json',//è¿”å›çš„æ•°æ®æ ¼å¼
+            success: function (result) { //è¯·æ±‚æˆåŠŸçš„å›è°ƒå‡½æ•°
                 $loadinng.hide();
                 if(result.success) {
                     that.totalPage=Math.ceil(result.totalCount/that.pageSize);
@@ -72,17 +76,17 @@ hisihiNews.prototype = {
                     $loadinng.next().text(result.massage).show().delay(2000).hide(0);
                 }
             },
-            complete : function(XMLHttpRequest,status){    //ÇëÇóÍê³Éºó×îÖÕÖ´ĞĞ²ÎÊı
+            complete : function(XMLHttpRequest,status){    //è¯·æ±‚å®Œæˆåæœ€ç»ˆæ‰§è¡Œå‚æ•°
                 $loadinng.hide();
-                if(status=='timeout'){   //³¬Ê±,status»¹ÓĞsuccess,errorµÈÖµµÄÇé¿ö
+                if(status=='timeout'){   //è¶…æ—¶,statusè¿˜æœ‰success,errorç­‰å€¼çš„æƒ…å†µ
                     ajaxTimeoutTest.abort();
-                    $loadinng.next().text('ÇëÇó³¬Ê±').show();
+                    $loadinng.next().text('è¯·æ±‚è¶…æ—¶').show();
                 }
                 else if(status=='error'){
-                    var tips='ÍøÂç´íÎó';
+                    var tips='ç½‘ç»œé”™è¯¯';
                     ajaxTimeoutTest.abort();
                     if(XMLHttpRequest.status=='404') {
-                        tips='ÇëÇóµØÖ·´íÎó';
+                        tips='è¯·æ±‚åœ°å€é”™è¯¯';
                     }
                     $loadinng.next().text(tips).show();
                 }
@@ -91,14 +95,14 @@ hisihiNews.prototype = {
     },
 
     /*
-     *Ìî³äÄÚÈİ
+     *å¡«å……å†…å®¹
      * para:
-     * data - {array} ½á¹ûÊı¾İ
+     * data - {array} ç»“æœæ•°æ®
      * return
-     * str - {string} ÄÚÈİ×Ö·û´®
+     * str - {string} å†…å®¹å­—ç¬¦ä¸²
      */
     getNewsContent:function(data){
-        data=JSON.parse('[{"id":"5472","title":"ÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔÄÚÒ³ÌûÍ¼Æ¬²âÊÔ","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"ĞÂÎÅ²âÊÔ","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
+        data=JSON.parse('[{"id":"5472","title":"å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•å†…é¡µå¸–å›¾ç‰‡æµ‹è¯•","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"æ–°é—»æµ‹è¯•","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
         var str = '',title, len = data.length, item,dateStr;
         for (var i = 0; i < len; i++) {
             item = data[i];
@@ -126,25 +130,25 @@ hisihiNews.prototype = {
     },
 
     /*
-     *¹ö¶¯¼ÓÔØ¸ü¶àµÄÊı¾İ
+     *æ»šåŠ¨åŠ è½½æ›´å¤šçš„æ•°æ®
      */
     scrollContainer:function(e){
         var target= e.currentTarget,
             height = target.scrollHeight - $(target).height();
-        if ($(target).scrollTop() == height) {  //¹ö¶¯µ½µ×²¿
+        if ($(target).scrollTop() == height) {  //æ»šåŠ¨åˆ°åº•éƒ¨
             this.loadData(this.pageIndex);
         }
     },
 
     /*
-     *×Ö·û´®½ØÈ¡
+     *å­—ç¬¦ä¸²æˆªå–
      * para
-     * str - {string} Ä¿±ê×Ö·û´®
-     * len - {int} ×î´ó³¤¶È
+     * str - {string} ç›®æ ‡å­—ç¬¦ä¸²
+     * len - {int} æœ€å¤§é•¿åº¦
      */
     substrLongStr: function (str, len) {
         if (str.length > len) {
-            str = str.substr(0, parseInt(len - 1)) + '¡­¡­';
+            str = str.substr(0, parseInt(len - 1)) + 'â€¦â€¦';
         }
         return str;
     },
@@ -157,8 +161,3 @@ hisihiNews.prototype = {
 
 
 };
-
-function getUser_iOS(session_id,name,avatar_url){
-    alert('session_id:'+session_id,'name:'+name+'avatar_url:Ì«³¤ÁË²»ÏÔÊ¾ÁË');
-}
-
