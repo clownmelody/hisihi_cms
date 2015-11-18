@@ -21,10 +21,11 @@ hisihiNews.prototype = {
         if(operation.mobile){
             if(operation.android){
                 //AppFunction.showShareView(false);  //调用安卓的方法，控制分享按钮不可用
+                alert('android');
             }
             else if(operation.ios){
-                //var userInfo = getUser_iOS();
-                //alert(JSON.stringify(userInfo));
+                var userInfo = getUser_iOS();
+                alert(JSON.stringify(userInfo));
             }
         }
 
@@ -102,7 +103,7 @@ hisihiNews.prototype = {
      * str - {string} 内容字符串
      */
     getNewsContent:function(data){
-        data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":"'+this.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
+        //data=JSON.parse('[{"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":"'+this.urlObj.server_url+'/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},{"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":"'+this.urlObj.server_url+'/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}]');
         var str = '',title, len = data.length, item,dateStr;
         for (var i = 0; i < len; i++) {
             item = data[i];
@@ -156,8 +157,5 @@ hisihiNews.prototype = {
     getTimeFromTimestamp:function (dateInfo, dateFormat) {
         return new Date(parseFloat(dateInfo) * 1000).format(dateFormat);
     },
-
-
-
 
 };
