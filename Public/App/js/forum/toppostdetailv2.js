@@ -36,6 +36,10 @@ commentObj.prototype={
             if(operation.android){
                 info=AppFunction.getUser();  //调用安卓的方法，得到用户的基体信息
                 //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
+
+            }
+            else if(operation.ios){
+                info=getUser_iOS();
                 //$.ajax({
                 //    url:this.urlObj.server_url+'/user/login',
                 //    data:{username:'18601995231',password:'123456',type:'3',client:'4'},
@@ -46,9 +50,6 @@ commentObj.prototype={
                 //        }
                 //    }
                 //});
-            }
-            else if(operation.ios){
-                info=getUser_iOS();
             }
             if(info) {
                 this.userInfo = JSON.parse(info);
@@ -133,6 +134,16 @@ commentObj.prototype={
                 }
                 that.showCommentTips.call(that,tip);
                 $target.addClass('disabled');
+            },
+            error:function(e){
+                if(e.status=='404'){
+                    that.showCommentTips.call(that,'地址不存在');
+                }else{
+                    that.showCommentTips.call(that, e.statusText);
+                }
+            },
+            beforesend:function(e){
+                console.log('beforesend');
             },
             complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
