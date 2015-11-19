@@ -32,6 +32,7 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
+		overflow: hidden;
 	}
 	img {
 		width: 100%;
@@ -42,8 +43,8 @@
 	}
 	.main{
 		position: relative;
-		height:-webkit-calc(100% - 4.4em);
-		height:-moz-calc(100% - 4.4em);
+		height:-webkit-calc(100% - 3em);
+		height:-moz-calc(100% - 3em);
 		width: 100%;
 		overflow: auto;
 	}
@@ -155,7 +156,7 @@
 	}
 
 	#comment-box{
-		/*display: none;*/
+		display: none;
 		position: absolute;
 		bottom: -0.1em;
 		width: 100%;
@@ -176,20 +177,17 @@
 	}
 	#comment-box .comment-box-left{
 		margin-right: 4em;
-		/*height: -webkit-calc(100% - 0.5em);*/
-		/*height: -moz-calc(100% - 0.5em);*/
 		height: 100%;
 		-webkit-border-radius: .2em;
 		-moz-border-radius: .3em;
 	}
 	#comment-box textarea{
-		/*height: -webkit-calc(100% - 0.5em);*/
-		/*height: -moz-calc(100% - 0.5em);*/
 		height:90%;
 		width: 100%;
 		background-color: #FFFFFF;
 		outline: none;
 		resize: none;
+		-webkit-appearance: none;
 		padding:0.2em 0.5em;
 		line-height: 1.5em;
 		font-size: 1.1em;
@@ -374,7 +372,7 @@
 			var newDate = new Date(parseInt(date) * 1000).format('MM-dd hh:mm');
 			return newDate;
 		}
-		urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
+//		urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
 		new commentObj($('#comment-box'),urlObj);
 	</script>
 
