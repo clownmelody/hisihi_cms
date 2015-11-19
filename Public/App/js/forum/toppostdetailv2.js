@@ -62,10 +62,10 @@ commentObj.prototype={
      *控制评论框的显示状态，如果用户没有登录， session_id 为空  则不显示
      */
     controlCommentBoxStatus:function(){
-        if(!this.userInfo) {
-            this.$wrapper.hide();
-            return;
-        }
+        //if(!this.userInfo) {
+        //    this.$wrapper.hide();
+        //    return;
+        //}
         this.$wrapper.show();
     },
 
