@@ -121,9 +121,9 @@ commentObj.prototype={
                         $targetCon.append(htmlStr);
                     }
                 }else{
-                    alert('fuck ,不行');
                     var tip=result.message;
                     tip =tip||'评论失败';
+                    alert('fuck ,不行');
                 }
                 that.showCommentTips.call(that,tip);
                 $target.addClass('disabled');
