@@ -13,6 +13,7 @@ function commentObj($wrapper,urlObj){
 
     this.controlCommentBoxStatus();
     this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
+    this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
     this.$wrapper.on('input','.comment-box-left textarea',function(){
         var txt=$(this).val().trim(),
             $btn=$(this).parent().next(),
@@ -97,7 +98,7 @@ commentObj.prototype={
             return;
         }
         $target.addClass('disabled').removeClass('abled');
-
+        alert(this.urlObj.server_url+'/Forum/doReply');
         var ajaxTimeoutTest=$.ajax({
             url:this.urlObj.server_url+'/Forum/doReply',  //请求的URL
             timeout : 20000, //超时时间设置，单位毫秒
@@ -149,8 +150,10 @@ commentObj.prototype={
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     that.showCommentTips.call(that,'请求超时');
-                    $target.addClass('disabled');
+                }else{
+                    that.showCommentTips.call(that,'未知错误');
                 }
+                $target.addClass('disabled');
             }
         });
     },
