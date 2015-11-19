@@ -13,7 +13,7 @@ function commentObj($wrapper,urlObj){
 
     this.controlCommentBoxStatus();
     this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
-    this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
+    //this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
     this.$wrapper.on('input','.comment-box-left textarea',function(){
         var txt=$(this).val().trim(),
             $btn=$(this).parent().next(),
@@ -37,20 +37,9 @@ commentObj.prototype={
             if(operation.android){
                 info=AppFunction.getUser();  //调用安卓的方法，得到用户的基体信息
                 //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
-
             }
             else if(operation.ios){
                 info=getUser_iOS();
-                //$.ajax({
-                //    url:this.urlObj.server_url+'/user/login',
-                //    data:{username:'18601995231',password:'123456',type:'3',client:'4'},
-                //    async:false,
-                //    success:function(data) {
-                //        if (data.success) {
-                //            that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
-                //        }
-                //    }
-                //});
             }
             if(info) {
                 this.userInfo = JSON.parse(info);
@@ -73,7 +62,7 @@ commentObj.prototype={
      *控制评论框的显示状态，如果用户没有登录， session_id 为空  则不显示
      */
     controlCommentBoxStatus:function(){
-        if(!this.userInfo.session_id){
+        if(!this.userInfo) {
             this.$wrapper.hide();
             return;
         }
@@ -94,11 +83,11 @@ commentObj.prototype={
             that.showCommentTips.call(that,'内容为空');
             return;
         }
-        if(!this.userInfo.session_id){
+        if(!this.userInfo){
+            that.showCommentTips.call(that,'请登录');
             return;
         }
         $target.addClass('disabled').removeClass('abled');
-        alert(this.urlObj.server_url+'/Forum/doReply');
         var ajaxTimeoutTest=$.ajax({
             url:this.urlObj.server_url+'/Forum/doReply',  //请求的URL
             timeout : 20000, //超时时间设置，单位毫秒
@@ -150,8 +139,9 @@ commentObj.prototype={
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     that.showCommentTips.call(that,'请求超时');
+                }else if(status=='success'){
                 }else{
-                    that.showCommentTips.call(that,'未知错误');
+                    that.showCommentTips.call(that,'状态码：'+status+',内容:'+XMLHttpRequest.statusText);
                 }
                 $target.addClass('disabled');
             }
