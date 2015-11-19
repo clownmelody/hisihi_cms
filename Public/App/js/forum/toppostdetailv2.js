@@ -146,7 +146,7 @@ commentObj.prototype={
                 }else if(status=='success'){
                     alert('好像成功了');
                 }else{
-                    that.showCommentTips.call(that,statusText);
+                    that.showCommentTips.call(that,'状态码：'+status+',内容:'+XMLHttpRequest.statusText);
                 }
                 $target.addClass('disabled');
             }
