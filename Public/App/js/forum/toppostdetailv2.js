@@ -36,11 +36,13 @@ commentObj.prototype={
         if(operation.mobile){
             if(operation.android){
                 info=AppFunction.getUser();  //调用安卓的方法，得到用户的基体信息
+                alert(info);
                 //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
 
             }
             else if(operation.ios){
                 info=getUser_iOS();
+                alert(info);
                 //$.ajax({
                 //    url:this.urlObj.server_url+'/user/login',
                 //    data:{username:'18601995231',password:'123456',type:'3',client:'4'},
@@ -73,7 +75,7 @@ commentObj.prototype={
      *控制评论框的显示状态，如果用户没有登录， session_id 为空  则不显示
      */
     controlCommentBoxStatus:function(){
-        if(!this.userInfo.session_id){
+        if(!this.userInfo) {
             this.$wrapper.hide();
             return;
         }
@@ -94,7 +96,8 @@ commentObj.prototype={
             that.showCommentTips.call(that,'内容为空');
             return;
         }
-        if(!this.userInfo.session_id){
+        if(!this.userInfo){
+            that.showCommentTips.call(that,'请登录');
             return;
         }
         $target.addClass('disabled').removeClass('abled');
