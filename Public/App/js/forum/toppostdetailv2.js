@@ -12,7 +12,7 @@ function commentObj($wrapper,urlObj){
     var that = this;
 
     this.controlCommentBoxStatus();
-    this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
+    this.$wrapper.on('touchstart', '#comment-box .abled', $.proxy(this, 'commitComment'));
     this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
     this.$wrapper.on('input','.comment-box-left textarea',function(){
         var txt=$(this).val().trim(),
