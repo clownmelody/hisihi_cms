@@ -12,7 +12,7 @@ function commentObj($wrapper,urlObj){
     var that = this;
 
     this.controlCommentBoxStatus();
-    this.$wrapper.on('touchstart', '#comment-box .abled', $.proxy(this, 'commitComment'));
+    this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
     this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
     this.$wrapper.on('input','.comment-box-left textarea',function(){
         var txt=$(this).val().trim(),
@@ -36,23 +36,10 @@ commentObj.prototype={
         if(operation.mobile){
             if(operation.android){
                 info=AppFunction.getUser();  //调用安卓的方法，得到用户的基体信息
-                alert(info);
                 //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
-
             }
             else if(operation.ios){
                 info=getUser_iOS();
-                alert(info);
-                //$.ajax({
-                //    url:this.urlObj.server_url+'/user/login',
-                //    data:{username:'18601995231',password:'123456',type:'3',client:'4'},
-                //    async:false,
-                //    success:function(data) {
-                //        if (data.success) {
-                //            that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
-                //        }
-                //    }
-                //});
             }
             if(info) {
                 this.userInfo = JSON.parse(info);
@@ -101,7 +88,6 @@ commentObj.prototype={
             return;
         }
         $target.addClass('disabled').removeClass('abled');
-        alert(this.urlObj.server_url+'/Forum/doReply');
         var ajaxTimeoutTest=$.ajax({
             url:this.urlObj.server_url+'/Forum/doReply',  //请求的URL
             timeout : 20000, //超时时间设置，单位毫秒
@@ -109,8 +95,10 @@ commentObj.prototype={
             data :{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},  //请求所传参数，json格式
             dataType:'json',//返回的数据格式
             success:function(result){ //请求成功的回调函数
+                alert('fuck ,行不行');
                 var tip,$targetCon=$('.detailed-list');
                 if(result.success){
+                    alert('fuck ,行');
                     $textarea.val('');
                     tip='评论成功';
                     var htmlStr='<li>'+
@@ -133,6 +121,7 @@ commentObj.prototype={
                         $targetCon.append(htmlStr);
                     }
                 }else{
+                    alert('fuck ,不行');
                     var tip=result.message;
                     tip =tip||'评论失败';
                 }
@@ -150,11 +139,14 @@ commentObj.prototype={
                 console.log('beforesend');
             },
             complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
+                alert('好像完成了');
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     that.showCommentTips.call(that,'请求超时');
+                }else if(status=='success'){
+                    alert('好像成功了');
                 }else{
-                    that.showCommentTips.call(that,'未知错误');
+                    that.showCommentTips.call(that,statusText);
                 }
                 $target.addClass('disabled');
             }
