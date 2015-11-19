@@ -328,7 +328,7 @@
 			repalybtn.attr('onclick','return false;');
 			$.ajax({
 				type: 'GET',
-				url: 'http://' + urlObj.server_url + '/forum/ajaxPostReplyList/post_id/' + postid +'/page/' + page,
+				url: urlObj.server_url + '/forum/ajaxPostReplyList/post_id/' + postid +'/page/' + page,
 				dataType: 'json',
 				success: function(data){
 					if(data['error_code'] == 0 && data != null){

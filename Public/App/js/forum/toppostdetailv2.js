@@ -13,7 +13,7 @@ function commentObj($wrapper,urlObj){
 
     this.controlCommentBoxStatus();
     this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
-    this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
+    //this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
     this.$wrapper.on('input','.comment-box-left textarea',function(){
         var txt=$(this).val().trim(),
             $btn=$(this).parent().next(),
@@ -95,10 +95,8 @@ commentObj.prototype={
             data :{post_id:$('#postid').val(),session_id:this.userInfo.session_id,content:str},  //请求所传参数，json格式
             dataType:'json',//返回的数据格式
             success:function(result){ //请求成功的回调函数
-                alert('fuck ,行不行');
                 var tip,$targetCon=$('.detailed-list');
                 if(result.success){
-                    alert('fuck ,行');
                     $textarea.val('');
                     tip='评论成功';
                     var htmlStr='<li>'+
@@ -123,7 +121,6 @@ commentObj.prototype={
                 }else{
                     var tip=result.message;
                     tip =tip||'评论失败';
-                    alert('fuck ,不行');
                 }
                 that.showCommentTips.call(that,tip);
                 $target.addClass('disabled');
@@ -139,12 +136,10 @@ commentObj.prototype={
                 console.log('beforesend');
             },
             complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
-                alert('好像完成了');
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     that.showCommentTips.call(that,'请求超时');
                 }else if(status=='success'){
-                    alert('好像成功了');
                 }else{
                     that.showCommentTips.call(that,'状态码：'+status+',内容:'+XMLHttpRequest.statusText);
                 }
