@@ -19,7 +19,12 @@ class EventController extends AppController{
         C('SHOW_PAGE_TRACE', false);
     }
 
-    public function competitionList($page=1, $count=5){
+    public function competitionList($page=1, $count=5, $version=null){
+        if((float)$version>=2.2){
+            $eventModel = M();
+            $allCount = $eventModel->query('select sum(view_count) as allCount from hisihi_event where status=1');
+            $extra['allCount'] = $allCount[0]['allCount'];
+        }
         $picModel = D('Home/Picture');
         $listData = $this->eventModel->getCompetitionEventList($page, $count);
         foreach($listData['list'] as &$event){
@@ -37,7 +42,9 @@ class EventController extends AppController{
                 $event['pic_path'] = $event_pic;
             }
         }
-        $this->apiSuccess("获取比赛列表成功", null, array('totalCount' => $listData['totalCount'], 'data' => $listData['list']));
+        $extra['totalCount'] = $listData['totalCount'];
+        $extra['data'] = $listData['list'];
+        $this->apiSuccess("获取比赛列表成功", null, $extra);
     }
 
     public function competitionDetail($competition_id=0){

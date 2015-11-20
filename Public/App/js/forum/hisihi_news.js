@@ -5,15 +5,29 @@
 var hisihiNews = function ($wrapper,urlObj) {
     this.separateOperation();
     this.$wrapper = $wrapper;
+    this.controlLoadingPos();
     this.urlObj=urlObj;
     this.pageIndex = 1;
     this.pageSize = 20;
     this.totalPage=1;
     this.loadData(1);
-    this.$wrapper.scroll($.proxy(this,'scrollContainer'));
+    this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
+    this.$wrapper.on('click','.loadError',function(){   //重新加载页面
+        window.location.reload();
+        $(this).hide();
+    });
 };
 
 hisihiNews.prototype = {
+
+    controlLoadingPos:function(){
+       var $loading = this.$wrapper.find('.loadingResultTips'),
+           w=$loading.width(),
+           h=$loading.height(),
+           dw=this.$wrapper.width(),
+           dh=this.$wrapper.height();
+        $loading.css({'top':(dh-h)/2,'left':(dw-w)/2});
+    },
 
 
     separateOperation:function(){
@@ -48,7 +62,7 @@ hisihiNews.prototype = {
         if(pageIndex>this.totalPage){
             return;
         }
-        $loadinng=this.$wrapper.find('#loadingTip').show();
+        $loadinng=this.$wrapper.find('.loadingResultTips').show();
         var tempObj = {
                 pageIndex: pageIndex,
                 count: this.pageSize
@@ -63,20 +77,24 @@ hisihiNews.prototype = {
             data:tempObj,
             dataType: 'json',//返回的数据格式
             success: function (result) { //请求成功的回调函数
-                $loadinng.hide();
+
                 if(result.success) {
+                    $loadinng.hide();
                     that.totalPage=Math.ceil(result.totalCount/that.pageSize);
                     that.pageIndex++;
                     $loadinng.before(that.getNewsContent(result.data));
+                    //控制图片的显示
+                    that.$wrapper.find('.newsListContainer img').unbind('load').bind("load",function(){
+                        $(this).css('opacity','1');
+                    });
                 }else{
-                    $loadinng.next().text(result.massage).show().delay(2000).hide(0);
+                    $loadinng.find('.loadingImg').hide().next().show();
                 }
             },
             complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
-                $loadinng.hide();
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
-                    $loadinng.next().text('请求超时').show();
+                    $loadinng.find('.loadingImg').hide().next().show();
                 }
                 else if(status=='error'){
                     var tips='网络错误';
@@ -84,7 +102,7 @@ hisihiNews.prototype = {
                     if(XMLHttpRequest.status=='404') {
                         tips='请求地址错误';
                     }
-                    $loadinng.next().text(tips).show();
+                    $loadinng.find('.loadingImg').hide().next().show();
                 }
             }
         });
@@ -119,7 +137,8 @@ hisihiNews.prototype = {
                     '</div>' +
                     '<div class="rightBottom">'+
                     '<div class="rightBottomLeft">'+
-                    '<i class="viewTimesIcon"><img src="'+this.urlObj.img_url+'/viewTimes.png"/></i>'+
+                    //'<i class="viewTimesIcon"><img src="'+this.urlObj.img_url+'/viewTimes.png"/></i>'+
+                    '<span class="viewTimesIcon">人气：</span>'+
                     '<span>'+item.view_count +'</span>'+
                     '</div>'+
                     '<div class="rightBottomRight">'+ dateStr + '</div>'+
