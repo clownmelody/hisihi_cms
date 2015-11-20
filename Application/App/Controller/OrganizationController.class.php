@@ -1505,7 +1505,8 @@ class OrganizationController extends AppController
      * @param int $organization_id
      */
     public function shareOrganization($organization_id=0){
-        if(true){
+        $result = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->find();
+        if($result){
             $extra['org_share_url'] = 'app.php/organization/organizationdetail/type/view/id/'.$organization_id;
             $uid = $this->getUid();
             if($uid){
@@ -1519,8 +1520,9 @@ class OrganizationController extends AppController
             }
             $this->apiSuccess("获取机构分享链接成功", null, $extra);
         }
-        else
+        else{
             $this->apiError(-404, '未找到该机构！');
+        }
     }
 
     //机构详情
@@ -1535,6 +1537,15 @@ class OrganizationController extends AppController
             $this->apiError(-404, '未找到该机构！');
         }
     }
+
+    /**
+     * 机构认证报告
+     * @param int $organization_id
+     */
+    public function OrganizationAuthenticationReport($organization_id=0){
+        $this->display('organizationauthenticationreport');
+    }
+
     /**
      * 获取机构的认证信息
      * @param $organization_id
