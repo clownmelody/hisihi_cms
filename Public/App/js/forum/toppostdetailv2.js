@@ -8,12 +8,18 @@
 function commentObj($wrapper,urlObj){
     this.$wrapper=$wrapper;
     this.urlObj=urlObj;
+
+    //根据平台的不同，调用不同的app 方法
     this.separateOperation();
     var that = this;
 
+    //控制评论框的显示和总的内容框的高度
     this.controlCommentBoxStatus();
+
     this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
     //this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
+
+    //控制输入框的状态，当有信息输入的时候才可用
     this.$wrapper.on('input','.comment-box-left textarea',function(){
         var txt=$(this).val().trim(),
             $btn=$(this).parent().next(),
@@ -29,6 +35,9 @@ function commentObj($wrapper,urlObj){
 
 commentObj.prototype={
 
+    /*
+    *区分安卓和ios
+    */
     separateOperation:function(){
         var that=this,
             operation=browserType(),
@@ -39,7 +48,7 @@ commentObj.prototype={
                 //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
             }
             else if(operation.ios){
-                info=getUser_iOS();
+                //info=getUser_iOS();
             }
             if(info) {
                 this.userInfo = JSON.parse(info);
@@ -59,19 +68,20 @@ commentObj.prototype={
     },
 
     /*
-     *控制评论框的显示状态，如果用户没有登录， session_id 为空  则不显示
+     *控制评论框的显示状态，
+     * 如果用户没有登录， session_id 为空  则不显示;并将内容框控制到最高
      */
     controlCommentBoxStatus:function(){
         if(!this.userInfo) {
             this.$wrapper.hide();
+            var $target=$('.main');
+            $target.css({'height':'100%'});
+            $target.find('.detailed-main').css('margin-bottom','0');
             return;
         }
         this.$wrapper.show();
     },
 
-    /*
-     *控制
-     */
 
     /*提交评论*/
     commitComment:function(e){
