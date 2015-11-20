@@ -116,8 +116,12 @@ class HiworksController extends AppController
     /**
      * 金榜作业
      */
-    public function topDownload(){
+    public function topDownload($version=null){
         $model = M();
+        if((float)$version>=2.2){
+            $allCount = $model->query('select sum(download) as allCount from hisihi_document_download');
+            $extra['allCount'] = $allCount[0]['allCount'];
+        }
         $result = $model->query("select document.id, document.title, document.category_id, document.cover_id, download.download from hisihi_document_download as download,
                                   hisihi_document as document where download.id=document.id and document.cover_id!=0 and document.status=1
                                   order by download.download desc limit 0,3");

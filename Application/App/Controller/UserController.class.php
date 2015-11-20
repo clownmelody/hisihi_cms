@@ -1453,7 +1453,7 @@ class UserController extends AppController
      * 荣誉学员和讲师
      * @param int $group  5为学生  6为老师
      */
-    public function honorUsers($group = 5){
+    public function honorUsers($group = 5, $version=null){
         $model = M();
         if($group==5){  // 学生
             ///$list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) desc limit 0,4");
@@ -1509,7 +1509,17 @@ class UserController extends AppController
             $v['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $v['uid']);
         }
         unset($v);
-        $this->apiSuccess("获取荣誉用户列表成功", null, array('totalCount' => count($list),'userList' => $list));
+        if((float)$version>=2.2){
+            $where = 'auth_group_access.uid = member.uid and auth_group_access.group_id = ';
+            $model =  M("table");
+            $statInfo['designers'] = $model->table(array(
+                'hisihi_auth_group_access'=>'auth_group_access',
+                'hisihi_member'=>'member',))->where($where.'6')->field('member.uid')->count();
+            $extra['allCount'] = $statInfo['designers'] + C('TEACHER_COUNT_BASE');
+        }
+        $extra['totalCount'] = count($list);
+        $extra['userList'] = $list;
+        $this->apiSuccess("获取荣誉用户列表成功", null, $extra);
     }
 
     /**
