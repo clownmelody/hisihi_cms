@@ -1505,7 +1505,8 @@ class OrganizationController extends AppController
      * @param int $organization_id
      */
     public function shareOrganization($organization_id=0){
-        if(true){
+        $result = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->find();
+        if($result){
             $extra['org_share_url'] = 'app.php/organization/organizationdetail/type/view/id/'.$organization_id;
             $uid = $this->getUid();
             if($uid){
@@ -1519,19 +1520,21 @@ class OrganizationController extends AppController
             }
             $this->apiSuccess("获取机构分享链接成功", null, $extra);
         }
-        else
+        else{
             $this->apiError(-404, '未找到该机构！');
+        }
     }
 
     //机构详情
     public function organizationDetail($id, $type = 'view')
     {
-        if(true){
+        $result = M('Organization')->where(array('id'=>$id,'status'=>1))->find();
+        if($result){
             if($type == 'view') {
                 $this->display();
             }
-        } else {
-            $this->apiError(-404, '未找到该课程！');
+        } else{
+            $this->apiError(-404, '未找到该机构！');
         }
     }
 

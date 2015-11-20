@@ -140,8 +140,10 @@
 		text-align: center;
 		text-decoration: none;
 		display: block;
-		padding:  10px;
-		color: #9C9A9D;
+		padding: 0.3em;
+		height: 2em;
+		box-sizing: border-box;
+		color: #757373;
 	}
 	.box-btn:hover{
 		text-decoration: none;
@@ -157,7 +159,7 @@
 	}
 	.loadingResultTips .loadingResultTipsMain{
 		width: 8em;
-		height: 2.5em;
+		height: 2em;
 		margin: 0 auto;
 		display: none;
 	}
@@ -165,6 +167,7 @@
 		float: left;
 		line-height: 2em;
 		margin-left: 0.8em;;
+		color: #757373;
 	}
 	.loadingResultTipsMain .loadingImg{
 		float: left;
@@ -172,21 +175,30 @@
 		margin: 0.25em auto;
 		height: 1.5em;
 		width: 1.5em;
-		background-image: url("__IMG__/loading.svg");
-		-webkit-animation: aloading 1.1s linear infinite;
-		-moz-animation: aloading 1.1s linear infinite;
+		background-image: url("__IMG__/loading2.svg");
+		-webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+		-moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+		animation: aloading 0.8s steps(6, end) 0s infinite;
 	}
 	@-webkit-keyframes aloading {
-		100% {
-			transform:rotate(360deg);
+		to {
+			-webkit-transform:rotate(360deg)
 		}
 	}
 	@-moz-keyframes aloading {
-		100% {
-			transform:rotate(360deg);
+		to {
+			-moz-transform:rotate(360deg)
+		}
+	}
+	@keyframes aloading {
+		to {
+			transform:rotate(360deg)
 		}
 	}
 	.loadingResultTips .loadError{
+		padding: 0.3em;
+		height: 2em;
+		box-sizing: border-box;
 		display: none;
 		color: #757373;
 		text-decoration: none !important;
@@ -201,8 +213,8 @@
 		height:4.5em;
 	}
 	.comment-box-header{
-		height: 1.4em;
-		font-size:0.5em;
+		height: 1em;
+		font-size:1em;
 		text-align: center;
 		color: #FF6600;
 		opacity: 0;
