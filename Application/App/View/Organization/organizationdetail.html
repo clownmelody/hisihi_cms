@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <php>
+        $oneplus_seo_meta = get_seo_meta($vars,$seo);
+    </php>
+
+    <if condition="$oneplus_seo_meta['title']">
+        <title>{$oneplus_seo_meta['title']}</title>
+        <else/>
+        <title>{:C('WEB_SITE_TITLE')}</title>
+    </if>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="__CSS__/app.min.css">
+    <style>
+        .bottomspace {
+            display: none;
+            height: 55px;
+        }
+        .info-title {
+            height: 40px;
+        }
+        .info-time {
+            font-size: 12px;
+            color: #ccc;
+        }
+        img {
+            max-width:100%;height:auto;
+        }
+    </style>
+</head>
+
+<body>
+<div class="app-page" data-page="home">
+
+    <div id="test-agent" style="display:none">user-agent</div>
+    <div class="app-content" style="-webkit-box-shadow: none;">
+        <div class="app-section" style="margin: 10px 10px 10px 10px">
+            <div class="info-title">
+                <div style="float:left;margin-top:-10px;width:100%">
+                    <h2>机构分析测试</h2>
+                </div>
+            </div>
+            <div class="info-time">
+                <p></p>
+            </div>
+            <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
+            </div>
+            <div>
+            <p>
+                机构分析测试<br>
+                机构分析测试<br>
+                机构分析测试<br>
+                </p>
+            </div>
+        </div>
+        <div class="bottomspace"></div>
+    </div>
+</div>
+<script src="__JS__/zepto.js"></script>
+<script src="__JS__/app.min.js"></script>
+<script>
+    App.controller('home', function (page) {
+        // put stuff here
+        //rawText      : '点击“确定”下载<br>【嘿设汇App】<br>体验更多功能',
+        $(page)
+                .find('.app-button')
+                .on('click', function () {
+                    window.location.href = "http://www.hisihi.com/download.php";
+                    /*App.dialog({
+                     title        : '嘿设汇',
+                     rawText      : '<img style="width: 50px;" src="__IMG__/icon.png" /><br>火速下载',
+                     okButton     : '确定',
+                     cancelButton : '取消'
+                     }, function (tryAgain) {
+                     if (tryAgain) {
+                     location.href = 'http://www.hisihi.com/app/downloadapp.html';
+                     }
+                     });*/
+                });
+    });
+
+    App.controller('page2', function (page) {
+        // put stuff here
+    });
+
+    try {
+        App.restore();
+    } catch (err) {
+        App.load('home');
+    }
+
+    $("a").removeAttr('href');
+
+    var userAgent = window.location.href;
+    if(userAgent.indexOf("hisihi-app") < 0) {
+        $(".app-bottombar").show();
+        $(".bottomspace").show();
+    }
+
+</script>
+</body>
+</html>

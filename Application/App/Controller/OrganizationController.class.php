@@ -1501,6 +1501,39 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 分享机构详情
+     * @param int $organization_id
+     */
+    public function shareOrganization($organization_id=0){
+        if(true){
+            $extra['org_share_url'] = 'app.php/organization/organizationdetail/type/view/id/'.$organization_id;
+            $uid = $this->getUid();
+            if($uid){
+                if($this->checkUserDoShareCache($uid)){
+                    if(increaseScore($uid, 1)){
+                        $extraData['scoreAdd'] = "1";
+                        $extraData['scoreTotal'] = getScoreCount($uid);
+                        $extra['score'] = $extraData;
+                    }
+                }
+            }
+            $this->apiSuccess("获取机构分享链接成功", null, $extra);
+        }
+        else
+            $this->apiError(-404, '未找到该机构！');
+    }
+    //机构详情
+    public function organizationDetail($id, $type = 'view')
+    {
+        if(true){
+            if($type == 'view') {
+                $this->display();
+            }
+        }
+        else
+            $this->apiError(-404, '未找到该课程！');
+    }
+    /**
      * 获取机构的认证信息
      * @param $organization_id
      */
