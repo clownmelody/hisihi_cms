@@ -40,6 +40,7 @@
                 <th class="">机构ID</th>
                 <th class="">机构名称</th>
                 <th class="">机构类型</th>
+                <th class="">默认展示</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -54,12 +55,22 @@
                         <td>{$vo.organization_id}</td>
                         <td>{$vo.organization}</td>
                         <td>{$vo.authentication_name}</td>
+                        <td><if condition="($vo.default_display eq 1) "> 是
+                            <else /> 否
+                        </if>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                             </if>
                         </td>
                         <td>
+                            <gt name="organization_id" value="0">
+                                <eq name="vo['default_display']" value="0">
+                                    <a href="{:U('Organization/authentication_display?id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">默认展示</a>
+                                    <else/>
+                                    <a href="{:U('Organization/authentication_hide?id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">默认隐藏</a>
+                                </eq>
+                            </gt>
                             <a href="{:U('Organization/authentication_edit?id='.$vo['id'])}" >修改</a>
                             <a href="{:U('Organization/authentication_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
