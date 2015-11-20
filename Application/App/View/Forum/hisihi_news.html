@@ -64,7 +64,7 @@
         /*}*/
         .newsListContainer li .coverBorderContainer{
             position: absolute;
-            height: 0.035em;
+            height: 0.0625em;
             bottom: 0em;
             background-color: white;
             width:0.75em;
@@ -88,10 +88,12 @@
             width: 4.5em;
             height: 4.5em;
             position: absolute;
+            background-image: url('__IMG__/logocover.png');
         }
         .newsListContainer li .left img{
             width: 100%;
             height: 100%;
+            opacity: 0;
         }
         .newsListContainer li .right{
             padding-left:5.25em ;
@@ -180,7 +182,7 @@
         server_url:'http://{$Think.server.HTTP_HOST}/api.php?s=/forum',
         img_url:'__IMG__'
     };
-//    urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
+    urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
     new hisihiNews($('.wrapper'),urlObj);
 </script>
 </html>

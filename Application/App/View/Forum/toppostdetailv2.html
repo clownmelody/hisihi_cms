@@ -171,7 +171,7 @@
 		opacity: 0;
 	}
 	.comment-box-main{
-		height: 3.7em;
+		height: 3.3em;
 		background-color: #e3e3e3;
 		position: relative;
 		padding: 0.65em;
@@ -180,17 +180,18 @@
 		margin-right: 4em;
 		height: 100%;
 		-webkit-border-radius: .2em;
-		-moz-border-radius: .3em;
+		-moz-border-radius: .2em;
+		margin-top: 0.2em;
 	}
 	#comment-box textarea{
-		height:90%;
+		height:100%;
 		width: 100%;
 		background-color: #FFFFFF;
 		outline: none;
 		resize: none;
 		-webkit-appearance: none;
-		padding:0.2em 0.5em;
-		line-height: 1.5em;
+		padding:0.3em 0.5em;
+		line-height: 1em;
 		font-size: 1.1em;
 		border: 0.0625em solid #CCCCCC;
 		border-radius: 0.5em;
@@ -213,11 +214,10 @@
 		color: #f5a000;
 	}
 	#comment-box input.abled:active{
-		transform: scale(.9);
 		color: #ce4611;
 	 }
 	#comment-box input.disabled{
-		color: #808080;
+		color: #dbdbdd;
 	}
 	</style>
 </head>
@@ -373,7 +373,7 @@
 			var newDate = new Date(parseInt(date) * 1000).format('MM-dd hh:mm');
 			return newDate;
 		}
-//		urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
+		urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
 		new commentObj($('#comment-box'),urlObj);
 	</script>
 
