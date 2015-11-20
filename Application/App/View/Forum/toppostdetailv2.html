@@ -32,6 +32,7 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
+		overflow: hidden;
 	}
 	img {
 		width: 100%;
@@ -39,6 +40,14 @@
 	input，textarea{
 		resize: none;
 		outline: none;
+	}
+	.main{
+		position: relative;
+		height:-webkit-calc(100% - 3em);
+		height:-moz-calc(100% - 3em);
+		width: 100%;
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 	.detailed-main{
 		padding: 10px;
@@ -149,7 +158,7 @@
 
 	#comment-box{
 		display: none;
-		position: fixed;
+		position: absolute;
 		bottom: -0.1em;
 		width: 100%;
 		height:4.5em;
@@ -169,20 +178,17 @@
 	}
 	#comment-box .comment-box-left{
 		margin-right: 4em;
-		/*height: -webkit-calc(100% - 0.5em);*/
-		/*height: -moz-calc(100% - 0.5em);*/
 		height: 100%;
 		-webkit-border-radius: .2em;
 		-moz-border-radius: .3em;
 	}
 	#comment-box textarea{
-		/*height: -webkit-calc(100% - 0.5em);*/
-		/*height: -moz-calc(100% - 0.5em);*/
 		height:90%;
 		width: 100%;
 		background-color: #FFFFFF;
 		outline: none;
 		resize: none;
+		-webkit-appearance: none;
 		padding:0.2em 0.5em;
 		line-height: 1.5em;
 		font-size: 1.1em;
@@ -216,8 +222,8 @@
 	</style>
 </head>
 <body>
-	
-	<div class="detailed-main">
+	<div class="main">
+		<div class="detailed-main">
 		<div class="detailed-box">
 			<input type="hidden" id="postid" value="{$post.post_id}">
 			<input type="hidden" id="replyTotalCount" value="{$replyTotalCount}">
@@ -283,6 +289,7 @@
 			</svg>
 			<a href="javascript:void(0);" class="box-btn" onclick="getMoreReplay();">点击加载更多</a>
 		</div>
+	</div>
 	</div>
 	<div id="comment-box">
 		<p class="comment-box-header">评论成功</p>
