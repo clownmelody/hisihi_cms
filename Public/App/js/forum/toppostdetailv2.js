@@ -48,7 +48,7 @@ commentObj.prototype={
                 //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
             }
             else if(operation.ios){
-                //info=getUser_iOS();
+                info=getUser_iOS();
             }
             if(info) {
                 this.userInfo = JSON.parse(info);
