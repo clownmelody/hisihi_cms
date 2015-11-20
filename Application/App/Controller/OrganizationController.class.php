@@ -1550,7 +1550,7 @@ class OrganizationController extends AppController
     private function getAuthenticationInfo($organization_id=0){
         $model = M('OrganizationAuthenticationConfig');
         $authModel = M('OrganizationAuthentication');
-        $config_list = $model->field('id, name, pic_id,content')->where('status=1')->select();
+        $config_list = $model->field('id, name, pic_id, content, default_display')->where('status=1')->select();
         foreach($config_list as &$config){
             $config['pic_url'] = $this->fetchImage($config['pic_id']);
             $map['organization_id'] = $organization_id;
