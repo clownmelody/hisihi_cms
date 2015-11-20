@@ -1522,6 +1522,7 @@ class OrganizationController extends AppController
         else
             $this->apiError(-404, '未找到该机构！');
     }
+
     //机构详情
     public function organizationDetail($id, $type = 'view')
     {
@@ -1529,10 +1530,19 @@ class OrganizationController extends AppController
             if($type == 'view') {
                 $this->display();
             }
-        }
-        else
+        } else {
             $this->apiError(-404, '未找到该课程！');
+        }
     }
+
+    /**
+     * 机构认证报告
+     * @param int $organization_id
+     */
+    public function OrganizationAuthenticationReport($organization_id=0){
+        $this->display('organizationauthenticationreport');
+    }
+
     /**
      * 获取机构的认证信息
      * @param $organization_id

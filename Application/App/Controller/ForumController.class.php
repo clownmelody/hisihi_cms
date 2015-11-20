@@ -1639,7 +1639,6 @@ class ForumController extends AppController
                 ->order('create_time desc')->page(1, 1)->select();
             array_unshift($list, $first_post);
             $list[1]['title'] = "嘿设汇已经解决33212个问题";
-            //$list[2]['title'] = "嘿设汇已经帮7234个学生找到机构";
         } else if ((float)$version>=2.1){
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1')
                 ->order('create_time desc')->page(1, 3)->select();
