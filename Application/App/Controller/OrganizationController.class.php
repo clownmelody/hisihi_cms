@@ -1522,16 +1522,18 @@ class OrganizationController extends AppController
         else
             $this->apiError(-404, '未找到该机构！');
     }
+
     //机构详情
     public function organizationDetail($id, $type = 'view')
     {
-        if(true){
+        $result = M('Organization')->where(array('id'=>$id,'status'=>1))->find();
+        if($result){
             if($type == 'view') {
                 $this->display();
             }
+        } else{
+            $this->apiError(-404, '未找到该机构！');
         }
-        else
-            $this->apiError(-404, '未找到该课程！');
     }
     /**
      * 获取机构的认证信息
