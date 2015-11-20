@@ -25,7 +25,7 @@ class CompanyController extends AppController {
      * @param int $count
      *
      */
-    public function alllist($uid=0, $page=1, $count=5, $id=0, $name=''){
+    public function alllist($uid=0, $page=1, $count=5, $id=0, $name='',$version=null){
         if (!$uid) {
             //$this->requireLogin();
             $uid = $this->getUid();
@@ -84,6 +84,10 @@ class CompanyController extends AppController {
                     $company['is_delivery'] = true;
                 }
             }
+        }
+        if((float)$version>=2.2){
+            $visit_count = M('CompanyConfig')->where('type=9 and status=1')->getField('value');
+            $extra['allCount'] = $visit_count;
         }
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $result;

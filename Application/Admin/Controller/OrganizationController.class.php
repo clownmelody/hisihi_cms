@@ -328,13 +328,21 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/organization/relation');
+                if($_POST['from_org']){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/relation&organization_id='.$data['organization_id']);
+                }else{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/relation');
+                }
             } else {
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->success('更新成功', 'index.php?s=/admin/organization/relation');
+                if($_POST['from_org']){
+                    $this->success('更新成功', 'index.php?s=/admin/organization/relation&organization_id='.$data['organization_id']);
+                }else{
+                    $this->success('更新成功', 'index.php?s=/admin/organization/relation');
+                }
             }
         } else {
             $this->display('relation_add');
@@ -359,6 +367,9 @@ class OrganizationController extends AdminController
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
         $teacher_group = M('OrganizationConfig')->where(array('organization_id'=>$data['organization_id'],'status'=>1,'type'=>1001))
             ->field('id,value')->select();
+        if($_GET['from_org']){//判断是否从机构跳转过来
+            $this->assign('from_org', $_GET['from_org']);
+        }
         $this->assign('info', $data);
         $this->assign('teacher_group',$teacher_group);
         $this->display();
@@ -381,7 +392,11 @@ class OrganizationController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('删除成功','index.php?s=/admin/organization/relation');
+            if(I('from_org')){
+                $this->success('删除成功', 'index.php?s=/admin/organization/relation&organization_id='.I('organization_id'));
+            }else{
+                $this->success('删除成功', 'index.php?s=/admin/organization/relation');
+            }
         } else {
             $this->error('未选择要删除的数据');
         }
@@ -834,6 +849,17 @@ class OrganizationController extends AdminController
             }
             if(empty($cid)){
                 try {
+                    //将最先添加的两个认证默认展示
+                    $filter_map['organization_id'] = $data['organization_id'];
+                    $filter_map['status'] = 1;
+                    $filter_map['default_display'] = 1;
+                    $display_count = M('OrganizationAuthentication')->where($filter_map)->count();
+                    if(!$display_count){
+                        $display_count = 0;
+                    }
+                    if($display_count < 3){
+                        $data['default_display'] = 1;
+                    }
                     $data["create_time"] = time();
                     $res = $model->add($data);
                     if(!$res){
@@ -921,6 +947,59 @@ class OrganizationController extends AdminController
         }
     }
 
+    /**
+     *认证默认展示
+     * @param $organization_id
+     */
+    public function authentication_display($organization_id=0){
+        if(!$organization_id){
+            $this->error('未选择机构');
+        }
+        $id = array_unique((array)I('id',0));
+        if (empty($id)) {
+            $this->error('请选择要操作的数据!');
+        }
+        $filter_map['organization_id'] = $organization_id;
+        $filter_map['status'] = 1;
+        $filter_map['default_display'] = 1;
+        $display_count = M('OrganizationAuthentication')->where($filter_map)->count();
+        if(!$display_count){
+            $display_count = 0;
+        }
+        if(count($id) > (2-$display_count)){
+            $this->error('默认展示不能超过两个');
+        }
+        $config = D('OrganizationAuthentication');
+        $map = array('id' => array('in', $id) );
+        $result = $config->where($map)->save(Array('default_display'=>1));
+        if($result){
+            $this->success('设置成功', U('authentication'));
+        } else {
+            $this->error('设置失败');
+        }
+    }
+
+    /**
+     * 认证默认隐藏
+     * @param int $organization_id
+     */
+    public function authentication_hide($organization_id=0){
+        if(!$organization_id){
+            $this->error('未选择机构');
+        }
+        $id = array_unique((array)I('id',0));
+        if (empty($id)) {
+            $this->error('请选择要操作的数据!');
+        }
+        $config = D('OrganizationAuthentication');
+        $map = array('id' => array('in', $id) );
+        $result = $config->where($map)->save(Array('default_display'=>0));
+        if($result){
+            $this->success('设置成功', U('authentication'));
+        } else {
+            $this->error('设置失败');
+        }
+    }
 
     /**
      * 认证配置列表
@@ -1736,7 +1815,9 @@ class OrganizationController extends AdminController
             $this->assign('organization_id',$organization_id);
         }
         $category = M('OrganizationConfig')->where(array('status'=>1,'type'=>1002))->field('id,value')->select();
-
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
+        }
         $this->assign('category', $category);
         $this->display();
     }
@@ -1767,14 +1848,23 @@ class OrganizationController extends AdminController
                     $this->error($e->getMessage());
                 }
                 $this->uploadLogoPicToOSS($data['img']);
-                $this->success('添加成功', 'index.php?s=/admin/organization/course');
+                if(I('from_org')){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/course&organization_id'.$data['organization_id']);
+                }else{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/course');
+                }
+
             } else {
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
                 $this->uploadLogoPicToOSS($data['img']);
-                $this->success('更新成功', 'index.php?s=/admin/organization/course');
+                if(I('from_org')){
+                    $this->success('更新成功', 'index.php?s=/admin/organization/course&organization_id'.$data['organization_id']);
+                }else{
+                    $this->success('更新成功', 'index.php?s=/admin/organization/course');
+                }
             }
         } else {
             $this->display('course_add');
@@ -1804,6 +1894,9 @@ class OrganizationController extends AdminController
             $teacher['id'] = $teacher_id['uid'];
             $teacher_list[] = $teacher;
         }
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
+        }
         $this->assign('teacher_list', $teacher_list);
         $this->assign('info', $data);
         $this->assign('category', $category);
@@ -1829,7 +1922,11 @@ class OrganizationController extends AdminController
                 $model->where('id='.$id)->save($data);
                 M('OrganizationVideo')->where(array('course_id'=>$id))->save($data);
             }
-            $this->success('删除成功','index.php?s=/admin/organization/course');
+            if(I('from_org')){
+                $this->success('删除成功','index.php?s=/admin/organization/course&organization_id='.I('organization_id'));
+            }else{
+                $this->success('删除成功','index.php?s=/admin/organization/course');
+            }
         } else {
             $this->error('未选择要删除的数据');
         }

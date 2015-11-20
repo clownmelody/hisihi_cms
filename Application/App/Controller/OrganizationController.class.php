@@ -1444,13 +1444,116 @@ class OrganizationController extends AppController
     }
 
     /**
+     * app获取机构老师列表
+     * @param int $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $totalCount = M('OrganizationRelation')
+            ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))->count();
+        $teacher_ids = M('OrganizationRelation')->field('uid,teacher_group_id')
+            ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))
+            ->page($page, $count)->select();
+        foreach($teacher_ids as &$teacher){
+            $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$teacher['uid']))->find();
+            $isfans = D('Follow')->where(array('who_follow'=>$teacher['uid'],'follow_who'=>get_uid()))->find();
+            $isfollowing = $isfollowing ? 2:0;
+            $isfans = $isfans ? 1:0;
+            $teacher['relationship'] = $isfollowing | $isfans;
+            $teacher['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $teacher['uid']);
+            $teacher['teacher_group'] = M('OrganizationConfig')
+                ->where(array('id'=>$teacher['teacher_group_id'],'organization_id'=>$organization_id,'status'=>1,'type'=>1001))->getField('value');
+        }
+        unset($teacher);
+        //返回成功结果
+        $this->apiSuccess("获取机构老师列表成功", null, array('totalCount' => $totalCount,'teacherList' => $teacher_ids));
+    }
+
+    /**
+     * 获取机构粉丝列表
+     * @param int $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function fansList($organization_id=0,$page = 1, $count = 10){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $totalCount = M('Follow')->where(array('follow_who'=>$organization_id,'status'=>1,'type'=>2))->count();
+        $fans = M('Follow')->field('who_follow as uid')
+            ->where(array('follow_who'=>$organization_id,'status'=>1,'type'=>2))
+            ->page($page, $count)->select();
+        foreach($fans as &$fan){
+            $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$fan['uid']))->find();
+            $isfans = D('Follow')->where(array('who_follow'=>$fan['uid'],'follow_who'=>get_uid()))->find();
+            $isfollowing = $isfollowing ? 2:0;
+            $isfans = $isfans ? 1:0;
+            $fan['relationship'] = $isfollowing | $isfans;
+            $fan['info'] = query_user(array('avatar256', 'avatar128', 'username', 'score', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $fan['uid']);
+        }
+        unset($fan);
+        //返回成功结果
+        $this->apiSuccess("获取机构粉丝列表成功", null, array('totalCount' => $totalCount,'fansList' => $fans));
+    }
+
+    /**
+     * 分享机构详情
+     * @param int $organization_id
+     */
+    public function shareOrganization($organization_id=0){
+        $result = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->find();
+        if($result){
+            $extra['org_share_url'] = 'app.php/organization/organizationdetail/type/view/id/'.$organization_id;
+            $uid = $this->getUid();
+            if($uid){
+                if($this->checkUserDoShareCache($uid)){
+                    if(increaseScore($uid, 1)){
+                        $extraData['scoreAdd'] = "1";
+                        $extraData['scoreTotal'] = getScoreCount($uid);
+                        $extra['score'] = $extraData;
+                    }
+                }
+            }
+            $this->apiSuccess("获取机构分享链接成功", null, $extra);
+        }
+        else{
+            $this->apiError(-404, '未找到该机构！');
+        }
+    }
+
+    //机构详情
+    public function organizationDetail($id, $type = 'view')
+    {
+        $result = M('Organization')->where(array('id'=>$id,'status'=>1))->find();
+        if($result){
+            if($type == 'view') {
+                $this->display();
+            }
+        } else{
+            $this->apiError(-404, '未找到该机构！');
+        }
+    }
+
+    /**
+     * 机构认证报告
+     * @param int $organization_id
+     */
+    public function OrganizationAuthenticationReport($organization_id=0){
+        $this->display('organizationauthenticationreport');
+    }
+
+    /**
      * 获取机构的认证信息
      * @param $organization_id
      */
     private function getAuthenticationInfo($organization_id=0){
         $model = M('OrganizationAuthenticationConfig');
         $authModel = M('OrganizationAuthentication');
-        $config_list = $model->field('id, name, pic_id')->where('status=1')->select();
+        $config_list = $model->field('id, name, pic_id,content')->where('status=1')->select();
         foreach($config_list as &$config){
             $config['pic_url'] = $this->fetchImage($config['pic_id']);
             $map['organization_id'] = $organization_id;

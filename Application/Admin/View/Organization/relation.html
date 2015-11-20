@@ -52,10 +52,17 @@
                             </if>
                         </td>
                         <td>
-                            <eq name="vo['group']" value="6">
-                                <a href="{:U('Organization/relation_edit?id='.$vo['id'])}" >编辑</a>
-                            </eq>
-                            <a href="{:U('Organization/relation_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <gt name="organization_id" value="0">
+                                <eq name="vo['group']" value="6">
+                                    <a href="{:U('Organization/relation_edit?from_org=1&id='.$vo['id'])}" >编辑</a>
+                                </eq>
+                                <a href="{:U('Organization/relation_delete?from_org=1&id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">删除</a>
+                            <else/>
+                                <eq name="vo['group']" value="6">
+                                    <a href="{:U('Organization/relation_edit?id='.$vo['id'])}" >编辑</a>
+                                </eq>
+                                <a href="{:U('Organization/relation_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            </gt>
                         </td>
                     </tr>
                 </volist>

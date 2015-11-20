@@ -15,7 +15,7 @@ class HotKeysController extends AppController
     /**
      * 客户端快捷键列表
      */
-    public function sort(){
+    public function sort($version=null){
         $data = array();
         $data[] = array(
             'text' => 'ps',
@@ -37,6 +37,10 @@ class HotKeysController extends AppController
             'text' => 'ae',
             'icon' => 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/AE.png'
         );
+        if((float)$version>=2.2){
+            $visit_count = M('CompanyConfig')->where('type=10 and status=1')->getField('value');
+            $extra['allCount'] = $visit_count;
+        }
         $extra['data'] = $data;
         $this->apiSuccess('获取快捷键列表成功', null, $extra);
     }
