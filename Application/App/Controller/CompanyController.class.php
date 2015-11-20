@@ -87,6 +87,8 @@ class CompanyController extends AppController {
                 }
             }
         }
+        $visit_count = M('CompanyConfig')->where('type=9 and status=1')->getField('value');
+        $extra['visit_count'] = $visit_count;
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $result;
         $end_time = time();
