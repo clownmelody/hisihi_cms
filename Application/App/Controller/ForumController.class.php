@@ -1218,6 +1218,7 @@ class ForumController extends AppController
                 $extraData['scoreAdd'] = "3";
                 $extraData['scoreTotal'] = getScoreCount($uid);
                 $extra['score'] = $extraData;
+                insertScoreRecord($uid, 3, '用户发帖');
             }
         }
         $this->apiSuccess($message,null, $extra);

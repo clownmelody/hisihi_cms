@@ -218,6 +218,7 @@ class DocumentController extends AppController {
                         $extraData['scoreAdd'] = "1";
                         $extraData['scoreTotal'] = getScoreCount($uid);
                         $extra['score'] = $extraData;
+                        insertScoreRecord($uid, 1, '用户收藏头条');
                     }
                     $this->apiSuccess('感谢您的支持', null, $extra);
                 } else {

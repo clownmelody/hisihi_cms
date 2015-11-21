@@ -108,7 +108,6 @@ class CheckinController extends AddonsController{
                 $data['total_num'] = $last['total_num'] + 1;
                 $data['total_score']=$last['total_score']+$add_score;
                 $result=D('Check_info')->where(array('uid'=>$data['uid']))->save($data);
-                increaseScore($uid, 5);
             } else {
                 $data['con_num'] = 1;
                 $data['total_num'] = 1;

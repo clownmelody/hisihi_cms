@@ -89,6 +89,7 @@ class AvatarAddon extends Addon
         }
         //返回成功消息
         increaseScore($uid, 10);
+        insertScoreRecord($uid, 10, '用户上传头像');
         return true;
     }
 

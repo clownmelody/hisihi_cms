@@ -318,11 +318,13 @@ class UserController extends AppController
             unset($check_info['ctime']);
         }
         //返回成功信息
-        $extra['checkInfo'] = $check_info;
         $uid = $this->getUid();
+        increaseScore($uid, 5);
+        $extra['checkInfo'] = $check_info;
         $extraData['scoreAdd'] = "5";
         $extraData['scoreTotal'] = getScoreCount($uid);
         $extra['score'] = $extraData;
+        insertScoreRecord($uid, 5, '用户签到');
 
         $this->apiSuccess("签到成功", null, $extra);
     }
