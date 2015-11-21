@@ -11,9 +11,12 @@ var hisihiNews = function ($wrapper,urlObj) {
     this.pageSize = 20;
     this.totalPage=1;
     this.loadData(1);
+    var that=this;
     this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
-    this.$wrapper.on('click','.loadError',function(){   //重新加载页面
-        window.location.reload();
+    this.$wrapper.on('click','.loadError',function(){   //重新加载数据
+        //重新加载页面
+        //    window.location.reload();
+        that.loadData(that.pageIndex);
         $(this).hide();
     });
 };
@@ -62,7 +65,7 @@ hisihiNews.prototype = {
         if(pageIndex>this.totalPage){
             return;
         }
-        $loadinng=this.$wrapper.find('.loadingResultTips').show();
+        $loadinng=this.$wrapper.find('.loadingResultTips').addClass('active').show();
         var tempObj = {
                 pageIndex: pageIndex,
                 count: this.pageSize
@@ -79,22 +82,24 @@ hisihiNews.prototype = {
             success: function (result) { //请求成功的回调函数
 
                 if(result.success) {
-                    $loadinng.hide();
+                    $loadinng.hide().removeClass('active');
                     that.totalPage=Math.ceil(result.totalCount/that.pageSize);
                     that.pageIndex++;
                     $loadinng.before(that.getNewsContent(result.data));
-                    //控制图片的显示
+                    //控制图片的显示，按比例显示
                     that.$wrapper.find('.newsListContainer img').unbind('load').bind("load",function(){
                         $(this).css('opacity','1');
                     });
                 }else{
-                    $loadinng.find('.loadingImg').hide().next().show();
+                    $loadinng.hide().removeClass('active');
+                    $loadinng.next().show();
                 }
             },
             complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
+                $loadinng.hide().removeClass('active');
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
-                    $loadinng.find('.loadingImg').hide().next().show();
+                    that.$wrapper.find('.loadError').show();
                 }
                 else if(status=='error'){
                     var tips='网络错误';
@@ -102,7 +107,7 @@ hisihiNews.prototype = {
                     if(XMLHttpRequest.status=='404') {
                         tips='请求地址错误';
                     }
-                    $loadinng.find('.loadingImg').hide().next().show();
+                    that.$wrapper.find('.loadError').show();
                 }
             }
         });

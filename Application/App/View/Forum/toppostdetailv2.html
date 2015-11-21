@@ -41,6 +41,46 @@
 		resize: none;
 		outline: none;
 	}
+
+	.loadingResultTips{
+		text-align: center;
+		color: #9C9A9D;
+		position: absolute;
+		height: 4em;
+		width: 12em;
+	}
+	.loadingResultTips .loadingImg{
+		margin: 0 auto;
+		height: 2em;
+		width: 2em;
+		background-image: url("__IMG__/loading2.svg");
+	}
+	.loadingResultTips.active .loadingImg{
+		-webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+		-moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+		animation: aloading 0.8s steps(6, end) 0s infinite;
+	}
+	@-webkit-keyframes aloading {
+		to {
+			-webkit-transform:rotate(360deg)
+		}
+	}
+	@-moz-keyframes aloading {
+		to {
+			-moz-transform:rotate(360deg)
+		}
+	}
+	@keyframes aloading {
+		to {
+			transform:rotate(360deg)
+		}
+	}
+	.loadingResultTips .loadError{
+		display: none;
+		color: #757373;
+		text-decoration: none !important;
+	}
+
 	.main{
 		position: relative;
 		height:-webkit-calc(100% - 3em);
@@ -154,28 +194,31 @@
 		margin: 0 auto;
 		display: none;
 	}
-	.loadingResultTips{
+	.loadingMoreResultTips{
 		text-align: center;
+		display: none;
 	}
-	.loadingResultTips .loadingResultTipsMain{
+	.loadingMoreResultTips .loadingMoreResultTipsMain{
 		width: 8em;
 		height: 2em;
 		margin: 0 auto;
-		display: none;
 	}
-	.loadingResultTipsMain span{
+	.loadingMoreResultTipsMain span{
 		float: left;
 		line-height: 2em;
 		margin-left: 0.8em;;
 		color: #757373;
 	}
-	.loadingResultTipsMain .loadingImg{
+	.loadingMoreResultTipsMain .loadingImg{
 		float: left;
 		display:inline-block;
 		margin: 0.25em auto;
 		height: 1.5em;
 		width: 1.5em;
 		background-image: url("__IMG__/loading2.svg");
+
+	}
+	.loadingMoreResultTips.active .loadingImg{
 		-webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
 		-moz-animation: aloading 0.8s steps(6, end) 0s infinite;
 		animation: aloading 0.8s steps(6, end) 0s infinite;
@@ -195,7 +238,7 @@
 			transform:rotate(360deg)
 		}
 	}
-	.loadingResultTips .loadError{
+	.loadingMoreResultTips .loadError{
 		padding: 0.3em;
 		height: 2em;
 		box-sizing: border-box;
@@ -213,17 +256,17 @@
 		height:4.5em;
 	}
 	.comment-box-header{
-		height: 1em;
+		height: 1.5em;
 		font-size:1em;
 		text-align: center;
 		color: #FF6600;
 		opacity: 0;
 	}
 	.comment-box-main{
-		height: 3.3em;
+		height: 2.9em;
 		background-color: #e3e3e3;
 		position: relative;
-		padding: 0.65em;
+		padding: 0.5em 0.65em;
 	}
 	#comment-box .comment-box-left{
 		margin-right: 4em;
@@ -239,7 +282,7 @@
 		outline: none;
 		resize: none;
 		-webkit-appearance: none;
-		padding:0.3em 0.5em;
+		padding:0.2em 0.5em;
 		line-height: 1em;
 		font-size: 1.1em;
 		border: 0.0625em solid #CCCCCC;
@@ -248,14 +291,15 @@
 	#comment-box input{
 		outline: none;
 		resize: none;
-		width: 4em;
+		width: 4.6em;
 		height: 100%;
+		line-height: 3.2em;
 		position: absolute;
 		border: none;
 		background-color:transparent;
 		right: 0;
 		top: 0;
-		font-size: 1.25em;
+		font-size: 1em;
 		color: #333333;
 	}
 
@@ -266,11 +310,15 @@
 		color: #ce4611;
 	 }
 	#comment-box input.disabled{
-		color: #dbdbdd;
+		color: #808080;
 	}
 	</style>
 </head>
 <body>
+	<!--<div id="loadingTip" class="loadingResultTips active">-->
+		<!--<div class="loadingImg"></div>-->
+		<!--<a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>-->
+	<!--</div>-->
 	<div class="main">
 		<div class="detailed-main">
 		<div class="detailed-box">
@@ -319,8 +367,8 @@
 		<!-- /.detailed-box -->
 
 		<div class="detailed-box" id="loadMoreContainer">
-			<div class="loadingResultTips">
-				<div class="loadingResultTipsMain">
+			<div class="loadingMoreResultTips">
+				<div class="loadingMoreResultTipsMain">
 					<i class="loadingImg"></i>
 					<span>正在加载…</span>
 				</div>
@@ -353,7 +401,7 @@
 			totalReplayCount = parseInt($('#replyTotalCount').val());
 			postid = $('#postid').val();
 
-			svgloading = $('.loadingResultTipsMain');
+			svgloading = $('.loadingMoreResultTips');
 			repalybtn = $('a.box-btn');
 			detailedlist = $('ul.detailed-list');
 			if(totalReplayCount > 10){
@@ -375,7 +423,7 @@
 
 		function getMoreReplay(){
 			repalybtn.hide();
-			svgloading.show();
+			svgloading.addClass('active').show();
 			$.ajax({
 				type: 'GET',
 				url: urlObj.server_url + '/forum/ajaxPostReplyList/post_id/' + postid +'/page/' + page,
@@ -394,7 +442,7 @@
 							replayarray.push('<p class="detailed-item-txt">' + replay[i]['content'] +'</p>');
 							replayarray.push('</div></li>');
 						}
-						svgloading.hide();
+						svgloading.hide().removeClass('active');
 						repalybtn.show();
 						detailedlist.append(replayarray.join(''));
 						page += 1;
@@ -409,7 +457,7 @@
 					}
 				},
 				error: function(xhr, type){
-					svgloading.hide().next().show();
+					svgloading.hide().removeClass('active').next().show();
 				}
 			})
 		}
