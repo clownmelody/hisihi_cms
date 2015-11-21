@@ -1515,6 +1515,7 @@ class OrganizationController extends AppController
                         $extraData['scoreAdd'] = "1";
                         $extraData['scoreTotal'] = getScoreCount($uid);
                         $extra['score'] = $extraData;
+                        insertScoreRecord($uid, 1, '用户分享');
                     }
                 }
             }
