@@ -149,6 +149,8 @@
             height: 2em;
             width: 2em;
             background-image: url("__IMG__/loading2.svg");
+        }
+        .loadingResultTips.active .loadingImg{
             -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
             -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
             animation: aloading 0.8s steps(6, end) 0s infinite;
@@ -178,7 +180,7 @@
 <body>
 <div class="wrapper">
     <ul class="newsListContainer">
-        <div id="loadingTip" class="loadingResultTips">
+        <div id="loadingTip" class="loadingResultTips active">
             <div class="loadingImg"></div>
             <a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>
         </div>

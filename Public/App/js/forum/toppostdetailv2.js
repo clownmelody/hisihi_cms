@@ -8,7 +8,7 @@
 function commentObj($wrapper,urlObj){
     this.$wrapper=$wrapper;
     this.urlObj=urlObj;
-
+    //this.controlLoadingPos();
     //根据平台的不同，调用不同的app 方法
     this.separateOperation();
     var that = this;
@@ -35,6 +35,15 @@ function commentObj($wrapper,urlObj){
 
 commentObj.prototype={
 
+    controlLoadingPos:function(){
+        var $loading = $('.loadingResultTips'),
+            w=$loading.width(),
+            h=$loading.height(),
+            dw=$('body').width(),
+            dh=$('body').height();
+        $loading.css({'top':(dh-h)/2,'left':(dw-w)/2});
+    },
+
     /*
     *区分安卓和ios
     */
@@ -48,12 +57,13 @@ commentObj.prototype={
                 //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
             }
             else if(operation.ios){
-                info=getUser_iOS();
+                info=getUser_iOS(); //调用IOS的方法，得到用户的基体信息
             }
             if(info) {
                 this.userInfo = JSON.parse(info);
             }
-        }else{
+        }
+        else{
             $.ajax({
                 url:this.urlObj.server_url+'/user/login',
                 data:{username:'18601995231',password:'123456',type:'3',client:'4'},
