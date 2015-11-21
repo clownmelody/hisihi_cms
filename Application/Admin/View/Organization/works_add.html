@@ -12,6 +12,7 @@
             <form id="form" action="{:U('works_update')}" method="post" class="form-horizontal doc-modal-form">
                 <input type="hidden" name="cid" id="id" value=""/>
                 <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id}"/>
+                <input type="hidden" name="from_org" id="from_org" value="{$from_org|default=0}"/>
                 <!-- 基础 -->
                 <div id="tab1" class="tab-pane in tab1">
                     <div class="form-item cf">
