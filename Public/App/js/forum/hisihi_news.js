@@ -16,8 +16,8 @@ var hisihiNews = function ($wrapper,urlObj) {
     this.$wrapper.on('click','.loadError',function(){   //重新加载数据
         //重新加载页面
         //    window.location.reload();
-        that.loadData(that.pageIndex);
         $(this).hide();
+        that.loadData(that.pageIndex);
     });
 };
 
@@ -51,9 +51,9 @@ hisihiNews.prototype = {
      * para:
      * pageIndex - {int} 当前的页码数
      */
-    loadData: function (pageIndex) {
+    loadData: function (pageIndex,callback) {
         var that=this;
-        this.getDataAsync(pageIndex);
+        this.getDataAsync(pageIndex,callback);
     },
 
     /*
@@ -61,13 +61,26 @@ hisihiNews.prototype = {
      * para:
      * pageIndex - {int} 当前的页码数
      */
-    getDataAsync: function (pageIndex) {
+    getDataAsync: function (pageIndex,callback) {
         if(pageIndex>this.totalPage){
-            return;
+            //return;
         }
-        $loadinng=this.$wrapper.find('.loadingResultTips').addClass('active').show();
+
+        //等待图片  区分两种情况：第一次加载的时候，等待图时居中的图；加载更多的时候，是在列表的底部
+        var $loadinngImgTarget,
+            $loadinngMore=this.$wrapper.find('.loadingMoreResultTips'),
+            $loadingError,
+            $loadingMain;
+        if(pageIndex==1){
+            $loadinngImgTarget=this.$wrapper.find('.loadingResultTips');
+        }else{
+            $loadinngImgTarget=$loadinngMore;
+        }
+        $loadinngImgTarget.addClass('active').show();  //显示加载效果
+        $loadingMain=$loadinngImgTarget.find('.loadingMoreResultTipsMain').show();  //加载提示对象
+        $loadingError=$loadinngImgTarget.find('.loadError');  //加载失败对象
         var tempObj = {
-                pageIndex: pageIndex,
+                page: pageIndex,
                 count: this.pageSize
             },
             url = this.urlObj.server_url + '/newsList',
@@ -80,26 +93,28 @@ hisihiNews.prototype = {
             data:tempObj,
             dataType: 'json',//返回的数据格式
             success: function (result) { //请求成功的回调函数
-
+                $loadinngImgTarget.removeClass('active');  //去掉active类，防止css3动画
                 if(result.success) {
-                    $loadinng.hide().removeClass('active');
+                    $loadinngImgTarget.hide();
                     that.totalPage=Math.ceil(result.totalCount/that.pageSize);
                     that.pageIndex++;
-                    $loadinng.before(that.getNewsContent(result.data));
+                    $loadinngMore.before(that.getNewsContent(result.data));
                     //控制图片的显示，按比例显示
                     that.$wrapper.find('.newsListContainer img').unbind('load').bind("load",function(){
                         $(this).css('opacity','1');
                     });
                 }else{
-                    $loadinng.hide().removeClass('active');
-                    $loadinng.next().show();
+                    $loadingMain.hide();
+                    $loadingError.show();
                 }
             },
             complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
-                $loadinng.hide().removeClass('active');
+                callback && callback();
+                $loadinngImgTarget.removeClass('active');
                 if(status=='timeout'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
-                    that.$wrapper.find('.loadError').show();
+                    $loadingMain.hide();
+                    $loadingError.show();
                 }
                 else if(status=='error'){
                     var tips='网络错误';
@@ -107,7 +122,8 @@ hisihiNews.prototype = {
                     if(XMLHttpRequest.status=='404') {
                         tips='请求地址错误';
                     }
-                    that.$wrapper.find('.loadError').show();
+                    $loadingMain.hide();
+                    $loadingError.show();
                 }
             }
         });
@@ -122,8 +138,8 @@ hisihiNews.prototype = {
      */
     getNewsContent:function(data){
         //data=[
-        //    {"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":this.urlObj.server_url+"/toppostdetailv2/post_id/5472","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},
-        //    {"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":this.urlObj.server_url+"/toppostdetailv2/post_id/5471","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}
+        //    {"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":this.urlObj.server_url+"/toppostdetailv2/post_id/5510","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},
+        //    {"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":this.urlObj.server_url+"/toppostdetailv2/post_id/5513","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}
         //];
         var str = '',title, len = data.length, item,dateStr;
         for (var i = 0; i < len; i++) {
@@ -157,12 +173,17 @@ hisihiNews.prototype = {
 
     /*
      *滚动加载更多的数据
+     * 通过滚动条是否在底部来确定
+     * 同时通过 loadingData 类 来防止连续快速滚动导致的重复加载
      */
     scrollContainer:function(e){
         var target= e.currentTarget,
             height = target.scrollHeight - $(target).height();
-        if ($(target).scrollTop() == height) {  //滚动到底部
-            this.loadData(this.pageIndex);
+        if ($(target).scrollTop() == height && !$(target).hasClass('loadingData')) {  //滚动到底部
+            $(target).addClass('loadingData');
+            this.loadData(this.pageIndex,function(){
+                $(target).removeClass('loadingData');
+            });
         }
     },
 

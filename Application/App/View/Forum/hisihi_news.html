@@ -32,6 +32,11 @@
         body {
             background: #ececec;
             font-size:1em;
+            /*position: absolute;*/
+            /*top: 0;*/
+            /*left: 0;*/
+            /*bottom: 0;*/
+            /*right: 0;*/
         }
 
         img {
@@ -44,6 +49,8 @@
             left: 0;
             bottom: 0;
             right: 0;
+            height: 100%;
+            width: 100%;
             overflow: auto;
             background-color: white;
             -webkit-overflow-scrolling: touch;
@@ -138,6 +145,16 @@
         .newsListContainer li .right .rightBottomRight{
             float: right;
         }
+
+        .wrapper .loadingImg{
+            background-image: url("__IMG__/loading2.svg");
+        }
+        .wrapper .loadError{
+            display: none;
+            color: #757373;
+            text-decoration: none !important;
+        }
+
         .loadingResultTips{
             opacity: 0;
             text-align: center;
@@ -150,7 +167,6 @@
             margin: 0 auto;
             height: 2em;
             width: 2em;
-            background-image: url("__IMG__/loading2.svg");
         }
         .loadingResultTips.active .loadingImg{
             -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
@@ -172,21 +188,53 @@
                 transform:rotate(360deg)
             }
         }
-        .loadingResultTips .loadError{
+
+
+        /*加载更多*/
+        .loadingMoreResultTips{
+            text-align: center;
             display: none;
-            color: #757373;
-            text-decoration: none !important;
         }
+        .loadingMoreResultTips .loadingMoreResultTipsMain{
+            width: 8em;
+            height: 2em;
+            margin: 0 auto;
+        }
+        .loadingMoreResultTipsMain span{
+            float: left;
+            line-height: 2em;
+            margin-left: 0.8em;;
+            color: #757373;
+        }
+        .loadingMoreResultTipsMain .loadingImg{
+            float: left;
+            display:inline-block;
+            margin: 0.25em auto;
+            height: 1.5em;
+            width: 1.5em;
+        }
+        .loadingMoreResultTips.active .loadingImg{
+            -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+            -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+            animation: aloading 0.8s steps(6, end) 0s infinite;
+        }
+
     </style>
 </head>
 <body>
 <div class="wrapper">
+    <div id="loadingTip" class="loadingResultTips active">
+        <div class="loadingImg loadingMoreResultTipsMain"></div>
+        <a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>
+    </div>
     <ul class="newsListContainer">
-        <div id="loadingTip" class="loadingResultTips active">
-            <div class="loadingImg"></div>
+        <div class="loadingMoreResultTips">
+            <div class="loadingMoreResultTipsMain">
+                <i class="loadingImg"></i>
+                <span>正在加载…</span>
+            </div>
             <a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>
         </div>
-        <!--<div id="error" class="loadingResultTips"></div>-->
     </ul>
 </div>
 </body>
