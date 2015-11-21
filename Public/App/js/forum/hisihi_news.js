@@ -8,7 +8,7 @@ var hisihiNews = function ($wrapper,urlObj) {
     this.controlLoadingPos();
     this.urlObj=urlObj;
     this.pageIndex = 1;
-    this.pageSize = 20;
+    this.pageSize = 10;
     this.totalPage=1;
     this.loadData(1);
     var that=this;
@@ -29,7 +29,7 @@ hisihiNews.prototype = {
            h=$loading.height(),
            dw=this.$wrapper.width(),
            dh=this.$wrapper.height();
-        $loading.css({'top':(dh-h)/2,'left':(dw-w)/2});
+        $loading.css({'top':(dh-h)/2,'left':(dw-w)/2,'opacity':'1'});
     },
 
 
