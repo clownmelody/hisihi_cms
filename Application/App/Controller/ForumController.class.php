@@ -1218,6 +1218,7 @@ class ForumController extends AppController
                 $extraData['scoreAdd'] = "3";
                 $extraData['scoreTotal'] = getScoreCount($uid);
                 $extra['score'] = $extraData;
+                insertScoreRecord($uid, 3, '用户发帖');
             }
         }
         $this->apiSuccess($message,null, $extra);
@@ -1385,6 +1386,7 @@ class ForumController extends AppController
                     $extraData['scoreAdd'] = "3";
                     $extraData['scoreTotal'] = getScoreCount($uid);
                     $extra['score'] = $extraData;
+                    insertScoreRecord($uid, 3, '用户回复帖子');
                 }
             }
             $this->apiSuccess('回复成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after), null, $extra);
@@ -1580,6 +1582,7 @@ class ForumController extends AppController
                     $extraData['scoreAdd'] = "1";
                     $extraData['scoreTotal'] = getScoreCount($message_uid);
                     $extra['score'] = $extraData;
+                    insertScoreRecord($message_uid, 1, '用户被点赞');
                 }
                 $this->apiSuccess('感谢您的支持', null, $extra);
             } else {

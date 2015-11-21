@@ -166,6 +166,7 @@ class CourseController extends AppController
                         $extraData['scoreAdd'] = "1";
                         $extraData['scoreTotal'] = getScoreCount($uid);
                         $extra['score'] = $extraData;
+                        insertScoreRecord($uid, 1, '用户分享课程');
                     }
                 }
             }
@@ -381,6 +382,7 @@ class CourseController extends AppController
                         $extraData['scoreAdd'] = "1";
                         $extraData['scoreTotal'] = getScoreCount($uid);
                         $extra['score'] = $extraData;
+                        insertScoreRecord($uid, 1, '用户收藏课程');
                     }
                     $this->apiSuccess('感谢您的支持', null, $extra);
                 } else {

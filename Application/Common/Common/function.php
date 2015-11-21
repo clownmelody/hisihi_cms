@@ -1208,6 +1208,20 @@ function getScoreCount($uid){
     return $score;
 }
 
+function insertScoreRecord($uid, $credit_dynamic, $reason){
+    $recordModel = M('CreditDynamic');
+    $data['create_time'] = time();
+    $data['status'] = 1;
+    $data['uid'] = $uid;
+    $data['credit_dynamic'] = $credit_dynamic;
+    $user = query_user(array('score'), $uid);
+    $left_credit = $user['score'];
+    $data['left_credit'] = $left_credit;
+    $data['reason'] = $reason;
+    $data['party'] = 'app-api';
+    $recordModel->add($data);
+}
+
 function getMyScore()
 {
     $user = query_user(array('score'), is_login());
