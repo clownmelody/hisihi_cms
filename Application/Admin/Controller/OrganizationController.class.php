@@ -450,6 +450,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
             $this->assign('organization_id',$organization_id);
             $this->assign('organization_name',$organization_name);
+            $this->assign('from_org',I('from_org'));
         }
         $this->display();
     }
@@ -476,7 +477,11 @@ class OrganizationController extends AdminController
                     $this->error($e->getMessage());
                 }
                 $this->uploadLogoPicToOSS($data["pic_id"]);
-                $this->success('添加成功', 'index.php?s=/admin/organization/works');
+                if(I('from_org')){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/works&organization_id='.$data['organization_id']);
+                }else{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/works');
+                }
             } else {
                 getThumbImageById($data["pic_id"],280,160);
                 $res = $model->where('id='.$cid)->save($data);
@@ -484,7 +489,11 @@ class OrganizationController extends AdminController
                     $this->error($model->getError());
                 }
                 $this->uploadLogoPicToOSS($data["pic_id"]);
-                $this->success('更新成功', 'index.php?s=/admin/organization/works');
+                if(I('from_org')){
+                    $this->success('更新成功', 'index.php?s=/admin/organization/works&organization_id='.$data['organization_id']);
+                }else{
+                    $this->success('更新成功', 'index.php?s=/admin/organization/works');
+                }
             }
         } else {
             $this->display('works_add');
@@ -504,6 +513,9 @@ class OrganizationController extends AdminController
         $data = $Model->where('status=1 and id='.$id)->find();
         if(!$data){
             $this->error($Model->getError());
+        }
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
         }
         $this->assign('info', $data);
         $this->display();
@@ -526,7 +538,11 @@ class OrganizationController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('删除成功','index.php?s=/admin/organization/works');
+            if(I('from_org')){
+                $this->success('删除成功','index.php?s=/admin/organization/works&organization_id='.I('organization_id'));
+            }else{
+                $this->success('删除成功','index.php?s=/admin/organization/works');
+            }
         } else {
             $this->error('未选择要删除的数据');
         }
@@ -825,6 +841,7 @@ class OrganizationController extends AdminController
             $this->assign('organization_id',$organization_id);
             $this->assign('organization_name',$organization['name']);
             $this->assign('authentication_list',$authentication_list);
+            $this->assign('from_org',I('from_org'));
             $this->display();
         }else{
             $this->error("未选择机构");
@@ -857,13 +874,21 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/organization/authentication');
+                if(I('from_org')){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/authentication&organization_id='.$data['organization_id']);
+                }else{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/authentication');
+                }
             } else {
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->success('更新成功', 'index.php?s=/admin/organization/authentication');
+                if(I('from_org')){
+                    $this->success('更新成功', 'index.php?s=/admin/organization/authentication&organization_id='.$data['organization_id']);
+                }else{
+                    $this->success('更新成功', 'index.php?s=/admin/organization/authentication');
+                }
             }
         } else {
             $this->display('authentication_add');
@@ -886,6 +911,9 @@ class OrganizationController extends AdminController
         }
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
         $authentication_list = M('OrganizationAuthenticationConfig')->where('status=1')->select();
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
+        }
         $this->assign('authentication_list',$authentication_list);
         $this->assign('info', $data);
         $this->display();
@@ -907,6 +935,9 @@ class OrganizationController extends AdminController
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
+            }
+            if(I('from_org')){
+                $this->success('删除成功','index.php?s=/admin/organization/authentication&organization_id='.I('organization_id'));
             }
             $this->success('删除成功','index.php?s=/admin/organization/authentication');
         } else {
@@ -1166,6 +1197,7 @@ class OrganizationController extends AdminController
             $organization_name = $model->where('status=1 and id='.$organization_id)->getField('name');
             $this->assign('organization_name', $organization_name);
             $this->assign('organization_id', $organization_id);
+            $this->assign('from_org', I('from_org'));
         }
 
         $this->meta_title = '新增机构配置';
@@ -1179,6 +1211,10 @@ class OrganizationController extends AdminController
     public function config_edit($id){
         $config = D('OrganizationConfig');
         $info = $config->where('status=1 and id='.$id)->find();
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
+            $this->assign('organization_id', I('organization_id'));
+        }
         $this->assign('config', $info);
         $this->meta_title = '编辑机构配置';
         $this->display();
@@ -1194,7 +1230,11 @@ class OrganizationController extends AdminController
             if(empty($id)){
                 if($data){
                     if($Config->add()){
-                        $this->success('新增成功', U('config'));
+                        if(I('from_org')){
+                            $this->success('新增成功', U('config&organization_id='.$_POST['organization_id']));
+                        }else{
+                            $this->success('新增成功', U('config'));
+                        }
                     } else {
                         $this->error('新增失败');
                     }
@@ -1204,7 +1244,11 @@ class OrganizationController extends AdminController
             } else {
                 $result = $Config->where('id='.$id)->save($data);
                 if($result){
-                    $this->success('编辑成功', U('config'));
+                    if(I('from_org')){
+                        $this->success('编辑成功', U('config&organization_id='.I('organization_id')));
+                    }else{
+                        $this->success('编辑成功', U('config'));
+                    }
                 } else {
                     $this->error('编辑失败');
                 }
@@ -1235,8 +1279,12 @@ class OrganizationController extends AdminController
         $filter_map['organization_id'] = array('in',$organization_id);
         $filter_map['teacher_group_id'] = array('in',$id);
         $res = M('OrganizationRelation')->where($filter_map)->save(array('status'=>-1));
-        if($result && $res){
-            $this->success('删除成功', U('config'));
+        if($result){
+            if(I('from_org')){
+                $this->success('删除成功', U('config&organization_id='.I('organization_id')));
+            }else{
+                $this->success('删除成功', U('config'));
+            }
         } else {
             $this->error('删除失败');
         }
@@ -1326,6 +1374,7 @@ class OrganizationController extends AdminController
                 $student_list[] = $student;
             }
             $this->assign('student_list',$student_list);
+            $this->assign('from_org',I('from_org'));
         }
 
         $this->meta_title = '新增机构评论';
@@ -1341,7 +1390,9 @@ class OrganizationController extends AdminController
         $info = $comment->where('status=1 and id='.$id)->find();
         $info['organization_name'] = M('Organization')->where(array('id'=>$info['organization_id'],'status'=>1))->getField('name');
         $info['user_name'] = M('Member')->where(array('uid'=>$info['uid'],'status'=>1))->getField('nickname');
-
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
+        }
         $this->assign('comment', $info);
         $this->meta_title = '编辑机构评论';
         $this->display();
@@ -1362,7 +1413,11 @@ class OrganizationController extends AdminController
                 if($data){
                     $data['create_time'] = time();
                     if($model->add($data)){
-                        $this->success('新增成功', U('comment'));
+                        if(I('from_org')){
+                            $this->success('新增成功', U('comment&organization_id='.$data['organization_id']));
+                        }else{
+                            $this->success('新增成功', U('comment'));
+                        }
                     } else {
                         $this->error('新增失败');
                     }
@@ -1372,7 +1427,11 @@ class OrganizationController extends AdminController
             } else {
                 $result = $model->where('id='.$id)->save($data);
                 if($result){
-                    $this->success('编辑成功', U('comment'));
+                    if(I('from_org')){
+                        $this->success('编辑成功', U('comment&organization_id='.$data['organization_id']));
+                    }else{
+                        $this->success('编辑成功', U('comment'));
+                    }
                 } else {
                     $this->error('编辑失败');
                 }
@@ -1393,7 +1452,11 @@ class OrganizationController extends AdminController
         $map = array('id' => array('in', $id) );
         $result = $config->where($map)->save(Array('status'=>-1));
         if($result){
-            $this->success('删除成功', U('comment'));
+            if(I('from_org')){
+                $this->success('删除成功', U('comment&organization_id='.I('organization_id')));
+            }else{
+                $this->success('删除成功', U('comment'));
+            }
         } else {
             $this->error('删除失败');
         }
@@ -1562,6 +1625,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
             $this->assign('organization_id',$organization_id);
             $this->assign('organization_name',$organization_name);
+            $this->assign('from_org',I('from_org'));
         }
         $this->display();
     }
@@ -1589,7 +1653,11 @@ class OrganizationController extends AdminController
                     $this->error($e->getMessage());
                 }
                 $this->uploadLogoPicToOSS($data["pic_id"]);
-                $this->success('添加成功', 'index.php?s=/admin/organization/environment');
+                if(I('from_org')){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/environment&organization_id='.$data['organization_id']);
+                }else{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/environment');
+                }
             } else {
                 getThumbImageById($data["pic_id"],280,160);
                 $res = $model->where('id='.$cid)->save($data);
@@ -1597,7 +1665,11 @@ class OrganizationController extends AdminController
                     $this->error($model->getError());
                 }
                 $this->uploadLogoPicToOSS($data["pic_id"]);
-                $this->success('更新成功', 'index.php?s=/admin/organization/environment');
+                if(I('from_org')){
+                    $this->success('编辑成功', 'index.php?s=/admin/organization/environment&organization_id='.$data['organization_id']);
+                }else{
+                    $this->success('编辑成功', 'index.php?s=/admin/organization/environment');
+                }
             }
         } else {
             $this->display('environment_add');
@@ -1617,6 +1689,9 @@ class OrganizationController extends AdminController
         $data = $Model->where('status=1 and id='.$id)->find();
         if(!$data){
             $this->error($Model->getError());
+        }
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
         }
         $this->assign('info', $data);
         $this->meta_title = '编辑机构环境图片信息';
@@ -1640,7 +1715,11 @@ class OrganizationController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('删除成功','index.php?s=/admin/organization/environment');
+            if(I('from_org')){
+                $this->success('删除成功','index.php?s=/admin/organization/environment&organization_id='.I('organization_id'));
+            }else{
+                $this->success('删除成功','index.php?s=/admin/organization/environment');
+            }
         } else {
             $this->error('未选择要删除的数据');
         }
@@ -1841,7 +1920,7 @@ class OrganizationController extends AdminController
                 }
                 $this->uploadLogoPicToOSS($data['img']);
                 if(I('from_org')){
-                    $this->success('添加成功', 'index.php?s=/admin/organization/course&organization_id'.$data['organization_id']);
+                    $this->success('添加成功', 'index.php?s=/admin/organization/course&organization_id='.$data['organization_id']);
                 }else{
                     $this->success('添加成功', 'index.php?s=/admin/organization/course');
                 }
@@ -1853,7 +1932,7 @@ class OrganizationController extends AdminController
                 }
                 $this->uploadLogoPicToOSS($data['img']);
                 if(I('from_org')){
-                    $this->success('更新成功', 'index.php?s=/admin/organization/course&organization_id'.$data['organization_id']);
+                    $this->success('更新成功', 'index.php?s=/admin/organization/course&organization_id='.$data['organization_id']);
                 }else{
                     $this->success('更新成功', 'index.php?s=/admin/organization/course');
                 }
@@ -2135,6 +2214,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
             $this->assign('organization_name',$organization_name);
             $this->assign('organization_id',$organization_id);
+            $this->assign('from_org',I('from_org'));
         }
         $this->display();
     }
@@ -2161,13 +2241,21 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/organization/notice');
+                if(I('from_org')){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/notice&organization_id='.$data["organization_id"]);
+                }{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/notice');
+                }
             } else {
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->success('更新成功', 'index.php?s=/admin/organization/notice');
+                if(I('from_org')){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/notice&organization_id='.$data["organization_id"]);
+                }{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/notice');
+                }
             }
         } else {
             $this->display('notice_add');
@@ -2186,6 +2274,9 @@ class OrganizationController extends AdminController
         $data = $Model->where('status=1 and id='.$id)->find();
         if(!$data){
             $this->error($Model->getError());
+        }
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
         }
         $this->assign('info', $data);
         $this->meta_title = '编辑机构公告信息';
@@ -2207,6 +2298,11 @@ class OrganizationController extends AdminController
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
+            }
+            if(I('from_org')){
+                $this->success('删除成功','index.php?s=/admin/organization/notice&organization_id='.I("organization_id"));
+            }else{
+
             }
             $this->success('删除成功','index.php?s=/admin/organization/notice');
         } else {

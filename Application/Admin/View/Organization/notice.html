@@ -57,8 +57,13 @@
                             </if>
                         </td>
                         <td>
-                            <a href="{:U('Organization/notice_edit?id='.$vo['id'])}" class="confirm">编辑</a>
-                            <a href="{:U('Organization/notice_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <gt name="organization_id" value="0">
+                                <a href="{:U('Organization/notice_edit?from_org=1&id='.$vo['id'])}" >编辑</a>
+                                <a href="{:U('Organization/notice_delete?from_org=1&id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">删除</a>
+                                <else/>
+                                <a href="{:U('Organization/notice_edit?id='.$vo['id'])}" >编辑</a>
+                                <a href="{:U('Organization/notice_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            </gt>
                         </td>
                     </tr>
                 </volist>
@@ -95,7 +100,7 @@
             var url = '{:U('Organization/notice_add')}';
             var organization_id = $("#organization_id").val();
             if(organization_id != 0){
-                url += '&organization_id=' + organization_id;
+                url += '&from_org=1&organization_id=' + organization_id;
             }
             window.location.href = url;
         });
