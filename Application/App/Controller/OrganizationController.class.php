@@ -1286,11 +1286,15 @@ class OrganizationController extends AppController
             $this->apiError(-1, '传入机构ID不能为空');
         }
         $model = M('OrganizationEnroll');
-        $list = $model->field('student_name, create_time')->where('status=1 and organization_id='.$organization_id)
+        $total_count = $model->where('status=2 and organization_id='.$organization_id)->count();
+        $list = $model->field('student_name, create_time')->where('status=2 and organization_id='.$organization_id)
             ->page($page, $count)->select();
         foreach($list as &$user){
             $user['student_name'] = mb_substr($user['student_name'],0,1,'utf-8') . '**';
         }
+        $guarantee_num = M('Organization')->where('status=1 and id='.$organization_id)->getField('guarantee_num');
+        $extra['available_count'] = (int)$guarantee_num - $total_count;
+        $extra['total_count'] = $total_count;
         $extra['data'] = $list;
         $this->apiSuccess('获取报名列表成功', null, $extra);
     }
