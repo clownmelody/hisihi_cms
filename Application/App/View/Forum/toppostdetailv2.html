@@ -91,7 +91,7 @@
 	}
 	.detailed-main{
 		padding: 10px;
-		margin-bottom: 3em;
+		margin-bottom: 0em;
 	}
 	.detailed-box{
 		border:1px solid #eee;
@@ -394,7 +394,9 @@
 	<script type="text/javascript" src="__JS__/forum/hisihi_news_common.js"></script>
 	<script type="text/javascript" src="__JS__/forum/toppostdetailv2.js"></script>
 	<script type="text/javascript">
-		document.documentElement.style.webkitTouchCallout='none'; //禁止长按事件
+		window.onload=function() {
+			document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+		}
 		var urlObj={
 			server_url:'http://{$Think.server.HTTP_HOST}/api.php?s=',
 			img_url:'__IMG__'

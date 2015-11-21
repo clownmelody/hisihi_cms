@@ -53,10 +53,12 @@
             width: 100%;
             overflow: auto;
             background-color: white;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch;   /* ios滑动卡顿解决办法 */
         }
         .wrapper *{
             font-size: 1em;
+            -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+            -moz-user-select: none;
         }
         .newsListContainer{
             margin:0em;
@@ -242,7 +244,9 @@
 <script type="text/javascript" src="__JS__/forum/hisihi_news_common.js"></script>
 <script type="text/javascript" src="__JS__/forum/hisihi_news.js"></script>
 <script>
-    document.documentElement.style.webkitTouchCallout='none'; //禁止长按事件
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
     var urlObj={
         server_url:'http://{$Think.server.HTTP_HOST}/api.php?s=/forum',
         img_url:'__IMG__'
