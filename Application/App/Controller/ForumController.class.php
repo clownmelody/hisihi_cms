@@ -75,7 +75,7 @@ class ForumController extends AppController
 
         $this->apiSuccess("获取类别标签成功", null, array('types' => $forum_type));
     }
-    private function formatList($list)
+    private function formatList($list, $version)
     {
         $map_support['appname'] = 'Forum';
         $map_support['table'] = 'post';
@@ -93,7 +93,11 @@ class ForumController extends AppController
             $v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];
 
             $v['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $v['uid']);
-
+            if((float)$version>=2.2){
+                $profile_group = A('User')->_profile_group($v['uid']);
+                $info_list = A('User')->_info_list($profile_group['id'], $v['uid'], $version);
+                $v['userInfo']['extinfo'] = $info_list;
+            }
             //解析并成立图片数据
             $v['img'] = $this->match_img($v['content']);
             /*
@@ -241,7 +245,7 @@ class ForumController extends AppController
      * @param bool|false $show_adv
      * @param int $post_type  区别公司热门话题和普通论坛
      */
-    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1)
+    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1, $version=null)
     {
         $start_time = time();
         $field_type = intval($field_type);
@@ -289,7 +293,7 @@ class ForumController extends AppController
         $list = $this->list_sort_by($list, 'last_reply_time');
         $totalCount = D('ForumPost')->where($map)->count();
 
-        $list = $this->formatList($list);
+        $list = $this->formatList($list, $version);
 
         if($show_adv==true){
             $len = count($list);
@@ -365,7 +369,7 @@ class ForumController extends AppController
     }
 
     //指定用户提问/回答列表
-    public function userForumList($uid = null, $page = 1, $count = 10, $tab = null)
+    public function userForumList($uid = null, $page = 1, $count = 10, $tab = null, $version=null)
     {
         if($uid == null){
             $uid = is_login();
@@ -379,7 +383,7 @@ class ForumController extends AppController
         $className = ucfirst($type) . 'Protocol';
 
         $content = D(ucfirst($type) . '/' . $className)->profileList($uid, $page, $count, $tab);
-        $content = $this->formatList($content);
+        $content = $this->formatList($content, $version);
         if (empty($content)) {
             $totalCount = 0;
             $content = null;
@@ -391,7 +395,7 @@ class ForumController extends AppController
         $this->apiSuccess("获取成功", null, array('total_count' => $totalCount, 'list' => $content));
     }
 
-    public function getPostInfo($id, $lite = 0)
+    public function getPostInfo($id, $lite=0, $version=null)
     {
         //读取帖子内容
         $field = 'id,uid,content,create_time';
@@ -408,6 +412,11 @@ class ForumController extends AppController
         $post['post_id'] = $id;
 
         $post['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $post['uid']);
+        if((float)$version>=2.2){
+            $profile_group = A('User')->_profile_group($post['uid']);
+            $info_list = A('User')->_info_list($profile_group['id'], $post['uid'], $version);
+            $post['userInfo']['extinfo'] = $info_list;
+        }
         unset($post['uid']);
 
         if($lite == 0){
@@ -711,11 +720,11 @@ class ForumController extends AppController
      * 获取贴子详情
      * @param null $post_id
      */
-    public function getPostDetail($post_id=null){
+    public function getPostDetail($post_id=null, $version=null){
         if(empty($post_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
-        $post = $this->getPostInfo($post_id);
+        $post = $this->getPostInfo($post_id, 0, $version);
         unset($post['reply_count']);
         $map['post_id'] = $post_id;
         $map['status'] = array('in','1,3');
@@ -1386,6 +1395,7 @@ class ForumController extends AppController
                     $extraData['scoreAdd'] = "3";
                     $extraData['scoreTotal'] = getScoreCount($uid);
                     $extra['score'] = $extraData;
+                    insertScoreRecord($uid, 3, '用户回复帖子');
                 }
             }
             $this->apiSuccess('回复成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after), null, $extra);
@@ -1581,6 +1591,7 @@ class ForumController extends AppController
                     $extraData['scoreAdd'] = "1";
                     $extraData['scoreTotal'] = getScoreCount($message_uid);
                     $extra['score'] = $extraData;
+                    insertScoreRecord($message_uid, 1, '用户被点赞');
                 }
                 $this->apiSuccess('感谢您的支持', null, $extra);
             } else {
@@ -2072,7 +2083,7 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function companyHotTopics($id, $page = 1, $count = 10){
+    public function companyHotTopics($id, $page = 1, $count = 10, $version=null){
         $id = intval($id);
         if(empty($id)){
             $this->error('传入的id参数不允许为空');
@@ -2100,7 +2111,7 @@ class ForumController extends AppController
                 }
             }
         }
-        $list = $this->formatList($list);
+        $list = $this->formatList($list, $version);
         $this->apiSuccess("获取公司热门话题列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
