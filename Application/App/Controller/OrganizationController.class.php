@@ -1173,15 +1173,29 @@ class OrganizationController extends AppController
      * @param int $uid
      * @param null $city
      * @param null $type
+     * @param null $name
      * @param int $page
      * @param int $count
      */
-    public function localOrganizationList($uid=0, $city=null, $type=null, $page=1, $count=10){
+    public function localOrganizationList($uid=0, $city=null, $type=null, $name=null, $page=1, $count=10){
         if($uid==0){
             $uid = is_login();
         }
         $model = M('Organization');
-        if(!empty($city)&&!empty($type)){
+        $select_where = "application_status=2 and status=1";
+        if(!empty($city)){
+            $select_where = $select_where . " and city like '%" .$city . "%'";
+        }
+        if(!empty($type)){
+            $select_where = $select_where . " and type=".$type;
+        }
+        if(!empty($name)){
+            $select_where = $select_where . " and name like '%".$name."%'";
+        }
+        $org_list = $model->field('id, name, slogan, city, view_count, logo')
+            ->where($select_where)->page($page, $count)->select();
+        $totalCount = $model->where("application_status=2 and status=1")->count();
+        /*if(!empty($city)&&!empty($type)){
             $org_list = $model->field('id, name, slogan, city, view_count, logo')
                 ->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->page($page, $count)->select();
             $totalCount = $model->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->count();
@@ -1200,7 +1214,7 @@ class OrganizationController extends AppController
             $org_list = $model->field('id, name, slogan, city, view_count, logo')
                 ->where("application_status=2 and status=1")->page($page, $count)->select();
             $totalCount = $model->where("application_status=2 and status=1")->count();
-        }
+        }*/
         foreach($org_list as &$org){
             $org_id = $org['id'];
             $logo_id = $org['logo'];

@@ -1650,7 +1650,12 @@ class ForumController extends AppController
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=0')
                 ->order('create_time desc')->page(1, 1)->select();
             array_unshift($list, $first_post);
-            $list[1]['title'] = "嘿设汇已经解决33212个问题";
+            $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
+            if($configCount){
+                $list[1]['title'] = "嘿设汇已经解决".$configCount['value']."个问题";
+            } else {
+                $list[1]['title'] = "嘿设汇已经解决330212个问题";
+            }
         } else if ((float)$version>=2.1){
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1')
                 ->order('create_time desc')->page(1, 3)->select();
@@ -1660,7 +1665,7 @@ class ForumController extends AppController
         }
         foreach($list as &$value){
             if($value['id']!='001'){
-                $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
+                $value['url'] = 'http://dev.hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
             }
             unset($value['uid']);
             unset($value['forum_id']);
