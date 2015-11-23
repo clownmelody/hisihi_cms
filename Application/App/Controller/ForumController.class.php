@@ -1660,7 +1660,7 @@ class ForumController extends AppController
         }
         foreach($list as &$value){
             if($value['id']!='001'){
-                $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
+                $value['url'] = 'http://dev.hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
             }
             unset($value['uid']);
             unset($value['forum_id']);
