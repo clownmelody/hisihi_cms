@@ -109,22 +109,13 @@ hisihiNews.prototype = {
                 }
             },
             complete : function(XMLHttpRequest,status){    //请求完成后最终执行参数
-                callback && callback();
                 $loadinngImgTarget.removeClass('active');
-                if(status=='timeout'){   //超时,status还有success,error等值的情况
+                if(status=='timeout' || status=='error'){   //超时,status还有success,error等值的情况
                     ajaxTimeoutTest.abort();
                     $loadingMain.hide();
                     $loadingError.show();
                 }
-                else if(status=='error'){
-                    var tips='网络错误';
-                    ajaxTimeoutTest.abort();
-                    if(XMLHttpRequest.status=='404') {
-                        tips='请求地址错误';
-                    }
-                    $loadingMain.hide();
-                    $loadingError.show();
-                }
+                callback && callback();
             }
         });
     },
