@@ -1281,14 +1281,18 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function enrollList($organization_id=0, $page=1, $count=3){
+    public function enrollList($organization_id=0, $page=0, $count=3){
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
         $model = M('OrganizationEnroll');
         $total_count = $model->where('status=2 and organization_id='.$organization_id)->count();
-        $list = $model->field('student_name, create_time')->where('status=2 and organization_id='.$organization_id)
-            ->page($page, $count)->select();
+        if($page){
+            $list = $model->field('student_name, create_time')->where('status=2 and organization_id='.$organization_id)->page($page, $count)->select();
+        }else{
+            $list = $model->field('student_name, create_time')->where('status=2 and organization_id='.$organization_id)->select();
+        }
+
         foreach($list as &$user){
             $user['student_name'] = mb_substr($user['student_name'],0,1,'utf-8') . '**';
         }
