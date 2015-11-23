@@ -19,7 +19,8 @@
                         <div class="controls">
                             <select name="type">
                                 <gt name="organization_id" value="0">
-                                    <option value="1001" selected>教师分组</option>
+                                    <option value="1001" <if condition="$config.type eq 1001">selected</if>>教师分组</option>
+                                    <option value="1003" <if condition="$config.type eq 1003">selected</if>>教师分组</option>
                                     <else/>
                                     <option value="2" <if condition="$config.type eq 2">selected</if>>机构优势</option>
                                     <option value="3" <if condition="$config.type eq 3">selected</if>>机构类型</option>

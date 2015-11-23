@@ -1620,6 +1620,26 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 获取机构课程列表，用于选择课程
+     * @param null $organization_id
+     */
+    public function appGetCourses($organization_id=null){
+        if(!$organization_id){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $model = M('OrganizationConfig');
+        $map['organization_id'] = $organization_id;
+        $map['status'] = 1;
+        $map['type']=1003;
+        $totalCount = $model->where($map)->count();
+        $course_list = $model->field('id, value')->where($map)->select();
+
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $course_list;
+        $this->apiSuccess('获取报名课程成功', null, $extra);
+    }
+
+    /**
      * 获取机构的认证信息
      * @param $organization_id
      */
