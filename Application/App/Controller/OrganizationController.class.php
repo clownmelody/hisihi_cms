@@ -1288,13 +1288,14 @@ class OrganizationController extends AppController
         $model = M('OrganizationEnroll');
         $total_count = $model->where('status=2 and organization_id='.$organization_id)->count();
         if($page){
-            $list = $model->field('student_name, create_time')->where('status=2 and organization_id='.$organization_id)->page($page, $count)->select();
+            $list = $model->field('student_name,phone_num, create_time')->where('status=2 and organization_id='.$organization_id)->page($page, $count)->select();
         }else{
-            $list = $model->field('student_name, create_time')->where('status=2 and organization_id='.$organization_id)->select();
+            $list = $model->field('student_name,phone_num, create_time')->where('status=2 and organization_id='.$organization_id)->select();
         }
 
         foreach($list as &$user){
             $user['student_name'] = mb_substr($user['student_name'],0,1,'utf-8') . '**';
+            $user['phone_num'] = mb_substr($user['phone_num'],0,3,'utf-8') . '********';
         }
         $guarantee_num = M('Organization')->where('status=1 and id='.$organization_id)->getField('guarantee_num');
         $extra['available_count'] = (int)$guarantee_num - $total_count;
@@ -1553,6 +1554,55 @@ class OrganizationController extends AppController
      */
     public function OrganizationAuthenticationReport($organization_id=0){
         $this->display('organizationauthenticationreport');
+    }
+
+    /**
+     * 机构报名
+     * @param int $organization_id
+     * @param null $student_name
+     * @param null $phone_num
+     * @param null $student_university
+     * @param null $course_id
+     */
+    public function enroll($organization_id=0,$student_name=null,$phone_num=null,$student_university=null,$course_id=null){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $this->requireLogin();
+        $uid = $this->getUid();
+        if(!$student_name){
+            $this->$this->apiError(-2,'未填写学生姓名');
+        }
+        if(!$phone_num){
+            $this->$this->apiError(-2,'未填写手机号码');
+        }
+        if(!$course_id){
+            $this->$this->apiError(-2,'未选择课程');
+        }
+        $map['organization_id']=$organization_id;
+        $map['student_uid']=$uid;
+        $map['student_name']=$student_name;
+        $map['phone_num']=$phone_num;
+        $map['course_id']=$course_id;
+        $map['status']=array('in',array(1,2));
+        $model = M('OrganizationEnroll');
+        $count = $model->where($map)->count();
+        if($count){
+            $this->apiError(-3,'你已经报名过该课程了');
+        }
+        $data['organization_id']=$organization_id;
+        $data['student_uid']=$uid;
+        $data['student_name']=$student_name;
+        $data['phone_num']=$phone_num;
+        $data['course_id']=$course_id;
+        $data['student_university']=$student_university;
+        $data['create_time']=time();
+        $result = $model->add($data);
+        if($result){
+            $this->apiSuccess('报名成功');
+        }else{
+            $this->apiError(-4,'添加报名信息失败');
+        }
     }
 
     /**
