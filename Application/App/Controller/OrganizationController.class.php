@@ -1606,7 +1606,7 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 获取机构课程列表，用于选择课程
+     * 获取机构报名课程列表，用于选择课程
      * @param null $organization_id
      */
     public function appGetCourses($organization_id=null){

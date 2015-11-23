@@ -47,7 +47,7 @@
                             <notempty name="course_list">
                                 <select class="text input-large" name="course_id" style="height: 30px;width: 400px;">
                                     <volist name="course_list" id="vo">
-                                        <option value="{$vo.id}" >{$vo.title}</option>
+                                        <option value="{$vo.id}" >{$vo.value}</option>
                                     </volist>
                                 </select>
                                 <else/>

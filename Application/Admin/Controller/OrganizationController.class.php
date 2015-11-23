@@ -590,8 +590,8 @@ class OrganizationController extends AdminController
             }else{
                 $enroll['organization'] = M('Organization')->where(array('id'=>$enroll['organization_id'],'status'=>1))->getField('name');
             }
-            $enroll['course_name'] = M('OrganizationCourse')
-                ->where(array('id'=>$enroll['course_id'],'status'=>1))->getField('title');
+            $enroll['course_name'] = M('OrganizationConfig')
+                ->where(array('id'=>$enroll['course_id'],'status'=>1,'type'=>1003))->getField('value');
         }
         if($organization_id){
             $this->assign('organization_id', $organization_id);
@@ -614,7 +614,7 @@ class OrganizationController extends AdminController
             if($organization['application_status'] != 2){
                 $this->error("该机构未通过审核机构",'index.php?s=/admin/organization/index',1);
             }
-            $course_list = M('OrganizationCourse')->where('status=1 and organization_id='.$organization_id)->select();
+            $course_list = M('OrganizationConfig')->where('status=1 and type=1003 and organization_id='.$organization_id)->select();
             $this->assign('organization_id',$organization_id);
             $this->assign('organization_name',$organization['name']);
             $this->assign('course_list',$course_list);
@@ -675,7 +675,7 @@ class OrganizationController extends AdminController
             $this->error($Model->getError());
         }
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
-        $course_list = M('OrganizationCourse')->where('status=1 and organization_id='.$data['organization_id'])->select();
+        $course_list = M('OrganizationConfig')->where('status=1 and type=1003 and organization_id='.$data['organization_id'])->select();
         $this->assign('info', $data);
         $this->assign('course_list', $course_list);
         $this->display();
