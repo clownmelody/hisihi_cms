@@ -37,7 +37,7 @@ hisihiNews.prototype = {
         var operation=browserType();
         if(operation.mobile){
             if(operation.android){
-                AppFunction.showShareView(false);  //调用安卓的方法，控制分享按钮不可用
+                //AppFunction.showShareView(false);  //调用安卓的方法，控制分享按钮不可用
             }
             else if(operation.ios){
                 //var userInfo = getUser_iOS();
@@ -63,7 +63,7 @@ hisihiNews.prototype = {
      */
     getDataAsync: function (pageIndex,callback) {
         if(pageIndex>this.totalPage){
-            //return;
+            return;
         }
 
         //等待图片  区分两种情况：第一次加载的时候，等待图时居中的图；加载更多的时候，是在列表的底部

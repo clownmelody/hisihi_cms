@@ -64,16 +64,16 @@ commentObj.prototype={
             }
         }
         else{
-            $.ajax({
-                url:this.urlObj.server_url+'/user/login',
-                data:{username:'18601995231',password:'123456',type:'3',client:'4'},
-                async:false,
-                success:function(data) {
-                    if (data.success) {
-                        that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
-                    }
-                }
-            });
+            //$.ajax({
+            //    url:this.urlObj.server_url+'/user/login',
+            //    data:{username:'18601995231',password:'123456',type:'3',client:'4'},
+            //    async:false,
+            //    success:function(data) {
+            //        if (data.success) {
+            //            that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
+            //        }
+            //    }
+            //});
         }
     },
 
