@@ -411,7 +411,7 @@ class OrganizationController extends AppController
         }
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num')->find();
         if($result){
             $logo_id = $result['logo'];
             $logo = $this->fetchImage($logo_id);
@@ -461,6 +461,8 @@ class OrganizationController extends AppController
                     }
                 }
             }
+            $enroll_count = M('OrganizationEnroll')->where(array('organization_id'=>$organization_id,'status'=>2))->count();
+            $result['available_num'] = $result['guarantee_num'] - $enroll_count;
             $result['advantage']=$advantage_array;
             $extra['data'] = $result;
             $this->apiSuccess("获取机构信息成功",null,$extra);
