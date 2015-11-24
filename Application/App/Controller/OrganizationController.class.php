@@ -1640,6 +1640,19 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 删除课程里的视频
+     * @param null $video_id
+     */
+    public function deleteCourseVideo($video_id=null){
+        $this->requireLogin();
+        if(!$video_id){
+            $this->apiError(-1, '传入视频id不能为空');
+        }
+        M('OrganizationVideo')->where(array('id'=>$video_id))->save(array('status'=>-1));
+        $this->apiSuccess('删除成功');
+    }
+
+    /**
      * 获取机构的认证信息
      * @param $organization_id
      */
