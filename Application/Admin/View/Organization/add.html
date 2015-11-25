@@ -1,6 +1,6 @@
 <extend name="Public/base" />
 <block name="body">
-    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min1.js"></script>
     <div class="main-title cf">
         <h2>新增机构</h2>
     </div>
@@ -85,6 +85,103 @@
                         </div>
                     </div>
                     <div class="form-item cf">
+                        <label class="item-label">机构视频</label>
+                        <div class="controls">
+                            <input type="file" id="upload_video_cover">
+                            <input type="hidden" name="video_img" id="video_img"/>
+                            <div class="upload-img-box">
+                                <notempty name="data[$field['name']]">
+                                    <div class="upload-pre-item"><img src="{$data[$field['name']]|get_cover='path'}"/></div>
+                                </notempty>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <input type="file" id="upload_video">
+                            <input type="hidden" name="video" id="video_id"/>
+                            <!--<div class="upload-img-box">
+                                <notempty name="data[$field['name']]">
+                                    <div class="upload-pre-item"><img src="{$data[$field['name']]|get_cover='path'}"/></div>
+                                </notempty>
+                            </div>-->
+                        </div>
+                        <script type="text/javascript">
+                            //上传图片
+                            /* 初始化上传插件 */
+                            $("#upload_video_cover").uploadify({
+                                "height"          : 30,
+                                "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                                "fileObjName"     : "download",
+                                "buttonText"      : "上传视频封面",
+                                "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                                "width"           : 120,
+                                'removeTimeout'	  : 1,
+                                'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                                "onUploadSuccess" : uploadPictureVideo,
+                                'onFallback' : function() {
+                                    alert('未检测到兼容版本的Flash.');
+                                }
+                            });
+                            function uploadPictureVideo(file, data,response){
+                                var data = $.parseJSON(data);
+                                var src = '';
+                                if(data.status){
+                                    $("#video_img").val(data.id);
+                                    src = data.url ||  data.path
+                                    $("#video_img").parent().find('.upload-img-box').html(
+                                            '<div class="upload-pre-item"><img src="' + src + '"/></div>'
+                                    );
+                                } else {
+                                    updateAlert(data.info);
+                                    setTimeout(function(){
+                                        $('#top-alert').find('button').click();
+                                        $(that).removeClass('disabled').prop('disabled',false);
+                                    },1500);
+                                }
+                            }
+                            var url = 'http://121.42.44.208:8082/MIS/addOrganizationVideo';
+                            var options = {
+//                                        'url': url,
+                                        'height': 30,
+                                        'width': 120,
+                                        'swf': "__STATIC__/uploadify/uploadify.swf",
+                                        'buttonText': '上传视频',
+//                                        'queueID': 'uploadProConForVideo',
+                                        'uploader': url,
+                                        'formData': {course_id: 0},
+                                        'fileDataName': 'video',
+                                        'fileObjName': 'video',
+                                        'fileSizeLimit': '100MB',//上传文件大小限制
+                                        'fileTypeDesc': '视频文件',
+                                        'fileTypeExts': '*.avi; *.mp4; *.mov; *.wmv',//文件类型过滤
+                                        'auto':true,
+                                        'errorCallback': uploadErrorCallback,
+                                        'onUploadSuccess':uploadVideo,
+                                        'onSelect':function(file){
+                                            console.log(file);
+                                        },
+                                        'onUploadProgress':function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal){
+                                            console.log(file);
+                                        }
+                            };
+                            $("#upload_video").uploadify(options);
+                            function uploadVideo(file, data,response){
+                                var data = $.parseJSON(data);
+                                if(data.status){
+                                    $("#video_id").val(data.id);
+                                } else {
+                                    updateAlert(data.info);
+                                    setTimeout(function(){
+                                        $('#top-alert').find('button').click();
+                                        $(that).removeClass('disabled').prop('disabled',false);
+                                    },1500);
+                                }
+                            }
+                            function uploadErrorCallback(data){
+                                console.log(data);
+                            }
+                        </script>
+                    </div>
+                    <div class="form-item cf">
                         <label class="item-label">机构担保名额（默认200名）</label>
                         <div class="controls">
                             <input type="text" class="text input-large" name="guarantee_num" value="">
@@ -119,12 +216,12 @@
                                 "width"           : 120,
                                 'removeTimeout'	  : 1,
                                 'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
-                                "onUploadSuccess" : uploadPictureCompany,
+                                "onUploadSuccess" : uploadPictureOrganization,
                                 'onFallback' : function() {
                                     alert('未检测到兼容版本的Flash.');
                                 }
                             });
-                            function uploadPictureCompany(file, data){
+                            function uploadPictureOrganization(file, data){
                                 var data = $.parseJSON(data);
                                 var src = '';
                                 if(data.status){
@@ -143,7 +240,6 @@
                             }
                         </script>
                     </div>
-
                 </div>
 
                 <!-- 按钮 -->

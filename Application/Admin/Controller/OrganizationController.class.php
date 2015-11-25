@@ -155,6 +155,8 @@ class OrganizationController extends AdminController
             $data["guarantee_num"] = $_POST["guarantee_num"];
             $data["view_count"] = $_POST["view_count"];
             $data["logo"] = $_POST["picture"];
+            $data["video_img"] = $_POST["video_img"];
+            $data["video"] = $_POST["video"];
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();
