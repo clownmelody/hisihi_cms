@@ -86,6 +86,13 @@
                                 <a href="{:U('User/changeStatus?method=resumeUser&id='.$vo['uid'])}"
                                    class="ajax-get">启用</a>
                             </eq>
+                            <!--<eq name="vo.group" value="5">
+                                <a href="{:U('User/changeStatus?method=deleteUser&id='.$vo['uid'])}"
+                                   class="confirm ajax-get">转成讲师</a>
+                                <else/>
+                                <a href="{:U('User/changeStatus?method=deleteUser&id='.$vo['uid'])}"
+                                   class="confirm ajax-get">转成设计师</a>
+                            </eq>-->
                             <a href="{:U('AuthManager/group?uid='.$vo['uid'])}" class="authorize">授权</a>
                             <a href="{:U('User/changeStatus?method=deleteUser&id='.$vo['uid'])}"
                                class="confirm ajax-get">删除</a>
