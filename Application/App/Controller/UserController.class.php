@@ -1047,6 +1047,11 @@ class UserController extends AppController
                 $info_map['skills'] = $skills;
                 $info_map['lightspot'] = $lightspot;
             }
+            if((float)$version >= 2.2){
+                $info_map['my_favorite_count'] = $this->getMyFavoriteCount($uid);
+                $info_map['my_follow_count'] = $this->getMyFollowerCount($uid);
+                $info_map['follow_me_count'] = $this->getFollowMeCount($uid);
+            }
             $this->apiSuccess("获取成功", null, $info_map);
         } else {//此场景为点左侧头像出现的数据
             $map = array('uid' => $uid);
@@ -1341,6 +1346,35 @@ class UserController extends AppController
         } else {
             $this->apiError(-102,'您还没有收藏过，不能删除!');
         }
+    }
+
+    /**
+     * 获取我的收藏数量
+     * @param int $uid
+     * @return mixed
+     */
+    private function getMyFavoriteCount($uid=0){
+        $favorite['uid'] = $uid;
+        $count = M('Favorite')->where($favorite)->count();
+        return $count;
+    }
+
+    /**
+     * 获取我关注的人的数量
+     * @param int $uid
+     */
+    private function getMyFollowerCount($uid=0){
+        $count = M('Follow')->where(array('who_follow'=>get_uid()))->count();
+        return $count;
+    }
+
+    /**
+     * 获取我的粉丝的数量
+     * @param int $uid
+     */
+    private function getFollowMeCount($uid=0){
+        $count = M('Follow')->where(array('follow_who'=>$uid))->count();
+        return $count;
     }
 
     public function bindMobile($verify)
