@@ -130,7 +130,8 @@ class ForumPostReplyModel extends Model
         $id = $map['post_id'];
         $replyList = $Model->join('Left JOIN hisihi_auth_group_access ON hisihi_forum_post_reply.uid = hisihi_auth_group_access.uid')
             ->where('hisihi_auth_group_access.group_id=6 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3)')
-            ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->select();
+            ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->field('hisihi_forum_post_reply.*')->select();
+
         foreach ($replyList as &$reply) {
             $reply['user'] = query_user(array('avatar128', 'nickname', 'space_url', 'icons_html', 'rank_link'), $reply['uid']);
             $reply['lzl_count'] = D('forum_lzl_reply')->where('is_del=0 and to_f_reply_id=' . $reply['id'])->count();
@@ -146,7 +147,7 @@ class ForumPostReplyModel extends Model
         $id = $map['post_id'];
         $replyList = $Model->join('Left JOIN hisihi_auth_group_access ON hisihi_forum_post_reply.uid = hisihi_auth_group_access.uid')
             ->where('(hisihi_forum_post_reply.reply_to_student=1 and hisihi_forum_post_reply.post_id='.$id.') or hisihi_auth_group_access.group_id=5 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3)')
-            ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->select();
+            ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->field('hisihi_forum_post_reply.*')->select();
         foreach ($replyList as &$reply) {
             $reply['user'] = query_user(array('avatar128', 'nickname', 'space_url', 'icons_html', 'rank_link'), $reply['uid']);
             $reply['lzl_count'] = D('forum_lzl_reply')->where('is_del=0 and to_f_reply_id=' . $reply['id'])->count();

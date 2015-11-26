@@ -1028,6 +1028,46 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取所有课程成功', null, $extra);
     }
 
+    /**
+     * 获取机构课程列表，展示用
+     * @param null $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function appGetCoursesList($organization_id=null, $page=1, $count=9){
+        if(!$organization_id){
+            $this->apiError(-1,'传入的机构id不能为空');
+        }
+        $model = M('OrganizationCourse');
+        $config_model = M("OrganizationConfig");
+        $org_model = M('Organization');
+        $video_model = M('OrganizationVideo');
+        $logo = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
+        $logo_url = $this->fetchImage($logo);
+        $map['organization_id'] = $organization_id;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, update_time')->where($map)->page($page, $count)->select();
+        $video_course = array();
+        foreach($course_list as &$course){
+            $category_id = $course['category_id'];
+            $course['ViewCount'] = $course['view_count'];
+            $course['type_id'] = $category_id;
+            $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
+            if($category){
+                $course['type'] = $category['value'];
+            }
+            $course['img'] = $this->fetchImage($course['img']);
+            $course['organization_logo'] = $logo_url;
+            $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
+            $course['duration'] = $course_duration;
+            $video_course[] = $course;
+        }
+        $extra['total_count'] = $totalCount;
+        $extra['coursesList'] = $video_course;
+        $this->apiSuccess('获取所有课程成功', null, $extra);
+    }
+
     /**删除课程
      * @param int $id
      */
