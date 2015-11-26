@@ -1,6 +1,6 @@
 <extend name="Public/base" />
 <block name="body">
-    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min1.js"></script>
+    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
     <div class="main-title cf">
         <h2>新增机构</h2>
     </div>
@@ -88,21 +88,18 @@
                         <label class="item-label">机构视频</label>
                         <div class="controls">
                             <input type="file" id="upload_video_cover">
-                            <input type="hidden" name="video_img" id="video_img"/>
+                            <input type="hidden" name="video_img" id="video_img" value=""/>
                             <div class="upload-img-box">
-                                <notempty name="data[$field['name']]">
-                                    <div class="upload-pre-item"><img src="{$data[$field['name']]|get_cover='path'}"/></div>
+                                <notempty name="organization['video_img']">
+                                    <div class="upload-pre-item"><img src="{$organization['video_img']|get_cover='path'}"/></div>
                                 </notempty>
                             </div>
                         </div>
                         <div class="controls">
                             <input type="file" id="upload_video">
-                            <input type="hidden" name="video" id="video_id"/>
-                            <!--<div class="upload-img-box">
-                                <notempty name="data[$field['name']]">
-                                    <div class="upload-pre-item"><img src="{$data[$field['name']]|get_cover='path'}"/></div>
-                                </notempty>
-                            </div>-->
+                            <input type="hidden" name="video" id="video_id" value=""/>
+                            <div class="upload-img-box">
+                            </div>
                         </div>
                         <script type="text/javascript">
                             //上传图片
@@ -116,12 +113,12 @@
                                 "width"           : 120,
                                 'removeTimeout'	  : 1,
                                 'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
-                                "onUploadSuccess" : uploadPictureVideo,
+                                "onUploadSuccess" : uploadVideoPicture,
                                 'onFallback' : function() {
                                     alert('未检测到兼容版本的Flash.');
                                 }
                             });
-                            function uploadPictureVideo(file, data,response){
+                            function uploadVideoPicture(file, data,response){
                                 var data = $.parseJSON(data);
                                 var src = '';
                                 if(data.status){
@@ -155,21 +152,18 @@
                                         'fileTypeExts': '*.avi; *.mp4; *.mov; *.wmv',//文件类型过滤
                                         'auto':true,
                                         'errorCallback': uploadErrorCallback,
-                                        'onUploadSuccess':uploadVideo,
-                                        'onSelect':function(file){
-                                            console.log(file);
-                                        },
-                                        'onUploadProgress':function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal){
-                                            console.log(file);
-                                        }
+                                        'onUploadSuccess':uploadVideo
                             };
                             $("#upload_video").uploadify(options);
                             function uploadVideo(file, data,response){
                                 var data = $.parseJSON(data);
-                                if(data.status){
-                                    $("#video_id").val(data.id);
+                                if(data['success']){
+                                    $("#video_id").val(data['data']['id']);
+                                    $("#video_id").parent().find('.upload-img-box').html(
+                                            '<div class="upload-pre-item"><p>'+ data['data']['name'] + file['type'] +'</p></div>'
+                                    );
                                 } else {
-                                    updateAlert(data.info);
+                                    updateAlert(data['message']);
                                     setTimeout(function(){
                                         $('#top-alert').find('button').click();
                                         $(that).removeClass('disabled').prop('disabled',false);
@@ -199,8 +193,8 @@
                             <input type="file" id="upload_organization_picture">
                             <input type="hidden" name="picture" id="cover_id_organization"/>
                             <div class="upload-img-box">
-                                <notempty name="data[$field['name']]">
-                                    <div class="upload-pre-item"><img src="{$data[$field['name']]|get_cover='path'}"/></div>
+                                <notempty name="organization['logo']">
+                                    <div class="upload-pre-item"><img src="{$organization['logo']|get_cover='path'}"/></div>
                                 </notempty>
                             </div>
                         </div>
@@ -277,7 +271,7 @@
             $(':input').labelauty();
         });
         function setAdvantage(){
-            var advantage = "";
+            var advantage = [];
             $.each($("#advantage_list li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
