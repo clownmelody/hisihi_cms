@@ -103,7 +103,7 @@ class UserController extends AppController
 
 	
 	//登录
-	public function login($username, $password='', $type = 1, $client = 'iOS', $reg_id = '') {
+	public function login($username, $password='', $type = 1, $client = 'iOS', $reg_id = '', $version=null) {
         // 获取上次登录的终端设备
         switch ($type) {
             case 1:
@@ -201,6 +201,11 @@ class UserController extends AppController
         $extra['ischeck'] = $ischeck;
         $extra['timestamp'] = time();
         $extra['mobile'] = $user2['mobile'];
+        if((float)$version>=2.2){
+            $extra['my_favorite_count'] = $this->getMyFavoriteCount($uid);
+            $extra['my_follow_count'] = $this->getMyFollowerCount($uid);
+            $extra['follow_me_count'] = $this->getFollowMeCount($uid);
+        }
         $this->apiSuccess("登录成功", null, $extra);
     }
 	
@@ -1867,12 +1872,14 @@ class UserController extends AppController
 
     /**
      * 第三方登陆
-     * @param $platform
-     * @param $access_token 微博和qq登陆 token
-     * @param $openId       微博和qq登陆 id
-     * @param string $code  微信登陆
+     * @param string $platform
+     * @param string $access_token
+     * @param string $openId
+     * @param string $code
+     * @param string $client
+     * @param null $version
      */
-    public function loginByThirdPartyOpenPlatform($platform='', $access_token='', $openId='', $code='', $client = 'client') {
+    public function loginByThirdPartyOpenPlatform($platform='', $access_token='', $openId='', $code='', $client = 'client', $version=null) {
         if("weibo"==$platform){
             $data = array(
                 'access_token'=>$access_token,
@@ -1896,10 +1903,10 @@ class UserController extends AppController
                 }
                 $avatar_model = D('Addons://Avatar/Avatar');
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
-                $this->thirdPartyLoginGetUserInfo($uid, $id, true, $client);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, true, $client, $version);
             } else {
                 $uid = $userExist[0];
-                $this->thirdPartyLoginGetUserInfo($uid, $id, false, $client);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, false, $client, $version);
             }
         } else if("qq"==$platform){
             $data = array(
@@ -1928,10 +1935,10 @@ class UserController extends AppController
                 }
                 $avatar_model = D('Addons://Avatar/Avatar');
                 $avatar_model->saveThirdPartyAvatar($uid, $avatar);
-                $this->thirdPartyLoginGetUserInfo($uid, $id, true, $client);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, true, $client, $version);
             } else {
                 $uid = $userExist[0];
-                $this->thirdPartyLoginGetUserInfo($uid, $id, false, $client);
+                $this->thirdPartyLoginGetUserInfo($uid, $id, false, $client, $version);
             }
         } else if('weixin'==$platform){
             if($code=='android'){ // 由于android使用share sdk，特殊情况区别对待
@@ -1955,10 +1962,10 @@ class UserController extends AppController
                     }
                     $avatar_model = D('Addons://Avatar/Avatar');
                     $avatar_model->saveThirdPartyAvatar($uid, $avatar);
-                    $this->thirdPartyLoginGetUserInfo($uid, $uid, true, $client);
+                    $this->thirdPartyLoginGetUserInfo($uid, $uid, true, $client, $version);
                 } else {
                     $uid = $userExist[0];
-                    $this->thirdPartyLoginGetUserInfo($uid, $uid, false, $client);
+                    $this->thirdPartyLoginGetUserInfo($uid, $uid, false, $client, $version);
                 }
             } else {
                 $data = array(
@@ -2009,10 +2016,10 @@ class UserController extends AppController
                     }
                     $avatar_model = D('Addons://Avatar/Avatar');
                     $avatar_model->saveThirdPartyAvatar($uid, $avatar);
-                    $this->thirdPartyLoginGetUserInfo($uid, $openid, true, $client);
+                    $this->thirdPartyLoginGetUserInfo($uid, $openid, true, $client, $version);
                 } else {
                     $uid = $userExist[0];
-                    $this->thirdPartyLoginGetUserInfo($uid, $openid, false, $client);
+                    $this->thirdPartyLoginGetUserInfo($uid, $openid, false, $client, $version);
                 }
             }
         } else {
@@ -2026,8 +2033,10 @@ class UserController extends AppController
      * @param $uid
      * @param $openid
      * @param $isNewUser
+     * @param $client
+     * @param null $version
      */
-    public function thirdPartyLoginGetUserInfo($uid, $openid, $isNewUser, $client){
+    public function thirdPartyLoginGetUserInfo($uid, $openid, $isNewUser, $client, $version=null){
         //读取数据库中的用户详细资料
         $map = array('uid' => $uid);
         $user1 = D('Home/Member')->where($map)->find();
@@ -2080,6 +2089,11 @@ class UserController extends AppController
             $extra['is_new'] = true;
         } else {
             $extra['is_new'] = false;
+        }
+        if((float)$version>=2.2){
+            $extra['my_favorite_count'] = $this->getMyFavoriteCount($uid);
+            $extra['my_follow_count'] = $this->getMyFollowerCount($uid);
+            $extra['follow_me_count'] = $this->getFollowMeCount($uid);
         }
         $this->apiSuccess("第三方登录成功", null, $extra);
     }
