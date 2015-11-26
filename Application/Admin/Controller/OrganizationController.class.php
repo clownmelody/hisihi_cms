@@ -409,7 +409,7 @@ class OrganizationController extends AdminController
      */
     public function works($organization_id=0){
         $model = D('OrganizationResource');
-        $map['type']=2;
+        $map['type']=1;
         $map['status']=1;
         if($organization_id){
             $map['organization_id'] = $organization_id;
@@ -466,7 +466,7 @@ class OrganizationController extends AdminController
             $data["pic_id"] = $_POST["picture"];
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
-            $data['type'] = 2;
+            $data['type'] = 1;
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();
@@ -1584,7 +1584,7 @@ class OrganizationController extends AdminController
     public function environment($organization_id=0){
         $model = D('OrganizationResource');
         $map['status'] = 1;
-        $map['type'] = 1;
+        $map['type'] = 2;
         if($organization_id){
             $map['organization_id'] = $organization_id;
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
@@ -1642,7 +1642,7 @@ class OrganizationController extends AdminController
             $data["pic_id"] = $_POST["picture"];
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
-            $data['type'] = 1;
+            $data['type'] = 2;
                 if(empty($cid)){
                 try {
                     $data["create_time"] = time();
