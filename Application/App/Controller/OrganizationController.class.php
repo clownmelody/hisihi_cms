@@ -1763,6 +1763,57 @@ class OrganizationController extends AppController
     }
 
     /**
+     *  获取课程详情
+     * @param int $uid
+     * @param int $course_id
+     */
+    public function getCourseDetail($uid=0, $course_id=0){
+        if($course_id==0){
+            $this->apiError(-1, '传入课程id不能为空');
+        }
+        if($uid==0){
+            $uid = $this->is_login();
+        }
+        $courseModel = M('OrganizationCourse');
+        $organizationModel = M('Organization');
+        $videoModel = M('OrganizationVideo');
+        $memberModel = M('Member');
+        $avatarModel = M('Avatar');
+        $courseInfo = $courseModel->where('status=1 and id='.$course_id)->find();
+        unset($courseInfo['img']);
+        unset($courseInfo['status']);
+        unset($courseInfo['category_id']);
+        unset($courseInfo['create_time']);
+        if($courseInfo){
+            $organization_id = $courseInfo['organization_id'];
+            $organizationInfo = $organizationModel->where('status=1 and id='.$organization_id)->find();
+            if($organizationInfo){
+                $courseInfo['organization']['name'] = $organizationInfo['name'];
+                $courseInfo['organization']['introduce'] = $organizationInfo['introduce'];
+                $courseInfo['organization']['logo'] = $organizationInfo['logo'];
+                $courseInfo['organization']['view_count'] = $organizationInfo['view_count'];
+                // to do 获取关注和报名数,用户是否已关注
+            }
+            $lectureInfo = $memberModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
+            $avatarInfo = $avatarModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
+            if($lectureInfo){
+                $courseInfo['lecturer_name'] = $lectureInfo['nickname'];
+                $courseInfo['lecturer_avatar'] = $avatarInfo['path'];
+                // to do 获取扩展信息,用户是否已关注
+                unset($courseInfo['lecturer']);
+            }
+            $video_list = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->select();
+            if($videoModel){
+                $courseInfo['video_list'] = $video_list;
+                $extra['data'] = $courseInfo;
+                $this->apiSuccess('获取视频详情成功', null, $extra);
+            }
+        } else {
+            $this->apiError(-1, '未找到对应的课程');
+        }
+    }
+
+    /**
      * 获取机构的认证信息
      * @param $organization_id
      */
