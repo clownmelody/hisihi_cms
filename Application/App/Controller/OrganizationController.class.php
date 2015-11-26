@@ -1660,17 +1660,17 @@ class OrganizationController extends AppController
      * @param null $organization_id
      */
     public function getPropagandaVideo($organization_id=null){
-        if(!$organization_id){
+        if (!$organization_id) {
             $this->apiError(-1, '传入机构id不能为空');
         }
         $model = M('Organization');
-        $info = $model->field('video, video_img')->where('status=1 and id='.$organization_id)->find();
-        if($info){
+        $info = $model->field('video, video_img')->where('status=1 and id=' . $organization_id)->find();
+        if ($info) {
             $video_id = $info['video'];
             $video_img = $info['video_img'];
             $video_img = $this->fetchImage($video_img);
             $videoModel = M('OrganizationVideo');
-            $videoInfo = $videoModel->field('url')->where('status=1 and id='.$video_id)->find();
+            $videoInfo = $videoModel->field('url')->where('status=1 and id=' . $video_id)->find();
             $oss_video_pre = 'http://game-video.oss-cn-qingdao.aliyuncs.com/';
             $oss_video_post = '/p.m3u8';
             $url = $oss_video_pre . $videoInfo['url'] . $oss_video_post;
@@ -1680,6 +1680,86 @@ class OrganizationController extends AppController
         } else {
             $this->apiError(-1, '未找到机构的宣传视频，可能没有上传');
         }
+    }
+
+    /**
+     * app获取学生作品
+     * @param null $organization_id
+     * @param int $page
+     * @param int $count
+     */
+    public function appGetStudentWorks($organization_id=null,$page=1,$count=3){
+        if(!$organization_id){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $model = M('OrganizationResource');
+        $map['organization_id'] = $organization_id;
+        $map['type'] = 1;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        foreach ($list as &$work) {
+            $pic_id = $work['pic_id'];
+            $pic_url = $this->fetchImage($pic_id);
+            unset($work['pic_id']);
+            $origin_img_info = getimagesize($pic_url);
+            $src_size = Array();
+            $src_size['width'] = $origin_img_info[0]; // width
+            $src_size['height'] = $origin_img_info[1]; // height
+            $work['picture'] = array(
+                'url'=>$pic_url,
+                'size'=>$src_size
+            );
+            $pic_small = getThumbImageById($pic_id, 280, 160);
+            $thumb_img_info = getimagesize($pic_small);
+            $thumb_size = Array();
+            $thumb_size['width'] = $thumb_img_info[0]; // width
+            $thumb_size['height'] = $thumb_img_info[1]; // height
+            $work['thumb'] = array(
+                'url'=>$pic_small,
+                'size'=>$thumb_size
+            );
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构学生作品成功', null, $extra);
+    }
+
+    public function appGetOrganizationEnvironment($organization_id=null,$page=1,$count=3){
+        if(!$organization_id){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $model = M('OrganizationResource');
+        $map['organization_id'] = $organization_id;
+        $map['type'] = 2;
+        $map['status'] = 1;
+        $totalCount = $model->where($map)->count();
+        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        foreach ($list as &$work) {
+            $pic_id = $work['pic_id'];
+            $pic_url = $this->fetchImage($pic_id);
+            unset($work['pic_id']);
+            $origin_img_info = getimagesize($pic_url);
+            $src_size = Array();
+            $src_size['width'] = $origin_img_info[0]; // width
+            $src_size['height'] = $origin_img_info[1]; // height
+            $work['picture'] = array(
+                'url'=>$pic_url,
+                'size'=>$src_size
+            );
+            $pic_small = getThumbImageById($pic_id, 280, 160);
+            $thumb_img_info = getimagesize($pic_small);
+            $thumb_size = Array();
+            $thumb_size['width'] = $thumb_img_info[0]; // width
+            $thumb_size['height'] = $thumb_img_info[1]; // height
+            $work['thumb'] = array(
+                'url'=>$pic_small,
+                'size'=>$thumb_size
+            );
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取机构环境图片成功', null, $extra);
     }
 
     /**
