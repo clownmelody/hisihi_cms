@@ -1140,6 +1140,7 @@ class OrganizationController extends AppController
         $res = json_decode($res);
         if($res->errNum==0){
             $data['city'] = $res->retData->content->address_detail->city;
+            $data['city'] = mb_substr($data['city'], 0, mb_strlen($data['city'], "UTF-8")-1, "UTF-8");
             $this->apiSuccess('获取位置成功', null, $data);
         } else {
             $data['city'] = '武汉';
@@ -1652,6 +1653,33 @@ class OrganizationController extends AppController
         }
         M('OrganizationVideo')->where(array('id'=>$video_id))->save(array('status'=>-1));
         $this->apiSuccess('删除成功');
+    }
+
+    /**
+     * 获取机构的宣传视频
+     * @param null $organization_id
+     */
+    public function getPropagandaVideo($organization_id=null){
+        if(!$organization_id){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $model = M('Organization');
+        $info = $model->field('video, video_img')->where('status=1 and id='.$organization_id)->find();
+        if($info){
+            $video_id = $info['video'];
+            $video_img = $info['video_img'];
+            $video_img = $this->fetchImage($video_img);
+            $videoModel = M('OrganizationVideo');
+            $videoInfo = $videoModel->field('url')->where('status=1 and id='.$video_id)->find();
+            $oss_video_pre = 'http://game-video.oss-cn-qingdao.aliyuncs.com/';
+            $oss_video_post = '/p.m3u8';
+            $url = $oss_video_pre . $videoInfo['url'] . $oss_video_post;
+            $extra['data']['video_img'] = $video_img;
+            $extra['data']['video_url'] = $url;
+            $this->apiSuccess('获取宣传视频成功', null, $extra);
+        } else {
+            $this->apiError(-1, '未找到机构的宣传视频，可能没有上传');
+        }
     }
 
     /**
