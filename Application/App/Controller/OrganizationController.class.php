@@ -755,7 +755,7 @@ class OrganizationController extends AppController
         if(empty($name)){
             $this->apiError(-1, '传入参数为空');
         }
-        $map['nickname'] = array('like', '%'.$name.'%');
+        $map['nickname'] = array('like', $name.'%');
         $list = D('User/Member')->field('uid, nickname')->where($map)->select();
         $a_model = M('AuthGroupAccess');
         $t_list = array();
@@ -850,8 +850,11 @@ class OrganizationController extends AppController
         if(!M('Member')->where('uid='.$uid)->count()){
             $this->apiError(-3, '该老师不存在');
         }
-        if($model->where('`status`=1 and `group`=6 and `uid`='.$uid)->count()){
+        if($model->where('`status`=1 and `group`=6 and `uid`='.$uid.' and `organization_id`='.$organization_id)->count()){
             $this->apiError(-2, '该老师已经添加过了');
+        }
+        if($model->where('`status`=1 and `group`=6 and `uid`='.$uid.' and `organization_id`<>'.$organization_id)->count()){
+            $this->apiError(-5, '该老师已加入其他机构');
         }
         $result = $model->add($data);
         if($result){
