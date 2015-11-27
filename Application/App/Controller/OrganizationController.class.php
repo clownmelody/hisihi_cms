@@ -1508,7 +1508,7 @@ class OrganizationController extends AppController
         $totalCount = $model->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->count();
         $list = $model->field('id, tag, title, create_time')->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
         foreach($list as &$notice){
-            $notice['detail_url'] = 'http://dev.hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
+            $notice['detail_url'] = 'http://hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
         }
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
