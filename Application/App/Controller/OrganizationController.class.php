@@ -1042,6 +1042,8 @@ class OrganizationController extends AppController
         $config_model = M("OrganizationConfig");
         $org_model = M('Organization');
         $video_model = M('OrganizationVideo');
+        $favorite_model = M('Favorite');
+        $support_model = M('Support');
         $logo = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
         $logo_url = $this->fetchImage($logo);
         $map['organization_id'] = $organization_id;
@@ -1061,11 +1063,152 @@ class OrganizationController extends AppController
             $course['organization_logo'] = $logo_url;
             $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
             $course['duration'] = $course_duration;
+            //获取收藏信息
+            $favorite['appname'] = 'Organization';
+            $favorite['table'] = 'organization_courses';
+            $favorite['row'] = $course['id'];
+            $favorite['uid'] = $this->getUid();
+            if ($favorite_model->where($favorite)->count()) {
+                $course['isFavorite'] = 1;
+            } else {
+                $course['isFavorite'] = 0;
+            }
+            $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
+                'table'=>'organization_courses','row'=>$course['id']))->count();
+            $course['favoriteCount'] = $favoriteCount;
+            //获取点赞信息
+            if ($support_model->where($favorite)->count()) {
+                $course['isSupportd'] = 1;
+            } else {
+                $course['isSupportd'] = 0;
+            }
+            $supportCount = $support_model->where(array('appname'=>'Organization',
+                'table'=>'organization_courses','row'=>$course['id']))->count();
+            $course['supportCount'] = $supportCount;
+            unset($course['category_id']);
             $video_course[] = $course;
         }
         $extra['total_count'] = $totalCount;
         $extra['coursesList'] = $video_course;
         $this->apiSuccess('获取所有课程成功', null, $extra);
+    }
+
+    /**
+     * 课程收藏
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function doFavoriteCourses($uid=0, $courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经收藏，不能再收藏了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消收藏机构课程
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function undoFavoriteCourses($uid=0,$courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有收藏，不能取消收藏!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**
+     * 课程点赞
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function doSupportCourses($uid=0, $courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Support');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经点赞了，不能再点赞了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('感谢您的支持');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消点赞机构课程
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function undoSupportCourses($uid=0,$courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Support');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有点赞，不能取消点赞!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消点赞成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
     }
 
     /**删除课程
