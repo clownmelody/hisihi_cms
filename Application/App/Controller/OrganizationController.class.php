@@ -1946,6 +1946,90 @@ class OrganizationController extends AppController
     }
 
     /**
+     *  获取课程详情
+     * @param int $uid
+     * @param int $course_id
+     */
+    public function getCourseDetail($uid=0, $course_id=0){
+        if($course_id==0){
+            $this->apiError(-1, '传入课程id不能为空');
+        }
+        if($uid==0){
+            $uid = $this->is_login();
+        }
+        $courseModel = M('OrganizationCourse');
+        $organizationModel = M('Organization');
+        $videoModel = M('OrganizationVideo');
+        $memberModel = M('Member');
+        $avatarModel = M('Avatar');
+        $courseInfo = $courseModel->where('status=1 and id='.$course_id)->find();
+        unset($courseInfo['img']);
+        unset($courseInfo['status']);
+        unset($courseInfo['category_id']);
+        unset($courseInfo['create_time']);
+        if($courseInfo){
+            $organization_id = $courseInfo['organization_id'];
+            $courseInfo['followCount'] = $this->getFollowCount($organization_id);
+            $courseInfo['enrollCount'] = $this->getEnrollCount($organization_id);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$organization_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$organization_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $courseInfo['organization_relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $courseInfo['organization_relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $courseInfo['organization_relationship'] = 1;
+            } else {
+                $courseInfo['organization_relationship'] = 0;
+            }
+            $organizationInfo = $organizationModel->where('status=1 and id='.$organization_id)->find();
+            if($organizationInfo){
+                $courseInfo['organization']['name'] = $organizationInfo['name'];
+                $courseInfo['organization']['introduce'] = $organizationInfo['introduce'];
+                $courseInfo['organization']['logo'] = $organizationInfo['logo'];
+                $courseInfo['organization']['view_count'] = $organizationInfo['view_count'];
+                // to do 获取关注和报名数,用户是否已关注
+            }
+            $lectureInfo = $memberModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
+            $avatarInfo = $avatarModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
+            if($lectureInfo){
+                $courseInfo['lecturer_name'] = $lectureInfo['nickname'];
+                $courseInfo['lecturer_avatar'] = $this->fetchImageByPath($avatarInfo['path']);
+                $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$courseInfo['lecturer'], 'type'=>2))->find();
+                $be_follow = D('Follow')->where(array('who_follow'=>$courseInfo['lecturer'],'follow_who'=>$uid, 'type'=>2))->find();
+                if($follow_other&&$be_follow){
+                    $courseInfo['lecturer_relationship'] = 3;
+                } else if($follow_other&&(!$be_follow)){
+                    $courseInfo['lecturer_relationship'] = 2;
+                } else if((!$follow_other)&&$be_follow){
+                    $courseInfo['lecturer_relationship'] = 1;
+                } else {
+                    $courseInfo['lecturer_relationship'] = 0;
+                }
+                $profile_group = A('User')->_profile_group($courseInfo['lecturer']);
+                $info_list = A('User')->_info_list($profile_group['id'], $uid);
+                foreach ($info_list as $_info) {
+                    if($_info['field_name']=='institution'){
+                        $courseInfo['lecturer_institution'] = $_info['field_content'];
+                        break;
+                    }
+                }
+                unset($courseInfo['lecturer']);
+            }
+            $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
+            $courseInfo['video_duration'] = $videoDuration;
+            $video_list = $videoModel->field('name, url, duration')->where('status=1 and course_id='.$course_id)->select();
+            if($videoModel){
+                $courseInfo['video_list'] = $video_list;
+                $extra['data'] = $courseInfo;
+                $this->apiSuccess('获取视频详情成功', null, $extra);
+            }
+        } else {
+            $this->apiError(-1, '未找到对应的课程');
+        }
+    }
+
+    /**
      * 获取机构的认证信息
      * @param $organization_id
      */
@@ -2047,6 +2131,25 @@ class OrganizationController extends AppController
             if($isExist){
                 $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
             }
+        }
+        return $picUrl;
+    }
+
+    /**
+     * 根据图片路径获取oss地址
+     * @param null $path
+     * @return null|string
+     */
+    private function fetchImageByPath($path=null){
+        if(empty($path)){
+            return null;
+        }
+        $objKey = substr($path, 17);
+        $param["bucketName"] = "hisihi-other";
+        $param['objectKey'] = $objKey;
+        $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+        if($isExist){
+            $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
         }
         return $picUrl;
     }
