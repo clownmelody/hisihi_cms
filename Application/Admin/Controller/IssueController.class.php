@@ -259,6 +259,36 @@ class IssueController extends AdminController
             $content['status'] = 0;
 
             $rs = D('IssueContent')->add($content);
+
+            if($rs){
+                /* ---------- 同步数据到新表中，支持新版本app对该视频可见 ----------- */
+                // 同步课程数据
+                $organizationCourseModel = M('OrganizationCourse');
+                $organizationVideoModel = M('OrganizationVideo');
+                $courseData['organization_id'] = 100101;
+                $courseData['title'] = op_t($coursevideo['name']);
+                $courseData['content'] = op_h($coursevideo['description']);
+                $courseData['create_time'] = time();
+                $courseData['update_time'] = time();
+                $courseData['status'] = 0;
+                $courseData['is_old_hisihi_data'] = 1;
+                $courseData['issue_content_id'] = $rs;
+                $courseData['img_str'] = op_t($coursevideo['image']);
+                $course_id = $organizationCourseModel->add($courseData);
+                // 同步视频数据
+                if($course_id){
+                    $videoData['course_id'] = $course_id;
+                    $videoData['name'] = $courseData['title'];
+                    $videoData['url'] = op_t($urlKey[1]);
+                    $videoData['duration'] = op_t($coursevideo['duration']);
+                    $videoData['create_time'] = time();
+                    $videoData['update_time'] = time();
+                    $videoData['status'] = 1;
+                    $organizationVideoModel->add($videoData);
+                }
+                /* ------------------------------------------------------------- */
+            }
+
             if ($rs) {
                 $coursevideo['status'] = 2;
                 $Videos->save($coursevideo);
@@ -323,6 +353,15 @@ class IssueController extends AdminController
             }
             $content['uid'] = $content_temp['uid']; //权限矫正，防止被改为管理员
             $content['update_time'] = time();
+
+            /* ----------------------- 更新同步后的课程数据 ------------------- */
+
+            $organizationCourseModel = M('OrganizationCourse');
+            $courseData['category_id'] = $issue_id;
+            $organizationCourseModel->where('is_old_hisihi_data=1 and issue_content_id='.$id)->save($courseData);
+
+            /* -------------------------------------------------------------- */
+
             $rs = D('IssueContent')->save($content);
             if ($rs) {
                 $this->success('编辑成功。', U('contents'));
