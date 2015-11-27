@@ -1105,6 +1105,9 @@ class ForumController extends AppController
         // 写入用户作品表
         $pictures_ids_list = explode(',',$pictures_ids_str);
         foreach ($pictures_ids_list as $pic_id) {
+            if(!$pic_id){
+                continue;
+            }
             $user_works_data['uid'] = is_login();
             $user_works_data['forum_id'] = $forum_id;
             $user_works_data['post_id'] = $post_id;

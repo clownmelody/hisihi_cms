@@ -1575,12 +1575,16 @@ class UserController extends AppController
             $this->apiError(-1, '传入用户ID为空异常');
         }
         $model = M();
-        $tem = $model->query('select count(*) as count from hisihi_user_works where status=1 and uid='.$uid);
+        $tem = $model->query('select count(*) as count from hisihi_user_works where status=1 and picture_id<>\'\' and uid='.$uid);
         $totalCount = $tem[0]['count'];
         $index = ($page - 1) * $count;
-        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and uid='.$uid.' order by create_time desc limit '.$index.','.$count);
+        $pic_list = $model->query('select id, picture_id from hisihi_user_works where status=1 and picture_id<>\'\' and uid='.$uid.' order by create_time desc limit '.$index.','.$count);
+        $picture_array = array();
         foreach ($pic_list as &$picinfo) {
             $pic_id = $picinfo['picture_id'];
+            if(!$pic_id){
+                continue;
+            }
             $picDetail= $model->query("select path from hisihi_picture where id=".$pic_id);
             $pic_small = getThumbImageById($pic_id, 280, 160);
             $thumb_img_info = getimagesize($pic_small);
@@ -1600,9 +1604,10 @@ class UserController extends AppController
             }
             $picinfo['size'] = $size;
             unset($picinfo['picture_id']);
+            $picture_array[] = $picinfo;
         }
         $extra['totalCount'] = $totalCount;
-        $extra['data'] = $pic_list;
+        $extra['data'] = $picture_array;
         $this->apiSuccess('获取个人作品成功', null, $extra);
     }
 
