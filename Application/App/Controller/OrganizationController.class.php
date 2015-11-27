@@ -365,7 +365,7 @@ class OrganizationController extends AppController
             ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
         if($result){
             $logo_id = $result['logo'];
-            $logo = $this->fetchImage($logo_id);
+            $logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
@@ -418,7 +418,7 @@ class OrganizationController extends AppController
             ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num')->find();
         if($result){
             $logo_id = $result['logo'];
-            $logo = $this->fetchImage($logo_id);
+            $logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
@@ -694,7 +694,7 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $work['url'] = $this->fetchImage($pic_id);
@@ -717,7 +717,7 @@ class OrganizationController extends AppController
         $map['type'] = 2;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $work['url'] = $this->fetchImage($pic_id);
@@ -1021,7 +1021,7 @@ class OrganizationController extends AppController
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, create_time')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -1053,53 +1053,84 @@ class OrganizationController extends AppController
         $video_model = M('OrganizationVideo');
         $favorite_model = M('Favorite');
         $support_model = M('Support');
+        $issue_model = M('Issue');
         $logo = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
-        $logo_url = $this->fetchImage($logo);
+        $logo_url = $this->getOrganizationLogo($logo);
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, update_time')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
             $course['ViewCount'] = $course['view_count'];
             $course['type_id'] = $category_id;
-            $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
-            if($category){
-                $course['type'] = $category['value'];
+            if($course['is_old_hisihi_data']){
+                $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
+                //解析并生成图片数据
+                $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+                $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+                //获取收藏信息
+                $favorite['appname'] = 'Issue';
+                $favorite['table'] = 'issue_content';
+                $favorite['row'] = $course['id'];
+                $favorite['uid'] = $this->getUid();
+                if ($favorite_model->where($favorite)->count()) {
+                    $course['isFavorite'] = 1;
+                } else {
+                    $course['isFavorite'] = 0;
+                }
+                $favoriteCount = $favorite_model->where(array('appname'=>'Issue',
+                    'table'=>'issue_content','row'=>$course['id']))->count();
+                $course['favoriteCount'] = $favoriteCount;
+                //获取点赞信息
+                if ($support_model->where($favorite)->count()) {
+                    $course['isSupportd'] = 1;
+                } else {
+                    $course['isSupportd'] = 0;
+                }
+                $supportCount = $support_model->where(array('appname'=>'Issue',
+                    'table'=>'issue_content','row'=>$course['id']))->count();
+                $course['supportCount'] = $supportCount;
+            }else{
+                $course['type'] = $config_model->where('`status`=1 and `type`=1002 and `id`='.$category_id)->getField('value');
+                $course['img'] = $this->fetchImage($course['img']);
+                //获取收藏信息
+                $favorite['appname'] = 'Organization';
+                $favorite['table'] = 'organization_courses';
+                $favorite['row'] = $course['id'];
+                $favorite['uid'] = $this->getUid();
+                if ($favorite_model->where($favorite)->count()) {
+                    $course['isFavorite'] = 1;
+                } else {
+                    $course['isFavorite'] = 0;
+                }
+                $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
+                    'table'=>'organization_courses','row'=>$course['id']))->count();
+                $course['favoriteCount'] = $favoriteCount;
+                //获取点赞信息
+                if ($support_model->where($favorite)->count()) {
+                    $course['isSupportd'] = 1;
+                } else {
+                    $course['isSupportd'] = 0;
+                }
+                $supportCount = $support_model->where(array('appname'=>'Organization',
+                    'table'=>'organization_courses','row'=>$course['id']))->count();
+                $course['supportCount'] = $supportCount;
             }
-            $course['img'] = $this->fetchImage($course['img']);
             $course['organization_logo'] = $logo_url;
             $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
             $course['duration'] = $course_duration;
-            //获取收藏信息
-            $favorite['appname'] = 'Organization';
-            $favorite['table'] = 'organization_courses';
-            $favorite['row'] = $course['id'];
-            $favorite['uid'] = $this->getUid();
-            if ($favorite_model->where($favorite)->count()) {
-                $course['isFavorite'] = 1;
-            } else {
-                $course['isFavorite'] = 0;
-            }
-            $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
-                'table'=>'organization_courses','row'=>$course['id']))->count();
-            $course['favoriteCount'] = $favoriteCount;
-            //获取点赞信息
-            if ($support_model->where($favorite)->count()) {
-                $course['isSupportd'] = 1;
-            } else {
-                $course['isSupportd'] = 0;
-            }
-            $supportCount = $support_model->where(array('appname'=>'Organization',
-                'table'=>'organization_courses','row'=>$course['id']))->count();
-            $course['supportCount'] = $supportCount;
+
             unset($course['category_id']);
+            unset($course['is_old_hisihi_data']);
+            unset($course['img_str']);
+            unset($course['view_count']);
             $video_course[] = $course;
         }
         $extra['total_count'] = $totalCount;
         $extra['coursesList'] = $video_course;
-        $this->apiSuccess('获取所有课程成功', null, $extra);
+        $this->apiSuccess('获取机构课程成功', null, $extra);
     }
 
     /**
@@ -1827,7 +1858,7 @@ class OrganizationController extends AppController
         $map['status'] = 1;
         $map['type']=1003;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, value')->where($map)->select();
+        $course_list = $model->field('id, value')->order('create_time desc')->where($map)->select();
 
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $course_list;
@@ -1889,7 +1920,7 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $pic_url = $this->fetchImage($pic_id);
@@ -1926,7 +1957,7 @@ class OrganizationController extends AppController
         $map['type'] = 2;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $pic_url = $this->fetchImage($pic_id);
@@ -2213,4 +2244,25 @@ class OrganizationController extends AppController
         return true;
     }
 
+    /**
+     * 获取机构id
+     * @param null $logo_id
+     * @return null|string
+     */
+    private function getOrganizationLogo($logo_id=null){
+        if(!$logo_id){
+            $this->apiError('机构logo id不能为空');
+        }
+        $crop_url = $this->fetchCropImage($logo_id);
+        if($crop_url){
+            return $crop_url;
+        }else{
+            $origin_url = $this->fetchImage($logo_id);
+            if($origin_url){
+                return $origin_url;
+            }else{
+                return 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
+        }
+    }
 }
