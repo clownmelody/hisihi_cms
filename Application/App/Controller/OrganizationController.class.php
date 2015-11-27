@@ -1475,7 +1475,7 @@ class OrganizationController extends AppController
      */
     public function followOrganization($organization_id=0){
         if($organization_id==0){
-            $this->apiError(-1, '传入机构id不能为空');
+            $this->apiError(-2, '传入机构id不能为空');
         }
         $this->requireLogin();
         $model = M('Follow');
@@ -1495,7 +1495,7 @@ class OrganizationController extends AppController
      */
     public function unFollowOrganization($organization_id=0){
         if($organization_id==0){
-            $this->apiError(-1, '传入机构id不能为空');
+            $this->apiError(-2, '传入机构id不能为空');
         }
         $this->requireLogin();
         $model = M('Follow');
@@ -1826,8 +1826,6 @@ class OrganizationController extends AppController
         unset($courseInfo['create_time']);
         if($courseInfo){
             $organization_id = $courseInfo['organization_id'];
-            $courseInfo['followCount'] = $this->getFollowCount($organization_id);
-            $courseInfo['enrollCount'] = $this->getEnrollCount($organization_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$organization_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$organization_id,'follow_who'=>$uid, 'type'=>2))->find();
             if($follow_other&&$be_follow){
@@ -1845,7 +1843,8 @@ class OrganizationController extends AppController
                 $courseInfo['organization']['introduce'] = $organizationInfo['introduce'];
                 $courseInfo['organization']['logo'] = $organizationInfo['logo'];
                 $courseInfo['organization']['view_count'] = $organizationInfo['view_count'];
-                // to do 获取关注和报名数,用户是否已关注
+                $courseInfo['organization']['followCount'] = $this->getFollowCount($organization_id);
+                $courseInfo['organization']['enrollCount'] = $this->getEnrollCount($organization_id);
             }
             $lectureInfo = $memberModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
             $avatarInfo = $avatarModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
@@ -1876,6 +1875,9 @@ class OrganizationController extends AppController
             $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
             $courseInfo['video_duration'] = $videoDuration;
             $video_list = $videoModel->field('name, url, duration')->where('status=1 and course_id='.$course_id)->select();
+            unset($courseInfo['is_old_hisihi_data']);
+            unset($courseInfo['issue_content_id']);
+            unset($courseInfo['img_str']);
             if($videoModel){
                 $courseInfo['video_list'] = $video_list;
                 $extra['data'] = $courseInfo;
