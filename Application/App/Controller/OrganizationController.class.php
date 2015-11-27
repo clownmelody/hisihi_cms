@@ -365,7 +365,7 @@ class OrganizationController extends AppController
             ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
         if($result){
             $logo_id = $result['logo'];
-            $logo = $this->fetchImage($logo_id);
+            $logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
@@ -418,7 +418,7 @@ class OrganizationController extends AppController
             ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num')->find();
         if($result){
             $logo_id = $result['logo'];
-            $logo = $this->fetchImage($logo_id);
+            $logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
@@ -1053,22 +1053,27 @@ class OrganizationController extends AppController
         $video_model = M('OrganizationVideo');
         $favorite_model = M('Favorite');
         $support_model = M('Support');
+        $issue_model = M('Issue');
         $logo = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
-        $logo_url = $this->fetchImage($logo);
+        $logo_url = $this->getOrganizationLogo($logo);
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, update_time')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
             $course['ViewCount'] = $course['view_count'];
             $course['type_id'] = $category_id;
-            $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
-            if($category){
-                $course['type'] = $category['value'];
+            if($course['is_old_hisihi_data']){
+                $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
+                //解析并生成图片数据
+                $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+                $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+            }else{
+                $course['type'] = $config_model->where('`status`=1 and `type`=1002 and `id`='.$category_id)->getField('value');
+                $course['img'] = $this->fetchImage($course['img']);
             }
-            $course['img'] = $this->fetchImage($course['img']);
             $course['organization_logo'] = $logo_url;
             $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
             $course['duration'] = $course_duration;
@@ -2211,4 +2216,25 @@ class OrganizationController extends AppController
         return true;
     }
 
+    /**
+     * 获取机构id
+     * @param null $logo_id
+     * @return null|string
+     */
+    private function getOrganizationLogo($logo_id=null){
+        if(!$logo_id){
+            $this->apiError('机构logo id不能为空');
+        }
+        $crop_url = $this->fetchCropImage($logo_id);
+        if($crop_url){
+            return $crop_url;
+        }else{
+            $origin_url = $this->fetchImage($logo_id);
+            if($origin_url){
+                return $origin_url;
+            }else{
+                return 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
+        }
+    }
 }
