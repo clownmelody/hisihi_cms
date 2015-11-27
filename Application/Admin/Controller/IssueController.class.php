@@ -358,6 +358,7 @@ class IssueController extends AdminController
 
             $organizationCourseModel = M('OrganizationCourse');
             $courseData['category_id'] = $issue_id;
+            $courseData['status'] = 1;
             $organizationCourseModel->where('is_old_hisihi_data=1 and issue_content_id='.$id)->save($courseData);
 
             /* -------------------------------------------------------------- */

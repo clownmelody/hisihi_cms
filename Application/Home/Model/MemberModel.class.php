@@ -42,7 +42,7 @@ class MemberModel extends Model
         /* 验证昵称 */
         array('nickname', '2,50', -33, self::EXISTS_VALIDATE, 'length'), //昵称长度不合法
         array('nickname', 'checkDenyNickname', -31, self::EXISTS_VALIDATE, 'callback'), //昵称禁止注册
-        array('nickname', 'checkNickname', -32, self::EXISTS_VALIDATE, 'callback'),
+        //array('nickname', 'checkNickname', -32, self::EXISTS_VALIDATE, 'callback'),
 
     );
 
