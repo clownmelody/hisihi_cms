@@ -694,7 +694,7 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $work['url'] = $this->fetchImage($pic_id);
@@ -717,7 +717,7 @@ class OrganizationController extends AppController
         $map['type'] = 2;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $work['url'] = $this->fetchImage($pic_id);
@@ -1021,7 +1021,7 @@ class OrganizationController extends AppController
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, create_time')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -1058,7 +1058,7 @@ class OrganizationController extends AppController
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, update_time')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, update_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -1827,7 +1827,7 @@ class OrganizationController extends AppController
         $map['status'] = 1;
         $map['type']=1003;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, value')->where($map)->select();
+        $course_list = $model->field('id, value')->order('create_time desc')->where($map)->select();
 
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $course_list;
@@ -1889,7 +1889,7 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $pic_url = $this->fetchImage($pic_id);
@@ -1926,7 +1926,7 @@ class OrganizationController extends AppController
         $map['type'] = 2;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_id = $work['pic_id'];
             $pic_url = $this->fetchImage($pic_id);
