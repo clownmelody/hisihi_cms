@@ -1070,41 +1070,67 @@ class OrganizationController extends AppController
                 //解析并生成图片数据
                 $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
                 $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+                //获取收藏信息
+                $favorite['appname'] = 'Issue';
+                $favorite['table'] = 'issue_content';
+                $favorite['row'] = $course['id'];
+                $favorite['uid'] = $this->getUid();
+                if ($favorite_model->where($favorite)->count()) {
+                    $course['isFavorite'] = 1;
+                } else {
+                    $course['isFavorite'] = 0;
+                }
+                $favoriteCount = $favorite_model->where(array('appname'=>'Issue',
+                    'table'=>'issue_content','row'=>$course['id']))->count();
+                $course['favoriteCount'] = $favoriteCount;
+                //获取点赞信息
+                if ($support_model->where($favorite)->count()) {
+                    $course['isSupportd'] = 1;
+                } else {
+                    $course['isSupportd'] = 0;
+                }
+                $supportCount = $support_model->where(array('appname'=>'Issue',
+                    'table'=>'issue_content','row'=>$course['id']))->count();
+                $course['supportCount'] = $supportCount;
             }else{
                 $course['type'] = $config_model->where('`status`=1 and `type`=1002 and `id`='.$category_id)->getField('value');
                 $course['img'] = $this->fetchImage($course['img']);
+                //获取收藏信息
+                $favorite['appname'] = 'Organization';
+                $favorite['table'] = 'organization_courses';
+                $favorite['row'] = $course['id'];
+                $favorite['uid'] = $this->getUid();
+                if ($favorite_model->where($favorite)->count()) {
+                    $course['isFavorite'] = 1;
+                } else {
+                    $course['isFavorite'] = 0;
+                }
+                $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
+                    'table'=>'organization_courses','row'=>$course['id']))->count();
+                $course['favoriteCount'] = $favoriteCount;
+                //获取点赞信息
+                if ($support_model->where($favorite)->count()) {
+                    $course['isSupportd'] = 1;
+                } else {
+                    $course['isSupportd'] = 0;
+                }
+                $supportCount = $support_model->where(array('appname'=>'Organization',
+                    'table'=>'organization_courses','row'=>$course['id']))->count();
+                $course['supportCount'] = $supportCount;
             }
             $course['organization_logo'] = $logo_url;
             $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
             $course['duration'] = $course_duration;
-            //获取收藏信息
-            $favorite['appname'] = 'Organization';
-            $favorite['table'] = 'organization_courses';
-            $favorite['row'] = $course['id'];
-            $favorite['uid'] = $this->getUid();
-            if ($favorite_model->where($favorite)->count()) {
-                $course['isFavorite'] = 1;
-            } else {
-                $course['isFavorite'] = 0;
-            }
-            $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
-                'table'=>'organization_courses','row'=>$course['id']))->count();
-            $course['favoriteCount'] = $favoriteCount;
-            //获取点赞信息
-            if ($support_model->where($favorite)->count()) {
-                $course['isSupportd'] = 1;
-            } else {
-                $course['isSupportd'] = 0;
-            }
-            $supportCount = $support_model->where(array('appname'=>'Organization',
-                'table'=>'organization_courses','row'=>$course['id']))->count();
-            $course['supportCount'] = $supportCount;
+
             unset($course['category_id']);
+            unset($course['is_old_hisihi_data']);
+            unset($course['img_str']);
+            unset($course['view_count']);
             $video_course[] = $course;
         }
         $extra['total_count'] = $totalCount;
         $extra['coursesList'] = $video_course;
-        $this->apiSuccess('获取所有课程成功', null, $extra);
+        $this->apiSuccess('获取机构课程成功', null, $extra);
     }
 
     /**
