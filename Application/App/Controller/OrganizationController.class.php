@@ -272,7 +272,7 @@ class OrganizationController extends AppController
         $crop_path = substr($org_path,0,strlen($org_path)-4).'_crop'.substr($org_path,-4);
         $image->crop($width, $height,$pointX,$pointY)->save($crop_path);
         //上传裁剪的图片到OSS
-        $picKey = substr($crop_path, 17);
+        $picKey = substr($crop_path, 18);
         $param["bucketName"] = "hisihi-other";
         $param['objectKey'] = $picKey;
         $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
@@ -2156,7 +2156,8 @@ class OrganizationController extends AppController
         $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
         if($pic_info){
             $path = $pic_info[0]['path'];
-            $objKey = substr($path, 17,(strlen($path)-4)).'_crop'.substr($path,-4);
+            $path = substr($path, 17);
+            $objKey = substr($path,0,strlen($path)-4).'_crop'.substr($path,-4);
             $param["bucketName"] = "hisihi-other";
             $param['objectKey'] = $objKey;
             $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
