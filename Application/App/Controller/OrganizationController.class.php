@@ -255,32 +255,36 @@ class OrganizationController extends AppController
 
     /**
      * 裁剪图片
+     * @param null $picture_id
+     * @param int $pointX
+     * @param int $pointY
+     * @param int $width
+     * @param int $height
      */
-    public function tailorPicture(){
-        /* 调用文件上传组件上传文件 */
-        $Picture = D('Admin/Picture');
-        $pic_driver = C('PICTURE_UPLOAD_DRIVER');
-        $info = $Picture->upload(
-            $_FILES,
-            C('PICTURE_UPLOAD'),
-            C('PICTURE_UPLOAD_DRIVER'),
-            C("UPLOAD_{$pic_driver}_CONFIG")
-        ); //TODO:上传到远程服务器
-        $path = $info['download']['path'];
+    public function tailorPicture($picture_id=null,$pointX=0,$pointY=0,$width=0,$height=0){
+        if(!$picture_id){
+            $this->apiError(-1,'传入图片id不能为空');
+        }
+        $path = M('Picture')->where('id='.$picture_id)->getField('path');
         $image = new \Think\Image();
-        $org_path = '.'. substr($path,11);
+        $org_path = '.'.$path;
         $image->open($org_path);
         $crop_path = substr($org_path,0,strlen($org_path)-4).'_crop'.substr($org_path,-4);
-        $image->crop(50, 50,20,20)->save($crop_path);
-        //原图片路径
-        $info['org_path'] = $path;
-        //裁剪后图片路径
-        $info['crop_path'] = $crop_path;
-        $crop_md5 = md5_file($crop_path);
-        $crop_sha1 = sha1_file($crop_path);
-        //图片ID
-        $info['pic_id'] = $info['download']['id'];
-        $this->apiSuccess("裁剪成功",null,$info);
+        $image->crop($width, $height,$pointX,$pointY)->save($crop_path);
+        //上传裁剪的图片到OSS
+        $picKey = substr($crop_path, 18);
+        $param["bucketName"] = "hisihi-other";
+        $param['objectKey'] = $picKey;
+        $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+        if(!$isExist){
+            Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+        }else{
+            Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'deleteResource', $param);
+            Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+        }
+        $crop_url = $this->fetchCropImage($picture_id);
+        $extra['crop_url'] = $crop_url;
+        $this->apiSuccess("裁剪成功",null,$extra);
     }
 
     /**
@@ -589,6 +593,7 @@ class OrganizationController extends AppController
             $data['pic_id'] = $pic_id;
             $data['description'] = $description;
             $data['create_time'] = time();
+            getThumbImageById($pic_id,280,160);
             $res = $model->add($data);
             if($res){
                 $this->uploadLogoPicToOSS($pic_id);
@@ -632,6 +637,7 @@ class OrganizationController extends AppController
             $data['pic_id'] = $pic_id;
             $data['description'] = $description;
             $data['create_time'] = time();
+            getThumbImageById($pic_id,280,160);
             $res = $model->add($data);
             if($res){
                 $this->uploadLogoPicToOSS($pic_id);
@@ -755,7 +761,7 @@ class OrganizationController extends AppController
         if(empty($name)){
             $this->apiError(-1, '传入参数为空');
         }
-        $map['nickname'] = array('like', '%'.$name.'%');
+        $map['nickname'] = array('like', $name.'%');
         $list = D('User/Member')->field('uid, nickname')->where($map)->select();
         $a_model = M('AuthGroupAccess');
         $t_list = array();
@@ -850,8 +856,11 @@ class OrganizationController extends AppController
         if(!M('Member')->where('uid='.$uid)->count()){
             $this->apiError(-3, '该老师不存在');
         }
-        if($model->where('`status`=1 and `group`=6 and `uid`='.$uid)->count()){
+        if($model->where('`status`=1 and `group`=6 and `uid`='.$uid.' and `organization_id`='.$organization_id)->count()){
             $this->apiError(-2, '该老师已经添加过了');
+        }
+        if($model->where('`status`=1 and `group`=6 and `uid`='.$uid.' and `organization_id`<>'.$organization_id)->count()){
+            $this->apiError(-5, '该老师已加入其他机构');
         }
         $result = $model->add($data);
         if($result){
@@ -1042,6 +1051,8 @@ class OrganizationController extends AppController
         $config_model = M("OrganizationConfig");
         $org_model = M('Organization');
         $video_model = M('OrganizationVideo');
+        $favorite_model = M('Favorite');
+        $support_model = M('Support');
         $logo = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
         $logo_url = $this->fetchImage($logo);
         $map['organization_id'] = $organization_id;
@@ -1061,11 +1072,152 @@ class OrganizationController extends AppController
             $course['organization_logo'] = $logo_url;
             $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
             $course['duration'] = $course_duration;
+            //获取收藏信息
+            $favorite['appname'] = 'Organization';
+            $favorite['table'] = 'organization_courses';
+            $favorite['row'] = $course['id'];
+            $favorite['uid'] = $this->getUid();
+            if ($favorite_model->where($favorite)->count()) {
+                $course['isFavorite'] = 1;
+            } else {
+                $course['isFavorite'] = 0;
+            }
+            $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
+                'table'=>'organization_courses','row'=>$course['id']))->count();
+            $course['favoriteCount'] = $favoriteCount;
+            //获取点赞信息
+            if ($support_model->where($favorite)->count()) {
+                $course['isSupportd'] = 1;
+            } else {
+                $course['isSupportd'] = 0;
+            }
+            $supportCount = $support_model->where(array('appname'=>'Organization',
+                'table'=>'organization_courses','row'=>$course['id']))->count();
+            $course['supportCount'] = $supportCount;
+            unset($course['category_id']);
             $video_course[] = $course;
         }
         $extra['total_count'] = $totalCount;
         $extra['coursesList'] = $video_course;
         $this->apiSuccess('获取所有课程成功', null, $extra);
+    }
+
+    /**
+     * 课程收藏
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function doFavoriteCourses($uid=0, $courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经收藏，不能再收藏了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消收藏机构课程
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function undoFavoriteCourses($uid=0,$courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有收藏，不能取消收藏!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**
+     * 课程点赞
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function doSupportCourses($uid=0, $courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Support');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经点赞了，不能再点赞了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('感谢您的支持');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消点赞机构课程
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function undoSupportCourses($uid=0,$courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Support');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有点赞，不能取消点赞!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消点赞成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
     }
 
     /**删除课程
@@ -1984,6 +2136,30 @@ class OrganizationController extends AppController
         if($pic_info){
             $path = $pic_info[0]['path'];
             $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            }
+        }
+        return $picUrl;
+    }
+
+    /**
+     * 获取裁剪图片
+     * @param $pic_id
+     * @return null|string
+     */
+    private function fetchCropImage($pic_id){
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $path = substr($path, 17);
+            $objKey = substr($path,0,strlen($path)-4).'_crop'.substr($path,-4);
             $param["bucketName"] = "hisihi-other";
             $param['objectKey'] = $objKey;
             $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);

@@ -69,4 +69,13 @@ use Common\Controller\Addon;
             return $oss_controller->isResourceExistInOSS($param["bucketName"], $param["objectKey"]);
         }
 
+        /**
+         * 删除OSS图片
+         * @param $param
+         * @return bool
+         */
+        public function deleteResource($param){
+            $oss_controller = new AliyunOssController();
+            return $oss_controller->deleteResource($param["bucketName"], $param["objectKey"]);
+        }
     }
