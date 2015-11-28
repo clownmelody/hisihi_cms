@@ -1660,7 +1660,7 @@ class ForumController extends AppController
                 $list[1]['title'] = "嘿设汇已经解决330212个问题";
             }
         } else if ((float)$version>=2.1){
-            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1')
+            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')
                 ->order('create_time desc')->page(1, 3)->select();
         } else {  //  老版本不展示包含外链的置顶
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and is_out_link=0 and status=1')
