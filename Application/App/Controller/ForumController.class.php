@@ -1652,9 +1652,6 @@ class ForumController extends AppController
             $first_post['url'] = "http://hisihi.com/app.php/forum/hisihi_news";
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=0')
                 ->order('create_time desc')->page(1, 1)->select();
-            if(!$list){
-                $list = array();
-            }
             array_unshift($list, $first_post);
             $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
             if($configCount){
