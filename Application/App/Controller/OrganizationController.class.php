@@ -244,13 +244,10 @@ class OrganizationController extends AppController
         }
         $model = M('Organization');
         $data['logo'] = $pic_id;
-        $result = $model->where('id='.$organization_id)->save($data);
-        if($result){
-            $this->uploadLogoPicToOSS($pic_id);
-            $this->apiSuccess('修改机构logo成功');
-        } else {
-            $this->apiError(-1, '修改机构logo失败，请重试');
-        }
+        $model->where('id='.$organization_id)->save($data);
+
+        $this->uploadLogoPicToOSS($pic_id);
+        $this->apiSuccess('修改机构logo成功');
     }
 
     /**
@@ -345,12 +342,8 @@ class OrganizationController extends AppController
                 $this->apiError(-1, '添加机构基本信息失败，请重试');
             }
         } else {  // 修改机构基本信息
-            $result = $model->where('id='.$organization_id)->save($data);
-            if($result){
-                $this->apiSuccess('修改机构基本信息成功');
-            } else {
-                $this->apiError(-1, '修改机构基本信息失败，请重试');
-            }
+            $model->where('id='.$organization_id)->save($data);
+            $this->apiSuccess('修改机构基本信息成功');
         }
     }
 
@@ -1444,7 +1437,7 @@ class OrganizationController extends AppController
         foreach($org_list as &$org){
             $org_id = $org['id'];
             $logo_id = $org['logo'];
-            $org['logo'] = $this->fetchImage($logo_id);
+            $org['logo'] = $this->getOrganizationLogo($logo_id);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
