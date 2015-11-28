@@ -1652,6 +1652,9 @@ class ForumController extends AppController
             $first_post['url'] = "http://hisihi.com/app.php/forum/hisihi_news";
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=0')
                 ->order('create_time desc')->page(1, 1)->select();
+            if(!$list){
+                $list = array();
+            }
             array_unshift($list, $first_post);
             $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
             if($configCount){
@@ -1660,7 +1663,7 @@ class ForumController extends AppController
                 $list[1]['title'] = "嘿设汇已经解决330212个问题";
             }
         } else if ((float)$version>=2.1){
-            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1')
+            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')
                 ->order('create_time desc')->page(1, 3)->select();
         } else {  //  老版本不展示包含外链的置顶
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and is_out_link=0 and status=1')
