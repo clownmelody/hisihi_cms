@@ -295,8 +295,10 @@ class OrganizationController extends AdminController
             }else{
                 $relation['organization'] = M('Organization')->where(array('id'=>$relation['organization_id'],'status'=>1))->getField('name');
             }
-            $relation['group_name'] = M('OrganizationConfig')->where(array('id'=>$relation['teacher_group_id'],'status'=>1,'type'=>1001))
-                ->getField('value');
+            /*$relation['group_name'] = M('OrganizationConfig')->where(array('id'=>$relation['teacher_group_id'],'status'=>1,'type'=>1001))
+                ->getField('value');*/
+            $relation['group_name'] = M('OrganizationLectureGroup')->where(array('id'=>$relation['teacher_group_id'],'status'=>1))
+                ->getField('title');
         }
         if($organization_id){
             $this->assign('organization_id', $organization_id);
@@ -367,8 +369,10 @@ class OrganizationController extends AdminController
         }
         $data['user_name'] = M('Member')->where(array('uid'=>$data['uid'],'status'=>1))->getField('nickname');
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
-        $teacher_group = M('OrganizationConfig')->where(array('organization_id'=>$data['organization_id'],'status'=>1,'type'=>1001))
-            ->field('id,value')->select();
+        /*$teacher_group = M('OrganizationConfig')->where(array('organization_id'=>$data['organization_id'],'status'=>1,'type'=>1001))
+            ->field('id,value')->select();*/
+        $teacher_group = M('OrganizationLectureGroup')->where(array('organization_id'=>$data['organization_id'],'status'=>1))
+            ->field('id, title')->select();
         if($_GET['from_org']){//判断是否从机构跳转过来
             $this->assign('from_org', $_GET['from_org']);
         }
