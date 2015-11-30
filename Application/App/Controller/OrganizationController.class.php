@@ -222,9 +222,11 @@ class OrganizationController extends AppController
 
         /* 记录图片信息 */
         if($info){
+            $this->uploadLogoPicToOSS($info['download']['id']);
+            $cdn_path = $this->fetchCdnImage($info['download']['id']);
             $extra['logo'] = array(
                 'id'=>$info['download']['id'],
-                'path'=>$info['download']['path']
+                'path'=>$cdn_path
             );
             $this->apiSuccess("上传Logo成功",null,$extra);
         } else {
@@ -588,15 +590,19 @@ class OrganizationController extends AppController
             if(empty($organization_id)||empty($pic_id)){
                 $this->apiError(-1, '传入参数不能为空');
             }
+
+            $this->uploadLogoPicToOSS($pic_id);
+            $url = $this->fetchCdnImage($pic_id);
+
             $data['type'] = 1;
             $data['organization_id'] = $organization_id;
-            $data['pic_id'] = $pic_id;
+            //$data['pic_id'] = $pic_id;
+            $data['url'] = $url;
             $data['description'] = $description;
             $data['create_time'] = time();
-            getThumbImageById($pic_id,280,160);
+            //getThumbImageById($pic_id,280,160);
             $res = $model->add($data);
             if($res){
-                $this->uploadLogoPicToOSS($pic_id);
                 $extra['works_id'] = $res;
                 $this->apiSuccess('添加学生作品成功',null,$extra);
             } else {
@@ -632,15 +638,18 @@ class OrganizationController extends AppController
             if(empty($organization_id)||empty($pic_id)){
                 $this->apiError(-1, '传入参数不能为空');
             }
+
+            $url = $this->fetchCdnImage($pic_id);
+
             $data['type'] = 2;
             $data['organization_id'] = $organization_id;
-            $data['pic_id'] = $pic_id;
+            //$data['pic_id'] = $pic_id;
+            $data['url'] = $url;
             $data['description'] = $description;
             $data['create_time'] = time();
-            getThumbImageById($pic_id,280,160);
+            //getThumbImageById($pic_id,280,160);
             $res = $model->add($data);
             if($res){
-                $this->uploadLogoPicToOSS($pic_id);
                 $extra['environment_id'] = $res;
                 $this->apiSuccess('添加机构环境图片成功',null,$extra);
             } else {
@@ -661,7 +670,8 @@ class OrganizationController extends AppController
         }
     }
 
-    /**更新图片描述
+    /**
+     * 更新图片描述
      * @param int $id
      * @param string $description
      */
@@ -694,12 +704,7 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
-        foreach ($list as &$work) {
-            $pic_id = $work['pic_id'];
-            $work['url'] = $this->fetchImage($pic_id);
-            unset($work['pic_id']);
-        }
+        $list = $model->field('id, url, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取机构学生作品成功', null, $extra);
@@ -717,12 +722,7 @@ class OrganizationController extends AppController
         $map['type'] = 2;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
-        foreach ($list as &$work) {
-            $pic_id = $work['pic_id'];
-            $work['url'] = $this->fetchImage($pic_id);
-            unset($work['pic_id']);
-        }
+        $list = $model->field('id, url, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取机构环境图片成功', null, $extra);
@@ -787,10 +787,15 @@ class OrganizationController extends AppController
      */
     public function addTeachersGroup($organization_id=null, $group_name=null){
         $this->requireAdminLogin();
-        $model = M('OrganizationConfig');
+        /*$model = M('OrganizationConfig');
         $data['organization_id'] = $organization_id;
         $data['type'] = 1001;
         $data['value'] = $group_name;
+        $data['create_time'] = time();
+        $result = $model->data($data)->add();*/
+        $model = M('OrganizationLectureGroup');
+        $data['organization_id'] = $organization_id;
+        $data['title'] = $group_name;
         $data['create_time'] = time();
         $result = $model->data($data)->add();
         if($result){
@@ -808,8 +813,10 @@ class OrganizationController extends AppController
      */
     public function updateTeachersGroup($teacher_group_id=null, $group_name=null){
         $this->requireAdminLogin();
-        $model = M('OrganizationConfig');
-        $data['value'] = $group_name;
+        /*$model = M('OrganizationConfig');
+        $data['value'] = $group_name;*/
+        $model = M('OrganizationLectureGroup');
+        $data['title'] = $group_name;
         $result = $model->where('id='.$teacher_group_id)->save($data);
         if($result){
             $this->apiSuccess('修改成功');
@@ -824,7 +831,8 @@ class OrganizationController extends AppController
      */
     public function deleteTeachersGroup($teacher_group_id=null){
         $this->requireAdminLogin();
-        $model = M('OrganizationConfig');
+        //$model = M('OrganizationConfig');
+        $model = M('OrganizationLectureGroup');
         $data['status'] = -1;
         $result = $model->where('id='.$teacher_group_id)->save($data);
         $organization_id = $model->where(array('id'=>$teacher_group_id))->getField('organization_id');
@@ -871,7 +879,8 @@ class OrganizationController extends AppController
         }
     }
 
-    /**从分组中移除老师
+    /**
+     * 从分组中移除老师
      * @param $relation_id
      */
     public function deleteTeacherFromGroup($relation_id=null){
@@ -958,14 +967,16 @@ class OrganizationController extends AppController
         }
     }
 
-    /**添加机构课程
+    /**
+     * 添加机构课程
+     * @param null $id
      * @param null $organization_id
      * @param null $title
      * @param null $content
      * @param null $category_id
      * @param null $img
      * @param null $lecturer
-     * @param null $auth
+     * @param int $auth
      */
     public function addCourse($id = null,$organization_id=null, $title=null, $content=null,$category_id=null, $img=null, $lecturer=null, $auth=1){
         $this->requireAdminLogin();
@@ -1920,11 +1931,9 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, url, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
-            $pic_id = $work['pic_id'];
-            $pic_url = $this->fetchImage($pic_id);
-            unset($work['pic_id']);
+            $pic_url = $work['url'];
             $origin_img_info = getimagesize($pic_url);
             $src_size = Array();
             $src_size['width'] = $origin_img_info[0]; // width
@@ -1933,11 +1942,11 @@ class OrganizationController extends AppController
                 'url'=>$pic_url,
                 'size'=>$src_size
             );
-            $pic_small = getThumbImageById($pic_id, 280, 160);
-            $thumb_img_info = getimagesize($pic_small);
+            $pic_small = $pic_url . '@50p';
+            $origin_img_info = getimagesize($pic_small);
             $thumb_size = Array();
-            $thumb_size['width'] = $thumb_img_info[0]; // width
-            $thumb_size['height'] = $thumb_img_info[1]; // height
+            $thumb_size['width'] = $origin_img_info[0]; // width
+            $thumb_size['height'] = $origin_img_info[1]; // height
             $work['thumb'] = array(
                 'url'=>$pic_small,
                 'size'=>$thumb_size
@@ -1948,6 +1957,12 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构学生作品成功', null, $extra);
     }
 
+    /**
+     * 获取机构环境图片
+     * @param null $organization_id
+     * @param int $page
+     * @param int $count
+     */
     public function appGetOrganizationEnvironment($organization_id=null,$page=1,$count=3){
         if(!$organization_id){
             $this->apiError(-1, '传入机构id不能为空');
@@ -1957,11 +1972,9 @@ class OrganizationController extends AppController
         $map['type'] = 2;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, pic_id, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $list = $model->field('id, url, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
-            $pic_id = $work['pic_id'];
-            $pic_url = $this->fetchImage($pic_id);
-            unset($work['pic_id']);
+            $pic_url = $work['url'];
             $origin_img_info = getimagesize($pic_url);
             $src_size = Array();
             $src_size['width'] = $origin_img_info[0]; // width
@@ -1970,11 +1983,11 @@ class OrganizationController extends AppController
                 'url'=>$pic_url,
                 'size'=>$src_size
             );
-            $pic_small = getThumbImageById($pic_id, 280, 160);
-            $thumb_img_info = getimagesize($pic_small);
+            $pic_small = $pic_url . '@50p';
+            $origin_img_info = getimagesize($pic_small);
             $thumb_size = Array();
-            $thumb_size['width'] = $thumb_img_info[0]; // width
-            $thumb_size['height'] = $thumb_img_info[1]; // height
+            $thumb_size['width'] = $origin_img_info[0]; // width
+            $thumb_size['height'] = $origin_img_info[1]; // height
             $work['thumb'] = array(
                 'url'=>$pic_small,
                 'size'=>$thumb_size
@@ -2172,6 +2185,31 @@ class OrganizationController extends AppController
             $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
             if($isExist){
                 $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            }
+        }
+        return $picUrl;
+    }
+
+    /**
+     * 获取cdn oss图片地址
+     * @param $pic_id
+     * @return null|string
+     */
+    private function fetchCdnImage($pic_id){
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://pic.hisihi.com/".$objKey;
+            } else {
+                $picUrl = null;
             }
         }
         return $picUrl;
