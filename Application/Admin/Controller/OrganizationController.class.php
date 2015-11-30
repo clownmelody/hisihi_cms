@@ -295,8 +295,10 @@ class OrganizationController extends AdminController
             }else{
                 $relation['organization'] = M('Organization')->where(array('id'=>$relation['organization_id'],'status'=>1))->getField('name');
             }
-            $relation['group_name'] = M('OrganizationConfig')->where(array('id'=>$relation['teacher_group_id'],'status'=>1,'type'=>1001))
-                ->getField('value');
+            /*$relation['group_name'] = M('OrganizationConfig')->where(array('id'=>$relation['teacher_group_id'],'status'=>1,'type'=>1001))
+                ->getField('value');*/
+            $relation['group_name'] = M('OrganizationLectureGroup')->where(array('id'=>$relation['teacher_group_id'],'status'=>1))
+                ->getField('title');
         }
         if($organization_id){
             $this->assign('organization_id', $organization_id);
@@ -367,8 +369,10 @@ class OrganizationController extends AdminController
         }
         $data['user_name'] = M('Member')->where(array('uid'=>$data['uid'],'status'=>1))->getField('nickname');
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
-        $teacher_group = M('OrganizationConfig')->where(array('organization_id'=>$data['organization_id'],'status'=>1,'type'=>1001))
-            ->field('id,value')->select();
+        /*$teacher_group = M('OrganizationConfig')->where(array('organization_id'=>$data['organization_id'],'status'=>1,'type'=>1001))
+            ->field('id,value')->select();*/
+        $teacher_group = M('OrganizationLectureGroup')->where(array('organization_id'=>$data['organization_id'],'status'=>1))
+            ->field('id, title')->select();
         if($_GET['from_org']){//判断是否从机构跳转过来
             $this->assign('from_org', $_GET['from_org']);
         }
@@ -463,14 +467,15 @@ class OrganizationController extends AdminController
         if (IS_POST) { //提交表单
             $model = M('OrganizationResource');
             $cid = $_POST["cid"];
-            $data["pic_id"] = $_POST["picture"];
+            $pic_id = $_POST["picture"];
+            $this->uploadLogoPicToOSS($pic_id);
+            $data['url'] = $this->fetchCdnImage($pic_id);
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
             $data['type'] = 1;
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();
-                    getThumbImageById($data["pic_id"],280,160);
                     $res = $model->add($data);
                     if(!$res){
                         $this->error($model->getError());
@@ -478,19 +483,16 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->uploadLogoPicToOSS($data["pic_id"]);
                 if(I('from_org')){
                     $this->success('添加成功', 'index.php?s=/admin/organization/works&organization_id='.$data['organization_id']);
                 }else{
                     $this->success('添加成功', 'index.php?s=/admin/organization/works');
                 }
             } else {
-                getThumbImageById($data["pic_id"],280,160);
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->uploadLogoPicToOSS($data["pic_id"]);
                 if(I('from_org')){
                     $this->success('更新成功', 'index.php?s=/admin/organization/works&organization_id='.$data['organization_id']);
                 }else{
@@ -552,6 +554,7 @@ class OrganizationController extends AdminController
 
     /**
      * 机构报名信息列表
+     * @param int $organization_id
      */
     public function enroll($organization_id=0){
         $model = M('OrganizationEnroll');
@@ -1149,6 +1152,7 @@ class OrganizationController extends AdminController
 
     /**
      * 机构配置列表
+     * @param int $organization_id
      */
     public function config($organization_id=0)
     {
@@ -1264,7 +1268,6 @@ class OrganizationController extends AdminController
 
     /**
      * 机构配置删除
-     * @param $ids
      */
     public function config_delete(){
         $id = array_unique((array)I('id',0));
@@ -1312,6 +1315,7 @@ class OrganizationController extends AdminController
 
     /**
      * 机构评论列表
+     * @param int $organization_id
      */
     public function comment($organization_id=0)
     {
@@ -1361,7 +1365,7 @@ class OrganizationController extends AdminController
 
     /**
      * 机构新增评论
-     * @param $id
+     * @param int $organization_id
      */
     public function comment_add($organization_id=0){
         if($organization_id){
@@ -1639,14 +1643,15 @@ class OrganizationController extends AdminController
         if (IS_POST) { //提交表单
             $model = M('OrganizationResource');
             $cid = $_POST["cid"];
-            $data["pic_id"] = $_POST["picture"];
+            $pic_id = $_POST["picture"];
+            $this->uploadLogoPicToOSS($pic_id);
+            $data["url"] = $this->fetchCdnImage($pic_id);
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
             $data['type'] = 2;
-                if(empty($cid)){
+            if(empty($cid)){
                 try {
                     $data["create_time"] = time();
-                    getThumbImageById($data["pic_id"],280,160);
                     $res = $model->add($data);
                     if(!$res){
                         $this->error($model->getError());
@@ -1654,19 +1659,16 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->uploadLogoPicToOSS($data["pic_id"]);
                 if(I('from_org')){
                     $this->success('添加成功', 'index.php?s=/admin/organization/environment&organization_id='.$data['organization_id']);
                 }else{
                     $this->success('添加成功', 'index.php?s=/admin/organization/environment');
                 }
             } else {
-                getThumbImageById($data["pic_id"],280,160);
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->uploadLogoPicToOSS($data["pic_id"]);
                 if(I('from_org')){
                     $this->success('编辑成功', 'index.php?s=/admin/organization/environment&organization_id='.$data['organization_id']);
                 }else{
@@ -2312,7 +2314,8 @@ class OrganizationController extends AdminController
         }
     }
 
-    /**上传图片到OSS
+    /**
+     * 上传图片到OSS
      * @param $picID
      */
     private function uploadLogoPicToOSS($picID){
@@ -2330,4 +2333,30 @@ class OrganizationController extends AdminController
             \Think\Log::write($isExist);
         }
     }
+
+    /**
+     * 获取cdn oss图片地址
+     * @param $pic_id
+     * @return null|string
+     */
+    private function fetchCdnImage($pic_id){
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://pic.hisihi.com/".$objKey;
+            } else {
+                $picUrl = null;
+            }
+        }
+        return $picUrl;
+    }
+
 }
