@@ -61,9 +61,9 @@ class OrganizationController extends AdminController
      * 机构基本信息增加
      */
     public function add(){
-        $model = $this->organization_configModel;
-        $list = $model->where("type=2 and status=1")->order("create_time")->select();
-        $type = $model->where("type=3 and status=1")->order("create_time")->select();
+        $model = M('OrganizationTag');
+        $list = $model->where("type=1 and status=1")->order("create_time")->select();
+        $type = $model->where("type=2 and status=1")->order("create_time")->select();
         $this->assign('_list', $list);
         $this->assign('_type', $type);
         $this->display();
@@ -81,31 +81,30 @@ class OrganizationController extends AdminController
         if(!$data){
             $this->error($Model->getError());
         }
-        $type_array = M('OrganizationConfig')->where(array('status'=>1,'type'=>3))->field('id,value')->select();
+        $tag_model = M('OrganizationTag');
+        $type_array = $tag_model->where(array('status'=>1,'type'=>2))->field('id,value')->select();
         $_type_array = explode("#",$data['type']);
 
-        $marks = M('OrganizationConfig')->where(array('status'=>1,'type'=>2))->field('id,value')->select();
-        //解析json格式的标签
-        $advantage = $data['advantage'];
-        $advantage = stripslashes($advantage);
-        $advantage = json_decode($advantage,true);
+        $marks = $tag_model->where(array('status'=>1,'type'=>1))->field('id,value')->select();
+        //解析标签
+        if(!empty($data['advantage'])){
+            $advantage = explode("#",$data['advantage']);
+        }
         $advantage_array = array();
-        $cmodel = M('OrganizationConfig');
-        foreach($advantage as &$markid){
-            $advantageid = $markid['id'];
-            if(0 == $advantageid){
-                $markobj = array(
-                    'id'=>(string)$markid['id'],
-                    'value'=>$markid['value'],
-                    'ischecked'=>1
-                );
-                $advantage_array[] = $markobj;
-            }else{
-                $markarr = $cmodel->field('id,value')->where('type=2 and status=1 and id='.$advantageid)->find();
+        if(!empty($advantage)){
+            foreach($advantage as &$ad_mark){
+                $markarr = $tag_model->field('id,value')->where('type=1 and status=1 and value='.$ad_mark)->find();
                 if($markarr){
                     $markobj = array(
                         'id'=>$markarr['id'],
                         'value'=>$markarr['value'],
+                        'ischecked'=>1
+                    );
+                    $advantage_array[] = $markobj;
+                }else{
+                    $markobj = array(
+                        'id'=>0,
+                        'value'=>$ad_mark,
                         'ischecked'=>1
                     );
                     $advantage_array[] = $markobj;
@@ -117,7 +116,7 @@ class OrganizationController extends AdminController
         foreach($marks as $mark){
             $is_exist = false;
             foreach($advantage_array as $advantage_mark){
-                if($mark['id'] == $advantage_mark['id']){
+                if($mark['value'] == $advantage_mark['value']){
                     $is_exist = true;
                 }
             }
@@ -131,7 +130,6 @@ class OrganizationController extends AdminController
         $this->assign('type_array', $_type_array);
         $this->assign('_marks', $all_marks);
         $this->assign('organization', $data);
-        $this->meta_title = '编辑机构信息';
         $this->display();
     }
 
@@ -2304,9 +2302,112 @@ class OrganizationController extends AdminController
             if(I('from_org')){
                 $this->success('删除成功','index.php?s=/admin/organization/notice&organization_id='.I("organization_id"));
             }else{
-
+                $this->success('删除成功','index.php?s=/admin/organization/notice');
             }
-            $this->success('删除成功','index.php?s=/admin/organization/notice');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 机构公用配置
+     */
+    public  function tag(){
+        $model = M('OrganizationTag');
+        $map['status'] = 1;
+        $count = $model->where($map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        //用于配置值搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['value'] = array('like','%'.$name.'%');
+            $map['status'] = 1;
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构公告列表");
+        $this->display();
+    }
+
+    /**
+     * 机构公用配置新增
+     */
+    public function tag_add(){
+        $this->display();
+    }
+
+    /**
+     * 机构公用配置更新
+     */
+    public  function tag_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationTag');
+            $cid = $_POST["cid"];
+            $data["type"] = $_POST["type"];
+            $data["value"] = $_POST["value"];
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/organization/tag');
+            } else {
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/organization/tag');
+            }
+        } else {
+            $this->display('tag_add');
+        }
+    }
+
+    /**编辑公用配置
+     * @param $id
+     */
+    public function tag_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationTag');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $this->assign('info', $data);
+        $this->display();
+    }
+
+    /**删除公告信息
+     * @param $id
+     */
+    public function tag_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationTag');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/tag');
         } else {
             $this->error('未选择要删除的数据');
         }

@@ -176,13 +176,13 @@
                         </script>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">机构担保名额（默认200名）</label>
+                        <label class="item-label">机构担保名额</label>
                         <div class="controls">
                             <input type="text" class="text input-large" name="guarantee_num" value="">
                         </div>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">机构浏览量（默认1000）</label>
+                        <label class="item-label">机构浏览量</label>
                         <div class="controls">
                             <input type="text" class="text input-large" name="view_count" value="">
                         </div>
@@ -271,8 +271,8 @@
             $(':input').labelauty();
         });
         function setAdvantage(){
-            var advantage = [];
-            $.each($("#advantage_list li"),function(i,n){
+            var advantage = '';
+            $.each($("#advantage_ul li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
                 var input = li.find("input");
@@ -280,13 +280,10 @@
                 var id = input.attr("id");
                 var value = input.val();
                 if(classattr == "labelauty-checked-image"){
-                    var mark = {};
-                    mark['id'] = id;
-                    mark['value'] = value;
-                    advantage.push(mark);
+                    advantage += (input.attr("value") + "#");
                 }
             });
-            var advantage_str = JSON.stringify(advantage);
+            var advantage_str = advantage.substring(0,advantage.length - 1);
             $("#advantage").val(advantage_str);
 
             var type = "";
