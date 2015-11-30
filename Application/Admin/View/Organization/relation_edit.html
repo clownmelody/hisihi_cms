@@ -24,7 +24,7 @@
                             <notempty name="teacher_group">
                                 <select class="text input-large" name="teacher_group_id" style="height: 30px;width: 400px;">
                                     <volist name="teacher_group" id="vo">
-                                        <option value="{$vo.id}" <eq name="vo['id']" value="$info['teacher_group_id']">selected="selected"</eq>>{$vo.value}</option>
+                                        <option value="{$vo.id}" <eq name="vo['id']" value="$info['teacher_group_id']">selected="selected"</eq>>{$vo.title}</option>
                                     </volist>
                                 </select>
                                 <else/>
