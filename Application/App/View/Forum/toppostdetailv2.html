@@ -83,11 +83,16 @@
 
 	.main{
 		position: relative;
-		height:-webkit-calc(100% - 3em);
-		height:-moz-calc(100% - 3em);
 		width: 100%;
 		overflow: auto;
 		-webkit-overflow-scrolling: touch;
+	}
+	.mainNormalScreen{
+		height:-webkit-calc(100% - 3em);
+		height:-moz-calc(100% - 3em);
+	}
+	.mainFullScreen{
+		height:100%;
 	}
 	.detailed-main{
 		padding: 10px;
@@ -251,7 +256,7 @@
 	}
 
 
-	#comment-box{
+	#comment-box,#downloadCon{
 		display: none;
 		position: absolute;
 		bottom: -0.1em;
@@ -315,6 +320,33 @@
 	#comment-box input.disabled{
 		color: #808080;
 	}
+
+	/*下载条*/
+	#downloadCon{
+		display: none;
+		height: 3em;
+	 }
+	#downloadCon .allDownImg {
+		margin-bottom:0;
+		position:absolute;
+		bottom:0;
+	}
+
+	#downloadCon .downBtn {
+		vertical-align:central;
+		float:right;
+		top:8%;
+		margin-right:7%;
+		max-width:24%;
+		position:relative;
+		z-index:1000;
+	}
+	/*************响应式处理****************/
+	@media screen and (max-width:320px) and (max-height: 570px){
+		#downloadCon .downBtn {
+			top: 20%;
+		}
+	}
 	</style>
 </head>
 <body>
@@ -322,7 +354,7 @@
 		<!--<div class="loadingImg"></div>-->
 		<!--<a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>-->
 	<!--</div>-->
-	<div class="main">
+	<div class="main mainNormalScreen">
 		<div class="detailed-main">
 		<div class="detailed-box">
 			<input type="hidden" id="postid" value="{$post.post_id}">
@@ -390,6 +422,10 @@
 			<input type="button" value="发送" class="disabled"/>
 		</div>
 	</div>
+	<div id="downloadCon">
+		<img src="__IMG__/2.png" class="allDownImg" />
+		<img src="__IMG__/3.png" class="btn downBtn" />
+	</div>
 	<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 	<script type="text/javascript" src="__JS__/forum/hisihi_news_common.js"></script>
 	<script type="text/javascript" src="__JS__/forum/toppostdetailv2.js"></script>
@@ -417,6 +453,9 @@
 				$(this).hide().prev().show();
 				getMoreReplay();
 			});
+
+
+
 		});
 		var totalReplayCount = 0;
 		var curRepalyCount = 10;

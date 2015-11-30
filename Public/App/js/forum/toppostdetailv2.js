@@ -8,10 +8,11 @@
 function commentObj($wrapper,urlObj){
     this.$wrapper=$wrapper;
     this.urlObj=urlObj;
-    //this.controlLoadingPos();
+
     //根据平台的不同，调用不同的app 方法
     this.separateOperation();
     var that = this;
+    this.isFromApp; //页面跳转来源
 
     //控制评论框的显示和总的内容框的高度
     this.controlCommentBoxStatus();
@@ -31,39 +32,46 @@ function commentObj($wrapper,urlObj){
         $btn.removeClass(oc).addClass(nc);
     });
 
+    //下载app
+    $('#downloadCon .downBtn').on('touchend',function(){
+        window.location.href='http://www.hisihi.com/download.php';
+    });
+
 }
 
 commentObj.prototype={
 
-    controlLoadingPos:function(){
-        var $loading = $('.loadingResultTips'),
-            w=$loading.width(),
-            h=$loading.height(),
-            dw=$('body').width(),
-            dh=$('body').height();
-        $loading.css({'top':(dh-h)/2,'left':(dw-w)/2});
-    },
-
     /*
     *区分安卓和ios
+    *从不同的平台的方法 获得用户的基本信息，进行发表评论时使用
     */
     separateOperation:function(){
         var that=this,
             operation=browserType(),
-            info;
+            appFn;
         if(operation.mobile){
-            if(operation.android){
-                info=AppFunction.getUser();  //调用安卓的方法，得到用户的基体信息
-                //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
+            if (operation.android) {
+                //如果方法存在
+                if(typeof AppFunction !="undefined") {
+                    appFn=AppFunction.getUser;
+                    //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
+                }
             }
-            else if(operation.ios){
-                info=getUser_iOS(); //调用IOS的方法，得到用户的基体信息
+            else if (operation.ios) {
+                //如果方法存在
+                if (typeof getUser_iOS !="undefined") {
+                    appFn=getUser_iOS;
+                }
             }
-            if(info) {
-                this.userInfo = JSON.parse(info);
+            if (appFn) {
+                this.userInfo = JSON.parse(appFn());  //调用app的方法，得到用户的基体信息
+                this.isFromApp=true;  //来源于app
+            }else{
+                this.isFromApp=false;  //来源于普通页面
             }
         }
         else{
+            this.isFromApp=false;  //来源于普通页面
             //$.ajax({
             //    url:this.urlObj.server_url+'/user/login',
             //    data:{username:'18601995231',password:'123456',type:'3',client:'4'},
@@ -78,18 +86,37 @@ commentObj.prototype={
     },
 
     /*
-     *控制评论框的显示状态，
-     * 如果用户没有登录， session_id 为空  则不显示;并将内容框控制到最高
+     * 控制评论框的显示状态，通过 session_id 是否 为空 来
+     * 三种情况：
+     * 1.用户已经登录，则直接显示评论框，并且主要容器的高度 不 为100%
+     * 2.用户未登录，不显示评论框，主要容器的高度  为 100%
+     * 3.用户不来源于app，而是从其他的地方进入，不显示评论框，显示下载条，主要容器的高度  不为 100%
+     * 如果用户没有登录，   则不显示;并将内容框控制到最高
      */
     controlCommentBoxStatus:function(){
-        if(!this.userInfo) {
-            this.$wrapper.hide();
-            var $target=$('.main');
-            $target.css({'height':'100%'});
-            $target.find('.detailed-main').css('margin-bottom','0');
-            return;
+        var $target=$('.main');
+        if(this.isFromApp){
+            if(!this.userInfo) {
+                this.$wrapper.hide();
+                $target.addClass('mainFullScreen').removeClass('mainNormalScreen');
+                $target.find('.detailed-main').css('margin-bottom','0');
+                return;
+            }
+            this.$wrapper.show();
+        }else {
+            this.controlDownloadBtnStyle();
+            $('#downloadCon').show();   //表示用户是从网页或者分享结果中进来的   直接显示下载条
+            $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
         }
-        this.$wrapper.show();
+    },
+
+    /*控制下载按钮的位置*/
+    controlDownloadBtnStyle:function(){
+        var $con=$('#downloadCon'),
+            $btn=$con.find('.downBtn'),
+            h=$con.height(),
+            bh=$btn.height();
+        //$btn.css({'top':'8%'});
     },
 
 
@@ -182,8 +209,9 @@ commentObj.prototype={
     },
 
 
-
 };
+
+
 
 /*
  *IOS调用  控制分享按钮的可用性

@@ -246,13 +246,10 @@ class OrganizationController extends AppController
         }
         $model = M('Organization');
         $data['logo'] = $pic_id;
-        $result = $model->where('id='.$organization_id)->save($data);
-        if($result){
-            $this->uploadLogoPicToOSS($pic_id);
-            $this->apiSuccess('修改机构logo成功');
-        } else {
-            $this->apiError(-1, '修改机构logo失败，请重试');
-        }
+        $model->where('id='.$organization_id)->save($data);
+
+        $this->uploadLogoPicToOSS($pic_id);
+        $this->apiSuccess('修改机构logo成功');
     }
 
     /**
@@ -347,12 +344,8 @@ class OrganizationController extends AppController
                 $this->apiError(-1, '添加机构基本信息失败，请重试');
             }
         } else {  // 修改机构基本信息
-            $result = $model->where('id='.$organization_id)->save($data);
-            if($result){
-                $this->apiSuccess('修改机构基本信息成功');
-            } else {
-                $this->apiError(-1, '修改机构基本信息失败，请重试');
-            }
+            $model->where('id='.$organization_id)->save($data);
+            $this->apiSuccess('修改机构基本信息成功');
         }
     }
 
@@ -1455,7 +1448,7 @@ class OrganizationController extends AppController
         foreach($org_list as &$org){
             $org_id = $org['id'];
             $logo_id = $org['logo'];
-            $org['logo'] = $this->fetchImage($logo_id);
+            $org['logo'] = $this->getOrganizationLogo($logo_id);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
@@ -1495,7 +1488,7 @@ class OrganizationController extends AppController
         foreach($org_list as &$org){
             $org_id = $org['id'];
             $logo_id = $org['logo'];
-            $org['logo'] = $this->fetchImage($logo_id);
+            $org['logo'] = $this->getOrganizationLogo($logo_id);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
@@ -1582,13 +1575,25 @@ class OrganizationController extends AppController
     /**
      * 获取机构的评论列表
      * @param int $organization_id
+     * @param string $type
      * @param int $page
      * @param int $count
      */
-    public function commentList($organization_id=0, $page=1, $count=10){
+    public function commentList($organization_id=0,$type=null, $page=1, $count=10){
         $model = M('OrganizationComment');
         $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
-        $list = $model->where('status=1 and organization_id='.$organization_id)->page($page, $count)->select();
+        $goodCount = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->count();
+        $mediumCount = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->count();
+        $badCount = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->count();
+        if($type == 'good'){
+            $list = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+        }else if($type == 'medium'){
+            $list = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+        }else if($type == 'bad'){
+            $list = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+        }else{
+            $list = $model->where('status=1 and organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
+        }
         foreach($list as &$comment){
             $uid = $comment['uid'];
             $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
@@ -1598,6 +1603,9 @@ class OrganizationController extends AppController
             unset($comment['status']);
         }
         $extra['totalCount'] = $totalCount;
+        $extra['goodCount'] = $goodCount;
+        $extra['mediumCount'] = $mediumCount;
+        $extra['badCount'] = $badCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取机构评论列表成功', null, $extra);
     }
@@ -2037,10 +2045,11 @@ class OrganizationController extends AppController
             if($organizationInfo){
                 $courseInfo['organization']['name'] = $organizationInfo['name'];
                 $courseInfo['organization']['introduce'] = $organizationInfo['introduce'];
-                $courseInfo['organization']['logo'] = $organizationInfo['logo'];
+                $courseInfo['organization']['logo'] = $this->getOrganizationLogo($organizationInfo['logo']);
                 $courseInfo['organization']['view_count'] = $organizationInfo['view_count'];
                 $courseInfo['organization']['followCount'] = $this->getFollowCount($organization_id);
                 $courseInfo['organization']['enrollCount'] = $this->getEnrollCount($organization_id);
+                $courseInfo['organization']['authentication'] = $this->getAuthentication($organization_id);
             }
             $lectureInfo = $memberModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
             $avatarInfo = $avatarModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
@@ -2248,14 +2257,19 @@ class OrganizationController extends AppController
         if(empty($path)){
             return null;
         }
-        $objKey = substr($path, 17);
-        $param["bucketName"] = "hisihi-other";
+        if(preg_match("/^http:\/\//",$path)){
+            return $path;
+        }
+        $objKey = substr($path,0,strlen($path)-4).'_256_256'.substr($path,-4);
+        $param["bucketName"] = "hisihi-avator";
         $param['objectKey'] = $objKey;
         $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
         if($isExist){
-            $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            $picUrl = "http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/".$objKey;
+            return $picUrl;
+        }else{
+            return 'http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/default/default_256_256.jpg';
         }
-        return $picUrl;
     }
 
     /**
@@ -2302,5 +2316,29 @@ class OrganizationController extends AppController
                 return 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
         }
+    }
+
+    /**
+     * 获取机构的认证
+     * @param null $organization_id
+     * @return mixed
+     */
+    private function getAuthentication($organization_id=null){
+        if(!$organization_id){
+            $this->apiError('机构id不能为空');
+        }
+        $authModel = M('OrganizationAuthentication');
+        $authConfigModel = M('OrganizationAuthenticationConfig');
+        $auth_list = $authModel->field('authentication_id')->where(array('organization_id'=>$organization_id,'status'=>1))->select();
+        $auth_array = array();
+        foreach($auth_list as &$auth){
+            $pic_id = $authConfigModel->where('`default_display`=1 and `status`=1 and id='.$auth['authentication_id'])->getField('pic_id');
+            if(!$pic_id){
+                continue;
+            }
+            $auth['authentication_img'] = $this->fetchImage($pic_id);
+            $auth_array[] = $auth;
+        }
+        return $auth_array;
     }
 }
