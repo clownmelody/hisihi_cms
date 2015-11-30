@@ -1571,6 +1571,9 @@ class OrganizationController extends AppController
     public function commentList($organization_id=0,$type=null, $page=1, $count=10){
         $model = M('OrganizationComment');
         $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
+        $goodCount = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->count();
+        $mediumCount = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->count();
+        $badCount = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->count();
         if($type == 'good'){
             $list = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
         }else if($type == 'medium'){
@@ -1589,6 +1592,9 @@ class OrganizationController extends AppController
             unset($comment['status']);
         }
         $extra['totalCount'] = $totalCount;
+        $extra['goodCount'] = $goodCount;
+        $extra['mediumCount'] = $mediumCount;
+        $extra['badCount'] = $badCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取机构评论列表成功', null, $extra);
     }
