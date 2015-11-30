@@ -1564,13 +1564,22 @@ class OrganizationController extends AppController
     /**
      * 获取机构的评论列表
      * @param int $organization_id
+     * @param string $type
      * @param int $page
      * @param int $count
      */
-    public function commentList($organization_id=0, $page=1, $count=10){
+    public function commentList($organization_id=0,$type=null, $page=1, $count=10){
         $model = M('OrganizationComment');
         $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
-        $list = $model->where('status=1 and organization_id='.$organization_id)->page($page, $count)->select();
+        if($type == 'good'){
+            $list = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+        }else if($type == 'medium'){
+            $list = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+        }else if($type == 'bad'){
+            $list = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+        }else{
+            $list = $model->where('status=1 and organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
+        }
         foreach($list as &$comment){
             $uid = $comment['uid'];
             $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
