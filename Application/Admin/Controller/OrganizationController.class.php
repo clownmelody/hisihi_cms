@@ -260,6 +260,7 @@ class OrganizationController extends AdminController
 
     /**
      * 机构老师关系列表
+     * @param int $organization_id
      */
     public function relation($organization_id=0){
         $model = M('OrganizationRelation');
