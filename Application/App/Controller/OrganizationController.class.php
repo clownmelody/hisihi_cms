@@ -354,7 +354,7 @@ class OrganizationController extends AppController
      * @param $organization_id
      */
     public function getBaseInfo($organization_id){
-        $this->requireAdminLogin();
+        //$this->requireAdminLogin();
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
             ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
@@ -369,30 +369,7 @@ class OrganizationController extends AppController
                 'url'=>$logo
             );
             $advantage = $result['advantage'];
-            $advantage = stripslashes($advantage);
-            $advantage = json_decode($advantage,true);
-            $advantage_array = array();
-            $cmodel = M('OrganizationConfig');
-            foreach($advantage as &$markid){
-                $advantageid = $markid['id'];
-                if(0 == $advantageid){
-                    $markobj = array(
-                        'id'=>(string)$markid['id'],
-                        'value'=>$markid['value']
-                    );
-                    $advantage_array[] = $markobj;
-                }else{
-                    $markarr = $cmodel->field('id,value')->where('type=2 and status=1 and id='.$advantageid)->find();
-                    if($markarr){
-                        $markobj = array(
-                            'id'=>$markarr['id'],
-                            'value'=>$markarr['value']
-                        );
-                        $advantage_array[] = $markobj;
-                    }
-                }
-            }
-            $result['advantage']=$advantage_array;
+            $result['advantage']=$advantage;
             $extra['data'] = $result;
             $this->apiSuccess("获取机构信息成功",null,$extra);
         }else{
@@ -437,32 +414,9 @@ class OrganizationController extends AppController
                 $result['relationship'] = 0;
             }
             $advantage = $result['advantage'];
-            $advantage = stripslashes($advantage);
-            $advantage = json_decode($advantage,true);
-            $advantage_array = array();
-            $cmodel = M('OrganizationConfig');
-            foreach($advantage as &$markid){
-                $advantageid = $markid['id'];
-                if(0 == $advantageid){
-                    $markobj = array(
-                        'id'=>(string)$markid['id'],
-                        'value'=>$markid['value']
-                    );
-                    $advantage_array[] = $markobj;
-                }else{
-                    $markarr = $cmodel->field('id,value')->where('type=2 and status=1 and id='.$advantageid)->find();
-                    if($markarr){
-                        $markobj = array(
-                            'id'=>$markarr['id'],
-                            'value'=>$markarr['value']
-                        );
-                        $advantage_array[] = $markobj;
-                    }
-                }
-            }
             $enroll_count = M('OrganizationEnroll')->where(array('organization_id'=>$organization_id,'status'=>2))->count();
             $result['available_num'] = $result['guarantee_num'] - $enroll_count;
-            $result['advantage']=$advantage_array;
+            $result['advantage']=$advantage;
             $extra['data'] = $result;
             $this->apiSuccess("获取机构信息成功",null,$extra);
         }else{
@@ -474,8 +428,8 @@ class OrganizationController extends AppController
      * 获取机构通用优势标签
      */
     public function getCommonAdvantageTags(){
-        $model = M('OrganizationConfig');
-        $list = $model->field('id, value')->where('type=2 and status=1')->select();
+        $model = M('OrganizationTag');
+        $list = $model->field('id, value')->where('type=1 and status=1')->select();
         $extra['totalCount'] = count($list);
         $extra['data'] = $list;
         $this->apiSuccess('获取推荐优势标签成功', null, $extra);
@@ -491,30 +445,7 @@ class OrganizationController extends AppController
         $res = $model->field('advantage')->where('id='.$organization_id)->find();
         if($res){
             $advantage = $res['advantage'];
-            $advantage = stripslashes($advantage);
-            $advantage = json_decode($advantage,true);
-            $advantage_array = array();
-            $cmodel = M('OrganizationConfig');
-            foreach($advantage as &$markid){
-                $advantageid = $markid['id'];
-                if(0 == $advantageid){
-                    $markobj = array(
-                        'id'=>(string)$markid['id'],
-                        'value'=>$markid['value']
-                    );
-                    $advantage_array[] = $markobj;
-                }else{
-                    $markarr = $cmodel->field('id,value')->where('type=2 and status=1 and id='.$advantageid)->find();
-                    if($markarr){
-                        $markobj = array(
-                            'id'=>$markarr['id'],
-                            'value'=>$markarr['value']
-                        );
-                        $advantage_array[] = $markobj;
-                    }
-                }
-            }
-            $extra['data'] = $advantage_array;
+            $extra['advantage'] = $advantage;
             $this->apiSuccess('获取机构优势标签成功', null, $extra);
         } else {
             $this->apiError(-1, '获取数据异常');
@@ -950,8 +881,8 @@ class OrganizationController extends AppController
      *获取视频分类
      */
     public function getVideoCategory(){
-        $model = M("OrganizationConfig");
-        $result = $model->where('status=1 and type=1002')->field('id,value')->select();
+        $model = M("OrganizationTag");
+        $result = $model->where('status=1 and type=5')->field('id,value')->select();
         if($result){
             $extra['data'] = $result;
             $this->apiSuccess('获取视频分类列表成功', null, $extra);
@@ -1019,9 +950,9 @@ class OrganizationController extends AppController
      * @param int $count
      */
     public function getCourses($organization_id=null, $page=1, $count=9){
-        $this->requireAdminLogin();
+        //$this->requireAdminLogin();
         $model = M('OrganizationCourse');
-        $config_model = M("OrganizationConfig");
+        $config_model = M("OrganizationTag");
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
@@ -1029,7 +960,7 @@ class OrganizationController extends AppController
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
-            $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
+            $category = $config_model->where('status=1 and type=5 and id='.$category_id)->field('value')->find();
             if($category){
                 $course['category_name'] = $category['value'];
             }
@@ -1286,13 +1217,13 @@ class OrganizationController extends AppController
         }
         $model = M('OrganizationCourse');
         $video_model = M('OrganizationVideo');
-        $config_model = M("OrganizationConfig");
+        $config_model = M("OrganizationTag");
         $member_model = M("Member");
         $map['id'] = $course_id;
         $map['status'] = 1;
         $course = $model->field('id, title, content, img, category_id, lecturer, auth')->where($map)->find();
         $category_id = $course['category_id'];
-        $category = $config_model->where('status=1 and type=1002 and id='.$category_id)->field('value')->find();
+        $category = $config_model->where('status=1 and type=5 and id='.$category_id)->field('value')->find();
         if($category){
             $course['category_name'] = $category['value'];
         }
@@ -1389,10 +1320,9 @@ class OrganizationController extends AppController
      * 获取热门城市列表
      */
     public function getHotCityList(){
-        $model = M('OrganizationConfig');
-        $map['organization_id'] = 0;
+        $model = M('OrganizationTag');
         $map['status'] = 1;
-        $map['type'] = 4;
+        $map['type'] = 3;
         $list = $model->field('value')->where($map)->select();
         $extra['data'] = $list;
         $this->apiSuccess('获取城市列表成功', null, $extra);
@@ -1556,11 +1486,11 @@ class OrganizationController extends AppController
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
-        $configModel = M('OrganizationConfig');
+        $configModel = M('OrganizationTag');
         $commentModel = M('OrganizationComment');
         $commentStarModel = M('OrganizationCommentStar');
         $comprehensiveScore = $commentModel->where('status=1 and organization_id='.$organization_id)->avg('comprehensive_score');
-        $configList = $configModel->field('id, value')->where('status=1 and type=5 and organization_id=0')->select();
+        $configList = $configModel->field('id, value')->where('status=1 and type=4')->select();
         foreach($configList as &$config){
             $config_id = $config['id'];
             $score = $commentStarModel->where('status=1 and organization_id='.$organization_id.' and comment_type='.$config_id)
@@ -1614,8 +1544,8 @@ class OrganizationController extends AppController
      * 获取机构评分种类的列表
      */
     public function getCommentScoreList(){
-        $configModel = M('OrganizationConfig');
-        $configList = $configModel->field('id, value')->where('status=1 and type=5 and organization_id=0')->select();
+        $configModel = M('OrganizationTag');
+        $configList = $configModel->field('id, value')->where('status=1 and type=4')->select();
         $extra['data'] = $configList;
         $this->apiSuccess('获取评分种类列表成功', null, $extra);
     }
@@ -1624,8 +1554,8 @@ class OrganizationController extends AppController
      * 获取机构的类型列表
      */
     public function getTypeList(){
-        $configModel = M('OrganizationConfig');
-        $configList = $configModel->field('id, value')->where('status=1 and type=3 and organization_id=0')->select();
+        $configModel = M('OrganizationTag');
+        $configList = $configModel->field('id, value')->where('status=1 and type=2')->select();
         $extra['data'] = $configList;
         $this->apiSuccess('获取机构类型列表成功', null, $extra);
     }
