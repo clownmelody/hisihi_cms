@@ -147,8 +147,8 @@ class OrganizationController extends AppController
         $user = M('OrganizationAdmin')->where($map)->find();
         if($user){
             $org_model = M('Organization');
-            $orginfo = $org_model->where('status=1 and id='.$user['organization_id'])->find();
-            $logo = $this->fetchImage($orginfo['logo']);
+            $org_info = $org_model->where('status=1 and id='.$user['organization_id'])->find();
+            $logo = $org_info['logo'];
             if(!$logo){//返回机构默认logo
                 $logo = 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
@@ -163,7 +163,7 @@ class OrganizationController extends AppController
             $extra['username'] = $user['username'];
             $extra['session_id'] = session_id();
             $extra['organization_id'] = $user['organization_id'];
-            $extra['organization_name'] = $orginfo['name'];
+            $extra['organization_name'] = $org_info['name'];
             $extra['organization_logo'] = $logo;
             $this->apiSuccess("登陆成功", null, $extra);
         } else {
@@ -244,11 +244,14 @@ class OrganizationController extends AppController
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
-        $model = M('Organization');
-        $data['logo'] = $pic_id;
-        $model->where('id='.$organization_id)->save($data);
 
         $this->uploadLogoPicToOSS($pic_id);
+        $cdn_path = $this->fetchCdnImage($pic_id);
+
+        $model = M('Organization');
+        $data['logo'] = $cdn_path;
+        $model->where('id='.$organization_id)->save($data);
+
         $this->apiSuccess('修改机构logo成功');
     }
 
@@ -311,8 +314,9 @@ class OrganizationController extends AppController
             $data['introduce'] = $introduce;
         }
         if(!empty($logo)){
-            $data['logo'] = $logo;
             $this->uploadLogoPicToOSS($logo);
+            $cdn_path = $this->fetchCdnImage($logo);
+            $data['logo'] = $cdn_path;
         }
         if(!empty($advantage)){
             $data['advantage'] = $advantage;
@@ -331,7 +335,7 @@ class OrganizationController extends AppController
                 if($res){
                     $extra['organization_id'] = $result;
                     $extra['organization_name'] = $name;
-                    $url = $this->fetchImage($logo);
+                    $url = $this->fetchCdnImage($logo);
                     if(!$url){
                         $url = 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
                     }
@@ -359,13 +363,12 @@ class OrganizationController extends AppController
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
             ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
         if($result){
-            $logo_id = $result['logo'];
-            $logo = $this->getOrganizationLogo($logo_id);
+            $logo = $result['logo'];
+            //$logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
-                $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+                $logo = 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
             $result['logo']=array(
-                'id'=>$logo_id,
                 'url'=>$logo
             );
             $advantage = $result['advantage'];
@@ -389,8 +392,8 @@ class OrganizationController extends AppController
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
             ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num')->find();
         if($result){
-            $logo_id = $result['logo'];
-            $logo = $this->getOrganizationLogo($logo_id);
+            $logo = $result['logo'];
+            //$logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
@@ -711,12 +714,6 @@ class OrganizationController extends AppController
      */
     public function addTeachersGroup($organization_id=null, $group_name=null){
         $this->requireAdminLogin();
-        /*$model = M('OrganizationConfig');
-        $data['organization_id'] = $organization_id;
-        $data['type'] = 1001;
-        $data['value'] = $group_name;
-        $data['create_time'] = time();
-        $result = $model->data($data)->add();*/
         $model = M('OrganizationLectureGroup');
         $data['organization_id'] = $organization_id;
         $data['title'] = $group_name;
@@ -737,8 +734,6 @@ class OrganizationController extends AppController
      */
     public function updateTeachersGroup($teacher_group_id=null, $group_name=null){
         $this->requireAdminLogin();
-        /*$model = M('OrganizationConfig');
-        $data['value'] = $group_name;*/
         $model = M('OrganizationLectureGroup');
         $data['title'] = $group_name;
         $result = $model->where('id='.$teacher_group_id)->save($data);
@@ -755,7 +750,6 @@ class OrganizationController extends AppController
      */
     public function deleteTeachersGroup($teacher_group_id=null){
         $this->requireAdminLogin();
-        //$model = M('OrganizationConfig');
         $model = M('OrganizationLectureGroup');
         $data['status'] = -1;
         $result = $model->where('id='.$teacher_group_id)->save($data);
@@ -828,8 +822,8 @@ class OrganizationController extends AppController
      */
     public function getAllGroups($organization_id=null){
         $this->requireAdminLogin();
-        $model = M('OrganizationConfig');
-        $list = $model->field('id, value')->where('status=1 and type=1001 and organization_id='.$organization_id)->select();
+        $model = M('OrganizationLectureGroup');
+        $list = $model->field('id, title')->where('status=1 and organization_id='.$organization_id)->select();
         $extra['data'] = $list;
         $this->apiSuccess('获取机构所有分组成功', null, $extra);
     }
@@ -840,8 +834,8 @@ class OrganizationController extends AppController
      */
     public function getAllGroupsTeachers($organization_id=null){
         $this->requireAdminLogin();
-        $model = M('OrganizationConfig');
-        $list = $model->field('id, value')->where('status=1 and type=1001 and organization_id='.$organization_id)->select();
+        $model = M('OrganizationLectureGroup');
+        $list = $model->field('id, title')->where('status=1 and organization_id='.$organization_id)->select();
         $t_model = M('OrganizationRelation');
         $all_list = array();
         foreach($list as &$group){
@@ -868,7 +862,7 @@ class OrganizationController extends AppController
             }
             $obj['group_info'] = array(
                 'group_id' => $group['id'],
-                'group_name'=> $group['value']
+                'group_name'=> $group['title']
             );
             $obj['teachers'] = $teacher_list;
             array_push($all_list, $obj);
@@ -1157,7 +1151,8 @@ class OrganizationController extends AppController
         }
     }
 
-    /**取消点赞机构课程
+    /**
+     * 取消点赞机构课程
      * @param int $uid
      * @param int $courses_id
      */
@@ -1186,7 +1181,8 @@ class OrganizationController extends AppController
         }
     }
 
-    /**删除课程
+    /**
+     * 删除课程
      * @param int $id
      */
     public function deleteCourses($id=0){

@@ -140,6 +140,12 @@ class OrganizationController extends AdminController
         if (IS_POST) { //提交表单
             $model = M('Organization');
             $cid = $_POST["id"];
+
+            $logo_id = $_POST["picture"];
+            $video_img_id = $_POST["video_img"];
+            $this->uploadLogoPicToOSS($logo_id);
+            $this->uploadLogoPicToOSS($video_img_id);
+
             $data["name"] = $_POST["name"];
             $data["slogan"] = $_POST["slogan"];
             $data["location"] = $_POST["location"];
@@ -152,8 +158,8 @@ class OrganizationController extends AdminController
             $data["introduce"] = $_POST["introduce"];
             $data["guarantee_num"] = $_POST["guarantee_num"];
             $data["view_count"] = $_POST["view_count"];
-            $data["logo"] = $_POST["picture"];
-            $data["video_img"] = $_POST["video_img"];
+            $data["logo"] = $this->fetchCdnImage($logo_id);
+            $data["video_img"] = $this->fetchCdnImage($video_img_id);
             $data["video"] = $_POST["video"];
             if(empty($cid)){
                 try {
@@ -171,12 +177,6 @@ class OrganizationController extends AdminController
                             'update_time'=>time()
                         );
                         M('OrganizationApplication')->add($application);
-
-                        //上传图片到OSS
-                        $picid = $model->where('id='.$id)->getField('logo');
-                        if($picid){
-                            $this->uploadLogoPicToOSS($picid);
-                        }
                     }
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
@@ -185,19 +185,16 @@ class OrganizationController extends AdminController
             } else {
                 $model = $this->organizationModel;
                 $model->updateOrganization($cid, $data);
-                //上传图片到OSS
-                $picid = $model->where('id='.$cid)->getField('logo');
-                if($picid){
-                    $this->uploadLogoPicToOSS($picid);
-                }
                 $this->success('更新成功', 'index.php?s=/admin/organization/index');
             }
         } else {
             $this->display('add');
         }
     }
+
     /**
      * 机构基本信息删除
+     * @param string $id
      */
     public function delete($id){
         if(!empty($id)){

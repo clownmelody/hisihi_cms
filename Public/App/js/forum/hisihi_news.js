@@ -36,8 +36,11 @@ hisihiNews.prototype = {
     separateOperation:function(){
         var operation=browserType();
         if(operation.mobile){
-            if(operation.android){
-                AppFunction.showShareView(false);  //调用安卓的方法，控制分享按钮不可用
+            if(operation.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    AppFunction.showShareView(false);  //调用安卓的方法，控制分享按钮不可用
+                }
             }
             else if(operation.ios){
                 //var userInfo = getUser_iOS();

@@ -10,9 +10,11 @@ function commentObj($wrapper,urlObj){
     this.urlObj=urlObj;
 
     //根据平台的不同，调用不同的app 方法
+
+    this.isFromApp; //页面跳转来源
     this.separateOperation();
     var that = this;
-    this.isFromApp; //页面跳转来源
+
 
     //控制评论框的显示和总的内容框的高度
     this.controlCommentBoxStatus();
@@ -49,6 +51,7 @@ commentObj.prototype={
         var that=this,
             operation=browserType(),
             appFn;
+        //this.userInfo = JSON.parse('');
         if(operation.mobile){
             if (operation.android) {
                 //如果方法存在
@@ -56,12 +59,14 @@ commentObj.prototype={
                     appFn=AppFunction.getUser;
                     //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
                 }
+                alert('android '+typeof AppFunction);
             }
             else if (operation.ios) {
                 //如果方法存在
                 if (typeof getUser_iOS !="undefined") {
                     appFn=getUser_iOS;
                 }
+                alert('IOS '+typeof getUser_iOS);
             }
             if (appFn) {
                 this.userInfo = JSON.parse(appFn());  //调用app的方法，得到用户的基体信息
@@ -71,6 +76,7 @@ commentObj.prototype={
             }
         }
         else{
+            alert('web '+typeof getUser_iOS);
             this.isFromApp=false;  //来源于普通页面
             //$.ajax({
             //    url:this.urlObj.server_url+'/user/login',
@@ -95,30 +101,26 @@ commentObj.prototype={
      */
     controlCommentBoxStatus:function(){
         var $target=$('.main');
+
+        //来源于app
         if(this.isFromApp){
             if(!this.userInfo) {
                 this.$wrapper.hide();
-                $target.addClass('mainFullScreen').removeClass('mainNormalScreen');
                 $target.find('.detailed-main').css('margin-bottom','0');
                 return;
+            }else {
+                this.$wrapper.show();
+                $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
             }
-            this.$wrapper.show();
-        }else {
-            this.controlDownloadBtnStyle();
+        }
+
+        //来源于普通的页面
+        else {
+            alert('downloadBar');
             $('#downloadCon').show();   //表示用户是从网页或者分享结果中进来的   直接显示下载条
             $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
         }
     },
-
-    /*控制下载按钮的位置*/
-    controlDownloadBtnStyle:function(){
-        var $con=$('#downloadCon'),
-            $btn=$con.find('.downBtn'),
-            h=$con.height(),
-            bh=$btn.height();
-        //$btn.css({'top':'8%'});
-    },
-
 
     /*提交评论*/
     commitComment:function(e){
