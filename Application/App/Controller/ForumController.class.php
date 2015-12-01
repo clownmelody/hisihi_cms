@@ -423,8 +423,11 @@ class ForumController extends AppController
             $forum = D('Forum')->find($post['forum_id']);
             $mapx = array('id' => $forum['type_id'], 'status' => 1);
             $forumType = D('ForumType')->where($mapx)->select();
-            $post['forumTitle'] = $forum['title'] . '/' . $forumType[0]['title'];
-
+            if(!empty($forum['title'])&&!empty($forumType[0]['title'])){
+                $post['forumTitle'] = $forum['title'] . '/' . $forumType[0]['title'];
+            } else {
+                $post['forumTitle'] = null;
+            }
             $map_support['appname'] = 'Forum';
             $map_support['table'] = 'post';
             $map_support['row'] = $id;
@@ -719,6 +722,7 @@ class ForumController extends AppController
     /**
      * 获取贴子详情
      * @param null $post_id
+     * @param null $version
      */
     public function getPostDetail($post_id=null, $version=null){
         if(empty($post_id)){
@@ -1649,7 +1653,7 @@ class ForumController extends AppController
             $first_post['is_out_link'] = 0;
             $first_post['link_url'] = "";
             $first_post['is_inner'] = 0;
-            $first_post['url'] = "http://hisihi.com/app.php/forum/hisihi_news";
+            $first_post['url'] = "http://dev.hisihi.com/app.php/forum/hisihi_news";
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=0')
                 ->order('create_time desc')->page(1, 1)->select();
             array_unshift($list, $first_post);
@@ -1669,10 +1673,14 @@ class ForumController extends AppController
                 ->order('create_time desc')->page(1, 3)->select();
         }
         foreach($list as &$value){
-            $value['show_type'] = 'web';
+            if((float)$version>=2.2){
+                $value['show_type'] = 'web';
+            }
             if($value['id']!='001'){
-                $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
-                $value['show_type'] = 'origin';
+                $value['url'] = 'http://dev.hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
+                if((float)$version>=2.2){
+                    $value['show_type'] = 'origin';
+                }
             }
             unset($value['uid']);
             unset($value['forum_id']);
@@ -1719,7 +1727,7 @@ class ForumController extends AppController
             ->order('create_time desc')->page($page, $count)->select();
         $totalCount = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')->count();
         foreach($list as &$value){
-            $value['url'] = 'http://hisihi.com/app.php/forum/toppostdetailv2/post_id/'.$value['id'];
+            $value['url'] = 'http://dev.hisihi.com/app.php/forum/toppostdetailv2/post_id/'.$value['id'];
             $value['pic_url'] = $this->fetchImageFromOSS($value['cover_id']);
             unset($value['uid']);
             unset($value['forum_id']);

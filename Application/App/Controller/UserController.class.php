@@ -842,10 +842,12 @@ class UserController extends AppController
         $this->apiSuccess('头像保存成功');
     }
 
-    /**分组下的字段信息及相应内容
-     * @param null $id 扩展分组id
+    /**
+     * 分组下的字段信息及相应内容
+     * @param null $id
      * @param null $uid
-     * @author RFly
+     * @param int $version
+     * @return array|null
      */
     public function _info_list($id = null, $uid = null, $version=1)
     {
