@@ -1655,9 +1655,11 @@ class ForumController extends AppController
             array_unshift($list, $first_post);
             $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
             if($configCount){
+                $configCount['value'] = $configCount['value'] + $this->getAutoIncreseCount();
                 $list[1]['title'] = "嘿设汇已经解决".$configCount['value']."个问题";
             } else {
-                $list[1]['title'] = "嘿设汇已经解决330212个问题";
+                $fakeCount = 330212 + $this->getAutoIncreseCount();
+                $list[1]['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
             }
         } else if ((float)$version>=2.1){
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')
@@ -1667,8 +1669,10 @@ class ForumController extends AppController
                 ->order('create_time desc')->page(1, 3)->select();
         }
         foreach($list as &$value){
+            $value['show_type'] = 'web';
             if($value['id']!='001'){
                 $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
+                $value['show_type'] = 'origin';
             }
             unset($value['uid']);
             unset($value['forum_id']);
@@ -1767,6 +1771,18 @@ class ForumController extends AppController
             //}
         }
         return $picUrl;
+    }
+
+    /**
+     * 获取自动增长数
+     */
+    private function getAutoIncreseCount(){
+        $Date_1 = date("Y-m-d");
+        $Date_2 = "2015-12-01";
+        $d1 = strtotime($Date_1);
+        $d2 = strtotime($Date_2);
+        $days = round(($d1-$d2)/3600/24);
+        return $days * 437;
     }
 
     /**
