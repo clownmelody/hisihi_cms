@@ -68,8 +68,10 @@ class OrganizationController extends AdminController
         $this->assign('_type', $type);
         $this->display();
     }
+
     /**
      * 机构基本信息编辑
+     * @param $id
      */
     public function edit($id){
         if(empty($id)){
@@ -143,8 +145,14 @@ class OrganizationController extends AdminController
 
             $logo_id = $_POST["picture"];
             $video_img_id = $_POST["video_img"];
-            $this->uploadLogoPicToOSS($logo_id);
-            $this->uploadLogoPicToOSS($video_img_id);
+            if((int)$logo_id>0){
+                $this->uploadLogoPicToOSS($logo_id);
+                $data["logo"] = $this->fetchCdnImage($logo_id);
+            }
+            if((int)$video_img_id>0){
+                $this->uploadLogoPicToOSS($video_img_id);
+                $data["video_img"] = $this->fetchCdnImage($video_img_id);
+            }
 
             $data["name"] = $_POST["name"];
             $data["slogan"] = $_POST["slogan"];
@@ -158,8 +166,6 @@ class OrganizationController extends AdminController
             $data["introduce"] = $_POST["introduce"];
             $data["guarantee_num"] = $_POST["guarantee_num"];
             $data["view_count"] = $_POST["view_count"];
-            $data["logo"] = $this->fetchCdnImage($logo_id);
-            $data["video_img"] = $this->fetchCdnImage($video_img_id);
             $data["video"] = $_POST["video"];
             if(empty($cid)){
                 try {
@@ -283,7 +289,6 @@ class OrganizationController extends AdminController
         }else{
             $list = $model->where($filter_map)->order('id desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
-
         foreach($list as &$relation){
             $relation['user_name'] = M('Member')->where(array('uid'=>$relation['uid'],'status'=>1))->getField('nickname');
             if($organization_id){
