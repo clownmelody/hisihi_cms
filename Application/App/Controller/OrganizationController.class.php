@@ -1834,7 +1834,7 @@ class OrganizationController extends AppController
         if ($info) {
             $video_id = $info['video'];
             $video_img = $info['video_img'];
-            $video_img = $this->fetchImage($video_img);
+            //$video_img = $this->fetchImage($video_img);
             $videoModel = M('OrganizationVideo');
             $videoInfo = $videoModel->field('url')->where('status=1 and id=' . $video_id)->find();
             $oss_video_pre = 'http://game-video.oss-cn-qingdao.aliyuncs.com/';
