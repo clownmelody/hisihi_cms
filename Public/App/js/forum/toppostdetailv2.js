@@ -76,7 +76,6 @@ commentObj.prototype={
             }
         }
         else{
-            alert('web '+typeof getUser_iOS);
             this.isFromApp=false;  //来源于普通页面
             //$.ajax({
             //    url:this.urlObj.server_url+'/user/login',
