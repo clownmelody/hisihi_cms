@@ -420,6 +420,13 @@ class OrganizationController extends AppController
             $enroll_count = M('OrganizationEnroll')->where(array('organization_id'=>$organization_id,'status'=>2))->count();
             $result['available_num'] = $result['guarantee_num'] - $enroll_count;
             $result['advantage']=$advantage;
+            $relationModel = M('OrganizationRelation');
+            $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.$uid)->find();
+            if(!$isExist){
+                $result['isStudent']=false;
+            }else{
+                $result['isStudent']=true;
+            }
             $extra['data'] = $result;
             $this->apiSuccess("获取机构信息成功",null,$extra);
         }else{
