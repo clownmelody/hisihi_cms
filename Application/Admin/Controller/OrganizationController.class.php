@@ -1276,13 +1276,6 @@ class OrganizationController extends AdminController
         $config = D('OrganizationConfig');
         $map = array('id' => array('in', $id) );
         $result = $config->where($map)->save(Array('status'=>-1));
-        foreach($id as $config_id){
-            $organization_id[] = $config->where(array('id'=>$config_id))->getField('organization_id');
-        }
-        $organization_id = array_unique($organization_id);
-        $filter_map['organization_id'] = array('in',$organization_id);
-        $filter_map['teacher_group_id'] = array('in',$id);
-        $res = M('OrganizationRelation')->where($filter_map)->save(array('status'=>-1));
         if($result){
             if(I('from_org')){
                 $this->success('删除成功', U('config&organization_id='.I('organization_id')));
@@ -1503,7 +1496,7 @@ class OrganizationController extends AdminController
                 $comment['organization_name'] = M('Organization')->where('status=1 and id='.$comment['organization_id'])->getField("name");
             }
             $comment['user_name'] = M('Member')->where(array('uid'=>$comment['uid'],'status'=>1))->getField('nickname');
-            $comment['star_type'] = M('OrganizationConfig')->where(array('id'=>$comment['comment_type'],'status'=>1))->getField('value');
+            $comment['star_type'] = M('OrganizationTag')->where(array('id'=>$comment['comment_type'],'status'=>1))->getField('value');
         }
 
         if($organization_id){
@@ -1526,7 +1519,7 @@ class OrganizationController extends AdminController
         $info = $comment->where('status=1 and id='.$id)->find();
         $info['organization_name'] = M('Organization')->where(array('id'=>$info['organization_id'],'status'=>1))->getField('name');
         $info['user_name'] = M('Member')->where(array('uid'=>$info['uid'],'status'=>1))->getField('nickname');
-        $star_type = M('OrganizationConfig')->where(array('type'=>5,'status'=>1))->select();
+        $star_type = M('OrganizationTag')->where(array('type'=>4,'status'=>1))->select();
 
         $this->assign('star_type', $star_type);
         $this->assign('comment', $info);
@@ -1856,7 +1849,7 @@ class OrganizationController extends AdminController
             }else{
                 $course['organization_name'] = M('Organization')->where('status=1 and id='.$course['organization_id'])->getField("name");
             }
-            $course['category'] = M('OrganizationConfig')->where(array('id'=>$course['category_id'],'type'=>1002,'status'=>1))->getField('value');
+            $course['category'] = M('OrganizationTag')->where(array('id'=>$course['category_id'],'type'=>5,'status'=>1))->getField('value');
             $course['teacher'] = M('Member')->where(array('uid'=>$course['lecturer']))->getField('nickname');
         }
 
@@ -1888,7 +1881,7 @@ class OrganizationController extends AdminController
             $this->assign('organization_name',$organization_name);
             $this->assign('organization_id',$organization_id);
         }
-        $category = M('OrganizationConfig')->where(array('status'=>1,'type'=>1002))->field('id,value')->select();
+        $category = M('OrganizationTag')->where(array('status'=>1,'type'=>5))->field('id,value')->select();
         if(I('from_org')){
             $this->assign('from_org', I('from_org'));
         }
@@ -1960,8 +1953,8 @@ class OrganizationController extends AdminController
         }
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
         $data['teacher'] = M('Member')->where(array('uid'=>$data['lecturer'],'status'=>1))->getField('nickname');
-        $category = M('OrganizationConfig')->where(array('status'=>1,'type'=>1002))->field('id,value')->select();
-        $teacher_ids = M(OrganizationRelation)->field('uid')
+        $category = M('OrganizationTag')->where(array('status'=>1,'type'=>5))->field('id,value')->select();
+        $teacher_ids = M('OrganizationRelation')->field('uid')
             ->where(array('organization_id'=>$data['organization_id'],'group'=>6,'status'=>1))->select();
         foreach($teacher_ids as &$teacher_id){
             $teacher['name'] = M('Member')->where(array('uid'=>$teacher_id['uid'],'status'=>1))->getField('nickname');
@@ -2411,6 +2404,119 @@ class OrganizationController extends AdminController
                 $model->where('id='.$id)->save($data);
             }
             $this->success('删除成功','index.php?s=/admin/organization/tag');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 机构老师分组
+     */
+    public  function lecture_group(){
+        $model = M('OrganizationLectureGroup');
+        $map['status'] = 1;
+        $count = $model->where($map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        //用于配置值搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['title'] = array('like','%'.$name.'%');
+            $map['status'] = 1;
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构老师分组列表");
+        $this->display();
+    }
+
+    /**
+     * 添加机构老师分组
+     */
+    public function lecture_group_add(){
+        $this->display();
+    }
+
+    /**
+     * 机构老师分组更新
+     */
+    public  function lecture_group_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationLectureGroup');
+            $cid = $_POST["cid"];
+            $data["organization_id"] = $_POST["organization_id"];
+            $data["title"] = $_POST["title"];
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/organization/lecture_group');
+            } else {
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/organization/lecture_group');
+            }
+        } else {
+            $this->display('lecture_group_add');
+        }
+    }
+
+    /**编辑机构老师分组
+     * @param $id
+     */
+    public function lecture_group_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationLectureGroup');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $this->assign('info', $data);
+        $this->display();
+    }
+
+    /**删除机构老师分组
+     * @param $id
+     */
+    public function lecture_group_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationLectureGroup');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                    $organization_id[] = $model->where(array('id'=>$i))->getField('organization_id');
+                }
+                $organization_id = array_unique($organization_id);
+                $filter_map['organization_id'] = array('in',$organization_id);
+                $filter_map['teacher_group_id'] = array('in',$id);
+                $res = M('OrganizationRelation')->where($filter_map)->save(array('status'=>-1));
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+                $organization_id = $model->where(array('id'=>$id))->getField('organization_id');
+                $filter_map['organization_id'] = $organization_id;
+                $filter_map['teacher_group_id'] = $id;
+                $res = M('OrganizationRelation')->where($filter_map)->save(array('status'=>-1));
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/lecture_group');
         } else {
             $this->error('未选择要删除的数据');
         }
