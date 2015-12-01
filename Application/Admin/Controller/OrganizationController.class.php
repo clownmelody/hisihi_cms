@@ -1214,8 +1214,10 @@ class OrganizationController extends AdminController
         $config = D('OrganizationConfig');
         $info = $config->where('status=1 and id='.$id)->find();
         if(I('from_org')){
+            $organization_name = M('Organization')->where('status=1 and id='.I('organization_id'))->getField('name');
             $this->assign('from_org', I('from_org'));
             $this->assign('organization_id', I('organization_id'));
+            $this->assign('organization_name', $organization_name);
         }
         $this->assign('config', $info);
         $this->meta_title = '编辑机构配置';

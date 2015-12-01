@@ -45,13 +45,7 @@
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
                         <td>
-                            <if condition="$vo.type eq 2">机构优势
-                                <elseif condition="$vo.type eq 3"/>机构类型
-                                <elseif condition="$vo.type eq 4"/>热门城市
-                                <elseif condition="$vo.type eq 5"/>评分类型
-                                <elseif condition="$vo.type eq 1001"/>教师分组
-                                <elseif condition="$vo.type eq 1002"/>视频分类
-                                <elseif condition="$vo.type eq 1003"/>报名课程
+                            <if condition="$vo.type eq 1003">报名课程
                                 <else /> 其它
                             </if>
                         </td>
@@ -136,6 +130,6 @@
             }
         });
         //导航高亮
-        highlight_subnav("{:U('User/index')}");
+        highlight_subnav("{:U('Organization/index')}");
     </script>
 </block>
