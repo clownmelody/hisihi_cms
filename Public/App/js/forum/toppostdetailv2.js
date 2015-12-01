@@ -59,14 +59,14 @@ commentObj.prototype={
                     appFn=AppFunction.getUser;
                     //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
                 }
-                alert('android '+typeof AppFunction);
+
             }
             else if (operation.ios) {
                 //如果方法存在
                 if (typeof getUser_iOS !="undefined") {
                     appFn=getUser_iOS;
                 }
-                alert('IOS '+typeof getUser_iOS);
+
             }
             if (appFn) {
                 this.userInfo = JSON.parse(appFn());  //调用app的方法，得到用户的基体信息
@@ -76,7 +76,7 @@ commentObj.prototype={
             }
         }
         else{
-            alert('web '+typeof getUser_iOS);
+
             this.isFromApp=false;  //来源于普通页面
             //$.ajax({
             //    url:this.urlObj.server_url+'/user/login',
@@ -116,7 +116,6 @@ commentObj.prototype={
 
         //来源于普通的页面
         else {
-            alert('downloadBar');
             $('#downloadCon').show();   //表示用户是从网页或者分享结果中进来的   直接显示下载条
             $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
         }
