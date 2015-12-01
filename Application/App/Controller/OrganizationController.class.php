@@ -237,19 +237,19 @@ class OrganizationController extends AppController
     /**
      * 修改机构logo
      * @param int $organization_id
-     * @param int $pic_id
+     * @param null $pic_url
      */
-    public function updateLogo($organization_id=0, $pic_id=0){
+    public function updateLogo($organization_id=0, $pic_url=null){
         $this->requireAdminLogin();
         if(empty($organization_id)||empty($pic_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
 
-        $this->uploadLogoPicToOSS($pic_id);
-        $cdn_path = $this->fetchCdnImage($pic_id);
+        /*$this->uploadLogoPicToOSS($pic_id);
+        $cdn_path = $this->fetchCdnImage($pic_id);*/
 
         $model = M('Organization');
-        $data['logo'] = $cdn_path;
+        $data['logo'] = $pic_url;
         $model->where('id='.$organization_id)->save($data);
 
         $this->apiSuccess('修改机构logo成功');
@@ -268,23 +268,17 @@ class OrganizationController extends AppController
             $this->apiError(-1,'传入图片id不能为空');
         }
         $path = M('Picture')->where('id='.$picture_id)->getField('path');
-        $image = new \Think\Image();
-        $org_path = '.'.$path;
-        $image->open($org_path);
-        $crop_path = substr($org_path,0,strlen($org_path)-4).'_crop'.substr($org_path,-4);
-        $image->crop($width, $height,$pointX,$pointY)->save($crop_path);
         //上传裁剪的图片到OSS
-        $picKey = substr($crop_path, 18);
+        $picKey = substr($path, 17);
         $param["bucketName"] = "hisihi-other";
         $param['objectKey'] = $picKey;
         $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
         if(!$isExist){
             Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            $crop_url = 'http://pic.hisihi.com/'.$picKey.'@'.$pointX.'-'.$pointY.'-'.$width.'-'.$height.'a';
         }else{
-            Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'deleteResource', $param);
-            Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            $crop_url = 'http://pic.hisihi.com/'.$picKey.'@'.$pointX.'-'.$pointY.'-'.$width.'-'.$height.'a';
         }
-        $crop_url = $this->fetchCropImage($picture_id);
         $extra['crop_url'] = $crop_url;
         $this->apiSuccess("裁剪成功",null,$extra);
     }
@@ -2162,7 +2156,7 @@ class OrganizationController extends AppController
      * @param $pic_id
      * @return null|string
      */
-    private function fetchCropImage($pic_id){
+    private function fetchCropImage($pic_id=null,$pointX=0,$pointY=0,$width=0,$height=0){
         if($pic_id == null)
             return null;
         $model = M();
@@ -2170,7 +2164,7 @@ class OrganizationController extends AppController
         if($pic_info){
             $path = $pic_info[0]['path'];
             $path = substr($path, 17);
-            $objKey = substr($path,0,strlen($path)-4).'_crop'.substr($path,-4);
+            $objKey = $path.'@'.$pointX.'-'.$pointY.'-'.$width.'-'.$height.'a';
             $param["bucketName"] = "hisihi-other";
             $param['objectKey'] = $objKey;
             $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
