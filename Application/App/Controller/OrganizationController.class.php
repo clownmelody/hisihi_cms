@@ -690,6 +690,7 @@ class OrganizationController extends AppController
             $this->apiError(-1, '传入参数为空');
         }
         $map['nickname'] = array('like', $name.'%');
+        $map['status'] = 1;
         $list = D('User/Member')->field('uid, nickname')->where($map)->select();
         $a_model = M('AuthGroupAccess');
         $t_list = array();
@@ -1374,8 +1375,6 @@ class OrganizationController extends AppController
         }*/
         foreach($org_list as &$org){
             $org_id = $org['id'];
-            $logo_id = $org['logo'];
-            $org['logo'] = $this->getOrganizationLogo($logo_id);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
@@ -1414,8 +1413,6 @@ class OrganizationController extends AppController
         $totalCount = $model->where("application_status=2 and status=1 and name like '%".$name."%'")->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
-            $logo_id = $org['logo'];
-            $org['logo'] = $this->getOrganizationLogo($logo_id);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
@@ -1837,7 +1834,7 @@ class OrganizationController extends AppController
         if ($info) {
             $video_id = $info['video'];
             $video_img = $info['video_img'];
-            $video_img = $this->fetchImage($video_img);
+            //$video_img = $this->fetchImage($video_img);
             $videoModel = M('OrganizationVideo');
             $videoInfo = $videoModel->field('url')->where('status=1 and id=' . $video_id)->find();
             $oss_video_pre = 'http://game-video.oss-cn-qingdao.aliyuncs.com/';
