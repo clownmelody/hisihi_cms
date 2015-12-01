@@ -1214,8 +1214,10 @@ class OrganizationController extends AdminController
         $config = D('OrganizationConfig');
         $info = $config->where('status=1 and id='.$id)->find();
         if(I('from_org')){
+            $organization_name = M('Organization')->where('status=1 and id='.I('organization_id'))->getField('name');
             $this->assign('from_org', I('from_org'));
             $this->assign('organization_id', I('organization_id'));
+            $this->assign('organization_name', $organization_name);
         }
         $this->assign('config', $info);
         $this->meta_title = '编辑机构配置';
@@ -2409,7 +2411,11 @@ class OrganizationController extends AdminController
     /**
      * 机构老师分组
      */
-    public  function lecture_group(){
+    public  function lecture_group($organization_id=0){
+        if(!$organization_id){
+            $this->error('机构id不能为空');
+        }
+        $map['organization_id'] = $organization_id;
         $model = M('OrganizationLectureGroup');
         $map['status'] = 1;
         $count = $model->where($map)->count();
@@ -2424,7 +2430,9 @@ class OrganizationController extends AdminController
         }else{
             $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
-
+        $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+        $this->assign('organization_name',$organization_name);
+        $this->assign('organization_id',$organization_id);
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -2435,7 +2443,13 @@ class OrganizationController extends AdminController
     /**
      * 添加机构老师分组
      */
-    public function lecture_group_add(){
+    public function lecture_group_add($organization_id=0){
+        if($organization_id){
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+            $this->assign('organization_name',$organization_name);
+            $this->assign('organization_id',$organization_id);
+            $this->assign('from_org',I('from_org'));
+        }
         $this->display();
     }
 
@@ -2458,13 +2472,13 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/organization/lecture_group');
+                $this->success('添加成功', 'index.php?s=/admin/organization/lecture_group&organization_id='.$data["organization_id"]);
             } else {
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/organization/lecture_group');
+                $this->success('添加成功', 'index.php?s=/admin/organization/lecture_group&organization_id='.$data["organization_id"]);
             }
         } else {
             $this->display('lecture_group_add');
@@ -2483,6 +2497,12 @@ class OrganizationController extends AdminController
         $data = $Model->where('status=1 and id='.$id)->find();
         if(!$data){
             $this->error($Model->getError());
+        }
+        if(I('from_org')){
+            $organization_name = M('Organization')->where('status=1 and id='.I('organization_id'))->getField('name');
+            $this->assign('from_org', I('from_org'));
+            $this->assign('organization_id', I('organization_id'));
+            $this->assign('organization_name', $organization_name);
         }
         $this->assign('info', $data);
         $this->display();
@@ -2513,7 +2533,7 @@ class OrganizationController extends AdminController
                 $filter_map['teacher_group_id'] = $id;
                 $res = M('OrganizationRelation')->where($filter_map)->save(array('status'=>-1));
             }
-            $this->success('删除成功','index.php?s=/admin/organization/lecture_group');
+            $this->success('删除成功','index.php?s=/admin/organization/lecture_group&organization_id='.$data["organization_id"]);
         } else {
             $this->error('未选择要删除的数据');
         }
