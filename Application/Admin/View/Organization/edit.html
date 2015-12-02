@@ -91,7 +91,7 @@
                             <input type="hidden" name="video_img" id="video_img" value="{$organization.video_img}"/>
                             <div class="upload-img-box">
                                 <notempty name="organization['video_img']">
-                                    <div class="upload-pre-item"><img src="{$organization['video_img']|get_cover='path'}"/></div>
+                                    <div class="upload-pre-item"><img src="{$organization['video_img']}"/></div>
                                 </notempty>
                             </div>
                         </div>
@@ -194,7 +194,7 @@
                             <input type="hidden" name="picture" id="cover_id_organization" value="{$organization.logo}"/>
                             <div class="upload-img-box">
                                 <notempty name="organization['logo']">
-                                    <div class="upload-pre-item"><img src="{$organization['logo']|get_cover='path'}"/></div>
+                                    <div class="upload-pre-item"><img src="{$organization['logo']}"/></div>
                                 </notempty>
                             </div>
                         </div>

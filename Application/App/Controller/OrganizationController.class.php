@@ -1999,7 +1999,7 @@ class OrganizationController extends AppController
                 $courseInfo['organization']['view_count'] = $organizationInfo['view_count'];
                 $courseInfo['organization']['followCount'] = $this->getFollowCount($organization_id);
                 $courseInfo['organization']['enrollCount'] = $this->getEnrollCount($organization_id);
-                $courseInfo['organization']['authentication'] = $this->getAuthentication($organization_id);
+                $courseInfo['organization']['authentication'] = $this->getAuthenticationInfo($organization_id);
             }
             $lectureInfo = $memberModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
             $avatarInfo = $avatarModel->where('status=1 and uid='.$courseInfo['lecturer'])->find();
@@ -2052,7 +2052,7 @@ class OrganizationController extends AppController
         $authModel = M('OrganizationAuthentication');
         $config_list = $model->field('id, name, pic_id, content, default_display')->where('status=1')->select();
         foreach($config_list as &$config){
-            $config['pic_url'] = $this->fetchImage($config['pic_id']);
+            $config['pic_url'] = $config['pic_id'];
             $map['organization_id'] = $organization_id;
             $map['authentication_id'] = $config['id'];
             if($authModel->where($map)->find()){
@@ -2060,6 +2060,7 @@ class OrganizationController extends AppController
             } else {
                 $config['status'] = false;
             }
+            unset($config['pic_id']);
         }
         return $config_list;
     }
