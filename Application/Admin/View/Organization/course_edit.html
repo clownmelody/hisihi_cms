@@ -70,10 +70,10 @@
                         <label class="item-label">课程封面</label>
                         <div class="controls">
                             <input type="file" id="upload_company_picture">
-                            <input type="hidden" name="picture" id="cover_id_company" value="{$info.img}"/>
+                            <input type="hidden" name="picture" id="cover_id_company" value="{$info.img_str}"/>
                             <div class="upload-img-box">
-                                <notempty name="info['img']">
-                                    <div class="upload-pre-item"><img src="{$info['img']|get_cover='path'}"/></div>
+                                <notempty name="info['img_str']">
+                                    <div class="upload-pre-item"><img src="{$info['img_str']|get_cover='path'}"/></div>
                                 </notempty>
                             </div>
                         </div>

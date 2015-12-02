@@ -1913,7 +1913,15 @@ class OrganizationController extends AdminController
             $data["title"] = $_POST["title"];
             $data["content"] = $_POST["content"];
             $data['organization_id'] = $_POST["organization_id"];
-            $data['img'] = $_POST["picture"];
+            //$data['img'] = $_POST["picture"];
+            $img_id = $_POST["picture"];
+            if((int)$img_id>0){
+                $this->uploadLogoPicToOSS($img_id);
+                $img_url = $this->fetchCdnImage($img_id);
+                $data['img_str'] = $img_url;
+            } else {
+                $data['img_str'] = $img_id;
+            }
             $data['category_id'] = $_POST["category_id"];
             $data['lecturer'] = $_POST["lecturer"];
             $data['auth'] = $_POST["auth"];
@@ -1940,7 +1948,6 @@ class OrganizationController extends AdminController
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->uploadLogoPicToOSS($data['img']);
                 if(I('from_org')){
                     $this->success('更新成功', 'index.php?s=/admin/organization/course&organization_id='.$data['organization_id']);
                 }else{
@@ -1952,7 +1959,8 @@ class OrganizationController extends AdminController
         }
     }
 
-    /**编辑机构课程
+    /**
+     * 编辑机构课程
      * @param $id
      */
     public function course_edit($id){
@@ -1985,7 +1993,8 @@ class OrganizationController extends AdminController
         $this->display();
     }
 
-    /**删除机构课程
+    /**
+     * 删除机构课程
      * @param $id
      */
     public function course_delete($id){

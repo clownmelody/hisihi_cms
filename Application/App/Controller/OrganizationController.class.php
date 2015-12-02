@@ -902,35 +902,37 @@ class OrganizationController extends AppController
         $this->requireAdminLogin();
         $model = M('OrganizationCourse');
         if(!empty($id)){
+            $this->uploadLogoPicToOSS($img);
+            $img_str = $this->fetchCdnImage($img);
             $data['organization_id'] = $organization_id;
             $data['title'] = $title;
             $data['content'] = $content;
-            $data['img'] = $img;
             $data['category_id']=$category_id;
             $data['lecturer'] = $lecturer;
             $data['auth'] = $auth;
             $data['update_time'] = time();
+            $data['img_str'] = $img_str;
             $result = $model->where(array('id'=>$id,'status'=>1))->save($data);
             if($result){
-                $this->uploadLogoPicToOSS($img);
                 $extra['courses_id'] = $id;
                 $this->apiSuccess('修改课程成功',null,$extra);
             } else {
                 $this->apiError(-1, '修改课程信息失败');
             }
         }else{
+            $this->uploadLogoPicToOSS($img);
+            $img_str = $this->fetchCdnImage($img);
             $data['organization_id'] = $organization_id;
             $data['title'] = $title;
             $data['content'] = $content;
-            $data['img'] = $img;
             $data['category_id']=$category_id;
             $data['lecturer'] = $lecturer;
             $data['auth'] = $auth;
             $data['create_time'] = time();
             $data['update_time'] = time();
+            $data['img_str'] = $img_str;
             $result = $model->add($data);
             if($result){
-                $this->uploadLogoPicToOSS($img);
                 $extra['courses_id'] = $result;
                 $this->apiSuccess('添加课程成功',null,$extra);
             } else {
@@ -952,7 +954,7 @@ class OrganizationController extends AppController
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, title, content, category_id, view_count, lecturer, auth, create_time, img_str')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -960,7 +962,13 @@ class OrganizationController extends AppController
             if($category){
                 $course['category_name'] = $category['value'];
             }
-            $course['url'] = $this->fetchImage($course['img']);
+            //$course['url'] = $this->fetchImage($course['img']);
+            $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+            if(strpos($course['img_str'], 'OSS')){
+                $course['url'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+            } else {
+                $course['url'] = $course['img_str'];
+            }
             $video_course[] = $course;
         }
         $extra['totalCount'] = $totalCount;
@@ -990,7 +998,7 @@ class OrganizationController extends AppController
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, img, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -1000,7 +1008,11 @@ class OrganizationController extends AppController
                 $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
                 //解析并生成图片数据
                 $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-                $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+                if(strpos($course['img_str'], 'OSS')){
+                    $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+                } else {
+                    $course['img'] = $course['img_str'];
+                }
                 //获取收藏信息
                 $favorite['appname'] = 'Issue';
                 $favorite['table'] = 'issue_content';
@@ -1025,7 +1037,13 @@ class OrganizationController extends AppController
                 $course['supportCount'] = $supportCount;
             }else{
                 $course['type'] = $config_model->where('`status`=1 and `type`=1002 and `id`='.$category_id)->getField('value');
-                $course['img'] = $this->fetchImage($course['img']);
+                $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+                if(strpos($course['img_str'], 'OSS')){
+                    $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+                } else {
+                    $course['img'] = $course['img_str'];
+                }
+                //$course['img'] = $this->fetchImage($course['img']);
                 //获取收藏信息
                 $favorite['appname'] = 'Organization';
                 $favorite['table'] = 'organization_courses';
@@ -1189,9 +1207,9 @@ class OrganizationController extends AppController
      */
     public function deleteCourses($id=0){
         $this->requireAdminLogin();
-        if(!$id){
+        if(!$id) {
             $this->apiError(-1,"参数不能为空");
-        }else{
+        } else {
             $model = M('OrganizationCourse');
             $data['status'] = -1;
             $result = $model->where(array('id'=>$id))->save($data);
@@ -1219,13 +1237,18 @@ class OrganizationController extends AppController
         $member_model = M("Member");
         $map['id'] = $course_id;
         $map['status'] = 1;
-        $course = $model->field('id, title, content, img, category_id, lecturer, auth')->where($map)->find();
+        $course = $model->field('id, title, content, category_id, lecturer, auth, img_str')->where($map)->find();
         $category_id = $course['category_id'];
         $category = $config_model->where('status=1 and type=5 and id='.$category_id)->field('value')->find();
         if($category){
             $course['category_name'] = $category['value'];
         }
-        $course['img_url'] = $this->fetchImage($course['img']);
+        $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+        if(strpos($course['img_str'], 'OSS')){
+            $course['img_url'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+        } else {
+            $course['img_url'] = $course['img_str'];
+        }
         $teacher_id = $course['lecturer'];
         $teacher = $member_model->where('status=1 and uid='.$teacher_id)->find();
         $course['teacher_name'] = $teacher['nickname'];
@@ -1834,12 +1857,15 @@ class OrganizationController extends AppController
         if ($info) {
             $video_id = $info['video'];
             $video_img = $info['video_img'];
-            //$video_img = $this->fetchImage($video_img);
             $videoModel = M('OrganizationVideo');
             $videoInfo = $videoModel->field('url')->where('status=1 and id=' . $video_id)->find();
             $oss_video_pre = 'http://game-video.oss-cn-qingdao.aliyuncs.com/';
             $oss_video_post = '/p.m3u8';
-            $url = $oss_video_pre . $videoInfo['url'] . $oss_video_post;
+            if(empty($videoInfo['url'])){
+                $url = null;
+            } else {
+                $url = $oss_video_pre . $videoInfo['url'] . $oss_video_post;
+            }
             $extra['data']['video_img'] = $video_img;
             $extra['data']['video_url'] = $url;
             $this->apiSuccess('获取宣传视频成功', null, $extra);
