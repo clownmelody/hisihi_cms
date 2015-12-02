@@ -969,6 +969,7 @@ class OrganizationController extends AppController
             } else {
                 $course['url'] = $course['img_str'];
             }
+            unset($course['img_str']);
             $video_course[] = $course;
         }
         $extra['totalCount'] = $totalCount;
@@ -987,18 +988,18 @@ class OrganizationController extends AppController
             $this->apiError(-1,'传入的机构id不能为空');
         }
         $model = M('OrganizationCourse');
-        $config_model = M("OrganizationConfig");
+        $tag_model = M("OrganizationTag");
         $org_model = M('Organization');
         $video_model = M('OrganizationVideo');
         $favorite_model = M('Favorite');
         $support_model = M('Support');
         $issue_model = M('Issue');
         $logo = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
-        $logo_url = $this->getOrganizationLogo($logo);
+        $logo_url = $logo;
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -1016,7 +1017,7 @@ class OrganizationController extends AppController
                 //获取收藏信息
                 $favorite['appname'] = 'Issue';
                 $favorite['table'] = 'issue_content';
-                $favorite['row'] = $course['id'];
+                $favorite['row'] = $course['issue_content_id'];
                 $favorite['uid'] = $this->getUid();
                 if ($favorite_model->where($favorite)->count()) {
                     $course['isFavorite'] = 1;
@@ -1024,7 +1025,7 @@ class OrganizationController extends AppController
                     $course['isFavorite'] = 0;
                 }
                 $favoriteCount = $favorite_model->where(array('appname'=>'Issue',
-                    'table'=>'issue_content','row'=>$course['id']))->count();
+                    'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
                 $course['favoriteCount'] = $favoriteCount;
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
@@ -1033,10 +1034,10 @@ class OrganizationController extends AppController
                     $course['isSupportd'] = 0;
                 }
                 $supportCount = $support_model->where(array('appname'=>'Issue',
-                    'table'=>'issue_content','row'=>$course['id']))->count();
+                    'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
                 $course['supportCount'] = $supportCount;
             }else{
-                $course['type'] = $config_model->where('`status`=1 and `type`=1002 and `id`='.$category_id)->getField('value');
+                $course['type'] = $tag_model->where('`status`=1 and `type`=5 and `id`='.$category_id)->getField('value');
                 $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
                 if(strpos($course['img_str'], 'OSS')){
                     $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
@@ -1075,6 +1076,7 @@ class OrganizationController extends AppController
             unset($course['is_old_hisihi_data']);
             unset($course['img_str']);
             unset($course['view_count']);
+            unset($course['issue_content_id']);
             $video_course[] = $course;
         }
         $extra['total_count'] = $totalCount;
@@ -1095,9 +1097,17 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $favorite['appname'] = 'Organization';
-        $favorite['table'] = 'organization_courses';
-        $favorite['row'] = $courses_id;
+        $courses = M('OrganizationCourse')->where(array('id'=>$courses_id,'status'=>1))
+            ->field('is_old_hisihi_data,issue_content_id')->find();
+        if($courses['is_old_hisihi_data']){
+            $favorite['appname'] = 'Issue';
+            $favorite['table'] = 'issue_content';
+            $favorite['row'] = $courses['issue_content_id'];
+        }else{
+            $favorite['appname'] = 'Organization';
+            $favorite['table'] = 'organization_courses';
+            $favorite['row'] = $courses_id;
+        }
         $favorite['uid'] = $uid;
         $favorite_model = M('Favorite');
         if ($favorite_model->where($favorite)->count()) {
@@ -1124,9 +1134,17 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $favorite['appname'] = 'Organization';
-        $favorite['table'] = 'organization_courses';
-        $favorite['row'] = $courses_id;
+        $courses = M('OrganizationCourse')->where(array('id'=>$courses_id,'status'=>1))
+            ->field('is_old_hisihi_data,issue_content_id')->find();
+        if($courses['is_old_hisihi_data']){
+            $favorite['appname'] = 'Issue';
+            $favorite['table'] = 'issue_content';
+            $favorite['row'] = $courses['issue_content_id'];
+        }else{
+            $favorite['appname'] = 'Organization';
+            $favorite['table'] = 'organization_courses';
+            $favorite['row'] = $courses_id;
+        }
         $favorite['uid'] = $uid;
         $favorite_model = M('Favorite');
         if (!$favorite_model->where($favorite)->count()) {
@@ -1154,9 +1172,17 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $favorite['appname'] = 'Organization';
-        $favorite['table'] = 'organization_courses';
-        $favorite['row'] = $courses_id;
+        $courses = M('OrganizationCourse')->where(array('id'=>$courses_id,'status'=>1))
+            ->field('is_old_hisihi_data,issue_content_id')->find();
+        if($courses['is_old_hisihi_data']){
+            $favorite['appname'] = 'Issue';
+            $favorite['table'] = 'issue_content';
+            $favorite['row'] = $courses['issue_content_id'];
+        }else{
+            $favorite['appname'] = 'Organization';
+            $favorite['table'] = 'organization_courses';
+            $favorite['row'] = $courses_id;
+        }
         $favorite['uid'] = $uid;
         $favorite_model = M('Support');
         if ($favorite_model->where($favorite)->count()) {
@@ -1184,9 +1210,17 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $favorite['appname'] = 'Organization';
-        $favorite['table'] = 'organization_courses';
-        $favorite['row'] = $courses_id;
+        $courses = M('OrganizationCourse')->where(array('id'=>$courses_id,'status'=>1))
+            ->field('is_old_hisihi_data,issue_content_id')->find();
+        if($courses['is_old_hisihi_data']){
+            $favorite['appname'] = 'Issue';
+            $favorite['table'] = 'issue_content';
+            $favorite['row'] = $courses['issue_content_id'];
+        }else{
+            $favorite['appname'] = 'Organization';
+            $favorite['table'] = 'organization_courses';
+            $favorite['row'] = $courses_id;
+        }
         $favorite['uid'] = $uid;
         $favorite_model = M('Support');
         if (!$favorite_model->where($favorite)->count()) {
@@ -1249,6 +1283,7 @@ class OrganizationController extends AppController
         } else {
             $course['img_url'] = $course['img_str'];
         }
+        unset($course['img_str']);
         $teacher_id = $course['lecturer'];
         $teacher = $member_model->where('status=1 and uid='.$teacher_id)->find();
         $course['teacher_name'] = $teacher['nickname'];
