@@ -212,7 +212,7 @@ class OrganizationController extends AdminController
                     $model->updateOrganization($i, $data);
                     M('OrganizationRelation')->where(array('organization_id'=>$i))->save($data);
                     M('OrganizationCourse')->where(array('organization_id'=>$i))->save($data);
-                    $course = M('OrganizationCourse')->where(array('organization_id'=>$id))->field('id')->select();
+                    $course = M('OrganizationCourse')->where(array('organization_id'=>$i))->field('id')->select();
                     if($course){
                         $course_array = array();
                         foreach($course as $courseid){
@@ -223,12 +223,13 @@ class OrganizationController extends AdminController
                     M('OrganizationResource')->where(array('organization_id'=>$i))->save($data);
                     M('OrganizationComment')->where(array('organization_id'=>$i))->save($data);
                     M('OrganizationCertification')->where(array('organization_id'=>$i))->save($data);
-                    M('OrganizationConfig')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationNotice')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationApplication')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationAuthentication')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationEnroll')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationCommentStar')->where(array('organization_id'=>$id))->save($data);
+                    M('OrganizationConfig')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationNotice')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationApplication')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationAuthentication')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationEnroll')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationCommentStar')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationLectureGroup')->where(array('organization_id'=>$i))->save($data);
                 }
             } else {
                 $id = intval($id);
@@ -252,6 +253,7 @@ class OrganizationController extends AdminController
                 M('OrganizationAuthentication')->where(array('organization_id'=>$id))->save($data);
                 M('OrganizationEnroll')->where(array('organization_id'=>$id))->save($data);
                 M('OrganizationCommentStar')->where(array('organization_id'=>$id))->save($data);
+                M('OrganizationLectureGroup')->where(array('organization_id'=>$id))->save($data);
             }
             $this->success('删除成功','index.php?s=/admin/organization');
         } else {
@@ -469,8 +471,10 @@ class OrganizationController extends AdminController
             $model = M('OrganizationResource');
             $cid = $_POST["cid"];
             $pic_id = $_POST["picture"];
-            $this->uploadLogoPicToOSS($pic_id);
-            $data['url'] = $this->fetchCdnImage($pic_id);
+            if(is_numeric($pic_id)){
+                $this->uploadLogoPicToOSS($pic_id);
+                $data["url"] = $this->fetchCdnImage($pic_id);
+            }
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
             $data['type'] = 1;
@@ -1071,7 +1075,11 @@ class OrganizationController extends AdminController
             $Config = M('OrganizationAuthenticationConfig');
             $id = $_POST['id'];
             $data['name'] = $_POST['name'];
-            $data['pic_id'] = $_POST['picture'];
+            if(is_numeric($_POST['picture'])){
+                $this->uploadLogoPicToOSS($_POST['picture']);
+                $data['pic_id'] = $this->fetchCdnImage($_POST['picture']);
+            }
+            $data['content'] = $_POST['content'];
             if(empty($id)){
                 if($data){
                     //将最先添加的两个认证默认展示
@@ -1640,8 +1648,10 @@ class OrganizationController extends AdminController
             $model = M('OrganizationResource');
             $cid = $_POST["cid"];
             $pic_id = $_POST["picture"];
-            $this->uploadLogoPicToOSS($pic_id);
-            $data["url"] = $this->fetchCdnImage($pic_id);
+            if(is_numeric($pic_id)){
+                $this->uploadLogoPicToOSS($pic_id);
+                $data["url"] = $this->fetchCdnImage($pic_id);
+            }
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
             $data['type'] = 2;
