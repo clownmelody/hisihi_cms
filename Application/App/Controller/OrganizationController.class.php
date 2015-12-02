@@ -75,7 +75,7 @@ class OrganizationController extends AppController
         $result = $this->request_by_curl($url, $headerArr, $post_data);
         if($result){
             $data['mobile'] = $mobile;
-            $data['password'] = md5($password);
+            $data['password'] = think_ucenter_md5($password, UC_AUTH_KEY);
             $data['create_time'] = time();
             $result = M('OrganizationAdmin')->data($data)->add();
             if($result){
@@ -120,7 +120,7 @@ class OrganizationController extends AppController
         $result = $this->request_by_curl($url, $headerArr, $post_data);
         if($result){
             $map['mobile'] = $mobile;
-            $data['password'] = md5($password);
+            $data['password'] = think_ucenter_md5($password, UC_AUTH_KEY);
             $result = M('OrganizationAdmin')->where($map)->save($data);
             if($result!==false){
                 $this->apiSuccess('重置密码成功');
@@ -143,7 +143,7 @@ class OrganizationController extends AppController
         }
         $map['status'] = 1;
         $map['mobile'] = $mobile;
-        $map['password'] = md5($password);
+        $map['password'] = think_ucenter_md5($password, UC_AUTH_KEY);
         $user = M('OrganizationAdmin')->where($map)->find();
         if($user){
             $org_model = M('Organization');
