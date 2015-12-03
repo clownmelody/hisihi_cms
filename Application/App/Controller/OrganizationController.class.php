@@ -1007,15 +1007,15 @@ class OrganizationController extends AppController
             $category_id = $course['category_id'];
             $course['ViewCount'] = $course['view_count'];
             $course['type_id'] = $category_id;
+            $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
+            //解析并生成图片数据
+            $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+            if(strpos($course['img_str'], 'OSS')){
+                $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+            } else {
+                $course['img'] = $course['img_str'];
+            }
             if($course['is_old_hisihi_data']){
-                $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
-                //解析并生成图片数据
-                $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-                if(strpos($course['img_str'], 'OSS')){
-                    $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
-                } else {
-                    $course['img'] = $course['img_str'];
-                }
                 //获取收藏信息
                 $favorite['appname'] = 'Issue';
                 $favorite['table'] = 'issue_content';
@@ -1039,14 +1039,6 @@ class OrganizationController extends AppController
                     'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
                 $course['supportCount'] = $supportCount;
             }else{
-                $course['type'] = $tag_model->where('`status`=1 and `type`=5 and `id`='.$category_id)->getField('value');
-                $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-                if(strpos($course['img_str'], 'OSS')){
-                    $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
-                } else {
-                    $course['img'] = $course['img_str'];
-                }
-                //$course['img'] = $this->fetchImage($course['img']);
                 //获取收藏信息
                 $favorite['appname'] = 'Organization';
                 $favorite['table'] = 'organization_courses';
@@ -2158,7 +2150,6 @@ class OrganizationController extends AppController
             unset($courseInfo['issue_content_id']);
             unset($courseInfo['img_str']);
             unset($courseInfo['category_id']);
-            unset($courseInfo['img']);
             unset($courseInfo['status']);
             unset($courseInfo['create_time']);
             if($videoModel){
