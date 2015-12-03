@@ -29,10 +29,10 @@
                         <label class="item-label">认证标志图片</label>
                         <div class="controls">
                             <input type="file" id="upload_company_picture">
-                            <input type="hidden" name="picture" id="cover_id_company" value="{$info.pic_id}"/>
+                            <input type="hidden" name="picture" id="cover_id_company" value="{$info.pic_url}"/>
                             <div class="upload-img-box">
-                                <notempty name="info['pic_id']">
-                                    <div class="upload-pre-item"><img src="{$info['pic_id']}"/></div>
+                                <notempty name="info['pic_url']">
+                                    <div class="upload-pre-item"><img src="{$info['pic_url']}"/></div>
                                 </notempty>
                             </div>
                         </div>
@@ -73,7 +73,100 @@
                         </script>
                     </div>
                 </div>
-
+                <div class="form-item cf">
+                    <label class="item-label">未认证标志图片</label>
+                    <div class="controls">
+                        <input type="file" id="upload_auth_disable">
+                        <input type="hidden" name="disable_pic_url" id="auth_disable" value="{$info.disable_pic_url}"/>
+                        <div class="upload-img-box">
+                            <notempty name="info['disable_pic_url']">
+                                <div class="upload-pre-item"><img src="{$info['disable_pic_url']}"/></div>
+                            </notempty>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        //上传图片
+                        /* 初始化上传插件 */
+                        $("#upload_auth_disable").uploadify({
+                            "height"          : 30,
+                            "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                            "fileObjName"     : "download",
+                            "buttonText"      : "上传图片",
+                            "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                            "width"           : 120,
+                            'removeTimeout'	  : 1,
+                            'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                            "onUploadSuccess" : uploadPictureCompany,
+                            'onFallback' : function() {
+                                alert('未检测到兼容版本的Flash.');
+                            }
+                        });
+                        function uploadPictureCompany(file, data){
+                            var data = $.parseJSON(data);
+                            var src = '';
+                            if(data.status){
+                                $("#auth_disable").val(data.id);
+                                src = data.url ||  data.path
+                                $("#auth_disable").parent().find('.upload-img-box').html(
+                                        '<div class="upload-pre-item"><img src="' + src + '"/></div>'
+                                );
+                            } else {
+                                updateAlert(data.info);
+                                setTimeout(function(){
+                                    $('#top-alert').find('button').click();
+                                    $(that).removeClass('disabled').prop('disabled',false);
+                                },1500);
+                            }
+                        }
+                    </script>
+                </div>
+                <div class="form-item cf">
+                    <label class="item-label">认证标签图片</label>
+                    <div class="controls">
+                        <input type="file" id="upload_auth_tag">
+                        <input type="hidden" name="tag_pic_url" id="auth_tag" value="{$info.tag_pic_url}"/>
+                        <div class="upload-img-box">
+                            <notempty name="info['tag_pic_url']">
+                                <div class="upload-pre-item"><img src="{$info['tag_pic_url']}"/></div>
+                            </notempty>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        //上传图片
+                        /* 初始化上传插件 */
+                        $("#upload_auth_tag").uploadify({
+                            "height"          : 30,
+                            "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                            "fileObjName"     : "download",
+                            "buttonText"      : "上传图片",
+                            "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                            "width"           : 120,
+                            'removeTimeout'	  : 1,
+                            'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                            "onUploadSuccess" : uploadPictureCompany,
+                            'onFallback' : function() {
+                                alert('未检测到兼容版本的Flash.');
+                            }
+                        });
+                        function uploadPictureCompany(file, data){
+                            var data = $.parseJSON(data);
+                            var src = '';
+                            if(data.status){
+                                $("#auth_tag").val(data.id);
+                                src = data.url ||  data.path
+                                $("#auth_tag").parent().find('.upload-img-box').html(
+                                        '<div class="upload-pre-item"><img src="' + src + '"/></div>'
+                                );
+                            } else {
+                                updateAlert(data.info);
+                                setTimeout(function(){
+                                    $('#top-alert').find('button').click();
+                                    $(that).removeClass('disabled').prop('disabled',false);
+                                },1500);
+                            }
+                        }
+                    </script>
+                </div>
                 <!-- 按钮 -->
                 <div class="form-item cf">
                     <label class="item-label"></label>
