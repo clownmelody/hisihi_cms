@@ -984,24 +984,45 @@ class OrganizationController extends AppController
     /**
      * 获取机构课程列表，展示用
      * @param null $organization_id
+     * @param null $type_id
+     * @param null $courses_id
+     * @param null $order
      * @param int $page
      * @param int $count
      */
-    public function appGetCoursesList($organization_id=null, $page=1, $count=9){
+    public function appGetCoursesList($organization_id=null,$type_id=null,$courses_id=null,$order=null, $page=1, $count=5){
         $org_model = M('Organization');
-        if($organization_id){
-            $map['organization_id'] = $organization_id;
-            $logo_url = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
-        }
         $model = M('OrganizationCourse');
-        $tag_model = M("OrganizationTag");
         $video_model = M('OrganizationVideo');
         $favorite_model = M('Favorite');
         $support_model = M('Support');
         $issue_model = M('Issue');
+        if($organization_id){//按机构查询/默认全部
+            $map['organization_id'] = $organization_id;
+            $logo_url = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
+        }
+        if($type_id){//按分类查询
+            $map['category_id'] = $type_id;
+        }
+        $order = op_t($order);
+        if ($order == 'view') {//排序
+            $order = 'view_count desc';
+        } else {
+            $order = 'create_time desc';//默认的
+        }
+        if($courses_id){//相关推荐
+            $course = $model->field('category_id')->find($courses_id);
+            if(!$course){
+                $this->apiError(-404, '未找到该课程！');
+            }
+            $map['id'] = array('neq' , $courses_id);
+            $map['category_id'] = $course['category_id'];
+        }
+
+
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order($order)->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
