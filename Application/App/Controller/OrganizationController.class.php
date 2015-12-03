@@ -2088,6 +2088,15 @@ class OrganizationController extends AppController
             $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
             $courseInfo['video_duration'] = $videoDuration;
             $video_list = $videoModel->field('name, url, duration')->where('status=1 and course_id='.$course_id)->select();
+            foreach($video_list as &$video){
+                $oss_video_pre = 'http://game-video.oss-cn-qingdao.aliyuncs.com/';
+                $oss_video_post = '/p.m3u8';
+                if(empty($video['url'])){
+                    $video['url'] = null;
+                } else {
+                    $video['url'] = $oss_video_pre . $video['url'] . $oss_video_post;
+                }
+            }
             unset($courseInfo['is_old_hisihi_data']);
             unset($courseInfo['issue_content_id']);
             unset($courseInfo['img_str']);
