@@ -873,8 +873,16 @@ class OrganizationController extends AppController
      *获取视频分类
      */
     public function getVideoCategory(){
-        $model = M("OrganizationTag");
+        /*$model = M("OrganizationTag");
         $result = $model->where('status=1 and type=5')->field('id,value')->select();
+        if($result){
+            $extra['data'] = $result;
+            $this->apiSuccess('获取视频分类列表成功', null, $extra);
+        } else {
+            $this->apiError(-1,"获取视频分类列表失败");
+        }*/
+        $model = M("Issue");
+        $result = $model->where('status=1 and pid=0')->field('id, title as value')->select();
         if($result){
             $extra['data'] = $result;
             $this->apiSuccess('获取视频分类列表成功', null, $extra);
@@ -1837,12 +1845,28 @@ class OrganizationController extends AppController
         $data['course_id']=$course_id;
         $data['student_university']=$student_university;
         $data['create_time']=time();
+        $data['blz_id'] = date("Y-m-d-H-i-s").'-'.$this->getRandChar(5);
         $result = $model->add($data);
         if($result){
             $this->apiSuccess('报名成功');
         }else{
             $this->apiError(-4,'添加报名信息失败');
         }
+    }
+
+    /**
+     * 获取随机字符串
+     * @param $length
+     * @return null|string
+     */
+    private function getRandChar($length){
+        $str = null;
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $max = strlen($strPol)-1;
+        for($i=0;$i<$length;$i++){
+            $str.=$strPol[rand(0,$max)];
+        }
+        return $str;
     }
 
     /**

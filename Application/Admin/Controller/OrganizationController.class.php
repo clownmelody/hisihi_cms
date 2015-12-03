@@ -716,10 +716,12 @@ class OrganizationController extends AdminController
 
     /**
      * 报名通过
+     * @param $id
      */
     public function enroll_pass($id){
         if(!empty($id)){
             $model = M('OrganizationEnroll');
+            $data['confirm_time'] = time();
             $data['status'] = 2;
             if(is_array($id)){
                 foreach ($id as $i)
