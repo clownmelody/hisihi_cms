@@ -1077,7 +1077,15 @@ class OrganizationController extends AdminController
             $data['name'] = $_POST['name'];
             if(is_numeric($_POST['picture'])){
                 $this->uploadLogoPicToOSS($_POST['picture']);
-                $data['pic_id'] = $this->fetchCdnImage($_POST['picture']);
+                $data['pic_url'] = $this->fetchCdnImage($_POST['picture']);
+            }
+            if(is_numeric($_POST['disable_pic_url'])){
+                $this->uploadLogoPicToOSS($_POST['disable_pic_url']);
+                $data['disable_pic_url'] = $this->fetchCdnImage($_POST['disable_pic_url']);
+            }
+            if(is_numeric($_POST['tag_pic_url'])){
+                $this->uploadLogoPicToOSS($_POST['tag_pic_url']);
+                $data['tag_pic_url'] = $this->fetchCdnImage($_POST['tag_pic_url']);
             }
             $data['content'] = $_POST['content'];
             if(empty($id)){
@@ -1106,7 +1114,6 @@ class OrganizationController extends AdminController
             } else {
                 $result = $Config->where('id='.$id)->save($data);
                 if($result){
-                    $this->uploadLogoPicToOSS($data['pic_id']);
                     $this->success('编辑成功', U('authentication_config'));
                 } else {
                     $this->error('编辑失败');

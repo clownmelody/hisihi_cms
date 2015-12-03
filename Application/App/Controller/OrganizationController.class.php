@@ -988,22 +988,20 @@ class OrganizationController extends AppController
      * @param int $count
      */
     public function appGetCoursesList($organization_id=null, $page=1, $count=9){
-        if(!$organization_id){
-            $this->apiError(-1,'传入的机构id不能为空');
+        $org_model = M('Organization');
+        if($organization_id){
+            $map['organization_id'] = $organization_id;
+            $logo_url = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
         }
         $model = M('OrganizationCourse');
         $tag_model = M("OrganizationTag");
-        $org_model = M('Organization');
         $video_model = M('OrganizationVideo');
         $favorite_model = M('Favorite');
         $support_model = M('Support');
         $issue_model = M('Issue');
-        $logo = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
-        $logo_url = $logo;
-        $map['organization_id'] = $organization_id;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order('create_time desc')->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -1072,6 +1070,9 @@ class OrganizationController extends AppController
                     'table'=>'organization_courses','row'=>$course['id']))->count();
                 $course['supportCount'] = $supportCount;
             }
+            if(!$organization_id){
+                $logo_url = $org_model->where(array('id'=>$course['organization_id'],'status'=>1))->getField('logo');
+            }
             $course['organization_logo'] = $logo_url;
             $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
             $course['duration'] = $course_duration;
@@ -1081,6 +1082,7 @@ class OrganizationController extends AppController
             unset($course['img_str']);
             unset($course['view_count']);
             unset($course['issue_content_id']);
+            unset($course['organization_id']);
             $video_course[] = $course;
         }
         $extra['total_count'] = $totalCount;
@@ -1644,6 +1646,7 @@ class OrganizationController extends AppController
         if($res){
             unset($data['comprehensive_score']);
             unset($data['comment']);
+            $strScoreList = stripslashes($strScoreList);
             $scoreList = json_decode($strScoreList, true);
             foreach($scoreList as $score){
                 $id = $score['id'];
