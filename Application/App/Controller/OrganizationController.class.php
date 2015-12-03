@@ -362,9 +362,7 @@ class OrganizationController extends AppController
             if(!$logo){
                 $logo = 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
-            $result['logo']=array(
-                'url'=>$logo
-            );
+            $result['logo'] = $logo;
             $advantage = $result['advantage'];
             $result['advantage']=$advantage;
             $extra['data'] = $result;
@@ -391,9 +389,7 @@ class OrganizationController extends AppController
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
-            $result['logo']=array(
-                'url'=>$logo
-            );
+            $result['logo'] = $logo;
             $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
             $result['followCount'] = $this->getFollowCount($organization_id);
             $result['teachersCount'] = $this->getTeachersCount($organization_id);
@@ -2088,9 +2084,9 @@ class OrganizationController extends AppController
     private function getAuthenticationInfo($organization_id=0){
         $model = M('OrganizationAuthenticationConfig');
         $authModel = M('OrganizationAuthentication');
-        $config_list = $model->field('id, name, pic_id, content, default_display')->where('status=1')->select();
+        $config_list = $model->field('id, name, pic_url, disable_pic_url, tag_pic_url, content, default_display')->where('status=1')->select();
         foreach($config_list as &$config){
-            $config['pic_url'] = $config['pic_id'];
+            //$config['pic_url'] = $config['pic_id'];
             $map['organization_id'] = $organization_id;
             $map['authentication_id'] = $config['id'];
             if($authModel->where($map)->find()){
@@ -2098,7 +2094,6 @@ class OrganizationController extends AppController
             } else {
                 $config['status'] = false;
             }
-            unset($config['pic_id']);
         }
         return $config_list;
     }
@@ -2321,13 +2316,16 @@ class OrganizationController extends AppController
         $auth_list = $authModel->field('authentication_id')->where(array('organization_id'=>$organization_id,'status'=>1))->select();
         $auth_array = array();
         foreach($auth_list as &$auth){
-            $pic_id = $authConfigModel->where('`default_display`=1 and `status`=1 and id='.$auth['authentication_id'])->getField('pic_id');
-            if(!$pic_id){
+            $pic = $authConfigModel->where('`default_display`=1 and `status`=1 and id='.$auth['authentication_id'])->field('pic_url, disable_pic_url, tag_pic_url')->find();
+            if(!$pic['pic_url']&&!$pic['disable_pic_url']&&!$pic['tag_pic_url']){
                 continue;
             }
-            $auth['authentication_img'] = $this->fetchImage($pic_id);
+            $auth['authentication_img'] = $pic['pic_url'];
+            $auth['authentication_disable_img'] = $pic['disable_pic_url'];
+            $auth['authentication_tag_img'] = $pic['tag_pic_url'];
             $auth_array[] = $auth;
         }
         return $auth_array;
     }
+
 }
