@@ -873,8 +873,16 @@ class OrganizationController extends AppController
      *获取视频分类
      */
     public function getVideoCategory(){
-        $model = M("OrganizationTag");
+        /*$model = M("OrganizationTag");
         $result = $model->where('status=1 and type=5')->field('id,value')->select();
+        if($result){
+            $extra['data'] = $result;
+            $this->apiSuccess('获取视频分类列表成功', null, $extra);
+        } else {
+            $this->apiError(-1,"获取视频分类列表失败");
+        }*/
+        $model = M("Issue");
+        $result = $model->where('status=1 and pid=0')->field('id, title as value')->select();
         if($result){
             $extra['data'] = $result;
             $this->apiSuccess('获取视频分类列表成功', null, $extra);
