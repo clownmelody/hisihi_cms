@@ -2032,10 +2032,6 @@ class OrganizationController extends AppController
         $memberModel = M('Member');
         $avatarModel = M('Avatar');
         $courseInfo = $courseModel->where('status=1 and id='.$course_id)->find();
-        unset($courseInfo['img']);
-        unset($courseInfo['status']);
-        unset($courseInfo['category_id']);
-        unset($courseInfo['create_time']);
         if($courseInfo){
             $organization_id = $courseInfo['organization_id'];
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$organization_id, 'type'=>2))->find();
@@ -2097,9 +2093,74 @@ class OrganizationController extends AppController
                     $video['url'] = $oss_video_pre . $video['url'] . $oss_video_post;
                 }
             }
+            $issue_model = M('Issue');
+            $favorite_model = M('Favorite');
+            $support_model = M('Support');
+            $courseInfo['type'] = $issue_model->where('id='.$courseInfo['category_id'])->getField('title');
+            $courseInfo['type_id'] = $courseInfo['category_id'];
+            //解析并生成图片数据
+            $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+            if(strpos($courseInfo['img_str'], 'OSS')){
+                $courseInfo['img'] = str_replace('OSS-', $oss_pic_pre, $courseInfo['img_str']);
+            } else {
+                $courseInfo['img'] = $courseInfo['img_str'];
+            }
+            if($courseInfo['is_old_hisihi_data']){
+                //获取收藏信息
+                $favorite['appname'] = 'Issue';
+                $favorite['table'] = 'issue_content';
+                $favorite['row'] = $courseInfo['issue_content_id'];
+                $favorite['uid'] = $this->getUid();
+                if ($favorite_model->where($favorite)->count()) {
+                    $courseInfo['isFavorite'] = 1;
+                } else {
+                    $courseInfo['isFavorite'] = 0;
+                }
+                $favoriteCount = $favorite_model->where(array('appname'=>'Issue',
+                    'table'=>'issue_content','row'=>$courseInfo['issue_content_id']))->count();
+                $courseInfo['favoriteCount'] = $favoriteCount;
+                //获取点赞信息
+                if ($support_model->where($favorite)->count()) {
+                    $courseInfo['isSupportd'] = 1;
+                } else {
+                    $courseInfo['isSupportd'] = 0;
+                }
+                $supportCount = $support_model->where(array('appname'=>'Issue',
+                    'table'=>'issue_content','row'=>$courseInfo['issue_content_id']))->count();
+                $courseInfo['supportCount'] = $supportCount;
+            }else{
+                //获取收藏信息
+                $favorite['appname'] = 'Organization';
+                $favorite['table'] = 'organization_courses';
+                $favorite['row'] = $courseInfo['id'];
+                $favorite['uid'] = $this->getUid();
+                if ($favorite_model->where($favorite)->count()) {
+                    $courseInfo['isFavorite'] = 1;
+                } else {
+                    $courseInfo['isFavorite'] = 0;
+                }
+                $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
+                    'table'=>'organization_courses','row'=>$courseInfo['id']))->count();
+                $courseInfo['favoriteCount'] = $favoriteCount;
+                //获取点赞信息
+                if ($support_model->where($favorite)->count()) {
+                    $courseInfo['isSupportd'] = 1;
+                } else {
+                    $courseInfo['isSupportd'] = 0;
+                }
+                $supportCount = $support_model->where(array('appname'=>'Organization',
+                    'table'=>'organization_courses','row'=>$courseInfo['id']))->count();
+                $courseInfo['supportCount'] = $supportCount;
+            }
+            $courseInfo['ReplyCount'] = 0;
+            $courseInfo['isRecommend'] = 0;
             unset($courseInfo['is_old_hisihi_data']);
             unset($courseInfo['issue_content_id']);
             unset($courseInfo['img_str']);
+            unset($courseInfo['category_id']);
+            unset($courseInfo['img']);
+            unset($courseInfo['status']);
+            unset($courseInfo['create_time']);
             if($videoModel){
                 $courseInfo['video_list'] = $video_list;
                 $extra['data'] = $courseInfo;
