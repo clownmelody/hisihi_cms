@@ -1002,7 +1002,20 @@ class OrganizationController extends AppController
             $logo_url = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
         }
         if($type_id){//按分类查询
-            $map['category_id'] = $type_id;
+            $issueType = $issue_model->field('pid')->find($type_id);
+            if(!$issueType)
+                $this->apiError(-404, '未找到该课程分类！');
+            if($issueType['pid'] == 0){
+                $issueTypeList = $issue_model->field('id')->where('pid='.$type_id)->select();
+                $issueTypeIds[] = $type_id;
+                foreach($issueTypeList as $issueType){
+                    $issueTypeIds[] = $issueType['id'];
+                }
+                $ids= implode(',',$issueTypeIds);
+                $map['category_id'] = array('in',$ids);
+            } else {
+                $map['category_id'] = $type_id;
+            }
         }
         $order = op_t($order);
         if ($order == 'view') {//排序
