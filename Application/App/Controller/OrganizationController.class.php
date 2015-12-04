@@ -2045,7 +2045,7 @@ class OrganizationController extends AppController
      * @param int $uid
      * @param int $course_id
      */
-    public function getCourseDetail($uid=0, $course_id=0){
+    public function getCourseDetail($uid=0, $course_id=0,$type=null){
         if($course_id==0){
             $this->apiError(-1, '传入课程id不能为空');
         }
@@ -2105,7 +2105,6 @@ class OrganizationController extends AppController
                         break;
                     }
                 }
-                unset($courseInfo['lecturer']);
             }
             $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
             $courseInfo['video_duration'] = $videoDuration;
@@ -2189,6 +2188,14 @@ class OrganizationController extends AppController
             if($videoModel){
                 $courseInfo['video_list'] = $video_list;
                 $extra['data'] = $courseInfo;
+                if($type == 'view'){//用于页面分享
+                    $course_content['duration'] = $this->sec2time($courseInfo['duration']);
+                    $this->assign('course_content', $courseInfo);
+                    $relatedList = $this->appGetCoursesList(null,$courseInfo['type_id'],$course_id);
+                    $this->assign('relatedList',$relatedList);
+                    $this->setTitle('{$course_content.title|op_t} — 嘿设汇');
+                    $this->display();
+                }
                 $this->apiSuccess('获取视频详情成功', null, $extra);
             }
         } else {
