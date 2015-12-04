@@ -1031,7 +1031,7 @@ class OrganizationController extends AppController
             $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
             //解析并生成图片数据
             $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-            if(strpos($course['img_str'], 'OSS')){
+            if(substr_count($course['img_str'], 'OSS')){
                 $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
             } else {
                 $course['img'] = $course['img_str'];
@@ -1297,7 +1297,7 @@ class OrganizationController extends AppController
             $course['category_name'] = $category['value'];
         }
         $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-        if(strpos($course['img_str'], 'OSS')){
+        if(substr_count($course['img_str'], 'OSS')){
             $course['img_url'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
         } else {
             $course['img_url'] = $course['img_str'];
@@ -2062,7 +2062,7 @@ class OrganizationController extends AppController
             if($organizationInfo){
                 $courseInfo['organization']['name'] = $organizationInfo['name'];
                 $courseInfo['organization']['introduce'] = $organizationInfo['introduce'];
-                $courseInfo['organization']['logo'] = $this->getOrganizationLogo($organizationInfo['logo']);
+                $courseInfo['organization']['logo'] = $organizationInfo['logo'];
                 $courseInfo['organization']['view_count'] = $organizationInfo['view_count'];
                 $courseInfo['organization']['followCount'] = $this->getFollowCount($organization_id);
                 $courseInfo['organization']['enrollCount'] = $this->getEnrollCount($organization_id);
@@ -2113,7 +2113,7 @@ class OrganizationController extends AppController
             $courseInfo['type_id'] = $courseInfo['category_id'];
             //解析并生成图片数据
             $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-            if(strpos($courseInfo['img_str'], 'OSS')){
+            if(substr_count($courseInfo['img_str'], 'OSS')){
                 $courseInfo['img'] = str_replace('OSS-', $oss_pic_pre, $courseInfo['img_str']);
             } else {
                 $courseInfo['img'] = $courseInfo['img_str'];
