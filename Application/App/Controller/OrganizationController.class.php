@@ -987,38 +987,72 @@ class OrganizationController extends AppController
     /**
      * 获取机构课程列表，展示用
      * @param null $organization_id
+     * @param null $type_id
+     * @param null $courses_id
+     * @param null $order
      * @param int $page
      * @param int $count
      */
-    public function appGetCoursesList($organization_id=null, $page=1, $count=9){
+    public function appGetCoursesList($organization_id=null,$type_id=null,$courses_id=null,$order=null, $page=1, $count=5){
         $org_model = M('Organization');
-        if($organization_id){
-            $map['organization_id'] = $organization_id;
-            $logo_url = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
-        }
         $model = M('OrganizationCourse');
-        $tag_model = M("OrganizationTag");
         $video_model = M('OrganizationVideo');
         $favorite_model = M('Favorite');
         $support_model = M('Support');
         $issue_model = M('Issue');
+        if($organization_id){//按机构查询/默认全部
+            $map['organization_id'] = $organization_id;
+            $logo_url = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
+        }
+        if($type_id){//按分类查询
+            $issueType = $issue_model->field('pid')->find($type_id);
+            if(!$issueType)
+                $this->apiError(-404, '未找到该课程分类！');
+            if($issueType['pid'] == 0){
+                $issueTypeList = $issue_model->field('id')->where('pid='.$type_id)->select();
+                $issueTypeIds[] = $type_id;
+                foreach($issueTypeList as $issueType){
+                    $issueTypeIds[] = $issueType['id'];
+                }
+                $ids= implode(',',$issueTypeIds);
+                $map['category_id'] = array('in',$ids);
+            } else {
+                $map['category_id'] = $type_id;
+            }
+        }
+        $order = op_t($order);
+        if ($order == 'view') {//排序
+            $order = 'view_count desc';
+        } else {
+            $order = 'create_time desc';//默认的
+        }
+        if($courses_id){//相关推荐
+            $course = $model->field('category_id')->find($courses_id);
+            if(!$course){
+                $this->apiError(-404, '未找到该课程！');
+            }
+            $map['id'] = array('neq' , $courses_id);
+            $map['category_id'] = $course['category_id'];
+        }
+
+
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order($order)->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
             $course['ViewCount'] = $course['view_count'];
             $course['type_id'] = $category_id;
+            $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
+            //解析并生成图片数据
+            $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+            if(substr_count($course['img_str'], 'OSS')){
+                $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+            } else {
+                $course['img'] = $course['img_str'];
+            }
             if($course['is_old_hisihi_data']){
-                $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
-                //解析并生成图片数据
-                $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-                if(strpos($course['img_str'], 'OSS')){
-                    $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
-                } else {
-                    $course['img'] = $course['img_str'];
-                }
                 //获取收藏信息
                 $favorite['appname'] = 'Issue';
                 $favorite['table'] = 'issue_content';
@@ -1042,14 +1076,6 @@ class OrganizationController extends AppController
                     'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
                 $course['supportCount'] = $supportCount;
             }else{
-                $course['type'] = $tag_model->where('`status`=1 and `type`=5 and `id`='.$category_id)->getField('value');
-                $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-                if(strpos($course['img_str'], 'OSS')){
-                    $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
-                } else {
-                    $course['img'] = $course['img_str'];
-                }
-                //$course['img'] = $this->fetchImage($course['img']);
                 //获取收藏信息
                 $favorite['appname'] = 'Organization';
                 $favorite['table'] = 'organization_courses';
@@ -1287,7 +1313,7 @@ class OrganizationController extends AppController
             $course['category_name'] = $category['value'];
         }
         $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
-        if(strpos($course['img_str'], 'OSS')){
+        if(substr_count($course['img_str'], 'OSS')){
             $course['img_url'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
         } else {
             $course['img_url'] = $course['img_str'];
@@ -2022,12 +2048,12 @@ class OrganizationController extends AppController
      * @param int $uid
      * @param int $course_id
      */
-    public function getCourseDetail($uid=0, $course_id=0){
+    public function getCourseDetail($uid=0, $course_id=0,$type=null){
         if($course_id==0){
             $this->apiError(-1, '传入课程id不能为空');
         }
         if($uid==0){
-            $uid = $this->is_login();
+            $uid = $this->getUid();
         }
         $courseModel = M('OrganizationCourse');
         $organizationModel = M('Organization');
@@ -2035,10 +2061,6 @@ class OrganizationController extends AppController
         $memberModel = M('Member');
         $avatarModel = M('Avatar');
         $courseInfo = $courseModel->where('status=1 and id='.$course_id)->find();
-        unset($courseInfo['img']);
-        unset($courseInfo['status']);
-        unset($courseInfo['category_id']);
-        unset($courseInfo['create_time']);
         if($courseInfo){
             $organization_id = $courseInfo['organization_id'];
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$organization_id, 'type'=>2))->find();
@@ -2056,7 +2078,7 @@ class OrganizationController extends AppController
             if($organizationInfo){
                 $courseInfo['organization']['name'] = $organizationInfo['name'];
                 $courseInfo['organization']['introduce'] = $organizationInfo['introduce'];
-                $courseInfo['organization']['logo'] = $this->getOrganizationLogo($organizationInfo['logo']);
+                $courseInfo['organization']['logo'] = $organizationInfo['logo'];
                 $courseInfo['organization']['view_count'] = $organizationInfo['view_count'];
                 $courseInfo['organization']['followCount'] = $this->getFollowCount($organization_id);
                 $courseInfo['organization']['enrollCount'] = $this->getEnrollCount($organization_id);
@@ -2079,24 +2101,104 @@ class OrganizationController extends AppController
                     $courseInfo['lecturer_relationship'] = 0;
                 }
                 $profile_group = A('User')->_profile_group($courseInfo['lecturer']);
-                $info_list = A('User')->_info_list($profile_group['id'], $uid);
+                $info_list = A('User')->_info_list($profile_group['id'], $courseInfo['lecturer']);
                 foreach ($info_list as $_info) {
                     if($_info['field_name']=='institution'){
                         $courseInfo['lecturer_institution'] = $_info['field_content'];
                         break;
                     }
                 }
-                unset($courseInfo['lecturer']);
             }
             $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
             $courseInfo['video_duration'] = $videoDuration;
             $video_list = $videoModel->field('name, url, duration')->where('status=1 and course_id='.$course_id)->select();
+            foreach($video_list as &$video){
+                $oss_video_pre = 'http://game-video.oss-cn-qingdao.aliyuncs.com/';
+                $oss_video_post = '/p.m3u8';
+                if(empty($video['url'])){
+                    $video['url'] = null;
+                } else {
+                    $video['url'] = $oss_video_pre . $video['url'] . $oss_video_post;
+                }
+            }
+            $issue_model = M('Issue');
+            $favorite_model = M('Favorite');
+            $support_model = M('Support');
+            $courseInfo['type'] = $issue_model->where('id='.$courseInfo['category_id'])->getField('title');
+            $courseInfo['type_id'] = $courseInfo['category_id'];
+            //解析并生成图片数据
+            $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+            if(substr_count($courseInfo['img_str'], 'OSS')){
+                $courseInfo['img'] = str_replace('OSS-', $oss_pic_pre, $courseInfo['img_str']);
+            } else {
+                $courseInfo['img'] = $courseInfo['img_str'];
+            }
+            if($courseInfo['is_old_hisihi_data']){
+                //获取收藏信息
+                $favorite['appname'] = 'Issue';
+                $favorite['table'] = 'issue_content';
+                $favorite['row'] = $courseInfo['issue_content_id'];
+                $favorite['uid'] = $this->getUid();
+                if ($favorite_model->where($favorite)->count()) {
+                    $courseInfo['isFavorite'] = 1;
+                } else {
+                    $courseInfo['isFavorite'] = 0;
+                }
+                $favoriteCount = $favorite_model->where(array('appname'=>'Issue',
+                    'table'=>'issue_content','row'=>$courseInfo['issue_content_id']))->count();
+                $courseInfo['favoriteCount'] = $favoriteCount;
+                //获取点赞信息
+                if ($support_model->where($favorite)->count()) {
+                    $courseInfo['isSupportd'] = 1;
+                } else {
+                    $courseInfo['isSupportd'] = 0;
+                }
+                $supportCount = $support_model->where(array('appname'=>'Issue',
+                    'table'=>'issue_content','row'=>$courseInfo['issue_content_id']))->count();
+                $courseInfo['supportCount'] = $supportCount;
+            }else{
+                //获取收藏信息
+                $favorite['appname'] = 'Organization';
+                $favorite['table'] = 'organization_courses';
+                $favorite['row'] = $courseInfo['id'];
+                $favorite['uid'] = $this->getUid();
+                if ($favorite_model->where($favorite)->count()) {
+                    $courseInfo['isFavorite'] = 1;
+                } else {
+                    $courseInfo['isFavorite'] = 0;
+                }
+                $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
+                    'table'=>'organization_courses','row'=>$courseInfo['id']))->count();
+                $courseInfo['favoriteCount'] = $favoriteCount;
+                //获取点赞信息
+                if ($support_model->where($favorite)->count()) {
+                    $courseInfo['isSupportd'] = 1;
+                } else {
+                    $courseInfo['isSupportd'] = 0;
+                }
+                $supportCount = $support_model->where(array('appname'=>'Organization',
+                    'table'=>'organization_courses','row'=>$courseInfo['id']))->count();
+                $courseInfo['supportCount'] = $supportCount;
+            }
+            $courseInfo['ReplyCount'] = 0;
+            $courseInfo['isRecommend'] = 0;
             unset($courseInfo['is_old_hisihi_data']);
             unset($courseInfo['issue_content_id']);
             unset($courseInfo['img_str']);
+            unset($courseInfo['category_id']);
+            unset($courseInfo['status']);
+            unset($courseInfo['create_time']);
             if($videoModel){
                 $courseInfo['video_list'] = $video_list;
                 $extra['data'] = $courseInfo;
+                if($type == 'view'){//用于页面分享
+                    $course_content['duration'] = $this->sec2time($courseInfo['duration']);
+                    $this->assign('course_content', $courseInfo);
+                    $relatedList = $this->appGetCoursesList(null,$courseInfo['type_id'],$course_id);
+                    $this->assign('relatedList',$relatedList);
+                    $this->setTitle('{$course_content.title|op_t} — 嘿设汇');
+                    $this->display();
+                }
                 $this->apiSuccess('获取视频详情成功', null, $extra);
             }
         } else {

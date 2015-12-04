@@ -1872,7 +1872,7 @@ class OrganizationController extends AdminController
             }else{
                 $course['organization_name'] = M('Organization')->where('status=1 and id='.$course['organization_id'])->getField("name");
             }
-            $course['category'] = M('OrganizationTag')->where(array('id'=>$course['category_id'],'type'=>5,'status'=>1))->getField('value');
+            $course['category'] = M('Issue')->where(array('id'=>$course['category_id'],'pid'=>0,'status'=>1))->getField('title');
             $course['teacher'] = M('Member')->where(array('uid'=>$course['lecturer']))->getField('nickname');
         }
 
@@ -1904,7 +1904,7 @@ class OrganizationController extends AdminController
             $this->assign('organization_name',$organization_name);
             $this->assign('organization_id',$organization_id);
         }
-        $category = M('OrganizationTag')->where(array('status'=>1,'type'=>5))->field('id,value')->select();
+        $category = M('Issue')->where(array('status'=>1,'pid'=>0))->field('id,title')->select();
         if(I('from_org')){
             $this->assign('from_org', I('from_org'));
         }
@@ -1984,7 +1984,7 @@ class OrganizationController extends AdminController
         }
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
         $data['teacher'] = M('Member')->where(array('uid'=>$data['lecturer'],'status'=>1))->getField('nickname');
-        $category = M('OrganizationTag')->where(array('status'=>1,'type'=>5))->field('id,value')->select();
+        $category = M('Issue')->where(array('status'=>1,'pid'=>0))->field('id,title')->select();
         $teacher_ids = M('OrganizationRelation')->field('uid')
             ->where(array('organization_id'=>$data['organization_id'],'group'=>6,'status'=>1))->select();
         foreach($teacher_ids as &$teacher_id){
@@ -1994,6 +1994,7 @@ class OrganizationController extends AdminController
         }
         if(I('from_org')){
             $this->assign('from_org', I('from_org'));
+            $this->assign('organization_id', I('organization_id'));
         }
         $this->assign('teacher_list', $teacher_list);
         $this->assign('info', $data);
