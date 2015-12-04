@@ -143,6 +143,7 @@ class EventController extends AdminController
                 $this->success('编辑失败。', '');
             }
         }else{
+            $content['view_count'] = rand(C('CompetitionInitMinViewCount'), C('CompetitionInitMaxViewCount'));
             $rs = D('Event')->add($content);
             if ($rs) {
                 $this->success('发布成功。' , U('event'));
