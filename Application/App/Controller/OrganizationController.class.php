@@ -2050,7 +2050,7 @@ class OrganizationController extends AppController
             $this->apiError(-1, '传入课程id不能为空');
         }
         if($uid==0){
-            $uid = $this->is_login();
+            $uid = $this->getUid();
         }
         $courseModel = M('OrganizationCourse');
         $organizationModel = M('Organization');
@@ -2098,7 +2098,7 @@ class OrganizationController extends AppController
                     $courseInfo['lecturer_relationship'] = 0;
                 }
                 $profile_group = A('User')->_profile_group($courseInfo['lecturer']);
-                $info_list = A('User')->_info_list($profile_group['id'], $uid);
+                $info_list = A('User')->_info_list($profile_group['id'], $courseInfo['lecturer']);
                 foreach ($info_list as $_info) {
                     if($_info['field_name']=='institution'){
                         $courseInfo['lecturer_institution'] = $_info['field_content'];
