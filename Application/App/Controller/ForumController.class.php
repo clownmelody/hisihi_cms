@@ -2540,6 +2540,32 @@ class ForumController extends AppController
     }
 
     /**
+     * 获取作业源文件总数
+     */
+    private function getHiworksTotalCount(){
+        $cateModel = M('Category');
+        $count = $cateModel->where('pid=1 and status=1')->sum('fake_hiworks_count');
+        return $count;
+    }
+
+    /**
+     * 获取入住大学生总数;
+     * http://115.28.72.197:8080/hisihi/app_base_data
+     */
+    public function getAllColleageStudentsCount(){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'http://115.28.72.197:8080/hisihi/app_base_data');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        $output = json_decode($output);
+        $data = json_decode($output->data);
+        return $data->installations;
+    }
+
+    /**
      * 获取一条社区内的广告
      * @param $width
      * @param $height

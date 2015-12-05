@@ -247,6 +247,11 @@ return  array(
     'CompanyDayIncreaseMaxViewCount' => 2000,
     // end 公司人气
 
+    // 解决问题数
+    'QuestionsResolvedDayIncreaseMinViewCount' => 2000,
+    'QuestionsResolvedDayIncreaseMaxViewCount' => 3000,
+    // end 解决问题数
+
     /* ------------------------------------- */
 
 
