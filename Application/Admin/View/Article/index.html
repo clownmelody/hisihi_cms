@@ -51,6 +51,16 @@
 			<button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/setStatus",array("status"=>-1))}">删 除</button>
 			<!-- <button class="btn document_add" url="{:U('article/batchOperate',array('cate_id'=>$cate_id,'pid'=>I('pid',0)))}">导入</button> -->
 			<button class="btn list_sort" url="{:U('sort',array('cate_id'=>$cate_id,'pid'=>I('pid',0)),'')}">排序</button>
+			<!--设置作业数量-->
+			<div class="btn-group-click adv-sch-pannel fl">
+				<button class="btn">设置数量</button>
+				<div class="dropdown cf">
+					<div class="row">
+						<input type="text" id="works_count" name="works_count" class="text input-2x" value="" placeholder="请输入作业数量"  />
+						<a class="btn ajax-get" id="set_works_count" href="{:U('article/set_works_count','cate_id='.$cate_id)}" onclick="set_works_count()">提交</a>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<!-- 高级搜索 -->
@@ -128,6 +138,14 @@
 <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
 <script type="text/javascript">
+	function set_works_count(){
+		var works_count = $('#works_count').val();
+		/*var url = $('#set_works_count').attr('url');
+		url += '&works_count=' + works_count;*/
+
+		var url = "{:U('article/set_works_count','cate_id='.$cate_id)}" + "&works_count=" + works_count;
+		$('#set_works_count').attr('href',url);
+	}
 $(function(){
 	//搜索功能
 	$("#search").click(function(){

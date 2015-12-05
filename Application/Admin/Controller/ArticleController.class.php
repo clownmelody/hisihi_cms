@@ -1212,4 +1212,22 @@ class ArticleController extends AdminController {
             $this->error('非法请求！');
         }
     }
+
+    /**
+     *设置hiworks数量
+     */
+    public function set_works_count(){
+        $works_count = I('works_count');
+        $cate_id = I('cate_id');
+        if($works_count){
+            $result = M('Category')->where('id='.$cate_id)->save(array('fake_hiworks_count'=>$works_count));
+            if($result){
+                $this->success('设置成功');
+            }else{
+                $this->error('设置失败');
+            }
+        }else{
+            $this->error('作业数量不能为空');
+        }
+    }
 }
