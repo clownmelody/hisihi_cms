@@ -11,7 +11,8 @@ function commentObj($wrapper,urlObj){
 
     //根据平台的不同，调用不同的app 方法
 
-    this.isFromApp; //页面跳转来源
+    this.isFromApp=false; //页面跳转来源
+    this.userInfo=null;
     this.separateOperation();
     var that = this;
 
@@ -50,41 +51,26 @@ commentObj.prototype={
     separateOperation:function(){
         var that=this,
             operation=browserType(),
-            appFn;
-        //this.userInfo = JSON.parse('');
+            userStr='';
         if(operation.mobile){
             if (operation.android) {
                 //如果方法存在
                 if(typeof AppFunction !="undefined") {
-                    appFn=AppFunction.getUser;
+                    this.isFromApp=true;
+                    userStr=AppFunction.getUser(); //调用app的方法，得到用户的基体信息
                     //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
                 }
             }
             else if (operation.ios) {
                 //如果方法存在
                 if (typeof getUser_iOS !="undefined") {
-                    appFn=getUser_iOS;
+                    userStr=getUser_iOS();//调用app的方法，得到用户的基体信息
+                    this.isFromApp=true;
                 }
             }
-            if (appFn) {
-                this.userInfo = JSON.parse(appFn());  //调用app的方法，得到用户的基体信息
-                this.isFromApp=true;  //来源于app
-            }else{
-                this.isFromApp=false;  //来源于普通页面
+            if(userStr!=''){
+                this.userInfo=JSON.parse(userStr);
             }
-        }
-        else{
-            this.isFromApp=false;  //来源于普通页面
-            //$.ajax({
-            //    url:this.urlObj.server_url+'/user/login',
-            //    data:{username:'18601995231',password:'123456',type:'3',client:'4'},
-            //    async:false,
-            //    success:function(data) {
-            //        if (data.success) {
-            //            that.userInfo = {session_id: data.session_id, name: data.name, pic: data.avatar_url};
-            //        }
-            //    }
-            //});
         }
     },
 

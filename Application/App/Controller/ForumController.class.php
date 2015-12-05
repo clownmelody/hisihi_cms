@@ -748,6 +748,7 @@ class ForumController extends AppController
         $post['teacherReplyTotalCount'] = $teacherReplyTotalCount;
         $post['studentReplyTotalCount'] = $studentReplyTotalCount;
         $post['reply_count'] = $teacherReplyTotalCount + $studentReplyTotalCount;
+        $post['shareUrl'] = 'http://hisihi.com/app.php/forum/toppostdetailv2/post_id/'.$post_id;
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
     }

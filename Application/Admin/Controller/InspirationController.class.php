@@ -56,8 +56,10 @@ class InspirationController extends AdminController {
             $data['selection'] = $_POST['selection'];
             $data["pic_id"] = $_POST["pic_id"];
             $data["create_time"] = time();
-            $data["view_count"] = rand(1000, 3000);
-            $data["favorite_count"] = rand(100, 300);
+            $data["view_count"] = rand(C('InspirationInitMinViewCount'), C('InspirationInitMaxViewCount'));
+            $min_rand = C('InspirationInitMinViewCount')/20 + rand(1, 100);
+            $max_rand = C('InspirationInitMaxViewCount')/20 + rand(1, 100);
+            $data["favorite_count"] = rand($min_rand, $max_rand);
             if(empty($cid)){
                 try {
                     if(!$model->create($data)){
@@ -108,7 +110,8 @@ class InspirationController extends AdminController {
         $this->display();
     }
 
-    /**修改灵感图片
+    /**
+     * 修改灵感图片
      * @param $id
      */
     public function edit($id){

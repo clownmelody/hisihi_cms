@@ -14,6 +14,9 @@ use Think\Exception;
 use Think\Hook;
 use Think\Model;
 
+require_once(APP_PATH . 'User/Conf/config.php');
+require_once(APP_PATH . 'User/Common/common.php');
+
 
 class OrganizationController extends AppController
 {

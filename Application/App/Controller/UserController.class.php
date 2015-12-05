@@ -863,6 +863,7 @@ class UserController extends AppController
         }else{//讲师组
             if((float)$version < 2.1){//老版本只显示讲师用户组信息
                 $where_map['profile_group_id'] = $id;
+                $where_map['id'] = array("in",array('36','37','38'));
             }else{
                 $where_map['id'] = array("in",array('36','37','44','46'));
             }

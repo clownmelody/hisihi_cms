@@ -271,6 +271,7 @@ class IssueController extends AdminController
                 $courseData['create_time'] = time();
                 $courseData['update_time'] = time();
                 $courseData['status'] = 0;
+                $courseData['view_count'] = rand(C('VideoInitMinPlayCount'), C('VideoInitMaxPlayCount'));
                 $courseData['is_old_hisihi_data'] = 1;
                 $courseData['issue_content_id'] = $rs;
                 $courseData['img_str'] = op_t($coursevideo['image']);
