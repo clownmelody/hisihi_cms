@@ -59,7 +59,12 @@
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
     }
-
+    #catalog {
+        box-flex:1;
+        -moz-box-flex:1;
+        -webkit-box-flex:1;
+        border-left: solid 1px #8d8d8d;
+    }
     .course-title {
         font-size: 16px;
         font-weight: bold;
@@ -69,6 +74,7 @@
         color: #4a4a4a;
         font-size: 12px;
         line-height: 13px;
+        margin-top: 3px;
     }
     .course-favorate {
         float: right;
@@ -131,6 +137,16 @@
         width:100%;
         font-size:10px;
         color: #ADADAD;
+    }
+    .catalog-content {
+        box-flex:1;
+        -moz-box-flex:1;
+        -webkit-box-flex:1;
+        padding-left: 10px;
+        font-size: 16px;
+        color:#000;
+        font-weight:normal;
+        width: 55%;
     }
     .comment-info {
         position: relative;
@@ -209,6 +225,25 @@
         text-align: center;
         z-index: 3000;
     }
+    .course-org{
+        float:left;
+        width: 100%;
+        margin-top: 8px;
+    }
+    .org-title{
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    .org-info{
+        float: left;
+        color: #4a4a4a;
+        font-size: 12px;
+        line-height: 13px;
+        margin-left: 10px;
+        font-weight: normal;
+        margin-top: 3px;
+    }
 </style>
 </head>
 
@@ -225,30 +260,84 @@
                    controls preload="auto" width="100%" height="100%"
                    poster="__IMG__/cover.png"
                    data-setup='{true}'>
-                <source src="{$course_content.url}" type='application/vnd.apple.mpegurl' />
+                <source src="{$course_content['video_list'][0]['url']}" type='application/vnd.apple.mpegurl' />
             </video>
         </div>
         <div class="app-section" style="margin: 10px;border:solid 1px #8d8d8d;height: 30px;padding: 0px">
             <div class="Tab">
                 <div id="detail" class="tab-active">详情</div>
+                <div id="catalog">目录</div>
                 <div id="related">相关推荐</div>
                 <!--<div id="comment">评论</div>-->
             </div>
         </div>
-        <div id="detail-content" class="app-section" style="margin: 10px 10px 10px 10px;height: 250px;padding: 15px">
+        <div id="detail-content" class="app-section" style="margin: 10px 10px 10px 10px;height: 300px;padding: 15px">
             <div>
-                <span class="course-title">{$course_content.title}</span>
+                <span class="course-title">{$course_content.type} | {$course_content.title}</span>
                 <span class="course-favorate">
                     <img  style="width: 15px;vertical-align:text-bottom;" src="__IMG__/support.png"/> {$course_content.supportCount}
                 </span>
                 <br>
                 <span class="course-info">
-                    更新:{$course_content.update_time|date='y.m.d',###} <span style="color: #bfcece">|</span> 时间:{$course_content.duration} <span style="color: #bfcece">|</span> 播放:{$course_content.ViewCount}
+                    更新:{$course_content.update_time|date='y.m.d',###} <span style="color: #bfcece">|</span> 时间:{$course_content.duration} <span style="color: #bfcece">|</span> 播放:{$course_content.view_count}
                 </span>
                 <div style="height: 26px"></div>
                 <span class="course-contents">
                     {$course_content.content}
                 </span>
+                <div style="position:absolute;margin-top:5px;margin-left:1px;border-bottom:solid 1px #E5E5E5;width:92%;z-index: 1000;"></div>
+            </div>
+            <div style="padding-top: 5px;">
+                <span class="course-title">机构/讲师介绍</span>
+                <br>
+                <div style="width: 100%;">
+                    <span class="course-org">
+                        <span style="float: left;">
+                            <img  style="width: 32px;height: 32px;vertical-align:text-top;" src="{$course_content['organization']['logo']}"/>
+                        </span>
+                        <span class="org-title">{$course_content['organization']['name']}
+                            <volist name="course_content['organization']['authentication']" id="auth">
+                                <eq name="auth['default_display']" value="1">
+                                    &nbsp;&nbsp;<img  style="width: 15px;vertical-align:text-bottom;" src="{$auth['tag_pic_url']}"/>
+                                </eq>
+                            </volist>
+                            <br>
+                            <span class="org-info">
+                                {$course_content['organization']['view_count']}查看 <span style="color: #bfcece">|</span> {$course_content['organization']['followCount']}关注 <span style="color: #bfcece">|</span> {$course_content['organization']['enrollCount']}报名
+                            </span>
+                        </span>
+                    </span>
+                </div>
+                <div style="height: 50px"></div>
+                <span class="course-contents">
+                    {$course_content['organization']['introduce']}
+                </span>
+                <div style="position:absolute;margin-top:5px;margin-left:1px;border-bottom:solid 1px #E5E5E5;width:92%;z-index: 1000;"></div>
+            </div>
+            <div>
+                <div style="width: 100%;">
+                    <span class="course-org">
+                        <span style="float: left;">
+                            <img  style="width: 32px;height: 32px;vertical-align:text-top;" src="{$course_content.lecturer_avatar}"/>
+                        </span>
+                        <span class="org-title">{$course_content.lecturer_name}<br>
+                            <span class="org-info">
+                                嘿设汇认证:<span>{$course_content.lecturer_institution}</span>
+                            </span>
+                        </span>
+                    </span>
+                </div>
+                <div style="position:absolute;margin-top:48px;margin-left:1px;border-bottom:solid 1px #E5E5E5;width:92%;z-index: 1000;"></div>
+            </div>
+        </div>
+        <div id="catalog-content" style="display: none;">
+            <div class="app-section" style="margin:10px;padding-top: 0px;padding-left: 2px;">
+            <volist name="course_content['video_list']" id="catalogT">
+                    <div class="related-info">
+                        <div class="org-title" style="width:95%;margin-right:10px;padding:5px 0 5px 0;border-bottom:solid 1px #E5E5E5;">
+                            &nbsp;{$i}&nbsp;&nbsp;{$catalogT.name}</div>
+                    </div>
+            </volist>
             </div>
         </div>
         <div id="related-content" style="display: none;">
@@ -271,7 +360,7 @@
                                 {$relatedT.duration} <span style="color: #bfcece">|</span> 播放:{$relatedT.ViewCount}次
                             </div>
                             <div class="related-lecturer">
-                                <p>讲师：{$relatedT.lecturer}</p>
+                                <p>讲师：{$relatedT.lecturer_name}</p>
                             </div>
                             <div class="related-bottom">
                                 <img  style="height: 15px;vertical-align:text-bottom;" src="__IMG__/sup.png"/> {$relatedT.supportCount} <span style="color: #bfcece"> &nbsp;|&nbsp; </span> <img  style="height: 15px;vertical-align:text-bottom;" src="__IMG__/fav.png"/> {$relatedT.favoriteCount} <span style="color: #bfcece"> &nbsp;|&nbsp; </span> <img  style="height: 15px;vertical-align:text-bottom;" src="__IMG__/com.png"/> {$relatedT.ReplyCount}
@@ -367,29 +456,46 @@
         $(page).find('#detail').on('click', function () {
             $(page).find('#detail').addClass("tab-active");
             $(page).find('#related').removeClass("tab-active"); 
-            $(page).find('#comment').removeClass("tab-active"); 
+            $(page).find('#comment').removeClass("tab-active");
+            $(page).find('#catalog').removeClass("tab-active");
 
             $(page).find('#detail-content').show();
             $(page).find('#related-content').hide();
             $(page).find('#comment-content').hide();
+            $(page).find('#catalog-content').hide();
         });
         $(page).find('#related').on('click', function () {
             $(page).find('#detail').removeClass("tab-active");
             $(page).find('#related').addClass("tab-active"); 
-            $(page).find('#comment').removeClass("tab-active"); 
+            $(page).find('#comment').removeClass("tab-active");
+            $(page).find('#catalog').removeClass("tab-active");
 
             $(page).find('#detail-content').hide();
             $(page).find('#related-content').show();
             $(page).find('#comment-content').hide();
+            $(page).find('#catalog-content').hide();
         });
         $(page).find('#comment').on('click', function () {
             $(page).find('#detail').removeClass("tab-active");
             $(page).find('#related').removeClass("tab-active"); 
-            $(page).find('#comment').addClass("tab-active"); 
+            $(page).find('#comment').addClass("tab-active");
+            $(page).find('#catalog').removeClass("tab-active");
 
             $(page).find('#detail-content').hide();
             $(page).find('#related-content').hide();
             $(page).find('#comment-content').show();
+            $(page).find('#catalog-content').hide();
+        });
+        $(page).find('#catalog').on('click', function () {
+            $(page).find('#detail').removeClass("tab-active");
+            $(page).find('#related').removeClass("tab-active");
+            $(page).find('#comment').removeClass("tab-active");
+            $(page).find('#catalog').addClass("tab-active");
+
+            $(page).find('#detail-content').hide();
+            $(page).find('#related-content').hide();
+            $(page).find('#comment-content').hide();
+            $(page).find('#catalog-content').show();
         });
     });
 
