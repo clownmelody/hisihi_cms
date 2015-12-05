@@ -14,8 +14,6 @@ var hisihiNews = function ($wrapper,urlObj) {
     var that=this;
     this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
     this.$wrapper.on('click','.loadError',function(){   //重新加载数据
-        //重新加载页面
-        //    window.location.reload();
         $(this).hide();
         that.loadData(that.pageIndex);
     });
