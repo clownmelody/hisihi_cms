@@ -13,6 +13,7 @@ function commentObj($wrapper,urlObj){
 
     this.isFromApp=false; //页面跳转来源
     this.userInfo=null;
+    this.operation=browserType();
     this.separateOperation();
     var that = this;
 
@@ -50,11 +51,10 @@ commentObj.prototype={
     */
     separateOperation:function(){
         var that=this,
-            operation=browserType(),
+
             userStr='';
-        console.log('123');
-        if(operation.mobile){
-            if (operation.android) {
+        if(this.operation.mobile){
+            if (this.operation.android) {
                 //如果方法存在
                 if(typeof AppFunction !="undefined") {
                     this.isFromApp=true;
@@ -62,7 +62,7 @@ commentObj.prototype={
                     //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
                 }
             }
-            else if (operation.ios) {
+            else if (this.operation.ios) {
                 //如果方法存在
                 if (typeof getUser_iOS !="undefined") {
                     userStr=getUser_iOS();//调用app的方法，得到用户的基体信息
@@ -88,13 +88,36 @@ commentObj.prototype={
 
         //来源于app
         if(this.isFromApp){
+            //用户没有登录
             if(!this.userInfo) {
                 this.$wrapper.hide();
                 $target.find('.detailed-main').css('margin-bottom','0');
                 return;
-            }else {
+            }
+            //用户已经登录
+            else {
                 this.$wrapper.show();
-                $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
+                var flag1=this.operation.android,
+                    flag2=false;
+
+                if(flag1) {
+                    var v = parseInt(androidVersionType().split('.')[0]);
+                    if (v < 5) {
+                        flag2=true;
+                    }
+                }
+
+                //安卓手机并且版本低于5.0
+                if(flag2){
+                    var h = $('body').height(),
+                        ch = 48;
+                    $target.css('height', h - ch + 'px');
+                }
+
+                //IOS或者是安卓版本不低于5.0
+                else{
+                    $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
+                }
             }
         }
 

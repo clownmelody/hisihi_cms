@@ -59,3 +59,9 @@ var browserType=function() {
     };
 };
 
+/*得到安卓的版本信息*/
+var androidVersionType=function(){
+    var u = navigator.userAgent;
+    return u.substr(u.indexOf('Android') + 8, 3);
+};
+
