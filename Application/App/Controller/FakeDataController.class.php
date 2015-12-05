@@ -43,7 +43,69 @@ class FakedataController extends AppController {
      * @return int
      */
     public function autoIncreaseVideoFavoriteCountByDay(){
+        $courseModel = M('OrganizationCourse');
+        $course_list = $courseModel->field('id')->where('status=1')->select();
+        foreach($course_list as $course) {
+            $id = $course['id'];
+            $random_count = rand(C('VideoDayIncreaseMinFavoriteCount'), C('VideoDayIncreaseMaxFavoriteCount'));
+            $courseModel->where('id='.$id)->setInc('fake_favorite_count', $random_count);
+        }
+    }
 
+    /**
+     * 视频点赞数量每天自动增长
+     * @return int
+     */
+    public function autoIncreaseVideoSupportCountByDay(){
+        $courseModel = M('OrganizationCourse');
+        $course_list = $courseModel->field('id')->where('status=1')->select();
+        foreach($course_list as $course) {
+            $id = $course['id'];
+            $random_count = rand(C('VideoDayIncreaseMinSupportCount'), C('VideoDayIncreaseMaxSupportCount'));
+            $courseModel->where('id='.$id)->setInc('fake_support_count', $random_count);
+        }
+    }
+
+    /**
+     * 头条浏览数量每天自动增长
+     * @return int
+     */
+    public function autoIncreaseArticleViewCountByDay(){
+        $documentModel = M('Document');
+        $article_list = $documentModel->field('id, view')->where('status=1')->select();
+        $count = count($article_list);
+        foreach($article_list as $article) {
+            $id = $article['id'];
+            $view_count = $article['view'];
+            if($view_count>100000){
+                $min = (int)C('VideoDaySlowIncreaseMinPlayCount') * 0.6;
+                $max = (int)C('VideoDaySlowIncreaseMaxPlayCount') * 0.6;
+                $random_count = rand($min, $max);
+                $random_id = rand(1, $count);
+                $documentModel->where('id='.$random_id)->setInc('view', $random_count);
+            } else {
+                $min = (int)C('VideoDayIncreaseMinPlayCount') * 0.6;
+                $max = (int)C('VideoDayIncreaseMaxPlayCount') * 0.6;
+                $random_count = rand($min, $max);
+                $documentModel->where('id='.$id)->setInc('view', $random_count);
+            }
+        }
+    }
+
+    /**
+     * 头条点赞数量每天自动增长
+     * @return int
+     */
+    public function autoIncreaseArticleSupportCountByDay(){
+        $documentModel = M('DocumentArticle');
+        $article_list = $documentModel->field('id')->select();
+        foreach($article_list as $article) {
+            $id = $article['id'];
+            $min = (int)C('VideoDayIncreaseMinSupportCount') * 0.6;
+            $max = (int)C('VideoDayIncreaseMaxSupportCount') * 0.6;
+            $random_count = rand($min, $max);
+            $documentModel->where('id='.$id)->setInc('fake_support_count', $random_count);
+        }
     }
 
     /**
@@ -141,6 +203,14 @@ class FakedataController extends AppController {
         $companyConfigModel = M('CompanyConfig');
         $random_view_count = rand(C('CompanyDayIncreaseMinViewCount'), C('CompanyDayIncreaseMaxViewCount'));
         $companyConfigModel->where('type=9 and status=1')->setInc('value', $random_view_count);
+    }
+
+    /**
+     * 解决问题数每天自动增长
+     */
+    public function autoQuestionResolvedCountByDay(){
+        $random_view_count = rand(C('QuestionsResolvedDayIncreaseMinViewCount'), C('QuestionsResolvedDayIncreaseMaxViewCount'));
+        M('CompanyConfig')->where('status=1 and type=11')->setInc('value', $random_view_count);
     }
 
 

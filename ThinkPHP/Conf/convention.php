@@ -203,6 +203,12 @@ return  array(
     'VideoDayIncreaseMaxFavoriteCount' => 400,
     // end 视频收藏次数
 
+    // 视频点赞次数
+    'VideoInitMinSupportCount' => 100,
+    'VideoInitMaxSupportCount' => 200,
+    'VideoDayIncreaseMinSupportCount' => 100,
+    'VideoDayIncreaseMaxSupportCount' => 200,
+    // end 视频点赞次数
 
     // 嘿设汇新闻
     'HisihiNewsInitMinViewCount' => 300,
@@ -240,6 +246,11 @@ return  array(
     'CompanyDayIncreaseMinViewCount' => 1000,
     'CompanyDayIncreaseMaxViewCount' => 2000,
     // end 公司人气
+
+    // 解决问题数
+    'QuestionsResolvedDayIncreaseMinViewCount' => 2000,
+    'QuestionsResolvedDayIncreaseMaxViewCount' => 3000,
+    // end 解决问题数
 
     /* ------------------------------------- */
 

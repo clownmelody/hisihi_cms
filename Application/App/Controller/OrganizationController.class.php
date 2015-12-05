@@ -1040,7 +1040,8 @@ class OrganizationController extends AppController
 
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $course_list = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order($order)->where($map)->page($page, $count)->select();
+        $course_list = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id,fake_favorite_count,fake_support_count')
+            ->order($order)->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
             $category_id = $course['category_id'];
@@ -1068,7 +1069,7 @@ class OrganizationController extends AppController
                 }
                 $favoriteCount = $favorite_model->where(array('appname'=>'Issue',
                     'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
-                $course['favoriteCount'] = $favoriteCount;
+                $course['favoriteCount'] = $favoriteCount + $course['fake_favorite_count'];
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
                     $course['isSupportd'] = 1;
@@ -1077,7 +1078,7 @@ class OrganizationController extends AppController
                 }
                 $supportCount = $support_model->where(array('appname'=>'Issue',
                     'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
-                $course['supportCount'] = $supportCount;
+                $course['supportCount'] = $supportCount + $course['fake_support_count'];
             }else{
                 //获取收藏信息
                 $favorite['appname'] = 'Organization';
@@ -1091,7 +1092,7 @@ class OrganizationController extends AppController
                 }
                 $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
                     'table'=>'organization_courses','row'=>$course['id']))->count();
-                $course['favoriteCount'] = $favoriteCount;
+                $course['favoriteCount'] = $favoriteCount + $course['fake_favorite_count'];
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
                     $course['isSupportd'] = 1;
@@ -1100,7 +1101,7 @@ class OrganizationController extends AppController
                 }
                 $supportCount = $support_model->where(array('appname'=>'Organization',
                     'table'=>'organization_courses','row'=>$course['id']))->count();
-                $course['supportCount'] = $supportCount;
+                $course['supportCount'] = $supportCount + $course['fake_support_count'];
             }
             if(!$organization_id){
                 $logo_url = $org_model->where(array('id'=>$course['organization_id'],'status'=>1))->getField('logo');
@@ -1115,6 +1116,8 @@ class OrganizationController extends AppController
             unset($course['view_count']);
             unset($course['issue_content_id']);
             unset($course['organization_id']);
+            unset($course['fake_support_count']);
+            unset($course['fake_favorite_count']);
             $video_course[] = $course;
         }
         if($type=='view'){
@@ -2054,6 +2057,7 @@ class OrganizationController extends AppController
      *  获取课程详情
      * @param int $uid
      * @param int $course_id
+     * @param null $type
      */
     public function getCourseDetail($uid=0, $course_id=0,$type=null){
         if($course_id==0){
@@ -2118,7 +2122,7 @@ class OrganizationController extends AppController
             }
             $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
             $courseInfo['video_duration'] = $videoDuration;
-            $video_list = $videoModel->field('name, url, duration')->where('status=1 and course_id='.$course_id)->select();
+            $video_list = $videoModel->field('id,name, url, duration')->where('status=1 and course_id='.$course_id)->select();
             foreach($video_list as &$video){
                 $oss_video_pre = 'http://game-video.oss-cn-qingdao.aliyuncs.com/';
                 $oss_video_post = '/p.m3u8';
@@ -2153,7 +2157,7 @@ class OrganizationController extends AppController
                 }
                 $favoriteCount = $favorite_model->where(array('appname'=>'Issue',
                     'table'=>'issue_content','row'=>$courseInfo['issue_content_id']))->count();
-                $courseInfo['favoriteCount'] = $favoriteCount;
+                $courseInfo['favoriteCount'] = $favoriteCount + $courseInfo['fake_favorite_count'];
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
                     $courseInfo['isSupportd'] = 1;
@@ -2162,7 +2166,7 @@ class OrganizationController extends AppController
                 }
                 $supportCount = $support_model->where(array('appname'=>'Issue',
                     'table'=>'issue_content','row'=>$courseInfo['issue_content_id']))->count();
-                $courseInfo['supportCount'] = $supportCount;
+                $courseInfo['supportCount'] = $supportCount + $courseInfo['fake_support_count'];
             }else{
                 //获取收藏信息
                 $favorite['appname'] = 'Organization';
@@ -2176,7 +2180,7 @@ class OrganizationController extends AppController
                 }
                 $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
                     'table'=>'organization_courses','row'=>$courseInfo['id']))->count();
-                $courseInfo['favoriteCount'] = $favoriteCount;
+                $courseInfo['favoriteCount'] = $favoriteCount + $courseInfo['fake_favorite_count'];
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
                     $courseInfo['isSupportd'] = 1;
@@ -2185,7 +2189,7 @@ class OrganizationController extends AppController
                 }
                 $supportCount = $support_model->where(array('appname'=>'Organization',
                     'table'=>'organization_courses','row'=>$courseInfo['id']))->count();
-                $courseInfo['supportCount'] = $supportCount;
+                $courseInfo['supportCount'] = $supportCount + $courseInfo['fake_support_count'];
             }
             $courseInfo['ReplyCount'] = 0;
             $courseInfo['isRecommend'] = 0;
@@ -2195,6 +2199,8 @@ class OrganizationController extends AppController
             unset($courseInfo['category_id']);
             unset($courseInfo['status']);
             unset($courseInfo['create_time']);
+            unset($courseInfo['fake_support_count']);
+            unset($courseInfo['fake_favorite_count']);
             if($videoModel){
                 $courseInfo['video_list'] = $video_list;
                 $extra['data'] = $courseInfo;

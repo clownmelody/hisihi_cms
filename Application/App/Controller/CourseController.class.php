@@ -249,22 +249,25 @@ class CourseController extends AppController
             $map_support['appname'] = 'Issue';
             $map_support['table'] = 'issue_content';
             $map_support['row'] = $course_content['id'];
-            $supportCount = $this->getSupportCountCache($map_support);
-
+            //$supportCount = $this->getSupportCountCache($map_support);
+            $supportCount = M('Support')->where($map_support)->count();
             //查询条件同support
-            $favoriteCount = $this->getFavoriteCountCache($map_support);
-
+            //$favoriteCount = $this->getFavoriteCountCache($map_support);
+            $favoriteCount = M('Favorite')->where($map_support)->count();
             $map_supported = array_merge($map_support, array('uid' => is_login()));
             $supported = D('Support')->where($map_supported)->count();
 
             //查询条件同supported
             $favorited = D('Favorite')->where($map_supported)->count();
-
+            $fake_count = M('OrganizationCourse')->where('issue_content_id='.$course_content['id'])
+                ->field('fake_favorite_count,fake_support_count')->find();
             $course_content['isRecommend'] = $course_content['status'] == 2 ? '1':'0';
             $course_content['ViewCount'] = $course_content['view_count'];
             $course_content['ReplyCount'] = $course_content['reply_count'];
-            $course_content['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT') + $this->getRandomBaseCount($id);
-            $course_content['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE') + $this->getRandomBaseCount($id);
+            //$course_content['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT') + $this->getRandomBaseCount($id);
+            //$course_content['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE') + $this->getRandomBaseCount($id);
+            $course_content['supportCount'] = $supportCount + $fake_count['fake_support_count'];
+            $course_content['favoriteCount'] = $favoriteCount + $fake_count['fake_favorite_count'];
             #$course_content['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE');
             $course_content['isFavorited'] = $favorited;
             #$course_content['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT');
@@ -566,7 +569,7 @@ class CourseController extends AppController
         foreach ($this->forum_list as $f) {
             $forum_key_value[$f['id']] = $f;
         }
-
+        $courses_model = M('OrganizationCourse');
         foreach ($list as $key=>&$v) {
             // if($v['id'] == $id) {
             //     unset($list[$key]);
@@ -593,11 +596,11 @@ class CourseController extends AppController
             }
 
             $map_support['row'] = $v['id'];
-            $supportCount = $this->getSupportCountCache($map_support);
-
+            //$supportCount = $this->getSupportCountCache($map_support);
+            $supportCount = M('Support')->where($map_support)->count();
             //查询条件同support
-            $favoriteCount = $this->getFavoriteCountCache($map_support);
-
+            //$favoriteCount = $this->getFavoriteCountCache($map_support);
+            $favoriteCount = M('Favorite')->where($map_support)->count();
             $map_support['appname'] = 'Issue';
             $map_supported = array_merge($map_support, array('uid' => is_login()));
             $supported = D('Support')->where($map_supported)->count();
@@ -607,10 +610,14 @@ class CourseController extends AppController
 
             $v['ViewCount'] = $v['view_count'];
             $v['ReplyCount'] = $v['reply_count'];
-            $v['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT') + $this->getRandomBaseCount($v['id']);
-            $v['isSupportd'] = $supported;
-            $v['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE') + $this->getRandomBaseCount($v['id']);
-            $v['isFavorited'] = $favorited;
+            //$v['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT') + $this->getRandomBaseCount($v['id']);
+            $fake_count = $courses_model->field('fake_favorite_count,fake_support_count')
+                ->where('issue_content_id='.$v['id'])->find();
+            $v['supportCount'] = $supportCount + $fake_count['fake_support_count'];
+                $v['isSupportd'] = $supported;
+            //$v['favoriteCount'] = $favoriteCount + C('VIDEO_BASE_FAVORITE') + $this->getRandomBaseCount($v['id']);
+            $v['favoriteCount'] = $favoriteCount + $fake_count['fake_favorite_count'];
+                $v['isFavorited'] = $favorited;
 
             $v['isRecommend'] = $v['status'] == 2 ? '1':'0';
 
