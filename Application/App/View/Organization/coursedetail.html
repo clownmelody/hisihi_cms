@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+<php>
+    $oneplus_seo_meta = get_seo_meta($vars,$seo);
+</php>
+
+<if condition="$oneplus_seo_meta['title']">
+    <title>{$oneplus_seo_meta['title']}</title>
+    <else/>
+    <title>{:C('WEB_SITE_TITLE')}</title>
+</if>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+<link rel="stylesheet" href="__CSS__/app.min.css">
+<link rel="stylesheet" href="__CSS__/video-js.min.css">
+<script src="__JS__/video.js"></script>
+<script>
+    videojs.options.flash.swf = "__JS__/video-js.swf";
+</script>
+<style>
+    .player {
+        position: relative;
+        width: 100%;
+    }
+    .Tab {
+        display: -moz-box;
+        display: -webkit-box;
+        display: box;
+        box-orient: horizontal;
+        width: 100%;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        color: #747474;
+    }
+    .tab-active {
+        background-color: #8d8d8d;
+        color: snow;
+    }
+    #detail {
+        box-flex:1;
+        -moz-box-flex:1;
+        -webkit-box-flex:1;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+    #related {
+        box-flex:1;
+        -moz-box-flex:1;
+        -webkit-box-flex:1;
+        border-left: solid 1px #8d8d8d;
+        border-right: solid 1px #8d8d8d;
+
+    }
+    #comment {
+        box-flex:1;
+        -moz-box-flex:1;
+        -webkit-box-flex:1;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+
+    .course-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .course-info {
+        float: left;
+        color: #4a4a4a;
+        font-size: 12px;
+        line-height: 13px;
+    }
+    .course-favorate {
+        float: right;
+        font-size: 10px;
+        color: #747474;
+        line-height: 24px;
+    }
+    .course-contents {
+        color: #747474;
+    }
+    .related-info {
+        padding-top: 2px;
+        width: 100%;
+        display: -moz-box;
+        display: -webkit-box;
+        display: box;
+        box-orient: horizontal;
+    }
+    .related-pic {
+        box-flex:1;
+        -moz-box-flex:1;
+        -webkit-box-flex:1;
+        width: 48%;
+    }
+    .related-pic img {
+        width:45%;
+        height: 96%;
+    }
+    .related-content {
+        box-flex:1;
+        -moz-box-flex:1;
+        -webkit-box-flex:1;
+        padding-left: 10px;
+        font-size: 16px;
+        color:#000;
+        font-weight:normal;
+        width: 55%;
+    }
+    .related-title {
+        font-size: 15px;
+        font-weight:bold;
+        width: 100%;
+        height: 25px;
+        line-height: 25px;
+    }
+    .related-extend {
+        font-size: 13px;
+        width: 100%;
+        height: 28px;
+        line-height: 28px;
+        color:#ADADAD;
+    }
+    .related-lecturer {
+        width: 100%;
+        min-height: 42px;
+        line-height: 20px;
+    }
+    .related-bottom {
+        height: 13px;
+        width:100%;
+        font-size:10px;
+        color: #ADADAD;
+    }
+    .comment-info {
+        position: relative;
+    }
+    .comment-user-pic {
+        position: relative;
+    }
+    .comment-user-name {
+        position: absolute;
+        padding-top: 2px;
+        padding-left: 10px;
+        font-size: 14px;
+        font-weight:bold;
+        color:#e7b71f;
+    }
+    .comment-content {
+        position: relative;
+        margin-top: -35px;
+        margin-left: 60px;
+        font-size: 16px;
+        color:#000;
+        font-weight:normal;
+        margin-bottom: 5px;
+        min-height:25px;
+    }
+    .comment-bottom {
+        position: relative;
+        height: 13px;
+        width:100%;
+        font-size:14px;
+        color: #747474;
+    }
+    .app-bottombar {
+        z-index: 3000;
+        position: fixed;
+        bottom: 0;
+        height: 60px;
+        width: 100%;
+        background: url("__IMG__/bg.png");
+    }
+    .bottomspace {
+        height: 55px;
+    }
+    .bottom-icon {
+        float: left;
+        margin: 5px 10px 5px 10px;
+    }
+    .bottom-title {
+        float: left;
+        font-size: 18px;
+        color: #fff;
+        margin-top: 10px;
+    }
+    .bottom-content {
+        position: absolute;
+        color: #aaa;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+    .bottom-star {
+        float: left;
+        margin-top: 10px;
+        margin-left: 5px;
+    }
+
+    .bottom-right {
+        float: right;
+        margin: 12px 10px;
+        width: 80px;
+        height: 35px;
+        font-size: 16px;
+        color: #fff;
+        line-height: 35px;
+        border-radius: 5px;
+        background-color: #2aba00;
+        text-align: center;
+        z-index: 3000;
+    }
+</style>
+</head>
+
+<body>
+<div class="app-page" data-page="home">
+    <!--
+    <div class="app-topbar">
+        <div class="app-title">提问详情</div>
+    </div>
+    -->
+    <div class="app-content" style="-webkit-box-shadow: none;">
+        <div class="player" style="height: 200px;">
+            <video id="video" class="video-js vjs-default-skin"
+                   controls preload="auto" width="100%" height="100%"
+                   poster="__IMG__/cover.png"
+                   data-setup='{true}'>
+                <source src="{$course_content.url}" type='application/vnd.apple.mpegurl' />
+            </video>
+        </div>
+        <div class="app-section" style="margin: 10px;border:solid 1px #8d8d8d;height: 30px;padding: 0px">
+            <div class="Tab">
+                <div id="detail" class="tab-active">详情</div>
+                <div id="related">相关推荐</div>
+                <!--<div id="comment">评论</div>-->
+            </div>
+        </div>
+        <div id="detail-content" class="app-section" style="margin: 10px 10px 10px 10px;height: 250px;padding: 15px">
+            <div>
+                <span class="course-title">{$course_content.title}</span>
+                <span class="course-favorate">
+                    <img  style="width: 15px;vertical-align:text-bottom;" src="__IMG__/support.png"/> {$course_content.supportCount}
+                </span>
+                <br>
+                <span class="course-info">
+                    更新:{$course_content.update_time|date='y.m.d',###} <span style="color: #bfcece">|</span> 时间:{$course_content.duration} <span style="color: #bfcece">|</span> 播放:{$course_content.ViewCount}
+                </span>
+                <div style="height: 26px"></div>
+                <span class="course-contents">
+                    {$course_content.content}
+                </span>
+            </div>
+        </div>
+        <div id="related-content" style="display: none;">
+            <volist name="relatedList" id="relatedT">
+                <div class="app-section" style="margin:10px;padding-top: 0px;padding-left: 2px;">
+                <div style="position:absolute;margin-top:25px;margin-left:1px;border-bottom:solid 1px #E5E5E5;width:99%;z-index: 1000;"></div>
+                    <div class="related-info">
+                        <div class="related-pic">
+                        <span>
+                            <img style="position:absolute;z-index: 2000;" src="{$relatedT.img}" />
+                            <img style="position:absolute;z-index: 2001;width:40px;height:40px;left:17%;top:30%" src="__IMG__/play.png" />
+                        </span>
+                        </div>
+                        
+                        <div class="related-content">
+                            <div class="related-title">
+                                <p>{$relatedT.title}</p>
+                            </div>
+                            <div class="related-extend">
+                                {$relatedT.duration} <span style="color: #bfcece">|</span> 播放:{$relatedT.ViewCount}次
+                            </div>
+                            <div class="related-lecturer">
+                                <p>讲师：{$relatedT.lecturer}</p>
+                            </div>
+                            <div class="related-bottom">
+                                <img  style="height: 15px;vertical-align:text-bottom;" src="__IMG__/sup.png"/> {$relatedT.supportCount} <span style="color: #bfcece"> &nbsp;|&nbsp; </span> <img  style="height: 15px;vertical-align:text-bottom;" src="__IMG__/fav.png"/> {$relatedT.favoriteCount} <span style="color: #bfcece"> &nbsp;|&nbsp; </span> <img  style="height: 15px;vertical-align:text-bottom;" src="__IMG__/com.png"/> {$relatedT.ReplyCount}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </volist>
+        </div>
+        <!--<div id="comment-content" style="display: none;">
+            <div class="app-section course-title" style="margin: 10px;border:solid 1px #C2C2C2;height: 30px;padding: 0px;padding-left: 30px;background-color:#DEDEEA;line-height:30px;color: #747474;font-size:14px">
+                    有什么感想快来说说吧...
+            </div>
+            <div class="app-section course-title" style="margin: 10px;border-radius:0px;border-top:solid 1px #C2C2C2;border-bottom:solid 1px #C2C2C2;height: 30px;padding: 0px;padding-left: 5px;background-color:#efeff4;line-height:30px">
+                共有{$course_content.ReplyCount}条评论
+            </div>
+            <volist name="commentList" id="commentT">
+                <div class="app-section" style="margin: 10px">
+                    <div class="comment-info">
+                        <span class="comment-user-pic">
+                            <img style="width: 50px; border-radius: 50px" src="/{$commentT.userInfo.avatar128}" />
+                        </span>
+                        <span class="comment-user-name">
+                            <p>{$commentT.userInfo.nickname}</p>
+                        </span>
+                        <div class="comment-content">{$commentT.content}</div>
+                    </div>
+                    <div class="comment-bottom">
+                        <p style="float: left;margin-left:60px">发表于{$commentT.create_time|date='m-d H:i',###}</p>
+                        <p style="float: right">回复</p>
+                    </div>
+                </div>
+            </volist>
+        </div>-->
+        <div class="bottomspace"></div>
+    </div>
+    <div class="app-bottombar">
+        <div>
+            <div>
+            <span class="bottom-icon">
+                <img style="width: 50px;" src="__IMG__/icon.png" />
+            </span>
+            <span class="bottom-title">
+                <p>嘿设汇</p>
+                <p class="bottom-content">设计师必备 百万设计师都在用</p>
+            </span>
+            <span class="bottom-star">
+                <img style="width: 10px;margin-left: -1px" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+            </span>
+            </div>
+            <div class="app-button bottom-right">
+                <p>立即下载</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-page" data-page="page2">
+    <div class="app-topbar">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Page 2</div>
+    </div>
+    <div class="app-content">
+        Page 2 is lonely
+    </div>
+</div>
+
+<script src="__JS__/zepto.js"></script>
+<script src="__JS__/app.min.js"></script>
+<script>
+    App.controller('home', function (page) {
+        // put stuff here
+        //rawText      : '点击“确定”下载<br>【嘿设汇App】<br>体验更多功能',
+        $(page)
+        .find('.app-button')
+        .on('click', function () {
+            window.location.href = "http://www.hisihi.com/download.php";
+            /*App.dialog({
+                title        : '嘿设汇',
+                rawText      : '<img style="width: 50px;" src="__IMG__/icon.png" /><br>火速下载',
+                okButton     : '确定',
+                cancelButton : '取消'
+            }, function (tryAgain) {
+                if (tryAgain) {
+
+                }
+            });*/
+        });
+        $(page).find('#detail').on('click', function () {
+            $(page).find('#detail').addClass("tab-active");
+            $(page).find('#related').removeClass("tab-active"); 
+            $(page).find('#comment').removeClass("tab-active"); 
+
+            $(page).find('#detail-content').show();
+            $(page).find('#related-content').hide();
+            $(page).find('#comment-content').hide();
+        });
+        $(page).find('#related').on('click', function () {
+            $(page).find('#detail').removeClass("tab-active");
+            $(page).find('#related').addClass("tab-active"); 
+            $(page).find('#comment').removeClass("tab-active"); 
+
+            $(page).find('#detail-content').hide();
+            $(page).find('#related-content').show();
+            $(page).find('#comment-content').hide();
+        });
+        $(page).find('#comment').on('click', function () {
+            $(page).find('#detail').removeClass("tab-active");
+            $(page).find('#related').removeClass("tab-active"); 
+            $(page).find('#comment').addClass("tab-active"); 
+
+            $(page).find('#detail-content').hide();
+            $(page).find('#related-content').hide();
+            $(page).find('#comment-content').show();
+        });
+    });
+
+    App.controller('page2', function (page) {
+        // put stuff here
+    });
+
+    try {
+        App.restore();
+    } catch (err) {
+        App.load('home');
+    }
+
+    var myPlayer = videojs('video');
+    videojs("video").ready(function(){
+        var myPlayer = this;
+        myPlayer.play();
+    });
+
+    var userAgent = window.location.href;
+    if(userAgent.indexOf("hisihi-app") > 0) {
+        $(".app-bottombar").hide();
+        $(".bottomspace").hide();
+    }
+</script>
+</body>
+</html>

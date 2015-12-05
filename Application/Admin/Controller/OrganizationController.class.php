@@ -68,8 +68,10 @@ class OrganizationController extends AdminController
         $this->assign('_type', $type);
         $this->display();
     }
+
     /**
      * 机构基本信息编辑
+     * @param $id
      */
     public function edit($id){
         if(empty($id)){
@@ -143,8 +145,14 @@ class OrganizationController extends AdminController
 
             $logo_id = $_POST["picture"];
             $video_img_id = $_POST["video_img"];
-            $this->uploadLogoPicToOSS($logo_id);
-            $this->uploadLogoPicToOSS($video_img_id);
+            if((int)$logo_id>0){
+                $this->uploadLogoPicToOSS($logo_id);
+                $data["logo"] = $this->fetchCdnImage($logo_id);
+            }
+            if((int)$video_img_id>0){
+                $this->uploadLogoPicToOSS($video_img_id);
+                $data["video_img"] = $this->fetchCdnImage($video_img_id);
+            }
 
             $data["name"] = $_POST["name"];
             $data["slogan"] = $_POST["slogan"];
@@ -158,8 +166,6 @@ class OrganizationController extends AdminController
             $data["introduce"] = $_POST["introduce"];
             $data["guarantee_num"] = $_POST["guarantee_num"];
             $data["view_count"] = $_POST["view_count"];
-            $data["logo"] = $this->fetchCdnImage($logo_id);
-            $data["video_img"] = $this->fetchCdnImage($video_img_id);
             $data["video"] = $_POST["video"];
             if(empty($cid)){
                 try {
@@ -206,7 +212,7 @@ class OrganizationController extends AdminController
                     $model->updateOrganization($i, $data);
                     M('OrganizationRelation')->where(array('organization_id'=>$i))->save($data);
                     M('OrganizationCourse')->where(array('organization_id'=>$i))->save($data);
-                    $course = M('OrganizationCourse')->where(array('organization_id'=>$id))->field('id')->select();
+                    $course = M('OrganizationCourse')->where(array('organization_id'=>$i))->field('id')->select();
                     if($course){
                         $course_array = array();
                         foreach($course as $courseid){
@@ -217,12 +223,13 @@ class OrganizationController extends AdminController
                     M('OrganizationResource')->where(array('organization_id'=>$i))->save($data);
                     M('OrganizationComment')->where(array('organization_id'=>$i))->save($data);
                     M('OrganizationCertification')->where(array('organization_id'=>$i))->save($data);
-                    M('OrganizationConfig')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationNotice')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationApplication')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationAuthentication')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationEnroll')->where(array('organization_id'=>$id))->save($data);
-                    M('OrganizationCommentStar')->where(array('organization_id'=>$id))->save($data);
+                    M('OrganizationConfig')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationNotice')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationApplication')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationAuthentication')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationEnroll')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationCommentStar')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationLectureGroup')->where(array('organization_id'=>$i))->save($data);
                 }
             } else {
                 $id = intval($id);
@@ -246,6 +253,7 @@ class OrganizationController extends AdminController
                 M('OrganizationAuthentication')->where(array('organization_id'=>$id))->save($data);
                 M('OrganizationEnroll')->where(array('organization_id'=>$id))->save($data);
                 M('OrganizationCommentStar')->where(array('organization_id'=>$id))->save($data);
+                M('OrganizationLectureGroup')->where(array('organization_id'=>$id))->save($data);
             }
             $this->success('删除成功','index.php?s=/admin/organization');
         } else {
@@ -283,7 +291,6 @@ class OrganizationController extends AdminController
         }else{
             $list = $model->where($filter_map)->order('id desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
-
         foreach($list as &$relation){
             $relation['user_name'] = M('Member')->where(array('uid'=>$relation['uid'],'status'=>1))->getField('nickname');
             if($organization_id){
@@ -464,8 +471,10 @@ class OrganizationController extends AdminController
             $model = M('OrganizationResource');
             $cid = $_POST["cid"];
             $pic_id = $_POST["picture"];
-            $this->uploadLogoPicToOSS($pic_id);
-            $data['url'] = $this->fetchCdnImage($pic_id);
+            if(is_numeric($pic_id)){
+                $this->uploadLogoPicToOSS($pic_id);
+                $data["url"] = $this->fetchCdnImage($pic_id);
+            }
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
             $data['type'] = 1;
@@ -707,10 +716,12 @@ class OrganizationController extends AdminController
 
     /**
      * 报名通过
+     * @param $id
      */
     public function enroll_pass($id){
         if(!empty($id)){
             $model = M('OrganizationEnroll');
+            $data['confirm_time'] = time();
             $data['status'] = 2;
             if(is_array($id)){
                 foreach ($id as $i)
@@ -1066,7 +1077,19 @@ class OrganizationController extends AdminController
             $Config = M('OrganizationAuthenticationConfig');
             $id = $_POST['id'];
             $data['name'] = $_POST['name'];
-            $data['pic_id'] = $_POST['picture'];
+            if(is_numeric($_POST['picture'])){
+                $this->uploadLogoPicToOSS($_POST['picture']);
+                $data['pic_url'] = $this->fetchCdnImage($_POST['picture']);
+            }
+            if(is_numeric($_POST['disable_pic_url'])){
+                $this->uploadLogoPicToOSS($_POST['disable_pic_url']);
+                $data['disable_pic_url'] = $this->fetchCdnImage($_POST['disable_pic_url']);
+            }
+            if(is_numeric($_POST['tag_pic_url'])){
+                $this->uploadLogoPicToOSS($_POST['tag_pic_url']);
+                $data['tag_pic_url'] = $this->fetchCdnImage($_POST['tag_pic_url']);
+            }
+            $data['content'] = $_POST['content'];
             if(empty($id)){
                 if($data){
                     //将最先添加的两个认证默认展示
@@ -1093,7 +1116,6 @@ class OrganizationController extends AdminController
             } else {
                 $result = $Config->where('id='.$id)->save($data);
                 if($result){
-                    $this->uploadLogoPicToOSS($data['pic_id']);
                     $this->success('编辑成功', U('authentication_config'));
                 } else {
                     $this->error('编辑失败');
@@ -1635,8 +1657,10 @@ class OrganizationController extends AdminController
             $model = M('OrganizationResource');
             $cid = $_POST["cid"];
             $pic_id = $_POST["picture"];
-            $this->uploadLogoPicToOSS($pic_id);
-            $data["url"] = $this->fetchCdnImage($pic_id);
+            if(is_numeric($pic_id)){
+                $this->uploadLogoPicToOSS($pic_id);
+                $data["url"] = $this->fetchCdnImage($pic_id);
+            }
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
             $data['type'] = 2;
@@ -1848,7 +1872,7 @@ class OrganizationController extends AdminController
             }else{
                 $course['organization_name'] = M('Organization')->where('status=1 and id='.$course['organization_id'])->getField("name");
             }
-            $course['category'] = M('OrganizationTag')->where(array('id'=>$course['category_id'],'type'=>5,'status'=>1))->getField('value');
+            $course['category'] = M('Issue')->where(array('id'=>$course['category_id'],'pid'=>0,'status'=>1))->getField('title');
             $course['teacher'] = M('Member')->where(array('uid'=>$course['lecturer']))->getField('nickname');
         }
 
@@ -1880,7 +1904,7 @@ class OrganizationController extends AdminController
             $this->assign('organization_name',$organization_name);
             $this->assign('organization_id',$organization_id);
         }
-        $category = M('OrganizationTag')->where(array('status'=>1,'type'=>5))->field('id,value')->select();
+        $category = M('Issue')->where(array('status'=>1,'pid'=>0))->field('id,title')->select();
         if(I('from_org')){
             $this->assign('from_org', I('from_org'));
         }
@@ -1898,7 +1922,15 @@ class OrganizationController extends AdminController
             $data["title"] = $_POST["title"];
             $data["content"] = $_POST["content"];
             $data['organization_id'] = $_POST["organization_id"];
-            $data['img'] = $_POST["picture"];
+            //$data['img'] = $_POST["picture"];
+            $img_id = $_POST["picture"];
+            if((int)$img_id>0){
+                $this->uploadLogoPicToOSS($img_id);
+                $img_url = $this->fetchCdnImage($img_id);
+                $data['img_str'] = $img_url;
+            } else {
+                $data['img_str'] = $img_id;
+            }
             $data['category_id'] = $_POST["category_id"];
             $data['lecturer'] = $_POST["lecturer"];
             $data['auth'] = $_POST["auth"];
@@ -1925,7 +1957,6 @@ class OrganizationController extends AdminController
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->uploadLogoPicToOSS($data['img']);
                 if(I('from_org')){
                     $this->success('更新成功', 'index.php?s=/admin/organization/course&organization_id='.$data['organization_id']);
                 }else{
@@ -1937,7 +1968,8 @@ class OrganizationController extends AdminController
         }
     }
 
-    /**编辑机构课程
+    /**
+     * 编辑机构课程
      * @param $id
      */
     public function course_edit($id){
@@ -1952,7 +1984,7 @@ class OrganizationController extends AdminController
         }
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
         $data['teacher'] = M('Member')->where(array('uid'=>$data['lecturer'],'status'=>1))->getField('nickname');
-        $category = M('OrganizationTag')->where(array('status'=>1,'type'=>5))->field('id,value')->select();
+        $category = M('Issue')->where(array('status'=>1,'pid'=>0))->field('id,title')->select();
         $teacher_ids = M('OrganizationRelation')->field('uid')
             ->where(array('organization_id'=>$data['organization_id'],'group'=>6,'status'=>1))->select();
         foreach($teacher_ids as &$teacher_id){
@@ -1962,6 +1994,7 @@ class OrganizationController extends AdminController
         }
         if(I('from_org')){
             $this->assign('from_org', I('from_org'));
+            $this->assign('organization_id', I('organization_id'));
         }
         $this->assign('teacher_list', $teacher_list);
         $this->assign('info', $data);
@@ -1970,7 +2003,8 @@ class OrganizationController extends AdminController
         $this->display();
     }
 
-    /**删除机构课程
+    /**
+     * 删除机构课程
      * @param $id
      */
     public function course_delete($id){

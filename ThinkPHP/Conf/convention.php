@@ -182,4 +182,66 @@ return  array(
     'QQOpenPlatFormLoginKey' => '1104475505',
     'WeiXinPlatFormId'       => 'wx9dcbe8acfcac3740',
 	'WeiXinPlatFormSecret'   => '8a418ba59c7347a3927a5a13ed17fded',
+
+    /* -------- Fuck The FakeData ---------- */
+    // 数据起增时间点
+    'DataBeginIncreaseStartTime' => '2015-12-01',
+
+    // 视频播放次数
+    'VideoInitMinPlayCount' => 3000,
+    'VideoInitMaxPlayCount' => 4000,
+    'VideoDayIncreaseMinPlayCount' => 4000,
+    'VideoDayIncreaseMaxPlayCount' => 5000,
+    'VideoDaySlowIncreaseMinPlayCount' => 100,
+    'VideoDaySlowIncreaseMaxPlayCount' => 1000,
+    // end 视频播放次数
+
+    // 视频收藏次数
+    'VideoInitMinFavoriteCount' => 300,
+    'VideoInitMaxFavoriteCount' => 400,
+    'VideoDayIncreaseMinFavoriteCount' => 300,
+    'VideoDayIncreaseMaxFavoriteCount' => 400,
+    // end 视频收藏次数
+
+
+    // 嘿设汇新闻
+    'HisihiNewsInitMinViewCount' => 300,
+    'HisihiNewsInitMaxViewCount' => 400,
+    'HisihiNewsDayIncreaseMinViewCount' => 500,
+    'HisihiNewsDayIncreaseMaxViewCount' => 1000,
+    'HisihiNewsDaySlowIncreaseMinViewCount' => 1,
+    'HisihiNewsDaySlowIncreaseMaxViewCount' => 100,
+    // end 嘿设汇新闻
+
+    // 灵感图片
+    'InspirationInitMinViewCount' => 1000,
+    'InspirationInitMaxViewCount' => 5000,
+    'InspirationDayIncreaseMinViewCount' => 50,
+    'InspirationDayIncreaseMaxViewCount' => 100,
+    'InspirationDayIncreaseMinFavoriteCount' => 1,
+    'InspirationDayIncreaseMaxFavoriteCount' => 10,
+    // end 灵感图片
+
+    // 比赛
+    'CompetitionInitMinViewCount' => 500,
+    'CompetitionInitMaxViewCount' => 3000,
+    'CompetitionDayIncreaseMinViewCount' => 100,
+    'CompetitionDayIncreaseMaxViewCount' => 500,
+    'CompetitionDaySlowIncreaseMinViewCount' => 1,
+    'CompetitionDaySlowIncreaseMaxViewCount' => 50,
+    // end 比赛
+
+    // 快捷键
+    'HotkeysDayIncreaseMinViewCount' => 200,
+    'HotkeysDayIncreaseMaxViewCount' => 4000,
+    // end 快捷键
+
+    // 公司人气
+    'CompanyDayIncreaseMinViewCount' => 1000,
+    'CompanyDayIncreaseMaxViewCount' => 2000,
+    // end 公司人气
+
+    /* ------------------------------------- */
+
+
 );

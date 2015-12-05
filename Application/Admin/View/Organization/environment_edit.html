@@ -28,10 +28,10 @@
                         <label class="item-label">环境图片</label>
                         <div class="controls">
                             <input type="file" id="upload_company_picture">
-                            <input type="hidden" name="picture" id="cover_id_company" value="{$info.pic_id}"/>
+                            <input type="hidden" name="picture" id="cover_id_company" value="{$info.url}"/>
                             <div class="upload-img-box">
-                                <notempty name="info['pic_id']">
-                                    <div class="upload-pre-item"><img src="{$info['pic_id']|get_cover='path'}"/></div>
+                                <notempty name="info['url']">
+                                    <div class="upload-pre-item"><img src="{$info['url']}"/></div>
                                 </notempty>
                             </div>
                         </div>
