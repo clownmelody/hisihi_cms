@@ -70,7 +70,8 @@ commentObj.prototype={
                 }
             }
             if (appFn) {
-                alert();
+                var ssss=appFn();
+                alert(ssss);
                 this.userInfo = JSON.parse(appFn());  //调用app的方法，得到用户的基体信息
                 alert('进入安卓的方法  后');
                 this.isFromApp=true;  //来源于app
