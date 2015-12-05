@@ -987,16 +987,19 @@ class OrganizationController extends AppController
      * @param null $type_id
      * @param null $courses_id
      * @param null $order
+     * @param null $type
      * @param int $page
      * @param int $count
+     * @return array
      */
-    public function appGetCoursesList($organization_id=null,$type_id=null,$courses_id=null,$order=null, $page=1, $count=5){
+    public function appGetCoursesList($organization_id=null,$type_id=null,$courses_id=null,$order=null,$type=null, $page=1, $count=5){
         $org_model = M('Organization');
         $model = M('OrganizationCourse');
         $video_model = M('OrganizationVideo');
         $favorite_model = M('Favorite');
         $support_model = M('Support');
         $issue_model = M('Issue');
+        $member_model = M('Member');
         if($organization_id){//按机构查询/默认全部
             $map['organization_id'] = $organization_id;
             $logo_url = $org_model->where(array('id'=>$organization_id,'status'=>1))->getField('logo');
@@ -1032,7 +1035,6 @@ class OrganizationController extends AppController
             $map['category_id'] = $course['category_id'];
         }
 
-
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
         $course_list = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id')->order($order)->where($map)->page($page, $count)->select();
@@ -1042,6 +1044,7 @@ class OrganizationController extends AppController
             $course['ViewCount'] = $course['view_count'];
             $course['type_id'] = $category_id;
             $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
+            $course['lecturer_name'] = $member_model->where('uid='.$course['lecturer'])->getField('nickname');
             //解析并生成图片数据
             $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
             if(substr_count($course['img_str'], 'OSS')){
@@ -1111,9 +1114,13 @@ class OrganizationController extends AppController
             unset($course['organization_id']);
             $video_course[] = $course;
         }
-        $extra['total_count'] = $totalCount;
-        $extra['coursesList'] = $video_course;
-        $this->apiSuccess('获取机构课程成功', null, $extra);
+        if($type=='view'){
+            return $video_course;
+        }else{
+            $extra['total_count'] = $totalCount;
+            $extra['coursesList'] = $video_course;
+            $this->apiSuccess('获取机构课程成功', null, $extra);
+        }
     }
 
     /**
@@ -2189,18 +2196,35 @@ class OrganizationController extends AppController
                 $courseInfo['video_list'] = $video_list;
                 $extra['data'] = $courseInfo;
                 if($type == 'view'){//用于页面分享
-                    $course_content['duration'] = $this->sec2time($courseInfo['duration']);
+                    $courseInfo['duration'] = $this->sec2time($courseInfo['video_duration']);
                     $this->assign('course_content', $courseInfo);
-                    $relatedList = $this->appGetCoursesList(null,$courseInfo['type_id'],$course_id);
+                    $relatedList = $this->appGetCoursesList(null,$courseInfo['type_id'],$course_id,null,'view');
+                    foreach($relatedList as &$video){
+                        $video['duration'] = $this->sec2time($video['duration']);
+                    }
                     $this->assign('relatedList',$relatedList);
                     $this->setTitle('{$course_content.title|op_t} — 嘿设汇');
-                    $this->display();
+                    $this->display('coursedetail');
+                }else{
+                    $this->apiSuccess('获取视频详情成功', null, $extra);
                 }
-                $this->apiSuccess('获取视频详情成功', null, $extra);
             }
         } else {
             $this->apiError(-1, '未找到对应的课程');
         }
+    }
+
+    private function sec2time($sec){
+        $sec = round($sec/60);
+        if ($sec >= 60){
+            $hour = floor($sec/60);
+            $min = $sec%60;
+            $res = $hour.' 小时 ';
+            $min != 0  &&  $res .= $min.' 分';
+        }else{
+            $res = $sec.' 分钟';
+        }
+        return $res;
     }
 
     /**
