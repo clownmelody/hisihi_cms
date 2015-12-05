@@ -52,6 +52,7 @@ commentObj.prototype={
         var that=this,
             operation=browserType(),
             userStr='';
+        console.log('123');
         if(operation.mobile){
             if (operation.android) {
                 //如果方法存在
