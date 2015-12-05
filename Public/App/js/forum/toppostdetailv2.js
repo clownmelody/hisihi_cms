@@ -55,8 +55,11 @@ commentObj.prototype={
         if(operation.mobile){
             if (operation.android) {
                 //如果方法存在
+                alert(typeof AppFunction);
                 if(typeof AppFunction !="undefined") {
+                    alert('进入安卓的方法  前');
                     appFn=AppFunction.getUser;
+
                     //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
                 }
             }
@@ -68,7 +71,9 @@ commentObj.prototype={
             }
             if (appFn) {
                 this.userInfo = JSON.parse(appFn());  //调用app的方法，得到用户的基体信息
+                alert('进入安卓的方法  后');
                 this.isFromApp=true;  //来源于app
+                alert(JSON.stringify(this.userInfo));
             }else{
                 this.isFromApp=false;  //来源于普通页面
             }
