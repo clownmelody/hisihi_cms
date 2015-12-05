@@ -10,7 +10,7 @@ use Think\Model;
 
 /* ----------------------------------------- */
 
-class FakeDataController extends AppController {
+class FakedataController extends AppController {
 
     public function _initialize() {
         C('SHOW_PAGE_TRACE', false);
