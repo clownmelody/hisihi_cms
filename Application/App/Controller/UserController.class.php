@@ -1560,11 +1560,24 @@ class UserController extends AppController
             $statInfo['designers'] = $model->table(array(
                 'hisihi_auth_group_access'=>'auth_group_access',
                 'hisihi_member'=>'member',))->where($where.'6')->field('member.uid')->count();
-            $extra['allCount'] = $statInfo['designers'] + C('TEACHER_COUNT_BASE');
+            $extra['allCount'] = $statInfo['designers'] + C('TEACHER_COUNT_BASE') + $this->getAutoIncreseCount();
         }
         $extra['totalCount'] = count($list);
         $extra['userList'] = $list;
         $this->apiSuccess("获取荣誉用户列表成功", null, $extra);
+    }
+
+    /**
+     * 获取自动增长数
+     */
+    private function getAutoIncreseCount(){
+        $Date_1 = date("Y-m-d");
+        $Date_2 = "2015-12-01";
+        $d1 = strtotime($Date_1);
+        $d2 = strtotime($Date_2);
+        $days = round(($d1-$d2)/3600/24);
+        $random_count = rand(1, 20);
+        return $days * $random_count;
     }
 
     /**

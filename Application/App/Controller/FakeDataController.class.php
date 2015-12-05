@@ -205,6 +205,14 @@ class FakedataController extends AppController {
         $companyConfigModel->where('type=9 and status=1')->setInc('value', $random_view_count);
     }
 
+    /**
+     * 解决问题数每天自动增长
+     */
+    public function autoQuestionResolvedCountByDay(){
+        $random_view_count = rand(C('QuestionsResolvedDayIncreaseMinViewCount'), C('QuestionsResolvedDayIncreaseMaxViewCount'));
+        M('CompanyConfig')->where('status=1 and type=11')->setInc('value', $random_view_count);
+    }
+
 
 
 
