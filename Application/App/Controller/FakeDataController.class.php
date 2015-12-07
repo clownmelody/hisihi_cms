@@ -36,6 +36,9 @@ class FakedataController extends AppController {
                 $courseModel->where('id='.$id)->setInc('view_count', $random_count);
             }
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseVideoPlayCountByDay success -- ' . $date);
     }
 
     /**
@@ -50,6 +53,9 @@ class FakedataController extends AppController {
             $random_count = rand(C('VideoDayIncreaseMinFavoriteCount'), C('VideoDayIncreaseMaxFavoriteCount'));
             $courseModel->where('id='.$id)->setInc('fake_favorite_count', $random_count);
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseVideoFavoriteCountByDay success -- ' . $date);
     }
 
     /**
@@ -64,6 +70,9 @@ class FakedataController extends AppController {
             $random_count = rand(C('VideoDayIncreaseMinSupportCount'), C('VideoDayIncreaseMaxSupportCount'));
             $courseModel->where('id='.$id)->setInc('fake_support_count', $random_count);
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseVideoSupportCountByDay success -- ' . $date);
     }
 
     /**
@@ -90,6 +99,9 @@ class FakedataController extends AppController {
                 $documentModel->where('id='.$id)->setInc('view', $random_count);
             }
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseArticleViewCountByDay success -- ' . $date);
     }
 
     /**
@@ -106,6 +118,9 @@ class FakedataController extends AppController {
             $random_count = rand($min, $max);
             $documentModel->where('id='.$id)->setInc('fake_support_count', $random_count);
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseArticleSupportCountByDay success -- ' . $date);
     }
 
     /**
@@ -127,6 +142,9 @@ class FakedataController extends AppController {
                 $hisihi_news_model->where('id='.$id)->setInc('view_count', $random_count);
             }
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseHisihiNewsViewCountByDay success -- ' . $date);
     }
 
     /**
@@ -152,6 +170,9 @@ class FakedataController extends AppController {
                 $hisihi_news_model->where('id='.$random_id)->setInc('favorite_count', $random_favorite_count);
             }
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseInspirationViewCountAndFavoriteCountByDay success -- ' . $date);
     }
 
     /**
@@ -172,6 +193,9 @@ class FakedataController extends AppController {
             $random_view_count = rand(C('CompetitionDaySlowIncreaseMinViewCount'), C('CompetitionDaySlowIncreaseMaxViewCount'));
             $eventModel->where('id='.$id)->setInc('view_count', $random_view_count);
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseCompetitionViewCountByDay success -- ' . $date);
     }
 
     /**
@@ -181,6 +205,9 @@ class FakedataController extends AppController {
         $hotkeysModel = M('CompanyConfig');
         $random_view_count = rand(C('HotkeysDayIncreaseMinViewCount'), C('HotkeysDayIncreaseMaxViewCount'));
         $hotkeysModel->where('type=10 and status=1')->setInc('value', $random_view_count);
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseHotKeysViewCountByDay success -- ' . $date);
     }
 
     /**
@@ -194,6 +221,9 @@ class FakedataController extends AppController {
             $random_view_count = rand(20, 40);
             $docModel->where('id='.$id)->setInc('view', $random_view_count);
         }
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseCateHiworksViewCountByDay success -- ' . $date);
     }
 
     /**
@@ -203,6 +233,9 @@ class FakedataController extends AppController {
         $companyConfigModel = M('CompanyConfig');
         $random_view_count = rand(C('CompanyDayIncreaseMinViewCount'), C('CompanyDayIncreaseMaxViewCount'));
         $companyConfigModel->where('type=9 and status=1')->setInc('value', $random_view_count);
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoIncreaseCompanyViewCountByDay success -- ' . $date);
     }
 
     /**
@@ -211,6 +244,9 @@ class FakedataController extends AppController {
     public function autoQuestionResolvedCountByDay(){
         $random_view_count = rand(C('QuestionsResolvedDayIncreaseMinViewCount'), C('QuestionsResolvedDayIncreaseMaxViewCount'));
         M('CompanyConfig')->where('status=1 and type=11')->setInc('value', $random_view_count);
+        $time = time();
+        $date = date("y-m-d",$time);
+        $this->apiSuccess('autoQuestionResolvedCountByDay success -- ' . $date);
     }
 
 
