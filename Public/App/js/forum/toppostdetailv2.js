@@ -51,7 +51,6 @@ commentObj.prototype={
     */
     separateOperation:function(){
         var that=this,
-
             userStr='';
         if(this.operation.mobile){
             if (this.operation.android) {
