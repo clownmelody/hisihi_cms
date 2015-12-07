@@ -191,7 +191,7 @@ commentObj.prototype={
         $tip.text(tip).css('opacity',1);
         window.setTimeout(function(){
             $tip.text('').css('opacity',0);
-        },1500)
+        },1500);
     },
 
     /*对安卓低版本进行特别的样式处理*/
@@ -210,7 +210,7 @@ commentObj.prototype={
         if(flag2){
             $bottomTarget.addClass('comment-boxSpe');
             var h = $('body').height(),
-                ch = 64;
+                ch = 50;
             $target.css('height', h - ch + 'px');
         }else{
             $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
