@@ -108,9 +108,9 @@ commentObj.prototype={
 
                 //安卓手机并且版本低于5.0
                 if(flag2){
-                    this.$wrapper.css('position','fixed');
+                    this.$wrapper.addClass('comment-boxSpe');
                     var h = $('body').height(),
-                        ch = 48;
+                        ch = 64;
                     $target.css('height', h - ch + 'px');
                 }
 
