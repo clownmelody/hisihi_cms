@@ -262,6 +262,49 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 点亮认证
+     * @param $id
+     */
+    public function light_authentication($id){
+        if(!empty($id)){
+            $model = $this->organizationModel;
+            $data['light_authentication'] = 1;
+            if(is_array($id)){
+                $map['id'] = array('in',$id);
+                $model->where($map)->save($data);
+            }else{
+                $id = intval($id);
+                $model->where(array('id'=>$id))->save($data);
+            }
+            $this->success('点亮认证成功','index.php?s=/admin/organization');
+        }else{
+            $this->error('未选择机构');
+        }
+    }
+
+    /**
+     * 取消认证
+     * @param $id
+     */
+    public function undo_authentication($id){
+        if(!empty($id)){
+            $model = $this->organizationModel;
+            $data['light_authentication'] = 0;
+            if(is_array($id)){
+                $map['id'] = array('in',$id);
+                $model->where($map)->save($data);
+            }else{
+                $id = intval($id);
+                $model->where(array('id'=>$id))->save($data);
+            }
+            $this->success('取消认证成功','index.php?s=/admin/organization');
+        }else{
+            $this->error('未选择机构');
+        }
+    }
+
+
+    /**
      * 机构老师关系列表
      * @param int $organization_id
      */
@@ -849,7 +892,7 @@ class OrganizationController extends AdminController
             if($organization['application_status'] != 2){
                 $this->error("该机构未通过审核机构",'index.php?s=/admin/organization/index',1);
             }
-            $authentication_list = M('OrganizationAuthenticationConfig')->where('status=1')->select();
+            $authentication_list = M('OrganizationAuthenticationConfig')->where('status=1 and flag=1')->select();
             $this->assign('organization_id',$organization_id);
             $this->assign('organization_name',$organization['name']);
             $this->assign('authentication_list',$authentication_list);
@@ -922,7 +965,7 @@ class OrganizationController extends AdminController
             $this->error($Model->getError());
         }
         $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
-        $authentication_list = M('OrganizationAuthenticationConfig')->where('status=1')->select();
+        $authentication_list = M('OrganizationAuthenticationConfig')->where('status=1 and flag=1')->select();
         if(I('from_org')){
             $this->assign('from_org', I('from_org'));
         }
@@ -1090,16 +1133,18 @@ class OrganizationController extends AdminController
                 $data['tag_pic_url'] = $this->fetchCdnImage($_POST['tag_pic_url']);
             }
             $data['content'] = $_POST['content'];
+            $data['flag'] = $_POST['flag'];
             if(empty($id)){
                 if($data){
                     //将最先添加的两个认证默认展示
                     $filter_map['status'] = 1;
                     $filter_map['default_display'] = 1;
+                    $filter_map['flag'] = 0;
                     $display_count = M('OrganizationAuthenticationConfig')->where($filter_map)->count();
                     if(!$display_count){
                         $display_count = 0;
                     }
-                    if($display_count < 3){
+                    if($display_count < 2){
                         $data['default_display'] = 1;
                     }
                     $data['create_time'] = time();
@@ -1130,7 +1175,7 @@ class OrganizationController extends AdminController
 
     /**
      * 机构认证配置删除
-     * @param $ids
+     *
      */
     public function authentication_config_delete(){
         $id = array_unique((array)I('id',0));

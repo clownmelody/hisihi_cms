@@ -13,6 +13,8 @@
             <div class="btn-group">
                 <button class="btn document_add" url="{:U('add')}">新 增</button>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/delete",array("status"=>-1))}">删 除</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/light_authentication")}">点亮认证</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/undo_authentication")}">取消认证</button>
             </div>
         </div>
 
@@ -36,6 +38,7 @@
                 <th class="" style="width: 100px;">地址</th>
                 <th class="">联系电话</th>
                 <th class="" >审核状态</th>
+                <th class="" >认证状态</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -51,10 +54,14 @@
                         <td >{$vo.location}</td>
                         <td>{$vo.phone_num}</td>
                         <td >
-                            <if condition="($vo.identification eq 2) "> 已认证
-                                <elseif condition="($vo.application_status eq 1)" />申请中
+                            <if condition="($vo.application_status eq 1) "> 申请中
                                 <elseif condition="($vo.application_status eq 2)" />已审核
                                 <elseif condition="($vo.application_status eq -2)" />已拒绝
+                            </if>
+                        </td>
+                        <td >
+                            <if condition="($vo.light_authentication eq 1) "> 已点亮
+                                <else />未点亮
                             </if>
                         </td>
                         <td><span>{$vo.create_time|time_format}</span></td>
