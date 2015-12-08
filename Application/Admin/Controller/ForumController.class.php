@@ -681,6 +681,76 @@ class ForumController extends AdminController
     }
 
     /**
+     * 设置广告位
+     */
+    public function advPositionSetting(){
+        $_marks = array(
+            array(
+                'id'=>1,
+                'value'=>'1号位'
+            ),
+            array(
+                'id'=>2,
+                'value'=>'2号位'
+            ),
+            array(
+                'id'=>3,
+                'value'=>'3号位'
+            ),
+            array(
+                'id'=>4,
+                'value'=>'4号位'
+            ),
+            array(
+                'id'=>5,
+                'value'=>'5号位'
+            ),
+            array(
+                'id'=>6,
+                'value'=>'6号位'
+            ),
+            array(
+                'id'=>7,
+                'value'=>'7号位'
+            ),
+            array(
+                'id'=>8,
+                'value'=>'8号位'
+            ),
+            array(
+                'id'=>9,
+                'value'=>'9号位'
+            ),
+            array(
+                'id'=>10,
+                'value'=>'10号位'
+            )
+        );
+        $position = M('CompanyConfig')->where('type=12')->field('id,value')->find();
+        $position_array = explode("#",$position['value']);
+        $this->assign('position_array',$position_array);
+        $this->assign('info',$position);
+        $this->assign('_marks',$_marks);
+        $this->display();
+    }
+
+    /**
+     * 更新广告位
+     */
+    public function advPositionUpdate(){
+        if (IS_POST) { //提交表单
+            $model = M('CompanyConfig');
+            $cid = $_POST["cid"];
+            $data["value"] = $_POST["value"];
+            if(empty($cid)){
+                $this->error('配置id为空', 'index.php?s=/admin/forum/post');
+            } else {
+                $res = $model->where('id='.$cid)->save($data);
+                $this->success('设置成功', 'index.php?s=/admin/forum/post');
+            }
+        }
+    }
+    /**
      * 上传图片到OSS
      * @param $picID
      */

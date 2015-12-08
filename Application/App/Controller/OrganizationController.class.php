@@ -385,7 +385,7 @@ class OrganizationController extends AppController
         }
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num,light_authentication')->find();
         if($result){
             $logo = $result['logo'];
             //$logo = $this->getOrganizationLogo($logo_id);
@@ -1453,7 +1453,7 @@ class OrganizationController extends AppController
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
         }
-        $org_list = $model->field('id, name, slogan, city, view_count, logo')
+        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication')
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where("application_status=2 and status=1")->count();
         /*if(!empty($city)&&!empty($type)){
@@ -1482,7 +1482,7 @@ class OrganizationController extends AppController
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
 
-            $user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
+            //$user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
             if($follow_other&&$be_follow){
@@ -1511,14 +1511,26 @@ class OrganizationController extends AppController
             $this->apiError(-1, '传入参数不能为空');
         }
         $model = M('Organization');
-        $org_list = $model->field('id, name, slogan, city, view_count, logo')
+        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication')
                 ->where("application_status=2 and status=1 and name like '%".$name."%'")->page($page, $count)->select();
         $totalCount = $model->where("application_status=2 and status=1 and name like '%".$name."%'")->count();
+        $uid = is_login();
         foreach($org_list as &$org){
             $org_id = $org['id'];
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $org['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $org['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $org['relationship'] = 1;
+            } else {
+                $org['relationship'] = 0;
+            }
         }
         $data['totalCount'] = $totalCount;
         $data['list'] = $org_list;
@@ -2091,6 +2103,7 @@ class OrganizationController extends AppController
                 $courseInfo['organization']['introduce'] = $organizationInfo['introduce'];
                 $courseInfo['organization']['logo'] = $organizationInfo['logo'];
                 $courseInfo['organization']['view_count'] = $organizationInfo['view_count'];
+                $courseInfo['organization']['light_authentication'] = $organizationInfo['light_authentication'];
                 $courseInfo['organization']['followCount'] = $this->getFollowCount($organization_id);
                 $courseInfo['organization']['enrollCount'] = $this->getEnrollCount($organization_id);
                 $courseInfo['organization']['authentication'] = $this->getAuthenticationInfo($organization_id);
@@ -2243,7 +2256,7 @@ class OrganizationController extends AppController
     private function getAuthenticationInfo($organization_id=0){
         $model = M('OrganizationAuthenticationConfig');
         $authModel = M('OrganizationAuthentication');
-        $config_list = $model->field('id, name, pic_url, disable_pic_url, tag_pic_url, content, default_display')->where('status=1')->select();
+        $config_list = $model->field('id, name, pic_url, disable_pic_url, tag_pic_url, content, default_display')->where('status=1 and flag=0')->select();
         foreach($config_list as &$config){
             //$config['pic_url'] = $config['pic_id'];
             $map['organization_id'] = $organization_id;
@@ -2438,53 +2451,4 @@ class OrganizationController extends AppController
         curl_close($ch);
         return true;
     }
-
-    /**
-     * 获取机构id
-     * @param null $logo_id
-     * @return null|string
-     */
-    private function getOrganizationLogo($logo_id=null){
-        if(!$logo_id){
-            $this->apiError('机构logo id不能为空');
-        }
-        $crop_url = $this->fetchCropImage($logo_id);
-        if($crop_url){
-            return $crop_url;
-        }else{
-            $origin_url = $this->fetchImage($logo_id);
-            if($origin_url){
-                return $origin_url;
-            }else{
-                return 'http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
-            }
-        }
-    }
-
-    /**
-     * 获取机构的认证
-     * @param null $organization_id
-     * @return mixed
-     */
-    private function getAuthentication($organization_id=null){
-        if(!$organization_id){
-            $this->apiError('机构id不能为空');
-        }
-        $authModel = M('OrganizationAuthentication');
-        $authConfigModel = M('OrganizationAuthenticationConfig');
-        $auth_list = $authModel->field('authentication_id')->where(array('organization_id'=>$organization_id,'status'=>1))->select();
-        $auth_array = array();
-        foreach($auth_list as &$auth){
-            $pic = $authConfigModel->where('`default_display`=1 and `status`=1 and id='.$auth['authentication_id'])->field('pic_url, disable_pic_url, tag_pic_url')->find();
-            if(!$pic['pic_url']&&!$pic['disable_pic_url']&&!$pic['tag_pic_url']){
-                continue;
-            }
-            $auth['authentication_img'] = $pic['pic_url'];
-            $auth['authentication_disable_img'] = $pic['disable_pic_url'];
-            $auth['authentication_tag_img'] = $pic['tag_pic_url'];
-            $auth_array[] = $auth;
-        }
-        return $auth_array;
-    }
-
 }
