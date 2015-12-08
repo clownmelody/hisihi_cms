@@ -1037,6 +1037,16 @@ class OrganizationController extends AppController
             $map['id'] = array('neq' , $courses_id);
             $map['category_id'] = $course['category_id'];
         }
+        if($type=='private') {//视频回放
+            $relationModel = M('OrganizationRelation');
+            $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.is_login())->find();
+            if(!$isExist){
+                $this->apiError(-2, '你不是该机构学员，无法查看');
+            }
+            $map['auth'] = 2;
+        }else{
+            $map['auth'] = 1;
+        }
 
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
