@@ -295,16 +295,43 @@ class ForumController extends AppController
 
         $list = $this->formatList($list, $version);
 
-        if($show_adv==true){
-            $len = count($list);
+        $adv_pos = $this->getAdvsPostion();
+        foreach($adv_pos as $pos){
+            $list = $this->mergeAdvertismentToForumList($list, $pos);
+        }
+        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+    }
+
+    /**
+     * 将广告内容和论坛内容合并
+     * @param null $forum_list
+     * @param int $pos
+     * @param bool|true $show_adv
+     * @return null
+     */
+    private function mergeAdvertismentToForumList($forum_list=null, $pos=3, $show_adv=true){
+        if($show_adv){
             $adv = $this->getOneForumAdv(640, 960);
             if($adv){
-                $list[$len] = $adv;
+                array_splice($forum_list, $pos, 0, $adv);
             }
         }
-        $end_time = time();
-        $t = $end_time - $start_time;
-        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+        return $forum_list;
+    }
+
+    /**
+     * 获取广告显示位置
+     * @return array
+     */
+    private function getAdvsPostion(){
+        $configModel = M('CompanyConfig');
+        $pos = $configModel->field('value')->where('type=12 and status=1')->find();
+        if($pos){
+            $pos = $pos['value'];
+            $pos = explode('#', $pos);
+            return $pos;
+        }
+        return array();
     }
 
     /**
@@ -1785,7 +1812,7 @@ class ForumController extends AppController
     /**
      * 获取自动增长数
      */
-    private function getAutoIncreseCount(){
+    public function getAutoIncreseCount(){
         $Date_1 = date("Y-m-d");
         $Date_2 = "2015-12-01";
         $d1 = strtotime($Date_1);
@@ -2542,7 +2569,7 @@ class ForumController extends AppController
     /**
      * 获取作业源文件总数
      */
-    private function getHiworksTotalCount(){
+    public function getHiworksTotalCount(){
         $cateModel = M('Category');
         $count = $cateModel->where('pid=1 and status=1')->sum('fake_hiworks_count');
         return $count;
@@ -2596,8 +2623,7 @@ class ForumController extends AppController
                 $size[] = $origin_img_info[0]; // width
                 $size[] = $origin_img_info[1]; // height
                 $data['size'] = $size;
-                $this->apiSuccess('ok', null, array('data'=>$data));
-                //return $data;
+                return array($data);
             } else {
                 return false;
             }

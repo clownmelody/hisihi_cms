@@ -1570,7 +1570,7 @@ class UserController extends AppController
     /**
      * 获取自动增长数
      */
-    private function getAutoIncreseCount(){
+    public function getAutoIncreseCount(){
         $Date_1 = date("Y-m-d");
         $Date_2 = "2015-12-01";
         $d1 = strtotime($Date_1);
