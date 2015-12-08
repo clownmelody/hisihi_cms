@@ -43,7 +43,11 @@ class HiworksController extends AppController
             $childcategory['icon'] = $this->getIconUrl($child['icon']);
             $childcategory['title'] = $child['title'];
             $map = array('category_id' => $child['id']);
-            $childcategory['files'] = D('Document')->where($map)->count('id');
+            //$childcategory['files'] = D('Document')->where($map)->count('id');
+            $t_res = M('Category')->field('fake_hiworks_count')->where('id='.$child['id'])->find();
+            if($t_res){
+                $childcategory['files'] = $t_res['fake_hiworks_count'];
+            }
             $view = D('Document')->where($map)->field('view')->select();
             $childcategory['download'] = 0;
             $childcategory['download'] += array_sum(getSubByKey($view,'view'));
@@ -55,8 +59,8 @@ class HiworksController extends AppController
             $cateResult = $model->where($condition)->field('id')->select();
             foreach($cateResult as &$value){
                 $submap = array('category_id' => $value['id']);
-                $subCount = D('Document')->where($submap)->count('id');
-                $childcategory['files'] = $childcategory['files'] + $subCount;
+                /*$subCount = D('Document')->where($submap)->count('id');
+                $childcategory['files'] = $childcategory['files'] + $subCount;*/
                 $subview = D('Document')->where($submap)->field('view')->select();
                 $childcategory['download'] += array_sum(getSubByKey($subview,'view'));
             }

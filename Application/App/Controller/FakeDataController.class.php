@@ -249,7 +249,39 @@ class FakedataController extends AppController {
         $this->apiSuccess('autoQuestionResolvedCountByDay success -- ' . $date);
     }
 
-
-
+    /**
+     * 修改嘿设汇置顶帖中的数据内容
+     */
+    public function autoModifyHisihiTopPostDataContent()
+    {
+        $postModel = M('ForumPost');
+        $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
+        if($configCount){
+            $questions_resolved = $configCount['value'] + A('Forum')->getAutoIncreseCount();
+        }
+        $allStudentsCount = A('Forum')->getAllColleageStudentsCount();
+        $allHiworksCount = A('Forum')->getHiworksTotalCount();
+        $where = 'auth_group_access.uid = member.uid and auth_group_access.group_id = ';
+        $statInfo['designers'] = M("table")->table(array(
+            'hisihi_auth_group_access'=>'auth_group_access',
+            'hisihi_member'=>'member',))->where($where.'6')->field('member.uid')->count();
+        $allTeachersCount = $statInfo['designers'] + C('TEACHER_COUNT_BASE') + A('User')->getAutoIncreseCount();
+        $data['content'] = '<p>嘿设汇致力于为广大设计学习者、爱好者和从业者提供交流互动平台，自2015年8月正式运营以来，当前：
+已经解决问题：'.$questions_resolved.'个'.'
+已入驻设计师：'.$allTeachersCount.'人'.'
+设计大学生：'.$allStudentsCount.'人'.'
+设计作业源文件：'.$allHiworksCount.'份'.'
+嘿设汇一直在努力！</p>
+ <p><img src="http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-12-03/jerqwersfd.jpg" _src="http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-12-03/jerqwersfd.jpg" style=""/></p>';
+        $data['update_time'] = time();
+        $res = $postModel->where('id=5346')->save($data);
+        $time = time();
+        $date = date("y-m-d",$time);
+        if($res){
+            $this->apiSuccess('修改置顶帖中数据内容 success -- ' . $date);
+        } else {
+            $this->apiSuccess('修改置顶帖中数据内容 Failture -- ' . $date);
+        }
+    }
 
 }
