@@ -96,34 +96,16 @@ commentObj.prototype={
             //用户已经登录
             else {
                 this.$wrapper.show();
-                var flag1=this.operation.android,
-                    flag2=false;
-
-                if(flag1) {
-                    var v = parseInt(androidVersionType().split('.')[0]);
-                    if (v < 5) {
-                        flag2=true;
-                    }
-                }
-
-                //安卓手机并且版本低于5.0
-                if(flag2){
-                    var h = $('body').height(),
-                        ch = 48;
-                    $target.css('height', h - ch + 'px');
-                }
-
                 //IOS或者是安卓版本不低于5.0
-                else{
-                    $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
-                }
+                this.dealWithAndroidLowVersion($('#comment-box'));
             }
         }
 
         //来源于普通的页面
         else {
-            $('#downloadCon').show();   //表示用户是从网页或者分享结果中进来的   直接显示下载条
-            $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
+            var $bottomTarget = $('#downloadCon');
+            $bottomTarget.show();   //表示用户是从网页或者分享结果中进来的   直接显示下载条
+            this.dealWithAndroidLowVersion($bottomTarget);
         }
     },
 
@@ -209,7 +191,30 @@ commentObj.prototype={
         $tip.text(tip).css('opacity',1);
         window.setTimeout(function(){
             $tip.text('').css('opacity',0);
-        },1500)
+        },1500);
+    },
+
+    /*对安卓低版本进行特别的样式处理*/
+    dealWithAndroidLowVersion:function($bottomTarget){
+        var flag1=this.operation.android,
+            flag2=false,
+            $target=$('.main');
+        if(flag1) {
+            var v = parseInt(androidVersionType().split('.')[0]);
+            if (v < 5) {
+                flag2=true;
+            }
+        }
+
+        //安卓手机并且版本低于5.0
+        if(flag2){
+            $bottomTarget.addClass('comment-boxSpe');
+            var h = $('body').height(),
+                ch = 50;
+            $target.css('height', h - ch + 'px');
+        }else{
+            $target.addClass('mainNormalScreen').removeClass('mainFullScreen');
+        }
     },
 
 };

@@ -2571,19 +2571,21 @@ class ForumController extends AppController
      * @param $height
      * @return bool
      */
-    public function getOneForumAdv($width, $height){
+    public function getOneForumAdv($width=640, $height=960){
         $model = M();
         $now = time();
         $picKey = "advspic_".$width.'_'.$height;
         $result = $model->query("select ".$picKey." , title, link from hisihi_advs where ".
             "position=4 and status=1 and ".$now." between create_time and end_time order by id desc");
+        $total_count = M('Advs')->where('position=4 and status=1 and '.$now.' between create_time and end_time')->count();
+        $pos = rand(1, $total_count);
         if($result){
-            $picID = $result[0][$picKey];
-            $advLink = $result[0]['link'];
-            $advTitle = $result[0]['title'];
-            $result = $model->query("select path from hisihi_picture where id=".$picID);
-            if($result){
-                $path = $result[0]['path'];
+            $picID = $result[$pos-1][$picKey];
+            $advLink = $result[$pos-1]['link'];
+            $advTitle = $result[$pos-1]['title'];
+            $pic_result = $model->query("select path from hisihi_picture where id=".$picID);
+            if($pic_result){
+                $path = $pic_result[0]['path'];
                 $objKey = substr($path, 17);
                 $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
                 $data['type'] = "advertisment";
@@ -2594,7 +2596,8 @@ class ForumController extends AppController
                 $size[] = $origin_img_info[0]; // width
                 $size[] = $origin_img_info[1]; // height
                 $data['size'] = $size;
-                return $data;
+                $this->apiSuccess('ok', null, array('data'=>$data));
+                //return $data;
             } else {
                 return false;
             }
