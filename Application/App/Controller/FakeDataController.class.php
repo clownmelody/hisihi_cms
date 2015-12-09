@@ -275,6 +275,7 @@ class FakedataController extends AppController {
  <p><img src="http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-12-03/jerqwersfd.jpg" _src="http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-12-03/jerqwersfd.jpg" style=""/></p>';
         $data['update_time'] = time();
         $res = $postModel->where('id=5346')->save($data);
+        //$res = $postModel->where('id=67282')->save($data);
         $time = time();
         $date = date("y-m-d",$time);
         if($res){

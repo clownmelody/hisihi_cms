@@ -270,7 +270,7 @@ class IssueController extends AdminController
                 $courseData['content'] = op_h($coursevideo['description']);
                 $courseData['create_time'] = time();
                 $courseData['update_time'] = time();
-                $courseData['status'] = 0;
+                $courseData['status'] = 1;
                 $courseData['view_count'] = rand(C('VideoInitMinPlayCount'), C('VideoInitMaxPlayCount'));
                 $courseData['fake_support_count'] = rand(C('VideoInitMinSupportCount'), C('VideoInitMaxSupportCount'));
                 $courseData['fake_favorite_count'] = rand(C('VideoInitMinFavoriteCount'), C('VideoInitMaxFavoriteCount'));

@@ -1707,6 +1707,9 @@ class ForumController extends AppController
         }
         foreach($list as &$value){
             if((float)$version>=2.2||$value['uid']==0){
+                if($value['id']!='001'){
+                    $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
+                }
                 $value['show_type'] = 'web';
             }
             if($value['id']!='001'&&$value['uid']!=0){
