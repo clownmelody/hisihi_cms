@@ -1683,15 +1683,20 @@ class ForumController extends AppController
             $first_post['is_inner'] = 0;
             $first_post['url'] = "http://hisihi.com/app.php/forum/hisihi_news";
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=0')
-                ->order('create_time desc')->page(1, 1)->select();
+                ->order('create_time desc')->page(1, 2)->select();
             array_unshift($list, $first_post);
-            $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
-            if($configCount){
-                $configCount['value'] = $configCount['value'] + $this->getAutoIncreseCount();
-                $list[1]['title'] = "嘿设汇已经解决".$configCount['value']."个问题";
-            } else {
-                $fakeCount = 330212 + $this->getAutoIncreseCount();
-                $list[1]['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
+
+            foreach($list as &$value){
+                if($value['uid']!=0){
+                    $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
+                    if($configCount){
+                        $configCount['value'] = $configCount['value'] + $this->getAutoIncreseCount();
+                        $value['title'] = "嘿设汇已经解决".$configCount['value']."个问题";
+                    } else {
+                        $fakeCount = 330212 + $this->getAutoIncreseCount();
+                        $value['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
+                    }
+                }
             }
         } else if ((float)$version>=2.1){
             $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')
@@ -1701,10 +1706,10 @@ class ForumController extends AppController
                 ->order('create_time desc')->page(1, 3)->select();
         }
         foreach($list as &$value){
-            if((float)$version>=2.2){
+            if((float)$version>=2.2||$value['uid']==0){
                 $value['show_type'] = 'web';
             }
-            if($value['id']!='001'){
+            if($value['id']!='001'&&$value['uid']!=0){
                 $value['url'] = 'http://hisihi.com/app.php/forum/topPostDetail/post_id/'.$value['id'];
                 if((float)$version>=2.2){
                     $value['show_type'] = 'origin';
