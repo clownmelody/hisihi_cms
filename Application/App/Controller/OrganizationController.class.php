@@ -1037,6 +1037,16 @@ class OrganizationController extends AppController
             $map['id'] = array('neq' , $courses_id);
             $map['category_id'] = $course['category_id'];
         }
+        if($type=='private') {//视频回放
+            $relationModel = M('OrganizationRelation');
+            $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.is_login())->find();
+            if(!$isExist){
+                $this->apiError(-2, '你不是该机构学员，无法查看');
+            }
+            $map['auth'] = 2;
+        }else{
+            $map['auth'] = 1;
+        }
 
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
@@ -2234,6 +2244,31 @@ class OrganizationController extends AppController
         } else {
             $this->apiError(-1, '未找到对应的课程');
         }
+    }
+
+    /**
+     * 获取机构认证列表
+     * @param null $organization_id
+     */
+    public function getAuthenticationList($organization_id=null){
+        if(!$organization_id){
+            $this->error('机构id不能为空');
+        }
+        $auth_list = M('OrganizationAuthenticationConfig')->field('id,name,pic_url,disable_pic_url,content')
+            ->where('flag=1 and status=1')->select();
+        foreach($auth_list as &$auth){
+            $map['organization_id'] = $organization_id;
+            $map['authentication_id'] = $auth['id'];
+            $map['status'] = 1;
+            $count = M('OrganizationAuthentication')->where($map)->count();
+            if($count){
+                $auth['status'] = true;
+            }else{
+                $auth['status'] = false;
+            }
+        }
+        $extra['data'] = $auth_list;
+        $this->apiSuccess('获取认证列表成功', null, $extra);
     }
 
     private function sec2time($sec){
