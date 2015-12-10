@@ -1186,9 +1186,7 @@ class OrganizationController extends AdminController
         $map = array('id' => array('in', $id) );
         $result = $config->where($map)->save(Array('status'=>-1));
 
-        $filter_map['authentication_id'] = array('in',$id);
-        $res = M('OrganizationAuthentication')->where($filter_map)->save(array('status'=>-1));
-        if($result && $res){
+        if($result){
             $this->success('删除成功', U('authentication_config'));
         } else {
             $this->error('删除失败');
