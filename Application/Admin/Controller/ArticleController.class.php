@@ -757,10 +757,12 @@ class ArticleController extends AdminController {
             $this->error(D('Document')->getError());
         }else{
             $id = $res['id'];
-            $min = (int)C('VideoInitMinPlayCount') * 0.6;
-            $max = (int)C('VideoInitMaxPlayCount') * 0.6;
-            $random_count = rand($min, $max);
-            M('Document')->where('id='.$id)->setInc('view', $random_count);
+            if(!$id){
+                $min = (int)C('VideoInitMinPlayCount') * 0.6;
+                $max = (int)C('VideoInitMaxPlayCount') * 0.6;
+                $random_count = rand($min, $max);
+                M('Document')->where('category_id=47 and id='.$id)->setInc('view', $random_count);
+            }
             $model = M();
             $result = $model->query('SELECT logo_pic FROM hisihi_document_article WHERE id='.$id);
             if($result){

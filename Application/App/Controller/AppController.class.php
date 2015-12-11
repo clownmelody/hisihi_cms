@@ -382,6 +382,10 @@ abstract class AppController extends RestController {
         $map_support_count['row'] = $id;
         $map_support_count['appname'] = 'Article';
         $supportCount = $this->getSupportCountCache($map_support_count);
+        $doc = M('DocumentArticle')->field('fake_support_count')->where('id='.$id)->find();
+        if($doc){
+            $supportCount = $supportCount + $doc['fake_support_count'];
+        }
         return $supportCount;
     }
 
