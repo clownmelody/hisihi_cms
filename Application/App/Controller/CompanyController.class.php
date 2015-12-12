@@ -148,6 +148,7 @@ class CompanyController extends AppController {
         }else{
             $this->apiError(-1, "该公司不存在");
         }
+        $cmodel->where('status=1 and type=9')->setInc('value', 1);
         $extra['data'] = $result;
         $this->apiSuccess('获取公司信息成功', null, $extra);
     }
