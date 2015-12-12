@@ -114,4 +114,12 @@ class HotKeysController extends AppController
         }
 
     }
+
+    //点击进入快捷键更新浏览量
+    public function clickHotKeys(){
+        $result = M("CompanyConfig")->where('type=10')->setInc('value');
+        if($result){
+            $this->apiSuccess('快捷键浏览数更新');
+        }
+    }
 }
