@@ -13,50 +13,278 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="__CSS__/app.min.css">
     <style>
+        .player {
+            position: relative;
+            width: 100%;
+            background-image: url("__IMG__/bg.png");
+        }
+        .related-pic img {
+            width:45%;
+            height: 96%;
+        }
+        .app-bottombar {
+            z-index: 3000;
+            position: fixed;
+            bottom: 0;
+            height: 60px;
+            width: 100%;
+            background: url("__IMG__/bg.png");
+        }
         .bottomspace {
-            display: none;
             height: 55px;
         }
-        .info-title {
-            height: 40px;
+        .bottom-icon {
+            float: left;
+            margin: 5px 10px 5px 10px;
         }
-        .info-time {
+        .bottom-title {
+            float: left;
+            font-size: 18px;
+            color: #fff;
+            margin-top: 10px;
+        }
+        .bottom-content {
+            position: absolute;
+            color: #aaa;
             font-size: 12px;
-            color: #ccc;
+            margin-top: 4px;
         }
-        img {
-            max-width:100%;height:auto;
+        .bottom-star {
+            float: left;
+            margin-top: 10px;
+            margin-left: 5px;
+        }
+
+        .bottom-right {
+            float: right;
+            margin: 12px 10px;
+            width: 80px;
+            height: 35px;
+            font-size: 16px;
+            color: #fff;
+            line-height: 35px;
+            border-radius: 5px;
+            background-color: #2aba00;
+            text-align: center;
+            z-index: 3000;
+        }
+        .course-org{
+            float:left;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .org-title{
+            display: inline-block;
+            padding-top: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .org-info{
+            float: left;
+            color: #4a4a4a;
+            font-size: 12px;
+            line-height: 13px;
+            font-weight: normal;
+            margin-top: 3px;
         }
     </style>
 </head>
 
 <body>
 <div class="app-page" data-page="home">
-
-    <div id="test-agent" style="display:none">user-agent</div>
     <div class="app-content" style="-webkit-box-shadow: none;">
-        <div class="app-section" style="margin: 10px 10px 10px 10px">
-            <div class="info-title">
-                <div style="float:left;margin-top:-10px;width:100%">
-                    <h2>机构分析测试</h2>
-                </div>
+        <div class="player" style="height: 120px;">
+            <div style="position: relative;width: 100%;">
+                <span class="course-org" style="margin-top: 30px;">
+                    <span style="float: left;">
+                        <img  style="width: 60px;height: 60px;vertical-align:text-top;margin-left: 10px;" src="{$organization['logo']}"/>
+                    </span>
+                    <span class="org-title" style="color: white;margin-left: 20px;">{$organization['name']}
+                            <volist name="organization['authenticationInfo']" id="auth">
+                                <eq name="auth['default_display']" value="1">
+                                    &nbsp;&nbsp;<img  style="width: 15px;vertical-align:text-bottom;" src="{$auth['tag_pic_url']}"/>
+                                </eq>
+                            </volist>
+                            <br>
+                            <br>
+                            <span class="org-info" style="color: white;">
+                                {$organization['view_count']}查看 <span style="color: #bfcece">|</span> {$organization['teachersCount']}老师 <span style="color: #bfcece">|</span> {$organization['followCount']}粉丝
+                            </span>
+                    </span>
+                </span>
             </div>
-            <div class="info-time">
-                <p></p>
-            </div>
-            <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
-            </div>
-            <div>
+        </div>
+        <div style="position: relative;height: 40px;background-color: red;color: white;">
             <p>
-                机构分析测试<br>
-                机构分析测试<br>
-                机构分析测试<br>
-                </p>
+                <div style=" width: 50%;float: left;text-align: center;padding-top: 10px;">嘿设汇认证</div>
+                <div style=" width: 50%;float: left;text-align: center;padding-top: 10px;">诚信机构认证</div>
+            </p>
+        </div>
+        <div class="app-section" style="margin: 10px;height: 80px;padding: 0px">
+            <volist name="toppost" id="post">
+                <div style="width: 100%;height: 50%;margin: 0;">
+                    <div style="float: left;margin: 8px 0 8px 10px;border: 1px solid #ff0000;border-radius: 3px;font-size: 10px;padding: 3px 3px 3px 3px;color: red;">{$post['tag']}</div>
+                    <div style="float: left;margin: 8px 0 8px 10px;">{$post['title']}</div>
+                </div>
+            </volist>
+        </div>
+        <div style="position: relative;height: 40px;background-color: red;color: white;">
+            <p style="height: 100%;text-align: center;padding-top: 10px;">剩余报名担保名额{$enroll['available_count']}人，马上报名</p>
+        </div>
+        <div class="app-section" style="margin: 10px 10px 10px 10px;height: 60px;padding: 15px">
+            <span style="float: left;">
+                <img style="width: 60px;height: 60px;" src="__IMG__/pic_type_libao.png">
+            </span>
+            <div style="height: 100%;width: 75%;margin-left: 90px;margin-top: 0px;">
+                <ul style="color: #f00;">
+                    <volist name="enroll['data']" id="enroll_item">
+                        <li style="list-style-type: disc;">
+                            <span style="color:black;">{$enroll_item['student_name']} 同学 于 {$enroll_item['create_time']} 成功报名</span>
+                        </li>
+                    </volist>
+                </ul>
             </div>
+        </div>
+        <div class="app-section" style="margin: 10px 10px 10px 10px;padding: 15px">
+            <p style="height: 30px;border-bottom: 1px solid grey;border-radius: 0;">基本信息</p>
+            <div></div>
+            <span style="margin-top: 10px;width: 100%;padding-top: 10px;">
+                {$organization['introduce']}
+            </span>
+        </div>
+        <div class="app-section" style="margin: 10px 10px 10px 10px;padding: 15px">
+            <p style="height: 30px;border-bottom: 1px solid grey;border-radius: 0;">优势</p>
+            <div></div>
+            <span style="margin-top: 10px;width: 100%;padding-top: 10px;">
+                <ul style="list-style-type: none;">
+                    <volist name="organization['advantage']" id="advantage_item">
+                        <li style="display: inline-block;">
+                            <span style="display: table;background-color:#FFDECC;margin: 5px;padding: 5px;border-radius: 5px;">{$advantage_item}</span>
+                        </li>
+                    </volist>
+                </ul>
+            </span>
+        </div>
+        <div class="app-section" style="margin: 10px 10px 10px 10px;height: 160px;padding: 15px">
+            <p style="height: 30px;border-bottom: 1px solid grey;border-radius: 0;">机构视频</p>
+            <span>
+                <img style="height: 130px;width: 100%;" src="{$org_video['video_img']}">
+            </span>
+        </div>
+        <div class="app-section" style="margin: 10px 10px 10px 10px;height: 160px;padding: 15px">
+            <p style="height: 30px;border-bottom: 1px solid grey;border-radius: 0;">师资力量</p>
+            <span>
+                <ul style="list-style-type: none;">
+                    <volist name="teacher" id="teacher_item">
+                        <li style="display: inline-block;width:50%;">
+                            <span style="display: inline-block;padding: 10px 0 10px 0;">
+                                <span style="float: left;">
+                                    <img  style="width: 48px;height: 48px;vertical-align:text-top;border-radius: 50px;" src="{$teacher_item['info']['avatar128']}"/>
+                                </span>
+                                <span class="org-title">{$teacher_item['info']['nickname']}
+                                    <br>
+                                    <span class="org-info">
+                                            {$organization['name']}
+                                    </span>
+                                </span>
+                            </span>
+                        </li>
+                    </volist>
+                </ul>
+            </span>
+        </div>
+        <div class="app-section" style="margin: 10px 10px 10px 10px;height: 150px;padding: 15px">
+            <span style="display: inline-block;float: left;width: 50%;text-align: center;height: 80px">
+                <span>{$fractionalStatistics['comprehensiveScore']}分</span><br>
+                <span>星星</span><br>
+                <span>共{$comment['totalCount']}评论</span>
+            </span>
+            <span style="display: inline-block;float: left;margin: 0;width: 50%;text-align: center;height: 80px">
+                <volist name="fractionalStatistics['data']" id="statistic_item">
+                    <span>
+                        <span>{$statistic_item['value']}</span>
+                        <span>星星</span>
+                        <span>{$statistic_item['score']}分</span>
+                        <br>
+                    </span>
+                </volist>
+            </span>
+            <span style="display: inline-block;width: 100%;">
+                <ul style="list-style-type: none;">
+                    <li style="display: inline-block;width: 24%;">
+                        <span style="display: block;text-align: center;">全部</span><br>
+                        <span style="display: block;text-align: center;">{$comment['totalCount']}</span>
+                    </li>
+                    <li style="display: inline-block;width: 24%;">
+                        <span style="display: block;text-align: center;">好评</span><br>
+                        <span style="display: block;text-align: center;">{$comment['goodCount']}</span>
+                    </li>
+                    <li style="display: inline-block;width: 24%;">
+                        <span style="display: block;text-align: center;">中评</span><br>
+                        <span style="display: block;text-align: center;">{$comment['mediumCount']}</span>
+                    </li>
+                    <li style="display: inline-block;width: 24%;">
+                        <span style="display: block;text-align: center;">差评</span><br>
+                        <span style="display: block;text-align: center;">{$comment['badCount']}</span>
+                    </li>
+                </ul>
+            </span>
+        </div>
+        <div class="app-section" style="margin: 10px 10px 10px 10px;padding: 15px">
+            <volist name="comment['data']" id="comment_item">
+                    <p style="border-bottom: 1px solid grey;border-radius: 0;padding-bottom: 10px;">
+                        <span style="float: left;">
+                            <img  style="width: 48px;border-radius: 50px;height: 48px;vertical-align:text-top;" src="{$comment_item['userInfo']['avatar128']}"/>
+                        </span>
+                        <span class="org-title">
+                            <span>{$comment_item['userInfo']['nickname']}</span>
+                            <span>星星</span>
+                        </span>
+                        <br>
+                        <span style="margin-left: 10px;">{$comment_item['comment']}</span>
+                        <br>
+                        <span style="margin-left: 10px;">发表于{$comment_item['create_time']}</span>
+                    </p>
+            </volist>
         </div>
         <div class="bottomspace"></div>
     </div>
+    <div class="app-bottombar">
+        <div>
+            <div>
+            <span class="bottom-icon">
+                <img style="width: 50px;" src="__IMG__/icon.png" />
+            </span>
+            <span class="bottom-title">
+                <p>嘿设汇</p>
+                <p class="bottom-content">设计师必备 百万设计师都在用</p>
+            </span>
+            <span class="bottom-star">
+                <img style="width: 10px;margin-left: -1px" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+            </span>
+            </div>
+            <div class="app-button bottom-right">
+                <p>立即下载</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="app-page" data-page="page2">
+    <div class="app-topbar">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Page 2</div>
+    </div>
+    <div class="app-content">
+        Page 2 is lonely
+    </div>
+</div>
+
 <script src="__JS__/zepto.js"></script>
 <script src="__JS__/app.min.js"></script>
 <script>
@@ -74,10 +302,11 @@
                      cancelButton : '取消'
                      }, function (tryAgain) {
                      if (tryAgain) {
-                     location.href = 'http://www.hisihi.com/app/downloadapp.html';
+
                      }
                      });*/
                 });
+
     });
 
     App.controller('page2', function (page) {
@@ -90,14 +319,11 @@
         App.load('home');
     }
 
-    $("a").removeAttr('href');
-
     var userAgent = window.location.href;
-    if(userAgent.indexOf("hisihi-app") < 0) {
-        $(".app-bottombar").show();
-        $(".bottomspace").show();
+    if(userAgent.indexOf("hisihi-app") > 0) {
+        $(".app-bottombar").hide();
+        $(".bottomspace").hide();
     }
-
 </script>
 </body>
 </html>

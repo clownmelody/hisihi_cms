@@ -103,8 +103,12 @@ class CourseController extends AppController
         $coursesList = D('IssueContent')->where($map)->order($order)->page($page, $count)->select();
         $totalCount = D('IssueContent')->where($map)->count();
 
-        if($type == 'view')
+        if($type == 'view'){
             $fetchImage = 1;
+        }else{
+            $fetchImage = 0;
+        }
+
         $coursesList = $this->formatList($id, $coursesList,$fetchImage);
 
         if($type == 'view') {

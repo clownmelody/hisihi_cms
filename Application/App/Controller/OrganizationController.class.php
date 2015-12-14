@@ -379,7 +379,7 @@ class OrganizationController extends AppController
      * app获取机构基本信息
      * @param $organization_id
      */
-    public function appGetBaseInfo($organization_id, $uid=0){
+    public function appGetBaseInfo($organization_id, $uid=0,$type=null){
         if($uid==0){
             $uid = $this->getUid();
         }
@@ -420,8 +420,12 @@ class OrganizationController extends AppController
             }else{
                 $result['isStudent']=true;
             }
-            $extra['data'] = $result;
-            $this->apiSuccess("获取机构信息成功",null,$extra);
+            if($type=="view"){
+                return $result;
+            }else{
+                $extra['data'] = $result;
+                $this->apiSuccess("获取机构信息成功",null,$extra);
+            }
         }else{
             $this->apiError(-1,"获取机构信息失败");
         }
@@ -1553,7 +1557,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function topPost($organization_id=0, $page=1, $count=10){
+    public function topPost($organization_id=0, $page=1, $count=10,$type=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
@@ -1563,9 +1567,13 @@ class OrganizationController extends AppController
         foreach($list as &$notice){
             $notice['detail_url'] = 'http://hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
         }
-        $extra['totalCount'] = $totalCount;
-        $extra['data'] = $list;
-        $this->apiSuccess('获取机构公告列表成功', null, $extra);
+        if($type=="view"){
+            return $list;
+        }else{
+            $extra['totalCount'] = $totalCount;
+            $extra['data'] = $list;
+            $this->apiSuccess('获取机构公告列表成功', null, $extra);
+        }
     }
 
     /**
@@ -1574,7 +1582,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function enrollList($organization_id=0, $page=0, $count=3){
+    public function enrollList($organization_id=0, $page=0, $count=3,$type=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
@@ -1591,17 +1599,24 @@ class OrganizationController extends AppController
             $user['phone_num'] = mb_substr($user['phone_num'],0,3,'utf-8') . '********';
         }
         $guarantee_num = M('Organization')->where('status=1 and id='.$organization_id)->getField('guarantee_num');
-        $extra['available_count'] = (int)$guarantee_num - $total_count;
-        $extra['total_count'] = $total_count;
-        $extra['data'] = $list;
-        $this->apiSuccess('获取报名列表成功', null, $extra);
+        if($type=="view"){
+            return array(
+                'available_count'=>(int)$guarantee_num - $total_count,
+                'data'=>$list
+            );
+        }else{
+            $extra['available_count'] = (int)$guarantee_num - $total_count;
+            $extra['total_count'] = $total_count;
+            $extra['data'] = $list;
+            $this->apiSuccess('获取报名列表成功', null, $extra);
+        }
     }
 
     /**
      * 获取机构的分数统计
      * @param int $organization_id
      */
-    public function fractionalStatistics($organization_id=0){
+    public function fractionalStatistics($organization_id=0,$type=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
@@ -1616,9 +1631,16 @@ class OrganizationController extends AppController
                 ->avg('star');
             $config['score'] = round($score, 1);
         }
-        $extra['comprehensiveScore'] = round($comprehensiveScore, 1);
-        $extra['data'] = $configList;
-        $this->apiSuccess('获取评论统计分数成功', null, $extra);
+        if($type=="view"){
+            return array(
+                'comprehensiveScore'=>round($comprehensiveScore, 1),
+                'data'=>$configList
+            );
+        }else{
+            $extra['comprehensiveScore'] = round($comprehensiveScore, 1);
+            $extra['data'] = $configList;
+            $this->apiSuccess('获取评论统计分数成功', null, $extra);
+        }
     }
 
     /**
@@ -1651,12 +1673,22 @@ class OrganizationController extends AppController
             unset($comment['uid']);
             unset($comment['status']);
         }
-        $extra['totalCount'] = $totalCount;
-        $extra['goodCount'] = $goodCount;
-        $extra['mediumCount'] = $mediumCount;
-        $extra['badCount'] = $badCount;
-        $extra['data'] = $list;
-        $this->apiSuccess('获取机构评论列表成功', null, $extra);
+        if($type=="view"){
+            return array(
+                'totalCount'=>$totalCount,
+                'goodCount'=>$goodCount,
+                'mediumCount'=>$mediumCount,
+                'badCount'=>$badCount,
+                'data'=>$list
+            );
+        }else{
+            $extra['totalCount'] = $totalCount;
+            $extra['goodCount'] = $goodCount;
+            $extra['mediumCount'] = $mediumCount;
+            $extra['badCount'] = $badCount;
+            $extra['data'] = $list;
+            $this->apiSuccess('获取机构评论列表成功', null, $extra);
+        }
     }
 
     /**
@@ -1767,7 +1799,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10){
+    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10,$type=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -1787,8 +1819,12 @@ class OrganizationController extends AppController
                 ->where(array('id'=>$teacher['teacher_group_id'],'organization_id'=>$organization_id,'status'=>1,'type'=>1001))->getField('value');
         }
         unset($teacher);
-        //返回成功结果
-        $this->apiSuccess("获取机构老师列表成功", null, array('totalCount' => $totalCount,'teacherList' => $teacher_ids));
+        if($type=="view"){
+            return $teacher_ids;
+        }else{
+            //返回成功结果
+            $this->apiSuccess("获取机构老师列表成功", null, array('totalCount' => $totalCount,'teacherList' => $teacher_ids));
+        }
     }
 
     /**
@@ -1849,9 +1885,33 @@ class OrganizationController extends AppController
     {
         $result = M('Organization')->where(array('id'=>$id,'status'=>1))->find();
         if($result){
-            if($type == 'view') {
-                $this->display();
-            }
+            $organization = $this->appGetBaseInfo($id,0,"view");
+            $organization = $this->formatOrganizationInfo($organization);
+            $toppost = $this->topPost($id,1,2,"view");
+            $toppost = $this->formatTopPostInfo($toppost);
+            $enroll = $this->enrollList($id,1,3,"view");
+            $enroll = $this->formatEnrollInfo($enroll);
+            $org_video = $this->getPropagandaVideo($id,"view");
+            $teacher = $this->appGetTeacherList($id,1,4,"view");
+            $teacher = $this->formatTeacherInfo($teacher);
+            //$student_works = $this->appGetStudentWorks($id,1,3,"view");
+            //$courses = $this->appGetCoursesList($id,null,null,null,"view",1,3);
+            //$environment = $this->appGetOrganizationEnvironment($id,1,3,"view");
+            $fractionalStatistics = $this->fractionalStatistics($id,"view");
+            $comment = $this->commentList($id,"view",1,10);
+            $comment = $this->formatCommentInfo($comment);
+            $this->assign('comment',$comment);
+            $this->assign('fractionalStatistics',$fractionalStatistics);
+            //$this->assign('environment',$environment);
+            //$this->assign('courses',$courses);
+            //$this->assign('student_works',$student_works);
+            $this->assign('teacher',$teacher);
+            $this->assign('org_video',$org_video);
+            $this->assign('enroll',$enroll);
+            $this->assign('toppost',$toppost);
+            $this->assign('organization',$organization);
+            $this->setTitle('{$organization.name|op_t} — 嘿设汇');
+            $this->display('organizationdetail');
         } else{
             $this->apiError(-404, '未找到该机构！');
         }
@@ -1967,7 +2027,7 @@ class OrganizationController extends AppController
      * 获取机构的宣传视频
      * @param null $organization_id
      */
-    public function getPropagandaVideo($organization_id=null){
+    public function getPropagandaVideo($organization_id=null,$type=null){
         if (!$organization_id) {
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -1987,7 +2047,11 @@ class OrganizationController extends AppController
             }
             $extra['data']['video_img'] = $video_img;
             $extra['data']['video_url'] = $url;
-            $this->apiSuccess('获取宣传视频成功', null, $extra);
+            if($type=="view"){
+                return $extra['data'];
+            }else{
+                $this->apiSuccess('获取宣传视频成功', null, $extra);
+            }
         } else {
             $this->apiError(-1, '未找到机构的宣传视频，可能没有上传');
         }
@@ -1999,7 +2063,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function appGetStudentWorks($organization_id=null,$page=1,$count=3){
+    public function appGetStudentWorks($organization_id=null,$page=1,$count=3,$type=null){
         if(!$organization_id){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -2029,9 +2093,13 @@ class OrganizationController extends AppController
                 'size'=>$thumb_size
             );
         }
-        $extra['totalCount'] = $totalCount;
-        $extra['data'] = $list;
-        $this->apiSuccess('获取机构学生作品成功', null, $extra);
+        if($type=="view"){
+            return $list;
+        }else{
+            $extra['totalCount'] = $totalCount;
+            $extra['data'] = $list;
+            $this->apiSuccess('获取机构学生作品成功', null, $extra);
+        }
     }
 
     /**
@@ -2040,7 +2108,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function appGetOrganizationEnvironment($organization_id=null,$page=1,$count=3){
+    public function appGetOrganizationEnvironment($organization_id=null,$page=1,$count=3,$type=null){
         if(!$organization_id){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -2070,9 +2138,13 @@ class OrganizationController extends AppController
                 'size'=>$thumb_size
             );
         }
-        $extra['totalCount'] = $totalCount;
-        $extra['data'] = $list;
-        $this->apiSuccess('获取机构环境图片成功', null, $extra);
+        if($type=="view"){
+            return $list;
+        }else{
+            $extra['totalCount'] = $totalCount;
+            $extra['data'] = $list;
+            $this->apiSuccess('获取机构环境图片成功', null, $extra);
+        }
     }
 
     /**
@@ -2485,5 +2557,58 @@ class OrganizationController extends AppController
         }
         curl_close($ch);
         return true;
+    }
+
+    private function formatOrganizationInfo($organization=null){
+        unset($organization['slogan']);
+        unset($organization['phone_num']);
+        unset($organization['guarantee_num']);
+        unset($organization['location']);
+        unset($organization['teachersCount']);
+        unset($organization['relationship']);
+        unset($organization['isStudent']);
+        $organization['advantage'] = explode("#",$organization['advantage']);
+
+        return $organization;
+    }
+
+    private function formatTopPostInfo($topPost=nulll){
+        unset($topPost['id']);
+        unset($topPost['create_time']);
+        unset($topPost['detail_url']);
+
+        return $topPost;
+    }
+
+    private function formatEnrollInfo($enroll=null){
+        foreach($enroll['data'] as &$enroll_item){
+            $enroll_item['create_time'] = time_format($enroll_item['create_time'],'Y-m-d');
+        }
+        return $enroll;
+    }
+
+    private function formatTeacherInfo($teacher=null){
+        unset($teacher['uid']);
+        unset($teacher['teacher_group_id']);
+        unset($teacher['relationship']);
+        unset($teacher['teacher_group']);
+        unset($teacher['info']['score']);
+        unset($teacher['info']['avatar256']);
+        unset($teacher['info']['username']);
+        unset($teacher['info']['group']);
+        unset($teacher['info']['fans']);
+        unset($teacher['info']['following']);
+        unset($teacher['info']['signature']);
+        unset($teacher['info']['weibocount']);
+        unset($teacher['info']['replycount']);
+
+        return $teacher;
+    }
+
+    private function formatCommentInfo($comment=null){
+        foreach($comment['data'] as &$comment_item){
+           $comment_item['create_time'] = time_format($comment_item['create_time'],'Y-m-d H:i');
+        }
+        return $comment;
     }
 }
