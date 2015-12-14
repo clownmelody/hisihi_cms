@@ -67,7 +67,11 @@ class HiworksController extends AppController
             /* -- */
             $categorylist[] = $childcategory;
         }
-
+        $allCateTotalDownloadCount = 0;
+        foreach($categorylist as $category){
+            $allCateTotalDownloadCount += $category['download'];
+            S('fake_all_category_hiworks_download', $allCateTotalDownloadCount);
+        }
         $this->apiSuccess("获取云作业列表成功", null, array('category' => $categorylist));
     }
 
@@ -119,12 +123,16 @@ class HiworksController extends AppController
 
     /**
      * 金榜作业
+     * @param null $version
      */
     public function topDownload($version=null){
         $model = M();
         if((float)$version>=2.2){
-            $allCount = $model->query('select sum(download) as allCount from hisihi_document_download');
-            $extra['allCount'] = $allCount[0]['allCount'];
+            $extra['allCount'] = S('fake_all_category_hiworks_download');
+            if(!$extra['allCount']){
+                $allCount = $model->query('select sum(view) as allCount from hisihi_document');
+                $extra['allCount'] = $allCount[0]['allCount'];
+            }
         }
         $result = $model->query("select document.id, document.title, document.category_id, document.cover_id, download.download from hisihi_document_download as download,
                                   hisihi_document as document where download.id=document.id and document.cover_id!=0 and document.status=1

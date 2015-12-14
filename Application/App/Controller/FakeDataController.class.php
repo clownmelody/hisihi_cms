@@ -81,7 +81,7 @@ class FakedataController extends AppController {
      */
     public function autoIncreaseArticleViewCountByDay(){
         $documentModel = M('Document');
-        $article_list = $documentModel->field('id, view')->where('status=1')->select();
+        $article_list = $documentModel->field('id, view')->where('status=1 and category_id=47')->select();
         $count = count($article_list);
         foreach($article_list as $article) {
             $id = $article['id'];
@@ -215,10 +215,10 @@ class FakedataController extends AppController {
      */
     public function autoIncreaseCateHiworksViewCountByDay(){
         $docModel = M('Document');
-        $doc_list = $docModel->where('status=1')->field('id')->select();
+        $doc_list = $docModel->where('status=1 and category_id!=47')->field('id')->select();
         foreach($doc_list as $doc){
             $id = $doc['id'];
-            $random_view_count = rand(20, 40);
+            $random_view_count = rand(5, 10);
             $docModel->where('id='.$id)->setInc('view', $random_view_count);
         }
         $time = time();
@@ -274,8 +274,8 @@ class FakedataController extends AppController {
 嘿设汇一直在努力！</p>
  <p><img src="http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-12-03/jerqwersfd.jpg" _src="http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-12-03/jerqwersfd.jpg" style=""/></p>';
         $data['update_time'] = time();
-        $res = $postModel->where('id=5346')->save($data);
-        //$res = $postModel->where('id=67282')->save($data);
+        //$res = $postModel->where('id=5346')->save($data);
+        $res = $postModel->where('id=67282')->save($data);
         $time = time();
         $date = date("y-m-d",$time);
         if($res){

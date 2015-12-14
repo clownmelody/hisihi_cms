@@ -211,8 +211,8 @@ return  array(
     // end 视频点赞次数
 
     // 嘿设汇新闻
-    'HisihiNewsInitMinViewCount' => 300,
-    'HisihiNewsInitMaxViewCount' => 400,
+    'HisihiNewsInitMinViewCount' => 500,
+    'HisihiNewsInitMaxViewCount' => 3000,
     'HisihiNewsDayIncreaseMinViewCount' => 500,
     'HisihiNewsDayIncreaseMaxViewCount' => 1000,
     'HisihiNewsDaySlowIncreaseMinViewCount' => 1,

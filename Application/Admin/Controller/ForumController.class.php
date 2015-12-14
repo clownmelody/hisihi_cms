@@ -459,8 +459,10 @@ class ForumController extends AdminController
     public function saveTopPost($title = '', $content = '', $top_type = '置顶', $is_top = 1, $is_out_link=0, $link_url=null, $is_inner=1, $cover_id=0){
         //写入数据库
         $model = D('Forum/ForumPost');
+        $random_count = rand(C('HisihiNewsInitMinViewCount'), C('HisihiNewsInitMaxViewCount'));
         $data = array('title' => $title, 'content' => $content, 'type' => $top_type, 'is_top' => $is_top,
-            'is_out_link' => $is_out_link, 'link_url' => $link_url, 'is_inner' => $is_inner, 'cover_id' => $cover_id);
+            'is_out_link' => $is_out_link, 'link_url' => $link_url, 'is_inner' => $is_inner, 'cover_id' => $cover_id,
+            'view_count'=>$random_count);
         $result = $model->createPost($data);
         $this->uploadLogoPicToOSS($cover_id);
         //如果写入不成功，则报错

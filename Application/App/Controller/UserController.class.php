@@ -1576,7 +1576,7 @@ class UserController extends AppController
         $d1 = strtotime($Date_1);
         $d2 = strtotime($Date_2);
         $days = round(($d1-$d2)/3600/24);
-        $random_count = rand(1, 20);
+        $random_count = 16;
         return $days * $random_count;
     }
 
