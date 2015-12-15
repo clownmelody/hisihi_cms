@@ -1719,11 +1719,13 @@ class OrganizationController extends AppController
      * @param null $strScoreList
      */
     public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null, $strScoreList=null){
-        if(empty($content)||empty($strScoreList)||$organization_id==0||$uid==0){
+        if(empty($content)||empty($strScoreList)||$organization_id==0){
             $this->apiError(-1, '传入参数不能为空');
         }
-        $this->requireLogin();
-        $uid = $this->getUid();
+        if(!$uid){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
         $relationModel = M('OrganizationRelation');
         $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.$uid)->find();
         if(!$isExist){
