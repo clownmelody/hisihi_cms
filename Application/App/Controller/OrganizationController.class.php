@@ -1668,7 +1668,6 @@ class OrganizationController extends AppController
         foreach($list as &$comment){
             $uid = $comment['uid'];
             $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
-            unset($comment['id']);
             unset($comment['organization_id']);
             unset($comment['uid']);
             unset($comment['status']);
@@ -1723,6 +1722,8 @@ class OrganizationController extends AppController
         if(empty($content)||empty($strScoreList)||$organization_id==0||$uid==0){
             $this->apiError(-1, '传入参数不能为空');
         }
+        $this->requireLogin();
+        $uid = $this->getUid();
         $relationModel = M('OrganizationRelation');
         $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.$uid)->find();
         if(!$isExist){
