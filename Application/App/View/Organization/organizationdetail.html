@@ -195,9 +195,9 @@
             </span>
         </div>
         <div class="app-section" style="margin: 10px 10px 10px 10px;height: 150px;padding: 15px">
-            <span style="display: inline-block;float: left;width: 50%;text-align: center;height: 80px">
-                <span>{$fractionalStatistics['comprehensiveScore']}分</span><br>
-                <span>星星</span><br>
+            <span style="display: inline-block;float: left;width: 100%;text-align: center;height: 80px">
+                <span>{$fractionalStatistics['comprehensiveScore']}分</span>
+                <span><div id="comprehensive_rate" style="height: 30px;width: 200px;"></div></span>
                 <span>共{$comment['totalCount']}评论</span>
             </span>
             <span style="display: inline-block;float: left;margin: 0;width: 50%;text-align: center;height: 80px">
@@ -209,26 +209,6 @@
                         <br>
                     </span>
                 </volist>
-            </span>
-            <span style="display: inline-block;width: 100%;">
-                <ul style="list-style-type: none;">
-                    <li style="display: inline-block;width: 24%;">
-                        <span style="display: block;text-align: center;">全部</span><br>
-                        <span style="display: block;text-align: center;">{$comment['totalCount']}</span>
-                    </li>
-                    <li style="display: inline-block;width: 24%;">
-                        <span style="display: block;text-align: center;">好评</span><br>
-                        <span style="display: block;text-align: center;">{$comment['goodCount']}</span>
-                    </li>
-                    <li style="display: inline-block;width: 24%;">
-                        <span style="display: block;text-align: center;">中评</span><br>
-                        <span style="display: block;text-align: center;">{$comment['mediumCount']}</span>
-                    </li>
-                    <li style="display: inline-block;width: 24%;">
-                        <span style="display: block;text-align: center;">差评</span><br>
-                        <span style="display: block;text-align: center;">{$comment['badCount']}</span>
-                    </li>
-                </ul>
             </span>
         </div>
         <div class="app-section" style="margin: 10px 10px 10px 10px;padding: 15px">
@@ -287,6 +267,7 @@
 
 <script src="__JS__/zepto.js"></script>
 <script src="__JS__/app.min.js"></script>
+<script src="__JS__/jRate.min.js"></script>
 <script>
     App.controller('home', function (page) {
         // put stuff here
@@ -324,6 +305,19 @@
         $(".app-bottombar").hide();
         $(".bottomspace").hide();
     }
+
+    $(function(){
+        $("#comprehensive_rate").jRate({
+            startColor: "#FF5A00",
+            endColor: "#FF5A00",
+            count:5,
+            rating:4.5,
+            max:5,
+            min:0,
+            readOnly:true,
+            precision:1
+        });
+    });
 </script>
 </body>
 </html>
