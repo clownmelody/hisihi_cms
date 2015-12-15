@@ -612,7 +612,14 @@ class CourseController extends AppController
             //查询条件同supported
             $favorited = D('Favorite')->where($map_supported)->count();
 
-            $v['ViewCount'] = $v['view_count'];
+            //$v['ViewCount'] = $v['view_count'];
+            $view_count = $courses_model->where('issue_content_id='.$v['id'])->getField('view_count');
+            if(!$view_count){
+                $v['ViewCount'] = $v['view_count'];
+            }else{
+                $v['ViewCount'] = $view_count;
+            }
+
             $v['ReplyCount'] = $v['reply_count'];
             //$v['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT') + $this->getRandomBaseCount($v['id']);
             $fake_count = $courses_model->field('fake_favorite_count,fake_support_count')
