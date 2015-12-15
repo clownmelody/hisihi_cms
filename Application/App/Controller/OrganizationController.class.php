@@ -1675,9 +1675,6 @@ class OrganizationController extends AppController
         if($type=="view"){
             return array(
                 'totalCount'=>$totalCount,
-                'goodCount'=>$goodCount,
-                'mediumCount'=>$mediumCount,
-                'badCount'=>$badCount,
                 'data'=>$list
             );
         }else{
@@ -2611,7 +2608,10 @@ class OrganizationController extends AppController
 
     private function formatCommentInfo($comment=null){
         foreach($comment['data'] as &$comment_item){
-           $comment_item['create_time'] = time_format($comment_item['create_time'],'Y-m-d H:i');
+            unset($comment_item['id']);
+            unset($comment_item['userInfo']['uid']);
+            unset($comment_item['userInfo']['avatar256']);
+            $comment_item['create_time'] = time_format($comment_item['create_time'],'Y-m-d H:i');
         }
         return $comment;
     }

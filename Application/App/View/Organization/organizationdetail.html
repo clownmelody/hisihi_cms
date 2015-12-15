@@ -194,38 +194,41 @@
                 </ul>
             </span>
         </div>
-        <div class="app-section" style="margin: 10px 10px 10px 10px;height: 150px;padding: 15px">
-            <span style="display: inline-block;float: left;width: 100%;text-align: center;height: 80px">
-                <span>{$fractionalStatistics['comprehensiveScore']}分</span>
-                <span><div id="comprehensive_rate" style="height: 30px;width: 200px;"></div></span>
-                <span>共{$comment['totalCount']}评论</span>
+        <div class="app-section" style="margin: 10px 10px 10px 10px;height: 140px;padding: 15px">
+            <span style="display: inline-block;float: left;width: 100%;text-align: center;height: 40px;border-bottom: 1px solid grey;border-radius: 0;">
+                <span style="float: left;">综合评分：{$fractionalStatistics['comprehensiveScore']}分</span>
+                <span><div id="comprehensive_rate" style="display: inline-block;float: left;height: 30px;width: 150px;"></div></span>
+                <span style="float: right;">共{$comment['totalCount']}评论</span>
             </span>
-            <span style="display: inline-block;float: left;margin: 0;width: 50%;text-align: center;height: 80px">
+            <span style="display: inline-block;float: left;margin: 0;width: 100%;text-align: center;height: 80px;margin-top: 20px;">
                 <volist name="fractionalStatistics['data']" id="statistic_item">
-                    <span>
-                        <span>{$statistic_item['value']}</span>
-                        <span>星星</span>
-                        <span>{$statistic_item['score']}分</span>
-                        <br>
+                    <span style="float: left;width: 30%;margin:0 5px 0 5px;">
+                        <span>{$statistic_item['value']}</span><br>
+                        <span>
+                            <div class="cate_rate" rate="{$statistic_item['score']}" style="display: inline-block;float: left;height: 30px;width: 100%;"></div>
+                        </span><br>
+                        <span>平均{$statistic_item['score']}分</span>
                     </span>
                 </volist>
             </span>
         </div>
         <div class="app-section" style="margin: 10px 10px 10px 10px;padding: 15px">
             <volist name="comment['data']" id="comment_item">
-                    <p style="border-bottom: 1px solid grey;border-radius: 0;padding-bottom: 10px;">
+                    <span style="display:inline-block;width:100%;border-bottom: 1px solid grey;border-radius: 0;padding-bottom: 10px;">
                         <span style="float: left;">
                             <img  style="width: 48px;border-radius: 50px;height: 48px;vertical-align:text-top;" src="{$comment_item['userInfo']['avatar128']}"/>
                         </span>
                         <span class="org-title">
                             <span>{$comment_item['userInfo']['nickname']}</span>
-                            <span>星星</span>
+                            <br>
+                            <span>{$comment_item['comment']}</span>
+                            <br>
+                            <span style="color:grey;">发表于{$comment_item['create_time']}</span>
                         </span>
-                        <br>
-                        <span style="margin-left: 10px;">{$comment_item['comment']}</span>
-                        <br>
-                        <span style="margin-left: 10px;">发表于{$comment_item['create_time']}</span>
-                    </p>
+                        <span style="float: right;">
+                            <div class="comment_rate" rate="{$comment_item['comprehensive_score']}" style="display: inline-block;float: right;height: 30px;width: 100px;"></div>
+                        </span>
+                    </span>
             </volist>
         </div>
         <div class="bottomspace"></div>
@@ -310,12 +313,45 @@
         $("#comprehensive_rate").jRate({
             startColor: "#FF5A00",
             endColor: "#FF5A00",
-            count:5,
-            rating:4.5,
-            max:5,
-            min:0,
-            readOnly:true,
-            precision:1
+            strokeColor: '#FF5A00',
+            rating:{$fractionalStatistics['comprehensiveScore']},
+            readOnly: true
+        });
+
+        $(".cate_rate").each(function(){
+            var $this = $(this);
+            var rate = $this.attr('rate');
+            var rate_color = "#FF5A00";
+            if(rate < 3){
+                rate_color = "#23A438";
+            }
+            if(rate < 4 && rate >= 3){
+                rate_color = "#FDBE0D";
+            }
+            $this.jRate({
+                shape:'RECTANGLE',
+                count:1,
+                height:'100%',
+                width:'100%',
+                strokeColor: 'white',
+                backgroundColor: "#E3E3E3",
+                startColor: rate_color,
+                endColor: rate_color,
+                rating:rate,
+                readOnly: true
+            });
+        });
+
+        $(".comment_rate").each(function(){
+            var $this = $(this);
+            var rate = $this.attr('rate');
+            $this.jRate({
+                startColor: "#FF5A00",
+                endColor: "#FF5A00",
+                strokeColor: '#FF5A00',
+                rating:rate,
+                readOnly: true
+            });
         });
     });
 </script>
