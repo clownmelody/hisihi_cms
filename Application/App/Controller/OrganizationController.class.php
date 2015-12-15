@@ -1754,7 +1754,8 @@ class OrganizationController extends AppController
         } else {
             $this->apiError(-1, '评论失败');
         }
-        $this->apiSuccess('评论成功');
+        $extra['comment_id'] = $res;
+        $this->apiSuccess('评论成功',null,$extra);
     }
 
     /**
