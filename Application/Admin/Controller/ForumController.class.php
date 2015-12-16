@@ -668,9 +668,13 @@ class ForumController extends AdminController
         if(count($ids)>1){
             $this->error('一次只能推送一条数据');
         }
-
+        $model = M('ForumPost')->field('title')->where('id='.$ids[0])->find();
+        if($model){
+            $param['alert_info'] = $model['title'];
+        } else {
+            $param['alert_info'] = "嘿设汇-论坛精华帖推荐";
+        }
         $param['type'] = 3;
-        $param['alert_info'] = "嘿设汇-论坛精华帖推荐";
         $param['id'] = $ids[0];
         $param['production'] = C('APNS_PRODUCTION');
         $result = Hook::exec('Addons\\JPush\\JPushAddon', 'push_video_article', $param);
