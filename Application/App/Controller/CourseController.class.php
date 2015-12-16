@@ -103,8 +103,12 @@ class CourseController extends AppController
         $coursesList = D('IssueContent')->where($map)->order($order)->page($page, $count)->select();
         $totalCount = D('IssueContent')->where($map)->count();
 
-        if($type == 'view')
+        if($type == 'view'){
             $fetchImage = 1;
+        }else{
+            $fetchImage = 0;
+        }
+
         $coursesList = $this->formatList($id, $coursesList,$fetchImage);
 
         if($type == 'view') {
@@ -608,7 +612,14 @@ class CourseController extends AppController
             //查询条件同supported
             $favorited = D('Favorite')->where($map_supported)->count();
 
-            $v['ViewCount'] = $v['view_count'];
+            //$v['ViewCount'] = $v['view_count'];
+            $view_count = $courses_model->where('issue_content_id='.$v['id'])->getField('view_count');
+            if(!$view_count){
+                $v['ViewCount'] = $v['view_count'];
+            }else{
+                $v['ViewCount'] = $view_count;
+            }
+
             $v['ReplyCount'] = $v['reply_count'];
             //$v['supportCount'] = $supportCount + C('VIDEO_BASE_SUPPORT') + $this->getRandomBaseCount($v['id']);
             $fake_count = $courses_model->field('fake_favorite_count,fake_support_count')
