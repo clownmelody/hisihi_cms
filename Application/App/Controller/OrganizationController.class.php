@@ -1657,10 +1657,13 @@ class OrganizationController extends AppController
         $mediumCount = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->count();
         $badCount = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->count();
         if($type == 'good'){
+            $totalCount = $goodCount;
             $list = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
         }else if($type == 'medium'){
+            $totalCount = $mediumCount;
             $list = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
         }else if($type == 'bad'){
+            $totalCount = $badCount;
             $list = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
         }else{
             $list = $model->where('status=1 and organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
