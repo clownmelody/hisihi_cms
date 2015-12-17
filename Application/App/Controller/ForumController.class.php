@@ -310,6 +310,7 @@ class ForumController extends AppController
      * @return null
      */
     private function mergeAdvertismentToForumList($forum_list=null, $pos=3, $show_adv=true){
+        $pos = $pos - 1;
         if($show_adv){
             $adv = $this->getOneForumAdv(640, 960);
             if($adv){
