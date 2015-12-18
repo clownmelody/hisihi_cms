@@ -201,10 +201,10 @@ class PublicController extends AppController {
     public function topList($page=1, $count=5, $version="1.0"){
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
-        //获取当前分类下的文章
-        $all_list = $Document->lists(47);
-        $totalCount = count($all_list);
         $topMap['position'] = array('neq', 5);
+        //获取当前分类下的文章
+        $all_list = $Document->where($topMap)->lists(47);
+        $totalCount = count($all_list);
         $list = $Document->where($topMap)->page($page, $count)->lists(47);
         foreach($list as &$topic){
             $did = $topic['id'];
