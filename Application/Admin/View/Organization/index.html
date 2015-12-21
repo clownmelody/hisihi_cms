@@ -22,7 +22,7 @@
                         <div class="row">
                             <input type="text" id="from"  class="text input-2x" placeholder="请输入开始值"  />
                             <input type="text" id="to"  class="text input-2x" placeholder="请输入结束值"  />
-                            <button id="createAccount" class="btn ajax-get confirm" url="{:U('organization/createOrgAdminAccount')}" onclick="setAccountIndex()">生成</button>
+                            <a id="createAccount" target="_blank" class="btn" href="{:U('organization/createOrgAdminAccount')}" onclick="setAccountIndex()">生成</a>
                         </div>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
             var to = $('#to').val();
 
             var url = "{:U('organization/createOrgAdminAccount')}" + "&from=" + from + "&to=" + to;
-            $('#createAccount').attr('url',url);
+            $('#createAccount').attr('href',url);
         }
 
         $(function(){

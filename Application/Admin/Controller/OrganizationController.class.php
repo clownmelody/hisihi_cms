@@ -15,7 +15,7 @@ use Think\Page;
 
 require_once(APP_PATH . 'User/Conf/config.php');
 require_once(APP_PATH . 'User/Common/common.php');
-
+require_once(VENDOR_PATH.'PHPExcel/PHPExcel.php');
 
 
 class OrganizationController extends AdminController
@@ -2745,26 +2745,24 @@ class OrganizationController extends AdminController
             unset($data['pwd']);
         }
         $model->addAll($admin_list);
-        $this->exportExcel($data_list,'机构帐号');
+        $this->exportExcel($data_list,'org');
         $this->success('编辑成功','index.php?s=/admin/organization/index');
     }
 
 
     private function exportExcel($data=array(),$filename='report'){
-        import('Vendor.PHPExcel.PHPExcel');
         $objPHPExcel = new \PHPExcel();
-
         /*以下是一些设置 ，什么作者  标题啊之类的*/
         $objPHPExcel->getProperties()->setCreator("hisihi")
             ->setLastModifiedBy("hisihi")
-            ->setTitle(iconv('utf-8', 'gb2312', "机构帐号备份数据EXCEL导出"))
-            ->setSubject(iconv('utf-8', 'gb2312', "机构帐号备份数据EXCEL导出"))
-            ->setDescription(iconv('utf-8', 'gb2312', "机构帐号备份数据"))
+            ->setTitle("org_account")
+            ->setSubject("org_account")
+            ->setDescription("org_account")
             ->setKeywords("")
             ->setCategory("");
         /*以下就是对处理Excel里的数据， 横着取数据，主要是这一步，其他基本都不要改*/
         $objPHPExcel->setActiveSheetIndex(0)
-            //Excel的第A列，uid是你查出数组的键值，下面以此类推
+            //设置第一行为表头
             ->setCellValue('A1', 'username')
             ->setCellValue('B1', 'pwd')
             ->setCellValue('C1', 'password')
@@ -2782,11 +2780,22 @@ class OrganizationController extends AdminController
         $objPHPExcel->getActiveSheet()->setTitle('org_admin_account');
         $objPHPExcel->setActiveSheetIndex(0);
         $date = time();
-        $date = time_format($date,'Y-m-d-H-i');
-        $filename = iconv('utf-8', 'gb2312', $filename.'_'.$date.'.xls');
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save('/tmp/'.$filename);
+        $filename = $filename.'_'.$date.'.xls';
+        // Redirect output to a client’s web browser (Excel5)
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
 
+        // If you're serving to IE over SSL, then the following may be needed
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header ('Pragma: public'); // HTTP/1.0
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
     }
 
     /**
