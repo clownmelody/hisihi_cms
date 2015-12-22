@@ -2404,7 +2404,7 @@ class OrganizationController extends AppController
         }
         $model = M('OrganizationEnroll');
         $data['organization_id'] = $organization_id;
-        $data['status'] = array('in','1,2');
+        $data['status'] = 2;
         $count = $model->where($data)->count();
         return $count;
     }
