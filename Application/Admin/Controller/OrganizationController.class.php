@@ -707,6 +707,9 @@ class OrganizationController extends AdminController
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();
+                    $now = strval(date("YmdHis"));
+                    $char = strval($this->getRandChar(5));
+                    $data['blz_id'] = $now.$char;
                     $res = $model->add($data);
                     if(!$res){
                         $this->error($model->getError());
@@ -2843,4 +2846,18 @@ class OrganizationController extends AdminController
         return $picUrl;
     }
 
+    /**
+     * 获取随机字符串
+     * @param $length
+     * @return null|string
+     */
+    private function getRandChar($length){
+        $str = null;
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $max = strlen($strPol)-1;
+        for($i=0;$i<$length;$i++){
+            $str.=$strPol[rand(0,$max)];
+        }
+        return $str;
+    }
 }

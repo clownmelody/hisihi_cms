@@ -1071,19 +1071,10 @@ class OrganizationController extends AppController
                 $course['img'] = $course['img_str'];
             }
             if($course['is_old_hisihi_data']){
-                //获取收藏信息
                 $favorite['appname'] = 'Issue';
                 $favorite['table'] = 'issue_content';
                 $favorite['row'] = $course['issue_content_id'];
                 $favorite['uid'] = $this->getUid();
-                if ($favorite_model->where($favorite)->count()) {
-                    $course['isFavorite'] = 1;
-                } else {
-                    $course['isFavorite'] = 0;
-                }
-                $favoriteCount = $favorite_model->where(array('appname'=>'Issue',
-                    'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
-                $course['favoriteCount'] = $favoriteCount + $course['fake_favorite_count'];
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
                     $course['isSupportd'] = 1;
@@ -1094,19 +1085,10 @@ class OrganizationController extends AppController
                     'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
                 $course['supportCount'] = $supportCount + $course['fake_support_count'];
             }else{
-                //获取收藏信息
                 $favorite['appname'] = 'Organization';
                 $favorite['table'] = 'organization_courses';
                 $favorite['row'] = $course['id'];
                 $favorite['uid'] = $this->getUid();
-                if ($favorite_model->where($favorite)->count()) {
-                    $course['isFavorite'] = 1;
-                } else {
-                    $course['isFavorite'] = 0;
-                }
-                $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
-                    'table'=>'organization_courses','row'=>$course['id']))->count();
-                $course['favoriteCount'] = $favoriteCount + $course['fake_favorite_count'];
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
                     $course['isSupportd'] = 1;
@@ -1117,6 +1099,20 @@ class OrganizationController extends AppController
                     'table'=>'organization_courses','row'=>$course['id']))->count();
                 $course['supportCount'] = $supportCount + $course['fake_support_count'];
             }
+            //获取收藏信息
+            $favorite['appname'] = 'Organization';
+            $favorite['table'] = 'organization_courses';
+            $favorite['row'] = $course['id'];
+            $favorite['uid'] = $this->getUid();
+            if ($favorite_model->where($favorite)->count()) {
+                $course['isFavorite'] = 1;
+            } else {
+                $course['isFavorite'] = 0;
+            }
+            $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
+                'table'=>'organization_courses','row'=>$course['id']))->count();
+            $course['favoriteCount'] = $favoriteCount + $course['fake_favorite_count'];
+
             if(!$organization_id){
                 $logo_url = $org_model->where(array('id'=>$course['organization_id'],'status'=>1))->getField('logo');
             }
@@ -1143,6 +1139,90 @@ class OrganizationController extends AppController
         }
     }
 
+    /**返回收藏列表数据
+     * @param null $courses_id
+     * @return mixed
+     */
+    public function findCoursesById($courses_id=null){
+        if(empty($courses_id)){
+            $this->apiError(-1,"传入课程id不能为空");
+        }
+        $org_model = M('Organization');
+        $model = M('OrganizationCourse');
+        $video_model = M('OrganizationVideo');
+        $favorite_model = M('Favorite');
+        $support_model = M('Support');
+        $issue_model = M('Issue');
+        $member_model = M('Member');
+        $map['id'] = $courses_id;
+        $map['status'] = 1;
+        $course = $model->field('id, organization_id, title, content, category_id, view_count, lecturer, auth, update_time,is_old_hisihi_data,img_str,issue_content_id,fake_favorite_count,fake_support_count')
+            ->where($map)->find();
+        if(!$course){
+            return null;
+        }
+        $category_id = $course['category_id'];
+        $course['ViewCount'] = $course['view_count'];
+        $course['type_id'] = $category_id;
+        $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
+        $course['lecturer_name'] = $member_model->where('uid='.$course['lecturer'])->getField('nickname');
+        //解析并生成图片数据
+        $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
+        if(substr_count($course['img_str'], 'OSS')){
+            $course['img'] = str_replace('OSS-', $oss_pic_pre, $course['img_str']);
+        } else {
+            $course['img'] = $course['img_str'];
+        }
+        if($course['is_old_hisihi_data']){
+            $favorite['appname'] = 'Issue';
+            $favorite['table'] = 'issue_content';
+            $favorite['row'] = $course['issue_content_id'];
+            $favorite['uid'] = $this->getUid();
+            //获取点赞信息
+            if ($support_model->where($favorite)->count()) {
+                $course['isSupportd'] = 1;
+            } else {
+                $course['isSupportd'] = 0;
+            }
+            $supportCount = $support_model->where(array('appname'=>'Issue',
+                'table'=>'issue_content','row'=>$course['issue_content_id']))->count();
+            $course['supportCount'] = $supportCount + $course['fake_support_count'];
+        }else{
+            $favorite['appname'] = 'Organization';
+            $favorite['table'] = 'organization_courses';
+            $favorite['row'] = $course['id'];
+            $favorite['uid'] = $this->getUid();
+            //获取点赞信息
+            if ($support_model->where($favorite)->count()) {
+                $course['isSupportd'] = 1;
+            } else {
+                $course['isSupportd'] = 0;
+            }
+            $supportCount = $support_model->where(array('appname'=>'Organization',
+                'table'=>'organization_courses','row'=>$course['id']))->count();
+            $course['supportCount'] = $supportCount + $course['fake_support_count'];
+        }
+        //获取收藏信息
+        $course['isFavorite'] = 1;
+        $favoriteCount = $favorite_model->where(array('appname'=>'Organization',
+            'table'=>'organization_courses','row'=>$course['id']))->count();
+        $course['favoriteCount'] = $favoriteCount + $course['fake_favorite_count'];
+        $course['organization_logo'] = $org_model->where(array('id'=>$course['organization_id'],'status'=>1))->getField('logo');
+        $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
+        $course['duration'] = $course_duration;
+
+        unset($course['category_id']);
+        unset($course['is_old_hisihi_data']);
+        unset($course['img_str']);
+        unset($course['view_count']);
+        unset($course['issue_content_id']);
+        unset($course['organization_id']);
+        unset($course['fake_support_count']);
+        unset($course['fake_favorite_count']);
+
+        return $course;
+    }
+
     /**
      * 课程收藏
      * @param int $uid
@@ -1156,17 +1236,10 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $courses = M('OrganizationCourse')->where(array('id'=>$courses_id,'status'=>1))
-            ->field('is_old_hisihi_data,issue_content_id')->find();
-        if($courses['is_old_hisihi_data']){
-            $favorite['appname'] = 'Issue';
-            $favorite['table'] = 'issue_content';
-            $favorite['row'] = $courses['issue_content_id'];
-        }else{
-            $favorite['appname'] = 'Organization';
-            $favorite['table'] = 'organization_courses';
-            $favorite['row'] = $courses_id;
-        }
+
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
         $favorite['uid'] = $uid;
         $favorite_model = M('Favorite');
         if ($favorite_model->where($favorite)->count()) {
@@ -1193,17 +1266,10 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $courses = M('OrganizationCourse')->where(array('id'=>$courses_id,'status'=>1))
-            ->field('is_old_hisihi_data,issue_content_id')->find();
-        if($courses['is_old_hisihi_data']){
-            $favorite['appname'] = 'Issue';
-            $favorite['table'] = 'issue_content';
-            $favorite['row'] = $courses['issue_content_id'];
-        }else{
-            $favorite['appname'] = 'Organization';
-            $favorite['table'] = 'organization_courses';
-            $favorite['row'] = $courses_id;
-        }
+
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization_courses';
+        $favorite['row'] = $courses_id;
         $favorite['uid'] = $uid;
         $favorite_model = M('Favorite');
         if (!$favorite_model->where($favorite)->count()) {
@@ -1970,7 +2036,9 @@ class OrganizationController extends AppController
         $data['course_id']=$course_id;
         $data['student_university']=$student_university;
         $data['create_time']=time();
-        $data['blz_id'] = date("Y-m-d-H-i-s").'-'.$this->getRandChar(5);
+        $now = strval(date("YmdHis"));
+        $char = strval($this->getRandChar(5));
+        $data['blz_id'] = $now.$char;
         $result = $model->add($data);
         if($result){
             $this->apiSuccess('报名成功');

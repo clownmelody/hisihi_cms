@@ -1325,6 +1325,10 @@ class UserController extends AppController
                     $favorite['isSupportd'] = $this->isArticleSupport($aid);
                     $favorite['isFavorited'] = $this->isArticleFavorite($aid);
                     $favorite['supportCount'] = $this->getArticleSupportCount($aid);
+                    break;
+                case 'Organization':
+                    $favorite['type'] = 'org_courses';
+                    $favorite['info'] = A('Organization')->findCoursesById($favorite['row']);
             }
             unset($favorite['appname']);
             unset($favorite['table']);
