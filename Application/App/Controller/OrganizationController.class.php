@@ -2118,7 +2118,7 @@ class OrganizationController extends AppController
             $courseInfo['organization'] = $this->findOrganizationById($courseInfo['organization_id']);
             $courseInfo['lecturer'] = $this->findTeacherById($courseInfo['lecturer']);
             $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
-            $courseInfo['video_duration'] = $videoDuration;
+            $courseInfo['duration'] = $videoDuration;
             $video_list = $videoModel->field('id,name, duration')->where('status=1 and course_id='.$course_id)->select();
 
             $issue_model = M('Issue');
