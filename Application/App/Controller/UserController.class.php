@@ -865,7 +865,7 @@ class UserController extends AppController
                 $where_map['profile_group_id'] = $id;
                 $where_map['id'] = array("in",array('36','37','38'));
             }else{
-                $where_map['id'] = array("in",array('36','37','44','46'));
+                $where_map['id'] = array("in",array('36','37', '39', '44','46'));
             }
         }
         $where_map['status'] = 1;
@@ -1076,7 +1076,7 @@ class UserController extends AppController
 
             //扩展信息
             $profile_group = $this->_profile_group($uid);
-            $info_list = $this->_info_list($profile_group['id'], $uid);
+            $info_list = $this->_info_list($profile_group['id'], $uid, $version);
             //$result['info']['group'] = $profile_group['gid'];
             $result['info']['extinfo'] = $info_list;
 
