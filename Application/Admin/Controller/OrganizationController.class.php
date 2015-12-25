@@ -2717,7 +2717,7 @@ class OrganizationController extends AdminController
         $model = M('OrganizationAdmin');
         $data_list = array();
         $admin_list = array();
-        for($i=$from;$i < $to; $i++){
+        for($i=$from;$i <= $to; $i++){
             if(strlen((strval($i))) < 2){
                 $account = $str.'000000'.$i;
             }else if(strlen((strval($i))) < 3){
