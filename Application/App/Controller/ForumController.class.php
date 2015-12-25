@@ -16,11 +16,13 @@ use Think\Hook;
 define('TOP_ALL', 2);
 define('TOP_FORUM', 1);
 
+
 class ForumController extends AppController
 {
     protected $forumModel;
     protected $forum_list;
     protected $forum_type;
+    private static $adv_index = 1;
 
     public function _initialize()
     {
@@ -247,7 +249,6 @@ class ForumController extends AppController
      */
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1, $version=null)
     {
-        $start_time = time();
         $field_type = intval($field_type);
         $page = intval($page);
         $count = intval($count);
@@ -2612,9 +2613,16 @@ class ForumController extends AppController
         $now = time();
         $picKey = "advspic_".$width.'_'.$height;
         $result = $model->query("select ".$picKey." , title, link from hisihi_advs where ".
-            "position=4 and status=1 and ".$now." between create_time and end_time order by id desc");
+            "position=4 and status=1 and ".$now." between create_time and end_time order by level desc");
         $total_count = M('Advs')->where('position=4 and status=1 and '.$now.' between create_time and end_time')->count();
-        $pos = rand(1, $total_count);
+        //$pos = rand(1, $total_count);
+        if(self::$adv_index>$total_count){
+            self::$adv_index = 1;
+            $pos = 1;
+        } else {
+            $pos = self::$adv_index;
+        }
+        self::$adv_index++;
         if($result){
             $picID = $result[$pos-1][$picKey];
             $advLink = $result[$pos-1]['link'];

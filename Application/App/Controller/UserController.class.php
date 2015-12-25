@@ -2240,6 +2240,22 @@ class UserController extends AppController
         }
     }
 
+    public function autoSupport(){
+        $startUid = 5513;
+        $count = 500;
+        $model = M('Support');
+        for ($x=0; $x<$count; $x++) {
+            $time = time();
+            $data['appname'] = 'Forum';
+            $data['row'] = 67282;
+            $data['uid'] = $startUid;
+            $data['create_time'] = $time;
+            $data['table'] = 'post';
+            $model->add($data);
+            $startUid++;
+        }
+    }
+
 
     public function smsTest($code=0){
         $tianyi = new TianyiAddon;
