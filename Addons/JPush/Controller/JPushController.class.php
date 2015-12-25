@@ -75,11 +75,16 @@ class JPushController extends AddonsController{
         try{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
+                //->setAudience(M\audience(M\registration_id(array('070abe41b89'))))
                 ->setAudience(M\all)
-                ->setNotification(M\notification("文章|视频|论坛推送", M\android($alert_info, '嘿设汇',
+                /*->setNotification(M\notification("文章|视频|论坛推送", M\android($alert_info, '嘿设汇',
                     null, array('type'=>$content_type, 'id'=>$id, 'infos'=>'')),
                     M\ios($alert_info, "default", "+0", false, array('type'=>$content_type, 'id'=>$id,
+                        'infos'=>''), null)))*/
+                ->setNotification(M\notification(
+                    M\ios($alert_info, "default", "+0", false, array('type'=>$content_type, 'id'=>$id,
                         'infos'=>''), null)))
+                ->setMessage(M\message($alert_info, null, null, array('type'=>$content_type, 'id'=>$id)))
                 ->setOptions(M\options(1234, 0, null, $product, 0))
                 ->send();
         } catch (APIRequestException $e) {
@@ -111,8 +116,11 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("被关注推送", M\android($alert_info, '嘿设汇',
+                /*->setNotification(M\notification("被关注推送", M\android($alert_info, '嘿设汇',
                     null, array('type'=>"follow_you", 'id'=>$fans_id, 'infos'=>$arr)),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"follow_you", 'id'=>$fans_id,
+                        'infos'=>$arr), null)))*/
+                ->setNotification(M\notification(
                     M\ios($alert_info, "default", "+1", false, array('type'=>"follow_you", 'id'=>$fans_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"follow_you", 'id'=>$fans_id,
@@ -149,8 +157,11 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("被点赞推送", M\android($alert_info, '嘿设汇',
+                /*->setNotification(M\notification("被点赞推送", M\android($alert_info, '嘿设汇',
                     null, array('type'=>"support_post", 'id'=>$question_id, 'infos'=>$arr)),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"support_post", 'id'=>$question_id,
+                        'infos'=>$arr), null)))*/
+                ->setNotification(M\notification(
                     M\ios($alert_info, "default", "+1", false, array('type'=>"support_post", 'id'=>$question_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"support_post", 'id'=>$question_id,
@@ -190,8 +201,11 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("提问被回答推送", M\android($alert_info, '嘿设汇',
+                /*->setNotification(M\notification("提问被回答推送", M\android($alert_info, '嘿设汇',
                     null, array('type'=>"reply_post", 'id'=>$question_id, 'infos'=>$arr)),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"reply_post", 'id'=>$question_id,
+                        'infos'=>$arr), null)))*/
+                ->setNotification(M\notification(
                     M\ios($alert_info, "default", "+1", false, array('type'=>"reply_post", 'id'=>$question_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"reply_post", 'id'=>$question_id,
@@ -232,8 +246,11 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("楼中楼回复推送", M\android($alert_info, '嘿设汇',
+                /*->setNotification(M\notification("楼中楼回复推送", M\android($alert_info, '嘿设汇',
                     null, array('type'=>"lzl_reply", 'id'=>$question_id, 'infos'=>$arr)),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"lzl_reply", 'id'=>$question_id,
+                        'infos'=>$arr), null)))*/
+                ->setNotification(M\notification(
                     M\ios($alert_info, "default", "+1", false, array('type'=>"lzl_reply", 'id'=>$question_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"lzl_reply", 'id'=>$question_id,
@@ -270,8 +287,11 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id($reg_id)))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("被提问推送", M\android($alert_info, '嘿设汇',
+                /*->setNotification(M\notification("被提问推送", M\android($alert_info, '嘿设汇',
                     null, array('type'=>"ask_you", 'id'=>$question_id, 'infos'=>$arr)),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"ask_you", 'id'=>$question_id,
+                        'infos'=>$arr), null)))*/
+                ->setNotification(M\notification(
                     M\ios($alert_info, "default", "+1", false, array('type'=>"ask_you", 'id'=>$question_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"ask_you", 'id'=>$question_id,
@@ -308,8 +328,11 @@ class JPushController extends AddonsController{
             $result = $this->push->push()
                 ->setPlatform(M\platform('ios', 'android'))
                 ->setAudience(M\audience(M\registration_id(array($reg_id))))  //  需要根据reg_id单独推送
-                ->setNotification(M\notification("下线通知推送", M\android($alert_info, '嘿设汇',
+                /*->setNotification(M\notification("下线通知推送", M\android($alert_info, '嘿设汇',
                     null, array('type'=>"logout", 'id'=>$user_id, 'infos'=>$arr)),
+                    M\ios($alert_info, "default", "+1", false, array('type'=>"logout", 'id'=>$user_id,
+                        'infos'=>$arr), null)))*/
+                ->setNotification(M\notification(
                     M\ios($alert_info, "default", "+1", false, array('type'=>"logout", 'id'=>$user_id,
                         'infos'=>$arr), null)))
                 ->setMessage(M\message($alert_info, null, null, array('type'=>"logout", 'id'=>$user_id,
