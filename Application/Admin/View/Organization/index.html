@@ -15,6 +15,17 @@
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/delete",array("status"=>-1))}">删 除</button>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/light_authentication")}">点亮认证</button>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/undo_authentication")}">取消认证</button>
+                <!--设置作业数量-->
+                <div class="btn-group-click adv-sch-pannel fl">
+                    <button class="btn">批量生成帐号</button>
+                    <div class="dropdown cf">
+                        <div class="row">
+                            <input type="text" id="from"  class="text input-2x" placeholder="请输入开始值"  />
+                            <input type="text" id="to"  class="text input-2x" placeholder="请输入结束值"  />
+                            <a id="createAccount" target="_blank" class="btn" href="{:U('organization/createOrgAdminAccount')}" onclick="setAccountIndex()">生成</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -70,6 +81,11 @@
                         </if>
                         </td>
                         <td>
+                            <eq name="vo['has_admin']" value="1">
+                                <a href="{:U('organization/admin_edit?id='.$vo['uid'])}" >编辑管理员</a>
+                            <else/>
+                                <a href="{:U('organization/admin_add?organization_id='.$vo['id'])}" >添加管理员</a>
+                            </eq>
                             <a href="{:U('organization/relation?organization_id='.$vo['id'])}" >师生</a>
                             <a href="{:U('organization/course?organization_id='.$vo['id'])}" >课程</a>
                             <a href="{:U('organization/environment?organization_id='.$vo['id'])}" >环境</a>
@@ -109,6 +125,15 @@
     <script type="text/javascript">
         //导航高亮
         highlight_subnav('{:U('organization/index')}');
+
+        function setAccountIndex(){
+            var from = $('#from').val();
+            var to = $('#to').val();
+
+            var url = "{:U('organization/createOrgAdminAccount')}" + "&from=" + from + "&to=" + to;
+            $('#createAccount').attr('href',url);
+        }
+
         $(function(){
             //搜索功能
             $("#search").click(function(){

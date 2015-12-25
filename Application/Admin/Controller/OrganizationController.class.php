@@ -13,6 +13,11 @@ use Think\Hook;
 use Think\Model;
 use Think\Page;
 
+require_once(APP_PATH . 'User/Conf/config.php');
+require_once(APP_PATH . 'User/Common/common.php');
+require_once(VENDOR_PATH.'PHPExcel/PHPExcel.php');
+
+
 class OrganizationController extends AdminController
 {
     protected $organizationModel;
@@ -49,6 +54,15 @@ class OrganizationController extends AdminController
         }else{
             $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
+        foreach($list as &$org){
+            $has_admin = M('OrganizationAdmin')->where('status=1 and id='.$org['uid'])->count();
+            if($has_admin){
+                $org['has_admin'] = 1;
+            }else{
+                $org['has_admin'] = 0;
+            }
+        }
+
 
         $this->assign('_list', $list);
         $this->assign('_page', $show);
@@ -693,6 +707,9 @@ class OrganizationController extends AdminController
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();
+                    $now = strval(date("YmdHis"));
+                    $char = strval($this->getRandChar(5));
+                    $data['blz_id'] = $now.$char;
                     $res = $model->add($data);
                     if(!$res){
                         $this->error($model->getError());
@@ -2518,8 +2535,8 @@ class OrganizationController extends AdminController
     }
 
     /**
-     * 添加机构老师分组
-     */
+ * 添加机构老师分组
+ */
     public function lecture_group_add($organization_id=0){
         if($organization_id){
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
@@ -2616,6 +2633,174 @@ class OrganizationController extends AdminController
         }
     }
 
+
+    /**
+     * 添加机构管理员
+     */
+    public function admin_add($organization_id=0){
+        if($organization_id){
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+            $this->assign('organization_name',$organization_name);
+            $this->assign('organization_id',$organization_id);
+            $this->assign('from_org',I('from_org'));
+        }
+        $this->display();
+    }
+
+    /**
+     * 机构管理员更新
+     */
+    public  function admin_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationAdmin');
+            $cid = $_POST["cid"];
+            $data["organization_id"] = $_POST["organization_id"];
+            $data["mobile"] = $_POST["mobile"];
+            $data["username"] = $_POST["username"];
+            $data["email"] = $_POST["email"];
+            $data["password"] = think_ucenter_md5($_POST["password"], UC_AUTH_KEY);
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                    M('Organization')->where('id='.$data['organization_id'])->save(array('uid'=>$res));
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/organization/index&organization_id='.$data["organization_id"]);
+            } else {
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                $this->success('编辑成功', 'index.php?s=/admin/organization/index&organization_id='.$data["organization_id"]);
+            }
+        }
+    }
+
+    /**编辑机构管理员
+     * @param $id
+     */
+    public function admin_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationAdmin');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+
+        $organization_name = M('Organization')->where('status=1 and id='.$id)->getField('name');
+        $this->assign('organization_id', $id);
+        $this->assign('organization_name', $organization_name);
+
+        $this->assign('info', $data);
+        $this->display();
+    }
+
+
+    /**
+     * 生成机构管理员账号
+     */
+    public function createOrgAdminAccount($from=0,$to=0){
+        if(!is_numeric($from) || !is_numeric($to)){
+            $this->error('参数为小于等于7位数');
+        }
+        $from = intval($from);
+        $to = intval($to);
+        $str = 'jg';
+        $model = M('OrganizationAdmin');
+        $data_list = array();
+        $admin_list = array();
+        for($i=$from;$i <= $to; $i++){
+            if(strlen((strval($i))) < 2){
+                $account = $str.'000000'.$i;
+            }else if(strlen((strval($i))) < 3){
+                $account = $str.'00000'.$i;
+            }else if(strlen((strval($i))) < 4){
+                $account = $str.'0000'.$i;
+            }else if(strlen((strval($i))) < 5){
+                $account = $str.'000'.$i;
+            }else if(strlen((strval($i))) < 6){
+                $account = $str.'00'.$i;
+            }else if(strlen((strval($i))) < 7){
+                $account = $str.'0'.$i;
+            }else{
+                $account = $str.$i;
+            }
+            $chars = '0123456789';
+            $password = '';
+            while(strlen($password)<6){
+                $password.=substr($chars,(mt_rand()%strlen($chars)),1);
+            }
+            $data['username'] = $account;
+            $data['password'] = think_ucenter_md5($password, UC_AUTH_KEY);
+            $data['create_time'] = time();
+            $admin_list[] = $data;
+
+            $data['pwd'] = $password;
+            $data_list[] = $data;
+            unset($data['pwd']);
+        }
+        $model->addAll($admin_list);
+        $this->exportExcel($data_list,'org');
+        $this->success('编辑成功','index.php?s=/admin/organization/index');
+    }
+
+
+    private function exportExcel($data=array(),$filename='report'){
+        $objPHPExcel = new \PHPExcel();
+        /*以下是一些设置 ，什么作者  标题啊之类的*/
+        $objPHPExcel->getProperties()->setCreator("hisihi")
+            ->setLastModifiedBy("hisihi")
+            ->setTitle("org_account")
+            ->setSubject("org_account")
+            ->setDescription("org_account")
+            ->setKeywords("")
+            ->setCategory("");
+        /*以下就是对处理Excel里的数据， 横着取数据，主要是这一步，其他基本都不要改*/
+        $objPHPExcel->setActiveSheetIndex(0)
+            //设置第一行为表头
+            ->setCellValue('A1', 'username')
+            ->setCellValue('B1', 'pwd')
+            ->setCellValue('C1', 'password')
+            ->setCellValue('D1', 'create_time');
+        foreach($data as $k => $v){
+            $num=$k+2;
+            $objPHPExcel->setActiveSheetIndex(0)
+                //Excel的第A列，uid是你查出数组的键值，下面以此类推
+                ->setCellValue('A'.$num, $v['username'])
+                ->setCellValue('B'.$num, $v['pwd'])
+                ->setCellValue('C'.$num, $v['password'])
+                ->setCellValue('D'.$num, $v['create_time']);
+        }
+
+        $objPHPExcel->getActiveSheet()->setTitle('org_admin_account');
+        $objPHPExcel->setActiveSheetIndex(0);
+        $date = time();
+        $filename = $filename.'_'.$date.'.xls';
+        // Redirect output to a client’s web browser (Excel5)
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header ('Pragma: public'); // HTTP/1.0
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
+    }
+
     /**
      * 上传图片到OSS
      * @param $picID
@@ -2661,4 +2846,18 @@ class OrganizationController extends AdminController
         return $picUrl;
     }
 
+    /**
+     * 获取随机字符串
+     * @param $length
+     * @return null|string
+     */
+    private function getRandChar($length){
+        $str = null;
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $max = strlen($strPol)-1;
+        for($i=0;$i<$length;$i++){
+            $str.=$strPol[rand(0,$max)];
+        }
+        return $str;
+    }
 }
