@@ -1,34 +1,289 @@
 /*less公用的方法*/
-.wrapper {
+ul {
+  padding: 0;
+  margin: 0;
+}
+ul li {
+  list-style: none;
+}
+#wrapper {
+  -webkit-overflow-scrolling: touch;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   background: #EBEBEB;
+  font-size: 100%;
 }
-.wrapper .mainItem {
+#wrapper * {
+  -webkit-user-select: none;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+#wrapper .spiteBg {
+  background-image: url("../images/orgbasicinfo/orginfo.png");
+  background-size: 105px 70px;
+}
+#wrapper .mainItem {
   width: 100%;
   height: auto;
-  margin-bottom: 15px;
-  border: 1px solid '#D6D6D6';
+  margin-bottom: 16px;
   background-color: #fff;
 }
-.wrapper .mainItem .mainContent {
-  padding: 0 10px;
+#wrapper .mainItem.mainItemNormal {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #d6d6d6;
 }
-.wrapper .mainItem.logoAndCertInfo {
-  border: 0 solid '#D6D6D6';
+#wrapper .mainItem.logoAndCertInfo {
+  border-bottom: 0 solid #d6d6d6;
 }
-.wrapper .mainItem.logoAndCertInfo .head {
-  width: 100%;
-  height: 80px;
+#wrapper .mainItem.logoAndCertInfo * {
+  color: #fff;
 }
-.wrapper .mainItem.logoAndCertInfo .head .img {
+#wrapper .mainItem.logoAndCertInfo .head {
+  position: relative;
+  width: auto;
+  height: 160px;
+}
+#wrapper .mainItem.logoAndCertInfo .head .filter * {
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
-.wrapper .mainItem.logoAndCertInfo .head .mainInfo {
+#wrapper .mainItem.logoAndCertInfo .head .filter img {
+  -webkit-filter: blur(10px);
+  /* Chrome, Opera */
+  -moz-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+  z-index: 1;
+}
+#wrapper .mainItem.logoAndCertInfo .head .filter .filterUp {
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  padding: 35px 15px;
   width: 100%;
-  height: 60px;
+  height: 100%;
+  box-sizing: border-box;
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo .left {
+  position: absolute;
+  width: 84px;
+  height: 84px;
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo .left > img {
+  box-sizing: border-box;
+  width: 84px;
+  height: 84px;
+  border-radius: 2%;
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo .right {
+  margin-left: 112px;
+  height: 100%;
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo .right #orgName {
+  font-size: 22px;
+  padding: 5px 0 12px 0;
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo .right .peopleInfo {
+  width: 100%;
+  height: auto;
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo .right .peopleInfo .peopleInfoItem {
+  float: left;
+  width: 25%;
+  height: auto;
+  box-sizing: border-box;
+  text-align: center;
+  border-right: 1px solid #fff;
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo .right .peopleInfo .peopleInfoItem * {
+  font-size: 14px;
+}
+#wrapper .mainItem.logoAndCertInfo .head .mainInfo .right .peopleInfo .peopleInfoItem:nth-child(4) {
+  border-right-width: 0;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom {
+  background-color: #ff5a00;
+  height: 48px;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem {
+  overflow-wrap: normal;
+  box-sizing: border-box;
+  width: 50%;
+  height: 48px;
+  float: left;
+  padding-top: 12px;
+  text-align: center;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  border: 1px solid #ff5a00;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span * {
+  float: left;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i {
+  display: inline-block;
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i.heiCerIcon.certed {
+  background-position: 0 -46px;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i.heiCerIcon.unCerted {
+  background-position: -81px 0;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i.honestCerIcon.certed {
+  background-position: -48px -46px;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i.honestCerIcon.unCerted {
+  background-position: -24px -46px;
+}
+#wrapper .mainItem.mainItemTopNews .topNewsCon {
+  margin: 0;
+}
+#wrapper .mainItem.mainItemTopNews .topNewsCon li {
+  width: 100%;
+  height: 54px;
+  border-bottom: 1px solid #e5e5e5;
+  box-sizing: border-box;
+  position: relative;
+  padding: 10px 0;
+}
+#wrapper .mainItem.mainItemTopNews .topNewsCon li:last-child {
+  border-bottom: 0 solid #d6d6d6 !important;
+}
+#wrapper .mainItem.mainItemTopNews .topNewsCon li > * {
+  float: left;
+}
+#wrapper .mainItem.mainItemTopNews .topNewsCon li .topNewLogo {
+  margin: 0 8px 0 15px;
+  position: absolute;
+  display: inline-block;
+  width: 54px;
+  height: 28px;
+  box-sizing: border-box;
+  color: #ff5a00;
+  border: 1px solid #ff5a00;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 28px;
+  font-size: 14px;
+}
+#wrapper .mainItem.mainItemTopNews .topNewsCon li .title {
+  margin-left: 75px;
+  margin-right: 15px;
+  height: 20px;
+  line-height: 20px;
+  padding-top: 5px;
+}
+#wrapper .mainItem.mainItemTopNews .topNewsCon li .title a {
+  width: 100%;
+  height: 100%;
+  color: #212121;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+#wrapper .mainItem.mainItemSignUp {
+  width: 100%;
+  height: auto;
+}
+#wrapper .mainItem.mainItemSignUp .header {
+  width: 100%;
+  height: 44px;
+  box-sizing: border-box;
+  text-align: center;
+  background-color: #fa4535;
+}
+#wrapper .mainItem.mainItemSignUp .header > * {
+  color: #fff;
+}
+#wrapper .mainItem.mainItemSignUp .header p {
+  line-height: 44px;
+  margin: 0;
+}
+#wrapper .mainItem.mainItemSignUp .mainContent {
+  position: relative;
+  padding-top: 12px;
+  width: 100%;
+  height: auto;
+}
+#wrapper .mainItem.mainItemSignUp .mainContent .left {
+  width: 52px;
+  height: 46px;
+  box-sizing: border-box;
+  margin: 15px;
+  margin-top: 8px;
+  position: absolute;
+}
+#wrapper .mainItem.mainItemSignUp .mainContent .right {
+  border-left: 1px solid #ccc;
+  margin-left: 82px;
+  padding-left: 8px;
+}
+#wrapper .mainItem.mainItemSignUp .mainContent .right span {
+  font-size: 14px;
+}
+#wrapper .mainItem.mainItemSignUp .mainContent .right span.dot {
+  font-size: 4px !important;
+  color: #ff5a00;
+  font-weight: bolder;
+}
+#wrapper .mainItem.mainItemBasicInfo .header {
+  height: 44px;
+  line-height: 44px;
+  border-bottom: 1px solid #d6d6d6;
+}
+#wrapper .mainItem.mainItemBasicInfo .header span {
+  margin-left: 15px;
+  color: #212121;
+  font-size: 16px;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem {
+  padding: 0px 15px;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem .itemHeader {
+  height: 44px;
+  line-height: 44px;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem .itemContentDetail {
+  padding: 0 15px;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem.introduce {
+  padding: 12px 15px;
+  border-bottom: 1px solid #d6d6d6;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem.introduce p {
+  margin: 0;
+  color: #212121;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 2px;
+  font-family: arial, helvetica, sans-serif;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem.advanceTags .itemContentDetail li {
+  display: inline-block;
+  background-color: #FFDECC;
+  padding: 8px;
+  height: 22px;
+  margin: 0 12px 12px 0;
+  border-radius: 3px;
 }

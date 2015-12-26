@@ -3,37 +3,317 @@
   width: @width;
   height: @height;
 }
-.border-bottom(@width:1px,@type:solid,@color:'#D6D6D6'){
-  border: @arguments;
+.pos(@top,@left){
+  top:@top;
+  left:@left;
 }
-
-.wrapper{
+.border-bottom(@width:1px,@type:solid,@color:#D6D6D6){
+  border-bottom: @arguments;
+}
+.box-sizing(@type:border-box){
+  box-sizing:@type;
+}
+.box-shadow(@h:0px,@v:0px,@b:1px,@s:1px,@c:#ccc){
+  box-shadow: @arguments;
+}
+ul {
+  padding: 0;
+  margin: 0;
+  li {
+    list-style: none;
+  }
+}
+@padingleft:15px;
+@orange:#ff5a00;
+#wrapper{
+  -webkit-overflow-scrolling:touch;
   position: absolute;
   top:0;
   left: 0;
   bottom: 0;
   right: 0;
   background: #EBEBEB;
+  font-size: 100%;
+  *{
+    -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+    -moz-user-select: none;
+    font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  }
+  .spiteBg{
+    background-image: url("../images/orgbasicinfo/orginfo.png");
+    background-size:105px 70px;
+  }
   .mainItem{
-    .size(100%,auto);
-    margin-bottom: 15px;
-    .border-bottom();
-    background-color: #fff;
-    .mainContent{
-      padding:0 10px;
+    &.mainItemNormal{
+      background-color: #FFFFFF;
+      .border-bottom();
     }
+    .size(100%,auto);
+    margin-bottom: 16px;
+    background-color: #fff;
+
     &.logoAndCertInfo{
       .border-bottom(0);
+      *{
+        color: #fff;
+      }
       .head{
-        .size(100%,80px);
-        .img{
-          .size(100%,100%);
+        position: relative;
+        .size(auto,160px);
+        .filter{
+          *{
+            .size(100%,100%);
+            position: absolute;
+            .pos(0,0);
+          }
+          img{
+            -webkit-filter: blur(10px); /* Chrome, Opera */
+            -moz-filter: blur(10px);
+            -ms-filter: blur(10px);
+            filter: blur(10px);
+            z-index: 1;
+          }
+          .filterUp{
+            z-index: 2;
+            background-color:rgba(0,0,0,0.2);
+          }
         }
+
         .mainInfo{
-          .size(100%,60px);
+          position: absolute;
+          z-index: 3;
+          .pos(0,0);
+          padding: 35px @padingleft;
+          .size(100%,100%);
+          .box-sizing();
+          .left{
+            position: absolute;
+            .size(84px,84px);
+            >img{
+              .box-sizing();
+              .size(84px,84px);
+              border-radius:2%;
+            }
+          }
+          .right{
+            margin-left: 112px;
+            height:100%;
+            //@width:~"100% - 100px";
+            //width:-moz-calc(@width);
+            //width:-webkit-calc(@width);
+            //width:calc(@width);
+            #orgName{
+              font-size: 22px;
+              padding:5px 0 12px 0;
+            }
+            .peopleInfo{
+              .size(100%,auto);
+              .peopleInfoItem{
+                *{
+                  font-size: 14px;
+                }
+                float: left;
+                .size(25%,auto);
+                .box-sizing();
+                text-align: center;
+                border-right:1px solid #fff;
+                &:nth-child(4){
+                  border-right-width: 0;
+                }
+              }
+            }
+           }
+        }
+      }
+      .bottom{
+        background-color: @orange;
+        height: 48px;
+
+        .cerInfoItem{
+          overflow-wrap: normal;
+          .box-sizing();
+          .size(50%,48px);
+          float: left;
+          padding-top: 12px;
+          text-align: center;
+          >span {
+            display: inline-block;
+            width: auto;
+            height: auto;
+            margin: 0 auto;
+            border: 1px solid @orange;
+            * {
+              float: left;
+            }
+            > i {
+              display: inline-block;
+              margin-right: 8px;
+              .size(24px, 24px);
+              &.heiCerIcon {
+                &.certed {
+                  background-position: 0 -46px;
+                }
+                &.unCerted {
+                  background-position: -81px 0;
+                }
+              }
+              &.honestCerIcon {
+                &.certed {
+                  background-position: -48px -46px;
+                }
+                &.unCerted {
+                  background-position: -24px -46px;
+                }
+              }
+
+            }
+          }
+        }
+
+      }
+    }
+
+    &.mainItemTopNews{
+      .topNewsCon{
+        margin: 0;
+        li{
+          .size(100%, 54px);
+          .border-bottom(1px, solid, #E5E5E5);
+          .box-sizing();
+          position: relative;
+          padding: 10px 0;
+          &:last-child{
+            .border-bottom(0) !important;
+          }
+          >*{
+            float: left;
+          }
+          .topNewLogo{
+            margin:0 8px 0 @padingleft;
+            position: absolute;
+            @h:28px;
+            display: inline-block;
+            .size(54px,@h);
+            .box-sizing();
+            color:@orange;
+            border:1px solid @orange;
+            border-radius: 2px;
+            text-align: center;
+            line-height: @h;
+            font-size: 14px;
+          }
+          .title {
+            margin-left: 75px;
+            margin-right: @padingleft;
+            height: 20px;
+            line-height: 20px;
+            padding-top: 5px;
+            a {
+              .size(100%,100%);
+              color: #212121;
+              font-size: 14px;
+              text-decoration: none;
+              display: inline-block;
+              text-overflow: ellipsis;
+              overflow: hidden;
+            }
+          }
         }
       }
     }
+
+    &.mainItemSignUp{
+      .size(100%,auto);
+      .header{
+        @h:44px;
+        >*{
+          color: #fff;
+        }
+        .size(100%,@h);
+        .box-sizing();
+        text-align: center;
+        background-color: #fa4535;
+        p{
+          line-height:@h;
+          margin:0;
+        }
+      }
+      .mainContent{
+        position: relative;
+        padding-top: 12px;
+        .size(100%,auto);
+        .left{
+          .size(52px,46px);
+          .box-sizing();
+          margin: @padingleft;
+          margin-top: 8px;
+          position: absolute;
+        }
+        .right{
+          border-left:1px solid #ccc;
+          margin-left: 82px;
+          //height: 64px;
+          padding-left: 8px;
+          span {
+            font-size: 14px;
+            &.dot {
+              font-size: 4px !important;
+              color: #ff5a00;
+              font-weight: bolder;
+            }
+          }
+        }
+      }
+    }
+
+    &.mainItemBasicInfo{
+      @h:44px;
+      .header{
+        height: @h;
+        line-height: @h;
+        .border-bottom();
+        span{
+          margin-left: @padingleft;
+          color: #212121;
+          font-size: 16px;
+        }
+      }
+      .mainContentItem{
+        padding:0px @padingleft;
+        .itemHeader{
+          height: @h;
+          line-height: @h;
+        }
+        .itemContentDetail{
+          padding:0 @padingleft;
+        }
+        &.introduce {
+          padding:12px @padingleft;
+          .border-bottom();
+          p {
+            margin: 0;
+            color: #212121;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 2px;
+            font-family: arial, helvetica, sans-serif;
+          }
+        }
+        &.advanceTags{
+          .itemContentDetail{
+            li{
+              display: inline-block;
+              background-color:#FFDECC;
+              padding: 8px;
+              height: 22px;
+              margin:0 12px 12px 0;
+              border-radius: 3px;
+            }
+          }
+        }
+      }
+    }
+
   }
 }
 
