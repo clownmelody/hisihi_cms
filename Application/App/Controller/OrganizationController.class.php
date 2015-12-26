@@ -2145,7 +2145,7 @@ class OrganizationController extends AppController
                 $favorite['appname'] = 'Issue';
                 $favorite['table'] = 'issue_content';
                 $favorite['row'] = $courseInfo['issue_content_id'];
-                $favorite['uid'] = $this->$uid;
+                $favorite['uid'] = $this->getUid();
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
                     $courseInfo['isSupportd'] = 1;
@@ -2159,7 +2159,7 @@ class OrganizationController extends AppController
                 $favorite['appname'] = 'Organization';
                 $favorite['table'] = 'organization_courses';
                 $favorite['row'] = $courseInfo['id'];
-                $favorite['uid'] = $this->$uid;
+                $favorite['uid'] = $this->getUid();
                 //获取点赞信息
                 if ($support_model->where($favorite)->count()) {
                     $courseInfo['isSupportd'] = 1;
@@ -2174,7 +2174,7 @@ class OrganizationController extends AppController
             $favorite['appname'] = 'Organization';
             $favorite['table'] = 'organization_courses';
             $favorite['row'] = $courseInfo['id'];
-            $favorite['uid'] = $this->$uid;
+            $favorite['uid'] = $this->getUid();
             if ($favorite_model->where($favorite)->count()) {
                 $courseInfo['isFavorite'] = 1;
             } else {

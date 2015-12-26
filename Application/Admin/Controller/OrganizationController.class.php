@@ -2706,10 +2706,11 @@ class OrganizationController extends AdminController
 
     /**
      * 生成机构管理员账号
+     * 由于int的取值范围问题，生成手机号只能在64系统下才能正常运行
      */
     public function createOrgAdminAccount($from=0,$to=0){
         if(!is_numeric($from) || !is_numeric($to)){
-            $this->error('参数为小于等于7位数');
+            $this->error('参数为整数');
         }
         $from = intval($from);
         $to = intval($to);
@@ -2731,12 +2732,17 @@ class OrganizationController extends AdminController
             }else if(strlen((strval($i))) < 7){
                 $account = $str.'0'.$i;
             }else{
-                $account = $str.$i;
+                $account = $i;
             }
-            $chars = '0123456789';
-            $password = '';
+            $chars = "0123456789";
+            $password = "";
             while(strlen($password)<6){
                 $password.=substr($chars,(mt_rand()%strlen($chars)),1);
+            }
+            if(preg_match("/^\d{11}$/",$account)){
+                $data['mobile'] = $account;
+            }else{
+                $data['mobile'] = '';
             }
             $data['username'] = $account;
             $data['password'] = think_ucenter_md5($password, UC_AUTH_KEY);
@@ -2767,7 +2773,7 @@ class OrganizationController extends AdminController
         $objPHPExcel->setActiveSheetIndex(0)
             //设置第一行为表头
             ->setCellValue('A1', 'username')
-            ->setCellValue('B1', 'pwd')
+            ->setCellValue('B1', 'mobile')
             ->setCellValue('C1', 'password')
             ->setCellValue('D1', 'create_time');
         foreach($data as $k => $v){
@@ -2775,8 +2781,8 @@ class OrganizationController extends AdminController
             $objPHPExcel->setActiveSheetIndex(0)
                 //Excel的第A列，uid是你查出数组的键值，下面以此类推
                 ->setCellValue('A'.$num, $v['username'])
-                ->setCellValue('B'.$num, $v['pwd'])
-                ->setCellValue('C'.$num, $v['password'])
+                ->setCellValue('B'.$num, $v['mobile'])
+                ->setCellValue('C'.$num, $v['pwd'])
                 ->setCellValue('D'.$num, $v['create_time']);
         }
 
