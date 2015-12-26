@@ -1875,6 +1875,14 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 机构web详情页
+     * @param int $organization_id
+     */
+    public function OrganizationBasicInfo($organization_id=0){
+        $this->display('orgbasicinfo');
+    }
+
+    /**
      * 机构报名
      * @param int $organization_id
      * @param null $student_name
