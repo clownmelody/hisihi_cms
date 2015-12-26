@@ -1,0 +1,34 @@
+/*less公用的方法*/
+.wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #EBEBEB;
+}
+.wrapper .mainItem {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  border: 1px solid '#D6D6D6';
+  background-color: #fff;
+}
+.wrapper .mainItem .mainContent {
+  padding: 0 10px;
+}
+.wrapper .mainItem.logoAndCertInfo {
+  border: 0 solid '#D6D6D6';
+}
+.wrapper .mainItem.logoAndCertInfo .head {
+  width: 100%;
+  height: 80px;
+}
+.wrapper .mainItem.logoAndCertInfo .head .img {
+  width: 100%;
+  height: 100%;
+}
+.wrapper .mainItem.logoAndCertInfo .head .mainInfo {
+  width: 100%;
+  height: 60px;
+}

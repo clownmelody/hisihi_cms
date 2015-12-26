@@ -1,0 +1,40 @@
+/*less公用的方法*/
+.size(@width:100%, @height:auto) {
+  width: @width;
+  height: @height;
+}
+.border-bottom(@width:1px,@type:solid,@color:'#D6D6D6'){
+  border: @arguments;
+}
+
+.wrapper{
+  position: absolute;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #EBEBEB;
+  .mainItem{
+    .size(100%,auto);
+    margin-bottom: 15px;
+    .border-bottom();
+    background-color: #fff;
+    .mainContent{
+      padding:0 10px;
+    }
+    &.logoAndCertInfo{
+      .border-bottom(0);
+      .head{
+        .size(100%,80px);
+        .img{
+          .size(100%,100%);
+        }
+        .mainInfo{
+          .size(100%,60px);
+        }
+      }
+    }
+  }
+}
+
+
