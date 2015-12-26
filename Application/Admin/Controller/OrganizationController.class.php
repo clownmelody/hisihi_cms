@@ -2734,8 +2734,8 @@ class OrganizationController extends AdminController
             }else{
                 $account = $i;
             }
-            $chars = '0123456789';
-            $password = '';
+            $chars = "0123456789";
+            $password = "";
             while(strlen($password)<6){
                 $password.=substr($chars,(mt_rand()%strlen($chars)),1);
             }
