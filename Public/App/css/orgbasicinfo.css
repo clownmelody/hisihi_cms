@@ -15,6 +15,8 @@ ul li {
   right: 0;
   background: #EBEBEB;
   font-size: 100%;
+  height: 100%;
+  overflow: auto;
 }
 #wrapper * {
   -webkit-user-select: none;
@@ -26,14 +28,47 @@ ul li {
   background-image: url("../images/orgbasicinfo/orginfo.png");
   background-size: 105px 70px;
 }
-#wrapper .mainItem {
+#wrapper .spiteBgOrigin {
+  background-image: url("../images/orgbasicinfo/orginfo.png");
+  background-size: 310px 140px;
+}
+#wrapper .mainItem .basicHeader {
+  margin-left: 15px;
+  height: 44px;
+  line-height: 44px;
+  border-bottom: 1px solid #d6d6d6;
+}
+#wrapper .mainItem .basicHeader span {
+  color: #212121;
+  font-size: 16px;
+}
+#wrapper .mainItem .basicHeaderWithArrow {
+  margin-left: 15px;
+  height: 44px;
+  line-height: 44px;
+}
+#wrapper .mainItem .basicHeaderWithArrow span {
+  color: #212121;
+  font-size: 16px;
+}
+#wrapper .mainItem .basicHeaderWithArrow i {
+  width: 15px;
+  height: 32px;
+}
+#wrapper .mainItem .itemHeader {
+  height: 44px;
+  line-height: 44px;
+}
+#wrapper .mainItem .itemHeader span {
+  margin-left: 15px;
+  color: #212121;
+  font-size: 16px;
+}
+#wrapper .mainItem.mainItemNormal {
   width: 100%;
   height: auto;
   margin-bottom: 16px;
   background-color: #fff;
-}
-#wrapper .mainItem.mainItemNormal {
-  background-color: #FFFFFF;
   border-bottom: 1px solid #d6d6d6;
 }
 #wrapper .mainItem.logoAndCertInfo {
@@ -223,10 +258,11 @@ ul li {
 #wrapper .mainItem.mainItemSignUp .mainContent {
   position: relative;
   padding-top: 12px;
+  margin-bottom: 10px;
   width: 100%;
   height: auto;
 }
-#wrapper .mainItem.mainItemSignUp .mainContent .left {
+#wrapper .mainItem.mainItemSignUp .mainContent .signUpIcon {
   width: 52px;
   height: 46px;
   box-sizing: border-box;
@@ -234,38 +270,25 @@ ul li {
   margin-top: 8px;
   position: absolute;
 }
-#wrapper .mainItem.mainItemSignUp .mainContent .right {
+#wrapper .mainItem.mainItemSignUp .mainContent .signUpCon {
   border-left: 1px solid #ccc;
   margin-left: 82px;
   padding-left: 8px;
 }
-#wrapper .mainItem.mainItemSignUp .mainContent .right span {
+#wrapper .mainItem.mainItemSignUp .mainContent .signUpCon li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#wrapper .mainItem.mainItemSignUp .mainContent .signUpCon li span {
   font-size: 14px;
 }
-#wrapper .mainItem.mainItemSignUp .mainContent .right span.dot {
+#wrapper .mainItem.mainItemSignUp .mainContent .signUpCon li span.dot {
   font-size: 4px !important;
   color: #ff5a00;
   font-weight: bolder;
 }
-#wrapper .mainItem.mainItemBasicInfo .header {
-  height: 44px;
-  line-height: 44px;
-  border-bottom: 1px solid #d6d6d6;
-}
-#wrapper .mainItem.mainItemBasicInfo .header span {
-  margin-left: 15px;
-  color: #212121;
-  font-size: 16px;
-}
 #wrapper .mainItem.mainItemBasicInfo .mainContentItem {
   padding: 0px 15px;
-}
-#wrapper .mainItem.mainItemBasicInfo .mainContentItem .itemHeader {
-  height: 44px;
-  line-height: 44px;
-}
-#wrapper .mainItem.mainItemBasicInfo .mainContentItem .itemContentDetail {
-  padding: 0 15px;
 }
 #wrapper .mainItem.mainItemBasicInfo .mainContentItem.introduce {
   padding: 12px 15px;
@@ -279,11 +302,47 @@ ul li {
   letter-spacing: 2px;
   font-family: arial, helvetica, sans-serif;
 }
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem.advanceTags {
+  border-bottom: 1px solid #d6d6d6;
+}
 #wrapper .mainItem.mainItemBasicInfo .mainContentItem.advanceTags .itemContentDetail li {
   display: inline-block;
   background-color: #FFDECC;
   padding: 8px;
-  height: 22px;
+  height: 15px;
+  line-height: 100%;
   margin: 0 12px 12px 0;
   border-radius: 3px;
+  font-size: 14px;
+  color: #212121;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem.videoCon #videoPreviewBox {
+  width: 100%;
+  position: relative;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem.videoCon #videoPreviewBox img {
+  max-width: 100%;
+}
+#wrapper .mainItem.mainItemBasicInfo .mainContentItem.videoCon #videoPreviewBox i {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  display: inline-block;
+  background-position: -106px 0;
+}
+#wrapper .mainItem.mainItemTeacherPower i {
+  float: right;
+  width: 15px;
+  height: 23px;
+  display: inline-block;
+  background-position: -190px -50px;
+  margin-right: 15px;
+}
+/*响应式样式*/
+@media screen and (min-width: 750px) {
+  #wrapper {
+    width: 560px;
+    height: auto;
+    margin: 0 auto;
+  }
 }

@@ -106,8 +106,8 @@
                 </p>
             </div>
             <div class="mainContent">
-                <div class="left spiteBg"></div>
-                <ul class="right">
+                <div class="signUpIcon spiteBg"></div>
+                <ul class="signUpCon">
                     <li>
                     <span class="dot">&middot;</span>
                     <span>李志</span>
@@ -135,7 +135,7 @@
 
         <!--基本信息-->
         <div class="mainItem mainItemNormal mainItemBasicInfo">
-            <div class="header"><span>基本信息</span></div>
+            <div class="basicHeader"><span>基本信息</span></div>
             <div class="mainContentItem introduce">
                 <p>我深深的爱着你，你却爱着一个傻逼，傻逼他不爱你，你比傻逼还傻逼，这他妈的什么道理，我跑着去找万晓利，不巧他在织毛衣，笑着说：hi，李逼
                 wo……，万晓利啊万晓利，你他妈的也会织毛衣wo……wo……万晓利啊万晓利我能不能做你的小傻逼出门遇见陈鲈鱼她骑着一头小毛驴毛驴穿着小毛衣她和毛驴谁才是傻逼wo……wo……陈鲈鱼啊陈鲈鱼
@@ -151,19 +151,40 @@
                     <li>武汉工作环境最好的互联基地</li>
                 </ul>
             </div>
-            <div class="mainContentItem">
-                <div class="itemHeader">优势</div>
-            </div>
-            <div class="mainContentItem">
-                <div class="itemHeader">优势</div>
+            <div class="mainContentItem videoCon">
+                <div class="itemHeader">机构视频</div>
+                <div id="videoPreviewBox">
+                    <img src="__IMG__/orgbasicinfo/videopreview.png"/>
+                    <i class="spiteBgOrigin"></i>
+                </div>
             </div>
 
         </div>
-        <div class="mainItem mainItemNormal"></div>
-        <div class="mainItem mainItemNormal"></div>
+
+        <!--师资力量-->
+        <div class="mainItem mainItemNormal mainItemTeacherPower">
+            <div class="basicHeaderWithArrow">
+                <span>师资力量</span>
+                <i class="spiteBgOrigin"></i>
+            </div>
+        </div>
+
+        <div class="mainItem mainItemNormal mainItemLocation">
+            <div class="basicHeaderWithArrow">
+                <span>地址</span>
+                <i></i>
+            </div>
+        </div>
     </div>
 </body>
-<script type="text/javascript" src="__JS__/zepto.js"></script>
-<script type="text/javascript" src="__JS__/prefixfree.min.js"></script>
-
+<script>
+    window.urlObject= {
+        js: "__JS__"+'/orgbasicinfo',
+        css: "__CSS__",
+        image: "__IMG__",
+        ctl:'__URL__',
+        apiUrl:'__API__',
+    };
+</script>
+<script type="text/javascript" data-main="__JS__/orgbasicinfo/main"  src="__JS__/orgbasicinfo/require.js" ></script>
 </html>

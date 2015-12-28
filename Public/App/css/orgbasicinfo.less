@@ -25,6 +25,8 @@ ul {
 }
 @padingleft:15px;
 @orange:#ff5a00;
+@font-color:#212121;
+@header-h:44px;
 #wrapper{
   -webkit-overflow-scrolling:touch;
   position: absolute;
@@ -34,6 +36,8 @@ ul {
   right: 0;
   background: #EBEBEB;
   font-size: 100%;
+  height: 100%;
+  overflow: auto;
   *{
     -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
     -moz-user-select: none;
@@ -43,15 +47,59 @@ ul {
     background-image: url("../images/orgbasicinfo/orginfo.png");
     background-size:105px 70px;
   }
+  .spiteBgOrigin{
+    background-image: url("../images/orgbasicinfo/orginfo.png");
+    background-size:310px 140px;
+  }
   .mainItem{
-    &.mainItemNormal{
-      background-color: #FFFFFF;
+    //一级标题
+    .basicHeader{
+      margin-left: @padingleft;
+      height: @header-h;
+      line-height: @header-h;
       .border-bottom();
+      span{
+        color: @font-color;
+        font-size: 16px;
+      }
     }
-    .size(100%,auto);
-    margin-bottom: 16px;
-    background-color: #fff;
 
+    //一级标题 带箭头
+    .basicHeaderWithArrow{
+      margin-left: @padingleft;
+      height: @header-h;
+      line-height: @header-h;
+      span{
+        color: @font-color;
+        font-size: 16px;
+      }
+      i{
+        .size(15px,32px);
+
+      }
+    }
+
+    //二级标题
+    .itemHeader{
+      height: @header-h;
+      line-height: @header-h;
+      span{
+        margin-left: @padingleft;
+        color: @font-color;
+        font-size: 16px;
+      }
+    }
+
+    //border: 1px solid blue;
+    &.mainItemNormal{
+      .size(100%,auto);
+      margin-bottom: 16px;
+      background-color: #fff;
+      .border-bottom();
+
+    }
+
+    //logo和认证信息
     &.logoAndCertInfo{
       .border-bottom(0);
       *{
@@ -173,6 +221,7 @@ ul {
       }
     }
 
+    //最新新闻
     &.mainItemTopNews{
       .topNewsCon{
         margin: 0;
@@ -222,6 +271,7 @@ ul {
       }
     }
 
+    //报名情况
     &.mainItemSignUp{
       .size(100%,auto);
       .header{
@@ -241,58 +291,48 @@ ul {
       .mainContent{
         position: relative;
         padding-top: 12px;
+        margin-bottom: 10px;
         .size(100%,auto);
-        .left{
+        .signUpIcon{
           .size(52px,46px);
           .box-sizing();
           margin: @padingleft;
           margin-top: 8px;
           position: absolute;
         }
-        .right{
+        .signUpCon{
           border-left:1px solid #ccc;
           margin-left: 82px;
           //height: 64px;
           padding-left: 8px;
-          span {
-            font-size: 14px;
-            &.dot {
-              font-size: 4px !important;
-              color: #ff5a00;
-              font-weight: bolder;
+          li {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            span {
+              font-size: 14px;
+              &.dot {
+                font-size: 4px !important;
+                color: #ff5a00;
+                font-weight: bolder;
+              }
             }
           }
         }
       }
     }
 
+    //基本上信息
     &.mainItemBasicInfo{
       @h:44px;
-      .header{
-        height: @h;
-        line-height: @h;
-        .border-bottom();
-        span{
-          margin-left: @padingleft;
-          color: #212121;
-          font-size: 16px;
-        }
-      }
+      @color:#212121;
       .mainContentItem{
         padding:0px @padingleft;
-        .itemHeader{
-          height: @h;
-          line-height: @h;
-        }
-        .itemContentDetail{
-          padding:0 @padingleft;
-        }
         &.introduce {
           padding:12px @padingleft;
           .border-bottom();
           p {
             margin: 0;
-            color: #212121;
+            color: @color;
             font-size: 14px;
             line-height: 20px;
             letter-spacing: 2px;
@@ -300,20 +340,58 @@ ul {
           }
         }
         &.advanceTags{
+          .border-bottom();
           .itemContentDetail{
             li{
               display: inline-block;
               background-color:#FFDECC;
               padding: 8px;
-              height: 22px;
+              height: 15px;
+              line-height: 100%;
               margin:0 12px 12px 0;
               border-radius: 3px;
+              font-size: 14px;
+              color: @color;
+            }
+          }
+        }
+        &.videoCon{
+          #videoPreviewBox{
+            width: 100%;
+            position: relative;
+            img{
+              max-width: 100%;
+            }
+            i{
+              position: absolute;
+              .size(56px,56px);
+              display: inline-block;
+              background-position: -106px 0;
             }
           }
         }
       }
     }
 
+    //师资力量
+    &.mainItemTeacherPower{
+      i{
+        float: right;
+        .size(15px,23px);
+        display: inline-block;
+        background-position: -190px -50px;
+        margin-right: 15px;
+      }
+    }
+
+  }
+}
+
+/*响应式样式*/
+@media screen and (min-width:750px) {
+  #wrapper{
+    .size(560px,auto);
+    margin: 0 auto;
   }
 }
 
