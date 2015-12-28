@@ -25,7 +25,7 @@ ul {
 }
 @padingleft:15px;
 @orange:#ff5a00;
-@font-color:#212121;
+@font-color:#2F2F2F;
 @header-h:44px;
 #wrapper{
   -webkit-overflow-scrolling:touch;
@@ -43,13 +43,16 @@ ul {
     -moz-user-select: none;
     font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
   }
+  img{
+    max-width: 100%;
+  }
   .spiteBg{
     background-image: url("../images/orgbasicinfo/orginfo.png");
     background-size:105px 70px;
   }
   .spiteBgOrigin{
     background-image: url("../images/orgbasicinfo/orginfo.png");
-    background-size:310px 140px;
+    //background-size:310px 140px;
   }
   .mainItem{
     //一级标题
@@ -73,9 +76,14 @@ ul {
         color: @font-color;
         font-size: 16px;
       }
-      i{
-        .size(15px,32px);
-
+      .arrow{
+        float: right;
+        .size(15px,23px);
+        display: inline-block;
+        background-position: -190px -50px;
+        margin-right: 20px;
+        margin-top: 10px;
+        transform: scale(0.7);
       }
     }
 
@@ -375,12 +383,53 @@ ul {
 
     //师资力量
     &.mainItemTeacherPower{
-      i{
-        float: right;
-        .size(15px,23px);
-        display: inline-block;
-        background-position: -190px -50px;
-        margin-right: 15px;
+      .teacherPowerDetail{
+        li{
+          float: left;
+          .size(50%,75px);
+          position: relative;
+          padding:10px @padingleft;
+          .border-bottom();
+          .box-sizing();
+          .leftPic{
+            position: absolute;
+            .size(50px,100%);
+            img{
+              .size(50px,50px);
+              border-radius: 100%;
+              border: 1px solid #ccc;
+            }
+          }
+          .rightUserInfo{
+            margin-left: 60px;
+            height: 100%;
+            .name{
+              font-size: 16px;
+              color: #474747;
+            }
+            .desc{
+              font-size: 12px;
+              color: #808080;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-height: 35px;
+            }
+          }
+        }
+      }
+    }
+
+    //地址
+    &.mainItemLocation{
+      #myLocation{
+        font-size: 16px;
+        color: @font-color;
+        padding: @padingleft;
+        padding-top: 0;
+        margin: 0;
+      }
+      #locationMap{
+        width: 100%;
       }
     }
 
