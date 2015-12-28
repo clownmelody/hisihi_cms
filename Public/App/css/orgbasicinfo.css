@@ -383,6 +383,16 @@ ul li {
 #wrapper .mainItem.mainItemLocation #locationMap {
   width: 100%;
 }
+#wrapper .mainItem.mainItemCompresAsse .basicHeader #starsCon {
+  display: inline-block;
+}
+#wrapper .mainItem.mainItemCompresAsse .basicHeader #starsCon li {
+  width: 26px;
+  height: 26px;
+  margin-top: 3px;
+  float: left;
+  background-position: -186px -74px;
+}
 /*响应式样式*/
 @media screen and (min-width: 750px) {
   #wrapper {
