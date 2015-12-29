@@ -2197,7 +2197,7 @@ class OrganizationController extends AppController
                 $courseInfo['video_list'] = $video_list;
                 $extra['data'] = $courseInfo;
                 if($type == 'view'){//用于页面分享
-                    $courseInfo['duration'] = $this->sec2time($courseInfo['video_duration']);
+                    $courseInfo['duration'] = $this->sec2time($courseInfo['duration']);
                     $this->assign('course_content', $courseInfo);
                     $relatedList = $this->appGetCoursesList(null,$courseInfo['type_id'],$course_id,null,'view');
                     foreach($relatedList as &$video){
@@ -2478,7 +2478,6 @@ class OrganizationController extends AppController
         unset($organization['phone_num']);
         unset($organization['guarantee_num']);
         unset($organization['location']);
-        unset($organization['teachersCount']);
         unset($organization['relationship']);
         unset($organization['isStudent']);
         $organization['advantage'] = explode("#",$organization['advantage']);

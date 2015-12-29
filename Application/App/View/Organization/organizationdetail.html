@@ -96,19 +96,14 @@
     <div class="app-content" style="-webkit-box-shadow: none;">
         <div class="player" style="height: 120px;">
             <div style="position: relative;width: 100%;">
-                <span class="course-org" style="margin-top: 30px;">
+                <span class="course-org" style="margin-top: 20px;">
                     <span style="float: left;">
-                        <img  style="width: 60px;height: 60px;vertical-align:text-top;margin-left: 10px;" src="{$organization['logo']}"/>
+                        <img  style="width: 80px;height: 80px;vertical-align:text-top;margin-left: 10px;" src="{$organization['logo']}"/>
                     </span>
-                    <span class="org-title" style="color: white;margin-left: 20px;">{$organization['name']}
-                            <volist name="organization['authenticationInfo']" id="auth">
-                                <eq name="auth['default_display']" value="1">
-                                    &nbsp;&nbsp;<img  style="width: 15px;vertical-align:text-bottom;" src="{$auth['tag_pic_url']}"/>
-                                </eq>
-                            </volist>
+                    <span class="org-title" style="font-size: 18px;color: white;margin-left: 20px;">{$organization['name']}
                             <br>
                             <br>
-                            <span class="org-info" style="color: white;">
+                            <span class="org-info" style="font-size: 14px;color: white;">
                                 {$organization['view_count']}查看 <span style="color: #bfcece">|</span> {$organization['teachersCount']}老师 <span style="color: #bfcece">|</span> {$organization['followCount']}粉丝
                             </span>
                     </span>
@@ -117,8 +112,14 @@
         </div>
         <div style="position: relative;height: 40px;background-color: red;color: white;">
             <p>
-                <div style=" width: 50%;float: left;text-align: center;padding-top: 10px;">嘿设汇认证</div>
-                <div style=" width: 50%;float: left;text-align: center;padding-top: 10px;">诚信机构认证</div>
+                <div style=" width: 50%;float: left;text-align: center;margin-top: 10px;">
+                    <img  style="width: 20px;vertical-align:text-bottom;" src="http://pic.hisihi.com/2015-12-03/565faef8618b4.png"/>
+                    嘿设汇认证
+                </div>
+                <div style=" width: 49%;float: left;text-align: center;margin-top: 10px;border-left: 1px solid white;">
+                    <img  style="width: 20px;vertical-align:text-bottom;" src="http://pic.hisihi.com/2015-12-03/565fb1c61bd54.png"/>
+                    诚信机构认证
+                </div>
             </p>
         </div>
         <div class="app-section" style="margin: 10px;height: 80px;padding: 0px">
@@ -140,7 +141,7 @@
                 <ul style="color: #f00;">
                     <volist name="enroll['data']" id="enroll_item">
                         <li style="list-style-type: disc;">
-                            <span style="color:black;">{$enroll_item['student_name']} 同学 于 {$enroll_item['create_time']} 成功报名</span>
+                            <span style="font-size: 14px;color:black;">{$enroll_item['student_name']} 同学 于 {$enroll_item['create_time']} 成功报名</span>
                         </li>
                     </volist>
                 </ul>
@@ -154,7 +155,7 @@
             </span>
         </div>
         <div class="app-section" style="margin: 10px 10px 10px 10px;padding: 15px">
-            <p style="height: 30px;border-bottom: 1px solid grey;border-radius: 0;">优势</p>
+            <p style="height: 30px;border-bottom: 1px solid #BDBDC4;border-radius: 0;">优势</p>
             <div></div>
             <span style="margin-top: 10px;width: 100%;padding-top: 10px;">
                 <ul style="list-style-type: none;">
@@ -173,7 +174,7 @@
             </span>
         </div>
         <div class="app-section" style="margin: 10px 10px 10px 10px;height: 160px;padding: 15px">
-            <p style="height: 30px;border-bottom: 1px solid grey;border-radius: 0;">师资力量</p>
+            <p style="height: 30px;border-bottom: 1px solid #BDBDC4;border-radius: 0;">师资力量</p>
             <span>
                 <ul style="list-style-type: none;">
                     <volist name="teacher" id="teacher_item">
@@ -195,10 +196,10 @@
             </span>
         </div>
         <div class="app-section" style="margin: 10px 10px 10px 10px;height: 140px;padding: 15px">
-            <span style="display: inline-block;float: left;width: 100%;text-align: center;height: 40px;border-bottom: 1px solid grey;border-radius: 0;">
-                <span style="float: left;">综合评分：{$fractionalStatistics['comprehensiveScore']}分</span>
-                <span><div id="comprehensive_rate" style="display: inline-block;float: left;height: 30px;width: 150px;"></div></span>
-                <span style="float: right;">共{$comment['totalCount']}评论</span>
+            <span style="display: inline-block;float: left;width: 100%;text-align: center;height: 40px;border-bottom: 1px solid #BDBDC4;border-radius: 0;">
+                <span style="font-size:15px;float: left;">综合评分：{$fractionalStatistics['comprehensiveScore']}分</span>
+                <span><div id="comprehensive_rate" style="display: inline-block;float: left;height: 30px;width: 130px;"></div></span>
+                <span style="font-size:15px;float: right;">共{$comment['totalCount']}评论</span>
             </span>
             <span style="display: inline-block;float: left;margin: 0;width: 100%;text-align: center;height: 80px;margin-top: 20px;">
                 <volist name="fractionalStatistics['data']" id="statistic_item">
@@ -207,26 +208,26 @@
                         <span>
                             <div class="cate_rate" rate="{$statistic_item['score']}" style="display: inline-block;float: left;height: 30px;width: 100%;"></div>
                         </span><br>
-                        <span>平均{$statistic_item['score']}分</span>
+                        <span style="color: #BDBDC4">平均{$statistic_item['score']}分</span>
                     </span>
                 </volist>
             </span>
         </div>
         <div class="app-section" style="margin: 10px 10px 10px 10px;padding: 15px">
             <volist name="comment['data']" id="comment_item">
-                    <span style="display:inline-block;width:100%;border-bottom: 1px solid grey;border-radius: 0;padding-bottom: 10px;">
+                    <span style="display:inline-block;width:100%;border-bottom: 1px solid #BDBDC4;border-radius: 0;padding-bottom: 10px;">
                         <span style="float: left;">
                             <img  style="width: 48px;border-radius: 50px;height: 48px;vertical-align:text-top;" src="{$comment_item['userInfo']['avatar128']}"/>
                         </span>
-                        <span class="org-title">
-                            <span>{$comment_item['userInfo']['nickname']}</span>
+                        <span style="padding-top: 5px;font-size: 14px;font-weight: bold;margin-left: 10px;">
+                            <span style="float: right;">
+                                <div class="comment_rate" rate="{$comment_item['comprehensive_score']}" style="display: inline-block;float: right;height: 30px;width: 100px;"></div>
+                            </span>
+                            <span style="line-height: 30px;">{$comment_item['userInfo']['nickname']}</span>
                             <br>
                             <span>{$comment_item['comment']}</span>
                             <br>
-                            <span style="color:grey;">发表于{$comment_item['create_time']}</span>
-                        </span>
-                        <span style="float: right;">
-                            <div class="comment_rate" rate="{$comment_item['comprehensive_score']}" style="display: inline-block;float: right;height: 30px;width: 100px;"></div>
+                            <span style="float: right;line-height: 30px;color:#BDBDC4;">发表于{$comment_item['create_time']}</span>
                         </span>
                     </span>
             </volist>
@@ -313,7 +314,7 @@
         $("#comprehensive_rate").jRate({
             startColor: "#FF5A00",
             endColor: "#FF5A00",
-            strokeColor: '#FF5A00',
+            strokeColor: '#FF0000',
             rating:{$fractionalStatistics['comprehensiveScore']},
             readOnly: true
         });
@@ -348,7 +349,7 @@
             $this.jRate({
                 startColor: "#FF5A00",
                 endColor: "#FF5A00",
-                strokeColor: '#FF5A00',
+                strokeColor: '#FF0000',
                 rating:rate,
                 readOnly: true
             });
