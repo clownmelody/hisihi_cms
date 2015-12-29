@@ -16,6 +16,12 @@
 .box-shadow(@h:0px,@v:0px,@b:1px,@s:1px,@c:#ccc){
   box-shadow: @arguments;
 }
+
+@paddingleft:15px;
+@paddingright:20px;
+@orange:#ff5a00;
+@font-color:#212121;
+@header-h:44px;
 ul {
   padding: 0;
   margin: 0;
@@ -23,10 +29,11 @@ ul {
     list-style: none;
   }
 }
-@padingleft:15px;
-@orange:#ff5a00;
-@font-color:#2F2F2F;
-@header-h:44px;
+input[type="text"]:focus {
+  border: 1px solid #BBAEAE !important;
+  outline: 0;
+}
+
 #wrapper{
   -webkit-overflow-scrolling:touch;
   position: absolute;
@@ -57,7 +64,7 @@ ul {
   .mainItem{
     //一级标题
     .basicHeader{
-      margin-left: @padingleft;
+      margin-left: @paddingleft;
       height: @header-h;
       line-height: @header-h;
       .border-bottom();
@@ -69,7 +76,7 @@ ul {
 
     //一级标题 带箭头
     .basicHeaderWithArrow{
-      margin-left: @padingleft;
+      margin-left: @paddingleft;
       height: @header-h;
       line-height: @header-h;
       span{
@@ -92,7 +99,7 @@ ul {
       height: @header-h;
       line-height: @header-h;
       span{
-        margin-left: @padingleft;
+        margin-left: @paddingleft;
         color: @font-color;
         font-size: 16px;
       }
@@ -139,7 +146,7 @@ ul {
           position: absolute;
           z-index: 3;
           .pos(0,0);
-          padding: 35px @padingleft;
+          padding: 35px @paddingleft;
           .size(100%,100%);
           .box-sizing();
           .left{
@@ -246,7 +253,7 @@ ul {
             float: left;
           }
           .topNewLogo{
-            margin:0 8px 0 @padingleft;
+            margin:0 8px 0 @paddingleft;
             position: absolute;
             @h:28px;
             display: inline-block;
@@ -261,7 +268,7 @@ ul {
           }
           .title {
             margin-left: 75px;
-            margin-right: @padingleft;
+            margin-right: @paddingleft;
             height: 20px;
             line-height: 20px;
             padding-top: 5px;
@@ -304,7 +311,7 @@ ul {
         .signUpIcon{
           .size(52px,46px);
           .box-sizing();
-          margin: @padingleft;
+          margin:@paddingleft;
           margin-top: 8px;
           position: absolute;
         }
@@ -334,9 +341,9 @@ ul {
       @h:44px;
       @color:#212121;
       .mainContentItem{
-        padding:0px @padingleft;
+        padding:0px @paddingleft;
         &.introduce {
-          padding:12px @padingleft;
+          padding:12px @paddingleft;
           .border-bottom();
           p {
             margin: 0;
@@ -388,7 +395,7 @@ ul {
           float: left;
           .size(50%,75px);
           position: relative;
-          padding:10px @padingleft;
+          padding:10px 8px 10px @paddingleft;
           .border-bottom();
           .box-sizing();
           .leftPic{
@@ -404,8 +411,11 @@ ul {
             margin-left: 60px;
             height: 100%;
             .name{
-              font-size: 16px;
+              font-size: 14px;
               color: #474747;
+              max-height: 20px;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .desc{
               font-size: 12px;
@@ -415,6 +425,12 @@ ul {
               max-height: 35px;
             }
           }
+          //&:nth-child(2n){
+          //
+          //}
+          //&:nth-child(2n+1){
+          //
+          //}
         }
       }
     }
@@ -424,7 +440,7 @@ ul {
       #myLocation{
         font-size: 16px;
         color: @font-color;
-        padding: @padingleft;
+        padding: @paddingleft;
         padding-top: 0;
         margin: 0;
       }
@@ -432,16 +448,145 @@ ul {
         width: 100%;
       }
     }
-
+    //评论
     &.mainItemCompresAsse{
-      .basicHeader {
-        #starsCon {
+
+      .starsCon {
+        line-height: 0;
+        i {
           display: inline-block;
+          //transform: scale(.8);
+          background-size:129px 85px;
+          .size(16px, 16px);
+          &.allStar {
+            background-position: -114px -45px;
+          }
+          &.halfStar {
+            background-position: -100px -29px;
+          }
+          &.emptyStar {
+            background-position: -98px -45px;
+          }
+
+        }
+      }
+      .basicHeader {
+        .leftItem {
+          float: left;
+          &.starsCon {
+            padding: 14px 0 0 10px;
+          }
+        }
+        .rightItem{
+          float: right;
+          margin-right: 20px;
+        }
+      }
+      .assessmentDetail{
+        padding: @paddingleft;
+        .box-sizing();
+        li{
+          width: 25%;
+          float: left;
+          padding-right: 21px;
+          .box-sizing();
+          &:last-child(0){
+            margin-right: 0;
+          }
+          .title{
+            text-align: center;
+            color: #212121;
+            font-size: 14px;
+          }
+          .colorBlock{
+            .size(100%,12px);
+            padding: 8px 0;
+            i{
+              display:block;
+              float: left;
+              .size(50%,100%);
+              &.unFillIn{
+                background-color:#e3e3e3;
+              }
+              &.redFillIn{
+                background-color:@orange;
+              }
+              &.greenFillIn{
+                background-color:#23a438;
+              }
+              &.yellowFillIn{
+                background-color:#fdbe0d;
+              }
+            }
+          }
+          .bottomInfo{
+            text-align: center;
+            >span{
+              color:#808080;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+      .studentCommentCon{
+        .inputComment{
+          .size(auto,30px);
+          padding:5px @paddingright 5px @paddingleft;
+          #myComment{
+            .size(100%,100%);
+            font-size: 14px;
+            text-indent: 10px;
+            border:1px solid #CCCCCC;
+            border-radius: 3px;
+            background-color: #E3E3E3;
+            outline: none;
+          }
+        }
+        .studentCommentDetail{
+          margin-top: @paddingright;
           li{
-            .size(26px,26px);
-            margin-top: 3px;
-            float: left;
-            background-position:-186px -74px;
+            min-height: 40px;
+            position: relative;
+            padding:0 0 12px 0;
+            &:last-child {
+              .commentCon{
+                .border-bottom(0);
+              }
+            }
+            .imgCon{
+              position: absolute;
+              .size(80px,80px);
+              .box-sizing();
+              padding:0 @paddingleft 0 @paddingright;
+              img{
+                .size(44px,44px);
+                border-radius: 100%;
+                border: 1px solid #CBCBCB;
+              }
+            }
+            .commentCon{
+              margin-left: 80px;
+              .border-bottom();
+              .commentHead {
+                .commentNickname {
+                  color: @font-color;
+                }
+                .rightItem{
+                  float: right;
+                  margin-right: @paddingright;
+                  padding-top: 3px;
+                }
+              }
+              .content{
+                padding: 8px @paddingright 5px 0;
+                font-size: 14px;
+              }
+              .publicTime{
+                color: #C6C6C6;
+                margin-bottom: 6px;
+                font-size: 12px;
+              }
+            }
           }
         }
       }
