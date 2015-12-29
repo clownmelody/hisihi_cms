@@ -3,37 +3,458 @@
   width: @width;
   height: @height;
 }
-.border-bottom(@width:1px,@type:solid,@color:'#D6D6D6'){
-  border: @arguments;
+.pos(@top,@left){
+  top:@top;
+  left:@left;
 }
-
-.wrapper{
+.border-bottom(@width:1px,@type:solid,@color:#D6D6D6){
+  border-bottom: @arguments;
+}
+.box-sizing(@type:border-box){
+  box-sizing:@type;
+}
+.box-shadow(@h:0px,@v:0px,@b:1px,@s:1px,@c:#ccc){
+  box-shadow: @arguments;
+}
+ul {
+  padding: 0;
+  margin: 0;
+  li {
+    list-style: none;
+  }
+}
+@padingleft:15px;
+@orange:#ff5a00;
+@font-color:#2F2F2F;
+@header-h:44px;
+#wrapper{
+  -webkit-overflow-scrolling:touch;
   position: absolute;
   top:0;
   left: 0;
   bottom: 0;
   right: 0;
   background: #EBEBEB;
+  font-size: 100%;
+  height: 100%;
+  overflow: auto;
+  *{
+    -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+    -moz-user-select: none;
+    font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  }
+  img{
+    max-width: 100%;
+  }
+  .spiteBg{
+    background-image: url("../images/orgbasicinfo/orginfo.png");
+    background-size:105px 70px;
+  }
+  .spiteBgOrigin{
+    background-image: url("../images/orgbasicinfo/orginfo.png");
+    //background-size:310px 140px;
+  }
   .mainItem{
-    .size(100%,auto);
-    margin-bottom: 15px;
-    .border-bottom();
-    background-color: #fff;
-    .mainContent{
-      padding:0 10px;
+    //一级标题
+    .basicHeader{
+      margin-left: @padingleft;
+      height: @header-h;
+      line-height: @header-h;
+      .border-bottom();
+      span{
+        color: @font-color;
+        font-size: 16px;
+      }
     }
+
+    //一级标题 带箭头
+    .basicHeaderWithArrow{
+      margin-left: @padingleft;
+      height: @header-h;
+      line-height: @header-h;
+      span{
+        color: @font-color;
+        font-size: 16px;
+      }
+      .arrow{
+        float: right;
+        .size(15px,23px);
+        display: inline-block;
+        background-position: -190px -50px;
+        margin-right: 20px;
+        margin-top: 10px;
+        transform: scale(0.7);
+      }
+    }
+
+    //二级标题
+    .itemHeader{
+      height: @header-h;
+      line-height: @header-h;
+      span{
+        margin-left: @padingleft;
+        color: @font-color;
+        font-size: 16px;
+      }
+    }
+
+    //border: 1px solid blue;
+    &.mainItemNormal{
+      .size(100%,auto);
+      margin-bottom: 16px;
+      background-color: #fff;
+      .border-bottom();
+
+    }
+
+    //logo和认证信息
     &.logoAndCertInfo{
       .border-bottom(0);
+      *{
+        color: #fff;
+      }
       .head{
-        .size(100%,80px);
-        .img{
-          .size(100%,100%);
+        position: relative;
+        .size(auto,160px);
+        .filter{
+          *{
+            .size(100%,100%);
+            position: absolute;
+            .pos(0,0);
+          }
+          img{
+            -webkit-filter: blur(10px); /* Chrome, Opera */
+            -moz-filter: blur(10px);
+            -ms-filter: blur(10px);
+            filter: blur(10px);
+            z-index: 1;
+          }
+          .filterUp{
+            z-index: 2;
+            background-color:rgba(0,0,0,0.2);
+          }
         }
+
         .mainInfo{
-          .size(100%,60px);
+          position: absolute;
+          z-index: 3;
+          .pos(0,0);
+          padding: 35px @padingleft;
+          .size(100%,100%);
+          .box-sizing();
+          .left{
+            position: absolute;
+            .size(84px,84px);
+            >img{
+              .box-sizing();
+              .size(84px,84px);
+              border-radius:2%;
+            }
+          }
+          .right{
+            margin-left: 112px;
+            height:100%;
+            //@width:~"100% - 100px";
+            //width:-moz-calc(@width);
+            //width:-webkit-calc(@width);
+            //width:calc(@width);
+            #orgName{
+              font-size: 22px;
+              padding:5px 0 12px 0;
+            }
+            .peopleInfo{
+              .size(100%,auto);
+              .peopleInfoItem{
+                *{
+                  font-size: 14px;
+                }
+                float: left;
+                .size(25%,auto);
+                .box-sizing();
+                text-align: center;
+                border-right:1px solid #fff;
+                &:nth-child(4){
+                  border-right-width: 0;
+                }
+              }
+            }
+           }
+        }
+      }
+      .bottom{
+        background-color: @orange;
+        height: 48px;
+
+        .cerInfoItem{
+          overflow-wrap: normal;
+          .box-sizing();
+          .size(50%,48px);
+          float: left;
+          padding-top: 12px;
+          text-align: center;
+          >span {
+            display: inline-block;
+            width: auto;
+            height: auto;
+            margin: 0 auto;
+            border: 1px solid @orange;
+            * {
+              float: left;
+            }
+            > i {
+              display: inline-block;
+              margin-right: 8px;
+              .size(24px, 24px);
+              &.heiCerIcon {
+                &.certed {
+                  background-position: 0 -46px;
+                }
+                &.unCerted {
+                  background-position: -81px 0;
+                }
+              }
+              &.honestCerIcon {
+                &.certed {
+                  background-position: -48px -46px;
+                }
+                &.unCerted {
+                  background-position: -24px -46px;
+                }
+              }
+
+            }
+          }
+        }
+
+      }
+    }
+
+    //最新新闻
+    &.mainItemTopNews{
+      .topNewsCon{
+        margin: 0;
+        li{
+          .size(100%, 54px);
+          .border-bottom(1px, solid, #E5E5E5);
+          .box-sizing();
+          position: relative;
+          padding: 10px 0;
+          &:last-child{
+            .border-bottom(0) !important;
+          }
+          >*{
+            float: left;
+          }
+          .topNewLogo{
+            margin:0 8px 0 @padingleft;
+            position: absolute;
+            @h:28px;
+            display: inline-block;
+            .size(54px,@h);
+            .box-sizing();
+            color:@orange;
+            border:1px solid @orange;
+            border-radius: 2px;
+            text-align: center;
+            line-height: @h;
+            font-size: 14px;
+          }
+          .title {
+            margin-left: 75px;
+            margin-right: @padingleft;
+            height: 20px;
+            line-height: 20px;
+            padding-top: 5px;
+            a {
+              .size(100%,100%);
+              color: #212121;
+              font-size: 14px;
+              text-decoration: none;
+              display: inline-block;
+              text-overflow: ellipsis;
+              overflow: hidden;
+            }
+          }
         }
       }
     }
+
+    //报名情况
+    &.mainItemSignUp{
+      .size(100%,auto);
+      .header{
+        @h:44px;
+        >*{
+          color: #fff;
+        }
+        .size(100%,@h);
+        .box-sizing();
+        text-align: center;
+        background-color: #fa4535;
+        p{
+          line-height:@h;
+          margin:0;
+        }
+      }
+      .mainContent{
+        position: relative;
+        padding-top: 12px;
+        margin-bottom: 10px;
+        .size(100%,auto);
+        .signUpIcon{
+          .size(52px,46px);
+          .box-sizing();
+          margin: @padingleft;
+          margin-top: 8px;
+          position: absolute;
+        }
+        .signUpCon{
+          border-left:1px solid #ccc;
+          margin-left: 82px;
+          //height: 64px;
+          padding-left: 8px;
+          li {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            span {
+              font-size: 14px;
+              &.dot {
+                font-size: 4px !important;
+                color: #ff5a00;
+                font-weight: bolder;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    //基本上信息
+    &.mainItemBasicInfo{
+      @h:44px;
+      @color:#212121;
+      .mainContentItem{
+        padding:0px @padingleft;
+        &.introduce {
+          padding:12px @padingleft;
+          .border-bottom();
+          p {
+            margin: 0;
+            color: @color;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 2px;
+            font-family: arial, helvetica, sans-serif;
+          }
+        }
+        &.advanceTags{
+          .border-bottom();
+          .itemContentDetail{
+            li{
+              display: inline-block;
+              background-color:#FFDECC;
+              padding: 8px;
+              height: 15px;
+              line-height: 100%;
+              margin:0 12px 12px 0;
+              border-radius: 3px;
+              font-size: 14px;
+              color: @color;
+            }
+          }
+        }
+        &.videoCon{
+          #videoPreviewBox{
+            width: 100%;
+            position: relative;
+            img{
+              max-width: 100%;
+            }
+            i{
+              position: absolute;
+              .size(56px,56px);
+              display: inline-block;
+              background-position: -106px 0;
+            }
+          }
+        }
+      }
+    }
+
+    //师资力量
+    &.mainItemTeacherPower{
+      .teacherPowerDetail{
+        li{
+          float: left;
+          .size(50%,75px);
+          position: relative;
+          padding:10px @padingleft;
+          .border-bottom();
+          .box-sizing();
+          .leftPic{
+            position: absolute;
+            .size(50px,100%);
+            img{
+              .size(50px,50px);
+              border-radius: 100%;
+              border: 1px solid #ccc;
+            }
+          }
+          .rightUserInfo{
+            margin-left: 60px;
+            height: 100%;
+            .name{
+              font-size: 16px;
+              color: #474747;
+            }
+            .desc{
+              font-size: 12px;
+              color: #808080;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-height: 35px;
+            }
+          }
+        }
+      }
+    }
+
+    //地址
+    &.mainItemLocation{
+      #myLocation{
+        font-size: 16px;
+        color: @font-color;
+        padding: @padingleft;
+        padding-top: 0;
+        margin: 0;
+      }
+      #locationMap{
+        width: 100%;
+      }
+    }
+
+    &.mainItemCompresAsse{
+      .basicHeader {
+        #starsCon {
+          display: inline-block;
+          li{
+            .size(26px,26px);
+            margin-top: 3px;
+            float: left;
+            background-position:-186px -74px;
+          }
+        }
+      }
+    }
+
+  }
+}
+
+/*响应式样式*/
+@media screen and (min-width:750px) {
+  #wrapper{
+    .size(560px,auto);
+    margin: 0 auto;
   }
 }
 
