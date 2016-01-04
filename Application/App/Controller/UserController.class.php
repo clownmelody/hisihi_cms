@@ -2263,4 +2263,31 @@ class UserController extends AppController
         $this->apiSuccess(json_encode($check));
     }
 
+    /**
+     * 获取通讯录的统计
+     * @param null $uid
+     */
+    public function getAddressBookStatistics($uid=null){
+        if(!$uid){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $follow = M('Follow');
+        $fans_count = $follow->where('type=1 and follow_who='.$uid)->count();
+        $follow_count = $follow->where('type=1 and who_follow='.$uid)->count();
+        $model =  M("table");
+        $where = 'auth_group_access.uid = member.uid and auth_group_access.group_id = 6';
+        $teacher_count = $model->table(array(
+            'hisihi_auth_group_access'=>'auth_group_access',
+            'hisihi_member'=>'member',))->where($where)->field('member.uid')->count();
+        $group_count = M('ImGroupMembers')->where('status=1 and member_id=\'c'.$uid.'\'')->count();
+        $extra['data'] = array(
+            'fans_count'=>$fans_count,
+            'follow_count'=>$follow_count,
+            'teacher_count'=>$teacher_count,
+            'group_count'=>$group_count
+        );
+        $this->apiSuccess('获取通讯录统计成功', null, $extra);
+    }
+
 }
