@@ -154,7 +154,7 @@ input[type="text"]:focus {
             .size(84px,84px);
             >img{
               .box-sizing();
-              .size(84px,84px);
+              .size(100%,100%);
               border-radius:2%;
             }
           }
@@ -403,7 +403,7 @@ input[type="text"]:focus {
             .size(50px,100%);
             img{
               .size(50px,50px);
-              border-radius: 100%;
+              border-radius: 50%;
               border: 1px solid #ccc;
             }
           }
@@ -560,7 +560,7 @@ input[type="text"]:focus {
               padding:0 @paddingleft 0 @paddingright;
               img{
                 .size(44px,44px);
-                border-radius: 100%;
+                border-radius: 50%;
                 border: 1px solid #CBCBCB;
               }
             }
@@ -602,5 +602,28 @@ input[type="text"]:focus {
     margin: 0 auto;
   }
 }
+
+@media screen and (max-width:320px) and (max-height: 480px){
+  .logoAndCertInfo{
+    .mainInfo{
+      .left{
+        .size(74px,74px) !important;
+      }
+      .right {
+        margin-left: 84px !important;
+        .filedInfo {
+          font-size: 12px !important;
+        }
+        #orgName{
+          font-size: 18px !important;
+          padding:3px 0 10px 0 !important;
+        }
+      }
+    }
+
+  }
+
+}
+
 
 
