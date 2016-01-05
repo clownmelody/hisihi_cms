@@ -396,7 +396,7 @@ class OrganizationController extends AppController
             $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
             $result['followCount'] = $this->getFollowCount($organization_id);
             $result['teachersCount'] = $this->getTeachersCount($organization_id);
-
+            $result['groupCount'] = $this->getGroupCount($organization_id);
             $user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$organization_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$organization_id,'follow_who'=>$uid, 'type'=>2))->find();
@@ -2337,6 +2337,14 @@ class OrganizationController extends AppController
         $data['group'] = 6;
         $count = $model->where($data)->count();
         return $count;
+    }
+
+    private function getGroupCount($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $group_count = M('ImGroups')->where('status=1 and organization_id='.$organization_id)->count();
+        return $group_count;
     }
 
     /**
