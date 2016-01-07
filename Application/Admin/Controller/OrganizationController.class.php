@@ -159,6 +159,7 @@ class OrganizationController extends AdminController
 
             $logo_id = $_POST["picture"];
             $video_img_id = $_POST["video_img"];
+            $location_img = $_POST["location_img"];
             if((int)$logo_id>0){
                 $this->uploadLogoPicToOSS($logo_id);
                 $data["logo"] = $this->fetchCdnImage($logo_id);
@@ -166,6 +167,10 @@ class OrganizationController extends AdminController
             if((int)$video_img_id>0){
                 $this->uploadLogoPicToOSS($video_img_id);
                 $data["video_img"] = $this->fetchCdnImage($video_img_id);
+            }
+            if((int)$location_img>0){
+                $this->uploadLogoPicToOSS($location_img);
+                $data["location_img"] = $this->fetchCdnImage($location_img);
             }
 
             $data["name"] = $_POST["name"];

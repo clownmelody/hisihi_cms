@@ -358,7 +358,7 @@ class OrganizationController extends AppController
         //$this->requireAdminLogin();
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num,location_img')->find();
         if($result){
             $logo = $result['logo'];
             //$logo = $this->getOrganizationLogo($logo_id);
@@ -385,7 +385,7 @@ class OrganizationController extends AppController
         }
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num,light_authentication')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num,light_authentication,location_img')->find();
         if($result){
             $logo = $result['logo'];
             //$logo = $this->getOrganizationLogo($logo_id);
