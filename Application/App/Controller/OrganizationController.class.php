@@ -1354,6 +1354,9 @@ class OrganizationController extends AppController
         }
     }
 
+    /**
+     * 定位到城市
+     */
     public function location(){
         $ip = get_client_ip();
         $ch = curl_init();
@@ -1372,6 +1375,30 @@ class OrganizationController extends AppController
             $this->apiSuccess('获取位置成功', null, $data);
         } else {
             $data['city'] = '武汉';
+            $this->apiSuccess('定位失败，返回默认城市', null, $data);
+        }
+    }
+
+    /**
+     * 定位到省份
+     */
+    public function locationToProvince(){
+        $ip = get_client_ip();
+        $ch = curl_init();
+        $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
+        $header = array(
+            'apikey: e1edb99789e6a40950685b5e3f0ee282',
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch , CURLOPT_URL , $url);
+        $res = curl_exec($ch);
+        $res = json_decode($res);
+        if($res->errNum==0){
+            $data['province'] = $res->retData->content->address_detail->province;
+            $this->apiSuccess('获取位置成功', null, $data);
+        } else {
+            $data['province'] = '湖北省';
             $this->apiSuccess('定位失败，返回默认城市', null, $data);
         }
     }
