@@ -473,21 +473,21 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 获取机构公告
+     * 机构web版获取机构公告
      * @param int $page
      * @param int $count
      */
     public function getNotice($page=1, $count=10){
         $this->requireAdminLogin();
         $model = M('OrganizationNotice');
-        $totoalCount = $model->where('status=1')->count();
+        $totalCount = $model->where('status=1')->count();
         $list = $model->where('status=1')->page($page, $count)->select();
         foreach($list as &$notice){
-            $notice['detail_url'] = 'http://hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
+            $notice['detail_url'] = C('HOST_NAME_PREFIX').'api.php?s=/organization/noticedetail/id/'.$notice['id'];
             unset($notice['content']);
             unset($notice['status']);
         }
-        $extra['totalCount'] = $totoalCount;
+        $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取公告信息列表成功', null, $extra);
     }
@@ -1511,8 +1511,10 @@ class OrganizationController extends AppController
      * @param int $organization_id
      * @param int $page
      * @param int $count
+     * @param null $type
+     * @return mixed
      */
-    public function topPost($organization_id=0, $page=1, $count=10,$type=null){
+    public function topPost($organization_id=0, $page=1, $count=3, $type=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
@@ -1520,7 +1522,7 @@ class OrganizationController extends AppController
         $totalCount = $model->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->count();
         $list = $model->field('id, tag, title, create_time')->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
         foreach($list as &$notice){
-            $notice['detail_url'] = 'http://hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
+            $notice['detail_url'] = C('HOST_NAME_PREFIX').'api.php?s=/organization/noticedetail/id/'.$notice['id'];
         }
         if($type=="view"){
             return $list;
@@ -1536,8 +1538,10 @@ class OrganizationController extends AppController
      * @param int $organization_id
      * @param int $page
      * @param int $count
+     * @param null $type
+     * @return array
      */
-    public function enrollList($organization_id=0, $page=0, $count=3,$type=null){
+    public function enrollList($organization_id=0, $page=0, $count=3, $type=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
@@ -1568,8 +1572,10 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 获取机构的分数统计
+     *  获取机构的分数统计
      * @param int $organization_id
+     * @param null $type
+     * @return array
      */
     public function fractionalStatistics($organization_id=0,$type=null){
         if($organization_id==0){
@@ -1601,9 +1607,10 @@ class OrganizationController extends AppController
     /**
      * 获取机构的评论列表
      * @param int $organization_id
-     * @param string $type
+     * @param null $type
      * @param int $page
      * @param int $count
+     * @return array
      */
     public function commentList($organization_id=0,$type=null, $page=1, $count=10){
         $model = M('OrganizationComment');
