@@ -125,12 +125,12 @@ class QrscanController extends AppController
 
                 if($type==1){  // 单个作业
                     //$extra['url'] = 'http://hisihi.com/hiworks_list.php/file/download/id/'.$category_id;
-                    $extra['url'] = 'http://hisihi.com/hiworks_list.php/index/index/download/'.$category_id;
+                    $extra['url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/index/index/download/'.$category_id;
                 } else if($type==0){  // 作业分类
                     if($category_id==0){ // 全部作业
-                        $extra['url'] = 'http://hisihi.com/hiworks_list.php/index/index';
+                        $extra['url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/index/index';
                     } else {
-                        $extra['url'] = 'http://hisihi.com/hiworks_list.php/index/index/cate/'.$category_id.'.html';
+                        $extra['url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/index/index/cate/'.$category_id.'.html';
                     }
                 }
                 $this->apiSuccess('', null, $extra);

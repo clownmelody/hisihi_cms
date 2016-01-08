@@ -358,7 +358,7 @@ class OrganizationController extends AppController
         //$this->requireAdminLogin();
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,phone_num')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num,location_img')->find();
         if($result){
             $logo = $result['logo'];
             //$logo = $this->getOrganizationLogo($logo_id);
@@ -385,7 +385,7 @@ class OrganizationController extends AppController
         }
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num,light_authentication')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num,light_authentication,location_img')->find();
         if($result){
             $logo = $result['logo'];
             //$logo = $this->getOrganizationLogo($logo_id);
@@ -396,7 +396,7 @@ class OrganizationController extends AppController
             $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
             $result['followCount'] = $this->getFollowCount($organization_id);
             $result['teachersCount'] = $this->getTeachersCount($organization_id);
-
+            $result['groupCount'] = $this->getGroupCount($organization_id);
             $user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$organization_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$organization_id,'follow_who'=>$uid, 'type'=>2))->find();
@@ -473,21 +473,21 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 获取机构公告
+     * 机构web版获取机构公告
      * @param int $page
      * @param int $count
      */
     public function getNotice($page=1, $count=10){
         $this->requireAdminLogin();
         $model = M('OrganizationNotice');
-        $totoalCount = $model->where('status=1')->count();
+        $totalCount = $model->where('status=1')->count();
         $list = $model->where('status=1')->page($page, $count)->select();
         foreach($list as &$notice){
-            $notice['detail_url'] = 'http://hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
+            $notice['detail_url'] = C('HOST_NAME_PREFIX').'api.php?s=/organization/noticedetail/id/'.$notice['id'];
             unset($notice['content']);
             unset($notice['status']);
         }
-        $extra['totalCount'] = $totoalCount;
+        $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取公告信息列表成功', null, $extra);
     }
@@ -1036,11 +1036,16 @@ class OrganizationController extends AppController
             $map['category_id'] = $course['category_id'];
         }
         if($type=='private') {//视频回放
-            $relationModel = M('OrganizationRelation');
-            $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.is_login())->find();
-            if(!$isExist){
-                $this->apiError(-2, '你不是该机构学员，无法查看');
+            $enrollModel = M('OrganizationEnroll');
+            $org_ids = $enrollModel->field('organization_id')->where('status=2 and student_uid='.$this->getUid())->select();
+            if(!$org_ids){
+                $this->apiError(-2, '你还未报名任何机构');
             }
+            $enroll_org = array();
+            foreach($org_ids as &$org_id){
+                $enroll_org[] = $org_id['organization_id'];
+            }
+            $map['organization_id'] = array('in', $enroll_org);
             $map['auth'] = 2;
         }else{
             $map['auth'] = 1;
@@ -1349,6 +1354,9 @@ class OrganizationController extends AppController
         }
     }
 
+    /**
+     * 定位到城市
+     */
     public function location(){
         $ip = get_client_ip();
         $ch = curl_init();
@@ -1367,6 +1375,30 @@ class OrganizationController extends AppController
             $this->apiSuccess('获取位置成功', null, $data);
         } else {
             $data['city'] = '武汉';
+            $this->apiSuccess('定位失败，返回默认城市', null, $data);
+        }
+    }
+
+    /**
+     * 定位到省份
+     */
+    public function locationToProvince(){
+        $ip = get_client_ip();
+        $ch = curl_init();
+        $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
+        $header = array(
+            'apikey: e1edb99789e6a40950685b5e3f0ee282',
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch , CURLOPT_URL , $url);
+        $res = curl_exec($ch);
+        $res = json_decode($res);
+        if($res->errNum==0){
+            $data['province'] = $res->retData->content->address_detail->province;
+            $this->apiSuccess('获取位置成功', null, $data);
+        } else {
+            $data['province'] = '湖北省';
             $this->apiSuccess('定位失败，返回默认城市', null, $data);
         }
     }
@@ -1506,8 +1538,10 @@ class OrganizationController extends AppController
      * @param int $organization_id
      * @param int $page
      * @param int $count
+     * @param null $type
+     * @return mixed
      */
-    public function topPost($organization_id=0, $page=1, $count=10,$type=null){
+    public function topPost($organization_id=0, $page=1, $count=3, $type=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
@@ -1515,7 +1549,7 @@ class OrganizationController extends AppController
         $totalCount = $model->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->count();
         $list = $model->field('id, tag, title, create_time')->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
         foreach($list as &$notice){
-            $notice['detail_url'] = 'http://hisihi.com/api.php?s=/organization/noticedetail/id/'.$notice['id'];
+            $notice['detail_url'] = C('HOST_NAME_PREFIX').'api.php?s=/organization/noticedetail/id/'.$notice['id'];
         }
         if($type=="view"){
             return $list;
@@ -1531,8 +1565,10 @@ class OrganizationController extends AppController
      * @param int $organization_id
      * @param int $page
      * @param int $count
+     * @param null $type
+     * @return array
      */
-    public function enrollList($organization_id=0, $page=0, $count=3,$type=null){
+    public function enrollList($organization_id=0, $page=0, $count=3, $type=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构ID不能为空');
         }
@@ -1563,8 +1599,10 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 获取机构的分数统计
+     *  获取机构的分数统计
      * @param int $organization_id
+     * @param null $type
+     * @return array
      */
     public function fractionalStatistics($organization_id=0,$type=null){
         if($organization_id==0){
@@ -1596,9 +1634,10 @@ class OrganizationController extends AppController
     /**
      * 获取机构的评论列表
      * @param int $organization_id
-     * @param string $type
+     * @param null $type
      * @param int $page
      * @param int $count
+     * @return array
      */
     public function commentList($organization_id=0,$type=null, $page=1, $count=10){
         $model = M('OrganizationComment');
@@ -2332,6 +2371,14 @@ class OrganizationController extends AppController
         $data['group'] = 6;
         $count = $model->where($data)->count();
         return $count;
+    }
+
+    private function getGroupCount($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '传入机构id不能为空');
+        }
+        $group_count = M('ImGroups')->where('status=1 and organization_id='.$organization_id)->count();
+        return $group_count;
     }
 
     /**
