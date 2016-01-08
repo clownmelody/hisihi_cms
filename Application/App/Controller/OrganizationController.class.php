@@ -2216,7 +2216,7 @@ class OrganizationController extends AppController
                 }
             }
         } else {
-            $this->apiError(-1, '未找到对应的课程');
+            $this->apiError(-404, '未找到对应的课程');
         }
     }
 
