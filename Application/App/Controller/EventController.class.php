@@ -28,7 +28,7 @@ class EventController extends AppController{
         $picModel = D('Home/Picture');
         $listData = $this->eventModel->getCompetitionEventList($page, $count);
         foreach($listData['list'] as &$event){
-            $event['content_url'] = 'http://www.hisihi.com/app.php/event/competitioncontent/type/view/id/'.$event['id'];
+            $event['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/competitioncontent/type/view/id/'.$event['id'];
             $event['pic_path'] = null;
             $cover_id = $event['cover_id'];
             $result = $picModel->where('status=1 and id='.$cover_id)->field('path')->find();
@@ -55,7 +55,7 @@ class EventController extends AppController{
         if(empty($info)){
             $this->apiError(-1, "id不存在");
         }
-        $info['content_url'] = 'http://www.hisihi.com/app.php/event/competitioncontent/type/view/id/'.$info['id'];
+        $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/competitioncontent/type/view/id/'.$info['id'];
         $event['pic_path'] = null;
         $cover_id = $info['cover_id'];
         $picModel = D('Home/Picture');
