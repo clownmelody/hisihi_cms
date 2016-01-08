@@ -83,9 +83,16 @@ class ForumController extends AppController
 
     //根据发帖人的年级分类
     private function getForumsByGrade($grade=null){
-        $map['field_id'] = 38;
-        $map['field_data'] = $grade;
-        $uids = M('Field')->where($map)->field('uid')->select();
+        if($grade == '其他'){
+            $model = new \Think\Model();
+            $uids = $model->query("select distinct uid from hisihi_forum_post"
+                                 ." where status=1 and uid != 0 and uid not in"
+                                 ." (select distinct uid from hisihi_field where field_id=38)");
+        }else{
+            $map['field_id'] = 38;
+            $map['field_data'] = $grade;
+            $uids = M('Field')->where($map)->field('uid')->select();
+        }
         return $uids;
     }
 
