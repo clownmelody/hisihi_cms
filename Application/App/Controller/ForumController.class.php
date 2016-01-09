@@ -71,6 +71,24 @@ class ForumController extends AppController
         }
         return $forum_type;
     }
+
+    //根据发帖位置分类
+    private function getForumsByPosition($position = null)
+    {
+        $map['type'] = 0;
+        $map['pos'] = array('like', '%'.$position.'%');
+        $post_ids = M('ForumPos')->where($map)->field('post_id')->select();
+        return $post_ids;
+    }
+
+    //根据发帖人的年级分类
+    private function getForumsByGrade($grade=null){
+        $map['field_id'] = 38;
+        $map['field_data'] = $grade;
+        $uids = M('Field')->where($map)->field('uid')->select();
+        return $uids;
+    }
+
     public function forumType()
     {
         $forum_type = $this->getForumsByType();
@@ -151,7 +169,7 @@ class ForumController extends AppController
             $v['isSupportd'] = $supported;
 
             $map_pos['type'] = 0;
-            $map_pos['id'] = $v['id'];
+            $map_pos['post_id'] = (int)$v['id'];
             $pos = $this->getForumPos($map_pos);
             $v['pos'] = $pos['pos'];
             $v['shareUrl'] = 'app.php/forum/detail/type/view/post_id/'.$v['id'];
@@ -247,7 +265,7 @@ class ForumController extends AppController
      * @param bool|false $show_adv
      * @param int $post_type  区别公司热门话题和普通论坛
      */
-    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1, $version=null)
+    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1, $version=null, $position=null, $grade=null)
     {
         $field_type = intval($field_type);
         $page = intval($page);
@@ -289,16 +307,32 @@ class ForumController extends AppController
         if($field_type == -4){  // 热门
             $order = "reply_count desc";
         }
+        if(!empty($position)){
+            $posts = $this->getForumsByPosition($position);
+            $post_ids = array();
+            foreach($posts as &$post_id){
+                $post_ids[] = $post_id['post_id'];
+            }
+            $map['id'] = array('in', $post_ids);
+        }
+        if(!empty($grade)){
+            $uids = $this->getForumsByGrade($grade);
+            $post_uids = array();
+            foreach($uids as &$post_uid){
+                $post_uids[] = $post_uid['uid'];
+            }
+            $map['uid'] = array('in', $post_uids);
+        }
         $map['is_top'] = 0;
-        $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
-        $list = $this->list_sort_by($list, 'last_reply_time');
         $totalCount = D('ForumPost')->where($map)->count();
-
-        $list = $this->formatList($list, $version);
-
-        $adv_pos = $this->getAdvsPostion();
-        foreach($adv_pos as $pos){
-            $list = $this->mergeAdvertismentToForumList($list, $pos);
+        $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
+        if($list){
+            $list = $this->list_sort_by($list, 'last_reply_time');
+            $list = $this->formatList($list, $version);
+            $adv_pos = $this->getAdvsPostion();
+            foreach($adv_pos as $pos){
+                $list = $this->mergeAdvertismentToForumList($list, $pos);
+            }
         }
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
@@ -467,7 +501,7 @@ class ForumController extends AppController
             $post['isSupportd'] = $supported;
 
             $map_pos['type'] = 0;
-            $map_pos['id'] = $id;
+            $map_pos['post_id'] = $id;
             $pos = $this->getForumPos($map_pos);
             $post['pos'] = $pos['pos'];
 
@@ -549,7 +583,7 @@ class ForumController extends AppController
             $post['isSupportd'] = $supported;
 
             $map_pos['type'] = 0;
-            $map_pos['id'] = $id;
+            $map_pos['post_id'] = $id;
             $pos = $this->getForumPos($map_pos);
             $post['pos'] = $pos['pos'];
 
@@ -603,7 +637,7 @@ class ForumController extends AppController
     }
 
     //提问详情
-    public function detail($post_id, $page = 1, $count = 10, $type = '')
+    public function detail($post_id, $page = 1, $count = 10, $type = '', $version=1)
     {
         //$this->requireLogin();
 
@@ -616,7 +650,7 @@ class ForumController extends AppController
         //判断是否需要显示1楼
         if ($page == 1) {
             $showMainPost = true;
-            $post = $this->getPostInfo($id);
+            $post = $this->getPostInfo($id, 0, $version);
             //增加浏览次数
             //D('ForumPost')->where(array('id' => $id))->setInc('view_count');
         } else {
@@ -637,12 +671,16 @@ class ForumController extends AppController
             $reply['reply_id'] = $reply['id'];
             unset($reply['id']);
             $map_pos['type'] = 1;
-            $map_pos['id'] = $reply['reply_id'];
+            $map_pos['post_id'] = $reply['reply_id'];
             $pos = $this->getForumPos($map_pos);
             $reply['pos'] = $pos['pos'];
 
             $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
-
+            if((float)$version>2.2){
+                $profile_group = A('User')->_profile_group($reply['uid']);
+                $info_list = A('User')->_info_list($profile_group['id'], $reply['uid'], $version);
+                $reply['userInfo']['extinfo'] = $info_list;
+            }
             $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$reply['uid']))->find();
             $isfans = D('Follow')->where(array('who_follow'=>$reply['uid'],'follow_who'=>get_uid()))->find();
             $isfollowing = $isfollowing ? 2:0;
@@ -682,7 +720,7 @@ class ForumController extends AppController
                 //unset($reply['uid']);
 
                 $map_pos['type'] = 2;
-                $map_pos['id'] = $lzl['lzl_id'];
+                $map_pos['post_id'] = $lzl['lzl_id'];
                 $pos = $this->getForumPos($map_pos);
                 $lzl['pos'] = $pos['pos'];
 
@@ -822,7 +860,7 @@ class ForumController extends AppController
             $reply['reply_id'] = $reply['id'];
             unset($reply['id']);
             $map_pos['type'] = 1;
-            $map_pos['id'] = $reply['reply_id'];
+            $map_pos['post_id'] = $reply['reply_id'];
             $pos = $this->getForumPos($map_pos);
             $reply['pos'] = $pos['pos'];
 
@@ -866,7 +904,7 @@ class ForumController extends AppController
                 unset($lzl['uid']);
 
                 $map_pos['type'] = 2;
-                $map_pos['id'] = $lzl['lzl_id'];
+                $map_pos['post_id'] = $lzl['lzl_id'];
                 $pos = $this->getForumPos($map_pos);
                 $lzl['pos'] = $pos['pos'];
 
@@ -926,7 +964,7 @@ class ForumController extends AppController
             $reply['reply_id'] = $reply['id'];
             unset($reply['id']);
             $map_pos['type'] = 1;
-            $map_pos['id'] = $reply['reply_id'];
+            $map_pos['post_id'] = $reply['reply_id'];
             $pos = $this->getForumPos($map_pos);
             $reply['pos'] = $pos['pos'];
 
@@ -1119,7 +1157,7 @@ class ForumController extends AppController
             $post_id = $result;
 
             if($pos != null) {
-                $map_pos['id'] = $post_id;
+                $map_pos['post_id'] = $post_id;
                 $map_pos['type'] = 0;
                 $map_pos['pos'] = $pos;
                 $this->setForumPos($map_pos);
@@ -1366,7 +1404,7 @@ class ForumController extends AppController
                 $this->apiError($model->getError(),'回复失败');
             }
             if($pos != null) {
-                $map_pos['id'] = $result;
+                $map_pos['post_id'] = $result;
                 $map_pos['type'] = 1;
                 $map_pos['pos'] = $pos;
                 $this->setForumPos($map_pos);
@@ -1507,7 +1545,7 @@ class ForumController extends AppController
             $this->apiError($model->getError(),'追问失败！');
         }
         if($pos != null) {
-            $map_pos['id'] = $result['id'];
+            $map_pos['post_id'] = $result['id'];
             $map_pos['type'] = 2;
             $map_pos['pos'] = $pos;
             $this->setForumPos($map_pos);
@@ -1871,7 +1909,7 @@ class ForumController extends AppController
             $reply['reply_id'] = $reply['id'];
             unset($reply['id']);
             $map_pos['type'] = 1;
-            $map_pos['id'] = $reply['reply_id'];
+            $map_pos['post_id'] = $reply['reply_id'];
             $pos = $this->getForumPos($map_pos);
             $reply['pos'] = $pos['pos'];
 
@@ -1918,7 +1956,7 @@ class ForumController extends AppController
                 //unset($reply['uid']);
 
                 $map_pos['type'] = 2;
-                $map_pos['id'] = $lzl['lzl_id'];
+                $map_pos['post_id'] = $lzl['lzl_id'];
                 $pos = $this->getForumPos($map_pos);
                 $lzl['pos'] = $pos['pos'];
 
@@ -1987,7 +2025,7 @@ class ForumController extends AppController
             $reply['reply_id'] = $reply['id'];
             unset($reply['id']);
             $map_pos['type'] = 1;
-            $map_pos['id'] = $reply['reply_id'];
+            $map_pos['post_id'] = $reply['reply_id'];
             $pos = $this->getForumPos($map_pos);
             $reply['pos'] = $pos['pos'];
 
@@ -2034,7 +2072,7 @@ class ForumController extends AppController
                 //unset($reply['uid']);
 
                 $map_pos['type'] = 2;
-                $map_pos['id'] = $lzl['lzl_id'];
+                $map_pos['post_id'] = $lzl['lzl_id'];
                 $pos = $this->getForumPos($map_pos);
                 $lzl['pos'] = $pos['pos'];
 
@@ -2081,7 +2119,7 @@ class ForumController extends AppController
             $reply['reply_id'] = $reply['id'];
             unset($reply['id']);
             $map_pos['type'] = 1;
-            $map_pos['id'] = $reply['reply_id'];
+            $map_pos['post_id'] = $reply['reply_id'];
             $pos = $this->getForumPos($map_pos);
             $reply['pos'] = $pos['pos'];
 
@@ -2124,7 +2162,7 @@ class ForumController extends AppController
                 unset($lzl['uid']);
 
                 $map_pos['type'] = 2;
-                $map_pos['id'] = $lzl['lzl_id'];
+                $map_pos['post_id'] = $lzl['lzl_id'];
                 $pos = $this->getForumPos($map_pos);
                 $lzl['pos'] = $pos['pos'];
 
@@ -2278,7 +2316,7 @@ class ForumController extends AppController
         $cache_key = "forum_pos_" . implode('_', $map_pos);
         $pos = S($cache_key);
         if (empty($pos)) {
-            $pos = D('ForumPos')->where($map_pos)->field('pos')->find();
+            $pos = M('ForumPos')->where($map_pos)->field('pos')->find();
             S($cache_key, $pos);
             return $pos;
         }
