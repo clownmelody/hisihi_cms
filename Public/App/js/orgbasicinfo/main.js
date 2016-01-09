@@ -4,7 +4,7 @@
 requirejs.config({
     baseUrl: window.urlObject.js,
     paths: {
-        zepto:'../zepto',
+        zepto:'zepto.min',
         prefixfree:'prefixfree.min',
         common:'../forum/hisihi_news_common',
         orgbasicinfo:'orgbasicinfo',

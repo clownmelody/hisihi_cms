@@ -22,6 +22,10 @@
 @orange:#ff5a00;
 @font-color:#212121;
 @header-h:44px;
+
+body{
+  margin: 0;
+}
 ul {
   padding: 0;
   margin: 0;
@@ -43,7 +47,7 @@ input[type="text"]:focus {
   right: 0;
   background: #EBEBEB;
   font-size: 100%;
-  height: 100%;
+  .size(100%,100%);
   overflow: auto;
   *{
     -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
@@ -88,6 +92,7 @@ input[type="text"]:focus {
 
   }
   .loadErrorCon {
+    display: none;
     .size(100%,30px);
     text-align: center;
     line-height: 30px;
@@ -111,6 +116,11 @@ input[type="text"]:focus {
         color: @font-color;
         font-size: 16px;
       }
+    }
+    .nonData{
+      text-align: center;
+      height: 45px;
+      line-height: 45px;
     }
 
     //一级标题 带箭头
@@ -337,6 +347,7 @@ input[type="text"]:focus {
 
     //报名情况
     &.mainItemSignUp{
+      min-height: 130px;
       .size(100%,auto);
       .header{
         @h:44px;
@@ -356,6 +367,7 @@ input[type="text"]:focus {
         position: relative;
         padding-top: 12px;
         margin-bottom: 10px;
+        .box-sizing();
         .size(100%,auto);
         .signUpIcon{
           .size(52px,46px);
@@ -369,6 +381,7 @@ input[type="text"]:focus {
           margin-left: 82px;
           //height: 64px;
           padding-left: 8px;
+          min-height: 65px;
           li {
             overflow: hidden;
             text-overflow: ellipsis;

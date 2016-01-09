@@ -24,6 +24,7 @@ define(['zepto','common'],function(){
         this.initImgPercent();
 
         this.$wrapper.find('#videoPreviewBox img').bind('load',this.controlPlayBtnStyle);
+        this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
         //this.$wrapper.on('click','.loadError',function(){   //重新加载数据
         //    that.loadData(queryPara);
         //});
@@ -96,8 +97,7 @@ define(['zepto','common'],function(){
 
                         if (result.success) {
                             that.controlLoadingTips(1);
-                            //that.fillInData(JSON.parse(xmlRequest.responseText).data);
-                            paras.sCallback(JSON.parse(xmlRequest.responseText).data);
+                            paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
 
                             var txt=result.message;
@@ -124,7 +124,8 @@ define(['zepto','common'],function(){
         },
 
         /*显示具体信息*/
-        fillInData:function(data){
+        fillInData:function(result){
+            var data=result.data;
             var  authen1=data.authenticationInfo[2].status,
                 class1=authen1?'certed':'unCerted',
                 authen2=data.authenticationInfo[3].status,
@@ -183,26 +184,161 @@ define(['zepto','common'],function(){
                     '</div>';
             this.$wrapper.find('.logoAndCertInfo').html(str).css('opacity',1);
             this.$wrapper.find('#myLogo').setImgBox();
+            this.fillInIntroduceInfo(result);
             this.loadTopAnnouncement();
         },
 
         /*加载头条信息*/
         loadTopAnnouncement:function(){
-            var that=this;
+            var that=this,
+                $target=that.$wrapper.find('.mainItemTopNews');
             this.loadData({
-                url: window.urlObject.apiUrl + 'getNotice',
+                url: window.urlObject.apiUrl + 'topPost',
                 paraData: {organization_id: this.oid},
-                sCallback: function(data){
-                    data;
-                    this.$wrapper.find('.mainItemTopNews').css('opacity',1);
+                sCallback: function(result){
+                    $target.css('opacity',1);
+                    that.fillInTopAnnouncement(result.data);
+                    that.loadSignUpInfo(); /*加载报名信息*/
                 },
                 eCallback:function(txt){
-                    that.$wrapper.find('.mainItemTopNews').css('opacity',1);
-                    that.$wrapper.find('.mainItemTopNews a').text('获得头条信息失败，'+txt).show();
+                    $target.css('opacity',1);
+                    $target.find('.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
+                    that.loadSignUpInfo(); /*加载报名信息*/
                 }
             });
         },
 
+        /*填充头条信息*/
+        fillInTopAnnouncement:function(data){
+            var str='',item;
+            if(!data || data.length==0){
+                return;
+            }
+            var len=data.length;
+            for(var i=0;i<len;i++){
+                item=data[i];
+                str += '<li>'+
+                            '<div class="topNewLogo">头条</div>'+
+                            '<div class="title">'+
+                                '<a href="'+window.urlObject.apiBasicUrl + item.detail_url+'">' + item.title + '</a>'+
+                            '</div>'+
+                        '</li>';
+            }
+            this.$wrapper.find('.mainItemTopNews .mainContent').html(str);
+
+        },
+
+        /*加载报名信息*/
+        loadSignUpInfo:function(){
+            var that=this,
+            $target=that.$wrapper.find('.mainItemSignUp');
+            this.loadData({
+                url: window.urlObject.apiUrl + 'enrollList',
+                paraData: {organization_id: this.oid},
+                sCallback: function(result){
+                    $target.css('opacity',1);
+                    $target.find('#leftSingUpNum').text(result.available_count);
+                    that.fillInSignUpInfo(result.data);  /*填充报名信息*/
+                },
+                eCallback:function(txt){
+                    $target.css('opacity',1);
+                    $target.find('.loadErrorCon').show().find('a').text('获得报名信息失败，'+txt).show();
+                }
+            });
+        },
+
+        /*填充报名信息*/
+        fillInSignUpInfo:function(data){
+            var str='',item;
+            if(!data || data.length==0){
+                return;
+            }
+            var len=data.length;
+            for(var i=0;i<len;i++){
+                item=data[i];
+                str += '<li>'+
+                            '<span class="dot">&middot;</span>'+
+                            '<span>李志</span>'+
+                            '<span>&nbsp;&nbsp;同学于</span>'+
+                            '<span>&nbsp;&nbsp;2015-11-02</span>'+
+                            '<span>&nbsp;&nbsp;成功报名</span>'+
+                        '</li>';
+            }
+            this.$wrapper.find('.mainItemSignUp .signUpCon').html(str);
+        },
+
+        /*填充简介信息*/
+        fillInIntroduceInfo:function(result){
+            var $target =this.$wrapper.find('.mainItemBasicInfo'),
+                $location=this.$wrapper.find('.mainItemLocation');
+            $target.add($location).css('opacity','1');
+            if(result &&result.data){
+                var data=result.data,
+                    introduce=data.introduce,
+                    advantage=data.advantage,
+                    location=data.location,
+                    locationImg=data.location_img;
+
+                if(introduce) {
+                    $target.find('.introduce p').text(introduce);
+                }if(advantage) {
+                    var arr=advantage.split('#'),
+                        str='';
+                    for(var i=0;i<arr.length;i++){
+                        str+='<li>'+arr[i]+'</li>';
+                    }
+                    $target.find('.itemContentDetail').html(str);
+                }
+                $location.find('#myLocation').text(location);
+                if(!locationImg){
+                    locationImg=window.urlObject.image+'/orgbasicinfo/map.png';
+                }
+                $location.find('.locationMap img').attr('src',locationImg);
+            }
+        },
+
+
+        /*加载我的老师信息*/
+        loadMyTeachersInfo:function(callback){
+            var that=this,
+                $target=that.$wrapper.find('.mainItemTeacherPower');
+            this.loadData({
+                url: window.urlObject.apiUrl + 'appGetTeacherList',
+                paraData: {organization_id: this.oid},
+                sCallback: function(result){
+                    $target.css('opacity',1);
+                    that.fillMyTeachersInfo(result.teacherList);
+                    callback();
+                },
+                eCallback:function(txt){
+                    $target.css('opacity',1);
+                    $target.find('.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
+                    callback();
+                }
+            });
+        },
+
+        /*填充我的老师信息*/
+        fillMyTeachersInfo:function(data){
+            var str='',item;
+            if(!data || data.length==0){
+                return;
+            }
+            var len=data.length;
+            for(var i=0;i<len;i++){
+                item=data[i];
+                str +=  '<li>'+
+                            '<div class="leftPic">'+
+                                '<img src="http://pic.hisihi.com/2015-12-25/1451016361334986.png@88-18-431-431a"/>'+
+                                '</div>'+
+                                '<div class="rightUserInfo">'+
+                                '<div class="name">宋东野哈哈哈哈顶替</div>'+
+                                '<div class="desc">麻油叶屌丝，</div>'+
+                            '</div>'+
+                        '</li>';
+            }
+            this.$wrapper.find('.mainItemSignUp .signUpCon').html(str);
+        },
 
         /*
         *加载等待,
@@ -237,9 +373,16 @@ define(['zepto','common'],function(){
             var target= e.currentTarget,
                 height = target.scrollHeight - $(target).height();
 
-            //加载评论内容
-            if($(target).scrollTop()==400){
-
+            //加载我的老师
+            var $target=this.$wrapper.find('.mainItemTeacherPower');
+            if($(target).scrollTop()>=300 && $target.attr('data-loading')==='false'){
+                var flag=$target.attr('data-loaded');
+                $target.attr('data-loading','true');
+                if(flag ==='false') {
+                    this.loadMyTeachersInfo(function(){
+                        $target.attr({'data-loaded':'true','data-loading':'false'});
+                    });
+                }
             }
 
             //加载更加多评论内容
