@@ -38,6 +38,39 @@ input[type="text"]:focus {
 #wrapper .spiteBgOrigin {
   background-image: url("../images/orgbasicinfo/orginfo.png");
 }
+#wrapper .loadingResultTips {
+  z-index: -1;
+  text-align: center;
+  color: #9C9A9D;
+  position: absolute;
+  height: 4em;
+  width: 12em;
+}
+#wrapper .loadingResultTips .loadingImg {
+  margin: 0 auto;
+  height: 2em;
+  width: 2em;
+  background-image: url("../images/loading2.svg");
+  opacity: 0;
+}
+#wrapper .loadingResultTips .loadingImg.active {
+  opacity: 1;
+  animation: aloading 0.8s steps(6, end) 0s infinite;
+}
+@keyframes aloading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+#wrapper .loadingResultTips .loadError {
+  display: none;
+  text-decoration: none;
+  color: #777;
+}
+#wrapper .mainItem {
+  min-height: 60px;
+  opacity: 0;
+}
 #wrapper .mainItem .basicHeader {
   margin-left: 15px;
   height: 44px;
@@ -84,6 +117,7 @@ input[type="text"]:focus {
   border-bottom: 1px solid #d6d6d6;
 }
 #wrapper .mainItem.logoAndCertInfo {
+  height: 208px;
   border-bottom: 0 solid #d6d6d6;
 }
 #wrapper .mainItem.logoAndCertInfo * {
@@ -133,6 +167,7 @@ input[type="text"]:focus {
   width: 100%;
   height: 100%;
   border-radius: 2%;
+  max-width: 84px !important;
 }
 #wrapper .mainItem.logoAndCertInfo .head .mainInfo .right {
   margin-left: 112px;
@@ -200,6 +235,12 @@ input[type="text"]:focus {
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i.honestCerIcon.unCerted {
   background-position: -24px -46px;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerName.certed {
+  color: white;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerName.unCerted {
+  color: #BDBDBD;
 }
 #wrapper .mainItem.mainItemTopNews .topNewsCon {
   margin: 0;

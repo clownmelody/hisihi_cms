@@ -21,5 +21,6 @@ requirejs.config({
 
 
 require(['zepto','common','orgbasicinfo','prefixfree'],function(Zepto,MyCommon,OrgBasicInfo){
-    new OrgBasicInfo($('#wrapper'));
+    var $target=$('#wrapper');
+    new OrgBasicInfo($target,$target.data('oid'));
 });
