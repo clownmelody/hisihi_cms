@@ -24,9 +24,9 @@ define(['zepto','common'],function(){
         this.initImgPercent();
 
         this.$wrapper.find('#videoPreviewBox img').bind('load',this.controlPlayBtnStyle);
-        this.$wrapper.on('click','.loadError',function(){   //重新加载数据
-            that.loadData(queryPara);
-        });
+        //this.$wrapper.on('click','.loadError',function(){   //重新加载数据
+        //    that.loadData(queryPara);
+        //});
     }
 
     OrgBasicInfo.prototype={
@@ -99,9 +99,15 @@ define(['zepto','common'],function(){
                             //that.fillInData(JSON.parse(xmlRequest.responseText).data);
                             paras.sCallback(JSON.parse(xmlRequest.responseText).data);
                         } else {
-                            var txt=result.message;
-                            that.controlLoadingTips(-1,txt);
 
+                            var txt=result.message;
+                            if(paras.eCallback){
+                                paras.eCallback(txt);
+                            }
+                            that.controlLoadingTips(1, txt);
+                            //else {
+                            //    that.controlLoadingTips(-1, txt);
+                            //}
                         }
                     }
                     //超时
@@ -110,7 +116,6 @@ define(['zepto','common'],function(){
                         that.controlLoadingTips(-1,'加载失败，点击重新加载');
                     }
                     else {
-
                         that.controlLoadingTips(-1,'加载失败，点击重新加载');
                     }
                 }
@@ -183,12 +188,17 @@ define(['zepto','common'],function(){
 
         /*加载头条信息*/
         loadTopAnnouncement:function(){
+            var that=this;
             this.loadData({
                 url: window.urlObject.apiUrl + 'getNotice',
                 paraData: {organization_id: this.oid},
                 sCallback: function(data){
                     data;
                     this.$wrapper.find('.mainItemTopNews').css('opacity',1);
+                },
+                eCallback:function(txt){
+                    that.$wrapper.find('.mainItemTopNews').css('opacity',1);
+                    that.$wrapper.find('.mainItemTopNews a').text('获得头条信息失败，'+txt).show();
                 }
             });
         },

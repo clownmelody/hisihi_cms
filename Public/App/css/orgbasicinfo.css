@@ -62,7 +62,13 @@ input[type="text"]:focus {
     transform: rotate(360deg);
   }
 }
-#wrapper .loadingResultTips .loadError {
+#wrapper .loadErrorCon {
+  width: 100%;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+}
+#wrapper .loadErrorCon .loadError {
   display: none;
   text-decoration: none;
   color: #777;
