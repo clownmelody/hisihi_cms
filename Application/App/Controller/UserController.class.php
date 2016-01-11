@@ -1073,7 +1073,16 @@ class UserController extends AppController
             $isfans = $isfans ? 1:0;
             $result['relationship'] = $isfollowing | $isfans;
             $result['info'] = query_user(array('avatar256', 'avatar128', 'username','group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $uid);
-
+            if((float)$version > 2.2){
+                $result['info']['postcount'] = $this->getPostCount($uid);
+                $result['info']['groupcount'] = $this->getGroupCount($uid);
+                //老师根据机构获取地址
+                if($result['info']['group'] == '6'){
+                    $result['info']['location'] = $this->getLocationByOrg($uid);
+                }else{
+                    $result['info']['location'] = null;
+                }
+            }
             //扩展信息
             $profile_group = $this->_profile_group($uid);
             $info_list = $this->_info_list($profile_group['id'], $uid);
@@ -2280,7 +2289,7 @@ class UserController extends AppController
         $teacher_count = $model->table(array(
             'hisihi_auth_group_access'=>'auth_group_access',
             'hisihi_member'=>'member',))->where($where)->field('member.uid')->count();
-        $group_count = M('ImGroupMembers')->where('status=1 and member_id=\'c'.$uid.'\'')->count();
+        $group_count = $this->getGroupCount($uid);
         $extra['data'] = array(
             'fans_count'=>$fans_count,
             'follow_count'=>$follow_count,
@@ -2288,6 +2297,23 @@ class UserController extends AppController
             'group_count'=>$group_count
         );
         $this->apiSuccess('获取通讯录统计成功', null, $extra);
+    }
+
+    public function getGroupCount($uid){
+        $group_count = M('ImGroupMembers')->where('status=1 and member_id=\'c'.$uid.'\'')->count();
+        return $group_count;
+    }
+
+    public function getPostCount($uid){
+        $post_count = M('ForumPost')->where('status=1 and uid='.$uid)->count();
+        return $post_count;
+    }
+
+    public function getLocationByOrg($uid){
+        $location = M('OrganizationRelation a')->join('hisihi_organization b on a.organization_id=b.id')
+            ->where('a.status=1 and a.uid='.$uid)->field('b.city')
+            ->select();
+        return $location[0]['city'];
     }
 
 }
