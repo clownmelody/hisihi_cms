@@ -2230,6 +2230,29 @@ class ForumController extends AppController
         $this->apiSuccess("获取公司热门话题列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
+
+    public function getForumCircle(){
+        $circle = array(
+            array(
+                'id'=>10001,
+                'name'=>'学习圈'
+            ),
+            array(
+                'id'=>10002,
+                'name'=>'老师圈'
+            ),
+            array(
+                'id'=>10003,
+                'name'=>'朋友圈'
+            ),
+            array(
+                'id'=>10004,
+                'name'=>'比赛圈'
+            )
+        );
+        $this->apiSuccess("获取社区圈子成功", null, array('data'=>$circle));
+    }
+
     /**
      * 定时执行的机器人
      */
