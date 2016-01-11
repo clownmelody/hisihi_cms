@@ -246,7 +246,7 @@ class DocumentController extends AppController {
         } else {
             $oppose['create_time'] = time();
             if (M('Oppose')->where($oppose)->add($oppose)) {
-                $this->clearCache($oppose);
+                $this->clearCache($oppose, 'oppose');
                 $this->apiSuccess('感谢您的支持');
             } else {
                 $this->apiError(-101,'写入数据库失败!');
@@ -267,7 +267,7 @@ class DocumentController extends AppController {
         $oppose['uid'] = is_login();
         if (M('Oppose')->where($oppose)->count()) {
             if (M('Oppose')->where($oppose)->delete()) {
-                $this->clearCache($oppose);
+                $this->clearCache($oppose, 'oppose');
                 $this->apiSuccess('取消点踩成功！');
             } else {
                 $this->apiError(-101,'写入数据库失败!');
@@ -337,6 +337,8 @@ class DocumentController extends AppController {
             $cache_key = "support_count_" . implode('_', $condition);
         else if($type == 'favorite')
             $cache_key = "favorite_count_" . implode('_', $condition);
+        else if($type == 'oppose')
+            $cache_key = "oppose_count_" . implode('_', $condition);
         S($cache_key, null);
     }
 
