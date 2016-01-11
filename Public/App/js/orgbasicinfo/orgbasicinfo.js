@@ -25,9 +25,12 @@ define(['zepto','common'],function(){
 
         this.$wrapper.find('#videoPreviewBox img').bind('load',this.controlPlayBtnStyle);
         this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
-        //this.$wrapper.on('click','.loadError',function(){   //重新加载数据
-        //    that.loadData(queryPara);
-        //});
+        this.$wrapper.on('click','#basicInfoLoadEorror',function(){   //重新加载数据
+            that.loadData(queryPara);
+        });
+        this.pageIndex=1; //评论页码
+        this.pageSize=0;
+        this.perPageSize=10;
     }
 
     OrgBasicInfo.prototype={
@@ -104,7 +107,7 @@ define(['zepto','common'],function(){
                             if(paras.eCallback){
                                 paras.eCallback(txt);
                             }
-                            that.controlLoadingTips(1, txt);
+                            that.controlLoadingTips(-1, txt);
                             //else {
                             //    that.controlLoadingTips(-1, txt);
                             //}
@@ -279,9 +282,13 @@ define(['zepto','common'],function(){
                     location=data.location,
                     locationImg=data.location_img;
 
+                /*简介*/
                 if(introduce) {
-                    $target.find('.introduce p').text(introduce);
-                }if(advantage) {
+                    $target.find('.introduce p').html('<p>'+introduce+'</p>');
+                }
+
+                /*优势标签*/
+                if(advantage) {
                     var arr=advantage.split('#'),
                         str='';
                     for(var i=0;i<arr.length;i++){
@@ -355,7 +362,7 @@ define(['zepto','common'],function(){
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
+                    $target.find('>.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
                     callback();
                 }
             });
@@ -368,23 +375,63 @@ define(['zepto','common'],function(){
                 return;
             }
             var str='',
+                that=this,
                 item,
                 $target=this.$wrapper.find('.mainItemCompresAsse'),
                 $basicHeader=$target.find('.basicHeader'),
-                $li=$target.find('.assessmentDetail');
+                $li=$target.find('.assessmentDetail li');
 
             /*添加星星*/
-            var strStar= this.getStarInfoByScore(data.comprehensiveScore);
+            var strStar= this.getStarInfoByScore(result.comprehensiveScore);
+            $basicHeader.find('#myAssessment').text(result.comprehensiveScore);
             $basicHeader.find('#starsConForCompress').prepend(strStar);
 
             /*色块评分*/
             for(var i=0;i<data.length;i++){
                 item=data[i];
                 $li.each(function(){
-
+                    var $this=$(this),
+                        result=that.getColorBlockInfoByScore(item.score);
+                    if($this.find('.title').text()==item.value){
+                        $this.find('.score').text(item.score);
+                        $this.find('.fillIn').addClass(result.cName)
+                            .css('width',result.width+'%')
+                            .next().css('width',100-result.width+'%');
+                        return false;
+                    }
                 });
             }
         },
+
+        /*加载我的评论信息*/
+        loadDetailCommentInfo:function(pageIndex,callback){
+            var that=this,
+                $target=that.$wrapper.find('.studentCommentCon');
+            this.loadData({
+                url: window.urlObject.apiUrl + 'commentList',
+                paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize},
+                sCallback: function(result){
+                    that.pageSize=Math.ceil(result.totalCount|0/that.perPageSize);
+                    that.fillDetailCommentInfo(result);
+                    callback&&callback.call(that);
+                },
+                eCallback:function(txt){
+                    $target.find('>.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
+                    callback&&callback.call(that)();
+                }
+            });
+        },
+
+        /*填充我的评论信息*/
+        fillDetailCommentInfo:function(result){
+            var data=result.data,$totoalNum=this.$wrapper.find('#commentNum');
+            if(!data || data.length==0){
+                $totoalNum.text(0);
+                return;
+            }
+            $totoalNum.text(data.length);
+        },
+
 
         /*
         *加载等待,
@@ -426,10 +473,10 @@ define(['zepto','common'],function(){
             var $target=this.$wrapper.find('.mainItemTeacherPower');
             if(scrollTop>=arrScrollTop[0] &&
                 scrollTop<arrScrollTop[1] &&
-                !$target.attr('data-loading')){
+                $target.attr('data-loading')=='false'){
                     var flag=$target.attr('data-loaded');
                     $target.attr('data-loading','true');
-                    if(!flag) {
+                    if(flag=='false') {
                         this.loadMyTeachersInfo(function(){
                             $target.attr({'data-loaded':'true','data-loading':'false'});
                         });
@@ -439,66 +486,84 @@ define(['zepto','common'],function(){
 
             //加载我的评分
             var $target=this.$wrapper.find('.mainItemCompresAsse');
-            if(scrollTop>=arrScrollTop[1] && !$target.attr('data-loading')){
+            if(scrollTop>=arrScrollTop[1] && $target.attr('data-loading')=='false'){
                 var flag=$target.attr('data-loaded');
                 $target.attr('data-loading','true');
-                if(!flag) {
+                if('false'==flag) {
                     this.loadMyCompresAsseinfo(function(){
                         $target.attr({'data-loaded':'true','data-loading':'false'});
                     });
+
+                    //加载评论内容
+                    this.loadDetailCommentInfo(this.pageIndex,function(){
+                        $target.attr({'data-loaded':'true','data-loading':'false'});
+                    });
                 }
+
+
                 return;
             }
 
             //加载更加多评论内容
             if ($(target).scrollTop() == height && !$(target).hasClass('loadingData')) {  //滚动到底部
+                if(this.pageIndex>=this.pageSize){
+                    return;
+                }
                 $(target).addClass('loadingData');
-                this.loadMyCompresAssenfo(this.pageIndex,function(){
-                    $(target).removeClass('loadingData');
+                this.loadDetailCommentInfo(this.pageIndex,function(){
+                    this.pageIndex++;
+                    $target.attr({'data-loaded':'true','data-loading':'false'});
                 });
             }
         },
 
         /*根据比例大小 计算图片的大小*/
         initImgPercent:function(){
-            $.fn.setImgBox=function(){
+            $.fn.setImgBox=function() {
                 if (this.length == 0) {
                     return;
                 }
-                var img=new Image();
-                img.src=this[0].src;
-                var height = img.height,
-                    width = img.width,
-                    mHeight=this.css('max-height'),
-                    mWidth=this.css('max-width');
-                if (!mHeight || mHeight=='none') {
-                    mHeight = this.parent().height();
-                }else{
-                    mHeight=mHeight.replace('px','');
-                }
-                if (!mWidth|| mWidth=='none') {
-                    mWidth = this.parent().width();
-                }
-                else{
-                    mWidth=mWidth.replace('px','');
-                }
-                var flag1 = height > mHeight;
-                var flag2 = width > mWidth;
-                var radio = 1;
-                if (flag1 || flag2) {
-                    var radio1 = mHeight / height;
-                    var radio2 = mWidth / width;
-                    if (radio1 < radio2) {
-                        height = mHeight;
-                        width = width * radio1;
-                        radio = radio1;
+                var that=this,
+                    img = new Image();
+                img.src = this[0].src;
+                img.onload = function () {
+                    var height = img.height,
+                        width = img.width,
+                        mHeight = that.css('max-height'),
+                        mWidth = that.css('max-width');
+                    if (!mHeight || mHeight == 'none') {
+                        mHeight = that.parent().height();
                     } else {
-                        width = mWidth;
-                        height = height * radio2;
-                        radio = radio2;
+                        mHeight = mHeight.replace('px', '');
                     }
-                }
-                this.css({'width':width+'px','height':height+'px','margin-top':(this.parent().height()-height)/2+'px'}).attr('data-radio',radio);
+                    if (!mWidth || mWidth == 'none') {
+                        mWidth = that.parent().width();
+                    }
+                    else {
+                        mWidth = mWidth.replace('px', '');
+                    }
+                    var flag1 = height > mHeight;
+                    var flag2 = width > mWidth;
+                    var radio = 1;
+                    if (flag1 || flag2) {
+                        var radio1 = mHeight / height;
+                        var radio2 = mWidth / width;
+                        if (radio1 < radio2) {
+                            height = mHeight;
+                            width = width * radio1;
+                            radio = radio1;
+                        } else {
+                            width = mWidth;
+                            height = height * radio2;
+                            radio = radio2;
+                        }
+                    }
+                    that.css({
+                        'width': width + 'px',
+                        'height': height + 'px',
+                        'margin-top': (that.parent().height() - height) / 2 + 'px'
+                    }).attr('data-radio', radio);
+                };
                 return this;
             };
         },
@@ -507,8 +572,8 @@ define(['zepto','common'],function(){
         getStarInfoByScore:function(num){
             num=num | 0;
             var str='',
-                allNum=Math.ceil(num),
-                tempNum=Math.round(num),
+                allNum=Math.floor(num),
+                tempNum=Math.ceil(num),
                 halfNum=tempNum==allNum? 0:1,
                 blankNum=5-tempNum;
             for(var i=0;i<allNum;i++){
@@ -521,6 +586,22 @@ define(['zepto','common'],function(){
                 str+='<i class="emptyStar spiteBgOrigin"></i>';
             }
             return str;
+        },
+
+        /*根据分数情况，得到色块的信息*/
+        getColorBlockInfoByScore:function(score){
+            var scores=[
+                {min:0,max:2,cName:'greenFillIn'},
+                {min:2,max:4,cName:'yellowFillIn'},
+                {min:4,max:5.000000001,cName:'redFillIn'}
+            ];
+            var temp =$.grep(scores,function(n,i){
+                return score>= n.min && score<n.max
+            })[0];
+            return{
+                cName:temp.cName,
+                width:Math.ceil(score/5*100)
+            }
         },
 
     };

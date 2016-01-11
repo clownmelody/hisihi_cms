@@ -65,6 +65,11 @@ input[type="text"]:focus {
     background-image: url("../images/orgbasicinfo/orginfo.png");
     //background-size:310px 140px;
   }
+  .loadError {
+    display: none;
+    text-decoration: none;
+    color: #777;
+  }
 
   .loadingResultTips {
     z-index: -1;
@@ -89,18 +94,13 @@ input[type="text"]:focus {
         }
       }
     }
-
   }
+
   .loadErrorCon {
     display: none;
     .size(100%,30px);
     text-align: center;
     line-height: 30px;
-    .loadError {
-      display: none;
-      text-decoration: none;
-      color: #777;
-    }
   }
 
   .mainItem{
@@ -506,8 +506,9 @@ input[type="text"]:focus {
         padding-top: 0;
         margin: 0;
       }
-      #locationMap{
+      .locationMap{
         width: 100%;
+        text-align: center;
       }
     }
     //评论

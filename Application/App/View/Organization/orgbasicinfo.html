@@ -12,11 +12,11 @@
     <title>嘿设汇——机构基本信息</title>
 </head>
 <body>
-    <div id="wrapper" data-oid="10">
+    <div id="wrapper" data-oid="17">
 
         <div id="loadingTip" class="loadingResultTips">
             <div class="loadingImg active"></div>
-            <a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>
+            <a class="loadError" id="basicInfoLoadEorror" href="javascript:void(0)">加载失败，点击重新加载</a>
         </div>
 
         <div class="mainItem logoAndCertInfo">
@@ -106,7 +106,7 @@
         <div class="mainItem mainItemNormal mainItemBasicInfo">
             <div class="basicHeader"><span>基本信息</span></div>
             <div class="mainContentItem introduce">
-                <p></p>
+                <div class="nonData">暂无基本信息</div>
             </div>
             <div class="mainContentItem advanceTags">
                 <div class="itemHeader">优势</div>
@@ -134,7 +134,7 @@
                 <a class="loadError" href="javascript:void(0)"></a>
             </div>
             <ul class="teacherPowerDetail">
-                <li><div class="nonData">暂无老师</div></li>
+                <div class="nonData">暂无老师</div>
                 <div style="clear: both;"></div>
             </ul>
         </div>
@@ -154,7 +154,7 @@
         </div>
 
         <!--综合评价-->
-        <div class="mainItem mainItemNormal mainItemCompresAsse">
+        <div class="mainItem mainItemNormal mainItemCompresAsse" data-loaded="false" data-loading="false">
             <div class="loadErrorCon">
                 <a class="loadError" href="javascript:void(0)"></a>
             </div>
@@ -174,7 +174,7 @@
                 <li id="priceColorBlock">
                     <div class="title">描述相符</div>
                     <div class="colorBlock">
-                        <i class="fillIn redFillIn"></i>
+                        <i class="fillIn"></i>
                         <i class="unFillIn"></i>
                     </div>
                     <div class="bottomInfo">
@@ -186,7 +186,7 @@
                 <li id="gradeColorBlock">
                     <div class="title">教学态度</div>
                     <div class="colorBlock">
-                        <i class="fillIn greenFillIn"></i>
+                        <i class="fillIn"></i>
                         <i class="unFillIn"></i>
                     </div>
                     <div class="bottomInfo">
@@ -198,7 +198,7 @@
                 <li id="teacherPowerColorBlock">
                     <div class="title">授课质量</div>
                     <div class="colorBlock">
-                        <i class="fillIn yellowFillIn"></i>
+                        <i class="fillIn"></i>
                         <i class="unFillIn"></i>
                     </div>
                     <div class="bottomInfo">
@@ -210,6 +210,9 @@
                 <div style="clear: both;"></div>
             </ul>
             <div class="studentCommentCon">
+                <div class="loadErrorCon">
+                    <a class="loadError" href="javascript:void(0)"></a>
+                </div>
                 <div class="basicHeaderWithArrow">
                     <span>学员评价</span>
                     <i class="spiteBgOrigin arrow"></i>
@@ -218,6 +221,7 @@
                     <input type="text" placeholder="有什么感想快来说说吧…" id="myComment"/>
                 </div>
                 <ul class="studentCommentDetail">
+                    <li><div class="nonData">暂无评论</div></li>
                     <!--<li>-->
                         <!--<div class="imgCon">-->
                             <!--<img src="http://pic.hisihi.com/2015-12-29/1451318640734258.png@170-79-223-223a"/>-->
