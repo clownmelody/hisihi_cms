@@ -206,6 +206,11 @@ class UserController extends AppController
             $extra['my_follow_count'] = $this->getMyFollowerCount($uid);
             $extra['follow_me_count'] = $this->getFollowMeCount($uid);
         }
+        if((float)$version>=2.3){
+            $extra['my_post_count'] = $this->getPostCount($uid);
+            $extra['my_reply_count'] = $this->getReplyCount($uid);
+            $extra['my_picture_count'] = $this->getPictureCount($uid);
+        }
         $this->apiSuccess("登录成功", null, $extra);
     }
 	
@@ -2314,6 +2319,17 @@ class UserController extends AppController
             ->where('a.status=1 and a.uid='.$uid)->field('b.city')
             ->select();
         return $location[0]['city'];
+    }
+
+    public function getReplyCount($uid){
+        $replyCount = M('ForumPostReply')->where('uid=' . $uid . ' and status >0')->count();
+        return $replyCount;
+    }
+
+    //获取相册的统计
+    public function getPictureCount($uid){
+        $pic_count = M('UserWorks')->where('status=1 and picture_id<>\'\' and uid='.$uid)->count();
+        return $pic_count;
     }
 
 }
