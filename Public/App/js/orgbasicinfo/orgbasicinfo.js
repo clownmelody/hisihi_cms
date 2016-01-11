@@ -340,6 +340,52 @@ define(['zepto','common'],function(){
             this.$wrapper.find('.mainItemSignUp .signUpCon').html(str);
         },
 
+
+        /*加载我的评分息*/
+        loadMyCompresAsseinfo:function(callback){
+            var that=this,
+                $target=that.$wrapper.find('.mainItemCompresAsse');
+            this.loadData({
+                url: window.urlObject.apiUrl + 'fractionalStatistics',
+                paraData: {organization_id: this.oid},
+                sCallback: function(result){
+                    $target.css('opacity',1);
+                    that.fillMyCompresAsseInfo(result);
+                    callback();
+                },
+                eCallback:function(txt){
+                    $target.css('opacity',1);
+                    $target.find('.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
+                    callback();
+                }
+            });
+        },
+
+        /*填充我的评分信息*/
+        fillMyCompresAsseInfo:function(result){
+            var data=result.data;
+            if(!data || data.length==0){
+                return;
+            }
+            var str='',
+                item,
+                $target=this.$wrapper.find('.mainItemCompresAsse'),
+                $basicHeader=$target.find('.basicHeader'),
+                $li=$target.find('.assessmentDetail');
+
+            /*添加星星*/
+            var strStar= this.getStarInfoByScore(data.comprehensiveScore);
+            $basicHeader.find('#starsConForCompress').prepend(strStar);
+
+            /*色块评分*/
+            for(var i=0;i<data.length;i++){
+                item=data[i];
+                $li.each(function(){
+
+                });
+            }
+        },
+
         /*
         *加载等待,
         *para:
@@ -371,24 +417,43 @@ define(['zepto','common'],function(){
          */
         scrollContainer:function(e){
             var target= e.currentTarget,
-                height = target.scrollHeight - $(target).height();
+                height = target.scrollHeight - $(target).height(),
+                scrollTop=$(target).scrollTop(),
+                arrScrollTop=[300,550];
+            console.log(scrollTop);
 
             //加载我的老师
             var $target=this.$wrapper.find('.mainItemTeacherPower');
-            if($(target).scrollTop()>=300 && $target.attr('data-loading')==='false'){
+            if(scrollTop>=arrScrollTop[0] &&
+                scrollTop<arrScrollTop[1] &&
+                !$target.attr('data-loading')){
+                    var flag=$target.attr('data-loaded');
+                    $target.attr('data-loading','true');
+                    if(!flag) {
+                        this.loadMyTeachersInfo(function(){
+                            $target.attr({'data-loaded':'true','data-loading':'false'});
+                        });
+                    }
+                    return;
+            }
+
+            //加载我的评分
+            var $target=this.$wrapper.find('.mainItemCompresAsse');
+            if(scrollTop>=arrScrollTop[1] && !$target.attr('data-loading')){
                 var flag=$target.attr('data-loaded');
                 $target.attr('data-loading','true');
-                if(flag ==='false') {
-                    this.loadMyTeachersInfo(function(){
+                if(!flag) {
+                    this.loadMyCompresAsseinfo(function(){
                         $target.attr({'data-loaded':'true','data-loading':'false'});
                     });
                 }
+                return;
             }
 
             //加载更加多评论内容
             if ($(target).scrollTop() == height && !$(target).hasClass('loadingData')) {  //滚动到底部
                 $(target).addClass('loadingData');
-                this.loadData(this.pageIndex,function(){
+                this.loadMyCompresAssenfo(this.pageIndex,function(){
                     $(target).removeClass('loadingData');
                 });
             }
@@ -437,6 +502,27 @@ define(['zepto','common'],function(){
                 return this;
             };
         },
+
+        /*根据分数情况，得到星星的信息*/
+        getStarInfoByScore:function(num){
+            num=num | 0;
+            var str='',
+                allNum=Math.ceil(num),
+                tempNum=Math.round(num),
+                halfNum=tempNum==allNum? 0:1,
+                blankNum=5-tempNum;
+            for(var i=0;i<allNum;i++){
+                str+='<i class="allStar spiteBgOrigin"></i>';
+            }
+            if(halfNum==1){
+                str+='<i class="halfStar spiteBgOrigin"></i>';
+            }
+            for(var i=0;i<blankNum;i++){
+                str+='<i class="emptyStar spiteBgOrigin"></i>';
+            }
+            return str;
+        },
+
     };
 
     return OrgBasicInfo;
