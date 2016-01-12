@@ -1918,6 +1918,7 @@ class OrganizationController extends AppController
      * @param int $organization_id
      */
     public function OrganizationBasicInfo($organization_id=0){
+        $this->assign("organization_id", $organization_id);
         $this->display('orgbasicinfo');
     }
 
