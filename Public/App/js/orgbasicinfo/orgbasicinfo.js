@@ -8,6 +8,11 @@ define(['zepto','common'],function(){
         var that = this;
         this.oid=oid;
         this.controlLoadingPos();
+        //控制视频预览框的高度
+        this.videoPreviewBox();
+        this.locationMapBox();
+        this.initImgPercent();
+        this.controlCoverFootStyle();
 
         /*加载基本信息*/
         var queryPara={
@@ -17,12 +22,6 @@ define(['zepto','common'],function(){
             eCallback:null
         };
         this.loadData(queryPara);
-
-        //控制视频预览框的高度
-        this.videoPreviewBox();
-        this.locationMapBox();
-        this.initImgPercent();
-        this.controlCoverFootStyle();
 
         this.$wrapper.find('#videoPreviewBox img').bind('load',this.controlPlayBtnStyle);
         this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
@@ -38,11 +37,12 @@ define(['zepto','common'],function(){
 
         /*加载等待框的位置*/
         controlLoadingPos:function(){
-            var $loading = this.$wrapper.find('.loadingResultTips'),
+            var $loading = $('.loadingResultTips'),
+                $body=$('body'),
                 w=$loading.width(),
                 h=$loading.height(),
-                dw=this.$wrapper.width(),
-                dh=this.$wrapper.height();
+                dw=$body.width(),
+                dh=$body.height();
             $loading.css({'top':(dh-h)/2,'left':(dw-w)/2,'opacity':'1'});
         },
 
@@ -442,7 +442,7 @@ define(['zepto','common'],function(){
         * 0.显示加载等待;  1 隐藏等待; -1加载失败，重新加载
         */
         controlLoadingTips:function(status,txt){
-            var $target=this.$wrapper.find('#loadingTip'),
+            var $target=$('#loadingTip'),
                 $img=$target.find('.loadingImg'),
                 $error=$img.next().hide();
             if(status==0){
