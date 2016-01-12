@@ -1382,7 +1382,7 @@ class OrganizationController extends AppController
     /**
      * 定位到省份
      */
-    public function locationToProvince(){
+    public function locatigonToProvince(){
         $ip = get_client_ip();
         $ch = curl_init();
         $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
@@ -1932,6 +1932,7 @@ class OrganizationController extends AppController
      * @param int $organization_id
      */
     public function OrganizationBasicInfo($organization_id=0){
+        $this->assign("organization_id", $organization_id);
         $this->display('orgbasicinfo');
     }
 
@@ -2639,4 +2640,5 @@ class OrganizationController extends AppController
         }
         return $organization;
     }
+
 }
