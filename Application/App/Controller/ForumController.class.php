@@ -123,6 +123,13 @@ class ForumController extends AppController
         return $ids;
     }
 
+    //获取上次发帖的forum_id
+    private function getLastForumId($uid){
+        $forum_id = M('ForumPost')->where('status=1 and uid='.$uid)
+            ->order('create_time desc')->getField('forum_id');
+        return $forum_id;
+    }
+
     public function forumType()
     {
         $forum_type = $this->getForumsByType();
@@ -1181,7 +1188,12 @@ class ForumController extends AppController
             $this->apiError(-100,'缺少标题!');
         }
         if ($forum_id == 0) {
-            $this->apiError(-101,'未选择标签');
+            $uid = $this->getUid();//需要传session_id
+            $forum_id = $this->getLastForumId($uid);
+            if(empty($forum_id)){
+                $forum_id = 48;//第一次发帖默认：设计吐槽
+            }
+            //$this->apiError(-101,'未选择标签');
         }
         //if (strlen($content) < 5) {
         //    $this->apiError(-102,'提问失败：内容长度不能小于5');
