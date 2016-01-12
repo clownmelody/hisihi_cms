@@ -865,7 +865,7 @@ class UserController extends AppController
                 $where_map['profile_group_id'] = $id;
                 $where_map['id'] = array("in",array('39','40','41'));
             }else{
-                $where_map['id'] = array("in",array('36','37','44','46'));
+                $where_map['id'] = array("in",array('36','37','39','44','46'));
             }
         }
         $where_map['status'] = 1;

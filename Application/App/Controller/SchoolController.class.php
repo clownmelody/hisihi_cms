@@ -24,11 +24,7 @@ class SchoolController extends AppController
      * 获取所有省的信息
      */
     public  function  province(){
-        //实例化空模型
-        //或者使用M快捷方法是等效的
-        $Model = M();
-        //进行原生的SQL查询
-        $list = $Model->query('SELECT * FROM hisihi_province');
+        $list = json_decode('[{"province_id":"1","province_name":"\u5317\u4eac"},{"province_id":"2","province_name":"\u5929\u6d25"},{"province_id":"3","province_name":"\u6cb3\u5317"},{"province_id":"4","province_name":"\u5c71\u897f"},{"province_id":"5","province_name":"\u5185\u8499\u53e4"},{"province_id":"6","province_name":"\u8fbd\u5b81"},{"province_id":"7","province_name":"\u5409\u6797"},{"province_id":"8","province_name":"\u9ed1\u9f99\u6c5f"},{"province_id":"9","province_name":"\u4e0a\u6d77"},{"province_id":"10","province_name":"\u6c5f\u82cf"},{"province_id":"11","province_name":"\u6d59\u6c5f"},{"province_id":"12","province_name":"\u5b89\u5fbd"},{"province_id":"13","province_name":"\u798f\u5efa"},{"province_id":"14","province_name":"\u6c5f\u897f"},{"province_id":"15","province_name":"\u5c71\u4e1c"},{"province_id":"16","province_name":"\u6cb3\u5357"},{"province_id":"17","province_name":"\u6e56\u5317"},{"province_id":"18","province_name":"\u6e56\u5357"},{"province_id":"19","province_name":"\u5e7f\u4e1c"},{"province_id":"20","province_name":"\u5e7f\u897f"},{"province_id":"21","province_name":"\u6d77\u5357"},{"province_id":"22","province_name":"\u91cd\u5e86"},{"province_id":"23","province_name":"\u56db\u5ddd"},{"province_id":"24","province_name":"\u8d35\u5dde"},{"province_id":"25","province_name":"\u4e91\u5357"},{"province_id":"26","province_name":"\u897f\u85cf"},{"province_id":"27","province_name":"\u9655\u897f"},{"province_id":"28","province_name":"\u7518\u8083"},{"province_id":"29","province_name":"\u9752\u6d77"},{"province_id":"30","province_name":"\u5b81\u590f"},{"province_id":"31","province_name":"\u65b0\u7586"},{"province_id":"32","province_name":"\u53f0\u6e7e"},{"province_id":"33","province_name":"\u9999\u6e2f"},{"province_id":"34","province_name":"\u6fb3\u95e8"}]');
         if($list){
             $resultlist = array();
             $resultlist["data"] = $list;

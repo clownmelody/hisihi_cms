@@ -1,12 +1,27 @@
 /*less公用的方法*/
-ul {
+body {
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+}
+body * {
+  -webkit-user-select: none;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+body ul {
   padding: 0;
   margin: 0;
 }
-ul li {
+body ul li {
   list-style: none;
 }
-input[type="text"]:focus {
+body input[type="text"]:focus {
   border: 1px solid #BBAEAE !important;
   outline: 0;
 }
@@ -15,18 +30,13 @@ input[type="text"]:focus {
   position: absolute;
   top: 0;
   left: 0;
-  bottom: 0;
   right: 0;
   background: #EBEBEB;
   font-size: 100%;
-  height: 100%;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
   overflow: auto;
-}
-#wrapper * {
-  -webkit-user-select: none;
-  /*禁用手机浏览器的用户选择功能 */
-  -moz-user-select: none;
-  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
 }
 #wrapper img {
   max-width: 100%;
@@ -38,6 +48,46 @@ input[type="text"]:focus {
 #wrapper .spiteBgOrigin {
   background-image: url("../images/orgbasicinfo/orginfo.png");
 }
+#wrapper .loadError {
+  display: none;
+  text-decoration: none;
+  color: #777;
+}
+#wrapper .loadingResultTips {
+  z-index: -1;
+  text-align: center;
+  color: #9C9A9D;
+  position: absolute;
+  height: 4em;
+  width: 12em;
+}
+#wrapper .loadingResultTips .loadingImg {
+  margin: 0 auto;
+  height: 2em;
+  width: 2em;
+  background-image: url("../images/loading2.svg");
+  opacity: 0;
+}
+#wrapper .loadingResultTips .loadingImg.active {
+  opacity: 1;
+  animation: aloading 0.8s steps(6, end) 0s infinite;
+}
+@keyframes aloading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+#wrapper .loadErrorCon {
+  display: none;
+  width: 100%;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+}
+#wrapper .mainItem {
+  min-height: 60px;
+  opacity: 0;
+}
 #wrapper .mainItem .basicHeader {
   margin-left: 15px;
   height: 44px;
@@ -47,6 +97,11 @@ input[type="text"]:focus {
 #wrapper .mainItem .basicHeader span {
   color: #212121;
   font-size: 16px;
+}
+#wrapper .mainItem .nonData {
+  text-align: center;
+  height: 45px;
+  line-height: 45px;
 }
 #wrapper .mainItem .basicHeaderWithArrow {
   margin-left: 15px;
@@ -84,6 +139,7 @@ input[type="text"]:focus {
   border-bottom: 1px solid #d6d6d6;
 }
 #wrapper .mainItem.logoAndCertInfo {
+  height: 208px;
   border-bottom: 0 solid #d6d6d6;
 }
 #wrapper .mainItem.logoAndCertInfo * {
@@ -130,9 +186,10 @@ input[type="text"]:focus {
 }
 #wrapper .mainItem.logoAndCertInfo .head .mainInfo .left > img {
   box-sizing: border-box;
-  width: 84px;
-  height: 84px;
+  width: 100%;
+  height: 100%;
   border-radius: 2%;
+  max-width: 84px !important;
 }
 #wrapper .mainItem.logoAndCertInfo .head .mainInfo .right {
   margin-left: 112px;
@@ -201,6 +258,12 @@ input[type="text"]:focus {
 #wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i.honestCerIcon.unCerted {
   background-position: -24px -46px;
 }
+#wrapper .mainItem.logoAndCertInfo .bottom .cerName.certed {
+  color: white;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerName.unCerted {
+  color: #BDBDBD;
+}
 #wrapper .mainItem.mainItemTopNews .topNewsCon {
   margin: 0;
 }
@@ -250,6 +313,7 @@ input[type="text"]:focus {
   overflow: hidden;
 }
 #wrapper .mainItem.mainItemSignUp {
+  min-height: 130px;
   width: 100%;
   height: auto;
 }
@@ -271,6 +335,7 @@ input[type="text"]:focus {
   position: relative;
   padding-top: 12px;
   margin-bottom: 10px;
+  box-sizing: border-box;
   width: 100%;
   height: auto;
 }
@@ -286,6 +351,7 @@ input[type="text"]:focus {
   border-left: 1px solid #ccc;
   margin-left: 82px;
   padding-left: 8px;
+  min-height: 65px;
 }
 #wrapper .mainItem.mainItemSignUp .mainContent .signUpCon li {
   overflow: hidden;
@@ -331,6 +397,7 @@ input[type="text"]:focus {
 #wrapper .mainItem.mainItemBasicInfo .mainContentItem.videoCon #videoPreviewBox {
   width: 100%;
   position: relative;
+  text-align: center;
 }
 #wrapper .mainItem.mainItemBasicInfo .mainContentItem.videoCon #videoPreviewBox img {
   max-width: 100%;
@@ -359,7 +426,7 @@ input[type="text"]:focus {
 #wrapper .mainItem.mainItemTeacherPower .teacherPowerDetail li .leftPic img {
   width: 50px;
   height: 50px;
-  border-radius: 100%;
+  border-radius: 50%;
   border: 1px solid #ccc;
 }
 #wrapper .mainItem.mainItemTeacherPower .teacherPowerDetail li .rightUserInfo {
@@ -387,8 +454,9 @@ input[type="text"]:focus {
   padding-top: 0;
   margin: 0;
 }
-#wrapper .mainItem.mainItemLocation #locationMap {
+#wrapper .mainItem.mainItemLocation .locationMap {
   width: 100%;
+  text-align: center;
 }
 #wrapper .mainItem.mainItemCompresAsse .starsCon {
   line-height: 0;
@@ -423,7 +491,7 @@ input[type="text"]:focus {
   box-sizing: border-box;
 }
 #wrapper .mainItem.mainItemCompresAsse .assessmentDetail li {
-  width: 25%;
+  width: 33.3%;
   float: left;
   padding-right: 21px;
   box-sizing: border-box;
@@ -502,7 +570,7 @@ input[type="text"]:focus {
 #wrapper .mainItem.mainItemCompresAsse .studentCommentCon .studentCommentDetail li .imgCon img {
   width: 44px;
   height: 44px;
-  border-radius: 100%;
+  border-radius: 50%;
   border: 1px solid #CBCBCB;
 }
 #wrapper .mainItem.mainItemCompresAsse .studentCommentCon .studentCommentDetail li .commentCon {
@@ -526,11 +594,52 @@ input[type="text"]:focus {
   margin-bottom: 6px;
   font-size: 12px;
 }
+#downloadCon {
+  width: 100%;
+  height: atuo;
+  position: absolute;
+  bottom: 0;
+  background-color: #9E9A98;
+}
+#downloadCon .allDownImg {
+  max-width: 100%;
+  margin-bottom: 0;
+}
+#downloadCon a {
+  position: absolute;
+  right: 12px;
+  display: inline-block;
+  width: 21%;
+  text-decoration: none;
+  background-color: #FF5A00;
+  text-align: center;
+  color: white;
+  font-size: 15px;
+  border-radius: 2px;
+  line-height: 14px;
+}
 /*响应式样式*/
 @media screen and (min-width: 750px) {
-  #wrapper {
+  #wrapper,
+  #downloadCon {
     width: 560px;
     height: auto;
     margin: 0 auto;
+  }
+}
+@media screen and (max-width: 320px) and (max-height: 480px) {
+  .logoAndCertInfo .mainInfo .left {
+    width: 74px !important;
+    height: 74px !important;
+  }
+  .logoAndCertInfo .mainInfo .right {
+    margin-left: 84px !important;
+  }
+  .logoAndCertInfo .mainInfo .right .filedInfo {
+    font-size: 12px !important;
+  }
+  .logoAndCertInfo .mainInfo .right #orgName {
+    font-size: 18px !important;
+    padding: 3px 0 10px 0 !important;
   }
 }
