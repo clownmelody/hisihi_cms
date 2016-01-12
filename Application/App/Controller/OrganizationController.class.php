@@ -1849,7 +1849,7 @@ class OrganizationController extends AppController
     public function shareOrganization($organization_id=0){
         $result = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->find();
         if($result){
-            $extra['org_share_url'] = 'app.php/organization/organizationdetail/type/view/id/'.$organization_id;
+            $extra['org_share_url'] = "api.php/Organization/OrganizationBasicInfo/organization_id/".$organization_id;
             $uid = $this->getUid();
             if($uid){
                 if($this->checkUserDoShareCache($uid)){
