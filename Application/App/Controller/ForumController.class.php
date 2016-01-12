@@ -96,6 +96,33 @@ class ForumController extends AppController
         return $uids;
     }
 
+    //获取学生发帖
+    private function getForumsFromStudents(){
+        $model = new \Think\Model();
+        $ids = $model->query("select id from hisihi_forum_post"
+                             ." where status=1 and uid != 0 and uid in"
+                             ." (select distinct uid from hisihi_auth_group_access where group_id=5)");
+        return $ids;
+    }
+
+    //获取老师发帖
+    private function getForumsFromTeachers(){
+        $model = new \Think\Model();
+        $ids = $model->query("select id from hisihi_forum_post"
+            ." where status=1 and uid != 0 and uid in"
+            ." (select distinct uid from hisihi_auth_group_access where group_id=6)");
+        return $ids;
+    }
+
+    //获取关注人发帖
+    private function getForumsFromFollows($uid=null){
+        $model = new \Think\Model();
+        $ids = $model->query("select id from hisihi_forum_post"
+            ." where status=1 and uid != 0 and uid in"
+            ." (select distinct follow_who from hisihi_follow where who_follow=".$uid.")");
+        return $ids;
+    }
+
     public function forumType()
     {
         $forum_type = $this->getForumsByType();
@@ -115,7 +142,7 @@ class ForumController extends AppController
         foreach ($list as &$v) {
             $forumInfo = $forum_key_value[$v['forum_id']];
             $mapx = array('id' => $forumInfo['type_id'], 'status' => 1);
-            $forumType = D('ForumType')->where($mapx)->select();
+            $forumType = M('ForumType')->where($mapx)->select();
             $v['post_id'] = $v['id'];
             $v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];
 
@@ -170,7 +197,7 @@ class ForumController extends AppController
             $supportCount = $this->getSupportCountCache($map_support);
 
             $map_supported = array_merge($map_support, array('uid' => is_login()));
-            $supported = D('Support')->where($map_supported)->count();
+            $supported = M('Support')->where($map_supported)->count();
 
             $v['supportCount'] = $supportCount;
             $v['isSupportd'] = $supported;
@@ -271,13 +298,18 @@ class ForumController extends AppController
      * @param string $order
      * @param bool|false $show_adv
      * @param int $post_type  区别公司热门话题和普通论坛
+     * @param int $circle_type 圈子类型
+     * @param null $version 版本号
+     * @param null $position 地理位置
+     * @param null $grade 年级
      */
-    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1, $version=null, $position=null, $grade=null)
+    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1, $version=null, $circle_type=1, $position=null, $grade=null)
     {
         $field_type = intval($field_type);
         $page = intval($page);
         $count = intval($count);
         $order = op_t($order);
+        $circle_type = intval($circle_type);
 
         if ($order == 'ctime') {
             $order = 'create_time desc';
@@ -314,13 +346,45 @@ class ForumController extends AppController
         if($field_type == -4){  // 热门
             $order = "reply_count desc";
         }
+
+        if($circle_type == 1){//学习圈
+            $ids = $this->getForumsFromStudents();
+            $post_ids = array();
+            foreach($ids as &$post_id){
+                $post_ids[] = $post_id['id'];
+            }
+            $map['id'] = array('in', $post_ids);
+        }
+        if($circle_type == 2){//老师圈
+            $ids = $this->getForumsFromTeachers();
+            $post_ids = array();
+            foreach($ids as &$post_id){
+                $post_ids[] = $post_id['id'];
+            }
+            $map['id'] = array('in', $post_ids);
+        }
+        if($circle_type == 3){//朋友圈
+            $ids = $this->getForumsFromFollows();
+            $post_ids = array();
+            foreach($ids as &$post_id){
+                $post_ids[] = $post_id['id'];
+            }
+            $map['id'] = array('in', $post_ids);
+        }
+        if($circle_type == 4){//比赛圈
+
+        }
+
         if(!empty($position)){
             $posts = $this->getForumsByPosition($position);
             $post_ids = array();
             foreach($posts as &$post_id){
                 $post_ids[] = $post_id['post_id'];
             }
-            $map['id'] = array('in', $post_ids);
+            if(!empty($map['id'])){//取帖子id交集
+                $intersect_ids = array_intersect($map['id'][1], $post_ids);
+            }
+            $map['id'] = array('in', $intersect_ids);
         }
         if(!empty($grade)){
             $uids = $this->getForumsByGrade($grade);
@@ -331,8 +395,9 @@ class ForumController extends AppController
             $map['uid'] = array('in', $post_uids);
         }
         $map['is_top'] = 0;
-        $totalCount = D('ForumPost')->where($map)->count();
-        $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
+        $forumPost = M('ForumPost');
+        $totalCount = $forumPost->where($map)->count();
+        $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
             $list = $this->formatList($list, $version);
@@ -2230,23 +2295,23 @@ class ForumController extends AppController
         $this->apiSuccess("获取公司热门话题列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
-
+    //获取社区的圈子接口
     public function getForumCircle(){
         $circle = array(
             array(
-                'id'=>10001,
+                'id'=>1,
                 'name'=>'学习圈'
             ),
             array(
-                'id'=>10002,
+                'id'=>2,
                 'name'=>'老师圈'
             ),
             array(
-                'id'=>10003,
+                'id'=>3,
                 'name'=>'朋友圈'
             ),
             array(
-                'id'=>10004,
+                'id'=>4,
                 'name'=>'比赛圈'
             )
         );
@@ -2343,13 +2408,14 @@ class ForumController extends AppController
      */
     private function getForumPos($map_pos)
     {
-        $cache_key = "forum_pos_" . implode('_', $map_pos);
-        $pos = S($cache_key);
-        if (empty($pos)) {
-            $pos = M('ForumPos')->where($map_pos)->field('pos')->find();
-            S($cache_key, $pos);
-            return $pos;
-        }
+//        $cache_key = "forum_pos_" . implode('_', $map_pos);
+//        $pos = S($cache_key);
+//        if (empty($pos)) {
+//            $pos = M('ForumPos')->where($map_pos)->field('pos')->find();
+//            S($cache_key, $pos);
+//            return $pos;
+//        }
+        $pos = M('ForumPos')->cache(true)->where($map_pos)->field('pos')->find();
         return $pos;
     }
 
