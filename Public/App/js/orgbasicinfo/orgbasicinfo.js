@@ -48,8 +48,9 @@ define(['zepto','common'],function(){
 
         /*机构视频预览的图片*/
         videoPreviewBox:function(){
+
             var $temp=this.$wrapper.find('#videoPreviewBox'),
-                w=this.$wrapper.width(),
+                w=this.$wrapper.width()-30,
                 h=parseInt(w*(9/16)),
                 $i=$temp.find('i'),
                 ih=$i.height(),
@@ -82,6 +83,9 @@ define(['zepto','common'],function(){
 
 
         loadData:function(paras) {
+            if(!paras.type){
+                paras.type='get';
+            }
             var that=this;
             that.controlLoadingTips(0);
             var loginXhr = $.ajax({
@@ -226,7 +230,7 @@ define(['zepto','common'],function(){
                 str += '<li>'+
                             '<div class="topNewLogo">头条</div>'+
                             '<div class="title">'+
-                                '<a href="'+window.urlObject.apiBasicUrl + item.detail_url+'">' + item.title + '</a>'+
+                                '<a href="'+item.detail_url+'">' + item.title + '</a>'+
                             '</div>'+
                         '</li>';
             }
@@ -262,11 +266,12 @@ define(['zepto','common'],function(){
             var len=data.length;
             for(var i=0;i<len;i++){
                 item=data[i];
+                var time=new Date(item.create_time*1000).format('yyyy-MM-dd');
                 str += '<li>'+
                             '<span class="dot">&middot;</span>'+
-                            '<span>李志</span>'+
+                            '<span>'+item.student_name+'</span>'+
                             '<span>&nbsp;&nbsp;同学于</span>'+
-                            '<span>&nbsp;&nbsp;2015-11-02</span>'+
+                            '<span>&nbsp;&nbsp;'+ time+'</span>'+
                             '<span>&nbsp;&nbsp;成功报名</span>'+
                         '</li>';
             }
@@ -287,7 +292,7 @@ define(['zepto','common'],function(){
 
                 /*简介*/
                 if(introduce) {
-                    $target.find('.introduce p').html('<p>'+introduce+'</p>');
+                    $target.find('.introduce').html('<p>'+introduce+'</p>');
                 }
 
                 /*优势标签*/
@@ -330,24 +335,26 @@ define(['zepto','common'],function(){
 
         /*填充我的老师信息*/
         fillMyTeachersInfo:function(data){
-            var str='',item;
+            var str='',itemInfo;
             if(!data || data.length==0){
                 return;
             }
             var len=data.length;
             for(var i=0;i<len;i++){
-                item=data[i];
+                itemInfo=data[i].info;
                 str +=  '<li>'+
                             '<div class="leftPic">'+
-                                '<img src="http://pic.hisihi.com/2015-12-25/1451016361334986.png@88-18-431-431a"/>'+
+                                '<img src="'+itemInfo.avatar128+'"/>'+
                                 '</div>'+
                                 '<div class="rightUserInfo">'+
-                                '<div class="name">宋东野哈哈哈哈顶替</div>'+
-                                '<div class="desc">麻油叶屌丝，</div>'+
+                                '<div class="name">'+itemInfo.nickname+'</div>'+
+                                '<div class="desc">'+itemInfo.institution.substrLongStr(12)+'</div>'+
                             '</div>'+
                         '</li>';
             }
-            this.$wrapper.find('.mainItemSignUp .signUpCon').html(str);
+            var $ul=this.$wrapper.find('.mainItemTeacherPower .teacherPowerDetail');
+            $ul.find('.nonData').remove();
+            $ul.prepend(str);
         },
 
 
@@ -414,7 +421,7 @@ define(['zepto','common'],function(){
                 url: window.urlObject.apiUrl + 'commentList',
                 paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize},
                 sCallback: function(result){
-                    that.pageSize=Math.ceil(result.totalCount|0/that.perPageSize);
+                    that.pageSize=Math.ceil((result.totalCount|0)/that.perPageSize);
                     that.fillDetailCommentInfo(result);
                     callback&&callback.call(that);
                 },
@@ -433,6 +440,32 @@ define(['zepto','common'],function(){
                 return;
             }
             $totoalNum.text(data.length);
+
+            /*具体的评论信息*/
+            var len=data.length,
+                str='',item,userInfo,dateTime;
+            for(var i=0;i<len;i++){
+                item=data[i];
+                userInfo=item.userInfo;
+                dateTime=new Date(item.create_time*1000).format('yyyy-MM-dd');
+                str+='<li>'+
+                        '<div class="imgCon">'+
+                            '<img src="'+userInfo.avatar128+'"/>'+
+                        '</div>'+
+                        '<div class="commentCon">'+
+                            '<div class="commentHead">'+
+                                '<span class="commentNickname">'+userInfo.nickname+'</span>'+
+                                '<span class="rightItem starsCon">'+
+                                    this.getStarInfoByScore(item.comprehensive_score | 0)+
+                                '<div style="clear: both;"></div>'+
+                                '</span>'+
+                            '</div>'+
+                            '<div class="content">'+item.comment+'</div>'+
+                            '<div class="publicTime">发表于'+dateTime+'</div>'+
+                        '</div>'+
+                     '</li>';
+            }
+            this.$wrapper.find('.studentCommentDetail').html(str);
         },
 
 

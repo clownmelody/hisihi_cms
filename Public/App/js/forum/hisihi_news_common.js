@@ -41,6 +41,21 @@ String.prototype.trim = function () {
 };
 
 /*
+ *字符串截取
+ * para
+ * len - {int} 最大长度
+ */
+String.prototype.substrLongStr = function (len) {
+    var str='';
+    if (this.length > len) {
+        str = this.substr(0, parseInt(len - 1)) + '…';
+    }else{
+        str=this;
+    }
+    return str;
+};
+
+/*
 *判断webview的来源
 */
 var browserType=function() {
