@@ -23,19 +23,31 @@
 @font-color:#212121;
 @header-h:44px;
 
-body{
+body {
   margin: 0;
-}
-ul {
-  padding: 0;
-  margin: 0;
-  li {
-    list-style: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  * {
+    -webkit-user-select: none; /*禁用手机浏览器的用户选择功能 */
+    -moz-user-select: none;
+    font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
   }
-}
-input[type="text"]:focus {
-  border: 1px solid #BBAEAE !important;
-  outline: 0;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    li {
+      list-style: none;
+    }
+  }
+  input[type="text"]:focus {
+    border: 1px solid #BBAEAE !important;
+    outline: 0;
+  }
 }
 
 #wrapper{
@@ -43,17 +55,13 @@ input[type="text"]:focus {
   position: absolute;
   top:0;
   left: 0;
-  bottom: 0;
   right: 0;
   background: #EBEBEB;
   font-size: 100%;
-  .size(100%,100%);
+  .size(100%,auto);
+  .box-sizing();
   overflow: auto;
-  *{
-    -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
-    -moz-user-select: none;
-    font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
-  }
+
   img{
     max-width: 100%;
   }
@@ -436,6 +444,7 @@ input[type="text"]:focus {
           #videoPreviewBox{
             width: 100%;
             position: relative;
+            text-align: center;
             img{
               max-width: 100%;
             }
@@ -658,9 +667,33 @@ input[type="text"]:focus {
   }
 }
 
+#downloadCon {
+  .size(100%,atuo);
+  position: absolute;
+  bottom: 0;
+  background-color:#9E9A98;
+  .allDownImg {
+    max-width: 100%;
+    margin-bottom: 0;
+  }
+  a {
+    position: absolute;
+    right: 12px;
+    display:inline-block;
+    width: 21%;
+    text-decoration: none;
+    background-color: #FF5A00;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    line-height: 14px;
+  }
+}
+
 /*响应式样式*/
 @media screen and (min-width:750px) {
-  #wrapper{
+  #wrapper,#downloadCon{
     .size(560px,auto);
     margin: 0 auto;
   }

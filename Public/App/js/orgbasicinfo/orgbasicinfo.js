@@ -22,6 +22,7 @@ define(['zepto','common'],function(){
         this.videoPreviewBox();
         this.locationMapBox();
         this.initImgPercent();
+        this.controlCoverFootStyle();
 
         this.$wrapper.find('#videoPreviewBox img').bind('load',this.controlPlayBtnStyle);
         this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
@@ -78,6 +79,7 @@ define(['zepto','common'],function(){
                 iw=$i.width();
             $i.css({'top':(h-ih)/2,'left':(w-iw)/2});
         },
+
 
         loadData:function(paras) {
             var that=this;
@@ -467,7 +469,6 @@ define(['zepto','common'],function(){
                 height = target.scrollHeight - $(target).height(),
                 scrollTop=$(target).scrollTop(),
                 arrScrollTop=[300,550];
-            console.log(scrollTop);
 
             //加载我的老师
             var $target=this.$wrapper.find('.mainItemTeacherPower');
@@ -602,6 +603,23 @@ define(['zepto','common'],function(){
                 cName:temp.cName,
                 width:Math.ceil(score/5*100)
             }
+        },
+
+        /*控制底部logo的位置样式*/
+        controlCoverFootStyle:function(){
+            var $target = $('#downloadCon'),
+                $a=$target.find('a'),
+                aw=$a.width(),
+                ah=aw*0.40,
+                bw=$target.width(),
+                h= bw*102/750;
+            $target.css({'height':h+'px','left':($('body').width()-bw)/2});
+            this.$wrapper.css('bottom',h+'px');
+            var fontSize='16px';
+            if(bw<375){
+                fontSize='14px';
+            }
+            $a.css({'top':(h-ah)/2,'height':ah+'px','line-height':ah+'px','font-size':fontSize});
         },
 
     };
