@@ -12,6 +12,7 @@
     <title>嘿设汇——机构基本信息</title>
 </head>
 <body>
+    <canvas id="canvas" width=300 height=300></canvas>
     <div id="loadingTip" class="loadingResultTips">
         <div class="loadingImg active"></div>
         <a class="loadError" id="basicInfoLoadEorror" href="javascript:void(0)">加载失败，点击重新加载</a>
@@ -227,10 +228,10 @@
         css: "__CSS__",
         image: "__IMG__",
         ctl:'__URL__',
-//        apiBasicUrl:'http://{$Think.server.HTTP_HOST}/hisihi-cms/',
-        apiBasicUrl:'http://{$Think.server.HTTP_HOST}/',
-//        apiUrl:'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/Organization/',
-        apiUrl:'http://{$Think.server.HTTP_HOST}/api.php?s=/Organization/',
+        apiBasicUrl:'http://{$Think.server.HTTP_HOST}/hisihi-cms/',
+//        apiBasicUrl:'http://{$Think.server.HTTP_HOST}/',
+        apiUrl:'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/Organization/',
+//        apiUrl:'http://{$Think.server.HTTP_HOST}/api.php?s=/Organization/',
     };
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件

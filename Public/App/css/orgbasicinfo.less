@@ -23,6 +23,9 @@
 @font-color:#212121;
 @header-h:44px;
 
+html{
+  overflow: hidden;
+}
 body {
   margin: 0;
   position: absolute;
@@ -47,6 +50,12 @@ body {
   input[type="text"]:focus {
     border: 1px solid #BBAEAE !important;
     outline: 0;
+  }
+  #canvas{
+    position: absolute;
+    top:0;
+    left: 0;
+    z-index: -2;
   }
 }
 
@@ -175,14 +184,14 @@ body {
 
     //logo和认证信息
     &.logoAndCertInfo{
-      height: 208px;
+      height: 200px;
       .border-bottom(0);
       *{
         color: #fff;
       }
       .head{
         position: relative;
-        .size(auto,160px);
+        .size(auto,150px);
         .filter{
           *{
             .size(100%,100%);
@@ -206,7 +215,7 @@ body {
           position: absolute;
           z-index: 3;
           .pos(0,0);
-          padding: 35px @paddingleft;
+          padding: 33px @paddingleft;
           .size(100%,100%);
           .box-sizing();
           .left{

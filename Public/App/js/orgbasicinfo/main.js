@@ -7,6 +7,7 @@ requirejs.config({
         zepto:'zepto.min',
         prefixfree:'prefixfree.min',
         common:'../forum/hisihi_news_common',
+        stackblur:'stackblur',
         orgbasicinfo:'orgbasicinfo',
     },
     shim: {
@@ -15,12 +16,15 @@ requirejs.config({
         },
         common:{
             output:'MyCommon'
+        },
+        stackblur:{
+            output:'StackBlur'
         }
     }
 });
 
 
-require(['zepto','common','orgbasicinfo','prefixfree'],function(Zepto,MyCommon,OrgBasicInfo){
+require(['zepto','common','orgbasicinfo','prefixfree','stackblur'],function(Zepto,MyCommon,OrgBasicInfo){
     var $target=$('#wrapper');
     new OrgBasicInfo($target,$target.data('oid'));
 });

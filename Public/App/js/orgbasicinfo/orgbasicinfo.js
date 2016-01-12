@@ -139,7 +139,7 @@ define(['zepto','common'],function(){
            //var str= '<div class="mainItem logoAndCertInfo">'+
             var str='<div class="head mainContent">'+
                             '<div class="filter">'+
-                                '<img class="logoBg myLogo" src="'+data.logo+'" alt="logo"/>'+
+                                '<img class="logoBg myLogo" id="myLogoBg" style="width:543px;height:150px;" src="'+data.logo+'" alt="logo"/>'+
                                 '<div class="filterUp"></div>'+
                             '</div>'+
                             '<div class="mainInfo">'+
@@ -190,7 +190,15 @@ define(['zepto','common'],function(){
             this.$wrapper.find('.logoAndCertInfo').html(str).css('opacity',1);
             this.$wrapper.find('#myLogo').setImgBox();
             this.fillInIntroduceInfo(result);
+            this.setFilterImg();
             this.loadTopAnnouncement();
+        },
+
+        /*设置图片模糊效果*/
+        setFilterImg:function(){
+            stackBlurImage("myLogoBg","canvas",50,false);
+            $("#canvas").width(300).height(200);
+            this.$wrapper.find('#myLogoBg')[0].src=$("#canvas")[0].toDataURL();
         },
 
         /*加载头条信息*/
