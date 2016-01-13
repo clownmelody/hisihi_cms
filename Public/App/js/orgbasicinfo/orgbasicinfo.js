@@ -25,7 +25,7 @@ define(['zepto','common'],function(){
 
         this.$wrapper.find('#videoPreviewBox img').bind('load',$.proxy(this,'controlPlayBtnStyle'));
         this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
-        this.$wrapper.on('click','#basicInfoLoadEorror',function(){   //重新加载数据
+        this.$wrapper.on('touchend','#basicInfoLoadEorror',function(){   //重新加载数据
             that.loadData(queryPara);
         });
         this.pageIndex=1; //评论页码
@@ -230,7 +230,7 @@ define(['zepto','common'],function(){
                 str += '<li>'+
                             '<div class="topNewLogo">头条</div>'+
                             '<div class="title">'+
-                                '<a href="'+window.urlObject.webRoot+item.detail_url+'">' + item.title + '</a>'+
+                                '<a href="'+item.detail_url+'">' + item.title + '</a>'+
                             '</div>'+
                         '</li>';
             }
@@ -305,10 +305,12 @@ define(['zepto','common'],function(){
                     $target.find('.itemContentDetail').html(str);
                 }
                 $location.find('#myLocation').text(location);
-                if(!locationImg){
-                    locationImg=window.urlObject.image+'/orgbasicinfo/map.png';
+                if(locationImg) {
+                    $location.find('.locationMap img').attr('src', locationImg);
                 }
-                $location.find('.locationMap img').attr('src',locationImg);
+                else{
+                    $location.find('.noDataInHeader').html('&nbsp;&nbsp;&nbsp;&nbsp;地址信息暂无');
+                }
             }
         },
 
@@ -366,10 +368,15 @@ define(['zepto','common'],function(){
                 paraData: {organization_id: this.oid},
                 sCallback: function(result){
                     if(result.success) {
-                        that.$wrapper.find('#videoPreview').attr('src', result.data.video_img);
+                        var src=result.data.video_img;
+                        if(src) {
+                            that.$wrapper.find('#videoPreview').attr('src', result.data.video_img);
+                        }else{
+                            that.$wrapper.find('.videoCon .itemHeader span').text('视频信息暂无');
+                        }
                         callback();
                     }else{
-                        that.$wrapper.find('.videoCon .itemHeader span').text('视频信息暂无');
+                        that.$wrapper.find('.noDataInHeader').text('视频信息暂无');
                     }
                 },
                 eCallback:function(txt){
