@@ -229,6 +229,7 @@ class ForumController extends AppController
             unset($v['link_url']);
             unset($v['update_time']);
             unset($v['title']);
+            unset($v['is_elite']);
         }
         unset($v);
 
@@ -305,23 +306,29 @@ class ForumController extends AppController
      * @param string $order
      * @param bool|false $show_adv
      * @param int $post_type  区别公司热门话题和普通论坛
-     * @param int $circle_type 圈子类型
+     * @param null $circle_type 圈子类型
+     * @param null $reply_type 评论类型,1未评论，2已评论
      * @param null $version 版本号
      * @param null $position 地理位置
      * @param null $grade 年级
      */
-    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply', $show_adv=false, $post_type=1, $version=null, $circle_type=1, $position=null, $grade=null)
+    public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply',
+                                $show_adv=false, $post_type=1, $version=null, $circle_type=null,
+                                $reply_type=null,$position=null, $grade=null)
     {
         $field_type = intval($field_type);
         $page = intval($page);
         $count = intval($count);
         $order = op_t($order);
         $circle_type = intval($circle_type);
+        $reply_type = intval($reply_type);
 
         if ($order == 'ctime') {
             $order = 'create_time desc';
         } else if ($order == 'reply') {
             $order = 'last_reply_time desc';
+        } else if($order == 'hot'){//2.2以上版本"最热"
+            $order = "reply_count desc";
         } else {
             $order = 'last_reply_time desc';//默认的
         }
@@ -354,6 +361,7 @@ class ForumController extends AppController
             $order = "reply_count desc";
         }
 
+        //2.2以上版本筛选条件
         if($circle_type == 1){//学习圈
             $ids = $this->getForumsFromStudents();
             $post_ids = array();
@@ -372,17 +380,26 @@ class ForumController extends AppController
         }
         if($circle_type == 3){//朋友圈
             $ids = $this->getForumsFromFollows();
+            if(empty($ids)){
+                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>null));
+            }
             $post_ids = array();
             foreach($ids as &$post_id){
                 $post_ids[] = $post_id['id'];
             }
             $map['id'] = array('in', $post_ids);
         }
-        if($circle_type == 4){//比赛圈
-
+        if($circle_type == 4){//精华圈
+            $map['is_elite'] = 1;
         }
 
-        if(!empty($position)){
+        if($reply_type == 1){//未评论
+            $map['reply_count'] = 0;
+        }else if($reply_type == 2){//已评论
+            $map['reply_count'] = array('gt',0);
+        }
+
+        if(!empty($position)){//发帖位置
             $posts = $this->getForumsByPosition($position);
             $post_ids = array();
             foreach($posts as &$post_id){
@@ -390,10 +407,12 @@ class ForumController extends AppController
             }
             if(!empty($map['id'])){//取帖子id交集
                 $intersect_ids = array_intersect($map['id'][1], $post_ids);
+                $map['id'] = array('in', $intersect_ids);
+            }else{
+                $map['id'] = array('in', $post_ids);
             }
-            $map['id'] = array('in', $intersect_ids);
         }
-        if(!empty($grade)){
+        if(!empty($grade)){//发帖人的年级
             $uids = $this->getForumsByGrade($grade);
             $post_uids = array();
             foreach($uids as &$post_uid){
@@ -2312,19 +2331,19 @@ class ForumController extends AppController
         $circle = array(
             array(
                 'id'=>1,
-                'name'=>'学习圈'
+                'name'=>'学习'
             ),
             array(
                 'id'=>2,
-                'name'=>'老师圈'
+                'name'=>'老师'
             ),
             array(
                 'id'=>3,
-                'name'=>'朋友圈'
+                'name'=>'朋友'
             ),
             array(
                 'id'=>4,
-                'name'=>'比赛圈'
+                'name'=>'精华'
             )
         );
         $this->apiSuccess("获取社区圈子成功", null, array('data'=>$circle));
