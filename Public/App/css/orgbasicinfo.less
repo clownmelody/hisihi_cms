@@ -140,6 +140,12 @@ body {
       text-align: center;
       height: 45px;
       line-height: 45px;
+      color: #9A9292;
+    }
+    .noDataInHeader{
+      font-size: 12px !important;
+      text-indent: 3px;
+      color: #9A9292 !important;
     }
 
     //一级标题 带箭头
@@ -485,7 +491,7 @@ body {
             .size(50px,100%);
             img{
               .size(50px,50px);
-              border-radius: 50%;
+              border-radius: 25px;
               border: 1px solid #ccc;
             }
           }
@@ -613,11 +619,12 @@ body {
       }
       .studentCommentCon{
         .inputComment{
-          .size(auto,40px);
+          .size(100%,40px);
           .box-sizing();
           padding:5px @paddingright 5px @paddingleft;
           #myComment{
             .size(100%,100%);
+            display: block;
             font-size: 14px;
             text-indent: 10px;
             border:1px solid #CCCCCC;
@@ -644,7 +651,7 @@ body {
               padding:0 @paddingleft 0 @paddingright;
               img{
                 .size(44px,44px);
-                border-radius: 50%;
+                border-radius: 22px;
                 border: 1px solid #CBCBCB;
               }
             }
