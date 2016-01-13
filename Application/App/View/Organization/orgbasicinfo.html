@@ -9,7 +9,7 @@
     <meta name="Description" content="嘿设汇——机构基本信息">
     <meta name="Keywords" content="嘿设汇——机构基本信息">
     <link type="text/css" href="__CSS__/orgbasicinfo.css" rel="stylesheet"/>
-    <title>嘿设汇——机构基本信息</title>
+    <title>{$organization_name}</title>
 </head>
 <body>
     <div id="loadingTip" class="loadingResultTips">
@@ -62,9 +62,9 @@
                 </ul>
             </div>
             <div class="mainContentItem videoCon">
-                <div class="itemHeader">机构视频</div>
+                <div class="itemHeader">机构视频<span class="noDataInHeader"></span></div>
                 <div id="videoPreviewBox">
-                    <img id="videoPreview" src="__IMG__/orgbasicinfo/videopreview.png"/>
+                    <img id="videoPreview" src="__IMG__/cover.png"/>
                     <i class="spiteBgOrigin"></i>
                 </div>
             </div>
@@ -89,13 +89,13 @@
         <!--地理位置-->
         <div class="mainItem mainItemNormal mainItemLocation">
             <div class="basicHeaderWithArrow">
-                <span>地址</span>
+                <span>地址<span class="noDataInHeader"></span>
                 <i class="spiteBgOrigin arrow"></i>
             </div>
             <div class="locationDetail">
                 <p id="myLocation"></p>
                 <div class="locationMap">
-                    <img src=""/>
+                    <img src="__IMG__/cover.png"/>
                 </div>
             </div>
         </div>
@@ -169,46 +169,6 @@
                 </div>
                 <ul class="studentCommentDetail">
                     <li><div class="nonData">暂无评论</div></li>
-                    <!--<li>-->
-                        <!--<div class="imgCon">-->
-                            <!--<img src="http://pic.hisihi.com/2015-12-29/1451318640734258.png@170-79-223-223a"/>-->
-                        <!--</div>-->
-                        <!--<div class="commentCon">-->
-                            <!--<div class="commentHead">-->
-                                <!--<span class="commentNickname">张学友</span>-->
-                                <!--<span class="rightItem starsCon">-->
-                                    <!--<i class="allStar spiteBgOrigin"></i>-->
-                                    <!--<i class="allStar spiteBgOrigin"></i>-->
-                                    <!--<i class="allStar spiteBgOrigin"></i>-->
-                                    <!--<i class="halfStar spiteBgOrigin"></i>-->
-                                    <!--<i class="emptyStar spiteBgOrigin"></i>-->
-                                    <!--<div style="clear: both;"></div>-->
-                                <!--</span>-->
-                            <!--</div>-->
-                            <!--<div class="content">这个培训机构各种坑爹，大家千万不要去！！！这个培训机构各种坑爹，大家千万不要去</div>-->
-                            <!--<div class="publicTime">发表于30年前</div>-->
-                        <!--</div>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<div class="imgCon">-->
-                            <!--<img src="http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/2015-03-26/551369fe8358c-05505543.jpg"/>-->
-                        <!--</div>-->
-                        <!--<div class="commentCon">-->
-                            <!--<div class="commentHead">-->
-                                <!--<span class="commentNickname">陈粒</span>-->
-                                <!--<span class="rightItem starsCon">-->
-                                    <!--<i class="allStar spiteBgOrigin"></i>-->
-                                    <!--<i class="allStar spiteBgOrigin"></i>-->
-                                    <!--<i class="allStar spiteBgOrigin"></i>-->
-                                    <!--<i class="halfStar spiteBgOrigin"></i>-->
-                                    <!--<i class="emptyStar spiteBgOrigin"></i>-->
-                                    <!--<div style="clear: both;"></div>-->
-                                <!--</span>-->
-                            <!--</div>-->
-                            <!--<div class="content">拥有坑人绝对的完美一双手，不流汗也不发抖，交叉在微笑的背后，暗藏危险的轮廓</div>-->
-                            <!--<div class="publicTime">发表于35年前</div>-->
-                        <!--</div>-->
-                    <!--</li>-->
                 </ul>
             </div>
         </div>
@@ -227,8 +187,6 @@
         css: "__CSS__",
         image: "__IMG__",
         ctl:'__URL__',
-//        apiBasicUrl:'http://{$Think.server.HTTP_HOST}/hisihi-cms/',
-        apiBasicUrl:'http://{$Think.server.HTTP_HOST}/',
 //        apiUrl:'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/Organization/',
         apiUrl:'http://{$Think.server.HTTP_HOST}/api.php?s=/Organization/',
     };
