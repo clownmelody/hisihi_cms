@@ -35,7 +35,7 @@ class CompanyController extends AppController {
             $totalCount = $model->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")->count();
             if($page==1&&$count==4){
                 $result = $model->field("id,name,city,slogan,introduce,filtrate_mark,marks,scale,website,fullname,location,picture,hr_email")
-                    ->where("status<>-1 and (`name` like '%".$name."%' or fullname like '%".$name."%')")
+                    ->where("status=1")
                     ->order('scale desc')->page($page, 30)->select();
                 $dyna_result = array();
                 $ccount = count($result);
@@ -43,15 +43,9 @@ class CompanyController extends AppController {
                 shuffle ($numbers);
                 $tem_array = array_slice($numbers,0, 4);
                 for($i=0; $i<4; $i++){
-                    //$random_id = rand(0, $ccount);
                     $random_id = $tem_array[$i];
                     $dyna_result[] = $result[$random_id];
                 }
-                /*$ccount = count($result);
-                for($i=0; $i<4; $i++){
-                    $random_id = rand(0, $ccount);
-                    $dyna_result[] = $result[$random_id];
-                }*/
                 $result = $dyna_result;
             } else {
                 $result = $model->field("id,name,city,slogan,introduce,filtrate_mark,marks,scale,website,fullname,location,picture,hr_email")
