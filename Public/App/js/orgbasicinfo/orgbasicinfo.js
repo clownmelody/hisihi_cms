@@ -23,7 +23,7 @@ define(['zepto','common'],function(){
         };
         this.loadData(queryPara);
 
-        this.$wrapper.find('#videoPreviewBox img').bind('load',this.controlPlayBtnStyle);
+        this.$wrapper.find('#videoPreviewBox img').bind('load',$.proxy(this,'controlPlayBtnStyle'));
         this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
         this.$wrapper.on('click','#basicInfoLoadEorror',function(){   //重新加载数据
             that.loadData(queryPara);
@@ -230,7 +230,7 @@ define(['zepto','common'],function(){
                 str += '<li>'+
                             '<div class="topNewLogo">头条</div>'+
                             '<div class="title">'+
-                                '<a href="'+item.detail_url+'">' + item.title + '</a>'+
+                                '<a href="'+window.urlObject.webRoot+item.detail_url+'">' + item.title + '</a>'+
                             '</div>'+
                         '</li>';
             }
@@ -357,6 +357,29 @@ define(['zepto','common'],function(){
             $ul.prepend(str);
         },
 
+        /*加载我的视频信息*/
+        loadMyVideoInfo:function(callback){
+            var that=this,
+                $target=that.$wrapper.find('.videoPreview');
+            this.loadData({
+                url: window.urlObject.apiUrl + 'getPropagandaVideo',
+                paraData: {organization_id: this.oid},
+                sCallback: function(result){
+                    if(result.success) {
+                        that.$wrapper.find('#videoPreview').attr('src', result.data.video_img);
+                        callback();
+                    }else{
+                        that.$wrapper.find('.videoCon .itemHeader span').text('视频信息暂无');
+                    }
+                },
+                eCallback:function(txt){
+                    $target.css('opacity',1);
+                    $target.find('.loadErrorCon').show().find('a').text('获得视频信息失败，'+txt).show();
+                    callback();
+                }
+            });
+        },
+
 
         /*加载我的评分息*/
         loadMyCompresAsseinfo:function(callback){
@@ -447,7 +470,7 @@ define(['zepto','common'],function(){
             for(var i=0;i<len;i++){
                 item=data[i];
                 userInfo=item.userInfo;
-                dateTime=new Date(item.create_time*1000).format('yyyy-MM-dd');
+                dateTime=this.getDiffTime(new Date(item.create_time*1000));   //得到发表时间距现在的时间差
                 str+='<li>'+
                         '<div class="imgCon">'+
                             '<img src="'+userInfo.avatar128+'"/>'+
@@ -513,6 +536,9 @@ define(['zepto','common'],function(){
                     $target.attr('data-loading','true');
                     if(flag=='false') {
                         this.loadMyTeachersInfo(function(){
+                            $target.attr({'data-loaded':'true','data-loading':'false'});
+                        });
+                        this.loadMyVideoInfo(function(){
                             $target.attr({'data-loaded':'true','data-loading':'false'});
                         });
                     }
@@ -605,7 +631,9 @@ define(['zepto','common'],function(){
 
         /*根据分数情况，得到星星的信息*/
         getStarInfoByScore:function(num){
-            num=num | 0;
+            if(num.toString().indexOf('.')>0){
+                num=this.myRoundNumber(num);
+            }
             var str='',
                 allNum=Math.floor(num),
                 tempNum=Math.ceil(num),
@@ -621,6 +649,32 @@ define(['zepto','common'],function(){
                 str+='<i class="emptyStar spiteBgOrigin"></i>';
             }
             return str;
+        },
+
+        /*
+        *对评分进行四舍五入
+        * 按照以下类似规则：
+        * 1：   2.1，2.2  = 2.0
+        * 2：   2.3，2.4，2.5，2.6 = 2.5
+        * 3：   2.7，2.8，2.9  = 3.0
+        */
+        myRoundNumber:function(num){
+            num=num.toFixed(1);
+            var arr=num.split('.'),
+                firstNum=arr[0],
+                lastNum=arr[1];
+            if(lastNum!=0){
+                var flag1=lastNum<= 2,
+                    flag2=lastNum>=7;
+                if(flag1){
+                    return firstNum | 0;
+                }else if(flag2){
+                    return firstNum | 0 + 1;
+                }
+                else{
+                    return parseInt(firstNum) + 0.5;
+                }
+            }
         },
 
         /*根据分数情况，得到色块的信息*/
@@ -654,6 +708,47 @@ define(['zepto','common'],function(){
                 fontSize='14px';
             }
             $a.css({'top':(h-ah)/2,'height':ah+'px','line-height':ah+'px','font-size':fontSize});
+        },
+
+        /*
+         *根据客户端的时间信息得到发表评论的时间格式
+         *多少分钟前，多少小时前，然后是昨天，然后再是月日
+         */
+        getDiffTime: function (recordTime) {
+            if (recordTime) {
+                var minute = 1000 * 60;
+                var hour = minute * 60;
+                var day = hour * 24;
+                var diff = new Date() - recordTime;
+                var result = '';
+                if (diff < 0) {
+                    return result;
+                }
+                var weekR = diff / (7 * day);
+                var dayC = diff / day;
+                var hourC = diff / hour;
+                var minC = diff / minute;
+                if (weekR >= 1) {
+                    result = recordTime.getFullYear() + '.' + (recordTime.getMonth() + 1) + '.' + recordTime.getDate();
+                    return result;
+                }
+                else if (dayC >= 1) {
+                    result = parseInt(dayC) + '天前';
+                    return result;
+                }
+                else if (hourC >= 1) {
+                    result = parseInt(hourC) + '小时前';
+                    return result;
+                }
+                else if (minC >= 1) {
+                    result = parseInt(minC) + '分钟前';
+                    return result;
+                } else {
+                    result = '刚刚';
+                    return result;
+                }
+            }
+            return '';
         },
 
     };
