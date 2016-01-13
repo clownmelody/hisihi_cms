@@ -51,18 +51,6 @@ body {
     border: 1px solid #BBAEAE !important;
     outline: 0;
   }
-  #canvas{
-    position: absolute;
-    top:0;
-    left: 0;
-    z-index: -2;
-  }
-}
-
-.loadError {
-  display: none;
-  text-decoration: none;
-  color: #777;
 }
 
 .loadingResultTips {
@@ -120,6 +108,10 @@ body {
     .size(100%,30px);
     text-align: center;
     line-height: 30px;
+    a{
+      color:#9A9292 !important;
+      text-decoration: none;
+    }
   }
 
   .mainItem{
@@ -194,6 +186,9 @@ body {
       .border-bottom(0);
       *{
         color: #fff;
+      }
+      .loadErrorCon{
+        padding-top: 60px;
       }
       .head{
         position: relative;
@@ -427,6 +422,7 @@ body {
     &.mainItemBasicInfo{
       @h:44px;
       @color:#212121;
+      opacity: 1;
       .mainContentItem{
         padding:0px @paddingleft;
         &.introduce {
@@ -525,6 +521,7 @@ body {
 
     //地址
     &.mainItemLocation{
+      opacity: 1;
       #myLocation{
         font-size: 16px;
         color: @font-color;

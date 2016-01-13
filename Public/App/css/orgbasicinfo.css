@@ -28,17 +28,6 @@ body input[type="text"]:focus {
   border: 1px solid #BBAEAE !important;
   outline: 0;
 }
-body #canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -2;
-}
-.loadError {
-  display: none;
-  text-decoration: none;
-  color: #777;
-}
 .loadingResultTips {
   z-index: -1;
   text-align: center;
@@ -92,6 +81,10 @@ body #canvas {
   height: 30px;
   text-align: center;
   line-height: 30px;
+}
+#wrapper .loadErrorCon a {
+  color: #9A9292 !important;
+  text-decoration: none;
 }
 #wrapper .mainItem {
   min-height: 60px;
@@ -159,6 +152,9 @@ body #canvas {
 }
 #wrapper .mainItem.logoAndCertInfo * {
   color: #fff;
+}
+#wrapper .mainItem.logoAndCertInfo .loadErrorCon {
+  padding-top: 60px;
 }
 #wrapper .mainItem.logoAndCertInfo .head {
   position: relative;
@@ -380,6 +376,9 @@ body #canvas {
   color: #ff5a00;
   font-weight: bolder;
 }
+#wrapper .mainItem.mainItemBasicInfo {
+  opacity: 1;
+}
 #wrapper .mainItem.mainItemBasicInfo .mainContentItem {
   padding: 0px 15px;
 }
@@ -461,6 +460,9 @@ body #canvas {
   overflow: hidden;
   text-overflow: ellipsis;
   max-height: 35px;
+}
+#wrapper .mainItem.mainItemLocation {
+  opacity: 1;
 }
 #wrapper .mainItem.mainItemLocation #myLocation {
   font-size: 16px;
