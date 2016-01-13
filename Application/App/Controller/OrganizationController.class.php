@@ -1933,6 +1933,8 @@ class OrganizationController extends AppController
      */
     public function OrganizationBasicInfo($organization_id=0){
         $this->assign("organization_id", $organization_id);
+        $organization_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');
+        $this->assign("organization_name", $organization_name);
         $this->display('orgbasicinfo');
     }
 
