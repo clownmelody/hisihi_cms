@@ -390,6 +390,31 @@ abstract class AppController extends RestController {
     }
 
     /**
+     * 头条是否被点踩
+     * @param $id
+     * @return mixed
+     */
+    protected function isArticleOppose($id){
+        $map_oppose['row'] = $id;
+        $map_oppose['appname'] = 'Article';
+        $map_oppose = array_merge($map_oppose, array('uid' => is_login()));
+        $opposed = M('Oppose')->where($map_oppose)->count();
+        return $opposed;
+    }
+
+    /**
+     * 获取头条的点踩数
+     * @param $id
+     * @return mixed
+     */
+    protected function getArticleOpposeCount($id){
+        $map_oppose_count['row'] = $id;
+        $map_oppose_count['appname'] = 'Article';
+        $supportCount = M('Oppose')->where($map_oppose_count)->count();
+        return $supportCount;
+    }
+
+    /**
      * @param $map_support
      * @return mixed
      * @auth RFly
@@ -404,7 +429,6 @@ abstract class AppController extends RestController {
             return $count;
         }*/
         $count = D('Support')->where($map_support)->count();
-        return $count;
         return $count;
     }
 }

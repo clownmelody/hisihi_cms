@@ -1491,6 +1491,20 @@ class OrganizationController extends AppController
                 $org['relationship'] = 0;
             }
         }
+        //机构列表按报名数排序
+        $sort = array(
+            'direction'=>'SORT_DESC',
+            'field'=>'enrollCount'
+        );
+        $arrSort = array();
+        foreach($org_list as $uniqid => $row){
+            foreach($row as $key=>$value){
+                $arrSort[$key][$uniqid] = $value;
+            }
+        }
+        if($sort['direction']){
+            array_multisort($arrSort[$sort['field']], constant($sort['direction']), $org_list);
+        }
         $data['totalCount'] = $totalCount;
         $data['list'] = $org_list;
         $this->apiSuccess('获取机构列表成功', null, $data);
@@ -1849,7 +1863,7 @@ class OrganizationController extends AppController
     public function shareOrganization($organization_id=0){
         $result = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->find();
         if($result){
-            $extra['org_share_url'] = 'app.php/organization/organizationdetail/type/view/id/'.$organization_id;
+            $extra['org_share_url'] = "api.php/Organization/OrganizationBasicInfo/organization_id/".$organization_id;
             $uid = $this->getUid();
             if($uid){
                 if($this->checkUserDoShareCache($uid)){
@@ -2354,7 +2368,7 @@ class OrganizationController extends AppController
         }
         $model = M('OrganizationEnroll');
         $data['organization_id'] = $organization_id;
-        $data['status'] = 2;
+        $data['status'] = array('gt', 0);
         $count = $model->where($data)->count();
         return $count;
     }

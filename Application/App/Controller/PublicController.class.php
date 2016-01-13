@@ -348,6 +348,11 @@ class PublicController extends AppController {
             $info['isFavorited'] = $this->isArticleFavorite($id);
             // 头条点赞数
             $info['supportCount'] = $this->getArticleSupportCount($id);
+            if((float)$version > 2.2){
+                $info['isOpposed'] = $this->isArticleOppose($id);
+                // 头条点踩数
+                $info['opposeCount'] = $this->getArticleOpposeCount($id);
+            }
             unset($info['uid']);
             unset($info['name']);
             unset($info['category_id']);
