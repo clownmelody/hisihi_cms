@@ -231,6 +231,53 @@ class DocumentController extends AppController {
     }
 
     /**
+     * 设计头条点踩
+     * @param $id
+     */
+    public function doOppose($id)
+    {
+        $this->requireLogin();
+        $oppose['appname'] = 'Article';
+        $oppose['table'] = 'article_content';
+        $oppose['row'] = $id;
+        $oppose['uid'] = is_login();
+        if (M('Oppose')->where($oppose)->count()) {
+            $this->apiError(-100,'您已经踩过，不能再踩了!');
+        } else {
+            $oppose['create_time'] = time();
+            if (M('Oppose')->where($oppose)->add($oppose)) {
+                $this->clearCache($oppose, 'oppose');
+                $this->apiSuccess('感谢您的支持');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**
+     * 取消设计头条点踩
+     * @param $id
+     */
+    public function undoOppose($id)
+    {
+        $this->requireLogin();
+        $oppose['appname'] = 'Article';
+        $oppose['table'] = 'article_content';
+        $oppose['row'] = $id;
+        $oppose['uid'] = is_login();
+        if (M('Oppose')->where($oppose)->count()) {
+            if (M('Oppose')->where($oppose)->delete()) {
+                $this->clearCache($oppose, 'oppose');
+                $this->apiSuccess('取消点踩成功！');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        } else {
+            $this->apiError(-102,'您还没有赞过，不能取消!');
+        }
+    }
+
+    /**
      * 检查用户收藏行为是否还能加积分
      * @param int $uid
      * @return bool
@@ -290,6 +337,8 @@ class DocumentController extends AppController {
             $cache_key = "support_count_" . implode('_', $condition);
         else if($type == 'favorite')
             $cache_key = "favorite_count_" . implode('_', $condition);
+        else if($type == 'oppose')
+            $cache_key = "oppose_count_" . implode('_', $condition);
         S($cache_key, null);
     }
 
