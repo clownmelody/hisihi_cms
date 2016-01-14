@@ -203,7 +203,7 @@ body input[type="text"]:focus {
   max-width: 84px !important;
 }
 #wrapper .mainItem.logoAndCertInfo .head .mainInfo .right {
-  margin-left: 112px;
+  margin-left: 100px;
   height: 100%;
 }
 #wrapper .mainItem.logoAndCertInfo .head .mainInfo .right #orgName {
@@ -229,7 +229,6 @@ body input[type="text"]:focus {
   border-right-width: 0;
 }
 #wrapper .mainItem.logoAndCertInfo .bottom {
-  background-color: #ff5a00;
   height: 48px;
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem {
@@ -246,7 +245,6 @@ body input[type="text"]:focus {
   width: auto;
   height: auto;
   margin: 0 auto;
-  border: 1px solid #ff5a00;
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span * {
   float: left;
@@ -268,6 +266,15 @@ body input[type="text"]:focus {
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i.honestCerIcon.unCerted {
   background-position: -24px -46px;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem.certed {
+  background-color: #ff5a00;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem.unCerted {
+  background-color: white;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerName {
+  line-height: 24px;
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerName.certed {
   color: white;
@@ -310,7 +317,7 @@ body input[type="text"]:focus {
   margin-left: 75px;
   margin-right: 15px;
   height: 20px;
-  line-height: 20px;
+  line-height: 18px;
   padding-top: 5px;
 }
 #wrapper .mainItem.mainItemTopNews .topNewsCon li .title a {
@@ -429,8 +436,13 @@ body input[type="text"]:focus {
   height: 75px;
   position: relative;
   padding: 10px 8px 10px 15px;
-  border-bottom: 1px solid #d6d6d6;
   box-sizing: border-box;
+}
+#wrapper .mainItem.mainItemTeacherPower .teacherPowerDetail li.border {
+  border-bottom: 1px solid #d6d6d6;
+}
+#wrapper .mainItem.mainItemTeacherPower .teacherPowerDetail li.unBorder {
+  border-bottom: 0 solid #d6d6d6;
 }
 #wrapper .mainItem.mainItemTeacherPower .teacherPowerDetail li .leftPic {
   position: absolute;
@@ -584,7 +596,7 @@ body input[type="text"]:focus {
   width: 80px;
   height: 80px;
   box-sizing: border-box;
-  padding: 0 15px 0 20px;
+  padding: 0 15px;
 }
 #wrapper .mainItem.mainItemCompresAsse .studentCommentCon .studentCommentDetail li .imgCon img {
   width: 44px;
