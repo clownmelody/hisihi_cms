@@ -33,17 +33,20 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.name}</td>
-                        <td>{$vo.course_name}</td>
+                        <td style="width: 200px;">{$vo.name}</td>
+                        <td style="width: 200px;">{$vo.course_name}</td>
                         <td>{$vo.duration}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
+                            <elseif condition="($vo.status eq 0) " /> 未审核
                             <else /> 已删除
                             </if>
                         </td>
                         <td>
                             <a href="{:U('Organization/video_edit?id='.$vo['id'])}" >编辑</a>
-                            <a href="{:U('Organization/video_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('Organization/video_delete?id='.$vo['id'].'&course_id='.$course_id)}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('Organization/video_play?id='.$vo['id'])}" class="ajax-get confirm">在线审核</a>
+                            <a href="{:U('Organization/video_checked?id='.$vo['id'].'&course_id='.$course_id)}" class="ajax-get confirm">审核通过</a>
                         </td>
                     </tr>
                 </volist>
