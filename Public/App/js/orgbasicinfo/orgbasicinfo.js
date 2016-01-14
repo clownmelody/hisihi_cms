@@ -362,12 +362,12 @@ define(['zepto','common'],function(){
                 sCallback: function(result){
                     $target.css('opacity',1);
                     that.fillMyTeachersInfo(result.teacherList);
-                    callback();
+                    callback&&callback();
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
                     $target.find('.loadErrorCon').show().find('a').text('获得教师信息失败，点击重新加载').show();
-                    callback();
+                    callback&&callback();
                 }
             });
         },
@@ -443,12 +443,12 @@ define(['zepto','common'],function(){
                 sCallback: function(result){
                     $target.css('opacity',1);
                     that.fillMyCompresAsseInfo(result);
-                    callback();
+                    callback && callback();
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
                     $target.find('.loadErrorCon').show().find('a').text('获取评价信息失败，点击重新加载').show();
-                    callback();
+                    callback && callback();
                 }
             });
         },
@@ -514,6 +514,7 @@ define(['zepto','common'],function(){
                 str='';
             if(!data || data.length==0){
                 str='<li><div class="nonData">暂无评论</div></li>';
+                this.$wrapper.find('.studentCommentDetail li').remove();
             }else {
                 /*具体的评论信息*/
                 var len = data.length,
