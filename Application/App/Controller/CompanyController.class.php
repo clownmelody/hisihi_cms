@@ -44,6 +44,9 @@ class CompanyController extends AppController {
                 $tem_array = array_slice($numbers,0, 4);
                 for($i=0; $i<4; $i++){
                     $random_id = $tem_array[$i];
+                    if($random_id==30){
+                        $random_id = 29;
+                    }
                     $dyna_result[] = $result[$random_id];
                 }
                 $result = $dyna_result;
