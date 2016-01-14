@@ -173,11 +173,14 @@ define(['zepto','common'],function(){
                 class1=authen1?'certed':'unCerted',
                 authen2=data.authenticationInfo[3].status,
                 class2=authen2?'certed':'unCerted';
+            var url=data.logo;
+            if(getDeviceType().android && androidVersionType()<4.4){
+                url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
+            }
 
-           //var str= '<div class="mainItem logoAndCertInfo">'+
             var str='<div class="head mainContent">'+
                             '<div class="filter">'+
-                                '<img class="logoBg myLogo" src="'+data.logo+'" alt="logo"/>'+
+                                '<img class="logoBg myLogo" src="'+url+'" alt="logo"/>'+
                                 '<div class="filterUp"></div>'+
                             '</div>'+
                             '<div class="mainInfo">'+
@@ -209,14 +212,14 @@ define(['zepto','common'],function(){
                             '</div>'+
                         '</div>'+
                         '<div class="bottom">'+
-                            '<div class="cerInfoItem">'+
+                            '<div class="cerInfoItem '+ class1 +'">'+
                                 '<span>'+
                                     '<i class="heiCerIcon spiteBg '+class1+'"></i>'+
                                     '<span class="cerName '+class1+'">嘿设汇认证</span>'+
                                     '<div style="clear: both;"></div>'+
                                 '</span>'+
                             '</div>'+
-                            '<div class="cerInfoItem">'+
+                            '<div class="cerInfoItem  '+ class2 +'">'+
                                 '<span>'+
                                     '<i class="honestCerIcon spiteBg '+class2+'"></i>'+
                                     '<span class="cerName '+class1+'">诚信机构认证</span>'+
@@ -337,6 +340,7 @@ define(['zepto','common'],function(){
                     }
                     $target.find('.itemContentDetail').html(str);
                 }
+                if(!location)
                 $location.find('#myLocation').text(location);
                 if(locationImg) {
                     $location.find('.locationMap img').attr('src', locationImg);
@@ -362,7 +366,7 @@ define(['zepto','common'],function(){
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show().find('a').text('获得头条信息失败，点击重新加载').show();
+                    $target.find('.loadErrorCon').show().find('a').text('获得教师信息失败，点击重新加载').show();
                     callback();
                 }
             });
@@ -375,10 +379,18 @@ define(['zepto','common'],function(){
                 str='<div class="nonData">暂无老师</div>';
             }
             else {
-                var len = data.length;
+                var len = data.length,
+                    isOdd=len%2== 0,
+                    className='border';
                 for (var i = 0; i < len; i++) {
+                    if(isOdd && i>=len-2){
+                        className='unBorder';
+                    }
+                    if(!isOdd && i>=len-1){
+                        className='unBorder';
+                    }
                     itemInfo = data[i].info;
-                    str += '<li>' +
+                    str += '<li class="'+className +'">' +
                         '<div class="leftPic">' +
                         '<img src="' + itemInfo.avatar128 + '"/>' +
                         '</div>' +
@@ -386,7 +398,7 @@ define(['zepto','common'],function(){
                         '<div class="name">' + itemInfo.nickname + '</div>' +
                         '<div class="desc">' + itemInfo.institution.substrLongStr(12) + '</div>' +
                         '</div>' +
-                        '</li>';
+                    '</li>';
                 }
             }
             this.$wrapper.find('.mainItemTeacherPower .teacherPowerDetail').prepend(str);
@@ -531,7 +543,7 @@ define(['zepto','common'],function(){
                         '</li>';
                 }
             }
-            this.$wrapper.find('.studentCommentDetail').html(str);
+            this.$wrapper.find('.studentCommentDetail').append(str);
         },
 
 
@@ -566,52 +578,57 @@ define(['zepto','common'],function(){
                 arrScrollTop=[300,550];
 
             //加载我的老师
-            var $target=this.$wrapper.find('.mainItemTeacherPower');
+            var $targetTeacher=this.$wrapper.find('.mainItemTeacherPower'),
+                $targetCompress=this.$wrapper.find('.mainItemCompresAsse');
+
+            //如果是 300 到500 之间，并且 没有加载过，也 不在加载过程中，则加载新数据
             if(scrollTop>=arrScrollTop[0] &&
                 scrollTop<arrScrollTop[1] &&
-                $target.attr('data-loading')=='false'){
-                    var flag=$target.attr('data-loaded');
-                    $target.attr('data-loading','true');
+                $targetTeacher.attr('data-loading')=='false' &&
+                $targetTeacher.attr('data-loaded')=='false'){
+                    var flag=$targetTeacher.attr('data-loaded');
+                        $targetTeacher.attr('data-loading','true');
                     if(flag=='false') {
                         this.loadMyTeachersInfo(function(){
-                            $target.attr({'data-loaded':'true','data-loading':'false'});
+                            $targetTeacher.attr({'data-loaded':'true','data-loading':'false'});
                         });
                         this.loadMyVideoInfo(function(){
-                            $target.attr({'data-loaded':'true','data-loading':'false'});
+                            $targetTeacher.prev().find('.videoCon').attr({'data-loaded':'true','data-loading':'false'});
                         });
                     }
                     return;
             }
 
             //加载我的评分
-            var $target=this.$wrapper.find('.mainItemCompresAsse');
-            if(scrollTop>=arrScrollTop[1] && $target.attr('data-loading')=='false'){
-                var flag=$target.attr('data-loaded');
-                $target.attr('data-loading','true');
-                if('false'==flag) {
-                    this.loadMyCompresAsseinfo(function(){
-                        $target.attr({'data-loaded':'true','data-loading':'false'});
-                    });
+            //如果 大于 500 ，并且 没有加载过，也 不在加载过程中，则加载新数据
+            if(scrollTop>=arrScrollTop[1] &&
+                $targetCompress.attr('data-loading')=='false' &&
+                $targetCompress.attr('data-loaded')=='false'){
+                    var flag=$targetCompress.attr('data-loaded');
+                    $targetCompress.attr('data-loading','true');
+                    if('false'==flag) {
+                        this.loadMyCompresAsseinfo(function(){
+                            $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
+                        });
 
-                    //加载评论内容
-                    this.loadDetailCommentInfo(this.pageIndex,function(){
-                        $target.attr({'data-loaded':'true','data-loading':'false'});
-                    });
-                }
-
-
+                        //加载评论内容
+                        this.loadDetailCommentInfo(this.pageIndex,function(){
+                            $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
+                            this.pageIndex++;
+                        });
+                    }
                 return;
             }
 
             //加载更加多评论内容
-            if ($(target).scrollTop() == height && !$(target).hasClass('loadingData')) {  //滚动到底部
-                if(this.pageIndex>=this.pageSize){
+            if ($(target).scrollTop() >= height -120 && $targetCompress.attr('data-loading')=='false') {  //滚动到底部
+                if(this.pageIndex>this.pageSize){
                     return;
                 }
-                $(target).addClass('loadingData');
+                $targetCompress.attr('data-loading','true');
                 this.loadDetailCommentInfo(this.pageIndex,function(){
+                    $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
                     this.pageIndex++;
-                    $target.attr({'data-loaded':'true','data-loading':'false'});
                 });
             }
         },
