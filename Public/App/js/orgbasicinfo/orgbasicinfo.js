@@ -497,6 +497,7 @@ define(['zepto','common'],function(){
                 paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize},
                 sCallback: function(result){
                     that.pageSize=Math.ceil((result.totalCount|0)/that.perPageSize);
+                    that.$wrapper.find('#commentNum').text(result.totalCount);
                     that.fillDetailCommentInfo(result);
                     callback&&callback.call(that);
                 },
@@ -510,14 +511,10 @@ define(['zepto','common'],function(){
         /*填充我的评论信息*/
         fillDetailCommentInfo:function(result){
             var data=result.data,
-                $totoalNum=this.$wrapper.find('#commentNum'),
                 str='';
             if(!data || data.length==0){
-                $totoalNum.text(0);
                 str='<li><div class="nonData">暂无评论</div></li>';
             }else {
-                $totoalNum.text(data.length);
-
                 /*具体的评论信息*/
                 var len = data.length,
                     item, userInfo, dateTime;
