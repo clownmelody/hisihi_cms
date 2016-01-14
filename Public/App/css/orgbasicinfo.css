@@ -28,17 +28,6 @@ body input[type="text"]:focus {
   border: 1px solid #BBAEAE !important;
   outline: 0;
 }
-body #canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -2;
-}
-.loadError {
-  display: none;
-  text-decoration: none;
-  color: #777;
-}
 .loadingResultTips {
   z-index: -1;
   text-align: center;
@@ -92,6 +81,10 @@ body #canvas {
   height: 30px;
   text-align: center;
   line-height: 30px;
+}
+#wrapper .loadErrorCon a {
+  color: #9A9292 !important;
+  text-decoration: none;
 }
 #wrapper .mainItem {
   min-height: 60px;
@@ -160,6 +153,9 @@ body #canvas {
 #wrapper .mainItem.logoAndCertInfo * {
   color: #fff;
 }
+#wrapper .mainItem.logoAndCertInfo .loadErrorCon {
+  padding-top: 60px;
+}
 #wrapper .mainItem.logoAndCertInfo .head {
   position: relative;
   width: auto;
@@ -207,7 +203,7 @@ body #canvas {
   max-width: 84px !important;
 }
 #wrapper .mainItem.logoAndCertInfo .head .mainInfo .right {
-  margin-left: 112px;
+  margin-left: 100px;
   height: 100%;
 }
 #wrapper .mainItem.logoAndCertInfo .head .mainInfo .right #orgName {
@@ -233,7 +229,6 @@ body #canvas {
   border-right-width: 0;
 }
 #wrapper .mainItem.logoAndCertInfo .bottom {
-  background-color: #ff5a00;
   height: 48px;
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem {
@@ -250,7 +245,6 @@ body #canvas {
   width: auto;
   height: auto;
   margin: 0 auto;
-  border: 1px solid #ff5a00;
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span * {
   float: left;
@@ -272,6 +266,15 @@ body #canvas {
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem > span > i.honestCerIcon.unCerted {
   background-position: -24px -46px;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem.certed {
+  background-color: #ff5a00;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerInfoItem.unCerted {
+  background-color: white;
+}
+#wrapper .mainItem.logoAndCertInfo .bottom .cerName {
+  line-height: 24px;
 }
 #wrapper .mainItem.logoAndCertInfo .bottom .cerName.certed {
   color: white;
@@ -314,7 +317,7 @@ body #canvas {
   margin-left: 75px;
   margin-right: 15px;
   height: 20px;
-  line-height: 20px;
+  line-height: 18px;
   padding-top: 5px;
 }
 #wrapper .mainItem.mainItemTopNews .topNewsCon li .title a {
@@ -380,6 +383,9 @@ body #canvas {
   color: #ff5a00;
   font-weight: bolder;
 }
+#wrapper .mainItem.mainItemBasicInfo {
+  opacity: 1;
+}
 #wrapper .mainItem.mainItemBasicInfo .mainContentItem {
   padding: 0px 15px;
 }
@@ -430,8 +436,13 @@ body #canvas {
   height: 75px;
   position: relative;
   padding: 10px 8px 10px 15px;
-  border-bottom: 1px solid #d6d6d6;
   box-sizing: border-box;
+}
+#wrapper .mainItem.mainItemTeacherPower .teacherPowerDetail li.border {
+  border-bottom: 1px solid #d6d6d6;
+}
+#wrapper .mainItem.mainItemTeacherPower .teacherPowerDetail li.unBorder {
+  border-bottom: 0 solid #d6d6d6;
 }
 #wrapper .mainItem.mainItemTeacherPower .teacherPowerDetail li .leftPic {
   position: absolute;
@@ -461,6 +472,9 @@ body #canvas {
   overflow: hidden;
   text-overflow: ellipsis;
   max-height: 35px;
+}
+#wrapper .mainItem.mainItemLocation {
+  opacity: 1;
 }
 #wrapper .mainItem.mainItemLocation #myLocation {
   font-size: 16px;
@@ -582,7 +596,7 @@ body #canvas {
   width: 80px;
   height: 80px;
   box-sizing: border-box;
-  padding: 0 15px 0 20px;
+  padding: 0 15px;
 }
 #wrapper .mainItem.mainItemCompresAsse .studentCommentCon .studentCommentDetail li .imgCon img {
   width: 44px;

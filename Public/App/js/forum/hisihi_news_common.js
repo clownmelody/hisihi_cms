@@ -58,7 +58,7 @@ String.prototype.substrLongStr = function (len) {
 /*
 *判断webview的来源
 */
-var browserType=function() {
+var getDeviceType=function() {
     var u = navigator.userAgent, app = navigator.appVersion;
     return { //移动终端浏览器版本信息
         trident: u.indexOf('Trident') > -1, //IE内核
@@ -77,6 +77,6 @@ var browserType=function() {
 /*得到安卓的版本信息*/
 var androidVersionType=function(){
     var u = navigator.userAgent;
-    return u.substr(u.indexOf('Android') + 8, 3);
+    return Number(u.substr(u.indexOf('Android') + 8, 3));
 };
 

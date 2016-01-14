@@ -14,26 +14,24 @@
 <body>
     <div id="loadingTip" class="loadingResultTips">
         <div class="loadingImg active"></div>
-        <a class="loadError" id="basicInfoLoadEorror" href="javascript:void(0)">加载失败，点击重新加载</a>
     </div>
     <div id="wrapper" data-oid="{$organization_id}">
-        <div class="mainItem logoAndCertInfo"></div>
+        <div class="mainItem logoAndCertInfo">
+            <div class="loadErrorCon">
+                <a class="loadError" href="javascript:void(0)" data-index="0">基本信息加载失败，点击重新加载</a>
+            </div>
+        </div>
 
         <!--头条信息-->
         <div class="mainItem mainItemNormal mainItemTopNews">
             <div class="loadErrorCon">
-                <a class="loadError" href="javascript:void(0)"></a>
+                <a class="loadError" href="javascript:void(0)" data-index="1"></a>
             </div>
-            <ul class="topNewsCon mainContent">
-                <li><div class="nonData">暂无头条信息</div>></li>
-            </ul>
+            <ul class="topNewsCon mainContent"></ul>
         </div>
 
         <!--报名的同学-->
         <div class="mainItem mainItemNormal mainItemSignUp">
-            <div class="loadErrorCon">
-                <a class="loadError" href="javascript:void(0)"></a>
-            </div>
             <div class="header">
                 <p>
                     <span>剩余报名担保名额</span>
@@ -43,9 +41,14 @@
             </div>
             <div class="mainContent">
                 <div class="signUpIcon spiteBg"></div>
-                <ul class="signUpCon">
-                    <li><div class="nonData">暂无人员报名</div></li>
-                </ul>
+                <div class="signUpCon">
+                    <div class="loadErrorCon">
+                        <a class="loadError" href="javascript:void(0)" data-index="2"></a>
+                    </div>
+                    <ul class="signUpConUl">
+
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -61,9 +64,12 @@
                     <li>暂无优势标签</li>
                 </ul>
             </div>
-            <div class="mainContentItem videoCon">
+            <div class="mainContentItem videoCon" data-loaded="false" data-loading="false">
                 <div class="itemHeader">机构视频<span class="noDataInHeader"></span></div>
                 <div id="videoPreviewBox">
+                    <div class="loadErrorCon">
+                        <a class="loadError" href="javascript:void(0)" data-index="3"></a>
+                    </div>
                     <img id="videoPreview" src="__IMG__/cover.png"/>
                     <i class="spiteBgOrigin"></i>
                 </div>
@@ -78,10 +84,11 @@
                 <i class="spiteBgOrigin arrow"></i>
             </div>
             <div class="loadErrorCon">
-                <a class="loadError" href="javascript:void(0)"></a>
+                <a class="loadError" href="javascript:void(0)" data-index="4"></a>
             </div>
+
             <ul class="teacherPowerDetail">
-                <div class="nonData">暂无老师</div>
+
                 <div style="clear: both;"></div>
             </ul>
         </div>
@@ -89,7 +96,7 @@
         <!--地理位置-->
         <div class="mainItem mainItemNormal mainItemLocation">
             <div class="basicHeaderWithArrow">
-                <span>地址<span class="noDataInHeader"></span>
+                <span>地址<span class="noDataInHeader"></span></span>
                 <i class="spiteBgOrigin arrow"></i>
             </div>
             <div class="locationDetail">
@@ -102,9 +109,6 @@
 
         <!--综合评价-->
         <div class="mainItem mainItemNormal mainItemCompresAsse" data-loaded="false" data-loading="false">
-            <div class="loadErrorCon">
-                <a class="loadError" href="javascript:void(0)"></a>
-            </div>
             <div class="basicHeader">
                 <span class="leftItem">
                     <span>综合评价：</span>
@@ -154,12 +158,13 @@
                         <span>分</span>
                     </div>
                 </li>
+                <div class="loadErrorCon">
+                    <a class="loadError" href="javascript:void(0)" data-index="5"></a>
+                </div>
                 <div style="clear: both;"></div>
             </ul>
             <div class="studentCommentCon">
-                <div class="loadErrorCon">
-                    <a class="loadError" href="javascript:void(0)"></a>
-                </div>
+
                 <div class="basicHeaderWithArrow">
                     <span>学员评价</span>
                     <i class="spiteBgOrigin arrow"></i>
@@ -168,7 +173,9 @@
                     <input type="text" placeholder="有什么感想快来说说吧…" disabled="disabled" id="myComment"/>
                 </div>
                 <ul class="studentCommentDetail">
-                    <li><div class="nonData">暂无评论</div></li>
+                    <div class="loadErrorCon">
+                        <a class="loadError" href="javascript:void(0)" data-index="6"></a>
+                    </div>
                 </ul>
             </div>
         </div>

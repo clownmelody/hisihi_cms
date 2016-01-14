@@ -7,30 +7,47 @@ define(['zepto','common'],function(){
         this.$wrapper = $wrapper;
         var that = this;
         this.oid=oid;
+        this.pageIndex=1; //评论页码
+        this.pageSize=0;
+        this.perPageSize=10;
+
+        //样式控制
         this.controlLoadingPos();
-        //控制视频预览框的高度
         this.videoPreviewBox();
         this.locationMapBox();
         this.initImgPercent();
         this.controlCoverFootStyle();
 
-        /*加载基本信息*/
-        var queryPara={
-            url:window.urlObject.apiUrl+'appGetBaseInfo',
-            paraData:{organization_id:this.oid},
-            sCallback: $.proxy(this,'fillInData'),
-            eCallback:null
-        };
-        this.loadData(queryPara);
+        //初始数据请求
+        this.loadBasicInfoData(); //基本信息
+        this.loadTopAnnouncement(); //头条
+        this.loadSignUpInfo(); /*加载报名信息*/
+
+        /*操作设备信息*/
+        var deviceType=getDeviceType(),
+            eventsName='touchend';
+        if(!deviceType.mobile) {
+            eventsName='click';
+        }else{
+            this.$wrapper.find('.btn').on('touchstart', function () {
+
+            });
+        }
 
         this.$wrapper.find('#videoPreviewBox img').bind('load',$.proxy(this,'controlPlayBtnStyle'));
         this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
-        this.$wrapper.on('touchend','#basicInfoLoadEorror',function(){   //重新加载数据
-            that.loadData(queryPara);
+
+        //重新加载数据
+        var fnArr=[this.loadBasicInfoData,this.loadTopAnnouncement,
+            this.loadSignUpInfo, this.loadMyVideoInfo,this.loadMyTeachersInfo,
+            this.loadMyCompresAsseinfo,this.loadDetailCommentInfo
+        ];
+        this.$wrapper.on(eventsName,'.loadErrorCon a',function(){
+            var index=$(this).data('index')| 0,
+                fn=fnArr[index];
+            fn&&fn.call(that);
         });
-        this.pageIndex=1; //评论页码
-        this.pageSize=0;
-        this.perPageSize=10;
+
     }
 
     OrgBasicInfo.prototype={
@@ -81,13 +98,12 @@ define(['zepto','common'],function(){
             $i.css({'top':(h-ih)/2,'left':(w-iw)/2});
         },
 
-
-        loadData:function(paras) {
+        loadData:function(paras){
             if(!paras.type){
                 paras.type='get';
             }
             var that=this;
-            that.controlLoadingTips(0);
+            that.controlLoadingTips(1);
             var loginXhr = $.ajax({
                 url: paras.url,
                 type: paras.type,
@@ -105,7 +121,7 @@ define(['zepto','common'],function(){
                         }
 
                         if (result.success) {
-                            that.controlLoadingTips(1);
+                            that.controlLoadingTips(0);
                             paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
 
@@ -113,37 +129,58 @@ define(['zepto','common'],function(){
                             if(paras.eCallback){
                                 paras.eCallback(txt);
                             }
-                            that.controlLoadingTips(-1, txt);
-                            //else {
-                            //    that.controlLoadingTips(-1, txt);
-                            //}
+                            that.controlLoadingTips(0);
                         }
                     }
                     //超时
                     else if (status == 'timeout') {
                         loginXhr.abort();
-                        that.controlLoadingTips(-1,'加载失败，点击重新加载');
+                        that.controlLoadingTips(0);
+                        paras.eCallback();
                     }
                     else {
-                        that.controlLoadingTips(-1,'加载失败，点击重新加载');
+                        that.controlLoadingTips(0);
+                        paras.eCallback()
                     }
                 }
             });
 
         },
 
+        /*加载基本信息*/
+        loadBasicInfoData:function() {
+            var that=this,
+                $target=that.$wrapper.find('.logoAndCertInfo'),
+                queryPara={
+                url:window.urlObject.apiUrl+'appGetBaseInfo',
+                paraData:{organization_id:this.oid},
+                sCallback: $.proxy(this,'fillInBasicInfoData'),
+                eCallback:function(){
+                    $target.css('opacity',1);
+                    $target.find('.loadErrorCon').show();
+
+                }
+            };
+            this.loadData(queryPara);
+        },
+
+
+
         /*显示具体信息*/
-        fillInData:function(result){
+        fillInBasicInfoData:function(result){
             var data=result.data;
             var  authen1=data.authenticationInfo[2].status,
                 class1=authen1?'certed':'unCerted',
                 authen2=data.authenticationInfo[3].status,
                 class2=authen2?'certed':'unCerted';
+            var url=data.logo;
+            if(getDeviceType().android && androidVersionType()<4.4){
+                url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
+            }
 
-           //var str= '<div class="mainItem logoAndCertInfo">'+
             var str='<div class="head mainContent">'+
                             '<div class="filter">'+
-                                '<img class="logoBg myLogo" src="'+data.logo+'" alt="logo"/>'+
+                                '<img class="logoBg myLogo" src="'+url+'" alt="logo"/>'+
                                 '<div class="filterUp"></div>'+
                             '</div>'+
                             '<div class="mainInfo">'+
@@ -175,14 +212,14 @@ define(['zepto','common'],function(){
                             '</div>'+
                         '</div>'+
                         '<div class="bottom">'+
-                            '<div class="cerInfoItem">'+
+                            '<div class="cerInfoItem '+ class1 +'">'+
                                 '<span>'+
                                     '<i class="heiCerIcon spiteBg '+class1+'"></i>'+
                                     '<span class="cerName '+class1+'">嘿设汇认证</span>'+
                                     '<div style="clear: both;"></div>'+
                                 '</span>'+
                             '</div>'+
-                            '<div class="cerInfoItem">'+
+                            '<div class="cerInfoItem  '+ class2 +'">'+
                                 '<span>'+
                                     '<i class="honestCerIcon spiteBg '+class2+'"></i>'+
                                     '<span class="cerName '+class1+'">诚信机构认证</span>'+
@@ -195,7 +232,7 @@ define(['zepto','common'],function(){
             this.$wrapper.find('#myLogo').setImgBox();
             this.fillInIntroduceInfo(result);
 
-            this.loadTopAnnouncement();
+
         },
 
         /*加载头条信息*/
@@ -208,12 +245,10 @@ define(['zepto','common'],function(){
                 sCallback: function(result){
                     $target.css('opacity',1);
                     that.fillInTopAnnouncement(result.data);
-                    that.loadSignUpInfo(); /*加载报名信息*/
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
-                    that.loadSignUpInfo(); /*加载报名信息*/
+                    $target.find('.loadErrorCon').show().find('a').text('获取头条信息失败，点击重新加载').show();
                 }
             });
         },
@@ -222,20 +257,20 @@ define(['zepto','common'],function(){
         fillInTopAnnouncement:function(data){
             var str='',item;
             if(!data || data.length==0){
-                return;
-            }
-            var len=data.length;
-            for(var i=0;i<len;i++){
-                item=data[i];
-                str += '<li>'+
-                            '<div class="topNewLogo">头条</div>'+
-                            '<div class="title">'+
-                                '<a href="'+item.detail_url+'">' + item.title + '</a>'+
-                            '</div>'+
+                str='<li><div class="nonData">暂无头条信息</div></li>';
+            }else {
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                    item = data[i];
+                    str += '<li>' +
+                        '<div class="topNewLogo">头条</div>' +
+                        '<div class="title">' +
+                        '<a href="' + item.detail_url + '">' + item.title + '</a>' +
+                        '</div>' +
                         '</li>';
+                }
             }
             this.$wrapper.find('.mainItemTopNews .mainContent').html(str);
-
         },
 
         /*加载报名信息*/
@@ -252,7 +287,7 @@ define(['zepto','common'],function(){
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show().find('a').text('获得报名信息失败，'+txt).show();
+                    $target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
                 }
             });
         },
@@ -261,21 +296,22 @@ define(['zepto','common'],function(){
         fillInSignUpInfo:function(data){
             var str='',item;
             if(!data || data.length==0){
-                return;
-            }
-            var len=data.length;
-            for(var i=0;i<len;i++){
-                item=data[i];
-                var time=new Date(item.create_time*1000).format('yyyy-MM-dd');
-                str += '<li>'+
-                            '<span class="dot">&middot;</span>'+
-                            '<span>'+item.student_name+'</span>'+
-                            '<span>&nbsp;&nbsp;同学于</span>'+
-                            '<span>&nbsp;&nbsp;'+ time+'</span>'+
-                            '<span>&nbsp;&nbsp;成功报名</span>'+
+                str='<li><div class="nonData">暂无人员报名</div></li>';
+            }else {
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                    item = data[i];
+                    var time = new Date(item.create_time * 1000).format('yyyy-MM-dd');
+                    str += '<li>' +
+                        '<span class="dot">&middot;</span>' +
+                        '<span>' + item.student_name + '</span>' +
+                        '<span>&nbsp;&nbsp;同学于</span>' +
+                        '<span>&nbsp;&nbsp;' + time + '</span>' +
+                        '<span>&nbsp;&nbsp;成功报名</span>' +
                         '</li>';
+                }
             }
-            this.$wrapper.find('.mainItemSignUp .signUpCon').html(str);
+            this.$wrapper.find('.mainItemSignUp .signUpConUl').html(str);
         },
 
         /*填充简介信息*/
@@ -304,6 +340,7 @@ define(['zepto','common'],function(){
                     }
                     $target.find('.itemContentDetail').html(str);
                 }
+                if(!location)
                 $location.find('#myLocation').text(location);
                 if(locationImg) {
                     $location.find('.locationMap img').attr('src', locationImg);
@@ -329,7 +366,7 @@ define(['zepto','common'],function(){
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
+                    $target.find('.loadErrorCon').show().find('a').text('获得教师信息失败，点击重新加载').show();
                     callback();
                 }
             });
@@ -339,24 +376,32 @@ define(['zepto','common'],function(){
         fillMyTeachersInfo:function(data){
             var str='',itemInfo;
             if(!data || data.length==0){
-                return;
+                str='<div class="nonData">暂无老师</div>';
             }
-            var len=data.length;
-            for(var i=0;i<len;i++){
-                itemInfo=data[i].info;
-                str +=  '<li>'+
-                            '<div class="leftPic">'+
-                                '<img src="'+itemInfo.avatar128+'"/>'+
-                                '</div>'+
-                                '<div class="rightUserInfo">'+
-                                '<div class="name">'+itemInfo.nickname+'</div>'+
-                                '<div class="desc">'+itemInfo.institution.substrLongStr(12)+'</div>'+
-                            '</div>'+
-                        '</li>';
+            else {
+                var len = data.length,
+                    isOdd=len%2== 0,
+                    className='border';
+                for (var i = 0; i < len; i++) {
+                    if(isOdd && i>=len-2){
+                        className='unBorder';
+                    }
+                    if(!isOdd && i>=len-1){
+                        className='unBorder';
+                    }
+                    itemInfo = data[i].info;
+                    str += '<li class="'+className +'">' +
+                        '<div class="leftPic">' +
+                        '<img src="' + itemInfo.avatar128 + '"/>' +
+                        '</div>' +
+                        '<div class="rightUserInfo">' +
+                        '<div class="name">' + itemInfo.nickname + '</div>' +
+                        '<div class="desc">' + itemInfo.institution.substrLongStr(12) + '</div>' +
+                        '</div>' +
+                    '</li>';
+                }
             }
-            var $ul=this.$wrapper.find('.mainItemTeacherPower .teacherPowerDetail');
-            $ul.find('.nonData').remove();
-            $ul.prepend(str);
+            this.$wrapper.find('.mainItemTeacherPower .teacherPowerDetail').prepend(str);
         },
 
         /*加载我的视频信息*/
@@ -381,7 +426,7 @@ define(['zepto','common'],function(){
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show().find('a').text('获得视频信息失败，'+txt).show();
+                    $target.find('.loadErrorCon').show().find('a').text('获取视频信息失败，，点击重新加载').show();
                     callback();
                 }
             });
@@ -402,7 +447,7 @@ define(['zepto','common'],function(){
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('>.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
+                    $target.find('.loadErrorCon').show().find('a').text('获取评价信息失败，点击重新加载').show();
                     callback();
                 }
             });
@@ -456,46 +501,49 @@ define(['zepto','common'],function(){
                     callback&&callback.call(that);
                 },
                 eCallback:function(txt){
-                    $target.find('>.loadErrorCon').show().find('a').text('获得头条信息失败，'+txt).show();
-                    callback&&callback.call(that)();
+                    $target.find('.loadErrorCon').show().find('a').text('获取评论信息失败，点击重新加载').show();
+                    callback&&callback.call(that);
                 }
             });
         },
 
         /*填充我的评论信息*/
         fillDetailCommentInfo:function(result){
-            var data=result.data,$totoalNum=this.$wrapper.find('#commentNum');
+            var data=result.data,
+                $totoalNum=this.$wrapper.find('#commentNum'),
+                str='';
             if(!data || data.length==0){
                 $totoalNum.text(0);
-                return;
-            }
-            $totoalNum.text(data.length);
+                str='<li><div class="nonData">暂无评论</div></li>';
+            }else {
+                $totoalNum.text(data.length);
 
-            /*具体的评论信息*/
-            var len=data.length,
-                str='',item,userInfo,dateTime;
-            for(var i=0;i<len;i++){
-                item=data[i];
-                userInfo=item.userInfo;
-                dateTime=this.getDiffTime(new Date(item.create_time*1000));   //得到发表时间距现在的时间差
-                str+='<li>'+
-                        '<div class="imgCon">'+
-                            '<img src="'+userInfo.avatar128+'"/>'+
-                        '</div>'+
-                        '<div class="commentCon">'+
-                            '<div class="commentHead">'+
-                                '<span class="commentNickname">'+userInfo.nickname+'</span>'+
-                                '<span class="rightItem starsCon">'+
-                                    this.getStarInfoByScore(item.comprehensive_score | 0)+
-                                '<div style="clear: both;"></div>'+
-                                '</span>'+
-                            '</div>'+
-                            '<div class="content">'+item.comment+'</div>'+
-                            '<div class="publicTime">发表于'+dateTime+'</div>'+
-                        '</div>'+
-                     '</li>';
+                /*具体的评论信息*/
+                var len = data.length,
+                    item, userInfo, dateTime;
+                for (var i = 0; i < len; i++) {
+                    item = data[i];
+                    userInfo = item.userInfo;
+                    dateTime = this.getDiffTime(new Date(item.create_time * 1000));   //得到发表时间距现在的时间差
+                    str += '<li>' +
+                        '<div class="imgCon">' +
+                        '<img src="' + userInfo.avatar128 + '"/>' +
+                        '</div>' +
+                        '<div class="commentCon">' +
+                        '<div class="commentHead">' +
+                        '<span class="commentNickname">' + userInfo.nickname + '</span>' +
+                        '<span class="rightItem starsCon">' +
+                        this.getStarInfoByScore(item.comprehensive_score | 0) +
+                        '<div style="clear: both;"></div>' +
+                        '</span>' +
+                        '</div>' +
+                        '<div class="content">' + item.comment + '</div>' +
+                        '<div class="publicTime">发表于' + dateTime + '</div>' +
+                        '</div>' +
+                        '</li>';
+                }
             }
-            this.$wrapper.find('.studentCommentDetail').html(str);
+            this.$wrapper.find('.studentCommentDetail').append(str);
         },
 
 
@@ -503,22 +551,17 @@ define(['zepto','common'],function(){
         *加载等待,
         *para:
         * status - {num} 状态控制 码
-        * 0.显示加载等待;  1 隐藏等待; -1加载失败，重新加载
+        * 0.显示加载等待;  1 隐藏等待;
         */
-        controlLoadingTips:function(status,txt){
+        controlLoadingTips:function(status){
             var $target=$('#loadingTip'),
-                $img=$target.find('.loadingImg'),
-                $error=$img.next().hide();
-            if(status==0){
+                $img=$target.find('.loadingImg');
+            if(status==1){
                 $target.css('z-index',1);
                 $img.addClass('active');
-            }
-            else if(status==1){
+            } else{
                 $target.css('z-index',-1);
                 $img.removeClass('active');
-            }else{
-                $img.removeClass('active');
-                $error.text(txt).show();
             }
 
         },
@@ -535,52 +578,57 @@ define(['zepto','common'],function(){
                 arrScrollTop=[300,550];
 
             //加载我的老师
-            var $target=this.$wrapper.find('.mainItemTeacherPower');
+            var $targetTeacher=this.$wrapper.find('.mainItemTeacherPower'),
+                $targetCompress=this.$wrapper.find('.mainItemCompresAsse');
+
+            //如果是 300 到500 之间，并且 没有加载过，也 不在加载过程中，则加载新数据
             if(scrollTop>=arrScrollTop[0] &&
                 scrollTop<arrScrollTop[1] &&
-                $target.attr('data-loading')=='false'){
-                    var flag=$target.attr('data-loaded');
-                    $target.attr('data-loading','true');
+                $targetTeacher.attr('data-loading')=='false' &&
+                $targetTeacher.attr('data-loaded')=='false'){
+                    var flag=$targetTeacher.attr('data-loaded');
+                        $targetTeacher.attr('data-loading','true');
                     if(flag=='false') {
                         this.loadMyTeachersInfo(function(){
-                            $target.attr({'data-loaded':'true','data-loading':'false'});
+                            $targetTeacher.attr({'data-loaded':'true','data-loading':'false'});
                         });
                         this.loadMyVideoInfo(function(){
-                            $target.attr({'data-loaded':'true','data-loading':'false'});
+                            $targetTeacher.prev().find('.videoCon').attr({'data-loaded':'true','data-loading':'false'});
                         });
                     }
                     return;
             }
 
             //加载我的评分
-            var $target=this.$wrapper.find('.mainItemCompresAsse');
-            if(scrollTop>=arrScrollTop[1] && $target.attr('data-loading')=='false'){
-                var flag=$target.attr('data-loaded');
-                $target.attr('data-loading','true');
-                if('false'==flag) {
-                    this.loadMyCompresAsseinfo(function(){
-                        $target.attr({'data-loaded':'true','data-loading':'false'});
-                    });
+            //如果 大于 500 ，并且 没有加载过，也 不在加载过程中，则加载新数据
+            if(scrollTop>=arrScrollTop[1] &&
+                $targetCompress.attr('data-loading')=='false' &&
+                $targetCompress.attr('data-loaded')=='false'){
+                    var flag=$targetCompress.attr('data-loaded');
+                    $targetCompress.attr('data-loading','true');
+                    if('false'==flag) {
+                        this.loadMyCompresAsseinfo(function(){
+                            $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
+                        });
 
-                    //加载评论内容
-                    this.loadDetailCommentInfo(this.pageIndex,function(){
-                        $target.attr({'data-loaded':'true','data-loading':'false'});
-                    });
-                }
-
-
+                        //加载评论内容
+                        this.loadDetailCommentInfo(this.pageIndex,function(){
+                            $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
+                            this.pageIndex++;
+                        });
+                    }
                 return;
             }
 
             //加载更加多评论内容
-            if ($(target).scrollTop() == height && !$(target).hasClass('loadingData')) {  //滚动到底部
-                if(this.pageIndex>=this.pageSize){
+            if ($(target).scrollTop() >= height -120 && $targetCompress.attr('data-loading')=='false') {  //滚动到底部
+                if(this.pageIndex>this.pageSize){
                     return;
                 }
-                $(target).addClass('loadingData');
+                $targetCompress.attr('data-loading','true');
                 this.loadDetailCommentInfo(this.pageIndex,function(){
+                    $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
                     this.pageIndex++;
-                    $target.attr({'data-loaded':'true','data-loading':'false'});
                 });
             }
         },
@@ -758,6 +806,15 @@ define(['zepto','common'],function(){
             return '';
         },
 
+
+        /*
+        *重新加载数据
+        * para:
+        * $target - {jquery object} 点击的目标对象
+        */
+        reloadData:function(index){
+
+        }
     };
 
     return OrgBasicInfo;

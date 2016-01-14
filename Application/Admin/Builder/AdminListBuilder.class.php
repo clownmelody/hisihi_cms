@@ -17,6 +17,7 @@ class AdminListBuilder extends AdminBuilder
     private $_data = array();
     private $_setStatusUrl;
     private $_searchPostUrl;
+    private $_setEliteUrl;//设置精华帖
 
     private $_search = array();
 
@@ -33,6 +34,17 @@ class AdminListBuilder extends AdminBuilder
     public function setStatusUrl($url)
     {
         $this->_setStatusUrl = $url;
+        return $this;
+    }
+
+    /**
+     * 设置精华帖
+     * @param $url 已被U函数解析的地址
+     * @return $this
+     */
+    public function setEliteUrl($url)
+    {
+        $this->_setEliteUrl = $url;
         return $this;
     }
 
@@ -288,6 +300,16 @@ class AdminListBuilder extends AdminBuilder
         return $this->keyDoAction($getUrl, $text, '操作','ajax');
     }
 
+    public function keyDoActionElite($text = '精华')
+    {
+        $that = $this;
+        $setEliteUrl = $this->_setEliteUrl;
+        $getUrl = function () use ($that, $setEliteUrl) {
+            return $that->addUrlParam($setEliteUrl, array('is_elite' => 1));
+        };
+        return $this->keyDoAction($getUrl, $text, '操作','ajax');
+    }
+
     public function keyTruncText($name, $title, $length)
     {
         return $this->key($name, $title, 'trunktext', $length);
@@ -439,6 +461,14 @@ class AdminListBuilder extends AdminBuilder
     {
         $ids = is_array($ids) ? $ids : explode(',', $ids);
         M($model)->where(array('id' => array('in', $ids)))->save(array('status' => $status));
+        $this->success('设置成功', $_SERVER['HTTP_REFERER']);
+    }
+
+    //设置精华帖
+    public function doSetElite($model, $ids, $status)
+    {
+        $ids = is_array($ids) ? $ids : explode(',', $ids);
+        M($model)->where(array('id' => array('in', $ids)))->save(array('is_elite' => $status));
         $this->success('设置成功', $_SERVER['HTTP_REFERER']);
     }
 

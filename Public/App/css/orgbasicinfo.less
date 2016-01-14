@@ -51,18 +51,6 @@ body {
     border: 1px solid #BBAEAE !important;
     outline: 0;
   }
-  #canvas{
-    position: absolute;
-    top:0;
-    left: 0;
-    z-index: -2;
-  }
-}
-
-.loadError {
-  display: none;
-  text-decoration: none;
-  color: #777;
 }
 
 .loadingResultTips {
@@ -120,6 +108,10 @@ body {
     .size(100%,30px);
     text-align: center;
     line-height: 30px;
+    a{
+      color:#9A9292 !important;
+      text-decoration: none;
+    }
   }
 
   .mainItem{
@@ -195,6 +187,9 @@ body {
       *{
         color: #fff;
       }
+      .loadErrorCon{
+        padding-top: 60px;
+      }
       .head{
         position: relative;
         .size(auto,150px);
@@ -235,12 +230,8 @@ body {
             }
           }
           .right{
-            margin-left: 112px;
+            margin-left: 100px;
             height:100%;
-            //@width:~"100% - 100px";
-            //width:-moz-calc(@width);
-            //width:-webkit-calc(@width);
-            //width:calc(@width);
             #orgName{
               font-size: 22px;
               padding:5px 0 12px 0;
@@ -265,7 +256,6 @@ body {
         }
       }
       .bottom{
-        background-color: @orange;
         height: 48px;
 
         .cerInfoItem{
@@ -280,7 +270,7 @@ body {
             width: auto;
             height: auto;
             margin: 0 auto;
-            border: 1px solid @orange;
+            //border: 1px solid @orange;
             * {
               float: left;
             }
@@ -307,8 +297,15 @@ body {
 
             }
           }
+          &.certed{
+            background-color: @orange;
+          }
+          &.unCerted {
+            background-color: white;
+          }
         }
         .cerName{
+          line-height: 24px;
           &.certed {
             color: white;
           }
@@ -354,7 +351,7 @@ body {
             margin-left: 75px;
             margin-right: @paddingleft;
             height: 20px;
-            line-height: 20px;
+            line-height: 18px;
             padding-top: 5px;
             a {
               .size(100%,100%);
@@ -427,6 +424,7 @@ body {
     &.mainItemBasicInfo{
       @h:44px;
       @color:#212121;
+      opacity: 1;
       .mainContentItem{
         padding:0px @paddingleft;
         &.introduce {
@@ -484,8 +482,13 @@ body {
           .size(50%,75px);
           position: relative;
           padding:10px 8px 10px @paddingleft;
-          .border-bottom();
           .box-sizing();
+          &.border{
+            .border-bottom();
+          }
+          &.unBorder{
+            .border-bottom(0);
+          }
           .leftPic{
             position: absolute;
             .size(50px,100%);
@@ -525,6 +528,7 @@ body {
 
     //地址
     &.mainItemLocation{
+      opacity: 1;
       #myLocation{
         font-size: 16px;
         color: @font-color;
@@ -648,7 +652,7 @@ body {
               position: absolute;
               .size(80px,80px);
               .box-sizing();
-              padding:0 @paddingleft 0 @paddingright;
+              padding:0 @paddingleft;
               img{
                 .size(44px,44px);
                 border-radius: 22px;
