@@ -9,7 +9,7 @@ define(['zepto','common'],function(){
         this.oid=oid;
         this.pageIndex=1; //评论页码
         this.pageSize=0;
-        this.perPageSize=10;
+        this.perPageSize=3;
 
         //样式控制
         this.controlLoadingPos();
@@ -627,16 +627,16 @@ define(['zepto','common'],function(){
             }
 
             //加载更加多评论内容
-            if ($(target).scrollTop() >= height -120 && $targetCompress.attr('data-loading')=='false') {  //滚动到底部
-                if(this.pageIndex>this.pageSize){
-                    return;
-                }
-                $targetCompress.attr('data-loading','true');
-                this.loadDetailCommentInfo(this.pageIndex,function(){
-                    $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
-                    this.pageIndex++;
-                });
-            }
+            //if ($(target).scrollTop() >= height -120 && $targetCompress.attr('data-loading')=='false') {  //滚动到底部
+            //    if(this.pageIndex>this.pageSize){
+            //        return;
+            //    }
+            //    $targetCompress.attr('data-loading','true');
+            //    this.loadDetailCommentInfo(this.pageIndex,function(){
+            //        $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
+            //        this.pageIndex++;
+            //    });
+            //}
         },
 
         /*根据比例大小 计算图片的大小*/
