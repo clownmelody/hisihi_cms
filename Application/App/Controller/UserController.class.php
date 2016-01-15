@@ -1086,9 +1086,11 @@ class UserController extends AppController
                     $info_from_org = $this->getInfoFromOrg($uid);
                     $result['info']['location'] = $info_from_org['city'];
                     $result['info']['institution'] = $info_from_org['name'];
+                    $result['info']['organization_id'] = $info_from_org['id'];
                 }else{
                     $result['info']['location'] = null;
                     $result['info']['institution'] = null;
+                    $result['info']['organization_id'] = null;
                 }
             }
             //扩展信息
@@ -2319,7 +2321,7 @@ class UserController extends AppController
 
     public function getInfoFromOrg($uid){
         $location = M('OrganizationRelation a')->join('hisihi_organization b on a.organization_id=b.id')
-            ->where('a.status=1 and a.uid='.$uid)->field('b.city, b.name')
+            ->where('a.status=1 and a.uid='.$uid)->field('b.id, b.city, b.name')
             ->select();
         return $location[0];
     }
