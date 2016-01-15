@@ -1560,8 +1560,8 @@ class OrganizationController extends AppController
             $this->apiError(-1, '传入机构ID不能为空');
         }
         $model = M('OrganizationNotice');
-        $totalCount = $model->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->count();
-        $list = $model->field('id, tag, title, create_time')->where('status=1 and push_to_organization=1 or organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
+        $totalCount = $model->where('status=1 and push_to_organization=1 or organization_id in (0, '.$organization_id.')')->count();
+        $list = $model->field('id, tag, title, create_time')->where('status=1 and push_to_organization=1 or organization_id in (0, '.$organization_id.')')->order('create_time desc')->page($page, $count)->select();
         foreach($list as &$notice){
             $notice['detail_url'] = C('HOST_NAME_PREFIX').'api.php?s=/organization/noticedetail/id/'.$notice['id'];
         }
