@@ -160,15 +160,15 @@ define(['zepto','common'],function(){
             var that=this,
                 $target=that.$wrapper.find('.logoAndCertInfo'),
                 queryPara={
-                url:window.urlObject.apiUrl+'appGetBaseInfo',
-                paraData:{organization_id:this.oid},
-                sCallback: $.proxy(this,'fillInBasicInfoData'),
-                eCallback:function(){
-                    $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show();
+                    url:window.urlObject.apiUrl+'appGetBaseInfo',
+                    paraData:{organization_id:this.oid},
+                    sCallback: $.proxy(this,'fillInBasicInfoData'),
+                    eCallback:function(){
+                        $target.css('opacity',1);
+                        $target.find('.loadErrorCon').show();
 
-                }
-            };
+                    }
+                };
             this.loadData(queryPara);
         },
 
@@ -187,55 +187,55 @@ define(['zepto','common'],function(){
             }
 
             var str='<div class="head mainContent">'+
-                            '<div class="filter">'+
-                                '<img class="logoBg myLogo" src="'+url+'" alt="logo"/>'+
-                                '<div class="filterUp"></div>'+
-                            '</div>'+
-                            '<div class="mainInfo">'+
-                                '<div class="left">'+
-                                    '<img id="myLogo" class="myLogo" src="'+data.logo+'" />'+
-                                '</div>'+
-                                '<div class="right">'+
-                                    '<div id="orgName">'+data.name+'</div>'+
-                                    '<div class="peopleInfo">'+
-                                        '<div class="peopleInfoItem">'+
-                                        '<div class="valInfo" id="viewedVal">'+data.view_count+'</div>'+
-                                        '<div class="filedInfo">查看人数</div>'+
-                                    '</div>'+
-                                    '<div class="peopleInfoItem">'+
-                                        '<div class="valInfo" id="teacherdVal">'+data.teachersCount+'</div>'+
-                                        '<div class="filedInfo">老师</div>'+
-                                    '</div>'+
-                                    '<div class="peopleInfoItem">'+
-                                        '<div class="valInfo" id="fansVal">'+data.followCount+'</div>'+
-                                        '<div class="filedInfo">粉丝</div>'+
-                                    '</div>'+
-                                    '<div class="peopleInfoItem">'+
-                                        '<div class="valInfo" id="groupsVal">'+data.groupCount+'</div>'+
-                                        '<div class="filedInfo">群主</div>'+
-                                    '</div>'+
-                                    '<div style="clear: both;"></div>'+
-                                '</div>'+
-                            '</div>'+
-                            '</div>'+
-                        '</div>'+
-                        '<div class="bottom">'+
-                            '<div class="cerInfoItem '+ class1 +'">'+
-                                '<span>'+
-                                    '<i class="heiCerIcon spiteBg '+class1+'"></i>'+
-                                    '<span class="cerName '+class1+'">嘿设汇认证</span>'+
-                                    '<div style="clear: both;"></div>'+
-                                '</span>'+
-                            '</div>'+
-                            '<div class="cerInfoItem  '+ class2 +'">'+
-                                '<span>'+
-                                    '<i class="honestCerIcon spiteBg '+class2+'"></i>'+
-                                    '<span class="cerName '+class1+'">诚信机构认证</span>'+
-                                    '<div style="clear: both;"></div>'+
-                                '</span>'+
-                            '</div>'+
-                        //'</div>'+
-                    '</div>';
+                '<div class="filter">'+
+                '<img class="logoBg myLogo" src="'+url+'" alt="logo"/>'+
+                '<div class="filterUp"></div>'+
+                '</div>'+
+                '<div class="mainInfo">'+
+                '<div class="left">'+
+                '<img id="myLogo" class="myLogo" src="'+data.logo+'" />'+
+                '</div>'+
+                '<div class="right">'+
+                '<div id="orgName">'+data.name+'</div>'+
+                '<div class="peopleInfo">'+
+                '<div class="peopleInfoItem">'+
+                '<div class="valInfo" id="viewedVal">'+data.view_count+'</div>'+
+                '<div class="filedInfo">查看人数</div>'+
+                '</div>'+
+                '<div class="peopleInfoItem">'+
+                '<div class="valInfo" id="teacherdVal">'+data.teachersCount+'</div>'+
+                '<div class="filedInfo">老师</div>'+
+                '</div>'+
+                '<div class="peopleInfoItem">'+
+                '<div class="valInfo" id="fansVal">'+data.followCount+'</div>'+
+                '<div class="filedInfo">粉丝</div>'+
+                '</div>'+
+                '<div class="peopleInfoItem">'+
+                '<div class="valInfo" id="groupsVal">'+data.groupCount+'</div>'+
+                '<div class="filedInfo">群主</div>'+
+                '</div>'+
+                '<div style="clear: both;"></div>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '<div class="bottom">'+
+                '<div class="cerInfoItem '+ class1 +'">'+
+                '<span>'+
+                '<i class="heiCerIcon spiteBg '+class1+'"></i>'+
+                '<span class="cerName '+class1+'">嘿设汇认证</span>'+
+                '<div style="clear: both;"></div>'+
+                '</span>'+
+                '</div>'+
+                '<div class="cerInfoItem  '+ class2 +'">'+
+                '<span>'+
+                '<i class="honestCerIcon spiteBg '+class2+'"></i>'+
+                '<span class="cerName '+class1+'">诚信机构认证</span>'+
+                '<div style="clear: both;"></div>'+
+                '</span>'+
+                '</div>'+
+                    //'</div>'+
+                '</div>';
             this.$wrapper.find('.logoAndCertInfo').html(str).css('opacity',1);
             this.$wrapper.find('#myLogo').setImgBox();
             this.fillInIntroduceInfo(result);
@@ -284,7 +284,7 @@ define(['zepto','common'],function(){
         /*加载报名信息*/
         loadSignUpInfo:function(){
             var that=this,
-            $target=that.$wrapper.find('.mainItemSignUp');
+                $target=that.$wrapper.find('.mainItemSignUp');
             this.loadData({
                 url: window.urlObject.apiUrl + 'enrollList',
                 paraData: {organization_id: this.oid},
@@ -349,7 +349,7 @@ define(['zepto','common'],function(){
                     $target.find('.itemContentDetail').html(str);
                 }
                 if(!location)
-                $location.find('#myLocation').text(location);
+                    $location.find('#myLocation').text(location);
                 if(locationImg) {
                     $location.find('.locationMap img').attr('src', locationImg);
                 }
@@ -406,7 +406,7 @@ define(['zepto','common'],function(){
                         '<div class="name">' + itemInfo.nickname + '</div>' +
                         '<div class="desc">' + itemInfo.institution.substrLongStr(12) + '</div>' +
                         '</div>' +
-                    '</li>';
+                        '</li>';
                 }
             }
             this.$wrapper.find('.mainItemTeacherPower .teacherPowerDetail').prepend(str);
@@ -554,11 +554,11 @@ define(['zepto','common'],function(){
 
 
         /*
-        *加载等待,
-        *para:
-        * status - {num} 状态控制 码
-        * 0.显示加载等待;  1 隐藏等待;
-        */
+         *加载等待,
+         *para:
+         * status - {num} 状态控制 码
+         * 0.显示加载等待;  1 隐藏等待;
+         */
         controlLoadingTips:function(status){
             var $target=$('#loadingTip'),
                 $img=$target.find('.loadingImg');
@@ -592,17 +592,17 @@ define(['zepto','common'],function(){
                 scrollTop<arrScrollTop[1] &&
                 $targetTeacher.attr('data-loading')=='false' &&
                 $targetTeacher.attr('data-loaded')=='false'){
-                    var flag=$targetTeacher.attr('data-loaded');
-                        $targetTeacher.attr('data-loading','true');
-                    if(flag=='false') {
-                        this.loadMyTeachersInfo(function(){
-                            $targetTeacher.attr({'data-loaded':'true','data-loading':'false'});
-                        });
-                        this.loadMyVideoInfo(function(){
-                            $targetTeacher.prev().find('.videoCon').attr({'data-loaded':'true','data-loading':'false'});
-                        });
-                    }
-                    return;
+                var flag=$targetTeacher.attr('data-loaded');
+                $targetTeacher.attr('data-loading','true');
+                if(flag=='false') {
+                    this.loadMyTeachersInfo(function(){
+                        $targetTeacher.attr({'data-loaded':'true','data-loading':'false'});
+                    });
+                    this.loadMyVideoInfo(function(){
+                        $targetTeacher.prev().find('.videoCon').attr({'data-loaded':'true','data-loading':'false'});
+                    });
+                }
+                return;
             }
 
             //加载我的评分
@@ -610,19 +610,19 @@ define(['zepto','common'],function(){
             if(scrollTop>=arrScrollTop[1] &&
                 $targetCompress.attr('data-loading')=='false' &&
                 $targetCompress.attr('data-loaded')=='false'){
-                    var flag=$targetCompress.attr('data-loaded');
-                    $targetCompress.attr('data-loading','true');
-                    if('false'==flag) {
-                        this.loadMyCompresAsseinfo(function(){
-                            $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
-                        });
+                var flag=$targetCompress.attr('data-loaded');
+                $targetCompress.attr('data-loading','true');
+                if('false'==flag) {
+                    this.loadMyCompresAsseinfo(function(){
+                        $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
+                    });
 
-                        //加载评论内容
-                        this.loadDetailCommentInfo(this.pageIndex,function(){
-                            $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
-                            this.pageIndex++;
-                        });
-                    }
+                    //加载评论内容
+                    this.loadDetailCommentInfo(this.pageIndex,function(){
+                        $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
+                        this.pageIndex++;
+                    });
+                }
                 return;
             }
 
@@ -713,12 +713,12 @@ define(['zepto','common'],function(){
         },
 
         /*
-        *对评分进行四舍五入
-        * 按照以下类似规则：
-        * 1：   2.1，2.2  = 2.0
-        * 2：   2.3，2.4，2.5，2.6 = 2.5
-        * 3：   2.7，2.8，2.9  = 3.0
-        */
+         *对评分进行四舍五入
+         * 按照以下类似规则：
+         * 1：   2.1，2.2  = 2.0
+         * 2：   2.3，2.4，2.5，2.6 = 2.5
+         * 3：   2.7，2.8，2.9  = 3.0
+         */
         myRoundNumber:function(num){
             num=num.toFixed(1);
             var arr=num.split('.'),
