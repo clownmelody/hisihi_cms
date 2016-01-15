@@ -362,12 +362,12 @@ define(['zepto','common'],function(){
                 sCallback: function(result){
                     $target.css('opacity',1);
                     that.fillMyTeachersInfo(result.teacherList);
-                    callback();
+                    callback&&callback();
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
                     $target.find('.loadErrorCon').show().find('a').text('获得教师信息失败，点击重新加载').show();
-                    callback();
+                    callback&&callback();
                 }
             });
         },
@@ -443,12 +443,12 @@ define(['zepto','common'],function(){
                 sCallback: function(result){
                     $target.css('opacity',1);
                     that.fillMyCompresAsseInfo(result);
-                    callback();
+                    callback && callback();
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show().find('a').text('获取评价信息失败，点击重新加载').show();
-                    callback();
+                    $target.find('.loadErrorCon:eq(0)').show().find('a').text('获取评价信息失败，点击重新加载').show();
+                    callback && callback();
                 }
             });
         },
@@ -497,11 +497,12 @@ define(['zepto','common'],function(){
                 paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize},
                 sCallback: function(result){
                     that.pageSize=Math.ceil((result.totalCount|0)/that.perPageSize);
+                    that.$wrapper.find('#commentNum').text(result.totalCount);
                     that.fillDetailCommentInfo(result);
                     callback&&callback.call(that);
                 },
                 eCallback:function(txt){
-                    $target.find('.loadErrorCon').show().find('a').text('获取评论信息失败，点击重新加载').show();
+                    $target.find('.loadErrorCon:eq(1)').show().find('a').text('获取评论信息失败，点击重新加载').show();
                     callback&&callback.call(that);
                 }
             });
@@ -510,14 +511,11 @@ define(['zepto','common'],function(){
         /*填充我的评论信息*/
         fillDetailCommentInfo:function(result){
             var data=result.data,
-                $totoalNum=this.$wrapper.find('#commentNum'),
                 str='';
             if(!data || data.length==0){
-                $totoalNum.text(0);
                 str='<li><div class="nonData">暂无评论</div></li>';
+                this.$wrapper.find('.studentCommentDetail li').remove();
             }else {
-                $totoalNum.text(data.length);
-
                 /*具体的评论信息*/
                 var len = data.length,
                     item, userInfo, dateTime;

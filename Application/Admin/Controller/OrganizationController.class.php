@@ -1814,19 +1814,21 @@ class OrganizationController extends AdminController
      */
     public function video($id){
         $model = M('OrganizationVideo');
-        $map['status'] = 1;
+        $map['status'] = array('egt',0);
         $map['course_id'] = $id;
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
         $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$video){
-            $video['course_name'] = M('OrganizationCourse')->where(array('id'=>$video['course_id'],'status'=>1))->getField('title');
+            $video['course_name'] = M('OrganizationCourse')
+                ->where(array('id'=>$video['course_id'],'status'=>array('egt',0)))->getField('title');
             $video['duration'] = time_format($video['duration'],'m分s秒');
         }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
+        $this->assign("course_id", $map['course_id']);
         $this->assign("meta_title","机构课程视频");
         $this->display();
     }
@@ -1853,13 +1855,13 @@ class OrganizationController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/organization/video');
+                $this->success('添加成功', 'index.php?s=/admin/organization/video/id'.$data['course_id']);
             } else {
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
                     $this->error($model->getError());
                 }
-                $this->success('更新成功', 'index.php?s=/admin/organization/video/id/'.$cid);
+                $this->success('更新成功', 'index.php?s=/admin/organization/video/id/'.$data['course_id']);
             }
         } else {
             $this->display('video_add');
@@ -1876,11 +1878,11 @@ class OrganizationController extends AdminController
         }
         /*获取一条记录的详细数据*/
         $Model = M('OrganizationVideo');
-        $data = $Model->where('status=1 and id='.$id)->find();
+        $data = $Model->where('id='.$id)->find();
         if(!$data){
             $this->error($Model->getError());
         }
-        $data['course_name'] = M('OrganizationCourse')->where(array('status'=>1,'id'=>$data['course_id']))->getField('title');
+        $data['course_name'] = M('OrganizationCourse')->where(array('id'=>$data['course_id']))->getField('title');
         $data['duration'] = time_format($data['duration'],'m分s秒');
         $this->assign('info', $data);
         $this->meta_title = '编辑机构课程视频';
@@ -1904,9 +1906,41 @@ class OrganizationController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('删除成功','index.php?s=/admin/organization/video');
+            $this->success('删除成功','index.php?s=/admin/organization/video/id/'.I('course_id'));
         } else {
             $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 视频审核通过
+     * @param $id
+     */
+    public function video_checked($id){
+        if(!empty($id)){
+            $model = M('OrganizationVideo');
+            $data['status'] = 1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('审核通过','index.php?s=/admin/organization/video/id/'.I('course_id'));
+        } else {
+            $this->error('未选择要审核的数据');
+        }
+    }
+
+    //播放视频
+    public function video_play($id){
+        if(!empty($id)){
+            $this->display();
+        } else {
+            $this->error('未选择要播放的视频');
         }
     }
 
@@ -1915,7 +1949,7 @@ class OrganizationController extends AdminController
      */
     public function course($organization_id=0){
         $model = D('OrganizationCourse');
-        $map['status']=1;
+        $map['status']=array('egt',0);
         if($organization_id){
             $map['organization_id'] = $organization_id;
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
@@ -2016,7 +2050,6 @@ class OrganizationController extends AdminController
                 }else{
                     $this->success('添加成功', 'index.php?s=/admin/organization/course');
                 }
-
             } else {
                 $res = $model->where('id='.$cid)->save($data);
                 if(!$res){
@@ -2043,7 +2076,7 @@ class OrganizationController extends AdminController
         }
         /*获取一条记录的详细数据*/
         $Model = M('OrganizationCourse');
-        $data = $Model->where('status=1 and id='.$id)->find();
+        $data = $Model->where('id='.$id)->find();
         if(!$data){
             $this->error($Model->getError());
         }
@@ -2096,6 +2129,36 @@ class OrganizationController extends AdminController
             $this->error('未选择要删除的数据');
         }
     }
+
+    /**
+     * 机构课程审核通过
+     * @param $id
+     */
+    public function course_checked($id){
+        if(!empty($id)){
+            $model = M('OrganizationCourse');
+            $data['status'] = 1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                    M('OrganizationVideo')->where(array('course_id'=>$i))->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+                M('OrganizationVideo')->where(array('course_id'=>$id))->save($data);
+            }
+            if(I('from_org')){
+                $this->success('审核通过','index.php?s=/admin/organization/course&organization_id='.I('organization_id'));
+            }else{
+                $this->success('审核通过','index.php?s=/admin/organization/course');
+            }
+        } else {
+            $this->error('未选择要审核的数据');
+        }
+    }
+
 
     /**
      * 机构证书
