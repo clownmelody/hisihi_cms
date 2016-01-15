@@ -491,11 +491,12 @@ body {
           }
           .leftPic{
             position: absolute;
-            .size(50px,100%);
+            .size(50px,50px);
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            overflow: hidden;
             img{
-              .size(50px,50px);
-              border-radius: 25px;
-              border: 1px solid #ccc;
+              .size(100%,100%);
             }
           }
           .rightUserInfo{
@@ -651,13 +652,17 @@ body {
             }
             .imgCon{
               position: absolute;
-              .size(80px,80px);
+              .size(80px, 80px);
               .box-sizing();
-              padding:0 @paddingleft;
-              img{
-                .size(44px,44px);
+              padding: 0 @paddingleft;
+              >div {
+                .size(44px, 44px);
                 border-radius: 22px;
                 border: 1px solid #CBCBCB;
+                overflow: hidden;
+                img {
+                  .size(100%, 100%);
+                }
               }
             }
             .commentCon{

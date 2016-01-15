@@ -533,7 +533,7 @@ define(['zepto','common'],function(){
                     dateTime = this.getDiffTime(new Date(item.create_time * 1000));   //得到发表时间距现在的时间差
                     str += '<li>' +
                         '<div class="imgCon">' +
-                        '<img src="' + userInfo.avatar128 + '"/>' +
+                            '<div><img src="' + userInfo.avatar128 + '"/></div>' +
                         '</div>' +
                         '<div class="commentCon">' +
                         '<div class="commentHead">' +
