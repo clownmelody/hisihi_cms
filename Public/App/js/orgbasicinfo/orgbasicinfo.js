@@ -174,7 +174,7 @@ define(['zepto','common'],function(){
                 authen2=data.authenticationInfo[3].status,
                 class2=authen2?'certed':'unCerted';
             var url=data.logo;
-            if(getDeviceType().android && androidVersionType()<4.4){
+            if(getDeviceType().android){
                 url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
             }
 
