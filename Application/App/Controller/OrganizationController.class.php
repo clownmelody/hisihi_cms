@@ -410,7 +410,7 @@ class OrganizationController extends AppController
                 $result['relationship'] = 0;
             }
             $advantage = $result['advantage'];
-            $enroll_count = M('OrganizationEnroll')->where(array('organization_id'=>$organization_id,'status'=>2))->count();
+            $enroll_count = M('OrganizationEnroll')->where(array('organization_id'=>$organization_id,'status'=>array('gt',0)))->count();
             $result['available_num'] = $result['guarantee_num'] - $enroll_count;
             $result['advantage']=$advantage;
             $relationModel = M('OrganizationRelation');
