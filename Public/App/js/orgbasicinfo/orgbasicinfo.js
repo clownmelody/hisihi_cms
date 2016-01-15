@@ -16,6 +16,7 @@ define(['zepto','common'],function(){
         this.videoPreviewBox();
         this.locationMapBox();
         this.initImgPercent();
+        this.controlCommentInputStyle();
         this.controlCoverFootStyle();
 
         //初始数据请求
@@ -96,6 +97,13 @@ define(['zepto','common'],function(){
                 ih=$i.height(),
                 iw=$i.width();
             $i.css({'top':(h-ih)/2,'left':(w-iw)/2});
+        },
+
+        /*播放我的评论输入框样式*/
+        controlCommentInputStyle:function(){
+            var $input=this.$wrapper.find('#myComment'),
+                w=this.$wrapper.width()-35;
+            $input.css('width',w+'px');
         },
 
         loadData:function(paras){
@@ -803,16 +811,6 @@ define(['zepto','common'],function(){
             }
             return '';
         },
-
-
-        /*
-        *重新加载数据
-        * para:
-        * $target - {jquery object} 点击的目标对象
-        */
-        reloadData:function(index){
-
-        }
     };
 
     return OrgBasicInfo;
