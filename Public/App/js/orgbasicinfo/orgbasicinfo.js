@@ -447,7 +447,7 @@ define(['zepto','common'],function(){
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show().find('a').text('获取评价信息失败，点击重新加载').show();
+                    $target.find('.loadErrorCon:eq(0)').show().find('a').text('获取评价信息失败，点击重新加载').show();
                     callback && callback();
                 }
             });
@@ -502,7 +502,7 @@ define(['zepto','common'],function(){
                     callback&&callback.call(that);
                 },
                 eCallback:function(txt){
-                    $target.find('.loadErrorCon').show().find('a').text('获取评论信息失败，点击重新加载').show();
+                    $target.find('.loadErrorCon:eq(1)').show().find('a').text('获取评论信息失败，点击重新加载').show();
                     callback&&callback.call(that);
                 }
             });
