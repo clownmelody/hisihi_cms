@@ -1083,9 +1083,12 @@ class UserController extends AppController
                 $result['info']['groupcount'] = $this->getGroupCount($uid);
                 //老师根据机构获取地址
                 if($result['info']['group'] == '6'){
-                    $result['info']['location'] = $this->getLocationByOrg($uid);
+                    $info_from_org = $this->getInfoFromOrg($uid);
+                    $result['info']['location'] = $info_from_org['city'];
+                    $result['info']['institution'] = $info_from_org['name'];
                 }else{
                     $result['info']['location'] = null;
+                    $result['info']['institution'] = null;
                 }
             }
             //扩展信息
@@ -2314,11 +2317,11 @@ class UserController extends AppController
         return $post_count;
     }
 
-    public function getLocationByOrg($uid){
+    public function getInfoFromOrg($uid){
         $location = M('OrganizationRelation a')->join('hisihi_organization b on a.organization_id=b.id')
-            ->where('a.status=1 and a.uid='.$uid)->field('b.city')
+            ->where('a.status=1 and a.uid='.$uid)->field('b.city, b.name')
             ->select();
-        return $location[0]['city'];
+        return $location[0];
     }
 
     public function getReplyCount($uid){
