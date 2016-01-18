@@ -29,9 +29,9 @@ define(['zepto','common'],function(){
         this.loadSignUpInfo(); /*加载报名信息*/
 
         /*操作设备信息*/
-        var deviceType=getDeviceType(),
+        this.deviceType=getDeviceType(),
             eventsName='touchend';
-        if(!deviceType.mobile) {
+        if(!this.deviceType.mobile) {
             eventsName='click';
         }else{
             this.$wrapper.find('.btn').on('touchstart', function () {
@@ -185,7 +185,7 @@ define(['zepto','common'],function(){
                 authen2=data.authenticationInfo[3].status,
                 class2=authen2?'certed':'unCerted';
             var url=data.logo;
-            if(getDeviceType().android){
+            if(this.deviceType.android){
                 url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
             }
 
@@ -318,7 +318,7 @@ define(['zepto','common'],function(){
                     item = data[i];
                     var time = new Date(item.create_time * 1000).format('yyyy-MM-dd');
                     str += '<li>' +
-                        '<span class="dot">&middot;</span>' +
+                        '<span class="dot spiteBg"></span>' +
                         '<span>' + item.student_name + '</span>' +
                         '<span>&nbsp;&nbsp;同学于</span>' +
                         '<span>&nbsp;&nbsp;' + time + '</span>' +
@@ -830,6 +830,7 @@ define(['zepto','common'],function(){
 
         /*拓展滚动*/
         extendJqueryForScroll:function(){
+            var that=this;
             $.extend($.fn, {
                 Scroll:function(opt,callback){
                     //参数初始化
@@ -847,12 +848,18 @@ define(['zepto','common'],function(){
                     var upHeight=0-line*lineH;
                     //滚动函数
                     var scrollUp=function(){
-                        _this.animate(
-                            {
+                        var style={
+                            'margin-top':upHeight,
+                        };
+                        if(that.deviceType.android){
+                             style={
                                 'margin-top':upHeight,
                                 '-webkit-transform':'translate3d(0,0,0)',
                                 '-moz-transform':'translate3d(0,0,0)'
-                            },
+                            };
+                        }
+                        _this.animate(
+                            style,
                             500,'ease-out',
                             function(){
                                 for(var i=1;i<=line;i++){
