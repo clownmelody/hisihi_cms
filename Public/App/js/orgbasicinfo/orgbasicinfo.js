@@ -320,9 +320,9 @@ define(['zepto','common'],function(){
                     str += '<li>' +
                         '<span class="dot spiteBg"></span>' +
                         '<span>' + item.student_name + '</span>' +
-                        '<span>&nbsp;&nbsp;同学于</span>' +
-                        '<span>&nbsp;&nbsp;' + time + '</span>' +
-                        '<span>&nbsp;&nbsp;成功报名</span>' +
+                        '<span>&nbsp;同学于</span>' +
+                        '<span>&nbsp;' + time + '</span>' +
+                        '<span>&nbsp;成功报名</span>' +
                         '</li>';
                 }
                 for(var i=0;i<diff;i++){
@@ -777,7 +777,7 @@ define(['zepto','common'],function(){
                 ah=aw*0.40,
                 bw=$target.width(),
                 h= bw*102/750;
-            $target.css({'height':h+'px','left':($('body').width()-bw)/2});
+            $target.css({'height':h+'px','left':($('body').width()-bw)/2,'opacity':1});
             this.$wrapper.css('bottom',h+'px');
             var fontSize='16px';
             if(bw<375){
