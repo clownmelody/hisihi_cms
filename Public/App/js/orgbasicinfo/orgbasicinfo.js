@@ -290,7 +290,7 @@ define(['zepto','common'],function(){
                 $target=that.$wrapper.find('.mainItemSignUp');
             this.loadData({
                 url: window.urlObject.apiUrl + 'enrollList',
-                paraData: {organization_id: this.oid},
+                paraData: {organization_id: this.oid,type:'all'},
                 sCallback: function(result){
                     $target.css('opacity',1);
                     $target.find('#leftSingUpNum').text(result.available_count);
