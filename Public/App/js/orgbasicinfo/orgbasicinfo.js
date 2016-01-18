@@ -3,6 +3,7 @@
  */
 
 define(['zepto','common'],function(){
+
     function OrgBasicInfo($wrapper,oid) {
         this.$wrapper = $wrapper;
         var that = this;
@@ -18,6 +19,9 @@ define(['zepto','common'],function(){
         this.initImgPercent();
         this.controlCommentInputStyle();
         this.controlCoverFootStyle();
+
+        /*报名人员列表滚动效果*/
+        this.extendJqueryForScroll();
 
         //初始数据请求
         this.loadBasicInfoData(); //基本信息
@@ -48,7 +52,6 @@ define(['zepto','common'],function(){
                 fn=fnArr[index];
             fn&&fn.call(that);
         });
-
     }
 
     OrgBasicInfo.prototype={
@@ -292,6 +295,7 @@ define(['zepto','common'],function(){
                     $target.css('opacity',1);
                     $target.find('#leftSingUpNum').text(result.available_count);
                     that.fillInSignUpInfo(result.data);  /*填充报名信息*/
+
                 },
                 eCallback:function(txt){
                     $target.css('opacity',1);
@@ -302,11 +306,14 @@ define(['zepto','common'],function(){
 
         /*填充报名信息*/
         fillInSignUpInfo:function(data){
-            var str='',item;
-            if(!data || data.length==0){
-                str='<li><div class="nonData">暂无人员报名</div></li>';
+            var str='',item,
+                flag=!data || data.length==0;
+
+            if(flag){
+                str='<div class="nonData">暂无人员报名</div>';
             }else {
-                var len = data.length;
+                var len = data.length,
+                    diff=Math.ceil(len/3)*3 - len;
                 for (var i = 0; i < len; i++) {
                     item = data[i];
                     var time = new Date(item.create_time * 1000).format('yyyy-MM-dd');
@@ -318,8 +325,16 @@ define(['zepto','common'],function(){
                         '<span>&nbsp;&nbsp;成功报名</span>' +
                         '</li>';
                 }
+                for(var i=0;i<diff;i++){
+                    str += '<li></li>';
+                }
             }
             this.$wrapper.find('.mainItemSignUp .signUpConUl').html(str);
+
+            // 如果记录人数超过三条，则使用滚动显示的方式
+            if(!flag && data.length>3){
+                this.$wrapper.find('.signUpCon').Scroll({line:3,speed:2500,timer:2500,up:"btn1",down:"btn2"});
+            }
         },
 
         /*填充简介信息*/
@@ -810,6 +825,47 @@ define(['zepto','common'],function(){
                 }
             }
             return '';
+        },
+
+
+        /*拓展滚动*/
+        extendJqueryForScroll:function(){
+            $.extend($.fn, {
+                Scroll:function(opt,callback){
+                    //参数初始化
+                    if(!opt) var opt={};
+                    var timerID;
+
+                    var _this=this.eq(0).find("ul"),
+                        $li=_this.find("li"),
+                        lineH=$li.eq(0).height(), //获取行高
+                        line=opt.line?parseInt(opt.line,10):parseInt(this.height()/lineH,10), //每次滚动的行数，默认为一屏<a href="http://www.codesky.net" class="hden">源码天空</a>，即父容器高度
+                        speed=opt.speed?parseInt(opt.speed,10):500, //卷动速度，数值越大，速度越慢（毫秒）
+                        timer=opt.timer; //?parseInt(opt.timer,10):3000; //滚动的时间间隔（毫秒）
+
+                    if(line==0) line=1;
+                    var upHeight=0-line*lineH;
+                    //滚动函数
+                    var scrollUp=function(){
+                        _this.animate(
+                            {marginTop:upHeight},
+                            500,'ease-out',
+                            function(){
+                                for(var i=1;i<=line;i++){
+                                    _this.find("li").eq(0).appendTo(_this);
+                                }
+                                _this.css({marginTop:0});
+                            }
+                        );
+                    }
+
+                    //Shawphy:自动播放
+                    var autoPlay = function(){
+                        if(timer)timerID = window.setInterval(scrollUp,timer);
+                    };
+                    autoPlay();
+                }
+            })
         },
     };
 

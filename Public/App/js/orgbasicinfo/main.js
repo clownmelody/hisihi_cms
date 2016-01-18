@@ -5,6 +5,7 @@ requirejs.config({
     baseUrl: window.urlObject.js,
     paths: {
         zepto:'zepto.min',
+        zeptofx:'fx',
         prefixfree:'prefixfree.min',
         common:'../forum/hisihi_news_common',
         orgbasicinfo:'orgbasicinfo',
@@ -15,15 +16,12 @@ requirejs.config({
         },
         common:{
             output:'MyCommon'
-        },
-        debuggap:{
-            output:'debuggap'
         }
     }
 });
 
 
-require(['zepto','common','orgbasicinfo','prefixfree'],function(Zepto,MyCommon,OrgBasicInfo){
+require(['zepto','common','zeptofx','orgbasicinfo','prefixfree'],function(Zepto,MyCommon,zeptofx,OrgBasicInfo){
     var $target=$('#wrapper');
     new OrgBasicInfo($target,$target.data('oid'));
 });

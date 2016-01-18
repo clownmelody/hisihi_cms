@@ -369,11 +369,13 @@ body input[type="text"]:focus {
   border-left: 1px solid #ccc;
   margin-left: 82px;
   padding-left: 8px;
-  min-height: 65px;
+  max-height: 65px;
+  overflow: hidden;
 }
 #wrapper .mainItem.mainItemSignUp .mainContent .signUpCon li {
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 22px;
 }
 #wrapper .mainItem.mainItemSignUp .mainContent .signUpCon li span {
   font-size: 14px;
