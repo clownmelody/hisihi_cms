@@ -318,7 +318,7 @@ define(['zepto','common'],function(){
                     item = data[i];
                     var time = new Date(item.create_time * 1000).format('yyyy-MM-dd');
                     str += '<li>' +
-                        '<span class="dot spiteBg"></span>' +
+                        //'<span class="dot spiteBg"></span>' +
                         '<span>' + item.student_name + '</span>' +
                         '<span>&nbsp;同学于</span>' +
                         '<span>&nbsp;' + time + '</span>' +
