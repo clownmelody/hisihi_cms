@@ -848,7 +848,11 @@ define(['zepto','common'],function(){
                     //滚动函数
                     var scrollUp=function(){
                         _this.animate(
-                            {marginTop:upHeight},
+                            {
+                                'margin-top':upHeight,
+                                '-webkit-transform':'translate3d(0,0,0)',
+                                '-moz-transform':'translate3d(0,0,0)'
+                            },
                             500,'ease-out',
                             function(){
                                 for(var i=1;i<=line;i++){
