@@ -382,7 +382,7 @@ class ForumController extends AppController
             $uid = $this->getUid();//session_id
             $ids = $this->getForumsFromFollows($uid);
             if(empty($ids)){
-                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>null));
+                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
             }
             $post_ids = array();
             foreach($ids as &$post_id){
