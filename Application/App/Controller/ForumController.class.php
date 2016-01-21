@@ -432,6 +432,9 @@ class ForumController extends AppController
             foreach($adv_pos as $pos){
                 $list = $this->mergeAdvertismentToForumList($list, $pos);
             }
+        }else{
+            $totalCount = 0;
+            $list = null;
         }
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
