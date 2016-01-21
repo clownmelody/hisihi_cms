@@ -164,6 +164,9 @@ class DocumentController extends AppController {
         } else {
             $support['create_time'] = time();
             if (D('Support')->where($support)->add($support)) {
+                unset($support['create_time']);
+                M('Oppose')->where($support)->delete();//点赞时取消踩
+                $this->clearCache($support, 'oppose');
                 $this->clearCache($support);
                 $this->apiSuccess('感谢您的支持');
             } else {
@@ -246,6 +249,9 @@ class DocumentController extends AppController {
         } else {
             $oppose['create_time'] = time();
             if (M('Oppose')->where($oppose)->add($oppose)) {
+                unset($oppose['create_time']);
+                M('Support')->where($oppose)->delete();//点踩时取消点赞
+                $this->clearCache($oppose);
                 $this->clearCache($oppose, 'oppose');
                 $this->apiSuccess('感谢您的支持');
             } else {

@@ -372,6 +372,17 @@ class PublicController extends AppController {
         }
     }
 
+
+    public function topContentInfo($id=null){
+        $this->requireLogin();
+        $info['isSupportd'] = $this->isArticleSupport($id);
+        $info['supportCount'] = $this->getArticleSupportCount($id);
+        $info['isOpposed'] = $this->isArticleOppose($id);
+        //头条点踩数
+        $info['opposeCount'] = $this->getArticleOpposeCount($id);
+        $this->apiSuccess("获取头条信息成功", null, array('data' => $info));
+    }
+
     public function companybanner($id){
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');

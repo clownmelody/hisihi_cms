@@ -382,7 +382,7 @@ class ForumController extends AppController
             $uid = $this->getUid();//session_id
             $ids = $this->getForumsFromFollows($uid);
             if(empty($ids)){
-                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>null));
+                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
             }
             $post_ids = array();
             foreach($ids as &$post_id){
@@ -432,6 +432,9 @@ class ForumController extends AppController
             foreach($adv_pos as $pos){
                 $list = $this->mergeAdvertismentToForumList($list, $pos);
             }
+        }else{
+            $totalCount = 0;
+            $list = array();
         }
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
