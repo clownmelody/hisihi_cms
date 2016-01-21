@@ -400,19 +400,27 @@ body {
         }
         .signUpCon{
           border-left:1px solid #ccc;
-          margin-left: 82px;
+          margin-left: 78px;
           //height: 64px;
           padding-left: 8px;
-          min-height: 65px;
+          max-height: 65px;
+          overflow: hidden;
           li {
             overflow: hidden;
             text-overflow: ellipsis;
+            height: 23px;
             span {
               font-size: 14px;
+              float: left;
               &.dot {
                 font-size: 4px !important;
                 color: #ff5a00;
                 font-weight: bolder;
+                height: 4px;
+                width: 4px;
+                display: inline-block;
+                background-position: -55px -30px;
+                margin: 8px 2px;
               }
             }
           }
@@ -702,6 +710,7 @@ body {
   position: absolute;
   bottom: 0;
   background-color:#9E9A98;
+  opacity: 0;
   .allDownImg {
     max-width: 100%;
     margin-bottom: 0;

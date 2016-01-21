@@ -1,0 +1,1 @@
+requirejs.config({baseUrl:window.urlObject.js,paths:{zepto:"zepto.min",zeptofx:"fx",prefixfree:"prefixfree.min",common:"../forum/hisihi_news_common",orgbasicinfo:"orgbasicinfo"},shim:{zepto:{output:"Zepto"},common:{output:"MyCommon"}}}),require(["zepto","common","zeptofx","orgbasicinfo","prefixfree"],function(e,t,n,r){var i=$("#wrapper");new r(i,i.data("oid"))});
