@@ -374,7 +374,6 @@ class PublicController extends AppController {
 
 
     public function topContentInfo($id=null){
-        $this->requireLogin();
         $info['isSupportd'] = $this->isArticleSupport($id);
         $info['supportCount'] = $this->getArticleSupportCount($id);
         $info['isOpposed'] = $this->isArticleOppose($id);
