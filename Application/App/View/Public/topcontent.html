@@ -73,6 +73,120 @@
         img {
             max-width:100%;height:auto;
         }
+        /*投票*/
+        .bottomVoteCon{
+            height: 80px;
+            width: 100%;
+            position: relative;
+        }
+        .bottomVoteCon>div{
+            float: left;
+        }
+        .bottomVoteCon .middleBox{
+            width: 100%;
+        }
+        .bottomVoteCon .middleBox .middle{
+            margin: 0 80px;
+            height: 100%;
+        }
+        .mainVoteBarCon{
+            height: 23px;
+            width: 100%;
+            opacity: 0;
+        }
+        .mainVoteBarCon *{
+            font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+        }
+        .mainVoteBarCon > div{
+            float: left;
+            height: 100%;
+            color: white;
+            line-height: 23px;
+        }
+        .mainVoteBarCon .up{
+            /*width: 58%;*/
+            background-color: #FF5A00;
+            box-sizing: border-box;
+            padding-left: 10px;
+            overflow: hidden;
+        }
+        .mainVoteBarCon .down{
+            /*width: 20%;*/
+            background-color:#039BE5;
+            text-align: right;
+            box-sizing: border-box;
+            padding-right: 10px;
+            overflow: hidden;
+        }
+        .mainVoteBarCon .arrowCon{
+            width: 40px;
+            height: 23px;
+        }
+        .bottomVoteCon .upAndDownNum{
+            overflow: hidden;
+            padding-top: 5px;
+            width: 80px;
+            height: 100%;
+            text-align: center;
+        }
+        .bottomVoteCon .left{
+            color: #FF5A00;
+            margin-left:-100%;
+        }
+        .bottomVoteCon .right{
+            margin-left:-80px;
+            color: #039BE5;
+        }
+
+        .bottomVoteCon .title{
+            position: absolute;
+            left: 50%;
+            padding-top: 5px;
+            color: white;
+        }
+
+        .mainVoteBtnCon{
+            height: 50px;
+            width: 100%;
+        }
+        .mainVoteBtnCon>div{
+            float: left;
+        }
+        .mainVoteBtnCon .totalVoteInfo{
+            width: 100%;
+            text-align: center;
+        }
+        .totalVoteInfoMiddle {
+            margin: 0 44px;
+            color: #808080;
+        }
+        .mainVoteBtnCon .spriteBgBtn{
+            background: url('__IMG__/topcontent/sprite.png');
+            height: 48px;
+            width: 88px;
+            display: inline-block;
+            height: 24px;
+            width: 44px;
+            background-size: 176px 24px;
+        }
+        .mainVoteBtnCon .upBtn{
+            margin-left:-100%;
+        }
+        .mainVoteBtnCon .upBtnAble{
+            background-position:-44px 0;
+        }
+        .mainVoteBtnCon .upBtnDisabled{
+            background-position:-112px 0;
+        }
+        .mainVoteBtnCon .downBtn{
+            margin-left:-44px;
+        }
+        .mainVoteBtnCon .downBtnAble{
+            background-position:0 0;
+        }
+        .mainVoteBtnCon .downBtnDiabled{
+            background-position:-88px 0;
+        }
     </style>
 </head>
 
@@ -103,6 +217,33 @@
             </div>
         </div>
         <div class="bottomspace"></div>
+        <div class="bottomVoteCon">
+            <div class="middleBox">
+                <div class="middle">
+                    <div class="mainVoteBarCon">
+                        <div class="up"></div>
+                        <div class="arrowCon">
+                            <canvas width="25" height="23" id="arrowColor"></canvas>
+                        </div>
+                        <div class="down"></div>
+                    </div>
+                    <div class="mainVoteBtnCon">
+                        <div class="totalVoteInfo">
+                            <div class="totalVoteInfoMiddle">
+                                <span>已经有</span>
+                                <span id="totolVoteNum">2345</span>
+                                <span>投票</span>
+                            </div>
+                        </div>
+                        <div class="spriteBgBtn upBtn upBtnAble"></div>
+                        <div class="spriteBgBtn downBtn downBtnAble"></div>
+                </div>
+                </div>
+            </div>
+            <div class="left upAndDownNum"></div>
+            <div class="right upAndDownNum"></div>
+            <div class="title">VS</div>
+        </div>
     </div>
     <div class="app-bottombar">
         <div>
@@ -160,6 +301,65 @@
                         }
                     });*/
             });
+
+        $(function(){
+
+            //加载投票信息
+            loadVoteInfo();
+
+            drawArrowColorBlock();
+
+            //绘制箭头
+            function drawArrowColorBlock(){
+                var canvas=document.getElementById('arrowColor');
+                var ctx=canvas.getContext('2d'),
+                        w=canvas.width,
+                        h=canvas.height;
+                var lines = ["#FF5A00", "#039BE5"];
+                ctx.fillStyle = lines[0];
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(w, 0);
+                ctx.lineTo(0, h);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = lines[1];
+                ctx.beginPath();
+                ctx.moveTo(w, 0);
+                ctx.lineTo(0, h);
+                ctx.lineTo(w, h);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            /*通过点赞和 踩的 人数，控制颜色条的长度*/
+            function loadVoteInfo(){
+                var up=1522,down=0;
+                var total=up+down,
+                        percent1=Math.round(up/total*100),
+                        percent2=100-percent1;
+                var $voteCon=$('.bottomVoteCon'),
+                        $left=$voteCon.find('.left'),
+                        $right=$voteCon.find('.right');
+                $left.text(up+'赞');
+                $right.text(down+'踩');
+
+                //颜色条样式
+                var $voteBar=$voteCon.find('.mainVoteBarCon'),
+                    $up=$voteBar.find('.up'),
+                    $down=$voteBar.find('.down'),
+                    w=$voteBar.width()-$voteBar.find('.arrowCon').width(),
+                    wUp=Math.round(w*percent1/100);
+                $up.css('width',wUp);
+                $down.css('width',w-wUp);
+                if(w-up<10){
+                    $down.css('padding-right','0');
+                }
+                $voteBar.css('opacity',1);
+            }
+        });
+
     });
 
     App.controller('page2', function (page) {
