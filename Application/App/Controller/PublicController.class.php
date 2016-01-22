@@ -374,6 +374,9 @@ class PublicController extends AppController {
 
 
     public function topContentInfo($id=null){
+        if(empty($id)){
+            $this->apiError(-1,'头条id不能为空');
+        }
         $info['isSupportd'] = $this->isArticleSupport($id);
         $info['supportCount'] = $this->getArticleSupportCount($id);
         $info['isOpposed'] = $this->isArticleOppose($id);
