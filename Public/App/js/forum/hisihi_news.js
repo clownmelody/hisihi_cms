@@ -32,7 +32,7 @@ hisihiNews.prototype = {
 
 
     separateOperation:function(){
-        var operation=browserType();
+        var operation=getDeviceType();
         if(operation.mobile){
             if(operation.android) {
                 //如果方法存在
