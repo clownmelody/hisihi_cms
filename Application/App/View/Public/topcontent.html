@@ -360,23 +360,26 @@
                 this.$wrapper=$target;
                 this.articleId=window.location.href.replace(/.*id\//,'').replace(/\/version.*/,'')|0;
                 this.userInfo={session_id:''};
+                this.isFromApp=false;
                 //加载投票信息
 
                 this.separateOperation(this.loadVoteInfo);
-                this.$wrapper.on('click','.mainVoteBtnCon .upBtn', $.proxy(this,'execVoteUp'));
-                this.$wrapper.on('click','.mainVoteBtnCon .downBtn', $.proxy(this,'execVoteDown'));
+                this.$wrapper.on('click','.mainVoteBtnCon .upBtnAble', $.proxy(this,'execVoteUp'));
+                this.$wrapper.on('click','.mainVoteBtnCon .downBtnAble', $.proxy(this,'execVoteDown'));
             };
             Vote.prototype={
 
                 /*通过点赞和 踩的 人数，控制颜色条的长度*/
                 loadVoteInfo:function(){
-
+                    var that=this;
                     var para={
                         url:this.baseUrl+'/public/topContentInfo',
                         type:'get',
-                        paraData:{id:781,session_id:this.userInfo.session_id},
-//                        paraData:{id:781},
-                        sCallback: $.proxy(this,'fillInfoVoteInfo'),
+                        paraData:{id:this.articleId,session_id:this.userInfo.session_id},
+                        sCallback: function(data){
+                            that.fillInfoVoteInfo(data.data);
+                            that.saveCurrentVoteInfo(); //存储当前投票信息
+                        },
                         eCallback: function(){},
 
                     };
@@ -395,8 +398,8 @@
                 *    }
                 */
                 fillInfoVoteInfo:function(data){
-                    if(data){
-                        data=data.data;
+                    if(!data){
+                        return;
                     }
 
                     var upCount=data.supportCount |0,
@@ -415,23 +418,33 @@
 
 
                     var upClass='upBtnAble',
-                        downClass='downBtnAble';
+                        upClass1='upBtnDisabled',
+                        downClass='downBtnAble',
+                        downClass1='downBtnDisabled',
+                        upTargetClass=upClass,
+                        downTargetClass=downClass;
 
                     //控制长度和 记录是否已经点过赞、踩
                     if(isUp){
-                        upClass='upBtnDisabled';
+                        upTargetClass=upClass1;
                     }
-                    $voteCon.find('.upBtn').addClass(upClass);
+                    $voteCon.find('.upBtn').removeClass(upClass +' '+upClass1).addClass(upTargetClass);
                     if(isDown){
-                        downClass='downBtnDisabled';
+                        downTargetClass=downClass1;
                     }
-                    $voteCon.find('.downBtn').addClass(downClass);
+                    $voteCon.find('.downBtn').removeClass(downClass +' '+downClass1).addClass(downTargetClass);
 
                     this.updateColorBar(upCount,downCount);  //控制色块的长度
                     this.drawArrowColorBlock();  // 绘制三角形
                     this.controlVSTitleStyle();  //vs文字样式
 
+                    if(!this.isFromApp){
+                        $voteCon.find('.mainVoteBtnCon').hide();
+                    }
+
                     $voteCon.find('.bottomVoteConBox').css('opacity',1);
+
+
                 },
 
                 //绘制箭头
@@ -559,7 +572,7 @@
                             var para={
                                 url:this.baseUrl+'/user/login',
                                 type:'get',
-                                paraData:{username:'18601995231',password:'123456',type:1,client:4},
+                                paraData:{username:'18600466074',password:'123456',type:1,client:4},
                                 sCallback: function(data){
                                     that.userInfo=data;
                                     callback.call(that);
@@ -567,13 +580,10 @@
 
                             };
                             this.loadDataAsync(para);
-//                            /user/login
-//                            this.userInfo={"id":"565","session_id":"rveg3gcdm48kn656muela0mcl5","pic":"http:\/\/hisihi-avator.oss-cn-qingdao.aliyuncs.com\/2015-11-13\/5645b11e133f0-05505543_256_256.jpg","name":"李长春"};
                         }
                     }
                     else{
                         callback.call(that);
-//                        this.userInfo={"id":"565","session_id":"rveg3gcdm48kn656muela0mcl5","pic":"http:\/\/hisihi-avator.oss-cn-qingdao.aliyuncs.com\/2015-11-13\/5645b11e133f0-05505543_256_256.jpg","name":"李长春"};
                     }
 
                 },
@@ -587,18 +597,30 @@
                         //调app的登录框跳转方法
                         return;
                     }
+                    //正在投票
+                    if(this.isVoting()){
+                        return;
+                    }
                     var url='',$target=$(e.currentTarget),that=this;
                     if($target.hasClass('upBtnAble')){
                         url=this.baseUrl+'/document/doSupport';
                     }else{
                         url=this.baseUrl+'/document/unDoSupport';
                     }
+                    $target.addClass('voting');
+                    that.finishVote(1);
                     var para={
                             url:url,
                             type:'get',
                             paraData:{session_id:this.userInfo.session_id,id:this.articleId},
-                            sCallback: function(){that.finishVote(true)},
-                            eCallback: function(){},
+                            sCallback: function(){
+                                $target.removeClass('voting');
+                                that.saveCurrentVoteInfo.call(that); //存储当前投票信息
+                            },
+                            eCallback: function(){
+                                $target.removeClass('voting');
+                                that.finishVote.call(that,-1);
+                            },
                         };
                     this.loadDataAsync(para);
                 },
@@ -611,26 +633,48 @@
                         //调app的登录框跳转方法
                         return;
                     }
+                    //正在投票
+                    if(this.isVoting()){
+                        return;
+                    }
                     var url='',that=this,$target=$(e.currentTarget);
                     if($target.hasClass('downBtnAble')){
                         url=this.baseUrl+'/document/doOppose';
                     }else{
                         url=this.baseUrl+'/document/undoOppose';
                     }
+                    $target.addClass('voting');
+                    that.finishVote(0);
                     var para={
                         url:url,
                         type:'get',
                         paraData:{session_id:this.userInfo.session_id,id:this.articleId},
-                        sCallback: function(){that.finishVote(false)},
-                        eCallback: function(){},
+                        sCallback: function(){
+                            $target.removeClass('voting');
+                            that.saveCurrentVoteInfo.call(that); //存储当前投票信息
+                        },
+                        eCallback: function(){
+                            $target.removeClass('voting');
+                            that.finishVote.call(that,-1);
+                        },
                     };
                     this.loadDataAsync(para);
+                },
+
+                //正在投票中，防止重复操作
+                isVoting:function(){
+                    var $up =this.$wrapper.find('.upBtn'),
+                            $down=this.$wrapper.find('.downBtn');
+                    if(!($down.hasClass('voting') || $up.hasClass('voting'))){
+                        return false;
+                    }
+                    return true;
                 },
 
                 /*
                  * 投票回调
                  * para：
-                 * flag - {num} 操作类型 0 表示踩 1表示赞
+                 * flag - {num} 操作类型 0 表示踩; 1表示赞; -1表示投票失败，信息回滚
                  */
                 finishVote:function(flag){
 
@@ -640,29 +684,43 @@
                         $right=this.$wrapper.find('.right span'),
                         $total=this.$wrapper.find('#totalVoteNum');
 
-                    //总数是否加1
-                    if(this.updateTotalVotes()){
-                        this.updateNum($total);
+                    /*正常操作*/
+                    if(flag!==-1) {
+                        //总数是否加1
+                        if (this.updateTotalVotes()) {
+                            this.updateNum($total);
+                        }
+                        //具体赞和踩的数据更新
+                        if(flag==1){
+                            this.updateNum($left);
+                            this.updateNum($right,false);
+                        }else{
+                            this.updateNum($right);
+                            this.updateNum($left,false);
+                        }
+
+                        //按钮样式
+                        if(flag==1) {
+                            $up.removeClass('upBtnAble').addClass('upBtnDisabled');
+                            $down.removeClass('downBtnDisabled').addClass('downBtnAble');
+                        }else{
+                            $up.removeClass('upBtnDisabled').addClass('upBtnAble');
+                            $down.removeClass('downBtnAble').addClass('downBtnDisabled');
+                        }
+                        this.updateColorBar($left.text() | 0, $right.text() | 0);
+
                     }
 
-                    //具体赞和踩的数据更新
-                    if(flag){
-                        this.updateNum($left);
-                        this.updateNum($right,false);
-                    }else{
-                        this.updateNum($right);
-                        this.updateNum($left,false);
+                    //信息回滚 操作
+                    else{
+                        var oldData=this.$wrapper.attr('data-oldinfo');
+                        if(oldData){
+                            oldData=JSON.parse(oldData);
+                        }
+                        this.fillInfoVoteInfo(oldData);
                     }
 
-                    //按钮样式
-                    if(flag==1) {
-                        $up.removeClass('upBtnAble').addClass('upBtnDisabled');
-                        $down.removeClass('downBtnDisabled').addClass('downBtnAble');
-                    }else{
-                        $up.removeClass('upBtnDisabled').addClass('upBtnAble');
-                        $down.removeClass('downBtnAble').addClass('downBtnDisabled');
-                    }
-                    this.updateColorBar($left.text() | 0, $right.text() | 0);
+
                 },
 
                 /*
@@ -716,6 +774,22 @@
                     $up.animate(style1, 500,'ease-out', function(){});
                     $down.animate(style2, 500,'ease-out', function(){});
                 },
+
+                /*记录当前的信息状态，为回滚备用*/
+                saveCurrentVoteInfo:function(){
+                    var iso=this.$wrapper.find('.downBtn ').hasClass('downBtnDisabled')?'1':'0',
+                        iss=this.$wrapper.find('.upBtn ').hasClass('upBtnDisabled')?'1':'0',
+                        sc=this.$wrapper.find('.left>span ').text(),
+                        oc=this.$wrapper.find('.right>span ').text(),
+                        oldData={
+                            isOpposed: iso,
+                            isSupportd: iss,
+                            opposeCount: oc,
+                            supportCount: sc
+                    };
+                    this.$wrapper.attr('data-oldinfo',JSON.stringify(oldData));
+                },
+
 
                 /*
                  *判断webview的来源
