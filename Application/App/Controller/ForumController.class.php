@@ -928,8 +928,9 @@ class ForumController extends AppController
      * @param $post_id
      * @param int $page
      * @param int $count
+     * @param int $version
      */
-    public function teacherReplyList($post_id, $page = 1, $count = 10){
+    public function teacherReplyList($post_id, $page = 1, $count = 10, $version = 1){
         $id = intval($post_id);
         $page = intval($page);
         $count = intval($count);
@@ -973,6 +974,10 @@ class ForumController extends AppController
             $isfollowing = $isfollowing ? 2:0;
             $isfans = $isfans ? 1:0;
             $reply['userInfo']['relationship'] = $isfollowing | $isfans;
+            if(floatval($version) > 2.2){
+                $info_from_org = A('User')->getInfoFromOrg($reply['uid']);
+                $reply['userInfo']['institution'] = $info_from_org['name'];
+            }
 
             unset($reply['uid']);
 
