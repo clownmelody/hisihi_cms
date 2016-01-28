@@ -1,0 +1,264 @@
+/*less公用的方法*/
+.size(@width:100%, @height:auto) {
+  width: @width;
+  height: @height;
+}
+.pos(@top,@left){
+  top:@top;
+  left:@left;
+}
+.border-bottom(@width:1px,@type:solid,@color:#D6D6D6){
+  border-bottom: @arguments;
+}
+.box-sizing(@type:border-box){
+  box-sizing:@type;
+}
+.box-shadow(@h:0px,@v:0px,@b:1px,@s:1px,@c:#ccc){
+  box-shadow: @arguments;
+}
+
+
+@paddingleft:15px;
+@paddingright:20px;
+@orange:#ff5a00;
+@font-color:#808080;
+@header-h:44px;
+
+body{
+  margin: 0;
+  background: #eee;
+  position: absolute;
+  top:0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+a,a:hover,a:link,a:hover,a:active,a:visited{
+  text-decoration: none;
+}
+a:focus {
+  outline:none;
+  -moz-outline:none;
+}
+.headlines-box{
+  margin: 0px;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 0 #ddd;
+  margin-bottom: 5px;
+}
+.headlines-top{
+  border-bottom: 1px solid #eee;
+  padding: 10px 10px 0;
+}
+.headlines-top h2{
+  margin: 10px 0;
+}
+.headlines-time{
+  color: #bbb;
+  font-size: 12px;
+  line-height: 30px;
+  margin: 5px 0 ;
+}
+.headlines-body{
+  padding: 10px;
+}
+.headlines-body img{
+  width: 100%;
+  min-width: 100%;
+  margin-bottom: 10px;
+}
+.headlines-body p{
+  width: 100%;
+  line-height: 25px;
+  /*font-style: 14px;*/
+  color: #333;
+  margin: 0 0 5px 0;
+}
+.headlines-fix{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #4A4A4B;
+  padding: 5px 10px;
+}
+.fix-img{
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  float: left;
+  margin-right: 10px;
+}
+.fix-btn{
+  padding: 7px 8px;
+  background: #2ABA00;
+  color: #fff;
+  font-style: 16px;
+  float: right;
+  border-radius: 5px;
+  margin-top: 7px;
+}
+.fix-body p{
+  margin: 0;
+}
+.fix-body-title{
+  color: #fff;
+  line-height: 30px;
+  margin-bottom: 5px;
+  font-style: 16px;
+}
+.fix-body-txt{
+  color: #AAA;
+  font-size: 12px;
+  line-height: 20px;
+}
+.fix-star{
+  margin-left: 10px;
+}
+.fix-star img{
+  width: 10px;
+  height: 10px;
+  margin-right: 2px;
+
+}
+
+*{
+  -webkit-user-select: none; /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  li {
+    list-style-type: none;
+  }
+}
+
+.headlines-more{
+  img{
+    max-width: 100%;
+  }
+  .spiteBg{
+    background-image: url("../../images/v2content/sprite.png");
+    background-size:105px 70px;
+  }
+  .spiteBgOrigin{
+    background-image: url("../../images/v2content/sprite.png");
+    //background-size:310px 140px;
+  }
+  .moreItem {
+    img {
+      max-width: 100%;
+    }
+    .spiteBg {
+      background-image: url("../images/v2content/icon.png");
+      background-size: 105px 70px;
+    }
+
+    //一级标题 带箭头
+    .basicHeaderWithArrow {
+      margin-left: @paddingleft;
+      height: @header-h;
+      line-height: @header-h;
+      span {
+        font-size: 16px;
+        &.titleInfo{
+          color: @orange;
+        }
+        &.moreTip {
+          float: right;
+          color: @font-color;
+        }
+      }
+      .arrow {
+        float: right;
+        .size(15px, 23px);
+        display: inline-block;
+        margin-right: 20px;
+        margin-top: 10px;
+        transform: scale(0.7);
+        background-position:-328px -128px;
+      }
+    }
+
+    .mainContentUl {
+      margin: 0em;
+      width: 100%;
+
+      > li {
+        width: 100%;
+        height: 6em;
+        position: relative;
+        .coverBorderContainer {
+          position: absolute;
+          height: 0.0625em;
+          bottom: 0em;
+          background-color: white;
+          width: 0.75em;
+          z-index: 100;
+        }
+        a {
+          height: 100%;
+          display: block;
+          position: relative;
+          text-decoration: none;
+          padding: 0.75em;
+          border-bottom: 0.0625em solid #bdbdbd;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          -o-box-sizing: border-box;
+          &:active {
+            background-color: #DCDCDC;
+          }
+          .left {
+            .size(72px,72px);
+            position: absolute;
+            background-position:-256px -128px;
+            img {
+              width: 100%;
+              height: 100%;
+              opacity: 0;
+            }
+          }
+          .right {
+            padding-left: 5.25em;
+            height: 100%;
+            .rightHeader {
+              height: 3.25em;
+              width: 100%;
+              p {
+                color: #212121;
+                line-height: 1.4em;
+                text-decoration: none;
+                margin: 0;
+              }
+            }
+            .rightBottom {
+              height: 1.25em;
+              width: 100%;
+              * {
+                font-size: 0.9em;
+                color: #bdbdbd;
+              }
+              div {
+                display: inline-block;
+              }
+              .rightBottomLeft {
+                float: left;
+              }
+              .rightBottomRight {
+                float: right;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
