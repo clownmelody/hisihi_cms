@@ -199,7 +199,9 @@ function query_user($fields = null, $uid = null)
     }
 
     if (in_array('replycount', $fields)) {
-        $result['replycount'] = D('ForumPostReply')->where('uid=' . $uid . ' and status >0')->count();
+        $Model = new \Think\Model();
+        $totalCount = $Model->query('select count(*) as count from (select distinct post_id from hisihi_forum_post_reply where `status`>0 and `uid`='.$uid.')m');
+        $result['replycount'] = $totalCount[0]['count'];
     }
 
     //用户组

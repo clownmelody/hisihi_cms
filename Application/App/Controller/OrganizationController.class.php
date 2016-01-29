@@ -1810,9 +1810,10 @@ class OrganizationController extends AppController
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
-        $totalCount = M('OrganizationRelation')
-            ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))->count();
-        $teacher_ids = M('OrganizationRelation')->field('uid')
+        $Model = new \Think\Model();
+        $totalCount = $Model->query('select count(*) as count from (select distinct uid from hisihi_organization_relation where `status`=1 and `group`=6 and `organization_id`='.$organization_id.')m');
+        $totalCount = $totalCount[0]['count'];
+        $teacher_ids = M('OrganizationRelation')->distinct('uid')->field('uid')
             ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))
             ->page($page, $count)->select();
         $org_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');

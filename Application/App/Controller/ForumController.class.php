@@ -382,7 +382,7 @@ class ForumController extends AppController
             $uid = $this->getUid();//session_id
             $ids = $this->getForumsFromFollows($uid);
             if(empty($ids)){
-                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>null));
+                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
             }
             $post_ids = array();
             foreach($ids as &$post_id){
@@ -432,6 +432,9 @@ class ForumController extends AppController
             foreach($adv_pos as $pos){
                 $list = $this->mergeAdvertismentToForumList($list, $pos);
             }
+        }else{
+            $totalCount = 0;
+            $list = array();
         }
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
@@ -925,8 +928,9 @@ class ForumController extends AppController
      * @param $post_id
      * @param int $page
      * @param int $count
+     * @param int $version
      */
-    public function teacherReplyList($post_id, $page = 1, $count = 10){
+    public function teacherReplyList($post_id, $page = 1, $count = 10, $version = 1){
         $id = intval($post_id);
         $page = intval($page);
         $count = intval($count);
@@ -970,6 +974,10 @@ class ForumController extends AppController
             $isfollowing = $isfollowing ? 2:0;
             $isfans = $isfans ? 1:0;
             $reply['userInfo']['relationship'] = $isfollowing | $isfans;
+            if(floatval($version) > 2.2){
+                $info_from_org = A('User')->getInfoFromOrg($reply['uid']);
+                $reply['userInfo']['institution'] = $info_from_org['name'];
+            }
 
             unset($reply['uid']);
 
