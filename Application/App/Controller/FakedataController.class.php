@@ -27,7 +27,7 @@ class FakedataController extends AppController {
         foreach($course_list as $course) {
             $id = $course['id'];
             $view_count = $course['view_count'];
-            if($view_count>100000){
+            if($view_count>60000){
                 $random_count = rand(C('VideoDaySlowIncreaseMinPlayCount'), C('VideoDaySlowIncreaseMaxPlayCount'));
                 $random_id = rand(1, $count);
                 $courseModel->where('id='.$random_id)->setInc('view_count', $random_count);
@@ -86,7 +86,7 @@ class FakedataController extends AppController {
         foreach($article_list as $article) {
             $id = $article['id'];
             $view_count = $article['view'];
-            if($view_count>100000){
+            if($view_count>60000){
                 $min = (int)C('VideoDaySlowIncreaseMinPlayCount') * 0.6;
                 $max = (int)C('VideoDaySlowIncreaseMaxPlayCount') * 0.6;
                 $random_count = rand($min, $max);
