@@ -1852,7 +1852,7 @@ class ForumController extends AppController
         foreach($list as &$value){
             if((float)$version>=2.2||$value['uid']==0){
                 if($value['id']!='001'){
-                    $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/topPostDetail/post_id/'.$value['id'];
+                    $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/topPostDetailv2/post_id/'.$value['id'];
                 }
                 $value['show_type'] = 'web';
             }
