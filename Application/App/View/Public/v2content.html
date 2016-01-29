@@ -20,7 +20,7 @@
 	<div class="headlines-body">
 		<p>{$top_content_info.content}</p>
 	</div>
-	<div class="headlines-more" data-type="新闻" data-loading="false">
+	<div class="headlines-more" data-type="教程" data-loading="false">
 		<div class="moreItem" ></div>
 		<div class="moreItem"></div>
 		<div class="moreItem"></div>
@@ -31,35 +31,26 @@
 		<div class="loadingImg active"></div>
 	</div>
 </div>
-<!--<div class="headlines-fix">
-	<img src="__IMG__/icon.png" alt="" class="fix-img">
-	<a href="#" class="fix-btn">立即下载</a>
-	<div class="fix-body">
-		<p class="fix-body-title">嘿设汇
-                <span class="fix-star">
-                    <img src="__IMG__/star.png" alt="">
-                    <img src="__IMG__/star.png" alt="">
-                    <img src="__IMG__/star.png" alt="">
-                    <img src="__IMG__/star.png" alt="">
-                    <img src="__IMG__/star.png" alt="">
-                </span>
-		</p>
-		<p class="fix-body-txt">设计师必备 百万设计师都在用</p>
-	</div>
-</div>-->
+<!--下载条-->
+<div id="downloadCon">
+	<img src="__IMG__/v2content/d.png" class="allDownImg" />
+	<a href="http://www.hisihi.com/download.php">立即下载</a>
+</div>
+</body>
+<script src="__JS__/v2content/zepto.min.js"></script>
 <script>
 	var aLink=document.getElementsByTagName("a");
 	for(var i=0; i<aLink.length; i++){
 		aLink[i].href = "javascript:void(0);";
 		aLink[i].setAttribute("disabled", "disabled");
 	}
+	$('#downloadCon a')[0].href='http://www.hisihi.com/download.php';
 	window.hisihiUrlObj={
 		server_url:'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum',
 		img_url:'__IMG__'
 	};
 </script>
-<script src="__JS__/v2content/zepto.min.js"></script>
 <script src="__JS__/forum/hisihi_news_common.js"></script>
 <script src="__JS__/v2content/main.js"></script>
-</body>
+
 </html>

@@ -71,10 +71,10 @@ MoreInfoBase.prototype={
         var $target=$('#loadingTip'),
             $img=$target.find('.loadingImg');
         if(status==1){
-            $target.css('z-index',1);
+            $target.show();
             $img.addClass('active');
         } else{
-            $target.css('z-index',-1);
+            $target.hide();
             $img.removeClass('active');
         }
     },
@@ -126,6 +126,7 @@ nPro.loadData=function(callback){
     var paras={
         url:this.paras.listUrl,
         type:'get',
+        paraData:{page:1, count:3},
         sCallback:function(data){
             callback && callback();
             that.fillInInfo.call(that,data);
@@ -137,12 +138,13 @@ nPro.loadData=function(callback){
 
 //填充内容
 nPro.fillInInfo=function(data){
-    //data=[
-    //    {"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":window.hisihiUrlObj.server_url+"/toppostdetailv2/post_id/5510","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},
-    //    {"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":window.hisihiUrlObj.server_url+"/toppostdetailv2/post_id/5513","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}
-    //];
-    var str = this.getContentStr(data),
-        allStr='<div class="basicHeaderWithArrow">'+
+    var str='';
+    if(this.paras.className!='hotShortcutKey') {
+         str = this.getContentStr(data);
+    }else{
+        str = this.getContentStrForKey(data);
+    }
+    var allStr='<div class="basicHeaderWithArrow">'+
                     '<span class="titleInfo">'+this.paras.title+'</span>'+
                     '<i class="spiteBgOrigin arrow"></i>'+
                     '<span class="moreTip">更多</span>'+
@@ -166,28 +168,43 @@ nPro.getContentStr=function(result){
     }
     else {
         data=result.data;
-        var len = data.length;
+        var len = data.length,
+            btnStr='',
+            strBottomRight='',
+            isLesson=this.paras.className=='hotLesson';
+        if(this.paras.title=='热门教程'){
+            btnStr='<div class="btnPlay spiteBgOrigin"></div>';
+        }
         for (var i = 0; i < len; i++) {
             item = data[i];
             title = this.substrLongStr(item.title, 25);
             dateStr = this.getTimeFromTimestamp(item.create_time);
+            if(!isLesson) {
+                strBottomRight = '<div class="rightBottomLeft">' +
+                                    dateStr +
+                                 '</div>'+
+                                 '<div class="rightBottomRight">' +
+                                    '<i class="viewTimesIcon spiteBg"></i>' +
+                                    '<span class="viewTimesIcon">' + item.view_count + '</span>' +
+                                 '</div>';
+            }else{
+                var statueStr=item.end?'(进行中)':'(已结束)';
+                strBottomRight = '<div class="rightBottomLeft">' +
+                                    '截稿时间：'+dateStr + '&nbsp;'+statueStr+
+                                 '</div>';
+            }
             str += '<li class="newsLiItem">' +
-                    //'<div class="coverBorderContainer"></div>' +
                     '<a href="' + item.url + '">' +
                         '<div class="left spiteBgOrigin">' +
                             '<img src="' + item.pic_url + '"/>' +
+                            btnStr+
                         '</div>' +
                         '<div class="right">' +
                             '<div class="rightHeader">' +
                                 '<p>' + title + '</p>' +
                             '</div>' +
                             '<div class="rightBottom">' +
-                                '<div class="rightBottomLeft">' +
-                                    //'<i class="viewTimesIcon"><img src="'+this.urlObj.img_url+'/viewTimes.png"/></i>'+
-                                    '<span class="viewTimesIcon">人气：</span>' +
-                                    '<span>' + item.view_count + '</span>' +
-                                '</div>' +
-                                '<div class="rightBottomRight">' + dateStr + '</div>' +
+                                strBottomRight+
                             '</div>' +
                         '</div>' +
                     '</a>' +
@@ -197,23 +214,50 @@ nPro.getContentStr=function(result){
     return str;
 };
 
+nPro.getContentStrForKey=function(){
+    var str = '',
+        data=[
+                {name:'ps',x:0,y:0,url:''},
+                {name:'ai',x:0,y:-1,url:''},
+                {name:'cad',x:-1,y:-1,url:''},
+                {name:'maya',x:-2,y:0,url:''},
+                {name:'ae',x:-1,y:0,url:''},
+        ],
+        size=65;
+    var len = data.length;
+    for (var i = 0; i < len; i++) {
+        var item=data[i];
+        var style='background-position:'+item.x*size +'px '+item.y*size+'px';
+        str+='<li class="shortKeyLiItem">'+
+                '<a href="' + item.url + '" class="spiteBgOrigin" style="'+style+'"></a>'+
+             '</li>';
+    }
+    str+='<div style="clear:both;"></div>';
+    return str;
+};
+
+
 
 /***********业务逻辑*************/
 var basicLogicClass=function(type){
 
     this.allContent=[
-            {name:'大家都在参加',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'activity'},
             {name:'热门头条',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hotTop'},
+            {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hotShortcutKey'},
             {name:'热门教程',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hotLesson'},
-            {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hotFastKey'},
+            {name:'大家都在参加',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'activity'},
             {name:'嘿设汇新闻',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hisihiNews'}
         ];
-    this.names=['活动','头条','视频','快捷键','新闻'];
+    this.names=['头条','快捷键','教程','比赛','新闻'];
+
     this.normalInfoObjArr=[];
     this.resetAllContentArr(type);  //根据当前文章的类型 重新调整内容数组的顺序
+    this.isFromApp=false;
+    this.separateOperation();
     this.$wrapper=$('.headlines-more');
     this.mainContentHeight=this.$wrapper.height();
     $('.headlines-box').scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
+    this.controlCommentBoxStatus();
 };
 
 basicLogicClass.prototype={
@@ -258,7 +302,7 @@ basicLogicClass.prototype={
         }
 
         var $Itemtarget=$target.eq(0);
-        if (scrollTop >= height -120 &&
+        if (scrollTop >= height -170 &&
             !that.$wrapper.hasClass('loadingData')) {  //滚动到底部
                 var index=$Itemtarget.index();
                 that.$wrapper.addClass('loadingData');
@@ -268,11 +312,82 @@ basicLogicClass.prototype={
                 });
         }
     },
+
+    /*
+     *获得用户的信息 区分安卓和ios
+     */
+    separateOperation:function(callback){
+        /*操作设备信息*/
+        this.deviceType=getDeviceType();
+        var userStr='',that=this;
+        if(this.deviceType.mobile){
+            if (this.deviceType.android) {
+                //如果方法存在
+                if(typeof AppFunction !="undefined") {
+                    this.isFromApp=true;
+                }
+            }
+            else if (this.deviceType.ios) {
+                //如果方法存在
+                if (typeof getUser_iOS !="undefined") {
+                    this.isFromApp=true;
+                }
+            }
+            if(userStr!=''){
+                this.userInfo=JSON.parse(userStr);
+                callback&&callback.call(that);
+            }else{
+
+            }
+        }
+        else{
+            callback&&callback.call(that);
+        }
+    },
+
+    /*
+     * 控制评论框的显示状态，通过 session_id 是否 为空 来
+     * 三种情况：
+     * 1.用户已经登录，则直接显示评论框，并且主要容器的高度 不 为100%
+     * 2.用户未登录，不显示评论框，主要容器的高度  为 100%
+     * 3.用户不来源于app，而是从其他的地方进入，不显示评论框，显示下载条，主要容器的高度  不为 100%
+     * 如果用户没有登录，   则不显示;并将内容框控制到最高
+     */
+    controlCommentBoxStatus:function(){
+        var $target=$('.headlines-box');
+        //来源于app
+        if(this.isFromApp){
+            this.$wrapper.hide();
+            $target.find('.detailed-main').css('margin-bottom','0');
+            return;
+        }
+        //来源于普通的页面
+        else {
+            this.controlCoverFootStyle();
+        }
+    },
+
+    /*控制底部logo的位置样式*/
+    controlCoverFootStyle:function(){
+        var $target = $('#downloadCon'),
+            $a=$target.find('a'),
+            aw=$a.width(),
+            ah=aw*0.40,
+            bw=$target.width(),
+            h= bw*120/750;
+        $target.css({'height':h+'px','left':($('body').width()-bw)/2,'opacity':1});
+        this.$wrapper.parent().css('bottom',h+'px');
+        var fontSize='16px';
+        if(bw<375){
+            fontSize='14px';
+        }
+        $a.css({'top':(h-ah)/2,'height':ah+'px','line-height':ah+'px','font-size':fontSize});
+    },
+
 };
 
 $(function(){
     var type=$('.headlines-more').data('type');
-    new basicLogicClass();
-    //var contentOrder
+    new basicLogicClass(type);
 });
 
