@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="Resource-type" content="Document"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>嘿设汇教程列表</title>
+    <style>
+        *::after, *::before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -o-box-sizing: border-box;
+        }
+
+        ul li {
+            list-style-type: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+
+        }
+
+        body {
+            background: #ececec;
+            font-size:1em;
+            /*position: absolute;*/
+            /*top: 0;*/
+            /*left: 0;*/
+            /*bottom: 0;*/
+            /*right: 0;*/
+        }
+
+        img {
+            width: 100%;
+        }
+
+        .wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            overflow: auto;
+            background-color: white;
+            -webkit-overflow-scrolling: touch;   /* ios滑动卡顿解决办法 */
+        }
+        .wrapper *{
+            font-size: 1em;
+            -webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+            -moz-user-select: none;
+        }
+        .newsListContainer{
+            margin:0em;
+            width: 100%;
+        }
+        .newsListContainer li{
+            width: 100%;
+            height:6em;
+            position: relative;
+        }
+        /*.newsListContainer li.selected{*/
+            /*background-color: #e3e3e3;*/
+        /*}*/
+        .newsListContainer li .coverBorderContainer{
+            position: absolute;
+            height: 0.0625em;
+            bottom: 0em;
+            background-color: white;
+            width:0.75em;
+            z-index: 100;
+        }
+        .newsListContainer li a{
+            height: 100%;
+            display: block;
+            position: relative;
+            text-decoration: none;
+            padding:0.75em;
+            border-bottom: 0.0625em solid #bdbdbd;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -o-box-sizing: border-box;
+        }
+        .newsListContainer li a:active{
+            background-color: #DCDCDC;
+        }
+        .newsListContainer li .left{
+            width: 4.5em;
+            height: 4.5em;
+            position: absolute;
+            background-image: url('__IMG__/logocover.png');
+        }
+        .newsListContainer li .left img{
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+        .newsListContainer li .right{
+            padding-left:5.25em ;
+        }
+        .newsListContainer li .right {
+            padding-left: 5.25em;
+            height: 100%;
+        }
+        .newsListContainer li .right .rightHeader{
+            height: 3.25em;
+            width: 100%;
+        }
+        .newsListContainer li .right .rightHeader p{
+            color:#212121;
+            line-height: 1.4em;
+            text-decoration: none;
+        }
+        .newsListContainer li .right .rightBottom{
+            height:1.25em;
+            width: 100%;
+        }
+        .newsListContainer li .right .rightBottom *{
+            font-size: 0.9em;
+            color: #bdbdbd;
+        }
+        .newsListContainer li .right .rightBottom div{
+            display: inline-block;
+        }
+        .newsListContainer li .right .rightBottomLeft{
+            float: left;
+        }
+        .newsListContainer li .right .rightBottom i{
+            display: inline-block;
+            height: 1.2em;
+            width: 1.2em;
+            margin-right:0.35em;
+        }
+        .newsListContainer li .right .rightBottom i img{
+            max-width: 100%;
+        }
+        .newsListContainer li .right .rightBottomRight{
+            float: right;
+        }
+
+        .wrapper .loadingImg{
+            background-image: url("__IMG__/loading2.svg");
+        }
+        .wrapper .loadError{
+            display: none;
+            color: #757373;
+            text-decoration: none !important;
+        }
+
+        .loadingResultTips{
+            opacity: 0;
+            text-align: center;
+            color: #9C9A9D;
+            position: absolute;
+            height: 4em;
+            width: 12em;
+        }
+        .loadingResultTips .loadingImg{
+            margin: 0 auto;
+            height: 2em;
+            width: 2em;
+        }
+        .loadingResultTips.active .loadingImg{
+            -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+            -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+            animation: aloading 0.8s steps(6, end) 0s infinite;
+        }
+        @-webkit-keyframes aloading {
+            to {
+                -webkit-transform:rotate(360deg)
+            }
+        }
+        @-moz-keyframes aloading {
+            to {
+                -moz-transform:rotate(360deg)
+            }
+        }
+        @keyframes aloading {
+            to {
+                transform:rotate(360deg)
+            }
+        }
+
+
+        /*加载更多*/
+        .loadingMoreResultTips{
+            text-align: center;
+            display: none;
+        }
+        .loadingMoreResultTips .loadingMoreResultTipsMain{
+            width: 8em;
+            height: 2em;
+            margin: 0 auto;
+        }
+        .loadingMoreResultTipsMain span{
+            float: left;
+            line-height: 2em;
+            margin-left: 0.8em;;
+            color: #757373;
+        }
+        .loadingMoreResultTipsMain .loadingImg{
+            float: left;
+            display:inline-block;
+            margin: 0.25em auto;
+            height: 1.5em;
+            width: 1.5em;
+        }
+        .loadingMoreResultTips.active .loadingImg{
+            -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+            -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+            animation: aloading 0.8s steps(6, end) 0s infinite;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div id="loadingTip" class="loadingResultTips active">
+        <div class="loadingImg loadingMoreResultTipsMain"></div>
+        <a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>
+    </div>
+    <ul class="newsListContainer">
+        <div class="loadingMoreResultTips">
+            <div class="loadingMoreResultTipsMain">
+                <i class="loadingImg"></i>
+                <span>正在加载…</span>
+            </div>
+            <a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>
+        </div>
+    </ul>
+</div>
+</body>
+<script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
+<script type="text/javascript" src="__JS__/forum/hisihi_news_common.js"></script>
+<script type="text/javascript" src="__JS__/forum/hisihi_lessons.js"></script>
+<script>
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+    var urlObj={
+        server_url:'http://{$Think.server.HTTP_HOST}/api.php?s=/forum',
+        img_url:'__IMG__'
+    };
+    urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
+    new hisihiNews($('.wrapper'),urlObj);
+</script>
+</html>
