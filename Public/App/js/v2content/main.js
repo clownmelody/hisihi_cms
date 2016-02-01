@@ -138,12 +138,7 @@ nPro.loadData=function(callback){
 
 //填充内容
 nPro.fillInInfo=function(data){
-    var str='';
-    if(this.paras.className!='hotShortcutKey') {
-         str = this.getContentStr(data);
-    }else{
-        str = this.getContentStrForKey(data);
-    }
+    var str= this.getContentStr(data);
     var allStr='<div class="basicHeaderWithArrow">'+
                     '<span class="titleInfo">'+this.paras.title+'</span>'+
                     '<i class="spiteBgOrigin arrow"></i>'+
@@ -160,51 +155,55 @@ nPro.fillInInfo=function(data){
     });
 };
 
-//内容字符串
 nPro.getContentStr=function(result){
+    if(this.paras.title=='嘿设汇新闻') {
+        return this.getContentStrNews(result);
+    }
+    if(this.paras.title=='热门头条') {
+        return this.getContentStrTop(result);
+    }
+    if(this.paras.title=='热门快捷键') {
+        return this.getContentStrForKey(result);
+    }
+    if(this.paras.title=='热门教程') {
+        return this.getContentStrLesson(result);
+    }
+    if(this.paras.title=='大家都在参加') {
+        return this.getContentStrActivity(result);
+    }
+};
+
+
+//新闻 内容字符串
+nPro.getContentStrNews=function(result){
     var str = '',title,item,dateStr;
     if(!result || result.data.length==0){
         str='<div class="nonData">暂无内容</div>';
     }
     else {
         data=result.data;
-        var len = data.length,
-            btnStr='',
-            strBottomRight='',
-            isLesson=this.paras.className=='hotLesson';
-        if(this.paras.title=='热门教程'){
-            btnStr='<div class="btnPlay spiteBgOrigin"></div>';
-        }
+        var len = data.length;
         for (var i = 0; i < len; i++) {
             item = data[i];
             title = this.substrLongStr(item.title, 25);
             dateStr = this.getTimeFromTimestamp(item.create_time);
-            if(!isLesson) {
-                strBottomRight = '<div class="rightBottomLeft">' +
-                                    dateStr +
-                                 '</div>'+
-                                 '<div class="rightBottomRight">' +
-                                    '<i class="viewTimesIcon spiteBg"></i>' +
-                                    '<span class="viewTimesIcon">' + item.view_count + '</span>' +
-                                 '</div>';
-            }else{
-                var statueStr=item.end?'(进行中)':'(已结束)';
-                strBottomRight = '<div class="rightBottomLeft">' +
-                                    '截稿时间：'+dateStr + '&nbsp;'+statueStr+
-                                 '</div>';
-            }
             str += '<li class="newsLiItem">' +
                     '<a href="' + item.url + '">' +
                         '<div class="left spiteBgOrigin">' +
-                            '<img src="' + item.pic_url + '"/>' +
-                            btnStr+
+                            '<img src="' + item.pic_url + '"/>'+
                         '</div>' +
                         '<div class="right">' +
                             '<div class="rightHeader">' +
                                 '<p>' + title + '</p>' +
                             '</div>' +
                             '<div class="rightBottom">' +
-                                strBottomRight+
+                                '<div class="rightBottomLeft">' +
+                                    dateStr +
+                                '</div>'+
+                            '<div class="rightBottomRight">' +
+                            '<i class="viewTimesIcon spiteBg"></i>' +
+                            '<span class="viewTimesIcon">' + item.view_count + '</span>' +
+                            '</div>'+
                             '</div>' +
                         '</div>' +
                     '</a>' +
@@ -214,25 +213,146 @@ nPro.getContentStr=function(result){
     return str;
 };
 
-nPro.getContentStrForKey=function(){
-    var str = '',
-        data=[
-                {name:'ps',x:0,y:0,url:''},
-                {name:'ai',x:0,y:-1,url:''},
-                {name:'cad',x:-1,y:-1,url:''},
-                {name:'maya',x:-2,y:0,url:''},
-                {name:'ae',x:-1,y:0,url:''},
-        ],
-        size=65;
-    var len = data.length;
-    for (var i = 0; i < len; i++) {
-        var item=data[i];
-        var style='background-position:'+item.x*size +'px '+item.y*size+'px';
-        str+='<li class="shortKeyLiItem">'+
-                '<a href="' + item.url + '" class="spiteBgOrigin" style="'+style+'"></a>'+
-             '</li>';
+//头条 内容字符串
+nPro.getContentStrTop=function(result){
+    var str = '',title,item,dateStr;
+    if(!result || result.course.length==0){
+        str='<div class="nonData">暂无内容</div>';
     }
-    str+='<div style="clear:both;"></div>';
+    else {
+        data=result.course;
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            item = data[i];
+            title = this.substrLongStr(item.title, 25);
+            dateStr = this.getTimeFromTimestamp(item.update_time);
+            str += '<li class="newsLiItem">' +
+                    '<a href="' + item.content_url + '">' +
+                '<div class="left spiteBgOrigin">' +
+                    '<img src="' + item.img + '"/>' +
+                '</div>' +
+                '<div class="right">' +
+                '<div class="rightHeader">' +
+                '<p>' + title + '</p>' +
+                '</div>' +
+                '<div class="rightBottom">' +
+                '<div class="rightBottomLeft">' +
+                    dateStr +
+                '</div>'+
+                '<div class="rightBottomRight">' +
+                    '<i class="viewTimesIcon spiteBg"></i>' +
+                    '<span class="viewTimesIcon">' + item.view + '</span>' +
+                '</div>'+
+                '</div>' +
+                '</div>' +
+                '</a>' +
+                '</li>';
+        }
+    }
+    return str;
+};
+
+//热门教程 内容字符串
+nPro.getContentStrLesson=function(result){
+    var str = '',title,item,dateStr;
+    if(!result || result.coursesList.length==0){
+        str='<div class="nonData">暂无内容</div>';
+    }
+    else {
+        data=result.coursesList;
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            item = data[i];
+            title = this.substrLongStr(item.title, 25);
+            dateStr = this.getTimeFromTimestamp(item.update_time);
+
+            str += '<li class="newsLiItem">' +
+                '<a href="' + item.id + '">' +
+                '<div class="left spiteBgOrigin">' +
+                    '<img src="' + item.img + '"/>' +
+                    '<div class="btnPlay spiteBgOrigin"></div>'+
+                '</div>' +
+                '<div class="right">' +
+                '<div class="rightHeader">' +
+                '<p>' + title + '</p>' +
+                '</div>' +
+                '<div class="rightBottom">' +
+                    '<div class="rightBottomLeft">' +
+                        dateStr +
+                    '</div>'+
+                    '<div class="rightBottomRight">' +
+                        '<i class="viewTimesIcon spiteBg"></i>' +
+                        '<span class="viewTimesIcon">' + item.ViewCount + '</span>' +
+                    '</div>'+
+                '</div>' +
+                '</div>' +
+                '</a>' +
+                '</li>';
+        }
+    }
+    return str;
+};
+
+//活动 内容字符串
+nPro.getContentStrActivity=function(result){
+    var str = '',title,item,dateStr;
+    if(!result || result.data.length==0){
+        str='<div class="nonData">暂无内容</div>';
+    }
+    else {
+        data=result.data;
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            item = data[i];
+            title = this.substrLongStr(item.title, 25);
+            var isEnd=new Date(parseFloat(item.eTime) * 1000) -new Date()>0;
+            dateStr = this.getTimeFromTimestamp(item.eTime);
+            var statueStr=isEnd?'(进行中)':'(已结束)';
+            var strBottomRight = '<div class="rightBottomLeft">' +
+                '截稿时间：'+dateStr + '&nbsp;'+statueStr+
+                '</div>';
+            str += '<li class="newsLiItem">' +
+                '<a href="' + item.url + '">' +
+                '<div class="left spiteBgOrigin">' +
+                '<img src="' + item.pic_path + '"/>' +
+                '</div>' +
+                '<div class="right">' +
+                '<div class="rightHeader">' +
+                '<p>' + title + '</p>' +
+                '</div>' +
+                '<div class="rightBottom">' +
+                    '<div class="rightBottomLeft">' +
+                        strBottomRight +
+                    '</div>'+
+                '</div>' +
+                '</div>' +
+                '</a>' +
+                '</li>';
+        }
+    }
+    return str;
+};
+
+//快捷键 内容字符串
+nPro.getContentStrForKey=function(result){
+    var str = '';
+    if(!result || result.data.length==0){
+        str='<div class="nonData">暂无内容</div>';
+    }
+    else {
+        data = result.data;
+        var len = data.length;
+            str = '';
+        for (var i = 0; i < len; i++) {
+            var item = data[i];
+            str += '<li class="shortKeyLiItem">' +
+                        '<a href="' + item.text + '">'+
+                            '<img src="'+item.icon+'"/>'+
+                        '</a>' +
+                    '</li>';
+        }
+        str += '<div style="clear:both;"></div>';
+    }
     return str;
 };
 
@@ -242,11 +362,11 @@ nPro.getContentStrForKey=function(){
 var basicLogicClass=function(type){
 
     this.allContent=[
-            {name:'热门头条',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hotTop'},
-            {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hotShortcutKey'},
-            {name:'热门教程',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hotLesson'},
-            {name:'大家都在参加',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'activity'},
-            {name:'嘿设汇新闻',url:window.hisihiUrlObj.server_url+'/newsList',loadNow:false,className:'hisihiNews'}
+            {name:'热门头条',url:window.hisihiUrlObj.server_url+'/public/topList',loadNow:false,className:'hotTop'},
+            {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'/HotKeys/sort',loadNow:false,className:'hotShortcutKey'},
+            {name:'热门教程',url:window.hisihiUrlObj.server_url+'/Course/recommendcourses',loadNow:false,className:'hotLesson'},
+            {name:'大家都在参加',url:window.hisihiUrlObj.server_url+'/event/competitionList',loadNow:false,className:'activity'},
+            {name:'嘿设汇新闻',url:window.hisihiUrlObj.server_url+'/forum/newsList',loadNow:false,className:'hisihiNews'}
         ];
     this.names=['头条','快捷键','教程','比赛','新闻'];
 
