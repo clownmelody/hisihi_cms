@@ -44,17 +44,17 @@ MoreInfoBase.prototype={
                         if(paras.eCallback){
                             paras.eCallback(txt);
                         }
-                        that.controlLoadingTips(0);
+                        that.controlLoadingTips(-1);
                     }
                 }
                 //超时
                 else if (status == 'timeout') {
                     loginXhr.abort();
-                    that.controlLoadingTips(0);
+                    that.controlLoadingTips(-1);
                     paras.eCallback();
                 }
                 else {
-                    that.controlLoadingTips(0);
+                    that.controlLoadingTips(-1);
                     paras.eCallback()
                 }
             }
@@ -65,15 +65,21 @@ MoreInfoBase.prototype={
      *加载等待,
      *para:
      * status - {num} 状态控制 码
-     * 0.显示加载等待;  1 隐藏等待;
+     * 0.显示加载等待;  1 隐藏等待; -1隐藏转圈图片，显示加载失败，重新刷新的按钮;
      */
     controlLoadingTips:function(status){
         var $target=$('#loadingTip'),
-            $img=$target.find('.loadingImg');
+            $img=$target.find('.loadingImg'),
+            $a=$target.find('.loadError');
         if(status==1){
             $target.show();
             $img.addClass('active');
-        } else{
+        }else if(status==-1){
+            $target.show();
+            $img.removeClass('active');
+            $a.show();
+        }
+        else{
             $target.hide();
             $img.removeClass('active');
         }
@@ -131,9 +137,15 @@ nPro.loadData=function(callback){
             callback && callback();
             that.fillInInfo.call(that,data);
         },
-        eCallback:function(){},
+        eCallback:function(){
+
+        },
     };
     this.getDataAsync(paras);
+};
+
+nPro.errorInfo=function(){
+    //loadingImg
 };
 
 //填充内容
@@ -188,7 +200,7 @@ nPro.getContentStrNews=function(result){
             title = this.substrLongStr(item.title, 25);
             dateStr = this.getTimeFromTimestamp(item.create_time);
             str += '<li class="newsLiItem">' +
-                    '<a href="' + item.url + '">' +
+                    '<a href="' +window.hisihiUrlObj.link_url + item.url + '">' +
                         '<div class="left spiteBgOrigin">' +
                             '<img src="' + item.pic_url + '"/>'+
                         '</div>' +
@@ -227,7 +239,7 @@ nPro.getContentStrTop=function(result){
             title = this.substrLongStr(item.title, 25);
             dateStr = this.getTimeFromTimestamp(item.update_time);
             str += '<li class="newsLiItem">' +
-                    '<a href="' + item.content_url + '">' +
+                    '<a href="' +window.hisihiUrlObj.link_url+ item.content_url + '">' +
                 '<div class="left spiteBgOrigin">' +
                     '<img src="' + item.img + '"/>' +
                 '</div>' +
@@ -267,7 +279,7 @@ nPro.getContentStrLesson=function(result){
             dateStr = this.getTimeFromTimestamp(item.update_time);
 
             str += '<li class="newsLiItem">' +
-                '<a href="' + item.id + '">' +
+                '<a href="'+window.hisihiUrlObj.server_url+'/course/courseDetail/type/view/id/' + item.id + '">' +
                 '<div class="left spiteBgOrigin">' +
                     '<img src="' + item.img + '"/>' +
                     '<div class="btnPlay spiteBgOrigin"></div>'+
@@ -312,7 +324,7 @@ nPro.getContentStrActivity=function(result){
                 '截稿时间：'+dateStr + '&nbsp;'+statueStr+
                 '</div>';
             str += '<li class="newsLiItem">' +
-                '<a href="' + item.url + '">' +
+                '<a href="' +window.hisihiUrlObj.server_url+ '/event/competitioncontent/type/view/id/'+item.id + '">' +
                 '<div class="left spiteBgOrigin">' +
                 '<img src="' + item.pic_path + '"/>' +
                 '</div>' +
@@ -346,7 +358,7 @@ nPro.getContentStrForKey=function(result){
         for (var i = 0; i < len; i++) {
             var item = data[i];
             str += '<li class="shortKeyLiItem">' +
-                        '<a href="' + item.text + '">'+
+                        '<a href="'+window.hisihiUrlObj.server_url+'/HotKeys/share/type/' + item.text + '">'+
                             '<img src="'+item.icon+'"/>'+
                         '</a>' +
                     '</li>';
@@ -362,7 +374,7 @@ nPro.getContentStrForKey=function(result){
 var basicLogicClass=function(type){
 
     this.allContent=[
-            {name:'热门头条',url:window.hisihiUrlObj.server_url+'/public/topList',loadNow:false,className:'hotTop'},
+            {name:'热门头条',url:window.hisihiUrlObj.server_url+'/public/topList1',loadNow:false,className:'hotTop'},
             {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'/HotKeys/sort',loadNow:false,className:'hotShortcutKey'},
             {name:'热门教程',url:window.hisihiUrlObj.server_url+'/Course/recommendcourses',loadNow:false,className:'hotLesson'},
             {name:'大家都在参加',url:window.hisihiUrlObj.server_url+'/event/competitionList',loadNow:false,className:'activity'},
@@ -373,10 +385,17 @@ var basicLogicClass=function(type){
     this.normalInfoObjArr=[];
     this.resetAllContentArr(type);  //根据当前文章的类型 重新调整内容数组的顺序
     this.isFromApp=false;
+    /*操作设备信息*/
+    this.deviceType=getDeviceType();
     this.separateOperation();
     this.$wrapper=$('.headlines-more');
     this.mainContentHeight=this.$wrapper.height();
     $('.headlines-box').scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
+    var eventName='touched';
+    if(!this.deviceType.mobile){
+        eventName='click';
+    }
+    $('.loadError').on(eventName,function(){});   //重新加载
     this.controlCommentBoxStatus();
 };
 
@@ -437,8 +456,7 @@ basicLogicClass.prototype={
      *获得用户的信息 区分安卓和ios
      */
     separateOperation:function(callback){
-        /*操作设备信息*/
-        this.deviceType=getDeviceType();
+
         var userStr='',that=this;
         if(this.deviceType.mobile){
             if (this.deviceType.android) {

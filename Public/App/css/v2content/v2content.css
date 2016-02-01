@@ -274,17 +274,25 @@ ul li {
 .loadingResultTips {
   height: 35px;
   display: none;
+  text-align: center;
 }
 .loadingResultTips .loadingImg {
   background-image: url("../../images/loading2.svg");
   margin: 0 auto;
   height: 2em;
   width: 2em;
+  display: none;
 }
 .loadingResultTips .loadingImg.active {
   -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
   -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
   animation: aloading 0.8s steps(6, end) 0s infinite;
+  display: block !important;
+}
+.loadingResultTips .loadError {
+  display: none;
+  color: #757373;
+  text-decoration: none !important;
 }
 @-webkit-keyframes aloading {
   to {
@@ -330,6 +338,7 @@ ul li {
 @media screen and (max-width: 320px) {
   .rightHeader p {
     font-size: 14px !important;
+    text-align: center;
   }
   .rightBottom * {
     font-size: 12px !important;

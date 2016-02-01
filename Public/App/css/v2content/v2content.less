@@ -305,16 +305,25 @@ ul {
 .loadingResultTips{
   height: 35px;
   display: none;
+  text-align: center;
   .loadingImg {
     background-image: url("../../images/loading2.svg");
     margin: 0 auto;
     height: 2em;
     width: 2em;
+    display: none;
     &.active {
       -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
       -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
       animation: aloading 0.8s steps(6, end) 0s infinite;
+      display: block !important;
     }
+  }
+
+  .loadError{
+    display: none;
+    color: #757373;
+    text-decoration: none !important;
   }
 
   @-webkit-keyframes aloading {
@@ -369,6 +378,7 @@ ul {
   .rightHeader {
     p {
       font-size: 14px !important;
+      text-align: center;
     }
   }
   .rightBottom {
