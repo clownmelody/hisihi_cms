@@ -122,4 +122,12 @@ class HotKeysController extends AppController
             $this->apiSuccess('快捷键浏览数更新');
         }
     }
+
+    /**
+     * web 快捷键列表
+     */
+    public function shareHotKeysList(){
+        $this->display('sharehotkeyslist');
+    }
+
 }

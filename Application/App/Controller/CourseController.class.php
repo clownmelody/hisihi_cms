@@ -773,4 +773,11 @@ class CourseController extends AppController
         $this->display('webListCourses');
     }
 
+    /**
+     * web 课程列表
+     */
+    public function shareCourseList(){
+        $this->display('sharecourselist');
+    }
+
 }

@@ -579,5 +579,11 @@ class PublicController extends AppController {
         $this->apiSuccess("获取公司列表Banner成功", null, array('data' => $list));
     }
 
+    /**
+     * web 头条列表
+     */
+    public function shareTopContentList(){
+        $this->display('sharetopcontentlist');
+    }
 
 }

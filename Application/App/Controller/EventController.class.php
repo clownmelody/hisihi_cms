@@ -86,4 +86,11 @@ class EventController extends AppController{
         }
     }
 
+    /**
+     * web 比赛列表
+     */
+    public function shareCompetitionList(){
+        $this->display('sharecompetitionlist');
+    }
+
 }
