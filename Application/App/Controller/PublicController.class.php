@@ -327,6 +327,7 @@ class PublicController extends AppController {
         $content = array_merge($info, $content);
         if($type == 'view') {
             $this->assign('top_content_info', $content);
+            $this->assign('article_type', 'top_content');
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
                 $this->display('v2content');
@@ -578,5 +579,11 @@ class PublicController extends AppController {
         $this->apiSuccess("获取公司列表Banner成功", null, array('data' => $list));
     }
 
+    /**
+     * web 头条列表
+     */
+    public function shareTopContentList(){
+        $this->display('sharetopcontentlist');
+    }
 
 }
