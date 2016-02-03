@@ -2,7 +2,7 @@
  * Created by jimmy on 2015/11/18.
  */
 
-var hisihiNews = function ($wrapper,urlObj) {
+var hisihiActivities = function ($wrapper,urlObj) {
     this.separateOperation();
     this.$wrapper = $wrapper;
     this.controlLoadingPos();
@@ -19,7 +19,7 @@ var hisihiNews = function ($wrapper,urlObj) {
     });
 };
 
-hisihiNews.prototype = {
+hisihiActivities.prototype = {
 
     controlLoadingPos:function(){
        var $loading = this.$wrapper.find('.loadingResultTips'),
@@ -84,7 +84,7 @@ hisihiNews.prototype = {
                 page: pageIndex,
                 count: this.pageSize
             },
-            url = this.urlObj.server_url + '/newsList',
+            url = this.urlObj.server_url + '/event/competitionList',
             that = this;
 
         var ajaxTimeoutTest=$.ajax({
@@ -99,7 +99,7 @@ hisihiNews.prototype = {
                     $loadinngImgTarget.hide();
                     that.totalPage=Math.ceil(result.totalCount/that.pageSize);
                     that.pageIndex++;
-                    $loadinngMore.before(that.getNewsContent(result.data));
+                    $loadinngMore.before(that.getNewsContent(result));
                     //控制图片的显示，按比例显示
                     that.$wrapper.find('.newsListContainer img').unbind('load').bind("load",function(){
                         $(this).css('opacity','1');
@@ -128,37 +128,45 @@ hisihiNews.prototype = {
      * return
      * str - {string} 内容字符串
      */
-    getNewsContent:function(data){
-        //data=[
-        //    {"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":this.urlObj.server_url+"/toppostdetailv2/post_id/5510","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},
-        //    {"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":this.urlObj.server_url+"/toppostdetailv2/post_id/5513","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}
-        //];
-        var str = '',title, len = data.length, item,dateStr;
-        for (var i = 0; i < len; i++) {
-            item = data[i];
-            title=this.substrLongStr(item.title,25);
-            dateStr=this.getTimeFromTimestamp(item.create_time);
-            str += '<li class="newsLiItem">'+
-                    '<div class="coverBorderContainer"></div>'+
-                    '<a href="'+item.url+'">' +
-                    '<div class="left">' +
-                    '<img src="' + item.pic_url + '"/>' +
-                    '</div>' +
-                    '<div class="right">' +
-                    '<div class="rightHeader">' +
-                    '<p>'+title+'</p>' +
-                    '</div>' +
-                    '<div class="rightBottom">'+
-                    '<div class="rightBottomLeft">'+
-                    //'<i class="viewTimesIcon"><img src="'+this.urlObj.img_url+'/viewTimes.png"/></i>'+
-                    '<span class="viewTimesIcon">人气：</span>'+
-                    '<span>'+item.view_count +'</span>'+
-                    '</div>'+
-                    '<div class="rightBottomRight">'+ dateStr + '</div>'+
-                    '</div>' +
-                    '</div>' +
-                    '</a>'+
-                '</li>';
+    getNewsContent:function(result){
+        var str = '',title,item,dateStr;
+        if(!result || !result.data || result.data.length==0){
+            str='<div class="nonData">暂无内容</div>';
+        }
+        else {
+            data=result.data;
+            var len = data.length;
+            for (var i = 0; i < len; i++) {
+                item = data[i];
+                title = this.substrLongStr(item.title, 25);
+                var isEnd=new Date(parseFloat(item.eTime) * 1000) -new Date()>0;
+                dateStr = this.getTimeFromTimestamp(item.eTime);
+                var statueStr=isEnd?'(进行中)':'(已结束)';
+                var strBottomRight = '<div class="rightBottomLeft">' +
+                    '截稿时间：'+dateStr + '&nbsp;'+statueStr+
+                    '</div>';
+
+                str += '<li class="newsLiItem">'+
+                        '<div class="coverBorderContainer"></div>'+
+                        '<a href="'+this.urlObj.server_url+'/event/competitioncontent/type/view/id/'+item.id +'">' +
+                            '<div class="left">' +
+                                '<img src="' + item.pic_path + '"/>' +
+                                '<div class="btnPlay spiteBgOrigin"></div>'+
+                                '</div>' +
+                            '<div class="right">' +
+                                '<div class="rightHeader">' +
+                                '<p>'+title+'</p>' +
+                                '</div>' +
+                                '<div class="rightBottom">'+
+                                    '<div class="rightBottomLeft">' +
+                                    strBottomRight +
+                                    '</div>'+
+                                '</div>' +
+                            '</div>' +
+                            '</div>' +
+                        '</a>'+
+                    '</li>';
+            }
         }
         return str;
     },

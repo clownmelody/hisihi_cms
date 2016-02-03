@@ -23,7 +23,7 @@ MoreInfoBase.prototype={
             url: paras.url,
             type: paras.type,
             data: paras.paraData,
-            timeOut: 10,
+            timeout: 10000,
             contentType: 'application/json;charset=utf-8',
             complete: function (xmlRequest, status) {
                 if(status=='success') {
@@ -41,21 +41,19 @@ MoreInfoBase.prototype={
                     } else {
 
                         var txt=result.message;
-                        if(paras.eCallback){
-                            paras.eCallback(txt);
-                        }
                         that.controlLoadingTips(-1);
+                        paras.eCallback &&paras.eCallback();
                     }
                 }
                 //超时
                 else if (status == 'timeout') {
                     loginXhr.abort();
                     that.controlLoadingTips(-1);
-                    paras.eCallback();
+                    paras.eCallback &&paras.eCallback();
                 }
                 else {
                     that.controlLoadingTips(-1);
-                    paras.eCallback()
+                    paras.eCallback && paras.eCallback()
                 }
             }
         });
@@ -106,9 +104,11 @@ MoreInfoBase.prototype={
 
 
 /********* 热门头条  热门新闻  热门教程 基本model**********/
+/***********业务逻辑*************/
 var NormalInfo=function($wrapper,paras){
     this.$wrapper=$wrapper;
     this.paras=paras;
+    $('.btnElement').on('touchstart',function(){});
     this.init()
 };
 
@@ -127,7 +127,7 @@ nPro.init=function(){
     this.$wrapper.addClass(classNames);
 };
 
-nPro.loadData=function(callback){
+nPro.loadData=function(callback,eCallback ){
     var that=this;
     var paras={
         url:this.paras.listUrl,
@@ -138,7 +138,7 @@ nPro.loadData=function(callback){
             that.fillInInfo.call(that,data);
         },
         eCallback:function(){
-
+            eCallback && eCallback();
         },
     };
     this.getDataAsync(paras);
@@ -146,6 +146,7 @@ nPro.loadData=function(callback){
 
 nPro.errorInfo=function(){
     //loadingImg
+
 };
 
 //填充内容
@@ -153,8 +154,10 @@ nPro.fillInInfo=function(data){
     var str= this.getContentStr(data);
     var allStr='<div class="basicHeaderWithArrow">'+
                     '<span class="titleInfo">'+this.paras.title+'</span>'+
-                    '<i class="spiteBgOrigin arrow"></i>'+
-                    '<span class="moreTip">更多</span>'+
+                    '<a class="basicHeaderRight" href="'+this.paras.shareUrl+'">'+
+                        '<i class="spiteBgOrigin arrow"></i>'+
+                        '<span class="moreTip">更多</span>'+
+                    '</a>'+
                 '</div>'+
                 '<div class="loadErrorCon">'+
                     '<a class="loadError" href="javascript:void(0)" data-index="4"></a>'+
@@ -169,7 +172,7 @@ nPro.fillInInfo=function(data){
 
 nPro.getContentStr=function(result){
     if(this.paras.title=='嘿设汇新闻') {
-        return this.getContentStrNews(result);
+        return  this.getContentStrNews(result);
     }
     if(this.paras.title=='热门头条') {
         return this.getContentStrTop(result);
@@ -239,7 +242,7 @@ nPro.getContentStrTop=function(result){
             title = this.substrLongStr(item.title, 25);
             dateStr = this.getTimeFromTimestamp(item.update_time);
             str += '<li class="newsLiItem">' +
-                    '<a href="' +window.hisihiUrlObj.link_url+ item.content_url + '">' +
+                    '<a href="' +window.hisihiUrlObj.link_url +item.content_url + '">' +
                 '<div class="left spiteBgOrigin">' +
                     '<img src="' + item.img + '"/>' +
                 '</div>' +
@@ -279,7 +282,7 @@ nPro.getContentStrLesson=function(result){
             dateStr = this.getTimeFromTimestamp(item.update_time);
 
             str += '<li class="newsLiItem">' +
-                '<a href="'+window.hisihiUrlObj.server_url+'/course/courseDetail/type/view/id/' + item.id + '">' +
+                '<a href="'+window.hisihiUrlObj.server_url+'course/courseDetail/type/view/id/' + item.id + '">' +
                 '<div class="left spiteBgOrigin">' +
                     '<img src="' + item.img + '"/>' +
                     '<div class="btnPlay spiteBgOrigin"></div>'+
@@ -324,7 +327,7 @@ nPro.getContentStrActivity=function(result){
                 '截稿时间：'+dateStr + '&nbsp;'+statueStr+
                 '</div>';
             str += '<li class="newsLiItem">' +
-                '<a href="' +window.hisihiUrlObj.server_url+ '/event/competitioncontent/type/view/id/'+item.id + '">' +
+                '<a href="' +window.hisihiUrlObj.server_url+ 'event/competitioncontent/type/view/id/'+item.id + '">' +
                 '<div class="left spiteBgOrigin">' +
                 '<img src="' + item.pic_path + '"/>' +
                 '</div>' +
@@ -357,8 +360,8 @@ nPro.getContentStrForKey=function(result){
             str = '';
         for (var i = 0; i < len; i++) {
             var item = data[i];
-            str += '<li class="shortKeyLiItem">' +
-                        '<a href="'+window.hisihiUrlObj.server_url+'/HotKeys/share/type/' + item.text + '">'+
+            str += '<li class="shortKeyLiItem btnElement">' +
+                        '<a href="'+window.hisihiUrlObj.server_url+'HotKeys/share/type/' + item.text + '">'+
                             '<img src="'+item.icon+'"/>'+
                         '</a>' +
                     '</li>';
@@ -370,15 +373,17 @@ nPro.getContentStrForKey=function(result){
 
 
 
-/***********业务逻辑*************/
-var basicLogicClass=function(type){
 
+
+
+var basicLogicClass=function(type){
+    var that=this;
     this.allContent=[
-            {name:'热门头条',url:window.hisihiUrlObj.server_url+'/public/topList1',loadNow:false,className:'hotTop'},
-            {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'/HotKeys/sort',loadNow:false,className:'hotShortcutKey'},
-            {name:'热门教程',url:window.hisihiUrlObj.server_url+'/Course/recommendcourses',loadNow:false,className:'hotLesson'},
-            {name:'大家都在参加',url:window.hisihiUrlObj.server_url+'/event/competitionList',loadNow:false,className:'activity'},
-            {name:'嘿设汇新闻',url:window.hisihiUrlObj.server_url+'/forum/newsList',loadNow:false,className:'hisihiNews'}
+            {name:'热门头条',url:window.hisihiUrlObj.server_url+'public/topList',shareUrl:window.hisihiUrlObj.link_url+'app.php/public/shareTopContentList',loadNow:false,className:'hotTop'},
+            {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'HotKeys/sort',shareUrl:window.hisihiUrlObj.link_url+'app.php/HotKeys/shareHotKeysList',loadNow:false,className:'hotShortcutKey'},
+            {name:'热门教程',url:window.hisihiUrlObj.server_url+'Course/recommendcourses',shareUrl:window.hisihiUrlObj.link_url+'app.php/course/shareCourseList',loadNow:false,className:'hotLesson'},
+            {name:'大家都在参加',url:window.hisihiUrlObj.server_url+'event/competitionList',shareUrl:window.hisihiUrlObj.link_url+'app.php/event/shareCompetitionList',loadNow:false,className:'activity'},
+            {name:'嘿设汇新闻',url:window.hisihiUrlObj.server_url+'forum/newsList',shareUrl:window.hisihiUrlObj.link_url+'app.php/forum/hisihi_news',loadNow:false,className:'hisihiNews'}
         ];
     this.names=['头条','快捷键','教程','比赛','新闻'];
 
@@ -391,11 +396,17 @@ var basicLogicClass=function(type){
     this.$wrapper=$('.headlines-more');
     this.mainContentHeight=this.$wrapper.height();
     $('.headlines-box').scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
-    var eventName='touched';
-    if(!this.deviceType.mobile){
-        eventName='click';
+    var eventName='click';
+    if(this.deviceType.mobile){
+        eventName='touchend';
+
     }
-    $('.loadError').on(eventName,function(){});   //重新加载
+
+    //重新加载
+    $('.loadError').on(eventName,function(){
+        $(this).hide();
+        that.loadData();
+    });
     this.controlCommentBoxStatus();
 };
 
@@ -413,6 +424,7 @@ basicLogicClass.prototype={
             var item=this.allContent[i];
             var para={
                 listUrl:item.url,
+                shareUrl:item.shareUrl,
                 title:item.name,
                 loadNow:item.loadNow,
                 className:item.className
@@ -440,16 +452,21 @@ basicLogicClass.prototype={
             return;
         }
 
-        var $Itemtarget=$target.eq(0);
-        if (scrollTop >= height -170 &&
+        if (scrollTop >= height -200 &&
             !that.$wrapper.hasClass('loadingData')) {  //滚动到底部
-                var index=$Itemtarget.index();
-                that.$wrapper.addClass('loadingData');
-                this.normalInfoObjArr[index].loadData(function(){
-                    that.$wrapper.removeClass('loadingData');
-                    $Itemtarget.removeClass('unFilledIn');
-                });
+            that.loadData();
         }
+    },
+
+    loadData:function(){
+        var that=this,
+            $target=this.$wrapper.find('.unFilledIn').eq(0),
+            index =that.$wrapper.find('.unFilledIn').eq(0).index();
+        that.$wrapper.addClass('loadingData');
+        that.normalInfoObjArr[index].loadData(function(){
+            that.$wrapper.removeClass('loadingData');
+            $target.removeClass('unFilledIn');
+        },function(){});
     },
 
     /*

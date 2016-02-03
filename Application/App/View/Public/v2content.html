@@ -20,7 +20,7 @@
 	<div class="headlines-body">
 		<p>{$top_content_info.content}</p>
 	</div>
-	<div class="headlines-more" data-type="头条" data-loading="false">
+	<div class="headlines-more" data-type="头条">
 		<div class="moreItem" ></div>
 		<div class="moreItem"></div>
 		<div class="moreItem"></div>
@@ -29,13 +29,13 @@
 	</div>
 	<div id="loadingTip" class="loadingResultTips">
 		<div class="loadingImg active"></div>
-		<a class="loadError" href="javascript:void(0)">加载失败，点击重新加载</a>
+		<a class="loadError btnElement" href="javascript:void(0)">加载失败，点击重新加载</a>
 	</div>
 </div>
 <!--下载条-->
 <div id="downloadCon">
 	<img src="__IMG__/v2content/d.png" class="allDownImg" />
-	<a href="http://www.hisihi.com/download.php">立即下载</a>
+	<a href="http://www.hisihi.com/download.php" class="btnElement">立即下载</a>
 </div>
 </body>
 <script src="__JS__/v2content/zepto.min.js"></script>
@@ -48,7 +48,7 @@
 	$('#downloadCon a')[0].href='http://www.hisihi.com/download.php';
 	$('#loadingTip a')[0].removeAttribute("disabled");
 	window.hisihiUrlObj={
-		server_url:'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=',
+		server_url:'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/',
 		link_url:'http://{$Think.server.HTTP_HOST}/hisihi-cms/',
 		img_url:'__IMG__'
 	};

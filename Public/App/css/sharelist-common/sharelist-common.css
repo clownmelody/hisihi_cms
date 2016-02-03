@@ -1,0 +1,205 @@
+/*less公用的方法*/
+*::after,
+*::before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+}
+ul li {
+  list-style-type: none;
+}
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+body {
+  background: #ececec;
+  font-size: 1em;
+}
+body img {
+  max-width: 100%;
+}
+body .spiteBg {
+  background-image: url("../../images/v2content/sprite.png");
+  background-size: 192px 128px;
+}
+body .spiteBgOrigin {
+  background-image: url("../../images/v2content/sprite.png");
+}
+body .wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  background-color: white;
+  -webkit-overflow-scrolling: touch;
+  /* ios滑动卡顿解决办法 */
+  /*加载更多*/
+}
+body .wrapper * {
+  font-size: 1em;
+  -webkit-user-select: none;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+}
+body .wrapper .loadingImg {
+  background-image: url("../../images/loading2.svg");
+}
+body .wrapper .loadError {
+  display: none;
+  color: #757373;
+  text-decoration: none !important;
+}
+body .wrapper .nonData {
+  margin-top: 40px;
+  text-align: center;
+  color: #757373;
+}
+body .wrapper .newsListContainer {
+  margin: 0em;
+  width: 100%;
+}
+body .wrapper .newsListContainer li {
+  width: 100%;
+  height: 6em;
+  position: relative;
+}
+body .wrapper .newsListContainer li .coverBorderContainer {
+  position: absolute;
+  height: 0.0625em;
+  bottom: 0em;
+  background-color: white;
+  width: 0.75em;
+  z-index: 100;
+}
+body .wrapper .newsListContainer li a {
+  height: 100%;
+  display: block;
+  position: relative;
+  text-decoration: none;
+  padding: 0.75em;
+  border-bottom: 0.0625em solid #bdbdbd;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+}
+body .wrapper .newsListContainer li a:active {
+  background-color: #DCDCDC;
+}
+body .wrapper .newsListContainer li a .left {
+  width: 4.5em;
+  height: 4.5em;
+  position: absolute;
+  background-image: url('../../images/logocover.png');
+}
+body .wrapper .newsListContainer li a .left img {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+body .wrapper .newsListContainer li a .left .btnPlay {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  left: 50%;
+  top: 50%;
+  margin-left: -24px;
+  margin-top: -24px;
+  background-position: -256px -72px;
+  transform: scale(0.8);
+}
+body .wrapper .newsListContainer li a .right {
+  padding-left: 5.25em;
+  height: 100%;
+}
+body .wrapper .newsListContainer li a .right .rightHeader {
+  height: 3.25em;
+  width: 100%;
+}
+body .wrapper .newsListContainer li a .right .rightHeader p {
+  color: #212121;
+  line-height: 1.4em;
+  text-decoration: none;
+}
+body .wrapper .newsListContainer li a .right .rightBottom {
+  height: 1.25em;
+  width: 100%;
+}
+body .wrapper .newsListContainer li a .right .rightBottom * {
+  font-size: 0.9em;
+  color: #bdbdbd;
+}
+body .wrapper .newsListContainer li a .right .rightBottom div {
+  display: inline-block;
+}
+body .wrapper .newsListContainer li a .right .rightBottom .rightBottomLeft {
+  float: left;
+}
+body .wrapper .newsListContainer li a .right .rightBottom .rightBottomRight {
+  float: right;
+}
+body .wrapper .loadingResultTips {
+  opacity: 0;
+  text-align: center;
+  color: #9C9A9D;
+  position: absolute;
+  height: 4em;
+  width: 12em;
+}
+body .wrapper .loadingResultTips .loadingImg {
+  margin: 0 auto;
+  height: 2em;
+  width: 2em;
+}
+body .wrapper .loadingResultTips.active .loadingImg {
+  -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+  -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+  animation: aloading 0.8s steps(6, end) 0s infinite;
+}
+@-webkit-keyframes aloading {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes aloading {
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+@keyframes aloading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+body .wrapper .loadingMoreResultTips {
+  text-align: center;
+  display: none;
+}
+body .wrapper .loadingMoreResultTips .loadingMoreResultTipsMain {
+  width: 8em;
+  height: 2em;
+  margin: 0 auto;
+}
+body .wrapper .loadingMoreResultTips .loadingMoreResultTipsMain span {
+  float: left;
+  line-height: 2em;
+  margin-left: 0.8em;
+  color: #757373;
+}
+body .wrapper .loadingMoreResultTips .loadingMoreResultTipsMain .loadingImg {
+  float: left;
+  display: inline-block;
+  margin: 0.25em auto;
+  height: 1.5em;
+  width: 1.5em;
+}
+body .wrapper .loadingMoreResultTips.active .loadingImg {
+  -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+  -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+  animation: aloading 0.8s steps(6, end) 0s infinite;
+}

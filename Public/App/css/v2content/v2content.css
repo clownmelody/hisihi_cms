@@ -130,6 +130,9 @@ ul li {
 .headlines-more .spiteBgOrigin {
   background-image: url("../../images/v2content/sprite.png");
 }
+.headlines-more .btnElement:active {
+  transform: scale(0.9, 0.9);
+}
 .headlines-more .moreItem {
   margin-bottom: 20px;
   padding: 0 20px 0 15px;
@@ -139,24 +142,27 @@ ul li {
   line-height: 44px;
   border-bottom: 1px solid #cccccc;
 }
-.headlines-more .moreItem .basicHeaderWithArrow span.titleInfo {
+.headlines-more .moreItem .basicHeaderWithArrow .titleInfo {
   color: #ff5a00;
   font-size: 18px;
 }
-.headlines-more .moreItem .basicHeaderWithArrow span.moreTip {
+.headlines-more .moreItem .basicHeaderWithArrow .basicHeaderRight {
+  float: right;
+}
+.headlines-more .moreItem .basicHeaderWithArrow .basicHeaderRight .moreTip {
   font-size: 16px;
   float: right;
   color: #808080;
   margin-right: 5px;
 }
-.headlines-more .moreItem .basicHeaderWithArrow .arrow {
+.headlines-more .moreItem .basicHeaderWithArrow .basicHeaderRight .arrow {
   float: right;
   width: 15px;
   height: 23px;
   display: inline-block;
   margin-top: 11px;
   transform: scale(0.5);
-  background-position: -328px -130px;
+  background-position: -328px 0;
 }
 .headlines-more .moreItem .mainContentUl {
   margin: 0em;
@@ -196,7 +202,7 @@ ul li {
   width: 72px;
   height: 72px;
   position: absolute;
-  background-position: -256px -128px;
+  background-position: -256px 0;
 }
 .headlines-more .moreItem .mainContentUl .newsLiItem a .left img {
   width: 100%;
@@ -211,7 +217,7 @@ ul li {
   top: 50%;
   margin-left: -24px;
   margin-top: -24px;
-  background-position: -256px -200px;
+  background-position: -256px -72px;
   transform: scale(0.8);
 }
 .headlines-more .moreItem .mainContentUl .newsLiItem a .right {
