@@ -361,7 +361,7 @@ nPro.getContentStrForKey=function(result){
         for (var i = 0; i < len; i++) {
             var item = data[i];
             str += '<li class="shortKeyLiItem btnElement">' +
-                        '<a href="'+window.hisihiUrlObj.server_url+'HotKeys/share/type/' + item.text + '">'+
+                        '<a href="'+this.paras.shareUrl.replace('keyshot',item.text) +'">'+
                             '<img src="'+item.icon+'"/>'+
                         '</a>' +
                     '</li>';
@@ -380,7 +380,7 @@ var basicLogicClass=function(type){
     var that=this;
     this.allContent=[
             {name:'热门头条',url:window.hisihiUrlObj.server_url+'public/topList',shareUrl:window.hisihiUrlObj.link_url+'app.php/public/shareTopContentList',loadNow:false,className:'hotTop'},
-            {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'HotKeys/sort',shareUrl:window.hisihiUrlObj.link_url+'app.php/HotKeys/shareHotKeysList',loadNow:false,className:'hotShortcutKey'},
+            {name:'热门快捷键',url:window.hisihiUrlObj.server_url+'HotKeys/sort',shareUrl:window.hisihiUrlObj.link_url+'api.php/HotKeys/share/type/keyshot',loadNow:false,className:'hotShortcutKey'},
             {name:'热门教程',url:window.hisihiUrlObj.server_url+'Course/recommendcourses',shareUrl:window.hisihiUrlObj.link_url+'app.php/course/shareCourseList',loadNow:false,className:'hotLesson'},
             {name:'大家都在参加',url:window.hisihiUrlObj.server_url+'event/competitionList',shareUrl:window.hisihiUrlObj.link_url+'app.php/event/shareCompetitionList',loadNow:false,className:'activity'},
             {name:'嘿设汇新闻',url:window.hisihiUrlObj.server_url+'forum/newsList',shareUrl:window.hisihiUrlObj.link_url+'app.php/forum/hisihi_news',loadNow:false,className:'hisihiNews'}
@@ -452,7 +452,7 @@ basicLogicClass.prototype={
             return;
         }
 
-        if (scrollTop >= height -200 &&
+        if (scrollTop >= height -300 &&
             !that.$wrapper.hasClass('loadingData')) {  //滚动到底部
             that.loadData();
         }

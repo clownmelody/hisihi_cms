@@ -104,12 +104,12 @@ body .wrapper .newsListContainer li a .left img {
 }
 body .wrapper .newsListContainer li a .left .btnPlay {
   position: absolute;
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   left: 50%;
   top: 50%;
-  margin-left: -24px;
-  margin-top: -24px;
+  margin-left: -25px;
+  margin-top: -25px;
   background-position: -256px -72px;
   transform: scale(0.8);
 }
