@@ -389,28 +389,56 @@ var basicLogicClass=function(type){
 
     this.normalInfoObjArr=[];
     this.resetAllContentArr(type);  //根据当前文章的类型 重新调整内容数组的顺序
-    this.isFromApp=false;
+
+    /*访问来源*/
+    var userAgent = window.location.href;
+    this.isFromApp=!userAgent.indexOf("hisihi-app") < 0;
+
     /*操作设备信息*/
     this.deviceType=getDeviceType();
     this.separateOperation();
-    this.$wrapper=$('.headlines-more');
-    this.mainContentHeight=this.$wrapper.height();
-    $('.headlines-box').scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
-    var eventName='click';
-    if(this.deviceType.mobile){
-        eventName='touchend';
 
-    }
+    //判断文章内容的高度，
+    this.dealwithContentHeight();
 
-    //重新加载
-    $('.loadError').on(eventName,function(){
-        $(this).hide();
-        that.loadData();
-    });
+
     this.controlCommentBoxStatus();
 };
 
 basicLogicClass.prototype={
+
+    /*
+    * 判断文章内容的高度，
+    * 如果高度大于总页面的高，即出现了滚动条，则采用滚动加载 推荐阅读内容
+    * 否则，直接一次性将 推荐阅读前两个内容 加载出来
+    */
+    dealwithContentHeight:function(){
+        var bodyHeight=$('body').height(),
+            contentHeight=$('.app-section').height(),
+            that=this;
+        this.$wrapper=$('.moreRecommend');
+        this.mainContentHeight=this.$wrapper.height();
+        if(contentHeight>bodyHeight) {
+            $('.headlines-box').scroll($.proxy(this, 'scrollContainer'));  //滚动加载更多数据
+        }else{
+            var $target=$('#loadingTip');
+            $target.css('opacity','0');
+            this.loadData(function(){
+                that.loadData.call(that,function(){
+                    $target.css('opacity',1);
+                });
+            });
+        }
+        var eventName='click';
+        if(this.deviceType.mobile){
+            eventName='touchend';
+        }
+        //重新加载
+        $('.loadError').on(eventName,function(){
+            $(this).hide();
+            that.loadData();
+        });
+    },
 
     /*根据当前文章的类型 重新调整内容数组的顺序*/
     resetAllContentArr:function(type){
@@ -458,14 +486,15 @@ basicLogicClass.prototype={
         }
     },
 
-    loadData:function(){
+    loadData:function(callback){
         var that=this,
             $target=this.$wrapper.find('.unFilledIn').eq(0),
             index =that.$wrapper.find('.unFilledIn').eq(0).index();
-        that.$wrapper.addClass('loadingData');
+        !callback  && that.$wrapper.addClass('loadingData');
         that.normalInfoObjArr[index].loadData(function(){
             that.$wrapper.removeClass('loadingData');
             $target.removeClass('unFilledIn');
+            callback && callback();
         },function(){});
     },
 
@@ -542,7 +571,7 @@ basicLogicClass.prototype={
 };
 
 $(function(){
-    var type=$('.headlines-more').data('type');
+    var type=$('.moreRecommend').data('type');
     new basicLogicClass(type);
 });
 

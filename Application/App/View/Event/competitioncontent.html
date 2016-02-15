@@ -70,46 +70,63 @@
         img {
             max-width:100%;height:auto;
         }
+        .more-recommend{
+            display: none;
+        }
     </style>
+    <link type="text/css" href="__CSS__/share-common/share-recommend.css" rel="stylesheet"/>
 </head>
 
 <body>
-<div class="app-page" data-page="home">
-    <div id="test-agent" style="display:none">user-agent</div>
-    <div class="app-content" style="-webkit-box-shadow: none;">
-        <div class="app-section" style="margin: 10px 10px 10px 10px">
+    <div class="app-page" data-page="home">
+        <div id="test-agent" style="display:none">user-agent</div>
+        <div class="app-content" style="-webkit-box-shadow: none;">
+            <div class="app-section" style="margin: 10px 10px 10px 10px">
+                <div>
+                    <p>
+                        {$top_content_info.content}
+                    </p>
+                </div>
+            </div>
+            <div class="more-recommend">
+                <div class="moreRecommend" data-type="比赛">
+                    <div class="moreItem" ></div>
+                    <div class="moreItem"></div>
+                    <div class="moreItem"></div>
+                    <div class="moreItem"></div>
+                    <div class="moreItem"></div>
+                </div>
+                <div id="loadingTip" class="loadingResultTips">
+                    <div class="loadingImg active"></div>
+                    <a class="loadError btnElement" href="javascript:void(0)">加载失败，点击重新加载</a>
+                </div>
+            </div>
+        </div>
+        <div class="app-bottombar">
             <div>
-                <p>
-                    {$top_content_info.content}
-                </p>
+                <div>
+                <span class="bottom-icon">
+                    <img style="width: 50px;" src="__IMG__/icon.png" />
+                </span>
+                <span class="bottom-title">
+                    <p>嘿设汇</p>
+                    <p class="bottom-content">设计师必备 百万设计师都在用</p>
+                </span>
+                <span class="bottom-star">
+                    <img style="width: 10px;margin-left: -1px" src="__IMG__/star.png" />
+                    <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                    <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                    <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                    <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                </span>
+                </div>
+                <div class="app-button bottom-right">
+                    <p>立即下载</p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="app-bottombar">
-        <div>
-            <div>
-            <span class="bottom-icon">
-                <img style="width: 50px;" src="__IMG__/icon.png" />
-            </span>
-            <span class="bottom-title">
-                <p>嘿设汇</p>
-                <p class="bottom-content">设计师必备 百万设计师都在用</p>
-            </span>
-            <span class="bottom-star">
-                <img style="width: 10px;margin-left: -1px" src="__IMG__/star.png" />
-                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
-                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
-                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
-                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
-            </span>
-            </div>
-            <div class="app-button bottom-right">
-                <p>立即下载</p>
-            </div>
-        </div>
-    </div>
-</div>
-
+</body>
 <script src="__JS__/zepto.js"></script>
 <script src="__JS__/app.min.js"></script>
 <script>
@@ -138,14 +155,24 @@
     if(userAgent.indexOf("hisihi-app") < 0) {
         $(".app-bottombar").show();
         $(".bottomspace").show();
+
+        //推荐阅读
+        $(".more-recommend").show();
     }
 
+    window.hisihiUrlObj={
+        server_url:'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/',
+        link_url:'http://{$Think.server.HTTP_HOST}/hisihi-cms/',
+        img_url:'__IMG__'
+    };
     // 禁用链接
     /*var aLink=document.getElementsByTagName("a");
      for(var i=0; i<aLink.length; i++){
      aLink[i].href = "javascript:void(0);";
      aLink[i].setAttribute("disabled", "disabled");
      }*/
+
 </script>
-</body>
+<script src="__JS__/forum/hisihi_news_common.js"></script>
+<script src="__JS__/sharelist/main.js"></script>
 </html>

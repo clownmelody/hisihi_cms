@@ -1,0 +1,296 @@
+/*less公用的方法*/
+.size(@width:100%, @height:auto) {
+  width: @width;
+  height: @height;
+}
+.pos(@top,@left){
+  top:@top;
+  left:@left;
+}
+.border-bottom(@width:1px,@type:solid,@color:#CCCCCC){
+  border-bottom: @arguments;
+}
+.box-sizing(@type:border-box){
+  box-sizing:@type;
+}
+.box-shadow(@h:0px,@v:0px,@b:1px,@s:1px,@c:#ccc){
+  box-shadow: @arguments;
+}
+
+
+@paddingleft:15px;
+@paddingright:20px;
+@orange:#ff5a00;
+@font-color:#808080;
+@header-h:44px;
+
+ul {
+  margin: 0;
+  padding: 0;
+  li {
+    list-style-type: none;
+  }
+}
+
+.moreRecommend{
+  img{
+    max-width: 100%;
+  }
+  .spiteBg{
+    background-image: url("../../images/v2content/sprite.png");
+    background-size:192px 128px;
+  }
+  .spiteBgOrigin{
+    background-image: url("../../images/v2content/sprite.png");
+    //background-size:310px 140px;
+  }
+  .btnElement:active {
+    transform: scale(0.9,0.9);
+  }
+  .moreItem {
+    margin-bottom: 20px;
+    padding:0 @paddingright 0 @paddingleft;
+
+    //一级标题 带箭头
+    .basicHeaderWithArrow {
+      height: @header-h;
+      line-height: @header-h;
+      .border-bottom(1px,solid ,#CCCCCC);
+      .titleInfo{
+        color: @orange;
+        font-size: 18px;
+      }
+      .basicHeaderRight {
+        float: right;
+        background-color: transparent;
+        &:active{
+          background-color: transparent;
+          outline:none;
+          -moz-outline:none;
+        }
+        .moreTip {
+          font-size: 16px;
+          float: right;
+          color: @font-color;
+          margin-right: 5px;
+        }
+        .arrow {
+          float: right;
+          .size(15px, 23px);
+          display: inline-block;
+          margin-top: 11px;
+          transform: scale(0.5);
+          background-position: -328px 0;
+        }
+      }
+    }
+
+    .mainContentUl {
+      margin: 0em;
+      width: 100%;
+
+      .newsLiItem {
+        width: 100%;
+        height: 6em;
+        position: relative;
+        &:nth-last-child(1){
+          a {
+            .border-bottom(0) !important;
+          }
+        }
+        .coverBorderContainer {
+          position: absolute;
+          height: 0.0625em;
+          bottom: 0em;
+          background-color: white;
+          width: 0.75em;
+          z-index: 100;
+        }
+        a {
+          height: 100%;
+          display: block;
+          position: relative;
+          text-decoration: none;
+          padding: 0.75em 0;
+          .border-bottom(0.0625em, solid, #bdbdbd);
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          -o-box-sizing: border-box;
+          &:active {
+            background-color: #DCDCDC;
+          }
+
+          .left {
+            .size(72px,72px);
+            position: absolute;
+            background-position:-256px 0;
+            img {
+              width: 100%;
+              height: 100%;
+              opacity: 0;
+            }
+            .btnPlay{
+              position: absolute;
+              .size(50px,50px);
+              left:50%;
+              top: 50%;
+              margin-left: -25px;
+              margin-top: -25px;
+              background-position:-256px -72px;
+              transform: scale(0.8);
+            }
+          }
+          .right {
+            padding-left: 5.25em;
+            height: 100%;
+            .rightHeader {
+              height: 3.25em;
+              width: 100%;
+              p {
+                color: #212121;
+                line-height: 1.4em;
+                text-decoration: none;
+                margin: 0;
+                font-size: 16px;
+              }
+            }
+            .rightBottom {
+              height: 1.25em;
+              width: 100%;
+              * {
+                color: #808080;
+                font-size: 14px;
+              }
+              div {
+                display: inline-block;
+              }
+              .rightBottomLeft {
+                float: left;
+              }
+              .rightBottomRight {
+                float: right;
+                i{
+                  display: inline-block;
+                  .size(18px, 10px);
+                  margin-right: 0.15em;
+                  background-position: -172px -64px;
+                  margin-top: 4px;
+                  transform: scale(1.3);
+                }
+                .viewTimesIcon {
+                  float: left;
+                }
+              }
+            }
+          }
+        }
+      }
+      .shortKeyLiItem{
+        float: left;
+        .size(65px,65px);
+        padding:10px 10px 0 0;
+        a{
+          display: block;
+          .box-sizing();
+          .size(100%,100%);
+          background-size:195px 130px;
+        }
+      }
+    }
+  }
+}
+
+.loadingResultTips{
+  height: 35px;
+  display: none;
+  text-align: center;
+  .loadingImg {
+    background-image: url("../../images/loading2.svg");
+    margin: 0 auto;
+    height: 2em;
+    width: 2em;
+    display: none;
+    &.active {
+      -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+      -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+      animation: aloading 0.8s steps(6, end) 0s infinite;
+      display: block !important;
+    }
+  }
+
+  .loadError{
+    display: none;
+    color: #757373;
+    text-decoration: none !important;
+  }
+
+  @-webkit-keyframes aloading {
+    to {
+      -webkit-transform:rotate(360deg);
+    }
+  }
+  @-moz-keyframes aloading {
+    to {
+      -moz-transform:rotate(360deg);
+    }
+  }
+  @keyframes aloading {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+#downloadCon {
+  .size(100%,atuo);
+  position: absolute;
+  bottom: 0;
+  background-color:#9E9A98;
+  opacity: 0;
+  .allDownImg {
+    max-width: 100%;
+    margin-bottom: 0;
+  }
+  a {
+    position: absolute;
+    right: 12px;
+    display:inline-block;
+    width: 21%;
+    text-decoration: none;
+    background-color: #FF5A00;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    line-height: 14px;
+  }
+}
+
+
+/*响应式样式*/
+@media screen and (min-width:750px) {
+  body {
+    width: 750px;
+  }
+}
+
+@media screen and (max-width:320px){
+  .rightHeader {
+    p {
+      font-size: 14px !important;
+      text-align: center;
+    }
+  }
+  .rightBottom {
+    * {
+      font-size: 12px !important;
+    }
+    .rightBottomRight {
+      i {
+        margin-top: 3px !important;
+        transform: scale(1.0) !important;
+      }
+    }
+  }
+
+}

@@ -13,14 +13,130 @@
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
 	<title>{:C('WEB_SITE_TITLE')}</title>
-	<link type="text/css" href="__CSS__/v2content/v2content.css" rel="stylesheet"/>
+	<style>
+		body {
+			margin: 0 auto;
+			background: #eee;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			overflow: hidden;
+		}
+		a,
+		a:hover,
+		a:link,
+		a:hover,
+		a:active,
+		a:visited {
+			text-decoration: none;
+		}
+		a:focus {
+			outline: none;
+			-moz-outline: none;
+		}
+		* {
+			-webkit-user-select: none;
+			/*禁用手机浏览器的用户选择功能 */
+			-moz-user-select: none;
+			font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+			-webkit-overflow-scrolling: touch;
+		}
+		.headlines-box {
+			overflow: auto;
+			background: #fff;
+			border-radius: 5px;
+			box-shadow: 0 0 0 #ddd;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			left: 0;
+		}
+		.headlines-top {
+			border-bottom: 1px solid #eee;
+			padding: 10px 10px 0;
+		}
+		.headlines-top h2 {
+			margin: 10px 0;
+		}
+		.headlines-time {
+			color: #bbb;
+			font-size: 12px;
+			line-height: 30px;
+			margin: 5px 0 ;
+		}
+		.headlines-body {
+			padding: 10px;
+		}
+		.headlines-body img {
+			width: 100%;
+			min-width: 100%;
+			margin-bottom: 10px;
+		}
+		.headlines-body p {
+			width: 100%;
+			line-height: 25px;
+			/*font-style: 14px;*/
+			color: #333;
+			margin: 0 0 5px 0;
+		}
+		.headlines-fix {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: #4A4A4B;
+			padding: 5px 10px;
+		}
+		.fix-img {
+			width: 50px;
+			height: 50px;
+			border-radius: 10px;
+			float: left;
+			margin-right: 10px;
+		}
+		.fix-btn {
+			padding: 7px 8px;
+			background: #2ABA00;
+			color: #fff;
+			font-style: 16px;
+			float: right;
+			border-radius: 5px;
+			margin-top: 7px;
+		}
+		.fix-body p {
+			margin: 0;
+		}
+		.fix-body-title {
+			color: #fff;
+			line-height: 30px;
+			margin-bottom: 5px;
+			font-style: 16px;
+		}
+		.fix-body-txt {
+			color: #AAA;
+			font-size: 12px;
+			line-height: 20px;
+		}
+		.fix-star {
+			margin-left: 10px;
+		}
+		.fix-star img {
+			width: 10px;
+			height: 10px;
+			margin-right: 2px;
+		}
+	</style>
+	<link type="text/css" href="__CSS__/share-common/share-recommend.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="headlines-box">
-	<div class="headlines-body">
+	<div class="headlines-body app-section">
 		<p>{$top_content_info.content}</p>
 	</div>
-	<div class="headlines-more" data-type="头条">
+	<div class="moreRecommend" data-type="头条">
 		<div class="moreItem" ></div>
 		<div class="moreItem"></div>
 		<div class="moreItem"></div>
@@ -38,7 +154,7 @@
 	<a href="http://www.hisihi.com/download.php" class="btnElement">立即下载</a>
 </div>
 </body>
-<script src="__JS__/v2content/zepto.min.js"></script>
+<script src="__JS__/sharelist/zepto.min.js"></script>
 <script>
 	var aLink=document.getElementsByTagName("a");
 	for(var i=0; i<aLink.length; i++){
@@ -54,6 +170,6 @@
 	};
 </script>
 <script src="__JS__/forum/hisihi_news_common.js"></script>
-<script src="__JS__/v2content/main.js"></script>
+<script src="__JS__/sharelist/main.js"></script>
 
 </html>
