@@ -151,7 +151,6 @@ hisihiActivities.prototype = {
                         '<a href="'+this.urlObj.server_url+'/event/competitioncontent/type/view/id/'+item.id +'">' +
                             '<div class="left">' +
                                 '<img src="' + item.pic_path + '"/>' +
-                                '<div class="btnPlay spiteBgOrigin"></div>'+
                                 '</div>' +
                             '<div class="right">' +
                                 '<div class="rightHeader">' +
