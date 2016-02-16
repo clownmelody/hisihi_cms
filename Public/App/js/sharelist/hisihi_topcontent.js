@@ -143,10 +143,9 @@ hisihiTopContent.prototype = {
 
                 str += '<li class="newsLiItem">'+
                     '<div class="coverBorderContainer"></div>'+
-                    '<a href="'+this.urlObj.link_url + item.id + '">' +
+                    '<a href="'+this.urlObj.link_url.replace(/SHAREID/i,item.id) + '">' +
                     '<div class="left">' +
                     '<img src="' + item.img + '"/>' +
-                    '<div class="btnPlay spiteBgOrigin"></div>'+
                     '</div>' +
                     '<div class="right">' +
                     '<div class="rightHeader">' +
