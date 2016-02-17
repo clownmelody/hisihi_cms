@@ -207,6 +207,7 @@ class UserController extends AppController
             $extra['follow_me_count'] = $this->getFollowMeCount($uid);
         }
         if((float)$version>=2.3){
+            $extra['my_favorite_count'] = $this->getNewFavoriteCount($uid);
             $extra['my_post_count'] = $this->getPostCount($uid);
             $extra['my_reply_count'] = $this->getReplyCount($uid);
             $extra['my_picture_count'] = $this->getPictureCount($uid);
@@ -1386,6 +1387,18 @@ class UserController extends AppController
      */
     private function getMyFavoriteCount($uid=0){
         $favorite['uid'] = $uid;
+        $count = M('Favorite')->where($favorite)->count();
+        return $count;
+    }
+
+    /**
+     * 获取2.3以上版本我的收藏数量
+     * @param int $uid
+     * @return mixed
+     */
+    private function getNewFavoriteCount($uid=0){
+        $favorite['uid'] = $uid;
+        $favorite['appname'] = array(array('eq','Article'),array('eq','Organization'),'or');
         $count = M('Favorite')->where($favorite)->count();
         return $count;
     }
