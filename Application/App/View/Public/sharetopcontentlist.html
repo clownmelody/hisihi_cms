@@ -11,7 +11,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
     <title>嘿设汇热门头条</title>
-    <link type="text/css" href="__CSS__/sharelist-common/sharelist-common.css" rel="stylesheet"/>
+    <link type="text/css" href="__CSS__/share-common/sharelist-common.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="wrapper">
@@ -43,7 +43,7 @@
         link_url:'',
     };
     urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/';
-    urlObj.link_url = urlObj.server_url+'public/topcontent/type/view/id/';
+    urlObj.link_url = urlObj.server_url+'public/topcontent/type/view/id/SHAREID/version/2.0';
     new hisihiTopContent($('.wrapper'),urlObj);
 </script>
 </html>

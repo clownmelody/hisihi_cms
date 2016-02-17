@@ -1,5 +1,5 @@
 /**
- * Created by jimmy on 2015/12/28.
+ * Created by jimmy on 2016/2/16.
  */
 requirejs.config({
     baseUrl: window.urlObject.js,
