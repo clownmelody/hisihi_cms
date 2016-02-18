@@ -462,7 +462,7 @@ define(['zepto'],function() {
                     });
                 });
             }
-            $('.headlines-box').scroll($.proxy(this, 'scrollContainer'));  //滚动加载更多数据
+            this.$wrapper.parent().scroll($.proxy(this, 'scrollContainer'));  //滚动加载更多数据
             var eventName = 'click';
             if (this.deviceType.mobile) {
                 eventName = 'touchend';

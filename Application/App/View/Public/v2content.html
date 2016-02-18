@@ -18,52 +18,52 @@
 </head>
 <body>
 	<div class="headlines-box">
-	<div class="headlines-body app-section">
-		<p>{$top_content_info.content}</p>
-	</div>
-	<div class="bottomVoteCon">
-		<div class="bottomVoteConBox">
-			<div class="middleBox">
-				<div class="middle">
-					<div class="mainVoteBarCon">
-						<div class="up"></div>
-						<div class="arrowCon">
-							<!--width="25" height="23"-->
-							<canvas  id="arrowColor"></canvas>
-						</div>
-						<div class="down"></div>
-						<div class="title">VS</div>
-					</div>
-					<div class="mainVoteBtnCon">
-						<div class="totalVoteInfo">
-							<div class="totalVoteInfoMiddle">
-								<span>已经有</span>
-								<span id="totalVoteNum"></span>
-								<span>人投票</span>
+		<div class="headlines-body app-section">
+			<p>{$top_content_info.content}</p>
+		</div>
+		<div class="bottomVoteCon">
+			<div class="bottomVoteConBox">
+				<div class="middleBox">
+					<div class="middle">
+						<div class="mainVoteBarCon">
+							<div class="up"></div>
+							<div class="arrowCon">
+								<!--width="25" height="23"-->
+								<canvas  id="arrowColor"></canvas>
 							</div>
+							<div class="down"></div>
+							<div class="title">VS</div>
 						</div>
-						<div class="spriteBgBtn upBtn"></div>
-						<div class="spriteBgBtn downBtn"></div>
+						<div class="mainVoteBtnCon">
+							<div class="totalVoteInfo">
+								<div class="totalVoteInfoMiddle">
+									<span>已经有</span>
+									<span id="totalVoteNum"></span>
+									<span>人投票</span>
+								</div>
+							</div>
+							<div class="spriteBgBtn upBtn"></div>
+							<div class="spriteBgBtn downBtn"></div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="left upAndDownNum"><span></span>赞</div>
-			<div class="right upAndDownNum"><span></span>踩</div>
+				<div class="left upAndDownNum"><span></span>赞</div>
+				<div class="right upAndDownNum"><span></span>踩</div>
 
+			</div>
+		</div>
+		<div class="moreRecommend" data-type="头条">
+			<div class="moreItem" ></div>
+			<div class="moreItem"></div>
+			<div class="moreItem"></div>
+			<div class="moreItem"></div>
+			<div class="moreItem"></div>
+		</div>
+		<div id="loadingTip" class="loadingResultTips">
+			<div class="loadingImg active"></div>
+			<a class="loadError btnElement" href="javascript:void(0)">加载失败，点击重新加载</a>
 		</div>
 	</div>
-	<div class="moreRecommend" data-type="头条">
-		<div class="moreItem" ></div>
-		<div class="moreItem"></div>
-		<div class="moreItem"></div>
-		<div class="moreItem"></div>
-		<div class="moreItem"></div>
-	</div>
-	<div id="loadingTip" class="loadingResultTips">
-		<div class="loadingImg active"></div>
-		<a class="loadError btnElement" href="javascript:void(0)">加载失败，点击重新加载</a>
-	</div>
-</div>
 	<!--下载条-->
 	<div id="downloadCon">
 		<img src="__IMG__/v2content/d.png" class="allDownImg" />
@@ -81,7 +81,11 @@
 	window.onload=function() {
 		document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
 	};
-
+	var aLink=document.getElementsByTagName("a");
+	for(var i=0; i<aLink.length; i++){
+		aLink[i].href = "javascript:void(0);";
+		aLink[i].setAttribute("disabled", "disabled");
+	}
 </script>
-<script type="text/javascript" data-main="__JS__/topcontent/main"  src="__JS__/topcontent/require.js" ></script>
+<script type="text/javascript" data-main="__JS__/topcontent/config"  src="__JS__/sharecommon/require.js" ></script>
 </html>

@@ -32,14 +32,14 @@
 </body>
 <script type="text/javascript" src="__STATIC__/zepto.min.js"></script>
 <script type="text/javascript" src="__JS__/forum/hisihi_news_common.js"></script>
-<script type="text/javascript" src="__JS__/sharelist/hisihi_activities.js"></script>
+<script type="text/javascript" src="__JS__/events/eventslist.js"></script>
 <script>
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
     };
     var urlObj={
         server_url:'http://{$Think.server.HTTP_HOST}/api.php?s=',
-        img_url:'__IMG__'
+        img_url:'__IMG__',
     };
     urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=';
     new hisihiActivities($('.wrapper'),urlObj);
