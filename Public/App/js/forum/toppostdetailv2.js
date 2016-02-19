@@ -13,7 +13,7 @@ function commentObj($wrapper,urlObj){
 
     this.isFromApp=false; //页面跳转来源
     this.userInfo=null;
-    this.operation=browserType();
+    this.operation=getDeviceType();
     this.separateOperation();
     var that = this;
 
@@ -105,7 +105,7 @@ commentObj.prototype={
         else {
             var $bottomTarget = $('#downloadCon');
             $bottomTarget.show();   //表示用户是从网页或者分享结果中进来的   直接显示下载条
-            this.dealWithAndroidLowVersion($bottomTarget);
+            //this.dealWithAndroidLowVersion($bottomTarget);
         }
     },
 
@@ -218,7 +218,6 @@ commentObj.prototype={
     },
 
 };
-
 
 
 /*
