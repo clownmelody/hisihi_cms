@@ -11,13 +11,16 @@ requirejs.config({
     },
     shim: {
         zepto:{
-            output:'Zepto'
+            deps:[],
+            exports:'Zepto'
         },
         common:{
-            output:'MyCommon'
+            deps:[],
+            exports:'MyCommon'
         },
         sharemain:{
-            output:'Sharemain'
+            deps:[],
+            exports:'Sharemain'
         },
     }
 });

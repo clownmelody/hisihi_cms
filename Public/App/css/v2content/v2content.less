@@ -1,3 +1,4 @@
+@voteSideWidth:80px;
 body{
   margin: 0 auto;
   background: #eee;
@@ -128,7 +129,7 @@ img{
     .middleBox {
       width: 100%;
       .middle {
-        margin: 0 80px;
+        margin: 0 @voteSideWidth;
         height: 100%;
         .mainVoteBarCon {
           height: 23px;
@@ -228,8 +229,8 @@ img{
 
     .upAndDownNum {
       overflow: hidden;
-      padding-top: 2px;
-      width: 80px;
+      padding-top: 1px;
+      width: @voteSideWidth;
       height: 100%;
       text-align: center;
       &.left {
@@ -242,4 +243,44 @@ img{
       }
     }
   }
+}
+
+/*************响应式处理****************/
+@media screen and (max-width:320px){
+  .bottomVoteConBox{
+    .upAndDownNum {
+      width: 60px !important;
+      &.right{
+        margin-left: -60px !important;
+      }
+    }
+    .middle {
+       margin: 0 60px !important;
+      .totalVoteInfoMiddle {
+        line-height: 17px !important;
+        * {
+          font-size: 12px;
+        }
+      }
+      .spriteBgBtn {
+        width: 40px !important;
+        height: 21px !important;
+        background-size:160px 21px !important;
+        &.upBtnAble {
+          background-position: -40px 0 !important;
+        }
+        &.upBtnDisabled {
+          background-position: -120px 0 !important;
+        }
+        &.downBtn {
+          margin-left: -40px !important;
+        }
+        &.downBtnDisabled {
+          background-position: -80px 0 !important;
+        }
+      }
+    }
+  }
+
+
 }

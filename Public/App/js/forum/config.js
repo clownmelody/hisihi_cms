@@ -79,7 +79,7 @@ require(['zepto','common','toppostdetailv2','sharemain'],function(Zepto,MyCommon
                         repalybtn.text('没有更多评论了');
                         repalybtn.attr('onclick','return false;');
                     }else{
-                        repalybtn.text('点击加载更多');
+                        repalybtn.text('点击加载更多评论');
                         repalybtn.attr('onclick','getMoreReplay();');
                     }
                 }

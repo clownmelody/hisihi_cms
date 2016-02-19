@@ -229,7 +229,7 @@ img {
 }
 .bottomVoteCon .bottomVoteConBox .upAndDownNum {
   overflow: hidden;
-  padding-top: 2px;
+  padding-top: 1px;
   width: 80px;
   height: 100%;
   text-align: center;
@@ -241,4 +241,39 @@ img {
 .bottomVoteCon .bottomVoteConBox .upAndDownNum.right {
   margin-left: -80px;
   color: #039BE5;
+}
+/*************响应式处理****************/
+@media screen and (max-width: 320px) {
+  .bottomVoteConBox .upAndDownNum {
+    width: 60px !important;
+  }
+  .bottomVoteConBox .upAndDownNum.right {
+    margin-left: -60px !important;
+  }
+  .bottomVoteConBox .middle {
+    margin: 0 60px !important;
+  }
+  .bottomVoteConBox .middle .totalVoteInfoMiddle {
+    line-height: 17px !important;
+  }
+  .bottomVoteConBox .middle .totalVoteInfoMiddle * {
+    font-size: 12px;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn {
+    width: 40px !important;
+    height: 21px !important;
+    background-size: 160px 21px !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn.upBtnAble {
+    background-position: -40px 0 !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn.upBtnDisabled {
+    background-position: -120px 0 !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn.downBtn {
+    margin-left: -40px !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn.downBtnDisabled {
+    background-position: -80px 0 !important;
+  }
 }

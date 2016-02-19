@@ -22,7 +22,6 @@ function commentObj($wrapper,urlObj){
     this.controlCommentBoxStatus();
 
     this.$wrapper.on('touchend', '#comment-box .abled', $.proxy(this, 'commitComment'));
-    //this.$wrapper.on('click', '#comment-box .abled', $.proxy(this, 'commitComment'));
 
     //控制输入框的状态，当有信息输入的时候才可用
     this.$wrapper.on('input','.comment-box-left textarea',function(){
@@ -37,9 +36,9 @@ function commentObj($wrapper,urlObj){
     });
 
     //下载app
-    $('#downloadCon .downBtn').on('touchend',function(){
-        window.location.href='http://www.hisihi.com/download.php';
-    });
+    //$('#downloadCon .downBtn').on('touchend',function(){
+    //    window.location.href='http://www.hisihi.com/download.php';
+    //});
 
 }
 
@@ -103,7 +102,7 @@ commentObj.prototype={
 
         //来源于普通的页面
         else {
-            var $bottomTarget = $('#downloadCon');
+            var $bottomTarget = $('#downloadCon, .moreRecommend, #loadingTip');
             $bottomTarget.show();   //表示用户是从网页或者分享结果中进来的   直接显示下载条
             //this.dealWithAndroidLowVersion($bottomTarget);
         }

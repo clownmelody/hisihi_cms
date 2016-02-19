@@ -6,7 +6,7 @@ requirejs.config({
     baseUrl: window.hisihiUrlObj.js,
     paths: {
         zepto:'../sharecommon/zepto.min',
-        zeptofx:'fx',
+        zeptofx:'../sharecommon/fx',
         common:'../forum/hisihi_news_common',
         vote:'topcontent_vote',
         sharemain:'../sharecommon/main',
@@ -28,7 +28,7 @@ requirejs.config({
 require(['zepto','common','zeptofx','vote','sharemain'],function(Zepto,MyCommon,zeptofx,vote,sharemain){
     $('#downloadCon a')[0].href='http://www.hisihi.com/download.php';
     $('#loadingTip a')[0].removeAttribute("disabled");
-    new Vote($('.bottomVoteCon'),window.hisihiUrlObj.server_url);
+    new vote($('.bottomVoteCon'),window.hisihiUrlObj.server_url);
     var type=$('.moreRecommend').data('type');
     new sharemain(type);
 });

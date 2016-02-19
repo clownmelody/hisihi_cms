@@ -448,10 +448,11 @@ define(['zepto'],function() {
          * 否则，直接一次性将 推荐阅读前两个内容 加载出来
          */
         dealwithContentHeight: function () {
-            var bodyHeight = $('body').height(),
-                contentHeight = $('.app-section').height(),
-                that = this;
             this.$wrapper = $('.moreRecommend');
+            var bodyHeight = $('body').height(),
+                contentHeight = this.$wrapper.parent()[0].scrollHeight,
+                that = this;
+
             this.mainContentHeight = this.$wrapper.height();
             if (contentHeight <= bodyHeight) {
                 var $target = $('#loadingTip');
