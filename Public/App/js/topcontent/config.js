@@ -8,7 +8,7 @@ requirejs.config({
         zepto:'../sharecommon/zepto.min',
         zeptofx:'../sharecommon/fx',
         prefixfree:'../sharecommon/prefixfree.min',
-        debuggap:'../sharecommon/debuggap',
+        //debuggap:'../sharecommon/debuggap',
         common:'../forum/hisihi_news_common',
         vote:'topcontent_vote',
         sharemain:'../sharecommon/main',
@@ -27,7 +27,7 @@ requirejs.config({
 });
 
 
-require(['zepto','common','zeptofx','vote','sharemain','prefixfree','debuggap'],function(Zepto,MyCommon,zeptofx,vote,sharemain){
+require(['zepto','common','zeptofx','vote','sharemain','prefixfree'],function(Zepto,MyCommon,zeptofx,vote,sharemain){
     $('#downloadCon a')[0].href='http://www.hisihi.com/download.php';
     $('#loadingTip a')[0].removeAttribute("disabled");
     new vote($('.bottomVoteCon'),window.hisihiUrlObj.server_url);

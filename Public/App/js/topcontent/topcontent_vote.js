@@ -87,7 +87,7 @@ define(['zepto','zeptofx'],function() {
             $voteCon.find('.downBtn').removeClass(downClass + ' ' + downClass1).addClass(downTargetClass);
 
             this.updateColorBar(upCount, downCount);  //控制色块的长度
-            this.drawArrowColorBlock();  // 绘制三角形
+            //this.drawArrowColorBlock();  // 绘制三角形
             this.controlVSTitleStyle();  //vs文字样式
 
             if (!this.isFromApp) {

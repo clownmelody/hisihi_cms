@@ -129,6 +129,9 @@ img {
 .bottomVoteCon .bottomVoteConBox > div {
   float: left;
 }
+.bottomVoteCon .bottomVoteConBox .spriteBg {
+  background: url('../../images/topcontent/sprite.png');
+}
 .bottomVoteCon .bottomVoteConBox .middleBox {
   width: 100%;
 }
@@ -169,10 +172,13 @@ img {
   position: absolute;
   left: 50%;
   color: white;
+  color: black;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon .arrowCon {
   width: 25px;
   height: 23px;
+  background-size: 228px 28px;
+  background-position: -203px 0;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon .arrowCon #arrowColor {
   width: 100%;
@@ -199,15 +205,10 @@ img {
   color: #808080;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn {
-  background: url('../../images/topcontent/sprite.png');
-  height: 48px;
-  width: 88px;
   display: inline-block;
-  height: 24px;
-  width: 44px;
   height: 27px;
   width: 50px;
-  background-size: 200px 27px;
+  background-size: 223px 27px;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn.upBtn {
   margin-left: -100%;
