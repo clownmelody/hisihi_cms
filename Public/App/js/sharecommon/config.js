@@ -7,6 +7,7 @@ requirejs.config({
     paths: {
         zepto:'zepto.min',
         common:'../forum/hisihi_news_common',
+        prefixfree:'../sharecommon/prefixfree.min',
         sharemain:'main',
     },
     shim: {
@@ -26,7 +27,7 @@ requirejs.config({
 });
 
 
-require(['zepto','common','sharemain'],function(Zepto,MyCommon,sharemain){
+require(['zepto','common','sharemain','prefixfree'],function(Zepto,MyCommon,sharemain){
     var type=$('.moreRecommend').data('type');
     new sharemain(type);
 });

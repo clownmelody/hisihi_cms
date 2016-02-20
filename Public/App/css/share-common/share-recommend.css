@@ -17,7 +17,8 @@ ul li {
   background-image: url("../../images/v2content/sprite.png");
 }
 .moreRecommend .btnElement:active {
-  transform: scale(0.9, 0.9);
+  -webkit-transform: scale(0.9, 0.9);
+  -moz-transform: scale(0.9, 0.9);
 }
 .moreRecommend .moreItem {
   margin-bottom: 20px;
@@ -52,8 +53,9 @@ ul li {
   width: 15px;
   height: 23px;
   display: inline-block;
-  margin-top: 11px;
-  transform: scale(0.5);
+  margin-top: 10px;
+  -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
   background-position: -328px 0;
 }
 .moreRecommend .moreItem .mainContentUl {
@@ -110,7 +112,8 @@ ul li {
   margin-left: -25px;
   margin-top: -25px;
   background-position: -256px -72px;
-  transform: scale(0.8);
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
 }
 .moreRecommend .moreItem .mainContentUl .newsLiItem a .right {
   padding-left: 5.25em;
@@ -151,7 +154,8 @@ ul li {
   margin-right: 0.15em;
   background-position: -172px -64px;
   margin-top: 4px;
-  transform: scale(1.3);
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
 }
 .moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom .rightBottomRight .viewTimesIcon {
   float: left;
@@ -250,6 +254,7 @@ ul li {
   }
   .rightBottom .rightBottomRight i {
     margin-top: 3px !important;
-    transform: scale(1) !important;
+    -webkit-transform: -webkit-scale(1) !important;
+    -moz-transform: -moz-scale(1) !important;
   }
 }
