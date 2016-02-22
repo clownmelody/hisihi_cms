@@ -1587,11 +1587,11 @@ class OrganizationController extends AppController
             $this->apiError(-1, '传入机构ID不能为空');
         }
         $model = M('OrganizationEnroll');
-        $total_count = $model->where('status=2 and organization_id='.$organization_id)->count();
+        $total_count = $model->where('status>0 and organization_id='.$organization_id)->count();
         if($type=="all"){
-            $list = $model->field('student_name,phone_num, create_time')->where('status=2 and organization_id='.$organization_id)->select();
+            $list = $model->field('student_name,phone_num, create_time')->where('status>0 and organization_id='.$organization_id)->select();
         }else{
-            $list = $model->field('student_name,phone_num, create_time')->where('status=2 and organization_id='.$organization_id)->page($page, $count)->select();
+            $list = $model->field('student_name,phone_num, create_time')->where('status>0 and organization_id='.$organization_id)->page($page, $count)->select();
         }
 
         foreach($list as &$user){
@@ -1729,8 +1729,10 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $relationModel = M('OrganizationRelation');
-        $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.$uid)->find();
+        $model = M();
+        $isExist = $model->query("SELECT  uid FROM (SELECT uid FROM hisihi_organization_student_classmate a
+LEFT JOIN (SELECT id FROM hisihi_organization_student_class WHERE organization_id = ".$organization_id.") b
+ON a.class_id = b.id WHERE a.status=2) c WHERE c.uid=".$uid);
         if(!$isExist){
             $this->apiError(-2, '你不是该机构学员，不允许评论');
         }
@@ -1960,8 +1962,15 @@ class OrganizationController extends AppController
             $this->$this->apiError(-2,'未填写手机号码');
         }
         if(!$course_id){
-            $this->$this->apiError(-2,'未选择课程');
+            //$this->$this->apiError(-2,'未选择课程');
+            $course_id=0;
         }
+        $relationModel = M('OrganizationRelation');
+        $is_exist = $relationModel->where('status=1 and uid='.$uid)->find();
+        if($is_exist){
+            $this->apiError(-5,'机构老师不能报名');
+        }
+
         $map['organization_id']=$organization_id;
         $map['student_uid']=$uid;
         $map['student_name']=$student_name;

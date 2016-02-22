@@ -10,7 +10,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <title>嘿设汇新闻列表</title>
+    <title>嘿设汇新闻</title>
     <style>
         *::after, *::before {
             -webkit-box-sizing: border-box;
@@ -157,6 +157,12 @@
             text-decoration: none !important;
         }
 
+        .wrapper .nonData{
+            text-align: center;
+            color: #757373;
+            margin-top: 40px;
+        }
+
         .loadingResultTips{
             opacity: 0;
             text-align: center;
@@ -249,9 +255,10 @@
     };
     var urlObj={
         server_url:'http://{$Think.server.HTTP_HOST}/api.php?s=/forum',
-        img_url:'__IMG__'
+        img_url:'__IMG__',
+
     };
-//    urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
+    urlObj.server_url = 'http://{$Think.server.HTTP_HOST}/hisihi-cms/api.php?s=/forum';
     new hisihiNews($('.wrapper'),urlObj);
 </script>
 </html>

@@ -2,7 +2,7 @@
  * Created by jimmy on 2015/11/18.
  */
 
-var hisihiNews = function ($wrapper,urlObj) {
+var hisihiTopContent = function ($wrapper,urlObj) {
     this.separateOperation();
     this.$wrapper = $wrapper;
     this.controlLoadingPos();
@@ -19,7 +19,7 @@ var hisihiNews = function ($wrapper,urlObj) {
     });
 };
 
-hisihiNews.prototype = {
+hisihiTopContent.prototype = {
 
     controlLoadingPos:function(){
        var $loading = this.$wrapper.find('.loadingResultTips'),
@@ -84,12 +84,12 @@ hisihiNews.prototype = {
                 page: pageIndex,
                 count: this.pageSize
             },
-            url = this.urlObj.server_url + '/newsList',
+            url = this.urlObj.server_url + 'public/topList',
             that = this;
 
         var ajaxTimeoutTest=$.ajax({
             url: url,  //请求的URL
-            timeout: 10000, //超时时间设置，单位毫秒
+            timeout: 30000, //超时时间设置，单位毫秒
             type: 'get',  //请求方式，get或post
             data:tempObj,
             dataType: 'json',//返回的数据格式
@@ -99,7 +99,7 @@ hisihiNews.prototype = {
                     $loadinngImgTarget.hide();
                     that.totalPage=Math.ceil(result.totalCount/that.pageSize);
                     that.pageIndex++;
-                    $loadinngMore.before(that.getNewsContent(result.data));
+                    $loadinngMore.before(that.getNewsContent(result));
                     //控制图片的显示，按比例显示
                     that.$wrapper.find('.newsListContainer img').unbind('load').bind("load",function(){
                         $(this).css('opacity','1');
@@ -128,21 +128,24 @@ hisihiNews.prototype = {
      * return
      * str - {string} 内容字符串
      */
-    getNewsContent:function(data){
-        //data=[
-        //    {"id":"5472","title":"内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试内页帖图片测试","create_time":"1447299691","view_count":"89757","is_out_link":"0","link_url":"","url":this.urlObj.server_url+"/toppostdetailv2/post_id/5510","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"},
-        //    {"id":"5471","title":"新闻测试","create_time":"1447295771","view_count":"12043","is_out_link":"0","link_url":"","url":this.urlObj.server_url+"/toppostdetailv2/post_id/5513","pic_url":"http://hisihi-other.oss-cn-qingdao.aliyuncs.com/2015-11-12/56440a5ccd24e.jpg"}
-        //];
-        var str = '',title, len = data.length, item,dateStr;
-        for (var i = 0; i < len; i++) {
-            item = data[i];
-            title=this.substrLongStr(item.title,25);
-            dateStr=this.getTimeFromTimestamp(item.create_time);
-            str += '<li class="newsLiItem">'+
+    getNewsContent:function(result){
+        var str = '',title,item,dateStr;
+        if(!result || !result.course || result.course.length==0){
+            str='<div class="nonData">暂无内容</div>';
+        }
+        else {
+            data=result.course;
+            var len = data.length;
+            for (var i = 0; i < len; i++) {
+                item = data[i];
+                title = this.substrLongStr(item.title, 25);
+                dateStr = this.getTimeFromTimestamp(item.update_time);
+
+                str += '<li class="newsLiItem">'+
                     '<div class="coverBorderContainer"></div>'+
-                    '<a href="'+ window.urlObj.server_url + '/toppostdetailv2/post_id/SHAREID'.replace(/SHAREID/,item.id)+'">' +
+                    '<a href="'+this.urlObj.link_url.replace(/SHAREID/i,item.id) + '">' +
                     '<div class="left">' +
-                    '<img src="' + item.pic_url + '"/>' +
+                    '<img src="' + item.img + '"/>' +
                     '</div>' +
                     '<div class="right">' +
                     '<div class="rightHeader">' +
@@ -150,15 +153,16 @@ hisihiNews.prototype = {
                     '</div>' +
                     '<div class="rightBottom">'+
                     '<div class="rightBottomLeft">'+
-                    //'<i class="viewTimesIcon"><img src="'+this.urlObj.img_url+'/viewTimes.png"/></i>'+
+                        //'<i class="viewTimesIcon"><img src="'+this.urlObj.img_url+'/viewTimes.png"/></i>'+
                     '<span class="viewTimesIcon">人气：</span>'+
-                    '<span>'+item.view_count +'</span>'+
+                    '<span>'+item.view +'</span>'+
                     '</div>'+
                     '<div class="rightBottomRight">'+ dateStr + '</div>'+
                     '</div>' +
                     '</div>' +
                     '</a>'+
-                '</li>';
+                    '</li>';
+            }
         }
         return str;
     },
