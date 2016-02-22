@@ -396,11 +396,11 @@
 			document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
 		}
 		var hisihiUrlObj={
-//			link_url:'http://{$Think.server.HTTP_HOST}/api.php?s=',
-			link_url:'http://{$Think.server.HTTP_HOST}/hisihi-cms/',
+			link_url:'http://{$Think.server.HTTP_HOST}/api.php?s=',
 			img_url:'__IMG__',
 			js:'__JS__/forum',
 		};
+		hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
 		hisihiUrlObj.server_url = hisihiUrlObj.link_url+'api.php?s=';
 	</script>
 	<script type="text/javascript" data-main="__JS__/forum/config"  src="__JS__/sharecommon/require.js" ></script>
