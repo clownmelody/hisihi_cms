@@ -48,15 +48,11 @@ class ForumController extends AppController
         foreach ($this->forum_list as $f) {
             $forum_key_value[$f['id']] = $f;
         }
-        //dump($forum_key_value);
         foreach ($this->forum_type as $t) {
-            //$t['forums'] = D("Forum/Forum")->getForumList(array('status' => 1, 'type_id' => $t['id']));
-            //$t['forums1'] = $forum_key_value[$t['id']];
             if($type_id != 0) {
                 if($t['id'] != $type_id)
                     continue;
             }
-
             foreach($forum_key_value as $tt){
                 if($tt['type_id'] == $t['id'])
                     $types[] = array("title"=>$tt['title'],"id"=>$tt['id']);
@@ -237,27 +233,27 @@ class ForumController extends AppController
     }
 
     /**
-     * @param int $type_id  帖子类型
-     * @param int $page
-     * @param int $count
-     * @param int $is_reply  -1 全部 0 无回答 1 有回答
-     * @param string $order
+     * 论坛列表
+     * @param int $type_id 帖子类型
+     * @param int $page  分页参数
+     * @param int $count  分页参数
+     * @param int $is_reply -1 全部 0 无回答 1 有回答
+     * @param string $order  帖子列表排序
+     * @param bool|false $show_adv  是否在帖子列表中插入广告
+     * @param int $post_type  1 论坛普通帖； 2 论坛公司帖
      */
-    public function forum($type_id = 0, $page = 1, $count = 10, $is_reply = -1, $order = 'ctime', $show_adv=false, $post_type=1)
+    public function forum($type_id = 0, $page = 1, $count = 10, $is_reply = -1, $order = 'ctime',
+                          $show_adv=false, $post_type=1)
     {
-        //$this->requireLogin();
         $type_id = intval($type_id);
-        //$id = intval($id);
         $page = intval($page);
         $count = intval($count);
         $order = op_t($order);
 
         if ($order == 'ctime') {
             $order = 'create_time desc';
-        } else if ($order == 'reply') {
-            $order = 'last_reply_time desc';
         } else {
-            $order = 'last_reply_time desc';//默认的
+            $order = 'last_reply_time desc';
         }
 
         //读取帖子列表
@@ -432,10 +428,16 @@ class ForumController extends AppController
             foreach($adv_pos as $pos){
                 $list = $this->mergeAdvertismentToForumList($list, $pos);
             }
-        }else{
+        } else {
             $totalCount = 0;
             $list = array();
         }
+
+        if($show_adv==true){
+            $len = count($list);
+            $list[$len] = $this->getOneForumAdv(640, 960);
+        }
+
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
