@@ -288,7 +288,11 @@ class ForumController extends AppController
 
         if($show_adv==true){
             $len = count($list);
-            $list[$len] = $this->getOneForumAdv(640, 960);
+            $now = time();
+            $total_count = M('Advs')->where('position=4 and status=1 and '.$now.' between create_time and end_time')->count();
+            if($total_count>0){
+                $list[$len] = $this->getOneForumAdv(640, 960);
+            }
         }
 
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
@@ -435,7 +439,11 @@ class ForumController extends AppController
 
         if($show_adv==true){
             $len = count($list);
-            $list[$len] = $this->getOneForumAdv(640, 960);
+            $now = time();
+            $total_count = M('Advs')->where('position=4 and status=1 and '.$now.' between create_time and end_time')->count();
+            if($total_count>0){
+                $list[$len] = $this->getOneForumAdv(640, 960);
+            }
         }
 
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
