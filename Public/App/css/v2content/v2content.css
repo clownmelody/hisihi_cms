@@ -143,6 +143,7 @@ img {
   height: 23px;
   width: 100%;
   position: relative;
+  overflow: hidden;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon * {
   font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
@@ -172,7 +173,6 @@ img {
   position: absolute;
   left: 50%;
   color: white;
-  color: black;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon .arrowCon {
   width: 25px;
@@ -242,6 +242,22 @@ img {
 .bottomVoteCon .bottomVoteConBox .upAndDownNum.right {
   margin-left: -80px;
   color: #039BE5;
+}
+.bottomVoteCon #loadingTipForVote {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  margin-left: -97px;
+  width: 195px;
+  display: block !important;
+}
+.bottomVoteCon #loadingTipForVote .loadingImg {
+  float: left;
+}
+.bottomVoteCon #loadingTipForVote span {
+  float: left;
+  line-height: 32px;
+  margin-left: 2px;
 }
 /*************响应式处理****************/
 @media screen and (max-width: 320px) {

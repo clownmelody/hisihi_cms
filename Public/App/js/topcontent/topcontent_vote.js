@@ -53,7 +53,6 @@ define(['zepto','zeptofx'],function() {
             if (!data) {
                 return;
             }
-
             var upCount = data.supportCount | 0,
                 downCount = data.opposeCount | 0,
                 isUp = data.isSupportd == '1',

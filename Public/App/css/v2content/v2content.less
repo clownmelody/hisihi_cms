@@ -139,6 +139,7 @@ img{
           height: 23px;
           width: 100%;
           position: relative;
+          overflow: hidden;
           * {
             font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
           }
@@ -167,7 +168,6 @@ img{
             position: absolute;
             left: 50%;
             color: white;
-            color: black;
           }
           .arrowCon {
             width: 25px;
@@ -243,6 +243,22 @@ img{
         margin-left: -80px;
         color: #039BE5;
       }
+    }
+  }
+  #loadingTipForVote{
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    margin-left: -97px;
+    width: 195px;
+    display: block !important;
+    .loadingImg{
+      float: left;
+    }
+    span{
+      float: left;
+      line-height: 32px;
+      margin-left: 2px;
     }
   }
 }
