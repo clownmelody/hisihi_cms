@@ -40,7 +40,6 @@ class ForumModel extends Model
         $cache_time=modC('CACHE_TIME',300,'Forum');
         if (empty($forum_list)) {
             //读取板块列表
-
             $forum_list = D('Forum/Forum')->where($map_type)->order('sort asc')->select();
             $forumPostModel = D('ForumPost');
             $forumPostReplyModel = D('ForumPostReply');
@@ -54,9 +53,7 @@ class ForumModel extends Model
                 $post_id=$forumPostModel->where(array('forum_id'=>$f['id']))->field('id')->select();
                 $p_id=getSubByKey($post_id,'id');
                 $map['post_id']=array('in',implode(',',$p_id));
-                $f['total_count'] = $f['topic_count'] + $forumPostReplyModel->where($map)->count();// + $forumLzlReplyModel->where($map)->count();
-
-
+                $f['total_count'] = $f['topic_count'] + $forumPostReplyModel->where($map)->count();
             }
             unset($f);
             S($tag, $forum_list, $cache_time);
