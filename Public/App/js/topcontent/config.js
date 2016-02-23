@@ -30,6 +30,12 @@ requirejs.config({
 require(['zepto','common','zeptofx','vote','sharemain','prefixfree'],function(Zepto,MyCommon,zeptofx,vote,sharemain){
     $('#downloadCon a')[0].href='http://www.hisihi.com/download.php';
     $('#loadingTip a')[0].removeAttribute("disabled");
+    //访问来源
+    var userAgent = window.location.href;
+    if(userAgent.indexOf("hisihi-app")>=0){
+        $('##downloadCon').hide();
+    }
+
     new vote($('.bottomVoteCon'),window.hisihiUrlObj.server_url);
     var type=$('.moreRecommend').data('type');
     new sharemain(type);

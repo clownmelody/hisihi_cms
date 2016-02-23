@@ -6,6 +6,13 @@ ul {
 ul li {
   list-style-type: none;
 }
+* {
+  -webkit-user-select: none;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
 .moreRecommend img {
   max-width: 100%;
 }
@@ -129,6 +136,7 @@ ul li {
   text-decoration: none;
   margin: 0;
   font-size: 16px;
+  text-align: left;
 }
 .moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom {
   height: 1.25em;
