@@ -214,9 +214,9 @@ class PublicController extends AppController {
             $topic['img'] = $this->fetchImage($topic['cover_id']);
             if((float)$version>=2.0){
                 $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
-                $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'];
+                $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'].'/version/'.$version;
             } else {
-                $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'];
+                $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'].'/version/'.$version;
             }
 
             $topic['isSupportd'] = $this->isArticleSupport($did);
@@ -338,7 +338,7 @@ class PublicController extends AppController {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
                 $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
-                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$info['id'];
+                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$info['id'].'/version/'.$version;
             } else {
                 $info['content_url'] = 'app.php/public/topcontent/type/view/id/'.$info['id'];
             }
