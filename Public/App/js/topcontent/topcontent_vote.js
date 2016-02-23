@@ -1,7 +1,8 @@
 /**
  * Created by jimmy on 2016/2/16.
  */
-define(['zepto','zeptofx'],function() {
+//define(['zepto','zeptofx'],function() {
+define(['zepto'],function() {
     var Vote = function ($target, url) {
         this.baseUrl = url;
         this.$wrapper = $target;
@@ -15,9 +16,11 @@ define(['zepto','zeptofx'],function() {
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
         //加载投票信息
         this.separateOperation(this.loadVoteInfo);
+        //this.separateOperation();
         this.$wrapper.on('click', '.mainVoteBtnCon .upBtnAble', $.proxy(this, 'execVoteUp'));
         this.$wrapper.on('click', '.mainVoteBtnCon .downBtnAble', $.proxy(this, 'execVoteDown'));
     };
+
     Vote.prototype = {
 
         /*通过点赞和 踩的 人数，控制颜色条的长度*/
@@ -26,7 +29,8 @@ define(['zepto','zeptofx'],function() {
             var para = {
                 url: this.baseUrl + 'public/topContentInfo',
                 type: 'get',
-                paraData: {id: this.articleId, session_id: this.userInfo.session_id},
+                //paraData: {id: this.articleId, session_id: this.userInfo.session_id},
+                paraData: {id: this.articleId},
                 sCallback: function (data) {
                     that.fillInfoVoteInfo(data.data);
                     that.saveCurrentVoteInfo(); //存储当前投票信息
@@ -228,7 +232,8 @@ define(['zepto','zeptofx'],function() {
                         }
 
                     };
-                    this.loadDataAsync(para);
+                    //this.loadDataAsync(para);
+                    callback && callback.call(that);
                 }
             }
             else {

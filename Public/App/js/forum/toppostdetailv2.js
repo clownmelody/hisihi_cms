@@ -104,7 +104,7 @@ commentObj.prototype={
         else {
             var $bottomTarget = $('#downloadCon, .moreRecommend, #loadingTip');
             $bottomTarget.show();   //表示用户是从网页或者分享结果中进来的   直接显示下载条
-            //this.dealWithAndroidLowVersion($bottomTarget);
+            this.dealWithAndroidLowVersion($bottomTarget);
         }
     },
 
@@ -199,7 +199,8 @@ commentObj.prototype={
             flag2=false,
             $target=$('.main');
         if(flag1) {
-            var v = parseInt(androidVersionType().split('.')[0]);
+            var v = parseInt(androidVersionType().toString().split('.')[0]);
+            alert(v);
             if (v < 5) {
                 flag2=true;
             }

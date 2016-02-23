@@ -93,9 +93,8 @@ require(['zepto','common','toppostdetailv2','sharemain'],function(Zepto,MyCommon
         var newDate = new Date(parseInt(date) * 1000).format('MM-dd hh:mm');
         return newDate;
     }
-
     new commentObj($('#comment-box'),window.hisihiUrlObj);
-
     var type=$('.moreRecommend').data('type');
     new sharemain(type);
+
 });
