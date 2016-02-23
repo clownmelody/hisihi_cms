@@ -11,7 +11,9 @@ define(['zepto'],function() {
 
         //访问来源
         var userAgent = window.location.href;
+        alert(userAgent);
         this.isFromApp = !userAgent.indexOf("hisihi-app") < 0;
+        alert(this.isFromApp);
 
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
         //加载投票信息
@@ -25,12 +27,15 @@ define(['zepto'],function() {
 
         /*通过点赞和 踩的 人数，控制颜色条的长度*/
         loadVoteInfo: function () {
-            var that = this;
+            var that = this,
+                paraData={id: this.articleId};
+            if(this.userInfo.session_id!==''){
+                paraData.session_id=this.userInfo.session_id;
+            }
             var para = {
                 url: this.baseUrl + 'public/topContentInfo',
                 type: 'get',
-                //paraData: {id: this.articleId, session_id: this.userInfo.session_id},
-                paraData: {id: this.articleId},
+                paraData: paraData,
                 sCallback: function (data) {
                     that.fillInfoVoteInfo(data.data);
                     that.saveCurrentVoteInfo(); //存储当前投票信息
@@ -94,6 +99,7 @@ define(['zepto'],function() {
             this.controlVSTitleStyle();  //vs文字样式
 
             if (!this.isFromApp) {
+                alert('hide');
                 $voteCon.find('.mainVoteBtnCon').hide();
             }
 
@@ -245,7 +251,7 @@ define(['zepto'],function() {
         /*赞同投票*/
         execVoteUp: function (e) {
             //没有登录
-            if (!this.userInfo.session_id) {
+            if (this.userInfo.session_id!=='') {
                 if (this.usedAppLoginFn) {
                     this.separateOperation();
                 } else {
@@ -285,7 +291,7 @@ define(['zepto'],function() {
         /*踩投票*/
         execVoteDown: function (e) {
             //没有登录
-            if (!this.userInfo.session_id) {
+            if (this.userInfo.session_id==='') {
                 alert('请登录');
                 //调app的登录框跳转方法
                 return;
