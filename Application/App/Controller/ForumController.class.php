@@ -428,23 +428,25 @@ class ForumController extends AppController
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
             $list = $this->formatList($list, $version);
-            $adv_pos = $this->getAdvsPostion();
-            foreach($adv_pos as $pos){
-                $list = $this->mergeAdvertismentToForumList($list, $pos);
+            if($show_adv==true){
+                $adv_pos = $this->getAdvsPostion();
+                foreach($adv_pos as $pos){
+                    $list = $this->mergeAdvertismentToForumList($list, $pos);
+                }
             }
         } else {
             $totalCount = 0;
             $list = array();
         }
 
-        if($show_adv==true){
+        /*if($show_adv==true){
             $len = count($list);
             $now = time();
             $total_count = M('Advs')->where('position=4 and status=1 and '.$now.' between create_time and end_time')->count();
             if($total_count>0){
                 $list[$len] = $this->getOneForumAdv(640, 960);
             }
-        }
+        }*/
 
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
