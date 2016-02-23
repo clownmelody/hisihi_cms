@@ -53,7 +53,7 @@ define(['zepto'],function() {
          * data - {array} 查询结果数据 格式为：
          *   {
          *       isOpposed: "0"
-         *       isSupportd: "0"
+         *       isSupported: "0"
          *       opposeCount: "0"
          *       supportCount: "0"
          *    }
@@ -64,7 +64,7 @@ define(['zepto'],function() {
             }
             var upCount = data.supportCount | 0,
                 downCount = data.opposeCount | 0,
-                isUp = data.isSupportd == '1',
+                isUp = data.isSupported == '1',
                 isDown = data.isOpposed == '1';
             var total = upCount + downCount | 0;
 
@@ -450,7 +450,7 @@ define(['zepto'],function() {
                 oc = this.$wrapper.find('.right>span ').text(),
                 oldData = {
                     isOpposed: iso,
-                    isSupportd: iss,
+                    isSupported: iss,
                     opposeCount: oc,
                     supportCount: sc
                 };
