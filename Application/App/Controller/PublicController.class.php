@@ -378,7 +378,7 @@ class PublicController extends AppController {
         if(empty($id)){
             $this->apiError(-1,'头条id不能为空');
         }
-        $info['isSupportd'] = $this->isArticleSupport($id);
+        $info['isSupported'] = $this->isArticleSupport($id);
         $info['supportCount'] = $this->getArticleSupportCount($id);
         $info['isOpposed'] = $this->isArticleOppose($id);
         //头条点踩数
