@@ -214,7 +214,7 @@ class PublicController extends AppController {
             $topic['img'] = $this->fetchImage($topic['cover_id']);
             if((float)$version>=2.0){
                 $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
-                $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'].'/version/'.$version;
+                $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$topic['id'].'/version/'.$version;
             } else {
                 $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'].'/version/'.$version;
             }
@@ -242,6 +242,30 @@ class PublicController extends AppController {
             unset($topic['isrecommend']);
         }
         $this->apiSuccess("获取首页顶部列表成功", null, array('totalCount' => $totalCount,'course' => $list));
+    }
+
+    /**
+     * 头条分享
+     * @param $id
+     */
+    public function v2contentforshare($id){
+        /* 获取当前分类列表 */
+        $Document = D('Blog/Document');
+        $Article = D('Blog/Article', 'Logic');
+
+        //获取当前分类下的文章
+        $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
+        if(empty($info)){
+            $this->apiError(-1, "id不存在");
+        }
+        $Document->where(array('id' => $id))->setInc('view');
+        $content = $Article->detail($id);
+        $content = array_merge($info, $content);
+
+        $this->assign('top_content_info', $content);
+        $this->assign('article_type', 'top_content');
+        $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
+        $this->display();
     }
 
     /**
