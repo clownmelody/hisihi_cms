@@ -11,7 +11,6 @@ define(['zepto'],function() {
 
         //访问来源
         var userAgent = window.location.href;
-        alert(userAgent);
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         alert(this.isFromApp);
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
@@ -100,10 +99,11 @@ define(['zepto'],function() {
                 alert('隐藏');
                 $voteCon.find('.mainVoteBtnCon').hide();
             }
-
+            alert('opacity 0');
+            alert($voteCon.find('.bottomVoteConBox').css('opacity'));
             $voteCon.find('.bottomVoteConBox').css('opacity', 1);
-
-
+            alert('opacity 1');
+            alert($voteCon.find('.bottomVoteConBox').css('opacity'));
         },
 
         //绘制箭头

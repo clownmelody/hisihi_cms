@@ -9,13 +9,13 @@
 .bottomVoteConBox {
     opacity: 0;
     height: 100%;
-> div {
-      float: left;
-  }
-.spriteBg{
-    background: url('../../images/topcontent/sprite.png');
-}
-.middleBox {
+    > div {
+          float: left;
+      }
+    .spriteBg{
+        background: url('../../images/topcontent/sprite.png');
+    }
+    .middleBox {
     width: 100%;
 .middle {
     margin: 0 @voteSideWidth;
@@ -71,25 +71,25 @@
     margin-top: 12px;
     height: 27px;
     width: 100%;
-> div {
-      float: left;
-  }
-.totalVoteInfo {
-    width: 100%;
-    text-align: center;
-    height: 100%;
-}
+    > div {
+          float: left;
+      }
+    .totalVoteInfo {
+        width: 100%;
+        text-align: center;
+        height: 100%;
+    }
 
-.totalVoteInfoMiddle {
-    height: 100%;
-    box-sizing: border-box;
-    line-height: 27px;
-    margin: 0 44px;
-    color: #808080;
-*{
-    font-size: 12px;
-}
-}
+  .totalVoteInfoMiddle {
+      height: 100%;
+      box-sizing: border-box;
+      line-height: 27px;
+      margin: 0 44px;
+      color: #808080;
+    *{
+        font-size: 12px;
+    }
+  }
 .spriteBgBtn {
     display: inline-block;
     height: 27px;
@@ -118,7 +118,7 @@
 }
 }
 
-.upAndDownNum {
+    .upAndDownNum {
     overflow: hidden;
     padding-top: 1px;
     width: @voteSideWidth;
@@ -133,7 +133,7 @@
      color: #039BE5;
  }
 }
-}
+  }
 }
 
 /*************响应式处理****************/
@@ -141,11 +141,11 @@
     .bottomVoteConBox{
     .upAndDownNum {
         width: 60px !important;
-&.right{
+        &.right{
      margin-left: -60px !important;
  }
-}
-.middle {
+    }
+    .middle {
     margin: 0 60px !important;
 .totalVoteInfoMiddle {
     line-height: 17px !important;
@@ -171,7 +171,7 @@
  }
 }
 }
-}
+  }
 
 
 }
