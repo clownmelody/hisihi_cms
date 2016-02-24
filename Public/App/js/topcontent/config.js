@@ -33,7 +33,7 @@ require(['zepto','common','zeptofx','vote','sharemain','prefixfree'],function(Ze
     //访问来源
     var userAgent = window.location.href;
     if(userAgent.indexOf("hisihi-app")>=0){
-        $('##downloadCon').hide();
+        $('#downloadCon').hide();
     }
 
     new vote($('.bottomVoteCon'),window.hisihiUrlObj.server_url);
