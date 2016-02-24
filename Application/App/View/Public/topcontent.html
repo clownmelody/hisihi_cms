@@ -12,8 +12,6 @@
     </if>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="__CSS__/app.min.css">
-    <link rel="stylesheet" href="__CSS__/v2content/v2content.css">
-
     <style>
         .app-bottombar {
             z-index: 3000;
@@ -23,7 +21,6 @@
             width: 100%;
             display: none;
             background: url("__IMG__/bg.png");
-            display: none;
         }
 
         .bottomspace {
@@ -76,111 +73,116 @@
         img {
             max-width:100%;height:auto;
         }
-        /*加载等待*/
-        .loadingResultTips {
-            z-index: -1;
-            text-align: center;
-            color: #9C9A9D;
-            position: absolute;
-            height: 4em;
-            width: 100%;
-            top:0;
-            left: 0;
-        }
-        .loadingResultTips .loadingImg {
-            margin: 0 auto;
-            height: 2em;
-            width: 2em;
-            background-image: url("__IMG__/topcontent/loading2.svg");
-            opacity: 0;
-        }
-        .loadingResultTips .loadingImg.active {
-            opacity: 1;
-            animation: aloading 0.8s steps(6, end) 0s infinite;
-        }
-        @keyframes aloading {
-            to {
-                transform: rotate(360deg);
-            }
-        }
     </style>
 </head>
 
 <body>
-    <div class="app-page" data-page="home">
-        <!--
-        <div class="app-topbar">
-            <div class="app-title">提问详情</div>
-        </div>
-        -->
-        <div id="test-agent" style="display:none">user-agent</div>
-        <div class="app-content" style="-webkit-box-shadow: none;">
-            <div class="app-section" style="margin: 10px 10px 10px 10px">
-                <div class="info-title">
-                    <div style="float:left;margin-top:-10px;width:100%">
-                        <h2>{$top_content_info.title}</h2>
-                    </div>
-                </div>
-                <div class="info-time">
-                    <p>{$top_content_info.create_time|date='m-d H:i',###}</p>
-                </div>
-                <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
-                </div>
-                <div>
-                <p>
-                    {$top_content_info.content}
-                    </p>
+<div class="app-page" data-page="home">
+    <!--
+    <div class="app-topbar">
+        <div class="app-title">提问详情</div>
+    </div>
+    -->
+    <div id="test-agent" style="display:none">user-agent</div>
+    <div class="app-content" style="-webkit-box-shadow: none;">
+        <div class="app-section" style="margin: 10px 10px 10px 10px">
+            <div class="info-title">
+                <div style="float:left;margin-top:-10px;width:100%">
+                    <h2>{$top_content_info.title}</h2>
                 </div>
             </div>
-            <div class="bottomspace"></div>
-            <div class="bottomVoteCon">
-                <div class="bottomVoteConBox">
-                    <div class="middleBox">
-                        <div class="middle">
-                            <div class="mainVoteBarCon">
-                                <div class="up"></div>
-                                    <div class="arrowCon spriteBg">
-                                </div>
-                                <div class="down"></div>
-                                <div class="title">VS</div>
-                            </div>
-                            <div class="mainVoteBtnCon">
-                                <div class="totalVoteInfo">
-                                    <div class="totalVoteInfoMiddle">
-                                        <span>已有</span>
-                                        <span id="totalVoteNum"></span>
-                                        <span>人投票</span>
-                                    </div>
-                                </div>
-                                <div class="spriteBgBtn upBtn"></div>
-                                <div class="spriteBgBtn downBtn"></div>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="left upAndDownNum"><span></span>赞</div>
-                    <div class="right upAndDownNum"><span></span>踩</div>
-
-                </div>
-                <div class="loadingResultTips" id="loadingTipForVote">
-                    <div class="loadingImg active"></div>
-                </div>
-
+            <div class="info-time">
+                <p>{$top_content_info.create_time|date='m-d H:i',###}</p>
+            </div>
+            <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
+            </div>
+            <div>
+                <p>
+                    {$top_content_info.content}
+                </p>
+            </div>
+        </div>
+        <div class="bottomspace"></div>
+    </div>
+    <div class="app-bottombar">
+        <div>
+            <div>
+            <span class="bottom-icon">
+                <img style="width: 50px;" src="__IMG__/icon.png" />
+            </span>
+            <span class="bottom-title">
+                <p>嘿设汇</p>
+                <p class="bottom-content">设计师必备 百万设计师都在用</p>
+            </span>
+            <span class="bottom-star">
+                <img style="width: 10px;margin-left: -1px" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+                <img style="width: 10px;margin-left: -1px;" src="__IMG__/star.png" />
+            </span>
+            </div>
+            <div class="app-button bottom-right">
+                <p>立即下载</p>
             </div>
         </div>
     </div>
-</body>
+</div>
+
+<div class="app-page" data-page="page2">
+    <div class="app-topbar">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">Page 2</div>
+    </div>
+    <div class="app-content">
+        Create By RFly！
+    </div>
+</div>
+
+<script src="__JS__/zepto.js"></script>
+<script src="__JS__/app.min.js"></script>
 <script>
-    window.hisihiUrlObj={
-        link_url:'http://{$Think.server.HTTP_HOST}/',
-        img_url:'__IMG__',
-        js: "__JS__"+'/topcontent/',
-    };
-//    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
-    window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
-    window.onload=function() {
-        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
-    };
+    App.controller('home', function (page) {
+        // put stuff here
+        //rawText      : '点击“确定”下载<br>【嘿设汇App】<br>体验更多功能',
+        $(page)
+                .find('.app-button')
+                .on('click', function () {
+                    window.location.href = "http://www.hisihi.com/download.php";
+                    /*App.dialog({
+                     title        : '嘿设汇',
+                     rawText      : '<img style="width: 50px;" src="__IMG__/icon.png" /><br>火速下载',
+                     okButton     : '确定',
+                     cancelButton : '取消'
+                     }, function (tryAgain) {
+                     if (tryAgain) {
+                     location.href = 'http://www.hisihi.com/app/downloadapp.html';
+                     }
+                     });*/
+                });
+    });
+
+    App.controller('page2', function (page) {
+        // put stuff here
+    });
+
+    try {
+        App.restore();
+    } catch (err) {
+        App.load('home');
+    }
+
+    $("a").removeAttr('href');
+
+    //var userAgent = navigator.userAgent.toLowerCase();
+
+    var userAgent = window.location.href;
+    //$("#test-agent").html(userAgent);
+    if(userAgent.indexOf("hisihi-app") < 0) {
+        $(".app-bottombar").show();
+        $(".bottomspace").show();
+    }
 
 </script>
-<script type="text/javascript" data-main="__JS__/topcontent/topcontentlogical"  src="__JS__/sharecommon/require.js" ></script>
+</body>
 </html>

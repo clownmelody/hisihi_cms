@@ -427,7 +427,7 @@ define(['zepto'],function() {
 
         /*访问来源*/
         var userAgent = window.location.href;
-        this.isFromApp = !userAgent.indexOf("hisihi-app") < 0;
+        this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
 
         /*操作设备信息*/
         this.deviceType = getDeviceType();
