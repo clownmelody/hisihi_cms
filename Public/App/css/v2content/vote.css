@@ -1,0 +1,165 @@
+/*投票*/
+.bottomVoteCon {
+  height: 80px;
+  width: 100%;
+  position: relative;
+}
+.bottomVoteCon .bottomVoteConBox {
+  opacity: 0;
+  height: 100%;
+}
+.bottomVoteCon .bottomVoteConBox > div {
+  float: left;
+}
+.bottomVoteCon .bottomVoteConBox .spriteBg {
+  background: url('../../images/topcontent/sprite.png');
+}
+.bottomVoteCon .bottomVoteConBox .middleBox {
+  width: 100%;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle {
+  margin: 0 80px;
+  height: 100%;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon {
+  height: 23px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon * {
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon > div {
+  float: left;
+  height: 100%;
+  color: white;
+  line-height: 23px;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon .up {
+  /*width: 58%;*/
+  background-color: #FF5A00;
+  box-sizing: border-box;
+  padding-left: 10px;
+  overflow: hidden;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon .down {
+  /*width: 20%;*/
+  background-color: #039BE5;
+  text-align: right;
+  box-sizing: border-box;
+  padding-right: 10px;
+  overflow: hidden;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon .title {
+  position: absolute;
+  left: 50%;
+  color: white;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon .arrowCon {
+  width: 25px;
+  height: 23px;
+  background-size: 228px 28px;
+  background-position: -203px 0;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon .arrowCon #arrowColor {
+  width: 100%;
+  height: 100%;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon {
+  margin-top: 12px;
+  height: 27px;
+  width: 100%;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon > div {
+  float: left;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfo {
+  width: 100%;
+  text-align: center;
+  height: 100%;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfoMiddle {
+  height: 100%;
+  box-sizing: border-box;
+  line-height: 27px;
+  margin: 0 44px;
+  color: #808080;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfoMiddle * {
+  font-size: 14px;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn {
+  display: inline-block;
+  height: 27px;
+  width: 50px;
+  background-size: 225px 27px;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn.upBtn {
+  margin-left: -100%;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn.upBtnAble {
+  background-position: -50px 0;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn.upBtnDisabled {
+  background-position: -150px 0;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn.downBtn {
+  margin-left: -50px;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn.downBtnAble {
+  background-position: 0 0;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn.downBtnDisabled {
+  background-position: -100px 0;
+}
+.bottomVoteCon .bottomVoteConBox .upAndDownNum {
+  overflow: hidden;
+  padding-top: 1px;
+  width: 80px;
+  height: 100%;
+  text-align: center;
+}
+.bottomVoteCon .bottomVoteConBox .upAndDownNum.left {
+  color: #FF5A00;
+  margin-left: -100%;
+}
+.bottomVoteCon .bottomVoteConBox .upAndDownNum.right {
+  margin-left: -80px;
+  color: #039BE5;
+}
+/*************响应式处理****************/
+@media screen and (max-width: 320px) {
+  .bottomVoteConBox .upAndDownNum {
+    width: 60px !important;
+  }
+  .bottomVoteConBox .upAndDownNum.right {
+    margin-left: -60px !important;
+  }
+  .bottomVoteConBox .middle {
+    margin: 0 60px !important;
+  }
+  .bottomVoteConBox .middle .totalVoteInfoMiddle {
+    line-height: 17px !important;
+  }
+  .bottomVoteConBox .middle .totalVoteInfoMiddle * {
+    font-size: 12px !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn {
+    width: 40px !important;
+    height: 21px !important;
+    background-size: 160px 21px !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn.upBtnAble {
+    background-position: -40px 0 !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn.upBtnDisabled {
+    background-position: -120px 0 !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn.downBtn {
+    margin-left: -40px !important;
+  }
+  .bottomVoteConBox .middle .spriteBgBtn.downBtnDisabled {
+    background-position: -80px 0 !important;
+  }
+}
