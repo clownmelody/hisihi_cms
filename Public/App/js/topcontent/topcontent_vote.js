@@ -250,10 +250,11 @@ define(['zepto'],function() {
         execVoteUp: function (e) {
             //没有登录
             if (this.userInfo.session_id==='') {
+                //调app的登录框跳转方法
                 if (this.usedAppLoginFn) {
                     this.separateOperation();
                 } else {
-                    this.execLoginFromApp();//调app的登录框跳转方法
+                    this.execLoginFromApp();
                     return;
                 }
 
@@ -290,9 +291,13 @@ define(['zepto'],function() {
         execVoteDown: function (e) {
             //没有登录
             if (this.userInfo.session_id==='') {
-                alert('请登录');
                 //调app的登录框跳转方法
-                return;
+                if (this.usedAppLoginFn) {
+                    this.separateOperation();
+                } else {
+                    this.execLoginFromApp();
+                    return;
+                }
             }
             //正在投票
             if (this.isVoting()) {
