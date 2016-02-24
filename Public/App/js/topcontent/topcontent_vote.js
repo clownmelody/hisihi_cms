@@ -489,7 +489,7 @@ define(['zepto'],function() {
                 if (this.deviceType.android) {
                     //如果方法存在
                     if (typeof AppFunction != "undefined") {
-                        AppFunction.showLoginView(); //调用app的方法，得到用户的基体信息
+                        AppFunction.login(); //显示app的登录方法，得到用户的基体信息
                         this.usedAppLoginFn = true;
                     }
                 } else {
