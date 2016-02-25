@@ -147,10 +147,12 @@ define(['zepto'],function() {
                             that.controlLoadingTips(0);
                             paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
-
-                            var txt = result.message;
                             if (paras.eCallback) {
-                                paras.eCallback(txt);
+                                var str='操作失败';
+                                if(xmlRequest.status==-100){
+                                    str=xmlRequest.statusText;
+                                }
+                                paras.eCallback(xmlRequest.status,str);
                             }
                             that.controlLoadingTips(0);
                         }
@@ -163,11 +165,11 @@ define(['zepto'],function() {
                     }
                     else {
                         that.controlLoadingTips(0);
-                        var str='';
+                        var str='操作失败';
                         if(xmlRequest.status==-100){
                             str=xmlRequest.statusText;
                         }
-                        paras.eCallback(-100,str);
+                        paras.eCallback(xmlRequest.status,str);
                     }
 
                 }
