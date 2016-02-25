@@ -264,6 +264,7 @@ class PublicController extends AppController {
 
         $this->assign('top_content_info', $content);
         $this->assign('article_type', 'top_content');
+        $this->assign('articleId', $id);
         $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
         $this->display();
     }
@@ -608,10 +609,8 @@ class PublicController extends AppController {
 
     /**
      * web 头条列表
-     * @param $id
      */
-    public function shareTopContentList($id){
-        $this->assign('articleId', $id);
+    public function shareTopContentList(){
         $this->display('sharetopcontentlist');
     }
 
