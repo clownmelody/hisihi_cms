@@ -80,3 +80,5 @@ var androidVersionType=function(){
     return Number(u.substr(u.indexOf('Android') + 8, 3));
 };
 
+
+
