@@ -283,7 +283,7 @@ class PublicController extends AppController {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
                 $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$id;
-                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$id;
+                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$id;
             } else {
                 $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$id;
             }
@@ -362,7 +362,7 @@ class PublicController extends AppController {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
                 $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
-                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$info['id'].'/version/'.$version;
+                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$info['id'].'/version/'.$version;
             } else {
                 $info['content_url'] = 'app.php/public/topcontent/type/view/id/'.$info['id'];
             }
