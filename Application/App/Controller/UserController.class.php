@@ -1362,6 +1362,7 @@ class UserController extends AppController
             }
             $listIndex++;
         }
+        $list = array_values($list);
         //返回成功结果
         $this->apiSuccess("获取成功", null, array('total_count' => $totalCount, 'favoriteList' => $list));
     }
