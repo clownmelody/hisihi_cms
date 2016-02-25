@@ -79,15 +79,21 @@
   text-align: center;
   height: 100%;
 }
-.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfoMiddle {
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfo .totalVoteInfoMiddle {
   height: 100%;
   box-sizing: border-box;
   line-height: 27px;
   margin: 0 44px;
   color: #808080;
 }
-.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfoMiddle * {
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfo .totalVoteInfoMiddle * {
   font-size: 12px;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfo #voteResult {
+  font-size: 14px;
+  text-align: center;
+  color: #FF6600;
+  opacity: 1;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn {
   display: inline-block;

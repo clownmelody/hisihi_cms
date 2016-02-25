@@ -159,11 +159,15 @@ define(['zepto'],function() {
                     else if (status == 'timeout') {
                         loginXhr.abort();
                         that.controlLoadingTips(0);
-                        paras.eCallback('加载超时。');
+                        paras.eCallback(408,'加载超时');
                     }
                     else {
                         that.controlLoadingTips(0);
-                        paras.eCallback(xmlRequest.statusText)
+                        var str='';
+                        if(xmlRequest.status==-100){
+                            str=xmlRequest.statusText;
+                        }
+                        paras.eCallback(-100,str);
                     }
 
                 }
@@ -271,9 +275,15 @@ define(['zepto'],function() {
                     $target.removeClass('voting');
                     that.saveCurrentVoteInfo.call(that); //存储当前投票信息
                 },
-                eCallback: function (str) {
+                eCallback: function (code,txt) {
                     $target.removeClass('voting');
+                    that.showVoteResult.call(that,txt);
+                    //已经操作
+                    if(code==-100){
+                        $target.removeClass('upBtnAble').addClass('upBtnDisabled');
+                    }
                     that.finishVote.call(that, -1);
+
                 },
             };
             this.loadDataAsync(para);
@@ -310,12 +320,30 @@ define(['zepto'],function() {
                     $target.removeClass('voting');
                     that.saveCurrentVoteInfo.call(that); //存储当前投票信息
                 },
-                eCallback: function (str) {
+                eCallback: function (code,txt) {
                     $target.removeClass('voting');
+                    that.showVoteResult.call(that,txt);
+                    //已经操作
+                    if(code==-100){
+                        $target.removeClass('downBtnAble').addClass('downBtnDisabled');
+                    }
                     that.finishVote.call(that, -1);
                 },
             };
             this.loadDataAsync(para);
+        },
+
+        /*
+         *显示操作结果
+         *para:
+         *tip - {string} 内容结果
+         */
+        showVoteResult:function(tip){
+            var $tip=this.$wrapper.find('#voteResult').text(tip);
+            $tip.text(tip).css('opacity',1);
+            window.setTimeout(function(){
+                $tip.text('').css('opacity',0);
+            },1500);
         },
 
         //正在投票中，防止重复操作
