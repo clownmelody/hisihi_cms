@@ -18,7 +18,7 @@
   width: 100%;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle {
-  margin: 0 80px;
+  margin: 0 70px;
   height: 100%;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon {
@@ -116,7 +116,7 @@
 .bottomVoteCon .bottomVoteConBox .upAndDownNum {
   overflow: hidden;
   padding-top: 1px;
-  width: 80px;
+  width: 70px;
   height: 100%;
   text-align: center;
 }
@@ -125,7 +125,7 @@
   margin-left: -100%;
 }
 .bottomVoteCon .bottomVoteConBox .upAndDownNum.right {
-  margin-left: -80px;
+  margin-left: -70px;
   color: #039BE5;
 }
 /*************响应式处理****************/
@@ -147,8 +147,8 @@
   }
   .bottomVoteConBox .middle .spriteBgBtn {
     width: 40px !important;
-    height: 21px !important;
-    background-size: 160px 21px !important;
+    height: 22px !important;
+    background-size: 180px 22px !important;
   }
   .bottomVoteConBox .middle .spriteBgBtn.upBtnAble {
     background-position: -40px 0 !important;
