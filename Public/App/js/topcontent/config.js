@@ -8,7 +8,6 @@ requirejs.config({
         zepto:'../sharecommon/zepto.min',
         zeptofx:'../sharecommon/fx',
         prefixfree:'../sharecommon/prefixfree.min',
-        //debuggap:'../sharecommon/debuggap',
         common:'../forum/hisihi_news_common',
         vote:'topcontent_vote',
     },
