@@ -1331,6 +1331,7 @@ class UserController extends AppController
         $list = D('Favorite')->where($map)->order('create_time desc')->page($page,$count)->select();
         $totalCount = D('Favorite')->where($map)->order('create_time desc')->count();
 
+        $listIndex = 0;
         //获取主题的详细资料
         foreach ($list as &$favorite) {
             switch($favorite['appname']){
@@ -1355,6 +1356,11 @@ class UserController extends AppController
             unset($favorite['row']);
             unset($favorite['uid']);
             unset($favorite['create_time']);
+            if($favorite['info']==null){  // 可能数据已经被删除
+                $totalCount--;
+                unset($list[$listIndex]);
+            }
+            $listIndex++;
         }
         //返回成功结果
         $this->apiSuccess("获取成功", null, array('total_count' => $totalCount, 'favoriteList' => $list));
