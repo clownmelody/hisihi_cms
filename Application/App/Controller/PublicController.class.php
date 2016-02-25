@@ -336,6 +336,7 @@ class PublicController extends AppController {
     }
 
     public function topContent($id, $type = '', $version='1.0'){
+        //redirect("http://www.huxiu.com/");
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         $Article = D('Blog/Article', 'Logic');
