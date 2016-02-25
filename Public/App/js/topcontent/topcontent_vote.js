@@ -13,6 +13,7 @@ define(['zepto'],function() {
         var userAgent = window.location.href;
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         alert(this.isFromApp);
+        //this.isFromApp=true;
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
 
         //加载投票信息
@@ -39,6 +40,7 @@ define(['zepto'],function() {
                     that.saveCurrentVoteInfo(); //存储当前投票信息
                 },
                 eCallback: function () {
+                    alert('投票信息获取失败');
                 },
 
             };
@@ -60,6 +62,7 @@ define(['zepto'],function() {
             if (!data) {
                 return;
             }
+            alert('填充投票信息');
             var upCount = data.supportCount | 0,
                 downCount = data.opposeCount | 0,
                 isUp = data.isSupported == '1',
@@ -173,6 +176,7 @@ define(['zepto'],function() {
                         that.controlLoadingTips(0);
                         paras.eCallback()
                     }
+
                 }
             });
         },
@@ -211,6 +215,7 @@ define(['zepto'],function() {
             if (this.deviceType.mobile) {
                 if (this.deviceType.android) {
                     //如果方法存在
+                    alert(typeof AppFunction);
                     if (typeof AppFunction != "undefined") {
                         userStr = AppFunction.getUser(); //调用app的方法，得到用户的基体信息
                         //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
@@ -218,12 +223,15 @@ define(['zepto'],function() {
                 }
                 else if (this.deviceType.ios) {
                     //如果方法存在
+                    alert(typeof getUser_iOS);
                     if (typeof getUser_iOS != "undefined") {
                         userStr = getUser_iOS();//调用app的方法，得到用户的基体信息
                     }
                 }
                 if (userStr != '') {
                     this.userInfo = JSON.parse(userStr);
+                    alert(this.userInfo);
+                    alert(userStr);
                     callback && callback.call(that);
                 } else {
                     var para = {
