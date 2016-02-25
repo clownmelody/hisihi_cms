@@ -355,6 +355,7 @@ class PublicController extends AppController {
             $this->assign('article_type', 'top_content');
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
+                //$htmlcontent = $this->fetch('v2content');
                 $this->display('v2content');
             } else {
                 $this->display();
