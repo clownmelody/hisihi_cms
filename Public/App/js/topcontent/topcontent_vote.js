@@ -11,9 +11,8 @@ define(['zepto'],function() {
 
         //访问来源
         var userAgent = window.location.href;
+        alert(userAgent);
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
-        alert(this.isFromApp);
-        //this.isFromApp=true;
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
 
         //加载投票信息
@@ -31,6 +30,7 @@ define(['zepto'],function() {
             if(this.userInfo.session_id!==''){
                 paraData.session_id=this.userInfo.session_id;
             }
+            alert(this.baseUrl + 'public/topContentInfo');
             var para = {
                 url: this.baseUrl + 'public/topContentInfo',
                 type: 'get',
@@ -39,10 +39,9 @@ define(['zepto'],function() {
                     that.fillInfoVoteInfo(data.data);
                     that.saveCurrentVoteInfo(); //存储当前投票信息
                 },
-                eCallback: function () {
-                    alert('投票信息获取失败');
+                eCallback: function (str) {
+                    alert(str);
                 },
-
             };
             this.loadDataAsync(para);
         },
@@ -99,14 +98,9 @@ define(['zepto'],function() {
             //this.drawArrowColorBlock();  // 绘制三角形
             this.controlVSTitleStyle();  //vs文字样式
             if (!this.isFromApp) {
-                alert('隐藏');
                 $voteCon.find('.mainVoteBtnCon').hide();
             }
-            alert('opacity 0');
-            alert($voteCon.find('.bottomVoteConBox').css('opacity'));
             $voteCon.find('.bottomVoteConBox').css('opacity', 1);
-            alert('opacity 1');
-            alert($voteCon.find('.bottomVoteConBox').css('opacity'));
         },
 
         //绘制箭头
@@ -170,11 +164,11 @@ define(['zepto'],function() {
                     else if (status == 'timeout') {
                         loginXhr.abort();
                         that.controlLoadingTips(0);
-                        paras.eCallback();
+                        paras.eCallback('加载超时。');
                     }
                     else {
                         that.controlLoadingTips(0);
-                        paras.eCallback()
+                        paras.eCallback(xmlRequest.statusText)
                     }
 
                 }
@@ -215,7 +209,6 @@ define(['zepto'],function() {
             if (this.deviceType.mobile) {
                 if (this.deviceType.android) {
                     //如果方法存在
-                    alert(typeof AppFunction);
                     if (typeof AppFunction != "undefined") {
                         userStr = AppFunction.getUser(); //调用app的方法，得到用户的基体信息
                         //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
@@ -223,15 +216,14 @@ define(['zepto'],function() {
                 }
                 else if (this.deviceType.ios) {
                     //如果方法存在
-                    alert(typeof getUser_iOS);
                     if (typeof getUser_iOS != "undefined") {
                         userStr = getUser_iOS();//调用app的方法，得到用户的基体信息
                     }
                 }
                 if (userStr != '') {
                     this.userInfo = JSON.parse(userStr);
-                    alert(this.userInfo);
                     alert(userStr);
+                    this.usedAppLoginFn = true;
                     callback && callback.call(that);
                 } else {
                     var para = {
@@ -259,18 +251,24 @@ define(['zepto'],function() {
             //没有登录
             if (this.userInfo.session_id==='') {
                 //调app的登录框跳转方法
-                if (this.usedAppLoginFn) {
-                    this.separateOperation();
-                } else {
+                this.separateOperation();
+                alert(this.usedAppLoginFn);
+                if (!this.usedAppLoginFn) {
                     this.execLoginFromApp();
                     return;
                 }
+                //else {
+                //    //alert('2 uselogin');
+                //    this.execLoginFromApp();
+                //    return;
+                //}
 
             }
             //正在投票
             if (this.isVoting()) {
                 return;
             }
+            alert('up1');
             var url = '', $target = $(e.currentTarget), that = this;
             if ($target.hasClass('upBtnAble')) {
                 url = this.baseUrl + 'document/doSupport';
@@ -279,15 +277,19 @@ define(['zepto'],function() {
             }
             $target.addClass('voting');
             that.finishVote(1);
+            alert(url);
             var para = {
                 url: url,
                 type: 'get',
                 paraData: {session_id: this.userInfo.session_id, id: this.articleId},
                 sCallback: function () {
+                    alert('ok');
                     $target.removeClass('voting');
                     that.saveCurrentVoteInfo.call(that); //存储当前投票信息
                 },
-                eCallback: function () {
+                eCallback: function (str) {
+                    alert(str);
+                    alert(that.userInfo.session_id);
                     $target.removeClass('voting');
                     that.finishVote.call(that, -1);
                 },
@@ -300,9 +302,9 @@ define(['zepto'],function() {
             //没有登录
             if (this.userInfo.session_id==='') {
                 //调app的登录框跳转方法
-                if (this.usedAppLoginFn) {
-                    this.separateOperation();
-                } else {
+                this.separateOperation();
+                alert(this.usedAppLoginFn);
+                if (!this.usedAppLoginFn) {
                     this.execLoginFromApp();
                     return;
                 }
@@ -311,12 +313,14 @@ define(['zepto'],function() {
             if (this.isVoting()) {
                 return;
             }
+            alert('down');
             var url = '', that = this, $target = $(e.currentTarget);
             if ($target.hasClass('downBtnAble')) {
                 url = this.baseUrl + 'document/doOppose';
             } else {
                 url = this.baseUrl + 'document/undoOppose';
             }
+            alert(url);
             $target.addClass('voting');
             that.finishVote(0);
             var para = {
@@ -324,10 +328,13 @@ define(['zepto'],function() {
                 type: 'get',
                 paraData: {session_id: this.userInfo.session_id, id: this.articleId},
                 sCallback: function () {
+                    alert('投票成功');
                     $target.removeClass('voting');
                     that.saveCurrentVoteInfo.call(that); //存储当前投票信息
                 },
-                eCallback: function () {
+                eCallback: function (str) {
+                    alert(str);
+                    alert(that.userInfo.session_id);
                     $target.removeClass('voting');
                     that.finishVote.call(that, -1);
                 },
@@ -357,7 +364,7 @@ define(['zepto'],function() {
                 $left = this.$wrapper.find('.left span'),
                 $right = this.$wrapper.find('.right span'),
                 $total = this.$wrapper.find('#totalVoteNum');
-
+            alert(flag);
             /*正常操作*/
             if (flag !== -1) {
                 //总数是否加1
@@ -393,8 +400,6 @@ define(['zepto'],function() {
                 }
                 this.fillInfoVoteInfo(oldData);
             }
-
-
         },
 
         /*
@@ -501,13 +506,12 @@ define(['zepto'],function() {
                     //如果方法存在
                     if (typeof AppFunction != "undefined") {
                         AppFunction.login(); //显示app的登录方法，得到用户的基体信息
-                        this.usedAppLoginFn = true;
                     }
                 } else {
                     //如果方法存在
                     if (typeof showLoginView != "undefined") {
                         showLoginView();//调用app的方法，得到用户的基体信息
-                        this.usedAppLoginFn = true;
+
                     }
                 }
             }
