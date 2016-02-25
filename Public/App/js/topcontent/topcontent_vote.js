@@ -148,9 +148,10 @@ define(['zepto'],function() {
                             paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
                             if (paras.eCallback) {
-                                var str='操作失败';
-                                if(xmlRequest.status==-100){
-                                    str=xmlRequest.statusText;
+                                var str='操作失败',
+                                    resultObj=JSON.parse(xmlRequest.responseText);
+                                if(resultObj.error_code==-100){
+                                    str=resultObj.message;
                                 }
                                 paras.eCallback(xmlRequest.status,str);
                             }
