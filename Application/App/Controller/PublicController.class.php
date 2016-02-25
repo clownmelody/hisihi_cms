@@ -353,6 +353,7 @@ class PublicController extends AppController {
         if($type == 'view') {
             $this->assign('top_content_info', $content);
             $this->assign('article_type', 'top_content');
+            $this->assign('articleId', $id);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
                 //$htmlcontent = $this->fetch('v2content');
@@ -607,8 +608,10 @@ class PublicController extends AppController {
 
     /**
      * web 头条列表
+     * @param $id
      */
-    public function shareTopContentList(){
+    public function shareTopContentList($id){
+        $this->assign('articleId', $id);
         $this->display('sharetopcontentlist');
     }
 
