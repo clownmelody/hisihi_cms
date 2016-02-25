@@ -6,11 +6,10 @@ define(['zepto'],function() {
     var Vote = function ($target, url) {
         this.baseUrl = url;
         this.$wrapper = $target;
-
         //访问来源
         var userAgent = window.location.href;
         this.articleId = userAgent.replace(/.*id\//, '').replace(/\/user-agent.*/, '') | 0;
-        alert.log(userAgent +'----'+this.articleId);
+        alert(userAgent +'----'+this.articleId);
         this.userInfo = {session_id: ''};
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
