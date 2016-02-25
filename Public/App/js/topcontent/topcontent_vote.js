@@ -168,7 +168,7 @@ define(['zepto'],function() {
                     }
                     else {
                         that.controlLoadingTips(0);
-                        paras.eCallback(statusText)
+                        paras.eCallback(xmlRequest.statusText)
                     }
 
                 }
