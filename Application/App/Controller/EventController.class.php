@@ -87,6 +87,8 @@ class EventController extends AppController{
         if($type == 'view') {
             $this->assign('top_content_info', $content);
             $this->assign('articleId', $id);
+            $this->assign('title', $detail['title']);
+            $this->assign('create_time', $detail['create_time']);
             $this->setTitle('比赛详情 — 嘿设汇');
             $this->display();
         }
