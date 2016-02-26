@@ -283,11 +283,12 @@ define(['zepto'],function() {
                 eCallback: function (code,txt) {
                     $target.removeClass('voting');
                     that.showVoteResult.call(that,txt);
+                    var typeNum=-1;
                     //已经操作
                     if(code==-100){
-                        $target.removeClass('upBtnAble').addClass('upBtnDisabled');
+                        typeNum=1;
                     }
-                    that.finishVote.call(that, -1);
+                    that.finishVote.call(that, -1,typeNum);
 
                 },
             };
@@ -328,12 +329,12 @@ define(['zepto'],function() {
                 eCallback: function (code,txt) {
                     $target.removeClass('voting');
                     that.showVoteResult.call(that,txt);
-                    alert(code);
+                    var typeNum=-1;
                     //已经操作
                     if(code==-100){
-                        $target.removeClass('downBtnAble').addClass('downBtnDisabled');
+                        typeNum=0;
                     }
-                    that.finishVote.call(that, -1);
+                    that.finishVote.call(that, -1,typeNum);
                 },
             };
             this.loadDataAsync(para);
@@ -366,8 +367,9 @@ define(['zepto'],function() {
          * 投票回调
          * para：
          * flag - {num} 操作类型 0 表示踩; 1表示赞; -1表示投票失败，信息回滚
+         * type - {num} 在flag 为-1时使用 0 表示踩; 1表示赞;
          */
-        finishVote: function (flag) {
+        finishVote: function (flag,type) {
 
             var $up = this.$wrapper.find('.upBtn'),
                 $down = this.$wrapper.find('.downBtn'),
@@ -417,7 +419,15 @@ define(['zepto'],function() {
                 if (oldData) {
                     oldData = JSON.parse(oldData);
                 }
-                this.fillInfoVoteInfo(oldData);
+                if(type==0){
+                    oldData.isOpposed=1;
+                    oldData.isSupported=0;
+                }else if(type==1){
+                    oldData.isOpposed=0;
+                    oldData.isSupported=1;
+                }
+                this.fillInfoVoteInfo(oldData,false);
+                this.saveCurrentVoteInfo();
             }
         },
 
