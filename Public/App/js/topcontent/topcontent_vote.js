@@ -443,19 +443,6 @@ define(['zepto'],function() {
             return false;
         },
 
-        /*当点踩的时候， 判断 是否对自己的赞消除。对于点赞时，也一样进行判断*/
-        clearMyOldVote:function(){
-            var infoStr=this.$wrapper.attr('data-oldinfo');
-            //是否操作过
-            if(infoStr!='') {
-                var myOldVote = JSON.parse(this.$wrapper.attr('data-oldinfo'));
-            }else{
-                return true;
-            }
-
-
-        },
-
         /*更新目标数据*/
         //updateNum: function ($target, flag) {
         //    if (!$target) {

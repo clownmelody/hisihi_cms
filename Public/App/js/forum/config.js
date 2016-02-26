@@ -94,7 +94,9 @@ require(['zepto','common','toppostdetailv2','sharemain'],function(Zepto,MyCommon
         return newDate;
     }
     new commentObj($('#comment-box'),window.hisihiUrlObj);
-    var type=$('.moreRecommend').data('type');
-    new sharemain(type);
+    var $recommend=$('.moreRecommend'),
+        type=$('.moreRecommend').data('type'),
+        cid=$recommend.data('id');
+    new sharemain(type,cid);
 
 });

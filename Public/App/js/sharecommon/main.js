@@ -25,7 +25,7 @@ define(['zepto'],function() {
                 url: paras.url,
                 type: paras.type,
                 data: paras.paraData,
-                timeout: 10000,
+                timeout: 20000,
                 contentType: 'application/json;charset=utf-8',
                 complete: function (xmlRequest, status) {
                     if (status == 'success') {
@@ -135,7 +135,7 @@ define(['zepto'],function() {
         var paras = {
             url: this.paras.apiUrl,
             type: 'get',
-            paraData: {page: 1, count: 3},
+            paraData: {page: 1, count: 3,removeId:this.paras.currentId},
             sCallback: function (data) {
                 callback && callback();
                 that.fillInInfo.call(that, data);
@@ -365,7 +365,7 @@ define(['zepto'],function() {
             for (var i = 0; i < len; i++) {
                 var item = data[i];
                 str += '<li class="shortKeyLiItem btnElement">' +
-                    '<a href="' + this.paras.detailUrl+'/'+item.text + '">' +
+                    '<a href="' + this.paras.detailUrl+item.text + '">' +
                     '<img src="' + item.icon + '"/>' +
                     '</a>' +
                     '</li>';
@@ -376,7 +376,7 @@ define(['zepto'],function() {
     };
 
 
-    var basicLogicClass = function (type) {
+    var basicLogicClass = function (type,cid) {
         var that = this;
         this.allContent = [
             {
@@ -391,7 +391,7 @@ define(['zepto'],function() {
                 name: '热门快捷键',
                 apiUrl: window.hisihiUrlObj.server_url + 'HotKeys/sort',
                 listUrl: window.hisihiUrlObj.link_url + 'api.php/HotKeys/share/type/keyshot',
-                detailUrl: window.hisihiUrlObj.link_url + 'api.php/HotKeys/share/type/keyshot/',
+                detailUrl: window.hisihiUrlObj.link_url + 'api.php/HotKeys/share/type/',
                 loadNow: false,
                 className: 'hotShortcutKey'
             },
@@ -423,7 +423,7 @@ define(['zepto'],function() {
         this.names = ['头条', '快捷键', '教程', '比赛', '新闻'];
 
         this.normalInfoObjArr = [];
-        this.resetAllContentArr(type);  //根据当前文章的类型 重新调整内容数组的顺序
+        this.resetAllContentArr(type,cid);  //根据当前文章的类型 重新调整内容数组的顺序
 
         /*访问来源*/
         var userAgent = window.location.href;
@@ -435,6 +435,20 @@ define(['zepto'],function() {
 
         //判断文章内容的高度，
         this.dealwithContentHeight();
+
+        this.$wrapper.parent().scroll($.proxy(this, 'scrollContainer'));  //滚动加载更多数据
+        var eventName = 'click';
+        if (this.deviceType.mobile) {
+            eventName = 'touchend';
+        }
+        //重新加载
+        $('.loadError').on(eventName, function () {
+            $(this).hide();
+            that.loadData();
+        });
+        $('#downloadCon .btnElement').on(eventName,function(){
+            window.location.href = "http://www.hisihi.com/download.php";
+        });
 
 
         this.controlCommentBoxStatus();
@@ -449,12 +463,9 @@ define(['zepto'],function() {
          */
         dealwithContentHeight: function () {
             this.$wrapper = $('.moreRecommend');
-            var bodyHeight = $('body').height(),
-                contentHeight = this.$wrapper.parent()[0].scrollHeight,
+            var contentHeight = $('.app-section').height(),
                 that = this;
-
-            this.mainContentHeight = this.$wrapper.height();
-            if (contentHeight <= bodyHeight) {
+            if (contentHeight <= 600) {
                 var $target = $('#loadingTip');
                 $target.css('opacity', '0');
                 this.loadData(function () {
@@ -463,20 +474,11 @@ define(['zepto'],function() {
                     });
                 });
             }
-            this.$wrapper.parent().scroll($.proxy(this, 'scrollContainer'));  //滚动加载更多数据
-            var eventName = 'click';
-            if (this.deviceType.mobile) {
-                eventName = 'touchend';
-            }
-            //重新加载
-            $('.loadError').on(eventName, function () {
-                $(this).hide();
-                that.loadData();
-            });
+
         },
 
         /*根据当前文章的类型 重新调整内容数组的顺序*/
-        resetAllContentArr: function (type) {
+        resetAllContentArr: function (type,cid) {
             var index = $.inArray(type, this.names);
             var tempItem = this.allContent.splice(index, 1)[0];
             this.allContent.splice(0, 0, tempItem);
@@ -491,7 +493,8 @@ define(['zepto'],function() {
                     detailUrl: item.detailUrl,
                     title: item.name,
                     loadNow: item.loadNow,
-                    className: item.className
+                    className: item.className,
+                    currentId:cid
                 };
                 normalInfoObj = new NormalInfo($wrapper.eq(i), para);
                 this.normalInfoObjArr.push(normalInfoObj);

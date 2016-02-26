@@ -200,7 +200,6 @@ commentObj.prototype={
             $target=$('.main');
         if(flag1) {
             var v = parseInt(androidVersionType().toString().split('.')[0]);
-            alert(v);
             if (v < 5) {
                 flag2=true;
             }

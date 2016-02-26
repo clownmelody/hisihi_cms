@@ -28,6 +28,8 @@ requirejs.config({
 
 
 require(['zepto','common','sharemain','prefixfree'],function(Zepto,MyCommon,sharemain){
-    var type=$('.moreRecommend').data('type');
-    new sharemain(type);
+    var $recommend=$('.moreRecommend'),
+        type=$recommend.data('type'),
+        cid=$recommend.data('id');
+    new sharemain(type,cid);
 });
