@@ -1921,9 +1921,10 @@ class ForumController extends AppController
      * 嘿设汇新闻内页帖子列表
      * @param int $page
      * @param int $count
+     * @param int $removeId
      */
-    public function newsList($page=1, $count=10){
-        $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')
+    public function newsList($page=1, $count=10, $removeId=0){
+        $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1 and id!='.$removeId)
             ->order('create_time desc')->page($page, $count)->select();
         $totalCount = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')->count();
         foreach($list as &$value){
