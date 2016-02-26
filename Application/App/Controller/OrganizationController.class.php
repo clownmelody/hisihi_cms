@@ -1967,7 +1967,7 @@ ON a.class_id = b.id WHERE a.status=2) c WHERE c.uid=".$uid);
             $course_id=0;
         }
         $relationModel = M('OrganizationRelation');
-        $is_exist = $relationModel->where('status=1 and uid='.$uid)->find();
+        $is_exist = $relationModel->where('status=1 and group=6 and uid='.$uid)->find();
         if($is_exist){
             $this->apiError(-5,'机构老师不能报名');
         }
