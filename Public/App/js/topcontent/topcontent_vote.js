@@ -33,7 +33,7 @@ define(['zepto'],function() {
                 type: 'get',
                 paraData: paraData,
                 sCallback: function (data) {
-                    that.fillInfoVoteInfo(data.data);
+                    that.fillInfoVoteInfo(data.data,false);
                     that.saveCurrentVoteInfo(); //存储当前投票信息
                 },
                 eCallback: function (str) {
@@ -53,7 +53,7 @@ define(['zepto'],function() {
          *       supportCount: "0"
          *    }
          */
-        fillInfoVoteInfo: function (data) {
+        fillInfoVoteInfo: function (data,flag) {
             if (!data) {
                 return;
             }
@@ -88,7 +88,9 @@ define(['zepto'],function() {
                 downTargetClass = downClass1;
             }
             $voteCon.find('.downBtn').removeClass(downClass + ' ' + downClass1).addClass(downTargetClass);
-
+            if(flag){
+               return;
+            }
             this.updateColorBar(upCount, downCount);  //控制色块的长度
             //this.drawArrowColorBlock();  // 绘制三角形
             this.controlVSTitleStyle();  //vs文字样式
@@ -326,6 +328,7 @@ define(['zepto'],function() {
                 eCallback: function (code,txt) {
                     $target.removeClass('voting');
                     that.showVoteResult.call(that,txt);
+                    alert(code);
                     //已经操作
                     if(code==-100){
                         $target.removeClass('downBtnAble').addClass('downBtnDisabled');
