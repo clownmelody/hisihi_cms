@@ -6,17 +6,15 @@ define(['zepto'],function() {
     var Vote = function ($target, url) {
         this.baseUrl = url;
         this.$wrapper = $target;
-        this.articleId = window.location.href.replace(/.*id\//, '').replace(/\/version.*/, '') | 0;
-        this.userInfo = {session_id: ''};
-
         //访问来源
         var userAgent = window.location.href;
-        this.isFromApp = !userAgent.indexOf("hisihi-app") < 0;
-
+        this.articleId = this.$wrapper.data('id') | 0;
+        this.userInfo = {session_id: ''};
+        this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
+
         //加载投票信息
         this.separateOperation(this.loadVoteInfo);
-        //this.separateOperation();
         this.$wrapper.on('click', '.mainVoteBtnCon .upBtnAble', $.proxy(this, 'execVoteUp'));
         this.$wrapper.on('click', '.mainVoteBtnCon .downBtnAble', $.proxy(this, 'execVoteDown'));
     };
@@ -25,19 +23,21 @@ define(['zepto'],function() {
 
         /*通过点赞和 踩的 人数，控制颜色条的长度*/
         loadVoteInfo: function () {
-            var that = this;
+            var that = this,
+                paraData={id: this.articleId};
+            if(this.userInfo.session_id!==''){
+                paraData.session_id=this.userInfo.session_id;
+            }
             var para = {
                 url: this.baseUrl + 'public/topContentInfo',
                 type: 'get',
-                //paraData: {id: this.articleId, session_id: this.userInfo.session_id},
-                paraData: {id: this.articleId},
+                paraData: paraData,
                 sCallback: function (data) {
-                    that.fillInfoVoteInfo(data.data);
+                    that.fillInfoVoteInfo(data.data,false);
                     that.saveCurrentVoteInfo(); //存储当前投票信息
                 },
-                eCallback: function () {
+                eCallback: function (str) {
                 },
-
             };
             this.loadDataAsync(para);
         },
@@ -48,18 +48,18 @@ define(['zepto'],function() {
          * data - {array} 查询结果数据 格式为：
          *   {
          *       isOpposed: "0"
-         *       isSupportd: "0"
+         *       isSupported: "0"
          *       opposeCount: "0"
          *       supportCount: "0"
          *    }
          */
-        fillInfoVoteInfo: function (data) {
+        fillInfoVoteInfo: function (data,flag) {
             if (!data) {
                 return;
             }
             var upCount = data.supportCount | 0,
                 downCount = data.opposeCount | 0,
-                isUp = data.isSupportd == '1',
+                isUp = data.isSupported == '1',
                 isDown = data.isOpposed == '1';
             var total = upCount + downCount | 0;
 
@@ -88,18 +88,16 @@ define(['zepto'],function() {
                 downTargetClass = downClass1;
             }
             $voteCon.find('.downBtn').removeClass(downClass + ' ' + downClass1).addClass(downTargetClass);
-
+            if(flag){
+               return;
+            }
             this.updateColorBar(upCount, downCount);  //控制色块的长度
             //this.drawArrowColorBlock();  // 绘制三角形
             this.controlVSTitleStyle();  //vs文字样式
-
             if (!this.isFromApp) {
                 $voteCon.find('.mainVoteBtnCon').hide();
             }
-
             $voteCon.find('.bottomVoteConBox').css('opacity', 1);
-
-
         },
 
         //绘制箭头
@@ -151,10 +149,13 @@ define(['zepto'],function() {
                             that.controlLoadingTips(0);
                             paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
-
-                            var txt = result.message;
                             if (paras.eCallback) {
-                                paras.eCallback(txt);
+                                var str='操作失败',
+                                    resultObj=JSON.parse(xmlRequest.responseText);
+                                if(resultObj.error_code==-100){
+                                    str=resultObj.message;
+                                }
+                                paras.eCallback(resultObj.error_code,str);
                             }
                             that.controlLoadingTips(0);
                         }
@@ -163,12 +164,17 @@ define(['zepto'],function() {
                     else if (status == 'timeout') {
                         loginXhr.abort();
                         that.controlLoadingTips(0);
-                        paras.eCallback();
+                        paras.eCallback(408,'加载超时');
                     }
                     else {
                         that.controlLoadingTips(0);
-                        paras.eCallback()
+                        var str='操作失败';
+                        if(xmlRequest.status==-100){
+                            str=xmlRequest.statusText;
+                        }
+                        paras.eCallback(xmlRequest.status,str);
                     }
+
                 }
             });
         },
@@ -220,6 +226,7 @@ define(['zepto'],function() {
                 }
                 if (userStr != '') {
                     this.userInfo = JSON.parse(userStr);
+                    this.usedAppLoginFn = true;
                     callback && callback.call(that);
                 } else {
                     var para = {
@@ -245,14 +252,13 @@ define(['zepto'],function() {
         /*赞同投票*/
         execVoteUp: function (e) {
             //没有登录
-            if (!this.userInfo.session_id) {
-                if (this.usedAppLoginFn) {
-                    this.separateOperation();
-                } else {
-                    this.execLoginFromApp();//调app的登录框跳转方法
+            if (this.userInfo.session_id==='') {
+                //调app的登录框跳转方法
+                this.separateOperation();
+                if (!this.usedAppLoginFn) {
+                    this.execLoginFromApp();
                     return;
                 }
-
             }
             //正在投票
             if (this.isVoting()) {
@@ -274,9 +280,16 @@ define(['zepto'],function() {
                     $target.removeClass('voting');
                     that.saveCurrentVoteInfo.call(that); //存储当前投票信息
                 },
-                eCallback: function () {
+                eCallback: function (code,txt) {
                     $target.removeClass('voting');
-                    that.finishVote.call(that, -1);
+                    that.showVoteResult.call(that,txt);
+                    var typeNum=-1;
+                    //已经操作
+                    if(code==-100){
+                        typeNum=1;
+                    }
+                    that.finishVote.call(that, -1,typeNum);
+
                 },
             };
             this.loadDataAsync(para);
@@ -285,10 +298,13 @@ define(['zepto'],function() {
         /*踩投票*/
         execVoteDown: function (e) {
             //没有登录
-            if (!this.userInfo.session_id) {
-                alert('请登录');
+            if (this.userInfo.session_id==='') {
                 //调app的登录框跳转方法
-                return;
+                this.separateOperation();
+                if (!this.usedAppLoginFn) {
+                    this.execLoginFromApp();
+                    return;
+                }
             }
             //正在投票
             if (this.isVoting()) {
@@ -310,12 +326,31 @@ define(['zepto'],function() {
                     $target.removeClass('voting');
                     that.saveCurrentVoteInfo.call(that); //存储当前投票信息
                 },
-                eCallback: function () {
+                eCallback: function (code,txt) {
                     $target.removeClass('voting');
-                    that.finishVote.call(that, -1);
+                    that.showVoteResult.call(that,txt);
+                    var typeNum=-1;
+                    //已经操作
+                    if(code==-100){
+                        typeNum=0;
+                    }
+                    that.finishVote.call(that, -1,typeNum);
                 },
             };
             this.loadDataAsync(para);
+        },
+
+        /*
+         *显示操作结果
+         *para:
+         *tip - {string} 内容结果
+         */
+        showVoteResult:function(tip){
+            var $tip=this.$wrapper.find('#voteResult').text(tip);
+            $tip.text(tip).css('opacity',1);
+            window.setTimeout(function(){
+                $tip.text('').css('opacity',0);
+            },1500);
         },
 
         //正在投票中，防止重复操作
@@ -332,28 +367,38 @@ define(['zepto'],function() {
          * 投票回调
          * para：
          * flag - {num} 操作类型 0 表示踩; 1表示赞; -1表示投票失败，信息回滚
+         * type - {num} 在flag 为-1时使用 0 表示踩; 1表示赞;
          */
-        finishVote: function (flag) {
+        finishVote: function (flag,type) {
 
             var $up = this.$wrapper.find('.upBtn'),
                 $down = this.$wrapper.find('.downBtn'),
                 $left = this.$wrapper.find('.left span'),
                 $right = this.$wrapper.find('.right span'),
                 $total = this.$wrapper.find('#totalVoteNum');
-
             /*正常操作*/
             if (flag !== -1) {
+                var havedVote=this.havedVote(); //是否参与过投票
+
                 //总数是否加1
-                if (this.updateTotalVotes()) {
-                    this.updateNum($total);
+                if (!havedVote) {
+                    this.updateNum($total,1);//加1
                 }
                 //具体赞和踩的数据更新
                 if (flag == 1) {
-                    this.updateNum($left);
-                    this.updateNum($right, false);
+                    this.updateNum($left,1);
+                    var tempNum=0;
+                    if(havedVote){
+                        tempNum=-1;
+                    }
+                    this.updateNum($right, tempNum);//对反方向处理 加(减)1
                 } else {
-                    this.updateNum($right);
-                    this.updateNum($left, false);
+                    this.updateNum($right,1);
+                    var tempNum=0;
+                    if(havedVote){
+                        tempNum=-1;
+                    }
+                    this.updateNum($left, tempNum);//对反方向处理 加(减)1
                 }
 
                 //按钮样式
@@ -374,31 +419,67 @@ define(['zepto'],function() {
                 if (oldData) {
                     oldData = JSON.parse(oldData);
                 }
-                this.fillInfoVoteInfo(oldData);
+                if(type==0){
+                    oldData.isOpposed=1;
+                    oldData.isSupported=0;
+                }else if(type==1){
+                    oldData.isOpposed=0;
+                    oldData.isSupported=1;
+                }
+                this.fillInfoVoteInfo(oldData,false);
+                this.saveCurrentVoteInfo();
             }
-
-
         },
 
         /*
-         *总投票数是否加1
+         *是否参与过投票
          */
-        updateTotalVotes: function () {
+        havedVote: function () {
             var $up = this.$wrapper.find('.upBtn'),
                 $down = this.$wrapper.find('.downBtn');
-            if (!($down.hasClass('downBtnAble') && $up.hasClass('upBtnAble'))) {
-                return false;
+            if ($down.hasClass('downBtnDisabled') || $up.hasClass('upBtnDisabled')) {
+                return true;
             }
-            return true;
+            return false;
+        },
+
+        /*当点踩的时候， 判断 是否对自己的赞消除。对于点赞时，也一样进行判断*/
+        clearMyOldVote:function(){
+            var infoStr=this.$wrapper.attr('data-oldinfo');
+            //是否操作过
+            if(infoStr!='') {
+                var myOldVote = JSON.parse(this.$wrapper.attr('data-oldinfo'));
+            }else{
+                return true;
+            }
+
+
         },
 
         /*更新目标数据*/
-        updateNum: function ($target, flag) {
+        //updateNum: function ($target, flag) {
+        //    if (!$target) {
+        //        return;
+        //    }
+        //    var diff = 1, num = $target.text() | 0;
+        //    if (flag === false) {
+        //        if (num > 0) {
+        //            diff = -1;
+        //        } else {
+        //            diff = 0;
+        //        }
+        //    }
+        //    num += diff;
+        //    $target.text(num);
+        //},
+
+        /*更新目标数据*/
+        updateNum: function ($target, diff) {
             if (!$target) {
                 return;
             }
-            var diff = 1, num = $target.text() | 0;
-            if (flag === false) {
+            var num = $target.text() | 0;
+           if(diff == -1){
                 if (num > 0) {
                     diff = -1;
                 } else {
@@ -444,7 +525,7 @@ define(['zepto'],function() {
                 oc = this.$wrapper.find('.right>span ').text(),
                 oldData = {
                     isOpposed: iso,
-                    isSupportd: iss,
+                    isSupported: iss,
                     opposeCount: oc,
                     supportCount: sc
                 };
@@ -483,14 +564,13 @@ define(['zepto'],function() {
                 if (this.deviceType.android) {
                     //如果方法存在
                     if (typeof AppFunction != "undefined") {
-                        AppFunction.showLoginView(); //调用app的方法，得到用户的基体信息
-                        this.usedAppLoginFn = true;
+                        AppFunction.login(); //显示app的登录方法，得到用户的基体信息
                     }
                 } else {
                     //如果方法存在
                     if (typeof showLoginView != "undefined") {
                         showLoginView();//调用app的方法，得到用户的基体信息
-                        this.usedAppLoginFn = true;
+
                     }
                 }
             }

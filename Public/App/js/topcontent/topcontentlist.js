@@ -206,5 +206,5 @@ hisihiTopContent.prototype = {
 *IOS调用  控制分享按钮的可用性
 */
 function canShare(){
-    return false;
+    return true;
 }

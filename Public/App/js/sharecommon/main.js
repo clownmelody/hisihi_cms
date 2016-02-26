@@ -382,7 +382,7 @@ define(['zepto'],function() {
             {
                 name: '热门头条',
                 apiUrl: window.hisihiUrlObj.server_url + 'public/topList',
-                detailUrl: window.hisihiUrlObj.link_url + 'api.php?s=/public/topcontent/type/view/id/SHAREID/version/2.0',
+                detailUrl: window.hisihiUrlObj.link_url + 'app.php?s=/public/v2contentforshare/version/2.0/type/view/id/SHAREID',
                 listUrl: window.hisihiUrlObj.link_url + 'api.php?s=/public/shareTopContentList',
                 loadNow: false,
                 className: 'hotTop'
@@ -427,7 +427,7 @@ define(['zepto'],function() {
 
         /*访问来源*/
         var userAgent = window.location.href;
-        this.isFromApp = !userAgent.indexOf("hisihi-app") < 0;
+        this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
 
         /*操作设备信息*/
         this.deviceType = getDeviceType();

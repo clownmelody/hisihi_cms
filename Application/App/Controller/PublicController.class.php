@@ -198,10 +198,13 @@ class PublicController extends AppController {
         $this->apiSuccess('建议发送成功！');
     }
 
-    public function topList($page=1, $count=5, $version="1.0"){
+    public function topList($page=1, $count=5, $version="1.0", $removeId=0){
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         $topMap['position'] = array('neq', 5);
+        if($removeId!=0){
+            $topMap['id'] = array('neq', $removeId);
+        }
         //获取当前分类下的文章
         $all_list = $Document->where($topMap)->lists(47);
         $totalCount = count($all_list);
@@ -214,7 +217,7 @@ class PublicController extends AppController {
             $topic['img'] = $this->fetchImage($topic['cover_id']);
             if((float)$version>=2.0){
                 $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
-                $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'].'/version/'.$version;
+                $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$topic['id'].'/version/'.$version;
             } else {
                 $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'].'/version/'.$version;
             }
@@ -245,6 +248,31 @@ class PublicController extends AppController {
     }
 
     /**
+     * 头条分享
+     * @param $id
+     */
+    public function v2contentforshare($id){
+        /* 获取当前分类列表 */
+        $Document = D('Blog/Document');
+        $Article = D('Blog/Article', 'Logic');
+
+        //获取当前分类下的文章
+        $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
+        if(empty($info)){
+            $this->apiError(-1, "id不存在");
+        }
+        $Document->where(array('id' => $id))->setInc('view');
+        $content = $Article->detail($id);
+        $content = array_merge($info, $content);
+
+        $this->assign('top_content_info', $content);
+        $this->assign('article_type', 'top_content');
+        $this->assign('articleId', $id);
+        $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
+        $this->display();
+    }
+
+    /**
      * 获取头条详情
      * @param $id
      * @param $version
@@ -259,7 +287,7 @@ class PublicController extends AppController {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
                 $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$id;
-                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$id;
+                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$id;
             } else {
                 $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$id;
             }
@@ -312,6 +340,7 @@ class PublicController extends AppController {
     }
 
     public function topContent($id, $type = '', $version='1.0'){
+        //redirect("http://www.huxiu.com/");
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         $Article = D('Blog/Article', 'Logic');
@@ -328,8 +357,10 @@ class PublicController extends AppController {
         if($type == 'view') {
             $this->assign('top_content_info', $content);
             $this->assign('article_type', 'top_content');
+            $this->assign('articleId', $id);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
+                //$htmlcontent = $this->fetch('v2content');
                 $this->display('v2content');
             } else {
                 $this->display();
@@ -338,7 +369,7 @@ class PublicController extends AppController {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
                 $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
-                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$info['id'].'/version/'.$version;
+                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$info['id'].'/version/'.$version;
             } else {
                 $info['content_url'] = 'app.php/public/topcontent/type/view/id/'.$info['id'];
             }

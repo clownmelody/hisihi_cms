@@ -1069,7 +1069,8 @@ class OrganizationController extends AppController
         }
     }
 
-    /**返回收藏列表数据
+    /**
+     * 返回收藏列表数据
      * @param null $courses_id
      * @return mixed
      */

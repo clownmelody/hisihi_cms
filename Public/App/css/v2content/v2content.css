@@ -1,11 +1,6 @@
 body {
-  margin: 0 auto;
+  margin: 0;
   background: #eee;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   overflow: hidden;
 }
 a,
@@ -118,7 +113,7 @@ img {
 }
 /*投票*/
 .bottomVoteCon {
-  height: 80px;
+  height: 90px;
   width: 100%;
   position: relative;
 }
@@ -136,7 +131,7 @@ img {
   width: 100%;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle {
-  margin: 0 80px;
+  margin: 0 70px;
   height: 100%;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBarCon {
@@ -186,7 +181,7 @@ img {
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon {
   margin-top: 12px;
-  height: 27px;
+  height: 55px;
   width: 100%;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon > div {
@@ -197,18 +192,28 @@ img {
   text-align: center;
   height: 100%;
 }
-.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfoMiddle {
-  height: 100%;
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfo .totalVoteInfoMiddle {
+  height: 27px;
   box-sizing: border-box;
   line-height: 27px;
   margin: 0 44px;
   color: #808080;
 }
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfo .totalVoteInfoMiddle * {
+  font-size: 12px;
+}
+.bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfo #voteResult {
+  font-size: 14px;
+  text-align: center;
+  color: #FF6600;
+  opacity: 1;
+  height: 28px;
+}
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn {
   display: inline-block;
   height: 27px;
   width: 50px;
-  background-size: 223px 27px;
+  background-size: 225px 27px;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn.upBtn {
   margin-left: -100%;
@@ -231,7 +236,7 @@ img {
 .bottomVoteCon .bottomVoteConBox .upAndDownNum {
   overflow: hidden;
   padding-top: 1px;
-  width: 80px;
+  width: 70px;
   height: 100%;
   text-align: center;
 }
@@ -240,7 +245,7 @@ img {
   margin-left: -100%;
 }
 .bottomVoteCon .bottomVoteConBox .upAndDownNum.right {
-  margin-left: -80px;
+  margin-left: -70px;
   color: #039BE5;
 }
 /*************响应式处理****************/
@@ -258,12 +263,12 @@ img {
     line-height: 17px !important;
   }
   .bottomVoteConBox .middle .totalVoteInfoMiddle * {
-    font-size: 12px;
+    font-size: 12px !important;
   }
   .bottomVoteConBox .middle .spriteBgBtn {
     width: 40px !important;
-    height: 21px !important;
-    background-size: 160px 21px !important;
+    height: 22px !important;
+    background-size: 180px 22px !important;
   }
   .bottomVoteConBox .middle .spriteBgBtn.upBtnAble {
     background-position: -40px 0 !important;
@@ -276,5 +281,273 @@ img {
   }
   .bottomVoteConBox .middle .spriteBgBtn.downBtnDisabled {
     background-position: -80px 0 !important;
+  }
+}
+/*less公用的方法*/
+ul {
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  list-style-type: none;
+}
+* {
+  -webkit-user-select: none;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+.moreRecommend img {
+  max-width: 100%;
+}
+.moreRecommend .spiteBg {
+  background-image: url("../../images/v2content/sprite.png");
+  background-size: 192px 128px;
+}
+.moreRecommend .spiteBgOrigin {
+  background-image: url("../../images/v2content/sprite.png");
+}
+.moreRecommend .btnElement:active {
+  -webkit-transform: scale(0.9, 0.9);
+  -moz-transform: scale(0.9, 0.9);
+}
+.moreRecommend .moreItem {
+  margin-bottom: 20px;
+  padding: 0 20px 0 15px;
+}
+.moreRecommend .moreItem .basicHeaderWithArrow {
+  height: 44px;
+  line-height: 44px;
+  border-bottom: 1px solid #cccccc;
+}
+.moreRecommend .moreItem .basicHeaderWithArrow .titleInfo {
+  color: #ff5a00;
+  font-size: 18px;
+}
+.moreRecommend .moreItem .basicHeaderWithArrow .basicHeaderRight {
+  float: right;
+  background-color: transparent;
+}
+.moreRecommend .moreItem .basicHeaderWithArrow .basicHeaderRight:active {
+  background-color: transparent;
+  outline: none;
+  -moz-outline: none;
+}
+.moreRecommend .moreItem .basicHeaderWithArrow .basicHeaderRight .moreTip {
+  font-size: 16px;
+  float: right;
+  color: #808080;
+  margin-right: 5px;
+}
+.moreRecommend .moreItem .basicHeaderWithArrow .basicHeaderRight .arrow {
+  float: right;
+  width: 15px;
+  height: 23px;
+  display: inline-block;
+  margin-top: 10px;
+  -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  background-position: -328px 0;
+}
+.moreRecommend .moreItem .mainContentUl {
+  margin: 0em;
+  width: 100%;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem {
+  width: 100%;
+  height: 6em;
+  position: relative;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem:nth-last-child(1) a {
+  border-bottom: 0 solid #cccccc !important;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem .coverBorderContainer {
+  position: absolute;
+  height: 0.0625em;
+  bottom: 0em;
+  background-color: white;
+  width: 0.75em;
+  z-index: 100;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a {
+  height: 100%;
+  display: block;
+  position: relative;
+  text-decoration: none;
+  padding: 0.75em 0;
+  border-bottom: 0.0625em solid #bdbdbd;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a:active {
+  background-color: #DCDCDC;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .left {
+  width: 72px;
+  height: 72px;
+  position: absolute;
+  background-position: -256px 0;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .left img {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .left .btnPlay {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 50%;
+  top: 50%;
+  margin-left: -25px;
+  margin-top: -25px;
+  background-position: -256px -72px;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right {
+  padding-left: 5.25em;
+  height: 100%;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightHeader {
+  height: 3.25em;
+  width: 100%;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightHeader p {
+  color: #212121;
+  line-height: 1.4em;
+  text-decoration: none;
+  margin: 0;
+  font-size: 16px;
+  text-align: left;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom {
+  height: 1.25em;
+  width: 100%;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom * {
+  color: #808080;
+  font-size: 14px;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom div {
+  display: inline-block;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom .rightBottomLeft {
+  float: left;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom .rightBottomRight {
+  float: right;
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom .rightBottomRight i {
+  display: inline-block;
+  width: 18px;
+  height: 10px;
+  margin-right: 0.15em;
+  background-position: -172px -64px;
+  margin-top: 4px;
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+}
+.moreRecommend .moreItem .mainContentUl .newsLiItem a .right .rightBottom .rightBottomRight .viewTimesIcon {
+  float: left;
+}
+.moreRecommend .moreItem .mainContentUl .shortKeyLiItem {
+  float: left;
+  width: 65px;
+  height: 65px;
+  padding: 10px 10px 0 0;
+}
+.moreRecommend .moreItem .mainContentUl .shortKeyLiItem a {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  background-size: 195px 130px;
+}
+.loadingResultTips {
+  height: 35px;
+  display: none;
+  text-align: center;
+}
+.loadingResultTips .loadingImg {
+  background-image: url("../../images/loading2.svg");
+  margin: 0 auto;
+  height: 2em;
+  width: 2em;
+  display: none;
+}
+.loadingResultTips .loadingImg.active {
+  -webkit-animation: aloading 0.8s steps(6, end) 0s infinite;
+  -moz-animation: aloading 0.8s steps(6, end) 0s infinite;
+  animation: aloading 0.8s steps(6, end) 0s infinite;
+  display: block !important;
+}
+.loadingResultTips .loadError {
+  display: none;
+  color: #757373;
+  text-decoration: none !important;
+}
+@-webkit-keyframes aloading {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes aloading {
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+@keyframes aloading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+#downloadCon {
+  width: 100%;
+  height: atuo;
+  position: absolute;
+  z-index: 1000;
+  bottom: 0;
+  background-color: #9E9A98;
+  opacity: 0;
+}
+#downloadCon .allDownImg {
+  max-width: 100%;
+  margin-bottom: 0;
+}
+#downloadCon a {
+  position: absolute;
+  right: 12px;
+  display: inline-block;
+  width: 21%;
+  text-decoration: none;
+  background-color: #FF5A00;
+  text-align: center;
+  color: white;
+  font-size: 15px;
+  border-radius: 2px;
+  line-height: 14px;
+}
+/*响应式样式*/
+@media screen and (min-width: 750px) {
+  body {
+    width: 750px;
+    margin: auto;
+  }
+}
+@media screen and (max-width: 320px) {
+  .rightHeader p {
+    font-size: 14px !important;
+    text-align: center;
+  }
+  .rightBottom * {
+    font-size: 12px !important;
+  }
+  .rightBottom .rightBottomRight i {
+    margin-top: 3px !important;
+    -webkit-transform: -webkit-scale(1) !important;
+    -moz-transform: -moz-scale(1) !important;
   }
 }

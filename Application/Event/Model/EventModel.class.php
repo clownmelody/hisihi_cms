@@ -30,12 +30,12 @@ class EventModel extends Model{
         array('uid', 'is_login',3, 'function'),
     );
 
-    public function getCompetitionEventList($page, $count){
+    public function getCompetitionEventList($page, $count, $removeId){
         $now = time();
         $totalCount = $this->where("status=1 and type_id=2")->count();
         $unend_count = $this->where("status=1 and type_id=2 and eTime>".$now)->count();
         $ended_count = $totalCount - $unend_count;
-        $list = $this->where("status=1 and type_id=2 and eTime>".$now)->page($page, $count)->order('eTime asc')
+        $list = $this->where("status=1 and type_id=2 and eTime>".$now." and id!=".$removeId)->page($page, $count)->order('eTime asc')
                         ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
 
         $can_page_count = ceil($unend_count/$count);  // 未结束比赛可以形成的分页数

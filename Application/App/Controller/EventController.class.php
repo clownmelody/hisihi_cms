@@ -19,14 +19,14 @@ class EventController extends AppController{
         C('SHOW_PAGE_TRACE', false);
     }
 
-    public function competitionList($page=1, $count=5, $version=null){
+    public function competitionList($page=1, $count=5, $version=null, $removeId=0){
         if((float)$version>=2.2){
             $eventModel = M();
             $allCount = $eventModel->query('select sum(view_count) as allCount from hisihi_event where status=1');
             $extra['allCount'] = $allCount[0]['allCount'];
         }
         $picModel = D('Home/Picture');
-        $listData = $this->eventModel->getCompetitionEventList($page, $count);
+        $listData = $this->eventModel->getCompetitionEventList($page, $count, $removeId);
         foreach($listData['list'] as &$event){
             $event['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/competitioncontent/type/view/id/'.$event['id'];
             $event['pic_path'] = null;

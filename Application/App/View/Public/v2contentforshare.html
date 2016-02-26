@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <php>
+        $oneplus_seo_meta = get_seo_meta($vars,$seo);
+    </php>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="Resource-type" content="Document" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>{:C('WEB_SITE_TITLE')}</title>
+    <link type="text/css" href="__CSS__/v2content/v2content.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="headlines-box">
+    <div class="app-section" style="margin: 10px 10px 10px 10px">
+        <div class="info-title">
+            <div style="float:left;margin-top:-10px;width:100%">
+                <h2>{$top_content_info.title}</h2>
+            </div>
+        </div>
+        <div class="info-time">
+            <p>{$top_content_info.create_time|date='m-d H:i',###}</p>
+        </div>
+        <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
+        </div>
+        <div>
+            <p>
+                {$top_content_info.content}
+            </p>
+        </div>
+    </div>
+    <div class="bottomVoteCon" data-id="{$articleId}">
+        <div class="bottomVoteConBox">
+            <div class="middleBox">
+                <div class="middle">
+                    <div class="mainVoteBarCon">
+                        <div class="up"></div>
+                        <div class="arrowCon spriteBg">
+                            <!--width="25" height="23"-->
+                            <!--<canvas  id="arrowColor"></canvas>-->
+                        </div>
+                        <div class="down"></div>
+                        <div class="title">VS</div>
+                    </div>
+                    <div class="mainVoteBtnCon">
+                        <div class="totalVoteInfo">
+                            <div class="totalVoteInfoMiddle">
+                                <span>已有</span>
+                                <span id="totalVoteNum"></span>
+                                <span>人投票</span>
+                            </div>
+                        </div>
+                        <div class="spriteBg spriteBgBtn upBtn"></div>
+                        <div class="spriteBg spriteBgBtn downBtn"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="left upAndDownNum"><span></span>赞</div>
+            <div class="right upAndDownNum"><span></span>踩</div>
+
+        </div>
+        <div class="loadingResultTips" id="loadingTipForVote">
+            <div class="loadingImg active"></div>
+        </div>
+    </div>
+    <div class="moreRecommend" data-type="头条">
+        <div class="moreItem" ></div>
+        <div class="moreItem"></div>
+        <div class="moreItem"></div>
+        <div class="moreItem"></div>
+        <div class="moreItem"></div>
+    </div>
+    <div id="loadingTip" class="loadingResultTips">
+        <div class="loadingImg"></div>
+
+        <a class="loadError btnElement" href="javascript:void(0)">加载失败，点击重新加载</a>
+    </div>
+</div>
+<!--下载条-->
+<div id="downloadCon">
+    <img src="__IMG__/v2content/d.png" class="allDownImg" />
+    <a href="http://www.hisihi.com/download.php" class="btnElement">立即下载</a>
+</div>
+</body>
+<script>
+
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/',
+        img_url:'__IMG__',
+        js: "__JS__"+'/topcontent/',
+    };
+//    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+    window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+    	var aLink=document.getElementsByTagName("a");
+    	for(var i=0; i<aLink.length; i++){
+    		aLink[i].href = "javascript:void(0);";
+    		aLink[i].setAttribute("disabled", "disabled");
+    	}
+</script>
+<script type="text/javascript" data-main="__JS__/topcontent/config_share"  src="__JS__/sharecommon/require.js" ></script>
+</html>
