@@ -50,9 +50,9 @@ class OrganizationController extends AdminController
         $name = $_GET["title"];
         if($name){
             $map['name'] = array('like','%'.$name.'%');
-            $list = $model->where($map)->where("status=1")->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($map)->where("status=1")->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where('status=1')->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$org){
             $has_admin = M('OrganizationAdmin')->where('status=1 and id='.$org['uid'])->count();
@@ -186,6 +186,10 @@ class OrganizationController extends AdminController
             $data["guarantee_num"] = $_POST["guarantee_num"];
             $data["view_count"] = $_POST["view_count"];
             $data["video"] = $_POST["video"];
+            $data["sort"] = $_POST["sort"];
+            if(empty($data["sort"]) || intval($data["sort"])==0){
+                $data["sort"]=100;
+            }
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();

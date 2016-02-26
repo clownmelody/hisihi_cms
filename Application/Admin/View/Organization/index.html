@@ -51,6 +51,7 @@
                 <th class="" >审核状态</th>
                 <th class="" >认证状态</th>
                 <th class="">创建时间</th>
+                <th class="">排序字段</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
             </tr>
@@ -76,6 +77,7 @@
                             </if>
                         </td>
                         <td><span>{$vo.create_time|time_format}</span></td>
+                        <td><span>{$vo.sort}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                         </if>
