@@ -198,10 +198,13 @@ class PublicController extends AppController {
         $this->apiSuccess('建议发送成功！');
     }
 
-    public function topList($page=1, $count=5, $version="1.0"){
+    public function topList($page=1, $count=5, $version="1.0", $removeId=0){
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         $topMap['position'] = array('neq', 5);
+        if($removeId!=0){
+            $topMap['id'] = array('neq', $removeId);
+        }
         //获取当前分类下的文章
         $all_list = $Document->where($topMap)->lists(47);
         $totalCount = count($all_list);
