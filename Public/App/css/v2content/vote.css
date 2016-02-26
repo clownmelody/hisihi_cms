@@ -1,6 +1,6 @@
 /*投票*/
 .bottomVoteCon {
-  height: 80px;
+  height: 90px;
   width: 100%;
   position: relative;
 }
@@ -68,7 +68,7 @@
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon {
   margin-top: 12px;
-  height: 27px;
+  height: 55px;
   width: 100%;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon > div {
@@ -80,7 +80,7 @@
   height: 100%;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .totalVoteInfo .totalVoteInfoMiddle {
-  height: 100%;
+  height: 27px;
   box-sizing: border-box;
   line-height: 27px;
   margin: 0 44px;
@@ -94,6 +94,7 @@
   text-align: center;
   color: #FF6600;
   opacity: 1;
+  height: 28px;
 }
 .bottomVoteCon .bottomVoteConBox .middleBox .middle .mainVoteBtnCon .spriteBgBtn {
   display: inline-block;

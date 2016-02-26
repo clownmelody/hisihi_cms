@@ -153,7 +153,7 @@ define(['zepto'],function() {
                                 if(resultObj.error_code==-100){
                                     str=resultObj.message;
                                 }
-                                paras.eCallback(xmlRequest.status,str);
+                                paras.eCallback(resultObj.error_code,str);
                             }
                             that.controlLoadingTips(0);
                         }
@@ -325,10 +325,8 @@ define(['zepto'],function() {
                 },
                 eCallback: function (code,txt) {
                     $target.removeClass('voting');
-                    alert(code);
                     that.showVoteResult.call(that,txt);
                     //已经操作
-                    alert(code);
                     if(code==-100){
                         $target.removeClass('downBtnAble').addClass('downBtnDisabled');
                     }
@@ -345,7 +343,6 @@ define(['zepto'],function() {
          */
         showVoteResult:function(tip){
             var $tip=this.$wrapper.find('#voteResult').text(tip);
-            alert(123);
             $tip.text(tip).css('opacity',1);
             window.setTimeout(function(){
                 $tip.text('').css('opacity',0);
@@ -376,17 +373,27 @@ define(['zepto'],function() {
                 $total = this.$wrapper.find('#totalVoteNum');
             /*正常操作*/
             if (flag !== -1) {
+                var havedVote=this.havedVote(); //是否参与过投票
+
                 //总数是否加1
-                if (this.updateTotalVotes()) {
-                    this.updateNum($total);
+                if (!havedVote) {
+                    this.updateNum($total,1);//加1
                 }
                 //具体赞和踩的数据更新
                 if (flag == 1) {
-                    this.updateNum($left);
-                    this.updateNum($right, false);
+                    this.updateNum($left,1);
+                    var tempNum=0;
+                    if(havedVote){
+                        tempNum=-1;
+                    }
+                    this.updateNum($right, tempNum);//对反方向处理 加(减)1
                 } else {
-                    this.updateNum($right);
-                    this.updateNum($left, false);
+                    this.updateNum($right,1);
+                    var tempNum=0;
+                    if(havedVote){
+                        tempNum=-1;
+                    }
+                    this.updateNum($left, tempNum);//对反方向处理 加(减)1
                 }
 
                 //按钮样式
@@ -412,24 +419,54 @@ define(['zepto'],function() {
         },
 
         /*
-         *总投票数是否加1
+         *是否参与过投票
          */
-        updateTotalVotes: function () {
+        havedVote: function () {
             var $up = this.$wrapper.find('.upBtn'),
                 $down = this.$wrapper.find('.downBtn');
-            if (!($down.hasClass('downBtnAble') && $up.hasClass('upBtnAble'))) {
-                return false;
+            if ($down.hasClass('downBtnDisabled') || $up.hasClass('upBtnDisabled')) {
+                return true;
             }
-            return true;
+            return false;
+        },
+
+        /*当点踩的时候， 判断 是否对自己的赞消除。对于点赞时，也一样进行判断*/
+        clearMyOldVote:function(){
+            var infoStr=this.$wrapper.attr('data-oldinfo');
+            //是否操作过
+            if(infoStr!='') {
+                var myOldVote = JSON.parse(this.$wrapper.attr('data-oldinfo'));
+            }else{
+                return true;
+            }
+
+
         },
 
         /*更新目标数据*/
-        updateNum: function ($target, flag) {
+        //updateNum: function ($target, flag) {
+        //    if (!$target) {
+        //        return;
+        //    }
+        //    var diff = 1, num = $target.text() | 0;
+        //    if (flag === false) {
+        //        if (num > 0) {
+        //            diff = -1;
+        //        } else {
+        //            diff = 0;
+        //        }
+        //    }
+        //    num += diff;
+        //    $target.text(num);
+        //},
+
+        /*更新目标数据*/
+        updateNum: function ($target, diff) {
             if (!$target) {
                 return;
             }
-            var diff = 1, num = $target.text() | 0;
-            if (flag === false) {
+            var num = $target.text() | 0;
+           if(diff == -1){
                 if (num > 0) {
                     diff = -1;
                 } else {
