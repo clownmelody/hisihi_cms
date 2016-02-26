@@ -1734,10 +1734,7 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $model = M();
-        $isExist = $model->query("SELECT  uid FROM (SELECT uid FROM hisihi_organization_student_classmate a
-LEFT JOIN (SELECT id FROM hisihi_organization_student_class WHERE organization_id = ".$organization_id.") b
-ON a.class_id = b.id WHERE a.status=2) c WHERE c.uid=".$uid);
+        $isExist = M('OrganizationEnroll')->where('status=2 and organization_id='.$organization_id)->select();
         if(!$isExist){
             $this->apiError(-2, '你不是该机构学员，不允许评论');
         }
