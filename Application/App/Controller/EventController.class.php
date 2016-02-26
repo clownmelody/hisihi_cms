@@ -73,6 +73,11 @@ class EventController extends AppController{
         $this->apiSuccess("获取比赛详情成功", null, array('data' => $info));
     }
 
+    /**
+     * 比赛详情
+     * @param $id
+     * @param string $type
+     */
     public function competitioncontent($id,$type = ''){
         $detail = $this->eventModel->getCompetitionDetail($id);
         $this->eventModel->incViewCount($id);
@@ -81,6 +86,7 @@ class EventController extends AppController{
         );
         if($type == 'view') {
             $this->assign('top_content_info', $content);
+            $this->assign('articleId', $id);
             $this->setTitle('比赛详情 — 嘿设汇');
             $this->display();
         }
