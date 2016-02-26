@@ -1404,10 +1404,27 @@ class UserController extends AppController
      * @return mixed
      */
     private function getNewFavoriteCount($uid=0){
-        $favorite['uid'] = $uid;
-        $favorite['appname'] = array(array('eq','Article'),array('eq','Organization'),'or');
-        $count = M('Favorite')->where($favorite)->count();
-        return $count;
+        $model = M();
+        $article = $model->query("select b.id from hisihi_favorite a LEFT JOIN hisihi_document b
+on a.row=b.id where a.uid=".$uid." and a.appname='Article'");
+        $courses = $model->query("select b.id from hisihi_favorite a LEFT JOIN hisihi_organization_course b
+on a.row=b.id where a.uid=".$uid." and a.appname='Organization'");
+        $article_count = count($article);
+        $courses_count = count($courses);
+        foreach($article as $article_item){
+            if(empty($article_item['id'])){
+                $article_count--;
+                continue;
+            }
+        }
+        foreach($courses as $courses_item){
+            if(empty($courses_item['id'])){
+                $courses_count--;
+                continue;
+            }
+        }
+
+        return $article_count + $courses_count;
     }
 
     /**
