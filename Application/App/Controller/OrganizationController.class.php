@@ -1449,7 +1449,7 @@ class OrganizationController extends AppController
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
         }
-        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication')
+        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication,sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where("application_status=2 and status=1")->count();
         /*if(!empty($city)&&!empty($type)){
@@ -1496,15 +1496,19 @@ class OrganizationController extends AppController
             'direction'=>'SORT_DESC',
             'field'=>'enrollCount'
         );
-        $arrSort = array();
-        foreach($org_list as $uniqid => $row){
-            foreach($row as $key=>$value){
-                $arrSort[$key][$uniqid] = $value;
-            }
+        $org_list = $this->sort_list($sort, $org_list);
+
+        //机构列表按排序字段排序
+        $sort2 = array(
+            'direction'=>'SORT_ASC',
+            'field'=>'sort'
+        );
+        $org_list = $this->sort_list($sort2, $org_list);
+        //去掉sort字段
+        foreach($org_list as &$org){
+            unset($org['sort']);
         }
-        if($sort['direction']){
-            array_multisort($arrSort[$sort['field']], constant($sort['direction']), $org_list);
-        }
+
         $data['totalCount'] = $totalCount;
         $data['list'] = $org_list;
         $this->apiSuccess('获取机构列表成功', null, $data);
@@ -2651,6 +2655,19 @@ ON a.class_id = b.id WHERE a.status=2) c WHERE c.uid=".$uid);
             $organization['authentication'] = $this->getAuthenticationInfo($organization_id);
         }
         return $organization;
+    }
+
+    public function sort_list($sort_array, $data_list){
+        $arrSort = array();
+        foreach($data_list as $uniqid => $row){
+            foreach($row as $key=>$value){
+                $arrSort[$key][$uniqid] = $value;
+            }
+        }
+        if($sort_array['direction']){
+            array_multisort($arrSort[$sort_array['field']], constant($sort_array['direction']), $data_list);
+        }
+        return $data_list;
     }
 
 }
