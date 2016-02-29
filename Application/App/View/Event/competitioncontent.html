@@ -25,13 +25,23 @@
         <div id="test-agent" style="display:none">user-agent</div>
         <div class="app-content" style.="-webkit-box-shadow: none;">
             <div class="app-section" style="margin: 10px 10px 10px 10px">
+                <div class="info-title">
+                    <div style="float:left;margin-top:-10px;width:100%">
+                        <h2>{$top_content_info.title}</h2>
+                    </div>
+                </div>
+                <div class="info-time">
+                    <p>{$top_content_info.create_time|date='m-d H:i',###}</p>
+                </div>
+                <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
+                </div>
                 <div>
                     <p>
                         {$top_content_info.content}
                     </p>
                 </div>
             </div>
-            <div class="moreRecommend" data-type="比赛">
+            <div class="moreRecommend" data-type="比赛" data-id="{$articleId}">
             <div class="moreItem" ></div>
             <div class="moreItem"></div>
             <div class="moreItem"></div>

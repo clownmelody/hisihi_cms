@@ -38,5 +38,6 @@ require(['zepto','common','zeptofx','vote','sharemain','prefixfree'],function(Ze
 
     new vote($('.bottomVoteCon'),window.hisihiUrlObj.server_url);
     var type=$('.moreRecommend').data('type');
-    new sharemain(type);
+    var cId=$('.bottomVoteCon').data('id');
+    new sharemain(type,cId);
 });
