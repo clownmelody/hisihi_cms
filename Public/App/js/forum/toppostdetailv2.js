@@ -83,7 +83,6 @@ commentObj.prototype={
      */
     controlCommentBoxStatus:function(){
         var $target=$('.main');
-
         //来源于app
         if(this.isFromApp){
             //用户没有登录

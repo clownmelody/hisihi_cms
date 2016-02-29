@@ -436,7 +436,9 @@ define(['zepto'],function() {
         //判断文章内容的高度，
         this.dealwithContentHeight();
 
-        this.$wrapper.parent().scroll($.proxy(this, 'scrollContainer'));  //滚动加载更多数据
+        if(!this.isFromApp){
+            this.$wrapper.parent().scroll($.proxy(this, 'scrollContainer')); //滚动加载更多数据
+        }
         var eventName = 'click';
         if (this.deviceType.mobile) {
             eventName = 'touchend';
