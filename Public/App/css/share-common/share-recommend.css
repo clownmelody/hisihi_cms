@@ -249,7 +249,11 @@ ul li {
 @media screen and (min-width: 750px) {
   body {
     width: 750px;
+    height: 800px;
     margin: auto;
+  }
+  #downloadCon {
+    display: none;
   }
 }
 @media screen and (max-width: 320px) {
