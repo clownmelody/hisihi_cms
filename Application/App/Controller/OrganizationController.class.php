@@ -410,7 +410,8 @@ class OrganizationController extends AppController
                 $result['relationship'] = 0;
             }
             $advantage = $result['advantage'];
-            $enroll_count = M('OrganizationEnroll')->where(array('organization_id'=>$organization_id,'status'=>array('gt',0)))->count();
+            $enroll_ = M('OrganizationEnroll')->distinct(true)->field('student_uid')->where(array('organization_id'=>$organization_id,'status'=>array('gt',0)))->select();
+            $enroll_count = count($enroll_);
             $result['available_num'] = $result['guarantee_num'] - $enroll_count;
             $result['advantage']=$advantage;
             $relationModel = M('OrganizationRelation');
@@ -1593,11 +1594,12 @@ class OrganizationController extends AppController
             $this->apiError(-1, '传入机构ID不能为空');
         }
         $model = M('OrganizationEnroll');
-        $total_count = $model->where('status>0 and organization_id='.$organization_id)->count();
+        $total = $model->distinct(true)->field('student_uid')->where('status>0 and organization_id='.$organization_id)->select();
+        $total_count = count($total);
         if($type=="all"){
-            $list = $model->field('student_name,phone_num, create_time')->where('status>0 and organization_id='.$organization_id)->select();
+            $list = $model->field('student_name,phone_num, create_time')->where('status>0 and organization_id='.$organization_id)->group('student_uid')->select();
         }else{
-            $list = $model->field('student_name,phone_num, create_time')->where('status>0 and organization_id='.$organization_id)->page($page, $count)->select();
+            $list = $model->field('student_name,phone_num, create_time')->where('status>0 and organization_id='.$organization_id)->group('student_uid')->page($page, $count)->select();
         }
 
         foreach($list as &$user){

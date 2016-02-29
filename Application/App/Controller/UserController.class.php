@@ -1404,10 +1404,27 @@ class UserController extends AppController
      * @return mixed
      */
     private function getNewFavoriteCount($uid=0){
-        $favorite['uid'] = $uid;
-        $favorite['appname'] = array(array('eq','Article'),array('eq','Organization'),'or');
-        $count = M('Favorite')->where($favorite)->count();
-        return $count;
+        $model = M();
+        $article = $model->query("select b.id from hisihi_favorite a LEFT JOIN hisihi_document b
+on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Article'");
+        $courses = $model->query("select b.id from hisihi_favorite a LEFT JOIN hisihi_organization_course b
+on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'");
+        $article_count = count($article);
+        $courses_count = count($courses);
+        foreach($article as &$article_item){
+            if(empty($article_item['id'])){
+                $article_count--;
+                continue;
+            }
+        }
+        foreach($courses as &$courses_item){
+            if(empty($courses_item['id'])){
+                $courses_count--;
+                continue;
+            }
+        }
+
+        return $article_count + $courses_count;
     }
 
     /**
@@ -2158,6 +2175,12 @@ class UserController extends AppController
             $extra['my_favorite_count'] = $this->getMyFavoriteCount($uid);
             $extra['my_follow_count'] = $this->getMyFollowerCount($uid);
             $extra['follow_me_count'] = $this->getFollowMeCount($uid);
+        }
+        if((float)$version>=2.3){
+            $extra['my_favorite_count'] = $this->getNewFavoriteCount($uid);
+            $extra['my_post_count'] = $this->getPostCount($uid);
+            $extra['my_reply_count'] = $this->getReplyCount($uid);
+            $extra['my_picture_count'] = $this->getPictureCount($uid);
         }
         $this->apiSuccess("第三方登录成功", null, $extra);
     }

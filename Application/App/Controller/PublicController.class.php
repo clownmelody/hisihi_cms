@@ -279,7 +279,7 @@ class PublicController extends AppController {
      */
     public function findArticle($id, $version){
         $doc_model = M();
-        $article = $doc_model->query("select id, title, cover_id, description, view, create_time, update_time from hisihi_document where id=".$id);
+        $article = $doc_model->query("select id, title, cover_id, description, view, create_time, update_time from hisihi_document where `status`>0 and id=".$id);
         foreach($article as &$info){
             $info['source_name'] = $this->getSourceName($id);
             $info['logo_pic'] = $this->getSourceLogoPic($id);
