@@ -424,6 +424,7 @@ class OrganizationController extends AppController
                 return $result;
             }else{
                 $extra['data'] = $result;
+                //$model->where('id='.$organization_id)->setInc('view_count');
                 $this->apiSuccess("获取机构信息成功",null,$extra);
             }
         }else{
