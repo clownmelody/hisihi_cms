@@ -277,6 +277,7 @@ define(['zepto'],function() {
                 type: 'get',
                 paraData: {session_id: this.userInfo.session_id, id: this.articleId},
                 sCallback: function () {
+                    //that.finishVote(1);
                     $target.removeClass('voting');
                     that.saveCurrentVoteInfo.call(that); //存储当前投票信息
                 },
@@ -323,6 +324,7 @@ define(['zepto'],function() {
                 type: 'get',
                 paraData: {session_id: this.userInfo.session_id, id: this.articleId},
                 sCallback: function () {
+                    //that.finishVote(0);
                     $target.removeClass('voting');
                     that.saveCurrentVoteInfo.call(that); //存储当前投票信息
                 },
