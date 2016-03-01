@@ -50,9 +50,9 @@
                         <td>{$vo.organization_id}</td>
                         <td>{$vo.name}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
-                        <td><if condition="($vo.status eq 2) "> 已审核
-                            <elseif condition="($vo.status eq 1)" />申请中
-                            <elseif condition="($vo.status eq -2)" />已拒绝
+                        <td><if condition="($vo.application_status eq 2) "> 已审核
+                            <elseif condition="($vo.application_status eq 1)" />申请中
+                            <elseif condition="($vo.application_status eq -2)" />已拒绝
                             <else /> 已删除
                             </if>
                         </td>

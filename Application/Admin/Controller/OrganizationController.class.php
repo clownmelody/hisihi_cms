@@ -2174,15 +2174,16 @@ class OrganizationController extends AdminController
         }
         $status = I('status');
         if(!empty($status)){
-            $map['status'] = $status;
+            $map['application_status'] = $status;
         }else{
-            $map['status'] = array('neq',-1);
+            $map['application_status'] = array('neq',-1);
         }
-        $model = D('OrganizationApplication');
+        $map['status'] = array('gt',0);
+        $model = M('Organization');
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($map)->field('id,name,application_status,create_time')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -2195,20 +2196,16 @@ class OrganizationController extends AdminController
      */
     public function application_pass($id){
         if(!empty($id)){
-            $model = M('OrganizationApplication');
-            $data['status'] = 2;
+            $model = M('Organization');
+            $data['application_status'] = 2;
             if(is_array($id)){
                 foreach ($id as $i)
                 {
                     $model->where('id='.$i)->save($data);
-                    $organization_id = $model->where('id='.$i)->getField('organization_id');
-                    M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>2));
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
-                $organization_id = $model->where('id='.$id)->getField('organization_id');
-                M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>2));
             }
             $this->success('审核通过','index.php?s=/admin/organization/application');
         } else {
@@ -2221,20 +2218,16 @@ class OrganizationController extends AdminController
      */
     public function application_refuse($id){
         if(!empty($id)){
-            $model = M('OrganizationApplication');
-            $data['status'] = -2;
+            $model = M('Organization');
+            $data['application_status'] = -2;
             if(is_array($id)){
                 foreach ($id as $i)
                 {
                     $model->where('id='.$i)->save($data);
-                    $organization_id = $model->where('id='.$i)->getField('organization_id');
-                    M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>-2));
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
-                $organization_id = $model->where('id='.$id)->getField('organization_id');
-                M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>-2));
             }
             $this->success('拒绝申请成功','index.php?s=/admin/organization/application');
         } else {
