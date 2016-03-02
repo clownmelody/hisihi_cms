@@ -297,6 +297,7 @@ class ForumController extends AdminController
             ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))
             ->ajaxButton(U('Forum/pushTopPost'), null, '推送')->buttonNew(U('Forum/post?showtop=1'),'显示置顶帖')
             ->buttonNew(U('Forum/post?showelite=1'),'显示精华帖')
+            ->ajaxButton(U('Forum/unsetPostElite'),null,'取消精华帖')
             ->keyId()->keyLink('title', '标题', 'Forum/reply?post_id=###')
             ->keyCreateTime()->keyUpdateTime()->keyTime('last_reply_time', '最后回复时间')->key('top', '是否置顶')
             ->keyStatus()->keyDoActionEdit('editPost?id=###')->keyDoActionHide()
@@ -491,6 +492,24 @@ class ForumController extends AdminController
     {
         $builder = new AdminListBuilder();
         $builder->doSetElite('ForumPost', $ids, $is_elite);
+    }
+
+    public function unsetPostElite($ids){
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        if(is_array($ids)){
+            $map['id'] = array('in',$ids);
+            $result = M('ForumPost')->where($map)->save(array('is_elite'=>0));
+            if($result){
+                $this->success('取消精华成功', U('Forum/post?showelite=1'));
+            }
+        }else{
+            $result = M('ForumPost')->where('id='.$ids)->save(array('is_elite'=>0));
+            if($result){
+                $this->success('取消精华成功', U('Forum/post?showelite=1'));
+            }
+        }
     }
 
     public function reply($page = 1, $post_id = null, $r = 20)
