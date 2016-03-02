@@ -212,6 +212,23 @@ class OrganizationController extends AdminController
                 }
                 $this->success('添加成功', 'index.php?s=/admin/organization/index');
             } else {
+                //修改机构名同时修改机构老师的扩展信息
+                $org_name = $model->where('status=1 and id='.$cid)->getField('name');
+                if($data['name'] != $org_name){
+                    $teacher_ids = M('OrganizationRelation')->distinct(true)->field('uid')
+                        ->where('`status`=1 and `group`=6 and organization_id='.$cid)
+                        ->select();
+                    if(!empty($teacher_ids)){
+                        $t_ids = array();
+                        foreach($teacher_ids as &$item){
+                            $t_ids[] = $item['uid'];
+                        }
+                        $map['uid'] = array('in',$t_ids);
+                        $map['field_id'] = 39;
+                        $field_data['field_data'] = $data['name'];
+                        M('Field')->where($map)->data($field_data)->save();
+                    }
+                }
                 $model = $this->organizationModel;
                 $model->updateOrganization($cid, $data);
                 $this->success('更新成功', 'index.php?s=/admin/organization/index');
@@ -461,10 +478,30 @@ class OrganizationController extends AdminController
             if(is_array($id)){
                 foreach ($id as $i)
                 {
+                    //删除老师时同事修改用户的角色为设计师
+                    $relation_item = $model->where('id='.$i)->find();
+                    if(intval($relation_item['group'])==6){
+                        $count = $model
+                            ->where('status=1 and uid='.$relation_item['uid'].' and organization_id='.$relation_item['organization_id'])
+                            ->count();
+                        if($count<2){
+                            M('AuthGroupAccess')->where('uid='.$relation_item['uid'])->save(array('group_id'=>5));
+                        }
+                    }
                     $model->where('id='.$i)->save($data);
                 }
             } else {
                 $id = intval($id);
+                //删除老师时同事修改用户的角色为设计师
+                $relation_item = $model->where('id='.$id)->find();
+                if(intval($relation_item['group'])==6){
+                    $count = $model
+                        ->where('status=1 and uid='.$relation_item['uid'].' and organization_id='.$relation_item['organization_id'])
+                        ->count();
+                    if($count<2){
+                        M('AuthGroupAccess')->where('uid='.$relation_item['uid'])->save(array('group_id'=>5));
+                    }
+                }
                 $model->where('id='.$id)->save($data);
             }
             if(I('from_org')){
