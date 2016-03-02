@@ -385,13 +385,14 @@ class OrganizationController extends AppController
         }
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,phone_num,view_count,guarantee_num,light_authentication,location_img')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img')->find();
         if($result){
             $logo = $result['logo'];
             //$logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
+            $result['phone_num'] = $this->get400PhoneNum();
             $result['logo'] = $logo;
             $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
             $result['followCount'] = $this->getFollowCount($organization_id);
@@ -2890,6 +2891,18 @@ class OrganizationController extends AppController
             array_multisort($arrSort[$sort_array['field']], constant($sort_array['direction']), $data_list);
         }
         return $data_list;
+    }
+
+    /**获取400电话
+     * @return string
+     */
+    public function get400PhoneNum(){
+        $tag = M('OrganizationTag')->where('type=5 and status=1')->find();
+        if($tag){
+            return $tag['value'];
+        }else{
+            return '4000340033';
+        }
     }
 
 }
