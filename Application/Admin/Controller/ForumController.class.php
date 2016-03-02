@@ -467,6 +467,9 @@ class ForumController extends AdminController
         $data = array('title' => $title, 'content' => $content, 'type' => $top_type, 'is_top' => $is_top,
             'is_out_link' => $is_out_link, 'link_url' => $link_url, 'is_inner' => $is_inner, 'cover_id' => $cover_id,
             'view_count'=>$random_count);
+        if($is_inner==0){
+            $data['uid'] = 0;
+        }
         $result = $model->createPost($data);
         $this->uploadLogoPicToOSS($cover_id);
         //如果写入不成功，则报错

@@ -1,0 +1,108 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <!-- 标题栏 -->
+    <div class="main-title">
+        <h2>机构 IM 群组</h2>
+    </div>
+
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+        <table class="">
+            <thead>
+            <tr>
+                <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                <th class="">群ID</th>
+                <th class="">群名称</th>
+                <th class="">会话ID</th>
+                <th class="">机构ID</th>
+                <th class="">创建时间</th>
+                <th class="">状态</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="_list">
+                <volist name="_list" id="vo">
+                    <tr>
+                        <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.group_name}</td>
+                        <td>{$vo.conversation_id}</td>
+                        <td>{$vo.organization_id}</td>
+                        <td><span>{$vo.create_time|time_format}</span></td>
+                        <td><if condition="($vo.status eq 1) "> 正常
+                            <else /> 已删除
+                        </if>
+                        </td>
+                        <td>
+                            <a href="{:U('Organization/im_group_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <div class="page">
+        {$_page}
+    </div>
+</block>
+
+<block name="script">
+    <script src="__STATIC__/thinkbox/jquery.thinkbox.js"></script>
+
+    <script type="text/javascript">
+        //搜索功能
+        $("#search").click(function () {
+            var url = $(this).attr('url');
+            var query = $('.search-form').find('input').serialize();
+            query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g, '');
+            query = query.replace(/^&/g, '');
+            if (url.indexOf('?') > 0) {
+                url += '&' + query;
+            } else {
+                url += '?' + query;
+            }
+            var organization_id = $("#organization_id").val();
+            if(organization_id != 0){
+                url += '&organization_id=' + organization_id;
+            }
+            window.location.href = url;
+        });
+
+        $("#add").click(function () {
+            var url = '{:U('Organization/tag_add')}';
+            var organization_id = $("#organization_id").val();
+            if(organization_id != 0){
+                url += '&from_org=1&organization_id=' + organization_id;
+            }
+            window.location.href = url;
+        });
+
+        /* 状态搜索子菜单 */
+        $(".search-form").find(".drop-down").hover(function(){
+            $("#sub-sch-menu").removeClass("hidden");
+        },function(){
+            $("#sub-sch-menu").addClass("hidden");
+        });
+        $("#sub-sch-menu li").find("a").each(function(){
+            $(this).click(function(){
+                var text = $(this).text();
+                $("#sch-sort-txt").text(text).attr("data",$(this).attr("value"));
+                $("#sub-sch-menu").addClass("hidden");
+            })
+        });
+        //回车搜索
+        $(".search-input").keyup(function (e) {
+            if (e.keyCode === 13) {
+                $("#search").click();
+                return false;
+            }
+        });
+        //导航高亮
+        highlight_subnav("{:U('Organization/index')}");
+    </script>
+</block>

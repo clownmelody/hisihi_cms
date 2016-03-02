@@ -2600,8 +2600,8 @@ class OrganizationController extends AdminController
     }
 
     /**
- * 添加机构老师分组
- */
+     * 添加机构老师分组
+     */
     public function lecture_group_add($organization_id=0){
         if($organization_id){
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
@@ -2644,7 +2644,8 @@ class OrganizationController extends AdminController
         }
     }
 
-    /**编辑机构老师分组
+    /**
+     * 编辑机构老师分组
      * @param $id
      */
     public function lecture_group_edit($id){
@@ -2667,7 +2668,8 @@ class OrganizationController extends AdminController
         $this->display();
     }
 
-    /**删除机构老师分组
+    /**
+     * 删除机构老师分组
      * @param $id
      */
     public function lecture_group_delete($id){
@@ -2746,7 +2748,8 @@ class OrganizationController extends AdminController
         }
     }
 
-    /**编辑机构管理员
+    /**
+     * 编辑机构管理员
      * @param $id
      */
     public function admin_edit($id){
@@ -2873,6 +2876,94 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 创建 IM 群组
+     * @param $organization_id
+     */
+    public function create_im_group($organization_id){
+        $this->assign('organization_id', $organization_id);
+        $this->display();
+    }
+
+    /**
+     * 添加或更新 IM 群信息
+     */
+    public function update_im_group(){
+        if (IS_POST) {
+            $post_data['organization_id'] = $_POST["organization_id"];
+            $post_data['group_name'] = $_POST["group_name"];
+            $post_data['description'] = $_POST["description"];
+            $post_data['admin_uid'] = 'o'.$_POST["admin_uid"];
+            $post_data['conversation_id'] = 0;
+            $post_data['member_client_ids'] = null;
+            $group_avatar_id = $_POST["group_avatar"];
+            $this->uploadLogoPicToOSS($group_avatar_id);
+            $group_avatar = $this->fetchCdnImage($group_avatar_id);
+            $post_data['group_avatar'] = $group_avatar;
+            $post_data = json_encode($post_data);
+            $result = $this->request_to_python_im_create_group_service("http://api.hisihi.com/v1/im/group", $post_data);
+            if($result){
+                $this->success('创建群组成功','index.php?s=/admin/organization/index');
+            }
+            $this->error('创建群组失败');
+        } else {  //  编辑群组
+
+        }
+    }
+
+    /**
+     * 机构群组管理
+     */
+    public function imgroup(){
+        $model = M('ImGroups');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构IM群组列表");
+        $this->display();
+    }
+
+    /**
+     * 删除机构 IM 群组
+     * @param $id
+     */
+    public function im_group_delete($id){
+        if(!empty($id)){
+            $model = M('ImGroups');
+            $data['status'] = -1;
+            $id = intval($id);
+            $model->where('id='.$id)->save($data);
+            $this->success('删除成功','index.php?s=/admin/organization/imgroup');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * @param $url
+     * @param $post_data
+     * @return bool
+     */
+    private function request_to_python_im_create_group_service($url, $post_data) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if($httpCode != 201){
+            return false;
+        }
+        curl_close($ch);
+        return true;
+    }
+
+    /**
      * 上传图片到OSS
      * @param $picID
      */
@@ -2888,7 +2979,6 @@ class OrganizationController extends AdminController
             if(!$isExist){
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
             }
-            \Think\Log::write($isExist);
         }
     }
 
