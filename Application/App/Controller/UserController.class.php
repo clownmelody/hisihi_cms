@@ -1066,6 +1066,12 @@ class UserController extends AppController
                 $info_map['my_follow_count'] = $this->getMyFollowerCount($uid);
                 $info_map['follow_me_count'] = $this->getFollowMeCount($uid);
             }
+            if((float)$version>=2.3){
+                $info_map['my_favorite_count'] = $this->getNewFavoriteCount($uid);
+                $info_map['my_post_count'] = $this->getPostCount($uid);
+                $info_map['my_reply_count'] = $this->getReplyCount($uid);
+                $info_map['my_picture_count'] = $this->getPictureCount($uid);
+            }
             $this->apiSuccess("获取成功", null, $info_map);
         } else {//此场景为点左侧头像出现的数据
             $map = array('uid' => $uid);
