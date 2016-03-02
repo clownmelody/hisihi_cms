@@ -2386,4 +2386,16 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
         return $pic_count;
     }
 
+
+//    public function renameOldAccount(){
+//        $name_array = file('/var/tmp/name.txt');
+//        $model = M('Member');
+//        $member_list = $model->where('uid>13300 and nickname like "%嘿设汇%"')->limit(0, 367)->select();
+//        foreach($member_list as $index => $member){
+//            $uid = $member['uid'];
+//            $data['nickname'] = $name_array[$index];
+//            $model->where('uid='.$uid)->save($data);
+//        }
+//    }
+
 }
