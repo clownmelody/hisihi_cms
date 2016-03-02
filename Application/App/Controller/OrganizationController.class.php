@@ -2619,12 +2619,10 @@ class OrganizationController extends AppController
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
-        $model = M('OrganizationRelation');
-        $data['organization_id'] = $organization_id;
-        $data['status'] = 1;
-        $data['group'] = 6;
-        $count = $model->where($data)->count();
-        return $count;
+        $Model = M();
+        $totalCount = $Model->query('select count(*) as count from (select distinct uid from hisihi_organization_relation where `status`=1 and `group`=6 and `organization_id`='.$organization_id.')m');
+        $totalCount = $totalCount[0]['count'];
+        return $totalCount;
     }
 
     private function getGroupCount($organization_id=0){
