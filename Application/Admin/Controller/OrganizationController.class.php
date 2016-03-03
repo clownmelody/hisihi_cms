@@ -3004,7 +3004,7 @@ class OrganizationController extends AdminController
      * 上传图片到OSS
      * @param $picID
      */
-    private function uploadLogoPicToOSS($picID){
+    public function uploadLogoPicToOSS($picID){
         $model = M();
         $result = $model->query("select path from hisihi_picture where id=".$picID);
         if($result){
@@ -3024,7 +3024,7 @@ class OrganizationController extends AdminController
      * @param $pic_id
      * @return null|string
      */
-    private function fetchCdnImage($pic_id){
+    public function fetchCdnImage($pic_id){
         if($pic_id == null)
             return null;
         $model = M();
