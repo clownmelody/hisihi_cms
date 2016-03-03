@@ -1904,6 +1904,7 @@ class OrganizationController extends AppController
         foreach($list as &$comment){
             $uid = $comment['uid'];
             $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
+            $comment['userInfo']['nickname'] = "嘿设汇用户";
             unset($comment['organization_id']);
             unset($comment['uid']);
             unset($comment['status']);
@@ -1959,10 +1960,10 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $isExist = M('OrganizationEnroll')->where('status=2 and organization_id='.$organization_id)->select();
-        if(!$isExist){
-            $this->apiError(-2, '你不是该机构学员，不允许评论');
-        }
+//        $isExist = M('OrganizationEnroll')->where('status=2 and organization_id='.$organization_id)->select();
+//        if(!$isExist){
+//            $this->apiError(-2, '你不是该机构学员，不允许评论');
+//        }
         $commentModel = M('OrganizationComment');
         $commentStarModel = M('OrganizationCommentStar');
         $data['organization_id'] = $organization_id;
