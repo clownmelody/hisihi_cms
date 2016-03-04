@@ -168,6 +168,7 @@ return  array(
     'DATA_CRYPT_TYPE'       =>  'Think',    // 数据加密方式
 
     'HOST_NAME_PREFIX'             =>  'http://dev.hisihi.com/',
+    'PYTHON_API_SERVICE_HOST_NAME' =>  'http://api.hisihi.com',
 
     'OSS_ENDPOINT'          => '.oss-cn-qingdao.aliyuncs.com/',
     'OSS_AVATAR'            => 'hisihi-avator',
