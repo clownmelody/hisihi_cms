@@ -9,11 +9,14 @@ class YellowPagesController extends AdminController {
 
     protected $yellowPages;
     protected $pageClass;
+    protected $pageLabel;
 
     public function _initialize(){
         parent::_initialize();
         $this->yellowPages = M('YellowPages');
         $this->pageClass = M('PageClass');
+        $this->pageLabel = M('YellowPagesLabel');
+
     }
 
     /**
@@ -37,6 +40,12 @@ class YellowPagesController extends AdminController {
             $cmodel = $this->pageClass;
             $category = $cmodel->where('status=1 and id='.$value)->getField("category_name");
             $website['category'] = $category;
+            $label_name = $this->pageLabel->where('status=1 and id='.$website['label'])->getField('name');
+            if($label_name){
+                $website['label_name'] = $label_name;
+            }else{
+                $website['label_name'] = '无';
+            }
         }
 
         $this->assign('_list', $list);
@@ -67,6 +76,12 @@ class YellowPagesController extends AdminController {
             $cmodel = $this->pageClass;
             $category = $cmodel->where('status=1 and id='.$value)->getField("category_name");
             $website['category'] = $category;
+            $label_name = $this->pageLabel->where('status=1 and id='.$website['label'])->getField('name');
+            if($label_name){
+                $website['label_name'] = $label_name;
+            }else{
+                $website['label_name'] = '无';
+            }
         }
 
         $this->assign('_list', $list);
@@ -97,6 +112,12 @@ class YellowPagesController extends AdminController {
             $cmodel = $this->pageClass;
             $category = $cmodel->where('status=1 and id='.$value)->getField("category_name");
             $website['category'] = $category;
+            $label_name = $this->pageLabel->where('status=1 and id='.$website['label'])->getField('name');
+            if($label_name){
+                $website['label_name'] = $label_name;
+            }else{
+                $website['label_name'] = '无';
+            }
         }
 
         $this->assign('_list', $list);
@@ -127,6 +148,12 @@ class YellowPagesController extends AdminController {
             $cmodel = $this->pageClass;
             $category = $cmodel->where('status=1 and id='.$value)->getField("category_name");
             $website['category'] = $category;
+            $label_name = $this->pageLabel->where('status=1 and id='.$website['label'])->getField('name');
+            if($label_name){
+                $website['label_name'] = $label_name;
+            }else{
+                $website['label_name'] = '无';
+            }
         }
 
         $this->assign('_list', $list);
@@ -162,9 +189,13 @@ class YellowPagesController extends AdminController {
                 }
                 $this->success('添加成功', 'index.php?s=/admin/yellow_pages');
             } else {
-                //上传图片到OSS
-                $this->uploadLogoPicToOSS($pic_id);
-                $data['icon_url'] = $this->fetchCdnImage($pic_id);
+                if(is_numeric($pic_id)){
+                    //上传图片到OSS
+                    $this->uploadLogoPicToOSS($pic_id);
+                    $data['icon_url'] = $this->fetchCdnImage($pic_id);
+                }else{
+                    $data['icon_url'] = $pic_id;
+                }
                 $result = $model->where('id='.$cid)->save($data);
                 if($result){
                     $this->success('更新成功', 'index.php?s=/admin/yellow_pages');
@@ -183,6 +214,8 @@ class YellowPagesController extends AdminController {
     public function add(){
         $model = $this->pageClass;
         $type = $model->where('status=1')->field('id,category_name')->order('id')->select();
+        $label = $this->pageLabel->where('status=1')->field('id,name')->order('id')->select();
+        $this->assign('_label', $label);
         $this->assign('_type', $type);
         $this->display();
     }
@@ -199,6 +232,8 @@ class YellowPagesController extends AdminController {
         $data = $yellowPages->where('status>=1 and id='.$id)->find();
         $model = $this->pageClass;
         $type = $model->where('status=1')->order('id')->select();
+        $label = $this->pageLabel->where('status=1')->field('id,name')->order('id')->select();
+        $this->assign('_label', $label);
         $this->assign('_type', $type);
         $this->assign('info',$data);
         $this->display();
@@ -263,9 +298,13 @@ class YellowPagesController extends AdminController {
                 }
                 $this->success('添加成功', 'index.php?s=/admin/yellow_pages/category');
             } else {
-                //上传图片到OSS
-                $this->uploadLogoPicToOSS($pic_id);
-                $data['icon_url'] = $this->fetchCdnImage($pic_id);
+                if(is_numeric($pic_id)){
+                    //上传图片到OSS
+                    $this->uploadLogoPicToOSS($pic_id);
+                    $data['icon_url'] = $this->fetchCdnImage($pic_id);
+                }else{
+                    $data['icon_url'] = $pic_id;
+                }
                 $result = $model->where('id='.$cid)->save($data);
                 $this->success('更新成功', 'index.php?s=/admin/yellow_pages/category');
             }
@@ -300,6 +339,91 @@ class YellowPagesController extends AdminController {
 
     public function category_edit($id){
         $model = $this->pageClass;
+        $data = $model->where('status=1 and id='.$id)->find();
+        $this->assign('info',$data);
+        $this->display();
+    }
+
+    /**
+     * 黄页分类列表
+     */
+    public function label(){
+        $model = $this->pageLabel;
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","黄页标签列表");
+        $this->display();
+    }
+
+
+    /**
+     * 更新黄页标签
+     */
+    public function label_update(){
+        if (IS_POST) { //提交表单
+            $model = $this->pageLabel;
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $pic_id = $_POST["pic_id"];
+            $data['status']=1;
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    //上传图片到OSS
+                    $this->uploadLogoPicToOSS($pic_id);
+                    $data['url'] = $this->fetchCdnImage($pic_id);
+                    $result = $model->data($data)->add();
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/yellow_pages/label');
+            } else {
+                if(is_numeric($pic_id)){
+                    //上传图片到OSS
+                    $this->uploadLogoPicToOSS($pic_id);
+                    $data['url'] = $this->fetchCdnImage($pic_id);
+                }else{
+                    $data['url'] = $pic_id;
+                }
+                $result = $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/yellow_pages/label');
+            }
+        } else {
+            $this->display('add');
+        }
+    }
+
+    /**删除黄页标签
+     * @param $id
+     */
+    public function label_delete($id){
+        if(!empty($id)){
+            $model = $this->pageLabel;
+            $data['status'] = -1;
+            if(is_array($id)){
+                $map['id'] = array('in',$id);
+                $res = $model->where($map)->save($data);
+            }else{
+                $map['id'] = $id;
+                $res = $model->where($map)->save($data);
+            }
+            if(!$res){
+                $this->error("删除数据失败");
+            }else{
+                $this->success("删除成功",'index.php?s=/admin/yellow_pages/label');
+            }
+        }else{
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    public function label_edit($id){
+        $model = $this->pageLabel;
         $data = $model->where('status=1 and id='.$id)->find();
         $this->assign('info',$data);
         $this->display();

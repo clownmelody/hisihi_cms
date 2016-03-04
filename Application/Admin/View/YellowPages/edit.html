@@ -48,16 +48,23 @@
 
                     <div class="form-item cf">
                         <label class="item-label">黄页标签</label>
-                        <input type="radio" value="0" name="label" <eq name="info['label']" value="0">checked</eq>/>无 &nbsp;&nbsp;
-                        <input type="radio" value="1" name="label" <eq name="info['label']" value="1">checked</eq>/>最热Hot
-                        <input type="radio" value="2" name="label" <eq name="info['label']" value="2">checked</eq>/>最新New
+                        <notempty name="_label">
+                            <select class="text input-large" name="label" style="height: 30px;width: 400px;">
+                                <option value="0" selected>无</option>
+                                <volist name="_label" id="vo">
+                                    <option value="{$vo.id}" <eq name="vo['id']" value="$info['label']">selected="selected"</eq>>{$vo.name}</option>
+                                </volist>
+                            </select>
+                            <else/>
+                            <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                        </notempty>
                     </div>
 
                     <div class="form-item cf">
                         <label class="item-label">黄页图标</label>
                         <div class="controls">
                             <input type="file" id="upload_company_picture">
-                            <input type="hidden" name="pic_id" id="cover_id_company" value="{$info.pic_id}"/>
+                            <input type="hidden" name="pic_id" id="cover_id_company" value="{$info['icon_url']}"/>
                             <div class="upload-img-box">
                                 <notempty name="info['icon_url']">
                                     <div class="upload-pre-item"><img src="{$info['icon_url']}"/></div>

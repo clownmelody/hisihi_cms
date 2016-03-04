@@ -2,66 +2,25 @@
 <block name="body">
     <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
     <div class="main-title cf">
-        <h2>新增黄页信息</h2>
+        <h2>新增黄页标签</h2>
     </div>
 
     <!-- 标签页导航 -->
     <div class="tab-wrap">
         <div class="tab-content">
             <!-- 表单 -->
-            <form id="form" action="{:U('update')}" method="post" class="form-horizontal doc-modal-form">
+            <form id="form" action="{:U('label_update')}" method="post" class="form-horizontal doc-modal-form">
                 <input type="hidden" name="cid" id="cid" value=""/>
                 <!-- 基础 -->
                 <div id="tab1" class="tab-pane in tab1">
                     <div class="form-item cf">
-                        <label class="item-label">网站名称</label>
+                        <label class="item-label">标签名称</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="website_name" value="">
+                            <input type="text" class="text input-large" name="name" value="">
                         </div>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">网址(以http://开头)</label>
-                        <div class="controls">
-                            <input type="text" class="text input-large" name="url" value="">
-                        </div>
-                    </div>
-                    <div class="form-item cf">
-                        <label class="item-label">黄页类别</label>
-                        <div class="controls">
-                            <notempty name="_type">
-                                <select class="text input-large" name="class_id" style="height: 30px;width: 400px;">
-                                    <volist name="_type" id="vo">
-                                        <option value="{$vo.id}" >{$vo.category_name}</option>
-                                    </volist>
-                                </select>
-                                <else/>
-                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
-                            </notempty>
-                        </div>
-                    </div>
-
-                    <div class="form-item cf">
-                        <label class="item-label">推荐到首页</label>
-                        <input type="radio" value="1" name="status" checked/>否 &nbsp;&nbsp;
-                        <input type="radio" value="2" name="status" />是
-                    </div>
-
-                    <div class="form-item cf">
-                        <label class="item-label">黄页标签</label>
-                        <notempty name="_label">
-                            <select class="text input-large" name="label" style="height: 30px;width: 400px;">
-                                <option value="0" selected>无</option>
-                                <volist name="_label" id="vo">
-                                    <option value="{$vo.id}" >{$vo.name}</option>
-                                </volist>
-                            </select>
-                            <else/>
-                            <div  class="text-center"> aOh! 暂时还没有内容!</div>
-                        </notempty>
-                    </div>
-
-                    <div class="form-item cf">
-                        <label class="item-label">黄页图标</label>
+                        <label class="item-label">标签图标</label>
                         <div class="controls">
                             <input type="file" id="upload_company_picture">
                             <input type="hidden" name="pic_id" id="cover_id_company"/>
@@ -84,9 +43,9 @@
                                 'removeTimeout'	  : 1,
                                 'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
                                 "onUploadSuccess" : uploadPictureCompany,
-                            'onFallback' : function() {
-                                alert('未检测到兼容版本的Flash.');
-                            }
+                                'onFallback' : function() {
+                                    alert('未检测到兼容版本的Flash.');
+                                }
                             });
                             function uploadPictureCompany(file, data){
                                 var data = $.parseJSON(data);
@@ -107,12 +66,6 @@
                             }
                         </script>
                     </div>
-                    <div class="form-item cf">
-                        <label class="item-label">浏览量（手动修改，用于排序）</label>
-                        <div class="controls">
-                            <input type="text" class="text input-large" name="fake_view_count" value="">
-                        </div>
-                    </div>
                 </div>
 
                 <!-- 按钮 -->
@@ -130,9 +83,6 @@
 
 <script>
     //导航高亮
-    highlight_subnav('{:U('yellow_pages/index')}');
+    highlight_subnav('{:U('yellow_pages/label')}');
 </script>
-<block name="script">
 
-
-</block>
