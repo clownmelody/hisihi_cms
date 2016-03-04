@@ -3,10 +3,9 @@
 namespace Admin\Controller;
 use Think\Exception;
 use Think\Page;
+
 /**
  * 2.5版本首页资讯流部分
- * Class InformationFlowController
- * @package Admin\Controller
  */
 class InformationFlowController extends AdminController {
 

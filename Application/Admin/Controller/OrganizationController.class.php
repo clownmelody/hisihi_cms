@@ -2929,7 +2929,7 @@ class OrganizationController extends AdminController
             $post_data['organization_id'] = $_POST["organization_id"];
             $post_data['group_name'] = $_POST["group_name"];
             $post_data['description'] = $_POST["description"];
-            $post_data['admin_uid'] = 'o'.$_POST["admin_uid"];
+            $post_data['admin_uid'] = 'c'.$_POST["admin_uid"];
             $post_data['conversation_id'] = 0;
             $post_data['member_client_ids'] = null;
             $group_avatar_id = $_POST["group_avatar"];
@@ -2937,11 +2937,12 @@ class OrganizationController extends AdminController
             $group_avatar = $this->fetchCdnImage($group_avatar_id);
             $post_data['group_avatar'] = $group_avatar;
             $post_data = json_encode($post_data);
-            $result = $this->request_to_python_im_create_group_service("http://api.hisihi.com/v1/im/group", $post_data);
+            $result = $this->request_to_python_im_create_group_service(C('PYTHON_API_SERVICE_HOST_NAME')."/v1/im/group", $post_data);
             if($result){
                 $this->success('创建群组成功','index.php?s=/admin/organization/index');
+            } else {
+                $this->error('创建群组失败');
             }
-            $this->error('创建群组失败');
         } else {  //  编辑群组
 
         }

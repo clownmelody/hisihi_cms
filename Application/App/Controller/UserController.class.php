@@ -2359,7 +2359,15 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
     }
 
     public function getGroupCount($uid){
-        $group_count = M('ImGroupMembers')->where('status=1 and member_id=\'c'.$uid.'\'')->count();
+        $group_count = 0;
+        $list = M('ImGroupMembers')->where('status=1 and member_id=\'c'.$uid.'\'')->select();
+        foreach($list as $group){
+            $group_id = $group['group_id'];
+            $isExist = M('ImGroups')->where('status=1 and id='.$group_id)->count();
+            if($isExist){
+                $group_count++;
+            }
+        }
         return $group_count;
     }
 
@@ -2386,11 +2394,11 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
         return $pic_count;
     }
 
-
+//
 //    public function renameOldAccount(){
 //        $name_array = file('/var/tmp/name.txt');
 //        $model = M('Member');
-//        $member_list = $model->where('uid>13300 and nickname like "%嘿设汇%"')->limit(0, 367)->select();
+//        $member_list = $model->where('uid>240 and nickname like "%TestUser%"')->limit(0, 1233)->select();
 //        foreach($member_list as $index => $member){
 //            $uid = $member['uid'];
 //            $data['nickname'] = $name_array[$index];
