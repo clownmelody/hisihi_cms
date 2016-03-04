@@ -528,6 +528,35 @@ class ArticleController extends AdminController {
     }
 
     /**
+     * 添加头条到首页资讯流内容当中
+     */
+    public function addToInformationFlowContent(){
+        $ids = I('request.ids');
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        $model = M('InformationFlowContent');
+        try {
+            foreach($ids as $rid){
+                $isExist = $model->where('content_type=1 and content_id='.$rid)->count();
+                if(!$isExist){
+                    $document_model = D('Document');
+                    $document_detail = $document_model->where(array('id'=>$rid))->find();
+                    $name = $document_detail['title'];
+                    $data['content_id'] = $rid;
+                    $data['content_type'] = 1;
+                    $data['content_name'] = $name;
+                    $data['create_time'] = time();
+                    $model->add($data);
+                }
+            }
+        } catch (Exception $e){
+            $this->error('添加失败，请检查后重试');
+        }
+        $this->success("添加成功", 'index.php?s=/admin/article/topcommend');
+    }
+
+    /**
      * 添加到推荐头条部分
      */
     /*public function pushToRecommend(){

@@ -118,7 +118,36 @@ class AdvsController extends AddonsController{
 				D('Addons://Advs/Advs')->forbidden($id);
 			}
 			$this->success('成功禁用该广告',Cookie('__forward__'));
-		}			
-
+		}
 	}
+
+	/**
+	 * 添加广告到首页资讯流内容当中
+	 */
+	public function addToInformationFlowContent(){
+		$ids = I('post.id');
+		if(empty($ids)){
+			$this->error('请选择要操作的数据');
+		}
+		$model = M('InformationFlowContent');
+		try {
+			foreach($ids as $rid){
+				$isExist = $model->where('content_type=3 and content_id='.$rid)->count();
+				if(!$isExist){
+					$advs_model = D('Advs');
+					$advs_detail = $advs_model->where(array('id'=>$rid))->find();
+					$name = $advs_detail['title'];
+					$data['content_id'] = $rid;
+					$data['content_type'] = 3;
+					$data['content_name'] = $name;
+					$data['create_time'] = time();
+					$model->add($data);
+				}
+			}
+		} catch (Exception $e){
+			$this->error('添加失败，请检查后重试');
+		}
+		$this->success("添加成功", 'index.php?s=/admin/information_flow/content');
+	}
+
 }

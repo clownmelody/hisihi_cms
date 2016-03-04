@@ -35,7 +35,8 @@
 			<input type="hidden" class="hide-data" name="pid" value="{$pid}"/>
 			<button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/setStatus",array("status"=>-1))}">删 除</button>
             <button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/pushArticleOrVideo")}">推 送</button>
-            <!--<button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/pushToRecommend")}">推荐头条</button>-->
+			<button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/addToInformationFlowContent")}">添加到资讯首页</button>
+			<!--<button class="btn ajax-post confirm" target-form="ids" url="{:U("Article/pushToRecommend")}">推荐头条</button>-->
 		</div>
 
 		<!-- 高级搜索 -->

@@ -2970,11 +2970,17 @@ class OrganizationController extends AdminController
      */
     public function im_group_delete($id){
         if(!empty($id)){
-            $model = M('ImGroups');
-            $data['status'] = -1;
-            $id = intval($id);
-            $model->where('id='.$id)->save($data);
-            $this->success('删除成功','index.php?s=/admin/organization/imgroup');
+//            $model = M('ImGroups');
+//            $data['status'] = -1;
+//            $id = intval($id);
+//            $model->where('id='.$id)->save($data);
+            $post_data = array();
+            $result = $this->request_to_python_im_delete_group_service(C('PYTHON_API_SERVICE_HOST_NAME')."/v1/im/group/".$id, $post_data);
+            if($result){
+                $this->success('删除成功','index.php?s=/admin/organization/imgroup');
+            } else {
+                $this->error('删除失败');
+            }
         } else {
             $this->error('未选择要删除的数据');
         }
@@ -2995,6 +3001,27 @@ class OrganizationController extends AdminController
         curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if($httpCode != 201){
+            return false;
+        }
+        curl_close($ch);
+        return true;
+    }
+
+    /**
+     * @param $url
+     * @param $post_data
+     * @return bool
+     */
+    private function request_to_python_im_delete_group_service($url, $post_data) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if($httpCode != 204){
             return false;
         }
         curl_close($ch);

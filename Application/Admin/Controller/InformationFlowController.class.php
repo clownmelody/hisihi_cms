@@ -97,5 +97,44 @@ class InformationFlowController extends AdminController {
         }
     }
 
+    /**
+     * 资讯流内容列表
+     */
+    public function content(){
+        $model = M('InformationFlowContent');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","资讯流内容");
+        $this->display();
+    }
+
+    /**
+     * 内容状态修改
+     * @param $id
+     * @param int $status
+     */
+    public function setContentStatus($id, $status=1){
+        if(!empty($id)){
+            $model = M('InformationFlowContent');
+            $data['status'] = $status;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/informationflow/content');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
 
 }
