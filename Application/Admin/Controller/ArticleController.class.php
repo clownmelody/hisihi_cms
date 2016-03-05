@@ -538,10 +538,14 @@ class ArticleController extends AdminController {
         $model = M('InformationFlowContent');
         try {
             foreach($ids as $rid){
-                $isExist = $model->where('content_type=1 and content_id='.$rid)->count();
-                if(!$isExist){
+                $content_detail = $model->where('content_type=1 and content_id='.$rid)->find();
+                if($content_detail){
+                    if($content_detail['status']==-1){
+                        $model->where('content_type=1 and content_id='.$rid)->save(array('status'=>1));
+                    }
+                } else {
                     $document_model = D('Document');
-                    $document_detail = $document_model->where(array('id'=>$rid))->find();
+                    $document_detail = $document_model->where(array('id'=>$rid, 'status'=>1))->find();
                     $name = $document_detail['title'];
                     $data['content_id'] = $rid;
                     $data['content_type'] = 1;

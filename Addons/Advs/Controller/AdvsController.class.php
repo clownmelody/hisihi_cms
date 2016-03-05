@@ -132,10 +132,14 @@ class AdvsController extends AddonsController{
 		$model = M('InformationFlowContent');
 		try {
 			foreach($ids as $rid){
-				$isExist = $model->where('content_type=3 and content_id='.$rid)->count();
-				if(!$isExist){
+				$content_detail = $model->where('content_type=3 and content_id='.$rid)->count();
+				if($content_detail){
+					if($content_detail['status']==-1){
+						$model->where('content_type=3 and content_id='.$rid)->save(array('status'=>1));
+					}
+				} else {
 					$advs_model = D('Advs');
-					$advs_detail = $advs_model->where(array('id'=>$rid))->find();
+					$advs_detail = $advs_model->where(array('id'=>$rid, 'status'=>1))->find();
 					$name = $advs_detail['title'];
 					$data['content_id'] = $rid;
 					$data['content_type'] = 3;
