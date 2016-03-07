@@ -2276,7 +2276,11 @@ class OrganizationController extends AdminController
     /**
      * 机构证书
      */
-    public function certificate(){
+    public function certificate($organization_id=0){
+        if($organization_id){
+            $map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+        }
         $name = I('name');
         if(!empty($name)){
             $map['name'] = array('like', '%' . (string)$name . '%');
@@ -2292,63 +2296,103 @@ class OrganizationController extends AdminController
         $Page = new Page($count, 10);
         $show = $Page->show();
         $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$Certificate){
+            if($organization_id){
+                $Certificate['organization_name'] = $organization_name;
+            }else{
+                if($Certificate['organization_id'] > 0){
+                    $Certificate['organization_name'] = M('Organization')
+                        ->where(array('id'=>$Certificate['organization_id'],'status'=>1))->getField('name');
+                }else{
+                    $Certificate['organization_name'] = '公用';
+                }
+            }
+        }
+        if($organization_id){
+            $this->assign('organization_id',$organization_id);
+            $this->assign('organization_name',$organization_name);
+        }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
-        $this->assign("meta_title","机构认证");
+        $this->assign("meta_title","机构认证报告");
         $this->display();
     }
 
     /**
      * 认证通过
      */
-    public function certificate_pass($id){
-        if(!empty($id)){
-            $model = M('OrganizationCertificate');
-            $data['status'] = 2;
-            if(is_array($id)){
-                foreach ($id as $i)
-                {
-                    $model->where('id='.$i)->save($data);
-                    $organization_id = $model->where('id='.$i)->getField('organization_id');
-                    M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>2));
-                }
-            } else {
-                $id = intval($id);
-                $model->where('id='.$id)->save($data);
-                $organization_id = $model->where('id='.$id)->getField('organization_id');
-                M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>2));
-            }
-            $this->success('认证成功','index.php?s=/admin/organization/certificate');
-        } else {
-            $this->error('未选择要认证的数据');
+    public function certificate_add($organization_id=0){
+        if($organization_id){
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+            $this->assign('organization_name',$organization_name);
+            $this->assign('organization_id',$organization_id);
+            $this->assign('from_org',I('from_org'));
         }
+        $this->display();
     }
 
     /**
      * 认证拒绝
      */
-    public function certificate_refuse($id){
-        if(!empty($id)){
+    public function certificate_update(){
+        if (IS_POST) { //提交表单
             $model = M('OrganizationCertificate');
-            $data['status'] = -2;
-            if(is_array($id)){
-                foreach ($id as $i)
-                {
-                    $model->where('id='.$i)->save($data);
-                    $organization_id = $model->where('id='.$i)->getField('organization_id');
-                    M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>-2));
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $data["content"] = $_POST["content"];
+            $data["organization_id"] = $_POST["organization_id"];
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                if(I('from_org')){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/certificate&organization_id='.$data["organization_id"]);
+                }{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/certificate');
                 }
             } else {
-                $id = intval($id);
-                $model->where('id='.$id)->save($data);
-                $organization_id = $model->where('id='.$id)->getField('organization_id');
-                M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>-2));
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                if(I('from_org')){
+                    $this->success('更新成功', 'index.php?s=/admin/organization/certificate&organization_id='.$data["organization_id"]);
+                }{
+                    $this->success('更新成功', 'index.php?s=/admin/organization/certificate');
+                }
             }
-            $this->success('拒绝认证成功','index.php?s=/admin/organization/certificate');
-        } else {
-            $this->error('未选择要拒绝认证的数据');
         }
+    }
+
+    public function certificate_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationCertificate');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
+        }
+        if(I('organization_id')){
+            $map['organization_id'] = I('organization_id');
+            $organization_name = M('Organization')->where(array('id'=>I('organization_id'),'status'=>1))->getField('name');
+            $this->assign('organization_name',$organization_name);
+            $this->assign('organization_id',I('organization_id'));
+        }
+        $this->assign('info', $data);
+        $this->meta_title = '编辑机构公告信息';
+        $this->display();
     }
 
     /**

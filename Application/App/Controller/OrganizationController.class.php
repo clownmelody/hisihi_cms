@@ -2155,6 +2155,10 @@ class OrganizationController extends AppController
      * @param int $organization_id
      */
     public function OrganizationAuthenticationReport($organization_id=0){
+        $content = M('OrganizationCertificate')
+            ->where('status=1 and organization_id='.$organization_id)
+            ->getField('content');
+        $this->assign('content',$content);
         $this->display('organizationauthenticationreport');
     }
 
