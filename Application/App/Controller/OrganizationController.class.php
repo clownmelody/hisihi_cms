@@ -2193,10 +2193,10 @@ class OrganizationController extends AppController
             //$this->$this->apiError(-2,'未选择课程');
             $course_id=0;
         }
-        $relationModel = M('OrganizationRelation');
-        $is_exist = $relationModel->where('status=1 and group=6 and uid='.$uid)->find();
+        $relationModel = M('AuthGroupAccess');
+        $is_exist = $relationModel->where('group_id=6 and uid='.$uid)->find();
         if($is_exist){
-            $this->apiError(-5,'机构老师不能报名');
+            $this->apiError(-5,'老师不能报名');
         }
 
         $map['organization_id']=$organization_id;
