@@ -3029,6 +3029,39 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 添加课程到首页资讯流内容当中
+     */
+    public function addToInformationFlowContent(){
+        $ids = I('post.id');
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        $model = M('InformationFlowContent');
+        try {
+            foreach($ids as $rid){
+                $content_detail = $model->where('content_type=2 and content_id='.$rid)->count();
+                if($content_detail){
+                    if($content_detail['status']==-1){
+                        $model->where('content_type=2 and content_id='.$rid)->save(array('status'=>1));
+                    }
+                } else {
+                    $organization_course_model = D('OrganizationCourse');
+                    $course_detail = $organization_course_model->where(array('id'=>$rid, 'status'=>1))->find();
+                    $name = $course_detail['title'];
+                    $data['content_id'] = $rid;
+                    $data['content_type'] = 2;
+                    $data['content_name'] = $name;
+                    $data['create_time'] = time();
+                    $model->add($data);
+                }
+            }
+        } catch (Exception $e){
+            $this->error('添加失败，请检查后重试');
+        }
+        $this->success("添加成功", 'index.php?s=/admin/organization/course');
+    }
+
+    /**
      * 上传图片到OSS
      * @param $picID
      */
