@@ -73,7 +73,6 @@ class InspirationController extends AppController {
                 $list = $model->where($map)->order('view_count desc')->page($page, $count)->select();
                 break;
         }
-
         $list = $this->formatList($list,$uid);
         $extra['totalCount'] = $total_count;
         $extra['data'] = $list;
@@ -284,17 +283,18 @@ class InspirationController extends AppController {
             return null;
         $model = M();
         $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        $picUrl = null;
         if($pic_info){
             $path = $pic_info[0]['path'];
             $objKey = substr($path, 17);
             $param["bucketName"] = "hisihi-other";
             $param['objectKey'] = $objKey;
-            if(file_exists('.'.$path)){
-                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
-                if($isExist){
-                    $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
-                }
+            //if(file_exists('.'.$path)){
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
             }
+            //}
         }
         return $picUrl;
     }

@@ -265,7 +265,7 @@ class IssueController extends AdminController
                 // 同步课程数据
                 $organizationCourseModel = M('OrganizationCourse');
                 $organizationVideoModel = M('OrganizationVideo');
-                $courseData['organization_id'] = 100101;
+                $courseData['organization_id'] = 1575;
                 $courseData['title'] = op_t($coursevideo['name']);
                 $courseData['content'] = op_h($coursevideo['description']);
                 $courseData['create_time'] = time();

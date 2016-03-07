@@ -2834,7 +2834,8 @@ class OrganizationController extends AppController
      */
     private function findTeacherById($teacher_id=null){
         if(empty($teacher_id)){
-            $this->apiError(-1,'老师id不能为空');
+            return null;
+            //$this->apiError(-1,'老师id不能为空');
         }
         $teacher['uid'] = $teacher_id;
         $isfollowing = M('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$teacher_id))->find();
