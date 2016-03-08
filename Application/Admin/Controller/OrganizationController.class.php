@@ -2395,6 +2395,29 @@ class OrganizationController extends AdminController
         $this->display();
     }
 
+    public function certificate_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationCertificate');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            if(I('from_org')){
+                $this->success('删除成功','index.php?s=/admin/organization/certificate&organization_id='.I("organization_id"));
+            }else{
+                $this->success('删除成功','index.php?s=/admin/organization/certificate');
+            }
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
     /**
      * 机构公告列表
      */
