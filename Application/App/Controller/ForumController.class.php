@@ -155,6 +155,14 @@ class ForumController extends AppController
                 $info_list = A('User')->_info_list($profile_group['id'], $v['uid'], $version);
                 $v['userInfo']['extinfo'] = $info_list;
             }
+            if((float)$version>=2.4){//2.5以后版本
+                if($v['userInfo']['group'] == 5){
+                    $v['first_teacher'] = $this->getFirstReplyTeacher($v['post_id']);
+                }else{
+                    $v['first_teacher'] = null;
+                }
+            }
+
             //解析并成立图片数据
             $v['img'] = $this->match_img($v['content']);
             /*
@@ -2888,4 +2896,18 @@ class ForumController extends AppController
         $sha = md5($sha.'m:24iyNJ~1$z(^SjGxe&ngorTfA#7EFu<?.c]Yt+');
         var_dump($sha);
     }
+
+    public function getFirstReplyTeacher($post_id=null){
+        $map['post_id'] = $post_id;
+        $map['status'] = array('in','1,3');
+        $teacher = M('ForumPostReply')->field('uid')->where($map)->order('create_time desc')->limit(1)->select();
+        $teacher_name = M('Member')->where('uid='.$teacher[0]['uid'])->getField('nickname');
+        if($teacher_name){
+            return $teacher_name;
+        }else{
+            return null;
+        }
+
+    }
+
 }
