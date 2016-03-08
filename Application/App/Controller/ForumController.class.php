@@ -129,9 +129,9 @@ class ForumController extends AppController
     public function forumType()
     {
         $forum_type = $this->getForumsByType();
-
         $this->apiSuccess("获取类别标签成功", null, array('types' => $forum_type));
     }
+
     private function formatList($list, $version)
     {
         $map_support['appname'] = 'Forum';
@@ -143,11 +143,12 @@ class ForumController extends AppController
         }
 
         foreach ($list as &$v) {
-            $forumInfo = $forum_key_value[$v['forum_id']];
-            $mapx = array('id' => $forumInfo['type_id'], 'status' => 1);
+            //$forumInfo = $forum_key_value[$v['forum_id']];
+            $mapx = array('id' => $v['forum_id'], 'status' => 1);
             $forumType = M('ForumType')->where($mapx)->select();
             $v['post_id'] = $v['id'];
-            $v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];
+            //$v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];
+            $v['forumTitle'] = $forumType[0]['title'];
 
             $v['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $v['uid']);
             if((float)$version>=2.2){
@@ -438,16 +439,6 @@ class ForumController extends AppController
             $totalCount = 0;
             $list = array();
         }
-
-        /*if($show_adv==true){
-            $len = count($list);
-            $now = time();
-            $total_count = M('Advs')->where('position=4 and status=1 and '.$now.' between create_time and end_time')->count();
-            if($total_count>0){
-                $list[$len] = $this->getOneForumAdv(640, 960);
-            }
-        }*/
-
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
