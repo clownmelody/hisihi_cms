@@ -156,7 +156,7 @@ class ForumController extends AppController
                 $info_list = A('User')->_info_list($profile_group['id'], $v['uid'], $version);
                 $v['userInfo']['extinfo'] = $info_list;
             }
-            if((float)$version>=2.4){//2.5以后版本
+            if((float)$version>2.4){//2.5以后版本
                 if($v['userInfo']['group'] == 5){
                     $v['first_teacher'] = $this->getFirstReplyTeacher($v['post_id']);
                 }else{
