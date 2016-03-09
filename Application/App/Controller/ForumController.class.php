@@ -1835,7 +1835,7 @@ class ForumController extends AppController
      * 获取论坛置顶帖
      * @param string $version
      */
-    public function forumTopPost($version='1.0'){
+    public function forumTopPost($version='1.0', $community=1){
         if((float)$version>=2.2){
             $first_post['id'] = "001";
             $first_post['title'] = "嘿设汇新闻";
@@ -1845,7 +1845,8 @@ class ForumController extends AppController
             $first_post['link_url'] = "";
             $first_post['is_inner'] = 0;
             $first_post['url'] = C('HOST_NAME_PREFIX')."app.php/forum/hisihi_news";
-            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=0')
+            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1
+                                            and is_inner=0 and community='.$community)
                 ->order('create_time desc')->page(1, 2)->select();
             array_unshift($list, $first_post);
 
@@ -1921,11 +1922,12 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      * @param int $removeId
+     * @param int $community
      */
-    public function newsList($page=1, $count=10, $removeId=0){
-        $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1 and id!='.$removeId)
+    public function newsList($page=1, $count=10, $removeId=0, $community=1){
+        $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1 and id!='.$removeId.' and community='.$community)
             ->order('create_time desc')->page($page, $count)->select();
-        $totalCount = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')->count();
+        $totalCount = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1 and community='.$community)->count();
         foreach($list as &$value){
             $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$value['id'];
             $value['pic_url'] = $this->fetchImageFromOSS($value['cover_id']);
