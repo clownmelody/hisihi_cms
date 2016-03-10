@@ -1905,6 +1905,8 @@ class OrganizationController extends AppController
             $uid = $comment['uid'];
             $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
             $comment['userInfo']['nickname'] = "嘿设汇用户";
+            $comment['userInfo']['avatar128'] = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/default_avatar.png";
+            $comment['userInfo']['avatar256'] = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/default_avatar.png";
             unset($comment['organization_id']);
             unset($comment['uid']);
             unset($comment['status']);
@@ -2637,6 +2639,9 @@ class OrganizationController extends AppController
         $data['follow_who'] = $organization_id;
         $data['type'] = 2;
         $count = $model->where($data)->count();
+        $model = M('Organization');
+        $fake_info = $model->field('fake_fans_count')->where('id='.$organization_id)->find();
+        $count = $count + (int)$fake_info['fake_fans_count'];
         return $count;
     }
 

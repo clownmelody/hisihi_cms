@@ -184,7 +184,7 @@ class OrganizationController extends AdminController
             $data["advantage"] = $_POST["advantage"];
             $data["introduce"] = $_POST["introduce"];
             $data["guarantee_num"] = $_POST["guarantee_num"];
-            $data["view_count"] = rand(1000, 3000);
+            $data["view_count"] = 0;
             $data["video"] = $_POST["video"];
             $data["sort"] = $_POST["sort"];
             if(empty($data["sort"]) || intval($data["sort"])==0){
@@ -206,6 +206,14 @@ class OrganizationController extends AdminController
                             'update_time'=>time()
                         );
                         M('OrganizationApplication')->add($application);
+                        $div = (int)$data["sort"]/100;
+                        $init_view_count = (int)(rand(2000, 3000) * (2-$div));
+                        $init_fans_count = (int)(rand(200, 300) * (2-$div));
+                        $init_data = array(
+                            'view_count' => $init_view_count,
+                            'fake_fans_count' => $init_fans_count
+                        );
+                        $model->where('id='.$id)->save($init_data);
                     }
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
@@ -1979,9 +1987,12 @@ class OrganizationController extends AdminController
     //播放视频
     public function video_play($id){
         if(!empty($id)){
-            $this->display();
+            $model = M('OrganizationVideo');
+            $data = $model->field('url')->where('id='.$id)->find();
+            $url = "http://121.42.44.208:8082/MIS/downloadVideo?videoName=".$data['url'];
+            redirect($url);
         } else {
-            $this->error('未选择要播放的视频');
+            $this->error('未选择要下载的视频');
         }
     }
 

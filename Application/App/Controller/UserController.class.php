@@ -2372,7 +2372,7 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
     }
 
     public function getPostCount($uid){
-        $post_count = M('ForumPost')->where('status=1 and uid='.$uid)->count();
+        $post_count = M('ForumPost')->where('is_top = 0 and status=1 and uid='.$uid)->count();
         return $post_count;
     }
 

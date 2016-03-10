@@ -285,4 +285,33 @@ class FakedataController extends AppController {
         }
     }
 
+
+    public function autoAddOrganizationViewCountAndFansCount(){
+        $model = M('Organization');
+        $list = $model->field('id, city, sort')->where('status=1')->select();
+        foreach($list as $organization) {
+            $sort = $organization['sort'];
+            $div = (int)$sort/100;
+            $add_view_count = (int)(rand(150, 250) * (2-$div));
+            $add_fans_count = (int)(rand(10, 30) * (2-$div));
+            $model->where('id='.$organization['id'])->setInc('view_count', $add_view_count);
+            $model->where('id='.$organization['id'])->setInc('fake_fans_count', $add_fans_count);
+        }
+    }
+
+    public function isInFirstClassCity($city_name){
+
+    }
+
+    /*public function initFansCount(){
+        $model = M('Organization');
+        $list = $model->field('id, sort')->select();
+        foreach($list as $organization) {
+            $sort = $organization['sort'];
+            $div = (int)$sort/100;
+            $add_fans_count = (int)(rand(200, 300) * (2-$div));
+            $model->where('id='.$organization['id'])->setInc('fake_fans_count', $add_fans_count);
+        }
+    }*/
+
 }
