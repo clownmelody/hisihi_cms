@@ -106,6 +106,12 @@ class InformationFlowController extends AdminController {
         $Page = new Page($count, 10);
         $show = $Page->show();
         $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$content){
+            $config_type = $content['config_type'];
+            $model = M('InformationFlowConfig');
+            $config_detail = $model->field('title')->where('id='.$config_type)->find();
+            $content['config_type'] = $config_detail['title'];
+        }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("_total", $count);
@@ -136,5 +142,112 @@ class InformationFlowController extends AdminController {
             $this->error('未选择要处理的数据');
         }
     }
+
+    /**
+     * 资讯流配置列表
+     */
+    public function config(){
+        $model = M('InformationFlowConfig');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","资讯流配置");
+        $this->display();
+    }
+
+    public function configAdd(){
+        $this->display();
+    }
+
+    public function configUpdate(){
+        if (IS_POST) { //提交表单
+            $model = M('InformationFlowConfig');
+            $cid = $_POST['cid'];
+            $data['title'] = $_POST["title"];
+            if(empty($cid)){
+                $data["create_time"] = time();
+                $data["update_time"] = time();
+                try {
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/informationflow/config');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/informationflow/config');
+            }
+        } else {
+            $this->display('configAdd');
+        }
+    }
+
+    /**
+     * 内容状态修改
+     * @param $id
+     * @param int $status
+     */
+    public function setConfigStatus($id, $status=1){
+        if(!empty($id)){
+            $model = M('InformationFlowConfig');
+            $data['status'] = $status;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/informationflow/config');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    /**
+     * @param $id
+     */
+    public function editconfig($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('InformationFlowConfig');
+        $data = $Model->where('id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $this->assign('banner', $data);
+        $this->meta_title = '编辑配置';
+        $this->display();
+    }
+
+    public function setConfigType($id){
+        $model = M('InformationFlowConfig');
+        $config_type = $model->where('status=1')->order('id')->select();
+        $this->assign('_config_type', $config_type);
+        $this->assign('cid', $id);
+        $this->display();
+    }
+
+
+    public function setConfigUpdate($cid, $config_type){
+        if(!empty($cid)){
+            $model = M('InformationFlowContent');
+            $data['config_type'] = $config_type;
+            $cid = intval($cid);
+            $model->where('id='.$cid)->save($data);
+            $this->success('处理成功','index.php?s=/admin/informationflow/content');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
 
 }

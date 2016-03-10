@@ -4,15 +4,18 @@
 	<!-- 标题 -->
 	<div class="main-title">
 		<h2>
-		资讯流内容列表
+		资讯流类型配置
 		</h2>
 	</div>
 
 	<!-- 按钮工具栏 -->
 	<div class="cf">
 		<div class="fl">
-            <button class="btn ajax-post" target-form="ids" url="{:U("informationflow/setContentStatus",array("status"=>1))}">启 用</button>
-			<button class="btn ajax-post confirm" target-form="ids" url="{:U("informationflow/setContentStatus",array("status"=>-1))}">删 除</button>
+			<div class="btn-group">
+				<button class="btn document_add" url="{:U('configAdd')}">新 增</button>
+			</div>
+            <button class="btn ajax-post" target-form="ids" url="{:U("informationflow/setConfigStatus",array("status"=>1))}">启 用</button>
+			<button class="btn ajax-post confirm" target-form="ids" url="{:U("informationflow/setConfigStatus",array("status"=>-1))}">删 除</button>
 		</div>
 	</div>
 
@@ -23,10 +26,7 @@
 			<tr>
 				<th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
 				<th class="">ID</th>
-				<th class="">内容类别</th>
-				<th class="">内容ID</th>
-				<th class="">内容标题</th>
-				<th class="">配置类型</th>
+				<th class="">类型名称</th>
 				<th class="">创建时间</th>
 				<th class="">状态</th>
 				<th class="">操作</th>
@@ -38,19 +38,16 @@
 					<tr>
 						<td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
 						<td>{$vo.id}</td>
-						<td>{$vo.content_type}</td>
-						<td>{$vo.content_id}</td>
-						<td>{$vo.content_name}</td>
-						<td>{$vo.config_type}</td>
+						<td>{$vo.title}</td>
 						<td><span>{$vo.create_time|time_format}</span></td>
 						<td><if condition="($vo.status eq 1) "> 正常
 							<else /> 删除
 						</if>
 						</td>
 						<td>
-							<a href="{:U('informationflow/setContentStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>
-							<a href="{:U('informationflow/setContentStatus?status=-1&id='.$vo['id'])}" class="ajax-get confirm">删除</a>
-							<a href="{:U('informationflow/setConfigType?id='.$vo['id'])}" >设置类型</a>
+							<a href="{:U('informationflow/editConfig?id='.$vo['id'])}" >编辑</a>
+							<a href="{:U('informationflow/setConfigStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>
+							<a href="{:U('informationflow/setConfigStatus?status=-1&id='.$vo['id'])}" class="ajax-get confirm">删除</a>
 						</td>
 					</tr>
 				</volist>

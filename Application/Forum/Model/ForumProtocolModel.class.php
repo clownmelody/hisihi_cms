@@ -48,7 +48,7 @@ class ForumProtocolModel extends Model
             foreach ($result as &$v) {
                 $v['forum'] = $forum_key_value[$v['forum_id']];
             }
-        } elseif ($tab == 'forum_in') {
+        } else if ($tab == 'forum_in') {
             $map_in = $this->_getInMap($map);
             unset($map_in['uid']);
             $map_in['status'] = 1;

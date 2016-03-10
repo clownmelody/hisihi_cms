@@ -1987,9 +1987,12 @@ class OrganizationController extends AdminController
     //播放视频
     public function video_play($id){
         if(!empty($id)){
-            $this->display();
+            $model = M('OrganizationVideo');
+            $data = $model->field('url')->where('id='.$id)->find();
+            $url = "http://121.42.44.208:8082/MIS/downloadVideo?videoName=".$data['url'];
+            redirect($url);
         } else {
-            $this->error('未选择要播放的视频');
+            $this->error('未选择要下载的视频');
         }
     }
 
