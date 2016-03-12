@@ -184,7 +184,6 @@ class OrganizationController extends AdminController
             $data["advantage"] = $_POST["advantage"];
             $data["introduce"] = $_POST["introduce"];
             $data["guarantee_num"] = $_POST["guarantee_num"];
-            $data["view_count"] = 0;
             $data["video"] = $_POST["video"];
             $data["sort"] = $_POST["sort"];
             if(empty($data["sort"]) || intval($data["sort"])==0){
@@ -192,6 +191,7 @@ class OrganizationController extends AdminController
             }
             if(empty($cid)){
                 try {
+                    $data["view_count"] = rand(2000, 3000);
                     $data["create_time"] = time();
                     $res = $model->add($data);
                     if(!$res){
