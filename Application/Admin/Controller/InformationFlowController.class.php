@@ -45,10 +45,10 @@ class InformationFlowController extends AdminController {
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/informationflow/banner');
+                $this->success('添加成功', 'index.php?s=/admin/informationFlow/banner');
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/informationflow/banner');
+                $this->success('更新成功', 'index.php?s=/admin/informationFlow/banner');
             }
         } else {
             $this->display('bannerAdd');
@@ -91,7 +91,7 @@ class InformationFlowController extends AdminController {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('处理成功','index.php?s=/admin/informationflow/banner');
+            $this->success('处理成功','index.php?s=/admin/informationFlow/banner');
         } else {
             $this->error('未选择要处理的数据');
         }
@@ -137,7 +137,7 @@ class InformationFlowController extends AdminController {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('处理成功','index.php?s=/admin/informationflow/content');
+            $this->success('处理成功','index.php?s=/admin/informationFlow/content');
         } else {
             $this->error('未选择要处理的数据');
         }
@@ -176,10 +176,10 @@ class InformationFlowController extends AdminController {
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/informationflow/config');
+                $this->success('添加成功', 'index.php?s=/admin/informationFlow/config');
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/informationflow/config');
+                $this->success('更新成功', 'index.php?s=/admin/informationFlow/config');
             }
         } else {
             $this->display('configAdd');
@@ -204,7 +204,7 @@ class InformationFlowController extends AdminController {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('处理成功','index.php?s=/admin/informationflow/config');
+            $this->success('处理成功','index.php?s=/admin/informationFlow/config');
         } else {
             $this->error('未选择要处理的数据');
         }
@@ -243,7 +243,7 @@ class InformationFlowController extends AdminController {
             $data['config_type'] = $config_type;
             $cid = intval($cid);
             $model->where('id='.$cid)->save($data);
-            $this->success('处理成功','index.php?s=/admin/informationflow/content');
+            $this->success('处理成功','index.php?s=/admin/informationFlow/content');
         } else {
             $this->error('未选择要处理的数据');
         }
