@@ -181,6 +181,37 @@ class PublicController extends AppController {
         $this->apiSuccess('获取统计信息成功', null, array('statInfo' => $statInfo));
     }
 
+    /**
+     * 获取发现页统计信息
+     */
+    public function statisticInfo(){
+        $model = M();
+        //云作业
+        $hiworks_count = C('fake_all_category_hiworks_download');
+        if(!$hiworks_count){
+            $allCount = $model->query('select sum(view) as allCount from hisihi_document');
+            $hiworks_count = (int)($allCount[0]['allCount']/37);
+        }
+        //讲师
+        $where = 'auth_group_access.uid = member.uid and auth_group_access.group_id = ';
+        $model =  M("table");
+        $statInfo['designers'] = $model->table(array(
+            'hisihi_auth_group_access'=>'auth_group_access',
+            'hisihi_member'=>'member',))->where($where.'6')->field('member.uid')->count();
+        $teacher_count = $statInfo['designers'] + C('TEACHER_COUNT_BASE')
+            + A('User')->getAutoIncreseCount();
+        //快捷键
+        $key_count = M('CompanyConfig')->where('type=10 and status=1')->getField('value');
+        //图库
+        $map['status'] = 1;
+        $inspiration_count = M('Inspiration')->where($map)->count();
+        $extra['data']['hiworks_count'] = $hiworks_count;
+        $extra['data']['teacher_count'] = $teacher_count;
+        $extra['data']['key_count'] = (int)$key_count;
+        $extra['data']['inspiration_count'] = (int)$inspiration_count;
+        $this->apiSuccess('获取统计信息成功', null, $extra);
+    }
+
     public function suggest($content) {
         $this->requireLogin();
         $this->requireSendInterval();
