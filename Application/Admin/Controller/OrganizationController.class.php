@@ -8,6 +8,7 @@
 
 namespace Admin\Controller;
 
+use App\Controller\FakedataController;
 use Think\Exception;
 use Think\Hook;
 use Think\Model;
@@ -186,17 +187,24 @@ class OrganizationController extends AdminController
             $data["guarantee_num"] = $_POST["guarantee_num"];
             $data["video"] = $_POST["video"];
             $data["sort"] = $_POST["sort"];
+            $data["view_count"] = $_POST["view_count"];
             if(empty($data["sort"]) || intval($data["sort"])==0){
                 $data["sort"]=100;
             }
             if(empty($cid)){
                 try {
-                    $data["view_count"] = rand(2000, 3000);
+                    $temController = new FakedataController();
+                    if($temController->isInFirstClassCity($data["city"])){
+                        $div = (int)$data["sort"]/100;
+                        $data["view_count"] = (int)(rand(2000, 3000)  * (2-$div));
+                    } else {
+                        $data["view_count"] = rand(1000, 2000);
+                    }
                     $data["create_time"] = time();
                     $res = $model->add($data);
                     if(!$res){
                         $this->error($model->getError());
-                    }else{
+                    } else {
                         $id = $res;
                         //添加到机构创建申请
                         $application = array(
@@ -206,13 +214,41 @@ class OrganizationController extends AdminController
                             'update_time'=>time()
                         );
                         M('OrganizationApplication')->add($application);
-                        $div = (int)$data["sort"]/100;
-                        $init_view_count = (int)(rand(2000, 3000) * (2-$div));
-                        $init_fans_count = (int)(rand(200, 300) * (2-$div));
-                        $init_data = array(
-                            'view_count' => $init_view_count,
-                            'fake_fans_count' => $init_fans_count
-                        );
+                        $sort_data = (int)$data["sort"];
+                        $temController = new FakedataController();
+                        if($temController->isInFirstClassCity($data["city"])){
+                            if($sort_data>1 && $sort_data<10){
+                                $init_view_count = rand(3000, 4000);
+                                $init_fans_count = rand(300, 400);
+                                $init_data = array(
+                                    'view_count' => $init_view_count,
+                                    'fake_fans_count' => $init_fans_count
+                                );
+                            } else {
+                                $init_view_count = rand(1000, 1500);
+                                $init_fans_count = rand(100, 150);
+                                $init_data = array(
+                                    'view_count' => $init_view_count,
+                                    'fake_fans_count' => $init_fans_count
+                                );
+                            }
+                        } else {
+                            if($sort_data>1 && $sort_data<10){
+                                $init_view_count = rand(500, 15000);
+                                $init_fans_count = rand(50, 150);
+                                $init_data = array(
+                                    'view_count' => $init_view_count,
+                                    'fake_fans_count' => $init_fans_count
+                                );
+                            } else {
+                                $init_view_count = rand(50, 100);
+                                $init_fans_count = rand(10, 20);
+                                $init_data = array(
+                                    'view_count' => $init_view_count,
+                                    'fake_fans_count' => $init_fans_count
+                                );
+                            }
+                        }
                         $model->where('id='.$id)->save($init_data);
                     }
                 } catch (Exception $e) {
@@ -220,6 +256,7 @@ class OrganizationController extends AdminController
                 }
                 $this->success('添加成功', 'index.php?s=/admin/organization/index');
             } else {
+                $data["fake_fans_count"] = $_POST["fake_fans_count"];
                 //修改机构名同时修改机构老师的扩展信息
                 $org_name = $model->where('status=1 and id='.$cid)->getField('name');
                 if($data['name'] != $org_name){

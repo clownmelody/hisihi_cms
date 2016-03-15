@@ -11,7 +11,6 @@ class RefreshPostController extends AppController {
 
     public function _initialize() {
         C('SHOW_PAGE_TRACE', false);
-
     }
 
     /**
