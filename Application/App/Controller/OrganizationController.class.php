@@ -392,6 +392,7 @@ class OrganizationController extends AppController
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
+            $result['ViewCount'] = $result['view_count'];//兼容iOS老版本
             $result['phone_num'] = $this->get400PhoneNum();
             $result['logo'] = $logo;
             $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
