@@ -1640,6 +1640,14 @@ class OrganizationController extends AppController
     }
 
     /**
+     * 城市列表是否需要同步
+     */
+    public function isCityListNeedSync(){
+        $extra['require_sync'] = false;
+        $this->apiSuccess('城市列表状态', null, $extra);
+    }
+
+    /**
      * 获取热门城市列表
      */
     public function getHotCityList(){
