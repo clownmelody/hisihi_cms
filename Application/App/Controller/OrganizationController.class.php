@@ -1674,7 +1674,11 @@ class OrganizationController extends AppController
         $model = M('Organization');
         $select_where = "application_status=2 and status=1";
         if(!empty($city)){
-            $select_where = $select_where . " and city like '%" .$city . "%'";
+            if($city == '吉林'){//区分吉林省和吉林市
+                $select_where = $select_where . " and city like '% " .$city . "%'";
+            }else{
+                $select_where = $select_where . " and city like '%" .$city . "%'";
+            }
         }
         if(!empty($type)){
             $select_where = $select_where . " and type=".$type;
