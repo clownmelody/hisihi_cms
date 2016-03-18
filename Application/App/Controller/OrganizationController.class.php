@@ -1674,7 +1674,11 @@ class OrganizationController extends AppController
         $model = M('Organization');
         $select_where = "application_status=2 and status=1";
         if(!empty($city)){
-            $select_where = $select_where . " and city like '%" .$city . "%'";
+            if($city == '吉林'){//区分吉林省和吉林市
+                $select_where = $select_where . " and city like '% " .$city . "%'";
+            }else{
+                $select_where = $select_where . " and city like '%" .$city . "%'";
+            }
         }
         if(!empty($type)){
             $select_where = $select_where . " and type=".$type;
@@ -2468,6 +2472,7 @@ class OrganizationController extends AppController
         $videoModel = M('OrganizationVideo');
         $courseInfo = $courseModel->where('status=1 and id='.$course_id)->find();
         if($courseInfo){
+            $courseInfo['ViewCount'] = $courseInfo['view_count'];//兼容iOS老版本
             $courseInfo['organization'] = $this->findOrganizationById($courseInfo['organization_id']);
             $courseInfo['lecturer'] = $this->findTeacherById($courseInfo['lecturer']);
             $courseInfo['lecturer']['info']['institution'] = $courseInfo['organization']['name'];
