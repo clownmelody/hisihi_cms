@@ -1868,7 +1868,14 @@ class ForumController extends AppController
                     $third_post['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
                 }
             }
-            $data_list = array($first_post, $second_post, $third_post);
+            //$data_list = array($first_post, $second_post, $third_post);
+            $data_list = array($first_post);
+            if($second_post['id']){
+                $data_list[] = $second_post;
+            }
+            if($third_post['id']){
+                $data_list[] = $third_post;
+            }
             foreach($data_list as &$value){
                 if($value['id']!='001'){
                     $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/topPostDetailv2/post_id/'.$value['id'];
