@@ -80,9 +80,11 @@ hisihiNews.prototype = {
         $loadinngImgTarget.addClass('active').show();  //显示加载效果
         $loadingMain=$loadinngImgTarget.find('.loadingMoreResultTipsMain').show();  //加载提示对象
         $loadingError=$loadinngImgTarget.find('.loadError');  //加载失败对象
+        var forum_community = $('.bottomVoteCon').data('id');
         var tempObj = {
                 page: pageIndex,
-                count: this.pageSize
+                count: this.pageSize,
+                community: forum_community
             },
             url = this.urlObj.server_url + '/newsList',
             that = this;
