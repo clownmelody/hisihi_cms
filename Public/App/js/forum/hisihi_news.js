@@ -82,7 +82,7 @@ hisihiNews.prototype = {
         $loadingError=$loadinngImgTarget.find('.loadError');  //加载失败对象
         var tempObj = {
                 page: pageIndex,
-                count: this.pageSize
+                count: this.pageSize,
             },
             url = this.urlObj.server_url + '/newsList',
             that = this;
