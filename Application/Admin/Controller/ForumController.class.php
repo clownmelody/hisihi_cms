@@ -297,6 +297,7 @@ class ForumController extends AdminController
             ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))
             ->ajaxButton(U('Forum/pushTopPost'), null, '推送')->buttonNew(U('Forum/post?showtop=1'),'显示置顶帖')
             ->buttonNew(U('Forum/post?showelite=1'),'显示精华帖')
+            ->ajaxButton(U('Forum/unsetPostElite'),null,'取消精华帖')
             ->keyId()->keyLink('title', '标题', 'Forum/reply?post_id=###')
             ->keyCreateTime()->keyUpdateTime()->keyTime('last_reply_time', '最后回复时间')->key('top', '是否置顶')
             ->keyStatus()->keyDoActionEdit('editPost?id=###')->keyDoActionHide()
@@ -307,12 +308,10 @@ class ForumController extends AdminController
             ->display();
     }
 
-    /**显示置顶帖
+    /**
+     * 显示置顶帖
      * @param int $page
-     * @param null $forum_id
      * @param int $r
-     * @param string $title
-     * @param string $content
      */
     /*public function showTopPost($page = 1, $forum_id = null, $r = 20, $title = '', $content = '')
     {
@@ -424,6 +423,7 @@ class ForumController extends AdminController
                 ->keyRadio('is_out_link', '外链', '是否是展示外链', array(0 => 0, 1 => 1))
                 ->keyText('link_url', '外链链接', '填写跳转的外链链接')
                 ->keyRadio('is_inner', '嘿设汇新闻', '是否是嘿设汇新闻内页', array(0 => 0, 1 => 1))
+                ->keyRadio('community', '所属圈子', '选择所属圈子', array(1 => '学习圈', 2 => '老师圈', 3 => '朋友圈', 4 => '精华圈'))
                 ->keySingleImage('cover_id','内页帖子封面')
                 ->keyCreateTime()->keyUpdateTime()
                 ->keyTime('last_reply_time', '最后回复时间')
@@ -445,7 +445,8 @@ class ForumController extends AdminController
             ->keyText('top_type', '类型', '填写置顶或加精等')
             ->keyRadio('is_out_link', '外链', '是否是展示外链', array(0 => 0, 1 => 1))
             ->keyText('link_url', '外链链接', '填写跳转的外链链接')
-            ->keyRadio('is_inner', '嘿设汇新闻', '是否是嘿设汇新闻内页', array(0 => 0, 1 => 1))
+            ->keyRadio('is_inner', '顶部分类', '选择显示在置顶的哪一栏', array(1 => '新闻', 2 => '第二栏', 3 => '第三栏'))
+            ->keyRadio('community', '所属圈子', '选择所属圈子', array(1 => '学习圈', 2 => '老师圈', 3 => '朋友圈', 4 => '精华圈'))
             ->keySingleImage('cover_id','内页帖子封面')
             ->buttonSubmit(U('saveTopPost'))->buttonBack()
             ->display();
@@ -459,14 +460,21 @@ class ForumController extends AdminController
      * @param int $is_top
      * @param int $is_out_link
      * @param null $link_url
+     * @param int $is_inner
+     * @param int $cover_id
+     * @param int $community
      */
-    public function saveTopPost($title = '', $content = '', $top_type = '置顶', $is_top = 1, $is_out_link=0, $link_url=null, $is_inner=1, $cover_id=0){
+    public function saveTopPost($title = '', $content = '', $top_type = '置顶', $is_top = 1, $is_out_link=0,
+                                $link_url=null, $is_inner=1, $cover_id=0, $community=1){
         //写入数据库
         $model = D('Forum/ForumPost');
         $random_count = rand(C('HisihiNewsInitMinViewCount'), C('HisihiNewsInitMaxViewCount'));
         $data = array('title' => $title, 'content' => $content, 'type' => $top_type, 'is_top' => $is_top,
             'is_out_link' => $is_out_link, 'link_url' => $link_url, 'is_inner' => $is_inner, 'cover_id' => $cover_id,
-            'view_count'=>$random_count);
+            'view_count'=>$random_count, 'community'=>$community);
+        if($is_inner==0){
+            $data['uid'] = 0;
+        }
         $result = $model->createPost($data);
         $this->uploadLogoPicToOSS($cover_id);
         //如果写入不成功，则报错
@@ -491,6 +499,24 @@ class ForumController extends AdminController
     {
         $builder = new AdminListBuilder();
         $builder->doSetElite('ForumPost', $ids, $is_elite);
+    }
+
+    public function unsetPostElite($ids){
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        if(is_array($ids)){
+            $map['id'] = array('in',$ids);
+            $result = M('ForumPost')->where($map)->save(array('is_elite'=>0));
+            if($result){
+                $this->success('取消精华成功', U('Forum/post?showelite=1'));
+            }
+        }else{
+            $result = M('ForumPost')->where('id='.$ids)->save(array('is_elite'=>0));
+            if($result){
+                $this->success('取消精华成功', U('Forum/post?showelite=1'));
+            }
+        }
     }
 
     public function reply($page = 1, $post_id = null, $r = 20)

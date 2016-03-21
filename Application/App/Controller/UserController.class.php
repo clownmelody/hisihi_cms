@@ -330,7 +330,7 @@ class UserController extends AppController
         }
         //返回成功信息
         $uid = $this->getUid();
-        increaseScore($uid, 5);
+        //increaseScore($uid, 5);
         $extra['checkInfo'] = $check_info;
         $extraData['scoreAdd'] = "5";
         $extraData['scoreTotal'] = getScoreCount($uid);
@@ -1066,6 +1066,12 @@ class UserController extends AppController
                 $info_map['my_follow_count'] = $this->getMyFollowerCount($uid);
                 $info_map['follow_me_count'] = $this->getFollowMeCount($uid);
             }
+            if((float)$version>=2.3){
+                $info_map['my_favorite_count'] = $this->getNewFavoriteCount($uid);
+                $info_map['my_post_count'] = $this->getPostCount($uid);
+                $info_map['my_reply_count'] = $this->getReplyCount($uid);
+                $info_map['my_picture_count'] = $this->getPictureCount($uid);
+            }
             $this->apiSuccess("获取成功", null, $info_map);
         } else {//此场景为点左侧头像出现的数据
             $map = array('uid' => $uid);
@@ -1404,10 +1410,27 @@ class UserController extends AppController
      * @return mixed
      */
     private function getNewFavoriteCount($uid=0){
-        $favorite['uid'] = $uid;
-        $favorite['appname'] = array(array('eq','Article'),array('eq','Organization'),'or');
-        $count = M('Favorite')->where($favorite)->count();
-        return $count;
+        $model = M();
+        $article = $model->query("select b.id from hisihi_favorite a LEFT JOIN hisihi_document b
+on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Article'");
+        $courses = $model->query("select b.id from hisihi_favorite a LEFT JOIN hisihi_organization_course b
+on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'");
+        $article_count = count($article);
+        $courses_count = count($courses);
+        foreach($article as &$article_item){
+            if(empty($article_item['id'])){
+                $article_count--;
+                continue;
+            }
+        }
+        foreach($courses as &$courses_item){
+            if(empty($courses_item['id'])){
+                $courses_count--;
+                continue;
+            }
+        }
+
+        return $article_count + $courses_count;
     }
 
     /**
@@ -2159,6 +2182,12 @@ class UserController extends AppController
             $extra['my_follow_count'] = $this->getMyFollowerCount($uid);
             $extra['follow_me_count'] = $this->getFollowMeCount($uid);
         }
+        if((float)$version>=2.3){
+            $extra['my_favorite_count'] = $this->getNewFavoriteCount($uid);
+            $extra['my_post_count'] = $this->getPostCount($uid);
+            $extra['my_reply_count'] = $this->getReplyCount($uid);
+            $extra['my_picture_count'] = $this->getPictureCount($uid);
+        }
         $this->apiSuccess("第三方登录成功", null, $extra);
     }
 
@@ -2330,12 +2359,20 @@ class UserController extends AppController
     }
 
     public function getGroupCount($uid){
-        $group_count = M('ImGroupMembers')->where('status=1 and member_id=\'c'.$uid.'\'')->count();
+        $group_count = 0;
+        $list = M('ImGroupMembers')->where('status=1 and member_id=\'c'.$uid.'\'')->select();
+        foreach($list as $group){
+            $group_id = $group['group_id'];
+            $isExist = M('ImGroups')->where('status=1 and id='.$group_id)->count();
+            if($isExist){
+                $group_count++;
+            }
+        }
         return $group_count;
     }
 
     public function getPostCount($uid){
-        $post_count = M('ForumPost')->where('status=1 and uid='.$uid)->count();
+        $post_count = M('ForumPost')->where('is_top = 0 and status=1 and uid='.$uid)->count();
         return $post_count;
     }
 
@@ -2356,5 +2393,17 @@ class UserController extends AppController
         $pic_count = M('UserWorks')->where('status=1 and picture_id<>\'\' and uid='.$uid)->count();
         return $pic_count;
     }
+
+//
+//    public function renameOldAccount(){
+//        $name_array = file('/var/tmp/name.txt');
+//        $model = M('Member');
+//        $member_list = $model->where('uid>240 and nickname like "%TestUser%"')->limit(0, 1233)->select();
+//        foreach($member_list as $index => $member){
+//            $uid = $member['uid'];
+//            $data['nickname'] = $name_array[$index];
+//            $model->where('uid='.$uid)->save($data);
+//        }
+//    }
 
 }

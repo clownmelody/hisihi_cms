@@ -83,6 +83,8 @@ class EventController extends AppController{
         $this->eventModel->incViewCount($id);
         $content = array(
             'content'=>$detail['detail_content'],
+            'title'=>$detail['title'],
+            'create_time'=>$detail['create_time']
         );
         if($type == 'view') {
             $this->assign('top_content_info', $content);

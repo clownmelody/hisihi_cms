@@ -8,6 +8,7 @@
 
 namespace Admin\Controller;
 
+use App\Controller\FakedataController;
 use Think\Exception;
 use Think\Hook;
 use Think\Model;
@@ -184,19 +185,26 @@ class OrganizationController extends AdminController
             $data["advantage"] = $_POST["advantage"];
             $data["introduce"] = $_POST["introduce"];
             $data["guarantee_num"] = $_POST["guarantee_num"];
-            $data["view_count"] = $_POST["view_count"];
             $data["video"] = $_POST["video"];
             $data["sort"] = $_POST["sort"];
+            $data["view_count"] = $_POST["view_count"];
             if(empty($data["sort"]) || intval($data["sort"])==0){
                 $data["sort"]=100;
             }
             if(empty($cid)){
                 try {
+                    $temController = new FakedataController();
+                    if($temController->isInFirstClassCity($data["city"])){
+                        $div = (int)$data["sort"]/100;
+                        $data["view_count"] = (int)(rand(2000, 3000)  * (2-$div));
+                    } else {
+                        $data["view_count"] = rand(1000, 2000);
+                    }
                     $data["create_time"] = time();
                     $res = $model->add($data);
                     if(!$res){
                         $this->error($model->getError());
-                    }else{
+                    } else {
                         $id = $res;
                         //添加到机构创建申请
                         $application = array(
@@ -206,12 +214,66 @@ class OrganizationController extends AdminController
                             'update_time'=>time()
                         );
                         M('OrganizationApplication')->add($application);
+                        $sort_data = (int)$data["sort"];
+                        $temController = new FakedataController();
+                        if($temController->isInFirstClassCity($data["city"])){
+                            if($sort_data>1 && $sort_data<10){
+                                $init_view_count = rand(3000, 4000);
+                                $init_fans_count = rand(300, 400);
+                                $init_data = array(
+                                    'view_count' => $init_view_count,
+                                    'fake_fans_count' => $init_fans_count
+                                );
+                            } else {
+                                $init_view_count = rand(1000, 1500);
+                                $init_fans_count = rand(100, 150);
+                                $init_data = array(
+                                    'view_count' => $init_view_count,
+                                    'fake_fans_count' => $init_fans_count
+                                );
+                            }
+                        } else {
+                            if($sort_data>1 && $sort_data<10){
+                                $init_view_count = rand(500, 15000);
+                                $init_fans_count = rand(50, 150);
+                                $init_data = array(
+                                    'view_count' => $init_view_count,
+                                    'fake_fans_count' => $init_fans_count
+                                );
+                            } else {
+                                $init_view_count = rand(50, 100);
+                                $init_fans_count = rand(10, 20);
+                                $init_data = array(
+                                    'view_count' => $init_view_count,
+                                    'fake_fans_count' => $init_fans_count
+                                );
+                            }
+                        }
+                        $model->where('id='.$id)->save($init_data);
                     }
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
                 $this->success('添加成功', 'index.php?s=/admin/organization/index');
             } else {
+                $data["fake_fans_count"] = $_POST["fake_fans_count"];
+                //修改机构名同时修改机构老师的扩展信息
+                $org_name = $model->where('status=1 and id='.$cid)->getField('name');
+                if($data['name'] != $org_name){
+                    $teacher_ids = M('OrganizationRelation')->distinct(true)->field('uid')
+                        ->where('`status`=1 and `group`=6 and organization_id='.$cid)
+                        ->select();
+                    if(!empty($teacher_ids)){
+                        $t_ids = array();
+                        foreach($teacher_ids as &$item){
+                            $t_ids[] = $item['uid'];
+                        }
+                        $map['uid'] = array('in',$t_ids);
+                        $map['field_id'] = 39;
+                        $field_data['field_data'] = $data['name'];
+                        M('Field')->where($map)->data($field_data)->save();
+                    }
+                }
                 $model = $this->organizationModel;
                 $model->updateOrganization($cid, $data);
                 $this->success('更新成功', 'index.php?s=/admin/organization/index');
@@ -461,10 +523,30 @@ class OrganizationController extends AdminController
             if(is_array($id)){
                 foreach ($id as $i)
                 {
+                    //删除老师时同事修改用户的角色为设计师
+                    $relation_item = $model->where('id='.$i)->find();
+                    if(intval($relation_item['group'])==6){
+                        $count = $model
+                            ->where('status=1 and uid='.$relation_item['uid'].' and organization_id='.$relation_item['organization_id'])
+                            ->count();
+                        if($count<2){
+                            M('AuthGroupAccess')->where('uid='.$relation_item['uid'])->save(array('group_id'=>5));
+                        }
+                    }
                     $model->where('id='.$i)->save($data);
                 }
             } else {
                 $id = intval($id);
+                //删除老师时同事修改用户的角色为设计师
+                $relation_item = $model->where('id='.$id)->find();
+                if(intval($relation_item['group'])==6){
+                    $count = $model
+                        ->where('status=1 and uid='.$relation_item['uid'].' and organization_id='.$relation_item['organization_id'])
+                        ->count();
+                    if($count<2){
+                        M('AuthGroupAccess')->where('uid='.$relation_item['uid'])->save(array('group_id'=>5));
+                    }
+                }
                 $model->where('id='.$id)->save($data);
             }
             if(I('from_org')){
@@ -1942,9 +2024,12 @@ class OrganizationController extends AdminController
     //播放视频
     public function video_play($id){
         if(!empty($id)){
-            $this->display();
+            $model = M('OrganizationVideo');
+            $data = $model->field('url')->where('id='.$id)->find();
+            $url = "http://121.42.44.208:8082/MIS/downloadVideo?videoName=".$data['url'];
+            redirect($url);
         } else {
-            $this->error('未选择要播放的视频');
+            $this->error('未选择要下载的视频');
         }
     }
 
@@ -2174,15 +2259,16 @@ class OrganizationController extends AdminController
         }
         $status = I('status');
         if(!empty($status)){
-            $map['status'] = $status;
+            $map['application_status'] = $status;
         }else{
-            $map['status'] = array('neq',-1);
+            $map['application_status'] = array('neq',-1);
         }
-        $model = D('OrganizationApplication');
+        $map['status'] = array('gt',0);
+        $model = M('Organization');
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($map)->field('id,name,application_status,create_time')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -2195,20 +2281,16 @@ class OrganizationController extends AdminController
      */
     public function application_pass($id){
         if(!empty($id)){
-            $model = M('OrganizationApplication');
-            $data['status'] = 2;
+            $model = M('Organization');
+            $data['application_status'] = 2;
             if(is_array($id)){
                 foreach ($id as $i)
                 {
                     $model->where('id='.$i)->save($data);
-                    $organization_id = $model->where('id='.$i)->getField('organization_id');
-                    M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>2));
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
-                $organization_id = $model->where('id='.$id)->getField('organization_id');
-                M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>2));
             }
             $this->success('审核通过','index.php?s=/admin/organization/application');
         } else {
@@ -2221,20 +2303,16 @@ class OrganizationController extends AdminController
      */
     public function application_refuse($id){
         if(!empty($id)){
-            $model = M('OrganizationApplication');
-            $data['status'] = -2;
+            $model = M('Organization');
+            $data['application_status'] = -2;
             if(is_array($id)){
                 foreach ($id as $i)
                 {
                     $model->where('id='.$i)->save($data);
-                    $organization_id = $model->where('id='.$i)->getField('organization_id');
-                    M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>-2));
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
-                $organization_id = $model->where('id='.$id)->getField('organization_id');
-                M('Organization')->where(array('id'=>$organization_id))->save(array('application_status'=>-2));
             }
             $this->success('拒绝申请成功','index.php?s=/admin/organization/application');
         } else {
@@ -2246,7 +2324,11 @@ class OrganizationController extends AdminController
     /**
      * 机构证书
      */
-    public function certificate(){
+    public function certificate($organization_id=0){
+        if($organization_id){
+            $map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+        }
         $name = I('name');
         if(!empty($name)){
             $map['name'] = array('like', '%' . (string)$name . '%');
@@ -2262,62 +2344,125 @@ class OrganizationController extends AdminController
         $Page = new Page($count, 10);
         $show = $Page->show();
         $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$Certificate){
+            if($organization_id){
+                $Certificate['organization_name'] = $organization_name;
+            }else{
+                if($Certificate['organization_id'] > 0){
+                    $Certificate['organization_name'] = M('Organization')
+                        ->where(array('id'=>$Certificate['organization_id'],'status'=>1))->getField('name');
+                }else{
+                    $Certificate['organization_name'] = '公用';
+                }
+            }
+        }
+        if($organization_id){
+            $this->assign('organization_id',$organization_id);
+            $this->assign('organization_name',$organization_name);
+        }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
-        $this->assign("meta_title","机构认证");
+        $this->assign("meta_title","机构认证报告");
         $this->display();
     }
 
     /**
      * 认证通过
      */
-    public function certificate_pass($id){
-        if(!empty($id)){
-            $model = M('OrganizationCertificate');
-            $data['status'] = 2;
-            if(is_array($id)){
-                foreach ($id as $i)
-                {
-                    $model->where('id='.$i)->save($data);
-                    $organization_id = $model->where('id='.$i)->getField('organization_id');
-                    M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>2));
-                }
-            } else {
-                $id = intval($id);
-                $model->where('id='.$id)->save($data);
-                $organization_id = $model->where('id='.$id)->getField('organization_id');
-                M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>2));
-            }
-            $this->success('认证成功','index.php?s=/admin/organization/certificate');
-        } else {
-            $this->error('未选择要认证的数据');
+    public function certificate_add($organization_id=0){
+        if($organization_id){
+            $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
+            $this->assign('organization_name',$organization_name);
+            $this->assign('organization_id',$organization_id);
+            $this->assign('from_org',I('from_org'));
         }
+        $this->display();
     }
 
     /**
      * 认证拒绝
      */
-    public function certificate_refuse($id){
+    public function certificate_update(){
+        if (IS_POST) { //提交表单
+            $model = M('OrganizationCertificate');
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $data["content"] = $_POST["content"];
+            $data["organization_id"] = $_POST["organization_id"];
+            if(empty($cid)){
+                try {
+                    $data["create_time"] = time();
+                    $res = $model->add($data);
+                    if(!$res){
+                        $this->error($model->getError());
+                    }
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                if(I('from_org')){
+                    $this->success('添加成功', 'index.php?s=/admin/organization/certificate&organization_id='.$data["organization_id"]);
+                }{
+                    $this->success('添加成功', 'index.php?s=/admin/organization/certificate');
+                }
+            } else {
+                $res = $model->where('id='.$cid)->save($data);
+                if(!$res){
+                    $this->error($model->getError());
+                }
+                if(I('from_org')){
+                    $this->success('更新成功', 'index.php?s=/admin/organization/certificate&organization_id='.$data["organization_id"]);
+                }{
+                    $this->success('更新成功', 'index.php?s=/admin/organization/certificate');
+                }
+            }
+        }
+    }
+
+    public function certificate_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('OrganizationCertificate');
+        $data = $Model->where('status=1 and id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        if(I('from_org')){
+            $this->assign('from_org', I('from_org'));
+        }
+        if(I('organization_id')){
+            $map['organization_id'] = I('organization_id');
+            $organization_name = M('Organization')->where(array('id'=>I('organization_id'),'status'=>1))->getField('name');
+            $this->assign('organization_name',$organization_name);
+            $this->assign('organization_id',I('organization_id'));
+        }
+        $this->assign('info', $data);
+        $this->meta_title = '编辑机构公告信息';
+        $this->display();
+    }
+
+    public function certificate_delete($id){
         if(!empty($id)){
             $model = M('OrganizationCertificate');
-            $data['status'] = -2;
+            $data['status'] = -1;
             if(is_array($id)){
                 foreach ($id as $i)
                 {
                     $model->where('id='.$i)->save($data);
-                    $organization_id = $model->where('id='.$i)->getField('organization_id');
-                    M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>-2));
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
-                $organization_id = $model->where('id='.$id)->getField('organization_id');
-                M('Organization')->where(array('id'=>$organization_id))->save(array('identification'=>-2));
             }
-            $this->success('拒绝认证成功','index.php?s=/admin/organization/certificate');
+            if(I('from_org')){
+                $this->success('删除成功','index.php?s=/admin/organization/certificate&organization_id='.I("organization_id"));
+            }else{
+                $this->success('删除成功','index.php?s=/admin/organization/certificate');
+            }
         } else {
-            $this->error('未选择要拒绝认证的数据');
+            $this->error('未选择要删除的数据');
         }
     }
 
@@ -2607,8 +2752,8 @@ class OrganizationController extends AdminController
     }
 
     /**
- * 添加机构老师分组
- */
+     * 添加机构老师分组
+     */
     public function lecture_group_add($organization_id=0){
         if($organization_id){
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
@@ -2651,7 +2796,8 @@ class OrganizationController extends AdminController
         }
     }
 
-    /**编辑机构老师分组
+    /**
+     * 编辑机构老师分组
      * @param $id
      */
     public function lecture_group_edit($id){
@@ -2674,7 +2820,8 @@ class OrganizationController extends AdminController
         $this->display();
     }
 
-    /**删除机构老师分组
+    /**
+     * 删除机构老师分组
      * @param $id
      */
     public function lecture_group_delete($id){
@@ -2753,7 +2900,8 @@ class OrganizationController extends AdminController
         }
     }
 
-    /**编辑机构管理员
+    /**
+     * 编辑机构管理员
      * @param $id
      */
     public function admin_edit($id){
@@ -2880,10 +3028,159 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 创建 IM 群组
+     * @param $organization_id
+     */
+    public function create_im_group($organization_id){
+        $this->assign('organization_id', $organization_id);
+        $this->display();
+    }
+
+    /**
+     * 添加或更新 IM 群信息
+     */
+    public function update_im_group(){
+        if (IS_POST) {
+            $post_data['organization_id'] = $_POST["organization_id"];
+            $post_data['group_name'] = $_POST["group_name"];
+            $post_data['description'] = $_POST["description"];
+            $post_data['admin_uid'] = 'c'.$_POST["admin_uid"];
+            $post_data['conversation_id'] = 0;
+            $post_data['member_client_ids'] = null;
+            $group_avatar_id = $_POST["group_avatar"];
+            $this->uploadLogoPicToOSS($group_avatar_id);
+            $group_avatar = $this->fetchCdnImage($group_avatar_id);
+            $post_data['group_avatar'] = $group_avatar;
+            $post_data = json_encode($post_data);
+            $result = $this->request_to_python_im_create_group_service(C('PYTHON_API_SERVICE_HOST_NAME')."/v1/im/group", $post_data);
+            if($result){
+                $this->success('创建群组成功','index.php?s=/admin/organization/index');
+            } else {
+                $this->error('创建群组失败');
+            }
+        } else {  //  编辑群组
+
+        }
+    }
+
+    /**
+     * 机构群组管理
+     */
+    public function imgroup(){
+        $model = M('ImGroups');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构IM群组列表");
+        $this->display();
+    }
+
+    /**
+     * 删除机构 IM 群组
+     * @param $id
+     */
+    public function im_group_delete($id){
+        if(!empty($id)){
+//            $model = M('ImGroups');
+//            $data['status'] = -1;
+//            $id = intval($id);
+//            $model->where('id='.$id)->save($data);
+            $post_data = array();
+            $result = $this->request_to_python_im_delete_group_service(C('PYTHON_API_SERVICE_HOST_NAME')."/v1/im/group/".$id, $post_data);
+            if($result){
+                $this->success('删除成功','index.php?s=/admin/organization/imgroup');
+            } else {
+                $this->error('删除失败');
+            }
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * @param $url
+     * @param $post_data
+     * @return bool
+     */
+    private function request_to_python_im_create_group_service($url, $post_data) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if($httpCode != 201){
+            return false;
+        }
+        curl_close($ch);
+        return true;
+    }
+
+    /**
+     * @param $url
+     * @param $post_data
+     * @return bool
+     */
+    private function request_to_python_im_delete_group_service($url, $post_data) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if($httpCode != 204){
+            return false;
+        }
+        curl_close($ch);
+        return true;
+    }
+
+    /**
+     * 添加课程到首页资讯流内容当中
+     */
+    public function addToInformationFlowContent(){
+        $ids = I('post.id');
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        $model = M('InformationFlowContent');
+        try {
+            foreach($ids as $rid){
+                $content_detail = $model->where('content_type=2 and content_id='.$rid)->count();
+                if($content_detail){
+                    if($content_detail['status']==-1){
+                        $model->where('content_type=2 and content_id='.$rid)->save(array('status'=>1));
+                    }
+                } else {
+                    $organization_course_model = D('OrganizationCourse');
+                    $course_detail = $organization_course_model->where(array('id'=>$rid, 'status'=>1))->find();
+                    $name = $course_detail['title'];
+                    $data['content_id'] = $rid;
+                    $data['content_type'] = 2;
+                    $data['content_name'] = $name;
+                    $data['create_time'] = time();
+                    $model->add($data);
+                }
+            }
+        } catch (Exception $e){
+            $this->error('添加失败，请检查后重试');
+        }
+        $this->success("添加成功", 'index.php?s=/admin/organization/course');
+    }
+
+    /**
      * 上传图片到OSS
      * @param $picID
      */
-    private function uploadLogoPicToOSS($picID){
+    public function uploadLogoPicToOSS($picID){
         $model = M();
         $result = $model->query("select path from hisihi_picture where id=".$picID);
         if($result){
@@ -2895,7 +3192,6 @@ class OrganizationController extends AdminController
             if(!$isExist){
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
             }
-            \Think\Log::write($isExist);
         }
     }
 
@@ -2904,7 +3200,7 @@ class OrganizationController extends AdminController
      * @param $pic_id
      * @return null|string
      */
-    private function fetchCdnImage($pic_id){
+    public function fetchCdnImage($pic_id){
         if($pic_id == null)
             return null;
         $model = M();

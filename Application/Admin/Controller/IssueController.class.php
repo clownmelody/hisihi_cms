@@ -265,7 +265,7 @@ class IssueController extends AdminController
                 // 同步课程数据
                 $organizationCourseModel = M('OrganizationCourse');
                 $organizationVideoModel = M('OrganizationVideo');
-                $courseData['organization_id'] = 100101;
+                $courseData['organization_id'] = 1575;
                 $courseData['title'] = op_t($coursevideo['name']);
                 $courseData['content'] = op_h($coursevideo['description']);
                 $courseData['create_time'] = time();
@@ -398,7 +398,7 @@ class IssueController extends AdminController
 
 
         $builder->title('内容管理')
-            ->setStatusUrl(U('setIssueContentStatus'))->buttonDisable('','审核不通过')->buttonDelete()->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('editContents'))->button('课程同步',array('href'=>U('SyncCourse')))->buttonSetStatus(U('PushVideo'),2,'推送',array())
+            ->setStatusUrl(U('setIssueContentStatus'))->buttonDisable('','审核不通过')->buttonSetStatus(U('deleteIssueContent'),-1,'删除',array())->buttonSetStatus(U('setIssueContentStatus'),2,'推荐',array())->buttonNew(U('editContents'))->button('课程同步',array('href'=>U('SyncCourse')))->buttonSetStatus(U('PushVideo'),2,'推送',array())
             ->keyId()->keyLink('title', '标题','editContents?id=###')->keyText('lecturer','讲师')->keyText('duration','时长（秒）')->keyCreateTime()->keyMap('status','状态',array(1 => '未推荐', 2 => '已推荐', 0 => '未激活'))
             ->keyDoActionEdit( 'Issue/editcontents?id=###','编辑')
             ->data($list)
@@ -444,6 +444,32 @@ class IssueController extends AdminController
         }
         $builder->doSetStatus('IssueContent', $ids, $status);
 
+    }
+
+    public function deleteIssueContent($ids,$status){
+        $builder = new AdminListBuilder();
+        if($status==-1){
+            if(is_array($ids)){
+                $map['issue_content_id'] = array('in',$ids);
+                $courses_ids = M('OrganizationCourse')->where($map)->field('id')->select();
+                if($courses_ids){
+                    $cid = array();
+                    foreach($courses_ids as &$item){
+                        $cid[] = $item['id'];
+                    }
+                    $result = M('OrganizationCourse')->where($map)->save(array('status'=>-1));
+                    $map_['course_id'] = array('in',$cid);
+                    $res = M('OrganizationVideo')->where($map_)->save(array('status'=>-1));
+                }
+            }else{
+                $courses_id = M('OrganizationCourse')->where('issue_content_id='.$ids)->getField('id');
+                if($courses_id){
+                    $result = M('OrganizationCourse')->where('id='.$courses_id)->save(array('status'=>-1));
+                    $res = M('OrganizationVideo')->where('course_id='.$courses_id)->save(array('status'=>-1));
+                }
+            }
+        }
+        $builder->doSetStatus('IssueContent', $ids, $status);
     }
 
     public function contentTrash($page=1, $r=10,$model=''){

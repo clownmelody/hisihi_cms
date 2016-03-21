@@ -181,6 +181,37 @@ class PublicController extends AppController {
         $this->apiSuccess('获取统计信息成功', null, array('statInfo' => $statInfo));
     }
 
+    /**
+     * 获取发现页统计信息
+     */
+    public function statisticInfo(){
+        $model = M();
+        //云作业
+        $hiworks_count = C('fake_all_category_hiworks_download');
+        if(!$hiworks_count){
+            $allCount = $model->query('select sum(view) as allCount from hisihi_document');
+            $hiworks_count = (int)($allCount[0]['allCount']/37);
+        }
+        //讲师
+        $where = 'auth_group_access.uid = member.uid and auth_group_access.group_id = ';
+        $model =  M("table");
+        $statInfo['designers'] = $model->table(array(
+            'hisihi_auth_group_access'=>'auth_group_access',
+            'hisihi_member'=>'member',))->where($where.'6')->field('member.uid')->count();
+        $teacher_count = $statInfo['designers'] + C('TEACHER_COUNT_BASE')
+            + A('User')->getAutoIncreseCount();
+        //快捷键
+        $key_count = M('CompanyConfig')->where('type=10 and status=1')->getField('value');
+        //图库
+        $map['status'] = 1;
+        $inspiration_count = M('Inspiration')->where($map)->count();
+        $extra['data']['hiworks_count'] = $hiworks_count;
+        $extra['data']['teacher_count'] = $teacher_count;
+        $extra['data']['key_count'] = (int)$key_count;
+        $extra['data']['inspiration_count'] = (int)$inspiration_count;
+        $this->apiSuccess('获取统计信息成功', null, $extra);
+    }
+
     public function suggest($content) {
         $this->requireLogin();
         $this->requireSendInterval();
@@ -217,7 +248,11 @@ class PublicController extends AppController {
             $topic['img'] = $this->fetchImage($topic['cover_id']);
             if((float)$version>=2.0){
                 $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
-                $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$topic['id'].'/version/'.$version;
+                if((float)$version>=2.4){
+                    $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$topic['id'].'/version/'.$version;
+                } else {
+                    $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'];
+                }
             } else {
                 $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'].'/version/'.$version;
             }
@@ -279,7 +314,7 @@ class PublicController extends AppController {
      */
     public function findArticle($id, $version){
         $doc_model = M();
-        $article = $doc_model->query("select id, title, cover_id, description, view, create_time, update_time from hisihi_document where id=".$id);
+        $article = $doc_model->query("select id, title, cover_id, description, view, create_time, update_time from hisihi_document where `status`>0 and id=".$id);
         foreach($article as &$info){
             $info['source_name'] = $this->getSourceName($id);
             $info['logo_pic'] = $this->getSourceLogoPic($id);
@@ -287,7 +322,11 @@ class PublicController extends AppController {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
                 $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$id;
-                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$id;
+                if((float)$version>=2.4){
+                    $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$id;
+                } else {
+                    $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$id;
+                }
             } else {
                 $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$id;
             }
@@ -369,7 +408,11 @@ class PublicController extends AppController {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
                 $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
-                $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$info['id'].'/version/'.$version;
+                if((float)$version>=2.4){
+                    $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$info['id'].'/version/'.$version;
+                } else {
+                    $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$info['id'];
+                }
             } else {
                 $info['content_url'] = 'app.php/public/topcontent/type/view/id/'.$info['id'];
             }

@@ -129,9 +129,9 @@ class ForumController extends AppController
     public function forumType()
     {
         $forum_type = $this->getForumsByType();
-
         $this->apiSuccess("获取类别标签成功", null, array('types' => $forum_type));
     }
+
     private function formatList($list, $version)
     {
         $map_support['appname'] = 'Forum';
@@ -143,11 +143,22 @@ class ForumController extends AppController
         }
 
         foreach ($list as &$v) {
-            $forumInfo = $forum_key_value[$v['forum_id']];
-            $mapx = array('id' => $forumInfo['type_id'], 'status' => 1);
+            /*$forumInfo = $forum_key_value[$v['forum_id']];
+            $mapx = array('id' => $v['forum_id'], 'status' => 1);
             $forumType = M('ForumType')->where($mapx)->select();
             $v['post_id'] = $v['id'];
-            $v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];
+            $v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];*/
+            /* ------ */
+            $v['post_id'] = $v['id'];
+            $forum = D('Forum')->find($v['forum_id']);
+            $mapx = array('id' => $forum['type_id'], 'status' => 1);
+            $forumType = D('ForumType')->where($mapx)->select();
+            if(!empty($forum['title'])&&!empty($forumType[0]['title'])){
+                $v['forumTitle'] = $forum['title'] . '/' . $forumType[0]['title'];
+            } else {
+                $v['forumTitle'] = null;
+            }
+
 
             $v['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $v['uid']);
             if((float)$version>=2.2){
@@ -155,6 +166,14 @@ class ForumController extends AppController
                 $info_list = A('User')->_info_list($profile_group['id'], $v['uid'], $version);
                 $v['userInfo']['extinfo'] = $info_list;
             }
+            if((float)$version>2.4){//2.5以后版本
+                if($v['userInfo']['group'] == 5){
+                    $v['first_teacher'] = $this->getFirstReplyTeacher($v['post_id']);
+                }else{
+                    $v['first_teacher'] = null;
+                }
+            }
+
             //解析并成立图片数据
             $v['img'] = $this->match_img($v['content']);
             /*
@@ -438,16 +457,6 @@ class ForumController extends AppController
             $totalCount = 0;
             $list = array();
         }
-
-        /*if($show_adv==true){
-            $len = count($list);
-            $now = time();
-            $total_count = M('Advs')->where('position=4 and status=1 and '.$now.' between create_time and end_time')->count();
-            if($total_count>0){
-                $list[$len] = $this->getOneForumAdv(640, 960);
-            }
-        }*/
-
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
@@ -1835,8 +1844,71 @@ class ForumController extends AppController
     /**
      * 获取论坛置顶帖
      * @param string $version
+     * @param int $community
      */
-    public function forumTopPost($version='1.0'){
+    public function forumTopPost($version='1.0', $community=1){
+        if((float)$version>=2.5){
+            // 获取第一栏
+            $first_post['id'] = "001";
+            $first_post['title'] = "嘿设汇新闻";
+            $first_post['type'] = "置顶";
+            $first_post['post_type'] = 1;
+            $first_post['is_out_link'] = 0;
+            $first_post['link_url'] = "";
+            $first_post['is_inner'] = 0;
+            $first_post['url'] = C('HOST_NAME_PREFIX')."app.php/forum/hisihi_news/community/".$community;
+            $first_post['show_type'] = "web";
+            // 获取第二栏
+            $second_post = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1
+                                            and is_inner=2 and community='.$community)
+                ->order('create_time desc')->find();
+            $second_post['show_type'] = 'web';
+            // 获取第三栏
+            /*$third_post = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1
+                                            and is_inner=3 and community='.$community)
+                ->order('create_time desc')->find();*/
+            $third_post = M('ForumPost')->where('id=67282 and community='.$community)
+                ->order('create_time desc')->find();
+            $third_post['show_type'] = 'origin';
+            if($community==1){
+                $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
+                if($configCount){
+                    $configCount['value'] = $configCount['value'] + $this->getAutoIncreseCount();
+                    $third_post['title'] = "嘿设汇已经解决".$configCount['value']."个问题";
+                } else {
+                    $fakeCount = 330212 + $this->getAutoIncreseCount();
+                    $third_post['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
+                }
+            }
+            //$data_list = array($first_post, $second_post, $third_post);
+            $data_list = array($first_post);
+            if($second_post['id']){
+                $data_list[] = $second_post;
+            }
+            if($third_post['id']){
+                $data_list[] = $third_post;
+            }
+            foreach($data_list as &$value){
+                if($value['id']!='001'){
+                    $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/topPostDetailv2/post_id/'.$value['id'];
+                }
+                unset($value['uid']);
+                unset($value['forum_id']);
+                unset($value['content_md5']);
+                unset($value['parse']);
+                unset($value['create_time']);
+                unset($value['update_time']);
+                unset($value['status']);
+                unset($value['last_reply_time']);
+                unset($value['view_count']);
+                unset($value['reply_count']);
+                unset($value['is_top']);
+                unset($value['content']);
+                unset($value['community']);
+            }
+            $extra['data'] = $data_list;
+            $this->apiSuccess('获取论坛置顶帖成功', null, $extra);
+        }
         if((float)$version>=2.2){
             $first_post['id'] = "001";
             $first_post['title'] = "嘿设汇新闻";
@@ -1846,7 +1918,8 @@ class ForumController extends AppController
             $first_post['link_url'] = "";
             $first_post['is_inner'] = 0;
             $first_post['url'] = C('HOST_NAME_PREFIX')."app.php/forum/hisihi_news";
-            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=0')
+            $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1
+                                            and is_inner=0 and community='.$community)
                 ->order('create_time desc')->page(1, 2)->select();
             array_unshift($list, $first_post);
 
@@ -1922,11 +1995,12 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      * @param int $removeId
+     * @param int $community
      */
-    public function newsList($page=1, $count=10, $removeId=0){
-        $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1 and id!='.$removeId)
+    public function newsList($page=1, $count=10, $removeId=0, $community=1){
+        $list = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1 and id!='.$removeId.' and community='.$community)
             ->order('create_time desc')->page($page, $count)->select();
-        $totalCount = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1')->count();
+        $totalCount = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1 and is_inner=1 and community='.$community)->count();
         foreach($list as &$value){
             $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$value['id'];
             $value['pic_url'] = $this->fetchImageFromOSS($value['cover_id']);
@@ -1952,8 +2026,10 @@ class ForumController extends AppController
 
     /**
      * 跳转嘿设汇新闻列表内页
+     * @param int $community
      */
-    public function hisihi_news(){
+    public function hisihi_news($community=1){
+        $this->assign('community', $community);
         $this->display('hisihi_news');
     }
 
@@ -2888,4 +2964,18 @@ class ForumController extends AppController
         $sha = md5($sha.'m:24iyNJ~1$z(^SjGxe&ngorTfA#7EFu<?.c]Yt+');
         var_dump($sha);
     }
+
+    public function getFirstReplyTeacher($post_id=null){
+        $map['post_id'] = $post_id;
+        $map['status'] = array('in','1,3');
+        $teacher = M('ForumPostReply')->field('uid')->where($map)->order('create_time desc')->limit(1)->select();
+        $teacher_name = M('Member')->where('uid='.$teacher[0]['uid'])->getField('nickname');
+        if($teacher_name){
+            return $teacher_name;
+        }else{
+            return null;
+        }
+
+    }
+
 }

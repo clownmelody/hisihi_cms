@@ -285,4 +285,81 @@ class FakedataController extends AppController {
         }
     }
 
+
+    public function autoAddOrganizationViewCountAndFansCount(){
+        $model = M('Organization');
+        $list = $model->field('id, city, sort')->where('status=1')->select();
+        foreach($list as $organization) {
+            $sort = $organization['sort'];
+            $div = (int)$sort/100;
+            if($this->isInFirstClassCity($organization['city'])){
+                if($sort>1 && $sort<10){
+                    $add_view_count = (int)(rand(150, 250) * (2-$div));
+                    $add_fans_count = (int)(rand(10, 30) * (2-$div));
+                    $model->where('id='.$organization['id'])->setInc('view_count', $add_view_count);
+                    $model->where('id='.$organization['id'])->setInc('fake_fans_count', $add_fans_count);
+                } else if($sort>11 && $sort<50) {
+                    $add_view_count = (int)(rand(150, 250) * (2-$div)) * 0.6;
+                    $add_fans_count = (int)(rand(10, 30) * (2-$div)) * 0.6;
+                    $model->where('id='.$organization['id'])->setInc('view_count', $add_view_count);
+                    $model->where('id='.$organization['id'])->setInc('fake_fans_count', $add_fans_count);
+                } else {
+                    $add_view_count = (int)(rand(150, 250) * (2-$div)) * 0.2;
+                    $add_fans_count = (int)(rand(10, 30) * (2-$div)) * 0.2;
+                    $model->where('id='.$organization['id'])->setInc('view_count', $add_view_count);
+                    $model->where('id='.$organization['id'])->setInc('fake_fans_count', $add_fans_count);
+                }
+            } else {
+                if($sort>1 && $sort<10){
+                    $add_view_count = (int)(rand(50, 150) * (2-$div)) * 0.8;
+                    $add_fans_count = (int)(rand(10, 20) * (2-$div)) * 0.8;
+                    $model->where('id='.$organization['id'])->setInc('view_count', $add_view_count);
+                    $model->where('id='.$organization['id'])->setInc('fake_fans_count', $add_fans_count);
+                } else {
+                    $add_view_count = (int)(rand(50, 150) * (2-$div)) * 0.1;
+                    $add_fans_count = (int)(rand(10, 20) * (2-$div)) * 0.1;
+                    $model->where('id='.$organization['id'])->setInc('view_count', $add_view_count);
+                    $model->where('id='.$organization['id'])->setInc('fake_fans_count', $add_fans_count);
+                }
+            }
+        }
+    }
+
+    public function isInFirstClassCity($city_name){
+        $city_array = array(
+            '武汉', '北京', '上海', '广州', '深圳', '南京',
+            '重庆', '天津', '大连', '沈阳', '成都', '长沙',
+            '青岛', '杭州', '厦门', '西安', '郑州', '南昌',
+            '合肥', '济南', '哈尔滨', '贵阳', '太原', '兰州',
+            '石家庄', '苏州'
+        );
+        foreach($city_array as $city){
+            $res = strpos($city_name, $city);
+            if($res==false){
+                return false;
+            }
+            if($res>=0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*public function initFansCount(){
+        $model = M('Organization');
+        $list = $model->field('id, sort')->select();
+        foreach($list as $organization) {
+            $sort = $organization['sort'];
+            $div = (int)$sort/100;
+            $add_fans_count = (int)(rand(200, 300) * (2-$div));
+            $model->where('id='.$organization['id'])->setInc('fake_fans_count', $add_fans_count);
+        }
+    }*/
+
+    public function test(){
+        $pos = strpos("湖北省  武汉市", "湖北");
+        var_dump($pos);
+    }
+
+
 }

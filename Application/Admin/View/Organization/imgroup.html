@@ -3,39 +3,19 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>{$organization_name|default='机构'}-视频课程列表(共：{$total|default=0} 个)</h2>
-        <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id | default=0}"/>
+        <h2>机构 IM 群组</h2>
     </div>
-    <div class="cf">
-        <div class="fl">
-            <div class="btn-group">
-                <gt name="organization_id" value="0">
-                    <a id="add" class="btn" href="javascript:void(0)">新 增</a>
-                </gt>
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/course_delete',array('status'=>-1))}">删 除</button>
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U("Organization/addToInformationFlowContent")}">添加到资讯首页</button>
-            </div>
-        </div>
-        <!-- 高级搜索 -->
-        <div class="search-form fr cf">
-            <div class="sleft">
-                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入课程名称">
-                <a class="sch-btn" href="javascript:;" id="search" url="{:U('organization/course')}"><i class="btn-search"></i></a>
-            </div>
-        </div>
-    </div>
+
     <!-- 数据列表 -->
     <div class="data-table table-striped">
         <table class="">
             <thead>
             <tr>
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
-                <th class="">ID</th>
-                <th class="">机构名称</th>
-                <th class="">课程名称</th>
-                <th class="">课程分类</th>
-                <th class="">讲师</th>
-                <th class="">课程权限</th>
+                <th class="">群ID</th>
+                <th class="">群名称</th>
+                <th class="">会话ID</th>
+                <th class="">机构ID</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -47,28 +27,16 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.organization_name}</td>
-                        <td style="width: 200px;">{$vo.title}</td>
-                        <td>{$vo.category}</td>
-                        <td>{$vo.teacher}</td>
-                        <td><eq name="vo['auth']" value="1">公开<else/>私有</eq></td>
+                        <td>{$vo.group_name}</td>
+                        <td>{$vo.conversation_id}</td>
+                        <td>{$vo.organization_id}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
-                            <elseif condition="($vo.status eq 0)"/>未审核
                             <else /> 已删除
-                            </if>
+                        </if>
                         </td>
                         <td>
-                            <a href="{:U('Organization/video?id='.$vo['id'])}" >视频列表</a>
-                            <gt name="organization_id" value="0">
-                                <a href="{:U('Organization/course_edit?from_org=1&id='.$vo['id'])}" >编辑</a>
-                                <a href="{:U('Organization/course_delete?from_org=1&id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">删除</a>
-                                <a href="{:U('Organization/course_checked?from_org=1&id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">审核通过</a>
-                            <else/>
-                                <a href="{:U('Organization/course_edit?id='.$vo['id'])}" >编辑</a>
-                                <a href="{:U('Organization/course_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
-                                <a href="{:U('Organization/course_checked?id='.$vo['id'])}" class="ajax-get confirm">审核通过</a>
-                            </gt>
+                            <a href="{:U('Organization/im_group_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
                 </volist>
@@ -98,7 +66,6 @@
             } else {
                 url += '?' + query;
             }
-
             var organization_id = $("#organization_id").val();
             if(organization_id != 0){
                 url += '&organization_id=' + organization_id;
@@ -107,7 +74,7 @@
         });
 
         $("#add").click(function () {
-            var url = '{:U('Organization/course_add')}';
+            var url = '{:U('Organization/tag_add')}';
             var organization_id = $("#organization_id").val();
             if(organization_id != 0){
                 url += '&from_org=1&organization_id=' + organization_id;
@@ -136,6 +103,6 @@
             }
         });
         //导航高亮
-        highlight_subnav("{:U('Organization/course')}");
+        highlight_subnav("{:U('Organization/index')}");
     </script>
 </block>
