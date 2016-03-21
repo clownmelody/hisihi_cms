@@ -143,12 +143,22 @@ class ForumController extends AppController
         }
 
         foreach ($list as &$v) {
-            //$forumInfo = $forum_key_value[$v['forum_id']];
+            /*$forumInfo = $forum_key_value[$v['forum_id']];
             $mapx = array('id' => $v['forum_id'], 'status' => 1);
             $forumType = M('ForumType')->where($mapx)->select();
             $v['post_id'] = $v['id'];
-            //$v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];
-            $v['forumTitle'] = $forumType[0]['title'];
+            $v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];*/
+            /* ------ */
+            $v['post_id'] = $v['id'];
+            $forum = D('Forum')->find($v['forum_id']);
+            $mapx = array('id' => $forum['type_id'], 'status' => 1);
+            $forumType = D('ForumType')->where($mapx)->select();
+            if(!empty($forum['title'])&&!empty($forumType[0]['title'])){
+                $v['forumTitle'] = $forum['title'] . '/' . $forumType[0]['title'];
+            } else {
+                $v['forumTitle'] = null;
+            }
+
 
             $v['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $v['uid']);
             if((float)$version>=2.2){
@@ -1854,8 +1864,10 @@ class ForumController extends AppController
                 ->order('create_time desc')->find();
             $second_post['show_type'] = 'web';
             // 获取第三栏
-            $third_post = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1
+            /*$third_post = M('ForumPost')->where('forum_id=0 and is_top=1 and status=1
                                             and is_inner=3 and community='.$community)
+                ->order('create_time desc')->find();*/
+            $third_post = M('ForumPost')->where('id=67282 and community='.$community)
                 ->order('create_time desc')->find();
             $third_post['show_type'] = 'origin';
             if($community==1){
@@ -1868,7 +1880,14 @@ class ForumController extends AppController
                     $third_post['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
                 }
             }
-            $data_list = array($first_post, $second_post, $third_post);
+            //$data_list = array($first_post, $second_post, $third_post);
+            $data_list = array($first_post);
+            if($second_post['id']){
+                $data_list[] = $second_post;
+            }
+            if($third_post['id']){
+                $data_list[] = $third_post;
+            }
             foreach($data_list as &$value){
                 if($value['id']!='001'){
                     $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/topPostDetailv2/post_id/'.$value['id'];
@@ -2007,8 +2026,10 @@ class ForumController extends AppController
 
     /**
      * 跳转嘿设汇新闻列表内页
+     * @param int $community
      */
-    public function hisihi_news(){
+    public function hisihi_news($community=1){
+        $this->assign('community', $community);
         $this->display('hisihi_news');
     }
 
