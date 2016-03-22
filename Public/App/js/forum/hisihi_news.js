@@ -84,7 +84,10 @@ hisihiNews.prototype = {
         var tempObj = {
                 page: pageIndex,
                 count: this.pageSize,
+<<<<<<< HEAD
+=======
                 community: forum_community
+>>>>>>> 9e596060b13ecdd5c840b7eb5394550ff7659e3c
             },
             url = this.urlObj.server_url + '/newsList',
             that = this;
