@@ -2034,6 +2034,46 @@ class ForumController extends AppController
     }
 
     /**
+     * 跳转到小嘿专栏列表网页
+     */
+    public function xiaoheicolumn(){
+        $this->display('xiaoheicolumn');
+    }
+
+    /**
+     * 小嘿专栏列表
+     * @param int $page
+     * @param int $count
+     */
+    public function xiaoheiList($page=1, $count=10){
+        $list = M('ForumPost')->where('forum_id=0 and status=1 and is_inner=4')
+            ->order('create_time desc')->page($page, $count)->select();
+        $totalCount = M('ForumPost')->where('forum_id=0 and status=1 and is_inner=4')->count();
+        foreach($list as &$value){
+            $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$value['id'];
+            $value['pic_url'] = $this->fetchImageFromOSS($value['cover_id']);
+            unset($value['uid']);
+            unset($value['forum_id']);
+            unset($value['content_md5']);
+            unset($value['parse']);
+            unset($value['update_time']);
+            unset($value['status']);
+            unset($value['last_reply_time']);
+            unset($value['reply_count']);
+            unset($value['is_top']);
+            unset($value['content']);
+            unset($value['type']);
+            unset($value['post_type']);
+            unset($value['is_inner']);
+            unset($value['cover_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取小嘿专栏列表成功', null, $extra);
+    }
+
+
+    /**
      * 从OSS获取图片地址
      * @param $pic_id
      * @return null|string

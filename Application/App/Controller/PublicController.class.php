@@ -540,6 +540,8 @@ class PublicController extends AppController {
 
     /**
      * 应用启动页广告
+     * @param int $width
+     * @param int $height
      */
     public function indexAdv($width=0, $height=0){
         if($width==0||$height==0){
@@ -550,10 +552,11 @@ class PublicController extends AppController {
         $model = M();
         $now = time();
         $picKey = "advspic_".$width.'_'.$height;
-        $result = $model->query("select ".$picKey." from hisihi_advs where ".
+        $result = $model->query("select link, ".$picKey." from hisihi_advs where ".
             "position=3 and status=1 and ".$now." between create_time and end_time order by id desc");
         if($result){
             $picID = $result[0][$picKey];
+            $data['link'] = $result[0]['link'];
             $result = $model->query("select path from hisihi_picture where id=".$picID);
             if($result){
                 $path = $result[0]['path'];

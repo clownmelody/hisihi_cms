@@ -445,7 +445,7 @@ class ForumController extends AdminController
             ->keyText('top_type', '类型', '填写置顶或加精等')
             ->keyRadio('is_out_link', '外链', '是否是展示外链', array(0 => 0, 1 => 1))
             ->keyText('link_url', '外链链接', '填写跳转的外链链接')
-            ->keyRadio('is_inner', '顶部分类', '选择显示在置顶的哪一栏', array(1 => '新闻', 2 => '第二栏', 3 => '第三栏'))
+            ->keyRadio('is_inner', '顶部分类', '选择显示在置顶的哪一栏', array(1 => '新闻', 2 => '第二栏', 3 => '第三栏', 4 => '小嘿专栏'))
             ->keyRadio('community', '所属圈子', '选择所属圈子', array(1 => '学习圈', 2 => '老师圈', 3 => '朋友圈', 4 => '精华圈'))
             ->keySingleImage('cover_id','内页帖子封面')
             ->buttonSubmit(U('saveTopPost'))->buttonBack()
