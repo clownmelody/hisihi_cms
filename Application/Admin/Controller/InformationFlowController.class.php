@@ -34,6 +34,7 @@ class InformationFlowController extends AdminController {
             $model = M('InformationFlowBanner');
             $cid = $_POST['cid'];
             $data['url'] = $_POST["url"];
+            $data['show_pos'] = $_POST['show_pos'];
             $pic_id = $_POST["picture"];
             A('Organization')->uploadLogoPicToOSS($pic_id);
             $data['pic_url'] = A('Organization')->fetchCdnImage($pic_id);

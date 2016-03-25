@@ -3221,6 +3221,46 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 展示用户填写的一键找机构列表
+     */
+    public function userfindorganization(){
+        $model = M('UserFindOrgRequest');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where('status=1')->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "用户找机构");
+        $this->display('userfindorganization');
+    }
+
+    /**
+     * 设置用户请求为已处理
+     * @param int $id
+     */
+    public function userfindorganization_delete($id=0){
+        if(!empty($id)){
+            $model = M('UserFindOrgRequest');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/organization/userfindorganization');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    /**
      * 获取随机字符串
      * @param $length
      * @return null|string

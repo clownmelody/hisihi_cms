@@ -2979,7 +2979,8 @@ class OrganizationController extends AppController
         return $data_list;
     }
 
-    /**获取400电话
+    /**
+     * 获取400电话
      * @return string
      */
     public function get400PhoneNum(){
@@ -2989,6 +2990,49 @@ class OrganizationController extends AppController
         }else{
             return '4000340033';
         }
+    }
+
+    /**
+     * 获取机构主页banner
+     * @param int $page
+     * @param int $per_page
+     */
+    public function getBanner($page=1, $per_page=5){
+        $org_banner_list = M('InformationFlowBanner')->field('id, pic_url, url')->order("create_time desc")
+            ->where('status=1 and show_pos=0')->page($page, $per_page)->select();
+        $total_count = M('InformationFlowBanner')->where('status=1 and show_pos=0')->count();
+        $extra['data'] = $org_banner_list;
+        $extra['total_count'] = $total_count;
+        $this->apiSuccess('获取机构banner列表成功', null, $extra);
+    }
+
+    /**
+     * 用户找机构请求
+     * @param null $city_name
+     * @param null $phone_num
+     * @param string $content
+     */
+    public function findOrganizationRequest($city_name=null, $phone_num=null, $content=""){
+        if($city_name==null||$phone_num==null){
+            $this->apiError(-1, "城市和电话不能为空");
+        }
+        $model = M('UserFindOrgRequest');
+        $data['city_name'] = $city_name;
+        $data['phone_num'] = $phone_num;
+        $data['content'] = $content;
+        $data['create_time'] = time();
+        $model->add($data);
+        $this->apiSuccess("处理成功");
+    }
+
+    /**
+     * 获取帮助找到机构总人数
+     */
+    public function getHelpUsersToFindOrganizationTotalCount(){
+        $model = M('OrganizationTag');
+        $fakeInfo = $model->where('type=6')->field('value')->find();
+        $total_count = $fakeInfo['value'];
+        $this->apiSuccess('获取帮助找到机构总人数成功', null, array("total_count"=>$total_count));
     }
 
 }
