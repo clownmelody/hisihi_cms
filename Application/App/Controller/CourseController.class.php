@@ -221,6 +221,13 @@ class CourseController extends AppController
     }
 
     public function findCourse($id, $fetchImage = 0){
+        $org_course = M('OrganizationCourse')->field('is_old_hisihi_data, issue_content_id')
+            ->where('status=1 and id='.$id)->find();
+        if($org_course){
+            if($org_course['is_old_hisihi_data']==1){
+                $id = $org_course['issue_content_id'];
+            }
+        }
         $course_content = D('IssueContent')->find($id);
         if($course_content){
             D('IssueContent')->where(array('id' => $id))->setInc('view_count');

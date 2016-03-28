@@ -398,7 +398,8 @@ class YellowPagesController extends AdminController {
         }
     }
 
-    /**删除黄页标签
+    /**
+     * 删除黄页标签
      * @param $id
      */
     public function label_delete($id){

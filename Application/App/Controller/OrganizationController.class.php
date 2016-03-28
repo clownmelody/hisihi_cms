@@ -2240,7 +2240,8 @@ class OrganizationController extends AppController
      * @param null $student_university
      * @param null $course_id
      */
-    public function enroll($organization_id=0,$student_name=null,$phone_num=null,$student_university=null,$course_id=null){
+    public function enroll($organization_id=0,$student_name=null,
+                           $phone_num=null,$student_university=null,$course_id=null,$qq=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -2279,6 +2280,7 @@ class OrganizationController extends AppController
         $data['phone_num']=$phone_num;
         $data['course_id']=$course_id;
         $data['student_university']=$student_university;
+        $data['qq'] = $qq;
         $data['create_time']=time();
         $now = strval(date("YmdHis"));
         $char = strval($this->getRandChar(5));
@@ -3033,6 +3035,16 @@ class OrganizationController extends AppController
         $fakeInfo = $model->where('type=6')->field('value')->find();
         $total_count = $fakeInfo['value'];
         $this->apiSuccess('获取帮助找到机构总人数成功', null, array("total_count"=>$total_count));
+    }
+
+    /**
+     * 获取机构大全的筛选类型列表
+     */
+    public function getCateOrgSearchTypeList(){
+        $model = M('OrganizationTag');
+        $list = $model->field('id, value')->where('type=7 and status=1')->select();
+        $list[] = array('id'=>0, 'value'=>'全部');
+        $this->apiSuccess('获取筛选类型成功', null, array('data'=>$list));
     }
 
 }
