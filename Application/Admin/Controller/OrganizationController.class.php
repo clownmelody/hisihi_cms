@@ -188,6 +188,7 @@ class OrganizationController extends AdminController
             $data["video"] = $_POST["video"];
             $data["sort"] = $_POST["sort"];
             $data["view_count"] = $_POST["view_count"];
+            $data["is_recommend"] = $_POST["is_recommend"];
             if(empty($data["sort"]) || intval($data["sort"])==0){
                 $data["sort"]=100;
             }
