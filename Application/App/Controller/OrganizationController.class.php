@@ -3043,8 +3043,101 @@ class OrganizationController extends AppController
     public function getCateOrgSearchTypeList(){
         $model = M('OrganizationTag');
         $list = $model->field('id, value')->where('type=7 and status=1')->select();
-        $list[] = array('id'=>0, 'value'=>'全部');
+        $list[] = array('id'=>'0', 'value'=>'全部');
         $this->apiSuccess('获取筛选类型成功', null, array('data'=>$list));
+    }
+
+    /**
+     * 获取机构大全省份列表
+     */
+    public function getOrgProvinceList(){
+        $ip = get_client_ip();
+        $ch = curl_init();
+        $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
+        $header = array(
+            'apikey: e1edb99789e6a40950685b5e3f0ee282',
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch , CURLOPT_URL , $url);
+        $res = curl_exec($ch);
+        $res = json_decode($res);
+        if($res->errNum==0){
+            $data['province'] = $res->retData->content->address_detail->province;
+        } else {
+            $data['province'] = '湖北';
+        }
+        $data['value'] = $data['province'].'机构';
+
+        $model = M('Province');
+        $province_list = $model->field('province_name')->select();
+        $result = array();
+        foreach ($province_list as $province) {
+            if($data['province']==$province['province_name']){
+                continue;
+            }
+            $object['province'] = $province['province_name'];
+            $object['value'] = $object['province'] . '机构';
+            $result[] = $object;
+        }
+        array_unshift($result, array('value'=>'推荐机构'), $data);
+        $this->apiSuccess('获取机构大全省份列表成功', null, array('data'=>$result));
+    }
+
+    /**
+     * 根据省份名称和类型来筛选机构
+     * @param int $uid
+     * @param null $province
+     * @param int $type
+     * @param int $page
+     * @param int $count
+     */
+    public function filterOrgByProvinceAndType($uid=0, $province=null, $type=0, $page=1, $count=10){
+        if($uid==0){
+            $uid = is_login();
+        }
+        $model = M('Organization');
+        $select_where = "status=1 and type=".$type." and city like '%".$province."%' and application_status=2 and status=1";
+        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication, sort')->order("sort asc")
+            ->where($select_where)->page($page, $count)->select();
+        $totalCount = $model->where($select_where)->count();
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $org['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $org['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $org['relationship'] = 1;
+            } else {
+                $org['relationship'] = 0;
+            }
+        }
+        //机构列表按报名数排序
+        $sort = array(
+            'direction'=>'SORT_DESC',
+            'field'=>'enrollCount'
+        );
+        $org_list = $this->sort_list($sort, $org_list);
+
+        //机构列表按排序字段排序
+        $sort2 = array(
+            'direction'=>'SORT_ASC',
+            'field'=>'sort'
+        );
+        $org_list = $this->sort_list($sort2, $org_list);
+        //去掉sort字段
+        foreach($org_list as &$org){
+            unset($org['sort']);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('获取机构列表成功', null, $data);
     }
 
 }

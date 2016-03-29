@@ -379,13 +379,11 @@ class PublicController extends AppController {
     }
 
     public function topContent($id, $type = '', $version='1.0'){
-        //redirect("http://www.huxiu.com/");
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         $Article = D('Blog/Article', 'Logic');
 
         //获取当前分类下的文章
-        //$info = $Document->field('id,title,description,display,view,comment,create_time,update_time,cover_id')->find($id);
         $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
         if(empty($info)){
             $this->apiError(-1, "id不存在");
@@ -399,7 +397,6 @@ class PublicController extends AppController {
             $this->assign('articleId', $id);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
-                //$htmlcontent = $this->fetch('v2content');
                 $this->display('v2content');
             } else {
                 $this->display();

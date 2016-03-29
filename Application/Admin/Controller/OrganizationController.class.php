@@ -99,7 +99,7 @@ class OrganizationController extends AdminController
             $this->error($Model->getError());
         }
         $tag_model = M('OrganizationTag');
-        $type_array = $tag_model->where(array('status'=>1,'type'=>2))->field('id,value')->select();
+        $type_array = $tag_model->where(array('status'=>1,'type'=>7))->field('id,value')->select();
         $_type_array = explode("#",$data['type']);
 
         $marks = $tag_model->where(array('status'=>1,'type'=>1))->field('id,value')->select();
