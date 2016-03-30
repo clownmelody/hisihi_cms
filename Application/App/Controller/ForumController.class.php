@@ -450,7 +450,7 @@ class ForumController extends AppController
             if($show_adv==true){
                 $adv_pos = $this->getAdvsPostion();
                 foreach($adv_pos as $pos){
-                    $list = $this->mergeAdvertismentToForumList($list, $pos);
+                    $list = $this->mergeAdvertismentToForumList($list, $pos, true, $circle_type);
                 }
             }
         } else {
@@ -465,12 +465,13 @@ class ForumController extends AppController
      * @param null $forum_list
      * @param int $pos
      * @param bool|true $show_adv
+     * @param int $community
      * @return null
      */
-    private function mergeAdvertismentToForumList($forum_list=null, $pos=3, $show_adv=true){
+    private function mergeAdvertismentToForumList($forum_list=null, $pos=3, $show_adv=true, $community=0){
         $pos = $pos - 1;
         if($show_adv){
-            $adv = $this->getOneForumAdv(640, 960);
+            $adv = $this->getOneForumAdv(640, 960, $community);
             if($adv){
                 array_splice($forum_list, $pos, 0, $adv);
             }
@@ -914,7 +915,7 @@ class ForumController extends AppController
      * @param null $post_id
      * @param null $version
      */
-    public function getPostDetail($post_id=null, $version=null){
+    public function getPostDetail($post_id=null, $version=null, $community=0){
         if(empty($post_id)){
             $this->apiError(-1, '传入参数不能为空');
         }
@@ -939,6 +940,9 @@ class ForumController extends AppController
         $post['studentReplyTotalCount'] = $studentReplyTotalCount;
         $post['reply_count'] = $teacherReplyTotalCount + $studentReplyTotalCount;
         $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$post_id;
+        if((float)$version>=2.6){
+            $post['post_detail_adv'] = $this->getOneForumPostDetailAdv($community);
+        }
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
     }
@@ -2034,6 +2038,46 @@ class ForumController extends AppController
     }
 
     /**
+     * 跳转到小嘿专栏列表网页
+     */
+    public function xiaoheicolumn(){
+        $this->display('xiaoheicolumn');
+    }
+
+    /**
+     * 小嘿专栏列表
+     * @param int $page
+     * @param int $count
+     */
+    public function xiaoheiList($page=1, $count=10){
+        $list = M('ForumPost')->where('forum_id=0 and status=1 and is_inner=4')
+            ->order('create_time desc')->page($page, $count)->select();
+        $totalCount = M('ForumPost')->where('forum_id=0 and status=1 and is_inner=4')->count();
+        foreach($list as &$value){
+            $value['url'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$value['id'];
+            $value['pic_url'] = $this->fetchImageFromOSS($value['cover_id']);
+            unset($value['uid']);
+            unset($value['forum_id']);
+            unset($value['content_md5']);
+            unset($value['parse']);
+            unset($value['update_time']);
+            unset($value['status']);
+            unset($value['last_reply_time']);
+            unset($value['reply_count']);
+            unset($value['is_top']);
+            unset($value['content']);
+            unset($value['type']);
+            unset($value['post_type']);
+            unset($value['is_inner']);
+            unset($value['cover_id']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取小嘿专栏列表成功', null, $extra);
+    }
+
+
+    /**
      * 从OSS获取图片地址
      * @param $pic_id
      * @return null|string
@@ -2424,27 +2468,13 @@ class ForumController extends AppController
         $this->apiSuccess("获取公司热门话题列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
-    //获取社区的圈子接口
+    /**
+     * 获取社区的圈子接口
+     */
     public function getForumCircle(){
-        $circle = array(
-            array(
-                'id'=>1,
-                'name'=>'学习'
-            ),
-            array(
-                'id'=>2,
-                'name'=>'老师'
-            ),
-            array(
-                'id'=>3,
-                'name'=>'朋友'
-            ),
-            array(
-                'id'=>4,
-                'name'=>'精华'
-            )
-        );
-        $this->apiSuccess("获取社区圈子成功", null, array('data'=>$circle));
+        $model = M('ForumConfig');
+        $list = $model->field('id, name')->where('type=1 and status=1')->select();
+        $this->apiSuccess("获取社区圈子成功", null, array('data'=>$list));
     }
 
     /**
@@ -2509,10 +2539,8 @@ class ForumController extends AppController
     }
 
     /**
-     * @param $id
-     * @param $type
-     * @return mixed
-     * @auth RFly
+     * @param $map_pos
+     * @return bool|int
      */
     private function setForumPos($map_pos)
     {
@@ -2530,20 +2558,11 @@ class ForumController extends AppController
     }
 
     /**
-     * @param $id
-     * @param $type
+     * @param $map_pos
      * @return mixed
-     * @auth RFly
      */
     private function getForumPos($map_pos)
     {
-//        $cache_key = "forum_pos_" . implode('_', $map_pos);
-//        $pos = S($cache_key);
-//        if (empty($pos)) {
-//            $pos = M('ForumPos')->where($map_pos)->field('pos')->find();
-//            S($cache_key, $pos);
-//            return $pos;
-//        }
         $pos = M('ForumPos')->cache(true)->where($map_pos)->field('pos')->find();
         return $pos;
     }
@@ -2866,18 +2885,19 @@ class ForumController extends AppController
     }
 
     /**
-     * 获取一条社区内的广告
-     * @param $width
-     * @param $height
-     * @return bool
+     * 获取一条社区对应圈子内的广告
+     * @param int $width
+     * @param int $height
+     * @param int $community
+     * @return array|bool
      */
-    public function getOneForumAdv($width=640, $height=960){
+    public function getOneForumAdv($width=640, $height=960, $community=0){
         $model = M();
         $now = time();
         $picKey = "advspic_".$width.'_'.$height;
         $result = $model->query("select ".$picKey." , title, link from hisihi_advs where ".
-            "position=4 and status=1 and ".$now." between create_time and end_time order by level desc");
-        $total_count = M('Advs')->where('position=4 and status=1 and '.$now.' between create_time and end_time')->count();
+            "position=4 and community=".$community." and status=1 and ".$now." between create_time and end_time order by level desc");
+        $total_count = M('Advs')->where('position=4 and community='.$community.' and status=1 and '.$now.' between create_time and end_time')->count();
         //$pos = rand(1, $total_count);
         if(self::$adv_index>$total_count){
             self::$adv_index = 1;
@@ -2886,6 +2906,47 @@ class ForumController extends AppController
             $pos = self::$adv_index;
         }
         self::$adv_index++;
+        if($result){
+            $picID = $result[$pos-1][$picKey];
+            $advLink = $result[$pos-1]['link'];
+            $advTitle = $result[$pos-1]['title'];
+            $pic_result = $model->query("select path from hisihi_picture where id=".$picID);
+            if($pic_result){
+                $path = $pic_result[0]['path'];
+                $objKey = substr($path, 17);
+                $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                $data['type'] = "advertisment";
+                $data['pic'] = $picUrl;
+                $data['content_url'] = $advLink;
+                $data['title'] = $advTitle;
+                $origin_img_info = getimagesize($picUrl);
+                $size[] = $origin_img_info[0]; // width
+                $size[] = $origin_img_info[1]; // height
+                $data['size'] = $size;
+                return array($data);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 获取一条社区帖子详情页的广告
+     * @param int $community
+     * @param int $width
+     * @param int $height
+     * @return array|bool
+     */
+    public function getOneForumPostDetailAdv($community=0, $width=640, $height=960){
+        $model = M();
+        $now = time();
+        $picKey = "advspic_".$width.'_'.$height;
+        $result = $model->query("select ".$picKey." , title, link from hisihi_advs where ".
+            "position=5 and community=".$community." and status=1 and ".$now." between create_time and end_time order by level desc");
+        $total_count = M('Advs')->where('position=5 and community='.$community.' and status=1 and '.$now.' between create_time and end_time')->count();
+        $pos = rand(1, $total_count);
         if($result){
             $picID = $result[$pos-1][$picKey];
             $advLink = $result[$pos-1]['link'];

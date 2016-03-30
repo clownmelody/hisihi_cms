@@ -28,6 +28,7 @@
 				<th class="">ID</th>
 				<th class="">图片地址</th>
 				<th class="">跳转地址</th>
+				<th class="">显示位置</th>
 				<th class="">创建时间</th>
 				<th class="">状态</th>
 				<th class="">操作</th>
@@ -41,6 +42,10 @@
 						<td>{$vo.id}</td>
 						<td>{$vo.pic_url}</td>
 						<td>{$vo.url}</td>
+						<td><if condition="($vo.show_pos eq 1) "> 资讯流
+							<else /> 机构列表
+						</if>
+						</td>
 						<td><span>{$vo.create_time|time_format}</span></td>
 						<td><if condition="($vo.status eq 1) "> 正常
 							<else /> 删除

@@ -13,6 +13,7 @@ use Admin\Builder\AdminConfigBuilder;
 use Admin\Builder\AdminSortBuilder;
 use Admin\Builder\AdminTreeListBuilder;
 use Think\Hook;
+use Think\Page;
 
 class ForumController extends AdminController
 {
@@ -445,7 +446,7 @@ class ForumController extends AdminController
             ->keyText('top_type', '类型', '填写置顶或加精等')
             ->keyRadio('is_out_link', '外链', '是否是展示外链', array(0 => 0, 1 => 1))
             ->keyText('link_url', '外链链接', '填写跳转的外链链接')
-            ->keyRadio('is_inner', '顶部分类', '选择显示在置顶的哪一栏', array(1 => '新闻', 2 => '第二栏', 3 => '第三栏'))
+            ->keyRadio('is_inner', '顶部分类', '选择显示在置顶的哪一栏', array(1 => '新闻', 2 => '第二栏', 3 => '第三栏', 4 => '小嘿专栏'))
             ->keyRadio('community', '所属圈子', '选择所属圈子', array(1 => '学习圈', 2 => '老师圈', 3 => '朋友圈', 4 => '精华圈'))
             ->keySingleImage('cover_id','内页帖子封面')
             ->buttonSubmit(U('saveTopPost'))->buttonBack()
@@ -793,6 +794,90 @@ class ForumController extends AdminController
             }
         }
     }
+
+    /**
+     * 论坛圈子管理
+     */
+    public function forumcircle(){
+        $model = M('ForumConfig');
+        $count = $model->where('type=1 and status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where("type=1 and status=1")->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title", "圈子管理");
+        $this->display('forumcircle');
+    }
+
+    /**
+     * 新增圈子
+     */
+    public function circleAdd(){
+        $this->display('circle_add');
+    }
+
+    /**
+     * 圈子数据更新
+     */
+    public function circle_update(){
+        if (IS_POST) { //提交表单
+            $model = M('ForumConfig');
+            $cid = $_POST["cid"];
+            $data['type'] = 1; // type 1 社区圈子
+            $data["name"] = $_POST["name"];
+            $data['status']=1;
+            if(empty($cid)){
+                $data["create_time"] = time();
+                $model->data($data)->add();
+                $this->success('添加成功', 'index.php?s=/admin/forum/forumcircle');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/forum/forumcircle');
+            }
+        } else {
+            $this->display('circle_add');
+        }
+    }
+
+    /**
+     * 编辑圈子
+     * @param $id
+     */
+    public function circle_edit($id){
+        $model = M('ForumConfig');
+        $data = $model->where('status=1 and id='.$id)->find();
+        $this->assign('info',$data);
+        $this->display();
+    }
+
+    /**
+     * 删除圈子
+     * @param $id
+     */
+    public function circle_delete($id){
+        if(!empty($id)){
+            $model = M('ForumConfig');
+            $data['status'] = -1;
+            if(is_array($id)){
+                $map['id'] = array('in',$id);
+                $res = $model->where($map)->save($data);
+            }else{
+                $map['id'] = $id;
+                $res = $model->where($map)->save($data);
+            }
+            if(!$res){
+                $this->error("删除数据失败");
+            }else{
+                $this->success("删除成功",'index.php?s=/admin/forum/forumcircle');
+            }
+        }else{
+            $this->error('未选择要删除的数据');
+        }
+    }
+
     /**
      * 上传图片到OSS
      * @param $picID

@@ -1409,233 +1409,241 @@ class OrganizationController extends AppController
 
     /**
      * 获取城市列表数据
+     * @param int $data_version
      */
-    public function getCityList(){
-        $list = json_decode('[
-	{
-        "city":"\u6B66\u6C49",
-        "code":"101200101"
-    },
-    {
-        "city":"\u5317\u4EAC",
-        "code":"101010100"
-    },
-    {
-        "city":"\u4E0A\u6D77",
-        "code":"101020100"
-    },
-    {
-        "city":"\u5E7F\u5DDE",
-        "code":"101280101"
-    },
-    {
-        "city":"\u6DF1\u5733",
-        "code":"101280601"
-    },
-    {
-        "city":"\u5357\u4EAC",
-        "code":"101190101"
-    },
-    {
-        "city":"\u91CD\u5E86",
-        "code":"101040100"
-    },
-    {
-        "city":"\u5929\u6D25",
-        "code":"101030100"
-    },
-    {
-        "city":"\u5927\u8FDE",
-        "code":"101070201"
-    },
-    {
-        "city":"\u6C88\u9633",
-        "code":"101070101"
-    },
-    {
-        "city":"\u6210\u90FD",
-        "code":"101270101"
-    },
-    {
-        "city":"\u957F\u6C99",
-        "code":"101250101"
-    },
-    {
-        "city":"\u9752\u5C9B",
-        "code":"101120201"
-    },
-    {
-        "city":"\u676D\u5DDE",
-        "code":"101210101"
-    },
-    {
-        "city":"\u53A6\u95E8",
-        "code":"101230201"
-    },
-    {
-        "city":"\u897F\u5B89",
-        "code":"101110101"
-    },
-    {
-        "city":"\u90D1\u5DDE",
-        "code":"101180101"
-    },
-    {
-        "city":"\u5357\u660C",
-        "code":"101240101"
-    },
-    {
-        "city":"\u5408\u80A5",
-        "code":"101220101"
-    },
-    {
-        "city":"\u4E34\u6C82",
-        "code":"101120901"
-    },
-    {
-        "city":"\u6D4E\u5357",
-        "code":"101120101"
-    },
-    {
-        "city":"\u54C8\u5C14\u6EE8",
-        "code":"101050101"
-    },
-	{
-        "city":"\u8D35\u9633",
-        "code":"101260101"
-    },
-	{
-        "city":"\u592A\u539F",
-        "code":"101100101"
-    },
-	{
-        "city":"\u5170\u5DDE",
-        "code":"101160101"
-    },
-	{
-        "city":"\u77F3\u5BB6\u5E84",
-        "code":"101090101"
-    },
-	{
-        "city":"\u82CF\u5DDE",
-        "code":"101190401"
-    },
-	{
-        "city":"\u798F\u5DDE",
-        "code":"101230101"
-    },
-	{
-        "city":"\u5409\u6797",
-        "code":"101060201"
-    },
-	{
-        "city":"\u957F\u6625",
-        "code":"101060101"
-    },
-	{
-        "city":"\u6CF0\u5B89",
-        "code":"101120801"
-    },
-	 {
-        "city":"\u79E6\u7687\u5C9B",
-        "code":"101091101"
-    },
-	{
-        "city":"\u5F90\u5DDE",
-        "code":"101190801"
-    },
-	{
-        "city":"\u5B9C\u660C",
-        "code":"101200901"
-    },
-	 {
-        "city":"\u682A\u6D32",
-        "code":"101250301"
-    },
-	{
-        "city":"\u5468\u53E3",
-        "code":"101181401"
-    },
-	{
-        "city":"\u6D1B\u9633",
-        "code":"101180901"
-    },
-	{
-        "city":"\u829C\u6E56",
-        "code":"101220301"
-    },
-	 {
-        "city":"\u9A6C\u978D\u5C71",
-        "code":"101220501"
-    },
-	 {
-        "city":"\u7EF5\u9633",
-        "code":"101270401"
-    },
-	 {
-        "city":"\u5357\u5B81",
-        "code":"101300101"
-    },
-	 {
-        "city":"\u6606\u660E",
-        "code":"101290101"
-    },
-	{
-        "city":"\u5510\u5C71",
-        "code":"101090501"
-    },
-	 {
-        "city":"\u90AF\u90F8",
-        "code":"101091001"
-    },
-	 {
-        "city":"\u547C\u548C\u6D69\u7279",
-        "code":"101080101"
-    },
-	 {
-        "city":"\u626C\u5DDE",
-        "code":"101190601"
-    },
-	 {
-        "city":"\u6DEE\u5B89",
-        "code":"101190901"
-    },
-	{
-        "city":"\u65E0\u9521",
-        "code":"101190201"
-    },
-	 {
-        "city":"\u6CC9\u5DDE",
-        "code":"101230501"
-    },
-	{
-        "city":"\u4F5B\u5C71",
-        "code":"101280800"
-    },
-	{
-        "city":"\u4E1C\u839E",
-        "code":"101281601"
-    },
-	 {
-        "city":"\u4E2D\u5C71",
-        "code":"101281701"
-    },
-	{
-        "city":"\u73E0\u6D77",
-        "code":"101280701"
-    },
-	{
-        "city":"\u4E09\u4E9A",
-        "code":"101310201"
-    },
-	{
-        "city":"\u6D77\u53E3",
-        "code":"101310101"
-    }
-]', true);
-        $extra['require_refresh'] = false;
-        $extra['data'] = $list;
-        $this->apiSuccess('获取城city列表成功', null, $extra);
+    public function getCityList($data_version=0){
+        $current_data_version = 1;
+        $data_version = (int)$data_version;
+        if($data_version!=0||$current_data_version<=$data_version){
+            $this->apiSuccess('城市数据未变更，不需要更新', null);
+        } else {
+            $list = json_decode('[
+                {
+                    "city":"\u6B66\u6C49",
+                    "code":"101200101"
+                },
+                {
+                    "city":"\u5317\u4EAC",
+                    "code":"101010100"
+                },
+                {
+                    "city":"\u4E0A\u6D77",
+                    "code":"101020100"
+                },
+                {
+                    "city":"\u5E7F\u5DDE",
+                    "code":"101280101"
+                },
+                {
+                    "city":"\u6DF1\u5733",
+                    "code":"101280601"
+                },
+                {
+                    "city":"\u5357\u4EAC",
+                    "code":"101190101"
+                },
+                {
+                    "city":"\u91CD\u5E86",
+                    "code":"101040100"
+                },
+                {
+                    "city":"\u5929\u6D25",
+                    "code":"101030100"
+                },
+                {
+                    "city":"\u5927\u8FDE",
+                    "code":"101070201"
+                },
+                {
+                    "city":"\u6C88\u9633",
+                    "code":"101070101"
+                },
+                {
+                    "city":"\u6210\u90FD",
+                    "code":"101270101"
+                },
+                {
+                    "city":"\u957F\u6C99",
+                    "code":"101250101"
+                },
+                {
+                    "city":"\u9752\u5C9B",
+                    "code":"101120201"
+                },
+                {
+                    "city":"\u676D\u5DDE",
+                    "code":"101210101"
+                },
+                {
+                    "city":"\u53A6\u95E8",
+                    "code":"101230201"
+                },
+                {
+                    "city":"\u897F\u5B89",
+                    "code":"101110101"
+                },
+                {
+                    "city":"\u90D1\u5DDE",
+                    "code":"101180101"
+                },
+                {
+                    "city":"\u5357\u660C",
+                    "code":"101240101"
+                },
+                {
+                    "city":"\u5408\u80A5",
+                    "code":"101220101"
+                },
+                {
+                    "city":"\u4E34\u6C82",
+                    "code":"101120901"
+                },
+                {
+                    "city":"\u6D4E\u5357",
+                    "code":"101120101"
+                },
+                {
+                    "city":"\u54C8\u5C14\u6EE8",
+                    "code":"101050101"
+                },
+                {
+                    "city":"\u8D35\u9633",
+                    "code":"101260101"
+                },
+                {
+                    "city":"\u592A\u539F",
+                    "code":"101100101"
+                },
+                {
+                    "city":"\u5170\u5DDE",
+                    "code":"101160101"
+                },
+                {
+                    "city":"\u77F3\u5BB6\u5E84",
+                    "code":"101090101"
+                },
+                {
+                    "city":"\u82CF\u5DDE",
+                    "code":"101190401"
+                },
+                {
+                    "city":"\u798F\u5DDE",
+                    "code":"101230101"
+                },
+                {
+                    "city":"\u5409\u6797",
+                    "code":"101060201"
+                },
+                {
+                    "city":"\u957F\u6625",
+                    "code":"101060101"
+                },
+                {
+                    "city":"\u6CF0\u5B89",
+                    "code":"101120801"
+                },
+                 {
+                    "city":"\u79E6\u7687\u5C9B",
+                    "code":"101091101"
+                },
+                {
+                    "city":"\u5F90\u5DDE",
+                    "code":"101190801"
+                },
+                {
+                    "city":"\u5B9C\u660C",
+                    "code":"101200901"
+                },
+                 {
+                    "city":"\u682A\u6D32",
+                    "code":"101250301"
+                },
+                {
+                    "city":"\u5468\u53E3",
+                    "code":"101181401"
+                },
+                {
+                    "city":"\u6D1B\u9633",
+                    "code":"101180901"
+                },
+                {
+                    "city":"\u829C\u6E56",
+                    "code":"101220301"
+                },
+                 {
+                    "city":"\u9A6C\u978D\u5C71",
+                    "code":"101220501"
+                },
+                 {
+                    "city":"\u7EF5\u9633",
+                    "code":"101270401"
+                },
+                 {
+                    "city":"\u5357\u5B81",
+                    "code":"101300101"
+                },
+                 {
+                    "city":"\u6606\u660E",
+                    "code":"101290101"
+                },
+                {
+                    "city":"\u5510\u5C71",
+                    "code":"101090501"
+                },
+                 {
+                    "city":"\u90AF\u90F8",
+                    "code":"101091001"
+                },
+                 {
+                    "city":"\u547C\u548C\u6D69\u7279",
+                    "code":"101080101"
+                },
+                 {
+                    "city":"\u626C\u5DDE",
+                    "code":"101190601"
+                },
+                 {
+                    "city":"\u6DEE\u5B89",
+                    "code":"101190901"
+                },
+                {
+                    "city":"\u65E0\u9521",
+                    "code":"101190201"
+                },
+                 {
+                    "city":"\u6CC9\u5DDE",
+                    "code":"101230501"
+                },
+                {
+                    "city":"\u4F5B\u5C71",
+                    "code":"101280800"
+                },
+                {
+                    "city":"\u4E1C\u839E",
+                    "code":"101281601"
+                },
+                 {
+                    "city":"\u4E2D\u5C71",
+                    "code":"101281701"
+                },
+                {
+                    "city":"\u73E0\u6D77",
+                    "code":"101280701"
+                },
+                {
+                    "city":"\u4E09\u4E9A",
+                    "code":"101310201"
+                },
+                {
+                    "city":"\u6D77\u53E3",
+                    "code":"101310101"
+                }
+            ]', true);
+            $extra['require_refresh'] = true;
+            $extra['current_data_version'] = $current_data_version;
+            $extra['data'] = $list;
+            $this->apiSuccess('获取城city列表成功', null, $extra);
+        }
     }
 
     /**
@@ -2232,7 +2240,8 @@ class OrganizationController extends AppController
      * @param null $student_university
      * @param null $course_id
      */
-    public function enroll($organization_id=0,$student_name=null,$phone_num=null,$student_university=null,$course_id=null){
+    public function enroll($organization_id=0,$student_name=null,
+                           $phone_num=null,$student_university=null,$course_id=null,$qq=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -2271,6 +2280,7 @@ class OrganizationController extends AppController
         $data['phone_num']=$phone_num;
         $data['course_id']=$course_id;
         $data['student_university']=$student_university;
+        $data['qq'] = $qq;
         $data['create_time']=time();
         $now = strval(date("YmdHis"));
         $char = strval($this->getRandChar(5));
@@ -2971,7 +2981,8 @@ class OrganizationController extends AppController
         return $data_list;
     }
 
-    /**获取400电话
+    /**
+     * 获取400电话
      * @return string
      */
     public function get400PhoneNum(){
@@ -2981,6 +2992,206 @@ class OrganizationController extends AppController
         }else{
             return '4000340033';
         }
+    }
+
+    /**
+     * 获取机构主页banner
+     * @param int $page
+     * @param int $per_page
+     */
+    public function getBanner($page=1, $per_page=5){
+        $org_banner_list = M('InformationFlowBanner')->field('id, pic_url, url')->order("create_time desc")
+            ->where('status=1 and show_pos=0')->page($page, $per_page)->select();
+        $total_count = M('InformationFlowBanner')->where('status=1 and show_pos=0')->count();
+        $extra['data'] = $org_banner_list;
+        $extra['total_count'] = $total_count;
+        $this->apiSuccess('获取机构banner列表成功', null, $extra);
+    }
+
+    /**
+     * 用户找机构请求
+     * @param null $city_name
+     * @param null $phone_num
+     * @param string $content
+     */
+    public function findOrganizationRequest($city_name=null, $phone_num=null, $content=""){
+        if($city_name==null||$phone_num==null){
+            $this->apiError(-1, "城市和电话不能为空");
+        }
+        $model = M('UserFindOrgRequest');
+        $data['city_name'] = $city_name;
+        $data['phone_num'] = $phone_num;
+        $data['content'] = $content;
+        $data['create_time'] = time();
+        $model->add($data);
+        $this->apiSuccess("处理成功");
+    }
+
+    /**
+     * 获取帮助找到机构总人数
+     */
+    public function getHelpUsersToFindOrganizationTotalCount(){
+        $model = M('OrganizationTag');
+        $fakeInfo = $model->where('type=6')->field('value')->find();
+        $total_count = $fakeInfo['value'];
+        $this->apiSuccess('获取帮助找到机构总人数成功', null, array("total_count"=>$total_count));
+    }
+
+    /**
+     * 获取机构大全的筛选类型列表
+     */
+    public function getCateOrgSearchTypeList(){
+        $model = M('OrganizationTag');
+        $list = $model->field('id, value')->where('type=7 and status=1')->select();
+        $list[] = array('id'=>'0', 'value'=>'全部');
+        $this->apiSuccess('获取筛选类型成功', null, array('data'=>$list));
+    }
+
+    /**
+     * 获取机构大全省份列表
+     */
+    public function getOrgProvinceList(){
+        $ip = get_client_ip();
+        $ch = curl_init();
+        $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
+        $header = array(
+            'apikey: e1edb99789e6a40950685b5e3f0ee282',
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch , CURLOPT_URL , $url);
+        $res = curl_exec($ch);
+        $res = json_decode($res);
+        if($res->errNum==0){
+            $data['province'] = $res->retData->content->address_detail->province;
+        } else {
+            $data['province'] = '湖北';
+        }
+        $data['value'] = $data['province'].'机构';
+
+        $model = M('Province');
+        $province_list = $model->field('province_name')->select();
+        $result = array();
+        foreach ($province_list as $province) {
+            if($data['province']==$province['province_name']){
+                continue;
+            }
+            $object['province'] = $province['province_name'];
+            $object['value'] = $object['province'] . '机构';
+            $result[] = $object;
+        }
+        array_unshift($result, array('value'=>'推荐机构'), $data);
+        $this->apiSuccess('获取机构大全省份列表成功', null, array('data'=>$result));
+    }
+
+    /**
+     * 根据省份名称和类型来筛选机构
+     * @param int $uid
+     * @param null $province
+     * @param int $type
+     * @param int $page
+     * @param int $count
+     */
+    public function filterOrgByProvinceAndType($uid=0, $province=null, $type=0, $page=1, $count=10){
+        if($uid==0){
+            $uid = is_login();
+        }
+        $model = M('Organization');
+        $select_where = "status=1 and type=".$type." and city like '%".$province."%' and application_status=2";
+        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication, sort')->order("sort asc")
+            ->where($select_where)->page($page, $count)->select();
+        $totalCount = $model->where($select_where)->count();
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $org['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $org['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $org['relationship'] = 1;
+            } else {
+                $org['relationship'] = 0;
+            }
+        }
+        //机构列表按报名数排序
+        $sort = array(
+            'direction'=>'SORT_DESC',
+            'field'=>'enrollCount'
+        );
+        $org_list = $this->sort_list($sort, $org_list);
+
+        //机构列表按排序字段排序
+        $sort2 = array(
+            'direction'=>'SORT_ASC',
+            'field'=>'sort'
+        );
+        $org_list = $this->sort_list($sort2, $org_list);
+        //去掉sort字段
+        foreach($org_list as &$org){
+            unset($org['sort']);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('获取机构列表成功', null, $data);
+    }
+
+    /**
+     * 获取推荐机构列表
+     * @param int $uid
+     * @param int $page
+     * @param int $count
+     */
+    public function getRecommendOrganization($uid=0, $page=1, $count=10){
+        if($uid==0){
+            $uid = is_login();
+        }
+        $model = M('Organization');
+        $select_where = "status=1 and application_status=2 and is_recommend=1";
+        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication, sort')->order("sort asc")
+            ->where($select_where)->page($page, $count)->select();
+        $totalCount = $model->where($select_where)->count();
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $org['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $org['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $org['relationship'] = 1;
+            } else {
+                $org['relationship'] = 0;
+            }
+        }
+        //机构列表按报名数排序
+        $sort = array(
+            'direction'=>'SORT_DESC',
+            'field'=>'enrollCount'
+        );
+        $org_list = $this->sort_list($sort, $org_list);
+
+        //机构列表按排序字段排序
+        $sort2 = array(
+            'direction'=>'SORT_ASC',
+            'field'=>'sort'
+        );
+        $org_list = $this->sort_list($sort2, $org_list);
+        //去掉sort字段
+        foreach($org_list as &$org){
+            unset($org['sort']);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('获取机构推荐列表成功', null, $data);
     }
 
 }

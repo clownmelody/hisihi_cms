@@ -25,7 +25,19 @@
 		                  </volist>
 		            </select>
 				</div>
-			</div>	
+			</div>
+
+            <div class="form-item cf">
+                <label class="item-label">所属论坛圈子<span class="check-tips">（广告位于论坛才会生效）</span></label>
+                <div class="controls">
+                    <select name="community" id="adv_community">
+                        <option value="" data="">请选择所属圈子</option>
+                        <volist name="advs_sing" id="so">
+                            <option value="{$so.id}" data="{$so.name}" <if condition="$so['id'] eq $info['position']">selected</if> >{$so.name}</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
 			
 			<div class="form-item cf" id="type1" <if condition="($info['type'] neq 1) or ($info['type'] neq 2)">style="display:none;"</if>>
 				<label class="item-label">广告图片(640*960)<span class="check-tips">（请上传广告图片）</span></label>

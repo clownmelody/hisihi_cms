@@ -379,13 +379,11 @@ class PublicController extends AppController {
     }
 
     public function topContent($id, $type = '', $version='1.0'){
-        //redirect("http://www.huxiu.com/");
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         $Article = D('Blog/Article', 'Logic');
 
         //获取当前分类下的文章
-        //$info = $Document->field('id,title,description,display,view,comment,create_time,update_time,cover_id')->find($id);
         $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
         if(empty($info)){
             $this->apiError(-1, "id不存在");
@@ -399,7 +397,6 @@ class PublicController extends AppController {
             $this->assign('articleId', $id);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
-                //$htmlcontent = $this->fetch('v2content');
                 $this->display('v2content');
             } else {
                 $this->display();
@@ -540,6 +537,8 @@ class PublicController extends AppController {
 
     /**
      * 应用启动页广告
+     * @param int $width
+     * @param int $height
      */
     public function indexAdv($width=0, $height=0){
         if($width==0||$height==0){
@@ -550,10 +549,11 @@ class PublicController extends AppController {
         $model = M();
         $now = time();
         $picKey = "advspic_".$width.'_'.$height;
-        $result = $model->query("select ".$picKey." from hisihi_advs where ".
+        $result = $model->query("select link, ".$picKey." from hisihi_advs where ".
             "position=3 and status=1 and ".$now." between create_time and end_time order by id desc");
         if($result){
             $picID = $result[0][$picKey];
+            $data['link'] = $result[0]['link'];
             $result = $model->query("select path from hisihi_picture where id=".$picID);
             if($result){
                 $path = $result[0]['path'];

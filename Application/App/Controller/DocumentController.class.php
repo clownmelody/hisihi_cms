@@ -284,6 +284,14 @@ class DocumentController extends AppController {
     }
 
     /**
+     * 调整设计头条点赞和踩得数量
+     * @param $id
+     */
+    private function adjustArticleSupportAndOpposeCount($id){
+
+    }
+
+    /**
      * 检查用户收藏行为是否还能加积分
      * @param int $uid
      * @return bool
