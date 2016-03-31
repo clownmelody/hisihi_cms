@@ -130,7 +130,10 @@ class QrscanController extends AppController
                     if($category_id==0){ // 全部作业
                         $extra['url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/index/index';
                     } else {
-                        $extra['url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/index/index/cate/'.$category_id.'.html';
+                        //$extra['url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/index/index/cate/'.$category_id.'.html';
+                        $model = M('Category');
+                        $info = $model->field('pid')->where('id='.$category_id)->find();
+                        $extra['url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/index/index/cate/'.$category_id.'/sub/1/base/'.$info["pid"].'.html';
                     }
                 }
                 $this->apiSuccess('', null, $extra);

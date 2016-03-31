@@ -1851,6 +1851,43 @@ class ForumController extends AppController
      * @param int $community
      */
     public function forumTopPost($version='1.0', $community=1){
+        if((float)$version>=2.6){
+            $model = M('ForumTopPost');
+            $toppostlist = $model->field('id, tag, title, type, post_id, url, content')
+                ->where('status=1 and community='.$community)
+                ->order('create_time desc')->select();
+            foreach($toppostlist as &$toppost){
+                $toppost_type = $toppost['type'];
+                // 置顶类型  1 新闻列表  2 内部web帖子  3 原生帖子  4 外部url
+                switch($toppost_type){
+                    case 1:
+                        $toppost['url'] = C('HOST_NAME_PREFIX')."app.php/forum/hisihi_news/community/".$community;
+                        $toppost['show_type'] = "web";
+                        unset($toppost['type']);
+                        break;
+                    case 2:
+                        $toppost['url'] = C('HOST_NAME_PREFIX').'app.php/forum/topPostDetailv2/post_id/'.$toppost['post_id'];
+                        $toppost['show_type'] = "web";
+                        break;
+                    case 3:
+                        $toppost['show_type'] = 'origin';
+                        $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
+                        if($configCount){
+                            $configCount['value'] = $configCount['value'] + $this->getAutoIncreseCount();
+                            $toppost['title'] = "嘿设汇已经解决".$configCount['value']."个问题";
+                        } else {
+                            $fakeCount = 330212 + $this->getAutoIncreseCount();
+                            $toppost['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
+                        }
+                        break;
+                    case 4:
+                        $toppost['show_type'] = "web";
+                        break;
+                }
+            }
+            $extra['data'] = $toppostlist;
+            $this->apiSuccess('获取论坛置顶帖成功', null, $extra);
+        }
         if((float)$version>=2.5){
             // 获取第一栏
             $first_post['id'] = "001";

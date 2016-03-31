@@ -417,14 +417,21 @@ class ForumController extends AdminController
             }
 
             //显示页面
+            $community_list = M('ForumConfig')->field('id, name')->where('type=1 and status=1')->select();
+            $community_array = array();
+            foreach($community_list as $community){
+                $community_array[$community['id']] = $community['name'];
+            }
             $builder = new AdminConfigBuilder();
             $builder->title($isEdit ? '编辑帖子' : '新建帖子')
                 ->keyId()->keyTitle()->keyEditor('content', '内容')->keyRadio('is_top', '置顶', '选择置顶形式', array(0 => '不置顶', 1 => '本版置顶', 2 => '全局置顶'))
-                ->keyText('type', '类型', '填写置顶或加精等')
+                /*->keyText('type', '类型', '填写置顶或加精等')
                 ->keyRadio('is_out_link', '外链', '是否是展示外链', array(0 => 0, 1 => 1))
-                ->keyText('link_url', '外链链接', '填写跳转的外链链接')
-                ->keyRadio('is_inner', '嘿设汇新闻', '是否是嘿设汇新闻内页', array(0 => 0, 1 => 1))
-                ->keyRadio('community', '所属圈子', '选择所属圈子', array(1 => '学习圈', 2 => '老师圈', 3 => '朋友圈', 4 => '精华圈'))
+                ->keyText('link_url', '外链链接', '填写跳转的外链链接')*/
+                //->keyRadio('is_inner', '嘿设汇新闻', '是否是嘿设汇新闻内页', array(0 => 0, 1 => 1))
+                //->keyRadio('community', '所属圈子', '选择所属圈子', array(1 => '学习圈', 2 => '老师圈', 3 => '朋友圈', 4 => '精华圈'))
+                ->keyRadio('is_inner', '顶部分类', '选择显示在置顶的哪一栏', array(1 => '新闻', 4 => '小嘿专栏'))
+                ->keyRadio('community', '所属圈子', '选择所属圈子', $community_array)
                 ->keySingleImage('cover_id','内页帖子封面')
                 ->keyCreateTime()->keyUpdateTime()
                 ->keyTime('last_reply_time', '最后回复时间')
@@ -439,15 +446,21 @@ class ForumController extends AdminController
      * 添加置顶帖
      */
     public function addTopPost(){
+        $community_list = M('ForumConfig')->field('id, name')->where('type=1 and status=1')->select();
+        $community_array = array();
+        foreach($community_list as $community){
+            $community_array[$community['id']] = $community['name'];
+        }
         //显示页面
         $builder = new AdminConfigBuilder();
-        $builder->title('添加论坛置顶帖')
+        $builder->title('添加论坛置顶列表内容')
             ->keyId()->keyTitle()->keyEditor('content', '内容')
-            ->keyText('top_type', '类型', '填写置顶或加精等')
+            /*->keyText('top_type', '类型', '填写置顶或加精等')
             ->keyRadio('is_out_link', '外链', '是否是展示外链', array(0 => 0, 1 => 1))
-            ->keyText('link_url', '外链链接', '填写跳转的外链链接')
-            ->keyRadio('is_inner', '顶部分类', '选择显示在置顶的哪一栏', array(1 => '新闻', 2 => '第二栏', 3 => '第三栏', 4 => '小嘿专栏'))
-            ->keyRadio('community', '所属圈子', '选择所属圈子', array(1 => '学习圈', 2 => '老师圈', 3 => '朋友圈', 4 => '精华圈'))
+            ->keyText('link_url', '外链链接', '填写跳转的外链链接')*/
+            ->keyRadio('is_inner', '顶部分类', '选择显示在置顶的哪一栏', array(1 => '新闻', /*2 => '第二栏', 3 => '第三栏',*/ 4 => '小嘿专栏'))
+            //->keyRadio('community', '所属圈子', '选择所属圈子', array(1 => '学习圈', 2 => '老师圈', 3 => '朋友圈', 4 => '精华圈'))
+            ->keyRadio('community', '所属圈子', '选择所属圈子', $community_array)
             ->keySingleImage('cover_id','内页帖子封面')
             ->buttonSubmit(U('saveTopPost'))->buttonBack()
             ->display();
@@ -872,6 +885,117 @@ class ForumController extends AdminController
                 $this->error("删除数据失败");
             }else{
                 $this->success("删除成功",'index.php?s=/admin/forum/forumcircle');
+            }
+        }else{
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 论坛置顶管理
+     */
+    public function forumtoppost(){
+        $model = M('ForumTopPost');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where("status=1")->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach ($list as &$toppost) {
+            $community = $toppost['community'];
+            $type = $toppost['type'];
+            $info = M('ForumConfig')->field('name')->where('type=1 and id='.$community)->find();
+            $toppost['community'] = $info['name'];
+            switch($type){
+                case 1:
+                    $toppost['type'] = '新闻列表';
+                    break;
+                case 2:
+                    $toppost['type'] = '内部web帖子';
+                    break;
+                case 3:
+                    $toppost['type'] = '原生帖子';
+                    break;
+                case 4:
+                    $toppost['type'] = '外部url';
+                    break;
+            }
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title", "置顶管理");
+        $this->display('forumtoppost');
+    }
+
+    /**
+     * 新增置顶
+     */
+    public function toppostAdd(){
+        $community_list = M('ForumConfig')->field('id, name')->where('type=1 and status=1')->select();
+        $this->assign('_community', $community_list);
+        $this->display('toppost_add');
+    }
+
+    /**
+     * 置顶数据更新
+     */
+    public function toppost_update(){
+        if (IS_POST) { //提交表单
+            $model = M('ForumTopPost');
+            $cid = $_POST["cid"];
+            $data['tag'] = $_POST['tag'];
+            $data["title"] = $_POST["title"];
+            $data["community"] = $_POST["community"];
+            $data["type"] = $_POST["type"];
+            $data["post_id"] = $_POST["post_id"];
+            //$data['content'] = $_POST["content"];
+            $data["url"] = $_POST["url"];
+            $data['status']=1;
+            if(empty($cid)){
+                $data["create_time"] = time();
+                $model->data($data)->add();
+                $this->success('添加成功', 'index.php?s=/admin/forum/forumtoppost');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/forum/forumtoppost');
+            }
+        } else {
+            $this->display('toppost_add');
+        }
+    }
+
+    /**
+     * 编辑置顶
+     * @param $id
+     */
+    public function toppost_edit($id){
+        $community_list = M('ForumConfig')->field('id, name')->where('type=1 and status=1')->select();
+        $info = M('ForumTopPost')->where('id='.$id)->find();
+        $this->assign('_community', $community_list);
+        $this->assign('info', $info);
+        $this->display();
+    }
+
+    /**
+     * 删除置顶
+     * @param $id
+     */
+    public function toppost_delete($id){
+        if(!empty($id)){
+            $model = M('ForumTopPost');
+            $data['status'] = -1;
+            if(is_array($id)){
+                $map['id'] = array('in',$id);
+                $res = $model->where($map)->save($data);
+            }else{
+                $map['id'] = $id;
+                $res = $model->where($map)->save($data);
+            }
+            if(!$res){
+                $this->error("删除数据失败");
+            }else{
+                $this->success("删除成功",'index.php?s=/admin/forum/forumtoppost');
             }
         }else{
             $this->error('未选择要删除的数据');
