@@ -410,8 +410,13 @@ abstract class AppController extends RestController {
     protected function getArticleOpposeCount($id){
         $map_oppose_count['row'] = $id;
         $map_oppose_count['appname'] = 'Article';
-        $supportCount = M('Oppose')->where($map_oppose_count)->count();
-        return $supportCount;
+        $opposeCount = M('Oppose')->where($map_oppose_count)->count();
+        $doc = M('DocumentArticle')->field('fake_support_count')->where('id='.$id)->find();
+        if($doc){
+            $fake_count = (int)$doc['fake_support_count'] * 0.05;
+            $opposeCount = $opposeCount + $fake_count;
+        }
+        return $opposeCount;
     }
 
     /**

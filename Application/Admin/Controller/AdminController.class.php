@@ -220,6 +220,9 @@ class AdminController extends Controller {
         switch ($status){
             case -1 :
                 $this->delete($Model, $map, array('success'=>'删除成功','error'=>'删除失败'));
+                $where_map['content_type'] = 1;
+                $where_map['content_id'] = array('in', $ids);
+                M('InformationFlowContent')->where($where_map)->save(array('status'=>-1));
                 break;
             case 0  :
                 $this->forbid($Model, $map, array('success'=>'禁用成功','error'=>'禁用失败'));

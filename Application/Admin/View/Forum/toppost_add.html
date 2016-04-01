@@ -1,0 +1,91 @@
+<extend name="Public/base" />
+<block name="body">
+    <div class="main-title cf">
+        <h2>新增置顶</h2>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="tab-wrap">
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('toppost_update')}" method="post" class="form-horizontal doc-modal-form">
+                <input type="hidden" name="cid" id="cid" value=""/>
+                <!-- 基础 -->
+                <div id="tab1" class="tab-pane in tab1">
+                    <div class="form-item cf">
+                        <label class="item-label">标签</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="tag" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">标题</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="title" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">所属圈子</label>
+                        <div class="controls">
+                            <notempty name="_community">
+                                <select class="text input-large" name="community" style="height: 30px;width: 400px;">
+                                    <volist name="_community" id="vo">
+                                        <option value="{$vo.id}" >{$vo.name}</option>
+                                    </volist>
+                                </select>
+                                <else/>
+                            </notempty>
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">类型</label>
+                        <div class="controls">
+                            <select class="text input-large" name="type" style="height: 30px;width: 400px;">
+                                <option value="1" selected="selected">新闻列表</option>
+                                <option value="2" >内部web帖子</option>
+                                <option value="3" >原生帖子</option>
+                                <option value="4" >外部url</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--<div class="form-item cf">
+                        <label class="item-label">帖子内容</label>
+                        <div class="controls">
+                            <label class="textarea">
+                                <textarea name="content"></textarea>
+                                {:hook('adminArticleEdit', array('name'=>'content','value'=>''))}
+                            </label>
+                        </div>
+                    </div>-->
+                    <div class="form-item cf">
+                        <label class="item-label">原生帖ID</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="post_id" value="">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">跳转地址</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="url" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="form-item cf">
+                    <label class="item-label"></label>
+                    <div class="controls edit_sort_btn">
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">确 定</button>
+                        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+
+<script>
+    //导航高亮
+    highlight_subnav('{:U('forum/forumtoppost')}');
+</script>
+

@@ -99,7 +99,7 @@ class OrganizationController extends AdminController
             $this->error($Model->getError());
         }
         $tag_model = M('OrganizationTag');
-        $type_array = $tag_model->where(array('status'=>1,'type'=>2))->field('id,value')->select();
+        $type_array = $tag_model->where(array('status'=>1,'type'=>7))->field('id,value')->select();
         $_type_array = explode("#",$data['type']);
 
         $marks = $tag_model->where(array('status'=>1,'type'=>1))->field('id,value')->select();
@@ -188,6 +188,7 @@ class OrganizationController extends AdminController
             $data["video"] = $_POST["video"];
             $data["sort"] = $_POST["sort"];
             $data["view_count"] = $_POST["view_count"];
+            $data["is_recommend"] = $_POST["is_recommend"];
             if(empty($data["sort"]) || intval($data["sort"])==0){
                 $data["sort"]=100;
             }
@@ -2203,11 +2204,13 @@ class OrganizationController extends AdminController
                 {
                     $model->where('id='.$i)->save($data);
                     M('OrganizationVideo')->where(array('course_id'=>$i))->save($data);
+                    M('InformationFlowContent')->where('content_type=2 and content_id='.$i)->save($data);
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
                 M('OrganizationVideo')->where(array('course_id'=>$id))->save($data);
+                M('InformationFlowContent')->where('content_type=2 and content_id='.$id)->save($data);
             }
             if(I('from_org')){
                 $this->success('删除成功','index.php?s=/admin/organization/course&organization_id='.I('organization_id'));
@@ -3218,6 +3221,46 @@ class OrganizationController extends AdminController
             }
         }
         return $picUrl;
+    }
+
+    /**
+     * 展示用户填写的一键找机构列表
+     */
+    public function userfindorganization(){
+        $model = M('UserFindOrgRequest');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where('status=1')->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "用户找机构");
+        $this->display('userfindorganization');
+    }
+
+    /**
+     * 设置用户请求为已处理
+     * @param int $id
+     */
+    public function userfindorganization_delete($id=0){
+        if(!empty($id)){
+            $model = M('UserFindOrgRequest');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/organization/userfindorganization');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
     }
 
     /**
