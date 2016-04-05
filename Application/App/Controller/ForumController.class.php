@@ -1853,7 +1853,7 @@ class ForumController extends AppController
     public function forumTopPost($version='1.0', $community=1){
         if((float)$version>=2.6){
             $model = M('ForumTopPost');
-            $toppostlist = $model->field('id, tag, title, type, post_id, url, content')
+            $toppostlist = $model->field('id, tag, title, type, post_id, url')
                 ->where('status=1 and community='.$community)
                 ->order('create_time desc')->select();
             foreach($toppostlist as &$toppost){

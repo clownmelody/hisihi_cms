@@ -3097,7 +3097,11 @@ class OrganizationController extends AppController
             $uid = is_login();
         }
         $model = M('Organization');
-        $select_where = "status=1 and type=".$type." and city like '%".$province."%' and application_status=2";
+        if($type!=0){
+            $select_where = "status=1 and type=".$type." and city like '%".$province."%' and application_status=2";
+        } else {
+            $select_where = "status=1 and city like '%".$province."%' and application_status=2";
+        }
         $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
@@ -3143,15 +3147,20 @@ class OrganizationController extends AppController
     /**
      * 获取推荐机构列表
      * @param int $uid
+     * @param int $type
      * @param int $page
      * @param int $count
      */
-    public function getRecommendOrganization($uid=0, $page=1, $count=10){
+    public function getRecommendOrganization($uid=0, $type=0, $page=1, $count=10){
         if($uid==0){
             $uid = is_login();
         }
         $model = M('Organization');
-        $select_where = "status=1 and application_status=2 and is_recommend=1";
+        if($type!=0){
+            $select_where = "status=1 and application_status=2 and is_recommend=1 and type=".$type;
+        } else {
+            $select_where = "status=1 and application_status=2 and is_recommend=1";
+        }
         $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
