@@ -1696,7 +1696,7 @@ class OrganizationController extends AppController
         }
         $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication,sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
-        $totalCount = $model->where("application_status=2 and status=1")->count();
+        $totalCount = $model->where($select_where)->count();
         /*if(!empty($city)&&!empty($type)){
             $org_list = $model->field('id, name, slogan, city, view_count, logo')
                 ->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->page($page, $count)->select();
