@@ -379,6 +379,14 @@ class PublicController extends AppController {
     }
 
     public function topContent($id, $type = '', $version='1.0'){
+
+        if($type == 'view'){
+            $cacheHtml = S('topcontent-v2-'.$id);
+            if($cacheHtml){  // 缓存存在
+                $this->responseHtml($cacheHtml);
+            }
+        }
+
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
         $Article = D('Blog/Article', 'Logic');
@@ -397,6 +405,11 @@ class PublicController extends AppController {
             $this->assign('articleId', $id);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
+                // 如果未缓存
+                if(!S('topcontent-v2-'.$id)){
+                    $html = $this->fetch('v2content');
+                    S('topcontent-v2-'.$id, $html, 3600);
+                }
                 $this->display('v2content');
             } else {
                 $this->display();
@@ -444,6 +457,13 @@ class PublicController extends AppController {
         }
     }
 
+    private function responseHtml($content){
+        header('Content-Type: text/html; charset=utf-8');
+        header('Cache-control: '.C('HTTP_CACHE_CONTROL'));  // 页面缓存控制
+        // 输出模板文件
+        echo $content;
+        return;
+    }
 
     public function topContentInfo($id=null){
         if(empty($id)){

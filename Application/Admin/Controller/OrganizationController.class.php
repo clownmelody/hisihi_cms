@@ -2204,11 +2204,13 @@ class OrganizationController extends AdminController
                 {
                     $model->where('id='.$i)->save($data);
                     M('OrganizationVideo')->where(array('course_id'=>$i))->save($data);
+                    M('InformationFlowContent')->where('content_type=2 and content_id='.$i)->save($data);
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
                 M('OrganizationVideo')->where(array('course_id'=>$id))->save($data);
+                M('InformationFlowContent')->where('content_type=2 and content_id='.$id)->save($data);
             }
             if(I('from_org')){
                 $this->success('删除成功','index.php?s=/admin/organization/course&organization_id='.I('organization_id'));

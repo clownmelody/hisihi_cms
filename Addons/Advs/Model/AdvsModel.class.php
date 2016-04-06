@@ -119,6 +119,7 @@ class AdvsModel extends Model
     /* 禁用 */
     public function forbidden($id)
     {
+        M('InformationFlowContent')->where('content_type=3 and content_id='.$id)->save(array('status'=>-1));
         return $this->save(array('id' => $id, 'status' => '0'));
     }
 
@@ -131,6 +132,7 @@ class AdvsModel extends Model
     /* 删除 */
     public function del($id)
     {
+        M('InformationFlowContent')->where('content_type=3 and content_id='.$id)->save(array('status'=>-1));
         return $this->delete($id);
     }
 
