@@ -132,7 +132,7 @@ class ForumController extends AppController
         $this->apiSuccess("获取类别标签成功", null, array('types' => $forum_type));
     }
 
-    private function formatList($list, $version)
+    private function formatList($list, $version, $circle_type)
     {
         $map_support['appname'] = 'Forum';
         $map_support['table'] = 'post';
@@ -172,6 +172,10 @@ class ForumController extends AppController
                 }else{
                     $v['first_teacher'] = null;
                 }
+            }
+
+            if((float)$version>2.5){//2.6版本
+                $v['community'] = $circle_type;
             }
 
             //解析并成立图片数据
@@ -446,7 +450,7 @@ class ForumController extends AppController
         $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
-            $list = $this->formatList($list, $version);
+            $list = $this->formatList($list, $version, $circle_type);
             if($show_adv==true){
                 $adv_pos = $this->getAdvsPostion();
                 foreach($adv_pos as $pos){
@@ -459,9 +463,7 @@ class ForumController extends AppController
         }
         $data['total_count'] = $totalCount;
         $data['forumList'] = $list;
-        if((float)$version >2.5){//2.6版本
-            $data['community'] = $circle_type;
-        }
+
         $this->apiSuccess("获取提问列表成功", null, $data);
     }
 
