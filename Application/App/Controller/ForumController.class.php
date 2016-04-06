@@ -942,6 +942,9 @@ class ForumController extends AppController
         $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$post_id;
         if((float)$version>=2.6){
             $post['post_detail_adv'] = $this->getOneForumPostDetailAdv($community);
+            if(!$post['post_detail_adv']){
+                unset($post['post_detail_adv']);
+            }
         }
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
