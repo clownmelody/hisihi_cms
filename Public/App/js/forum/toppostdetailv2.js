@@ -60,7 +60,7 @@ commentObj.prototype={
                     //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
                 }
             }
-            alert('进入ios前');
+            //alert("进入ios前")
             else if (this.operation.ios) {
                 //如果方法存在
                 alert(typeof getUser_iOS);
