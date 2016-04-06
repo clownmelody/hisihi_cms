@@ -943,7 +943,7 @@ class ForumController extends AppController
         if((float)$version>=2.6){
             $post['post_detail_adv'] = $this->getOneForumPostDetailAdv($community);
             if(!$post['post_detail_adv']){
-                unset($post['post_detail_adv']);
+                $post['post_detail_adv'] = null;
             }
         }
         $extra['data'] = $post;
