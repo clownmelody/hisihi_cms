@@ -1853,7 +1853,7 @@ class ForumController extends AppController
     public function forumTopPost($version='1.0', $community=1){
         if((float)$version>=2.6){
             $model = M('ForumTopPost');
-            $toppostlist = $model->field('id, tag, title, type, post_id, url, content')
+            $toppostlist = $model->field('id, tag, title, type, post_id, url')
                 ->where('status=1 and community='.$community)
                 ->order('create_time desc')->select();
             foreach($toppostlist as &$toppost){
@@ -3066,7 +3066,18 @@ class ForumController extends AppController
     public function getFirstReplyTeacher($post_id=null){
         $map['post_id'] = $post_id;
         $map['status'] = array('in','1,3');
-        $teacher = M('ForumPostReply')->field('uid')->where($map)->order('create_time desc')->limit(1)->select();
+        $teacher = M()->query('SELECT
+	a.uid
+FROM
+	hisihi_forum_post_reply a
+LEFT JOIN hisihi_auth_group_access b ON a.uid = b.uid
+WHERE
+	a.post_id = '.$post_id.'
+AND a.`status` IN (1, 3)
+AND b.group_id=6
+ORDER BY
+	a.create_time DESC
+LIMIT 1');
         $teacher_name = M('Member')->where('uid='.$teacher[0]['uid'])->getField('nickname');
         if($teacher_name){
             return $teacher_name;
