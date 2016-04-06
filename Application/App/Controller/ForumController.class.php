@@ -457,7 +457,12 @@ class ForumController extends AppController
             $totalCount = 0;
             $list = array();
         }
-        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+        $data['total_count'] = $totalCount;
+        $data['forumList'] = $list;
+        if((float)$version >2.5){//2.6版本
+            $data['community'] = $circle_type;
+        }
+        $this->apiSuccess("获取提问列表成功", null, $data);
     }
 
     /**
