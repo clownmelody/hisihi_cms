@@ -134,7 +134,7 @@ class ForumController extends AppController
         $this->apiSuccess("获取类别标签成功", null, array('types' => $forum_type));
     }
 
-    private function formatList($list, $version)
+    private function formatList($list, $version, $circle_type)
     {
         $map_support['appname'] = 'Forum';
         $map_support['table'] = 'post';
@@ -174,6 +174,10 @@ class ForumController extends AppController
                 }else{
                     $v['first_teacher'] = null;
                 }
+            }
+
+            if((float)$version>2.5){//2.6版本
+                $v['community'] = $circle_type;
             }
 
             //解析并成立图片数据
@@ -459,7 +463,7 @@ class ForumController extends AppController
         $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
-            $list = $this->formatList($list, $version);
+            $list = $this->formatList($list, $version, $circle_type);
             if($show_adv==true){
                 $adv_pos = $this->getAdvsPostion();
                 foreach($adv_pos as $pos){
@@ -470,11 +474,15 @@ class ForumController extends AppController
             $totalCount = 0;
             $list = array();
         }
-
         $cache = new \RedisCache();
         $cache->setResCache($this, '获取提问列表成功', array( 'total_count' => $totalCount, 'forumList' => $list), 120);
         $cache->close();
 //        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+
+//        $data['total_count'] = $totalCount;
+//        $data['forumList'] = $list;
+//
+//        $this->apiSuccess("获取提问列表成功", null, $data);
     }
 
     /**
@@ -959,6 +967,9 @@ class ForumController extends AppController
         $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$post_id;
         if((float)$version>=2.6){
             $post['post_detail_adv'] = $this->getOneForumPostDetailAdv($community);
+            if(!$post['post_detail_adv']){
+                $post['post_detail_adv'] = null;
+            }
         }
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
