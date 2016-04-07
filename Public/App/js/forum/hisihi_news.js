@@ -142,7 +142,7 @@ hisihiNews.prototype = {
             dateStr=this.getTimeFromTimestamp(item.create_time);
             str += '<li class="newsLiItem">'+
                     '<div class="coverBorderContainer"></div>'+
-                    '<a href="'+ window.urlObj.server_url + '/toppostdetailv2/post_id/SHAREID'.replace(/SHAREID/,item.id)+'/user-agent/hisihi-ios-app">' +
+                    '<a href="'+ window.urlObj.server_url + '/toppostdetailv2/post_id/SHAREID'.replace(/SHAREID/,item.id)+'/hisihi-new-open">' +
                     '<div class="left">' +
                     '<img src="' + item.pic_url + '"/>' +
                     '</div>' +
