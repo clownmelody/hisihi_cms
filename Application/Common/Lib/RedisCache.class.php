@@ -8,10 +8,12 @@
  * 用于缓存Api的结果
  */
 
-//
+
 class RedisCache
 {
     private $cache;
+    private $key;
+    const prefix = 'hisihi_php';
 
     function __construct(){
         $redis = new Redis();
@@ -24,18 +26,22 @@ class RedisCache
         $redis->auth($redis_auth);
         $redis->select($redis_db_num);
         $this->cache = $redis;
+
+        $this->key = self::prefix.'+'.$_SERVER['REQUEST_URI'];
     }
 
     /** 获取当前request的缓存结果
      * @return mixed|null
      */
-    public function getResCache(){
-        $q = $_SERVER['REQUEST_URI'];
-        $has = $this->cache->exists($q);
+    public function getResCache($controller){
+//        $q = $_SERVER['REQUEST_URI'];
+        $has = $this->cache->exists($this->key);
         if($has){
-            $value = $this->cache->get($q);
+            $value = $this->cache->get($this->key);
             $arr = json_decode($value);
-            return $arr;
+            $msg = $arr->msg;
+            $arr = $arr->content;
+            $controller->apiSuccess($msg, null, $arr);
         }
         else{
          return null;
@@ -46,18 +52,21 @@ class RedisCache
         $this->cache->close();
     }
 
-    /** 设置api结果缓存
+    /** 设置api结果缓存，缓存后会中断后续执行，返回客户端结果
+     * @param $controller 被缓存的控制器实例
      * @param $message 提示消息
      * @param $array 返回数组
      * @param int $ttl 过期时间
      * @return bool 是否成功
+     *
      */
-    public function setResCache($message, $array, $ttl=60){
+    public function setResCache($controller, $message, $array, $ttl=60){
         $arr = array();
         $arr['msg'] = $message;
         $arr['content'] = $array;
         $str = json_encode($arr);
-        $success = $this->cache->setex($_SERVER['REQUEST_URI'], $ttl, $str);
-        return $success;
+
+        $success = $this->cache->setex($this->key, $ttl, $str);
+        $controller->apiSuccess($message, null, $array);
     }
 }

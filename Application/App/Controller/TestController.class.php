@@ -9,6 +9,7 @@
 namespace App\Controller;
 
 require('Application/Common/Lib/RedisCache.class.php');
+include('Application/App/Controller/AppController.class.php');
 
 class TestController extends AppController
 {
@@ -23,28 +24,18 @@ class TestController extends AppController
     {
         $cache = new \RedisCache();
         $arr = array('success'=>true, 'error_code'=>0,array('h'=>7));
-        $cache->setResCache('获取成功',$arr, 600);
-        $this->apiSuccess($arr);
+        $cache->setResCache($this, '获取成功', $arr);
+//        $this->apiSuccess($arr);
     }
 
     public function _before_do_test(){
-//        $c = $_SERVER['HTTP_HOST'];
-//        $x = $_SERVER['PHP_SELF'];
-//        $f = $_SERVER['QUERY_STRING'];
-
-//        $m = md5($q);
-//        print($c.'<br>'.$x.'<br>'.$f.'<br>'.$q.'<br>'.$m.'<br>');
         $cache = new \RedisCache();
-        $value = $cache->getResCache();
-        if(!$value){
-            return;
-        }
-        else{
-            $msg = $value->msg;
-            $arr = $value->content;
-            $this->apiSuccess($msg, null, $arr);
-        }
-//        $this->apiSuccess($hhh);
+        $cache->getResCache($this);
+        return;
+    }
+
+    public function hi(){
+        echo 'hihihi';
     }
 
     public function _after_do_test(){
