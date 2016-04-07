@@ -22,6 +22,10 @@ class RedisCache
         $redis_auth = C('REDIS_AUTH');
         $redis_db_num = C('REDIS_DB_NUM');
 
+        echo $redis_host.'<br>';
+        echo $redis_auth.'<br>';
+        echo $redis_db_num;
+
         $redis->connect($redis_host, $redis_port);
         $redis->auth($redis_auth);
         $redis->select($redis_db_num);
