@@ -327,12 +327,12 @@ class ForumController extends AppController
      * forumFilter拦截器，用于缓存Api结果
      * created by leilei @2016.4.6
      */
-    public function _before_forumFilter(){
-        $cache = new \RedisCache();
-        $cache->getResCache($this);
-        $cache->close();
-        return;
-    }
+//    public function _before_forumFilter(){
+//        $cache = new \RedisCache();
+//        $cache->getResCache($this);
+//        $cache->close();
+//        return;
+//    }
 
     /**
      * 论坛数据筛选
@@ -474,10 +474,10 @@ class ForumController extends AppController
             $totalCount = 0;
             $list = array();
         }
-        $cache = new \RedisCache();
-        $cache->setResCache($this, '获取提问列表成功', array( 'total_count' => $totalCount, 'forumList' => $list), 120);
-        $cache->close();
-//        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+//        $cache = new \RedisCache();
+//        $cache->setResCache($this, '获取提问列表成功', array( 'total_count' => $totalCount, 'forumList' => $list), 120);
+//        $cache->close();
+          $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
 
 //        $data['total_count'] = $totalCount;
 //        $data['forumList'] = $list;
