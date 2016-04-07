@@ -77,7 +77,7 @@ abstract class AppController extends RestController {
         }
     }
 
-    protected function apiSuccess($message, $redirect=null, $extra=null) {
+    public function apiSuccess($message, $redirect=null, $extra=null) {
         return $this->apiReturn(true, 0, $message, $redirect, $extra);
     }
 
