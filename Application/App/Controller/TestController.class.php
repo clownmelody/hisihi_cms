@@ -20,19 +20,30 @@ class TestController extends AppController
 //        tag('cache');
     }
 
-    public function do_test($hhh)
+    public function do_test()
     {
+
+        $value2 = 'World';
         $cache = new \RedisCache();
-        $arr = array('success'=>true, 'error_code'=>0,array('h'=>7));
-        $cache->setResCache($this, '获取成功', $arr);
-//        $this->apiSuccess($arr);
+        $value_cache = $cache->getPartResCache('part1');
+        if(!$value_cache){
+            $value1 = 'Hello';
+            $cache->setPartResCache('part1', $value1);
+            $arr['value1'] = $value1;
+        }
+        else{
+            $arr['value1'] = $value_cache;
+        }
+        $arr['value2'] = $value2;
+        $this->apiSuccess('succccccc', null, $arr);
     }
 
-    public function _before_do_test(){
-        $cache = new \RedisCache();
-        $cache->getResCache($this);
-        return;
-    }
+//    public function _before_do_test(){
+//
+//        $cache = new \RedisCache();
+//        $cache->getResCache($this);
+//        return;
+//    }
 
     public function hi(){
         echo 'hihihi';
