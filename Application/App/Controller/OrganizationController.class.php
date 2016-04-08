@@ -1742,9 +1742,9 @@ class OrganizationController extends AppController
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
             if(floatval($version) > 2.5){
-                $org['type'] = $this->getOrganizationType($org['type']);
+                $org['type_tag'] = $this->getOrganizationType($org['type']);
             }else{
-                unset($org['type']);
+                unset($org['type_tag']);
             }
             //$user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -2727,7 +2727,7 @@ class OrganizationController extends AppController
     }
 
     private function getOrganizationType($type=null){
-        $value = M('OrganizationTag')->where('status = 1 and type=7 and id='.$type)->getField('value');
+        $value = M('OrganizationTag')->where('status = 1 and type=7 and id='.$type)->getField('extra');
         if(empty($value)){
             return null;
         }else{
@@ -3139,7 +3139,7 @@ class OrganizationController extends AppController
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
-            $org['type'] = $this->getOrganizationType($org['type']);
+            $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
