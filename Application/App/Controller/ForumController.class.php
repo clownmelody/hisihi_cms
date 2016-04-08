@@ -13,6 +13,8 @@ use Think\Model;
 use Weibo\Api\WeiboApi;
 use Think\Hook;
 
+require('Application/Common/Lib/RedisCache.class.php');
+
 define('TOP_ALL', 2);
 define('TOP_FORUM', 1);
 
@@ -132,7 +134,7 @@ class ForumController extends AppController
         $this->apiSuccess("获取类别标签成功", null, array('types' => $forum_type));
     }
 
-    private function formatList($list, $version)
+    private function formatList($list, $version, $circle_type)
     {
         $map_support['appname'] = 'Forum';
         $map_support['table'] = 'post';
@@ -172,6 +174,10 @@ class ForumController extends AppController
                 }else{
                     $v['first_teacher'] = null;
                 }
+            }
+
+            if((float)$version>2.5){//2.6版本
+                $v['community'] = $circle_type;
             }
 
             //解析并成立图片数据
@@ -255,10 +261,10 @@ class ForumController extends AppController
      * 论坛列表
      * @param int $type_id 帖子类型
      * @param int $page  分页参数
-     * @param int $count  分页参数
-     * @param int $is_reply -1 全部 0 无回答 1 有回答
+     * @param int $count  分页参数部 0 无回答 1 有回答
      * @param string $order  帖子列表排序
-     * @param bool|false $show_adv  是否在帖子列表中插入广告
+     * @param bool|false $show_adv
+     * @param int $is_reply -1 全  是否在帖子列表中插入广告
      * @param int $post_type  1 论坛普通帖； 2 论坛公司帖
      */
     public function forum($type_id = 0, $page = 1, $count = 10, $is_reply = -1, $order = 'ctime',
@@ -316,6 +322,17 @@ class ForumController extends AppController
 
         $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
+
+    /**
+     * forumFilter拦截器，用于缓存Api结果
+     * created by leilei @2016.4.6
+     */
+//    public function _before_forumFilter(){
+//        $cache = new \RedisCache();
+//        $cache->getResCache($this);
+//        $cache->close();
+//        return;
+//    }
 
     /**
      * 论坛数据筛选
@@ -446,7 +463,7 @@ class ForumController extends AppController
         $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
-            $list = $this->formatList($list, $version);
+            $list = $this->formatList($list, $version, $circle_type);
             if($show_adv==true){
                 $adv_pos = $this->getAdvsPostion();
                 foreach($adv_pos as $pos){
@@ -457,7 +474,15 @@ class ForumController extends AppController
             $totalCount = 0;
             $list = array();
         }
-        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+//        $cache = new \RedisCache();
+//        $cache->setResCache($this, '获取提问列表成功', array( 'total_count' => $totalCount, 'forumList' => $list), 120);
+//        $cache->close();
+          $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+
+//        $data['total_count'] = $totalCount;
+//        $data['forumList'] = $list;
+//
+//        $this->apiSuccess("获取提问列表成功", null, $data);
     }
 
     /**
@@ -942,6 +967,9 @@ class ForumController extends AppController
         $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$post_id;
         if((float)$version>=2.6){
             $post['post_detail_adv'] = $this->getOneForumPostDetailAdv($community);
+            if(!$post['post_detail_adv']){
+                $post['post_detail_adv'] = null;
+            }
         }
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);

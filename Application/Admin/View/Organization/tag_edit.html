@@ -1,5 +1,6 @@
 <extend name="Public/base" />
 <block name="body">
+    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
     <div class="main-title cf">
         <h2>修改机构公用配置信息</h2>
     </div>
@@ -15,7 +16,7 @@
                     <div class="form-item cf">
                         <label class="item-label">配置类型</label>
                         <div class="controls">
-                            <select name="type">
+                            <select id="s_type" name="type">
                                 <option value="1" <if condition="$info.type eq 1">selected</if>>机构优势</option>
                                 <option value="2" <if condition="$info.type eq 2">selected</if>>机构类型</option>
                                 <option value="3" <if condition="$info.type eq 3">selected</if>>热门城市</option>
@@ -32,6 +33,53 @@
                             <input type="text" class="text input-large" name="value" value="{$info.value}">
                         </div>
                     </div>
+                    <div id="extra_pic" <if condition="$info.type neq 7">style="display: none"</if> class="form-item cf">
+                        <label class="item-label">标签图片</label>
+                        <div class="controls">
+                            <input type="file" id="upload_company_picture">
+                            <input type="hidden" name="picture" id="cover_id_company" value="{$info.extra}"/>
+                            <div class="upload-img-box">
+                                <notempty name="info['extra']">
+                                    <div class="upload-pre-item"><img src="{$info['extra']}"/></div>
+                                </notempty>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            //上传图片
+                            /* 初始化上传插件 */
+                            $("#upload_company_picture").uploadify({
+                                "height"          : 30,
+                                "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                                "fileObjName"     : "download",
+                                "buttonText"      : "上传图片",
+                                "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                                "width"           : 120,
+                                'removeTimeout'	  : 1,
+                                'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                                "onUploadSuccess" : uploadPictureCompany,
+                                'onFallback' : function() {
+                                    alert('未检测到兼容版本的Flash.');
+                                }
+                            });
+                            function uploadPictureCompany(file, data){
+                                var data = $.parseJSON(data);
+                                var src = '';
+                                if(data.status){
+                                    $("#cover_id_company").val(data.id);
+                                    src = data.url ||  data.path
+                                    $("#cover_id_company").parent().find('.upload-img-box').html(
+                                            '<div class="upload-pre-item"><img src="' + src + '"/></div>'
+                                    );
+                                } else {
+                                    updateAlert(data.info);
+                                    setTimeout(function(){
+                                        $('#top-alert').find('button').click();
+                                        $(that).removeClass('disabled').prop('disabled',false);
+                                    },1500);
+                                }
+                            }
+                        </script>
+                    </div>
                 </div>
 
                 <!-- 按钮 -->
@@ -47,8 +95,21 @@
     </div>
 </block>
 
-<script>
-    //导航高亮
-    highlight_subnav('{:U('Organization/tag')}');
-</script>
+<block name="script">
+    <script>
+        //导航高亮
+        highlight_subnav('{:U('Organization/tag')}');
+        $(function(){
+            $('#s_type').change(function(){
+                var value = $('#s_type').val();
+                if(value == '7'){
+                    $('#extra_pic').show();
+                }else {
+                    $('#extra_pic').hide();
+                }
+            });
+        });
+
+    </script>
+</block>
 

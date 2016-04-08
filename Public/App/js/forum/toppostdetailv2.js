@@ -62,6 +62,7 @@ commentObj.prototype={
             }
             else if (this.operation.ios) {
                 //如果方法存在
+                alert(typeof getUser_iOS);
                 if (typeof getUser_iOS !="undefined") {
                     userStr=getUser_iOS();//调用app的方法，得到用户的基体信息
                     this.isFromApp=true;
