@@ -381,9 +381,16 @@ class PublicController extends AppController {
     public function topContent($id, $type = '', $version='1.0'){
 
         if($type == 'view'){
-            $cacheHtml = S('topcontent-v2-'.$id);
-            if($cacheHtml){  // 缓存存在
-                $this->responseHtml($cacheHtml);
+            if((float)$version >=2.0){
+                $cacheHtml = S('topcontent-v2-'.$id);
+                if($cacheHtml){
+                    $this->responseHtml($cacheHtml);
+                }
+            } else {
+                $cacheHtml = S('topcontent-v1-'.$id);
+                if($cacheHtml){
+                    $this->responseHtml($cacheHtml);
+                }
             }
         }
 
@@ -408,11 +415,19 @@ class PublicController extends AppController {
                 // 如果未缓存
                 if(!S('topcontent-v2-'.$id)){
                     $html = $this->fetch('v2content');
+                    S('topcontent-v2-'.$id, null);
                     S('topcontent-v2-'.$id, $html, 3600);
                 }
-                $this->display('v2content');
+                $this->responseHtml($html);
+                //$this->display('v2content');
             } else {
-                $this->display();
+                if(!S('topcontent-v1-'.$id)){
+                    $html = $this->fetch('topcontent');
+                    S('topcontent-v1-'.$id, null);
+                    S('topcontent-v1-'.$id, $html, 3600);
+                }
+                $this->responseHtml($html);
+                //$this->display();
             }
         } else {
             $info['img'] = $this->fetchImage($info['cover_id']);

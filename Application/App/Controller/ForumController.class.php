@@ -1894,7 +1894,7 @@ class ForumController extends AppController
                         unset($toppost['type']);
                         break;
                     case 2:
-                        $toppost['url'] = C('HOST_NAME_PREFIX').'app.php/forum/topPostDetailv2/post_id/'.$toppost['post_id'];
+                        //$toppost['url'] = C('HOST_NAME_PREFIX').'app.php/forum/topPostDetailv2/post_id/'.$toppost['post_id'];
                         $toppost['show_type'] = "web";
                         break;
                     case 3:

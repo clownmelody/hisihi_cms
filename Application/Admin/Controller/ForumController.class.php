@@ -382,7 +382,7 @@ class ForumController extends AdminController
     }
 
     public function editPost($id = null, $title = '', $content = '', $create_time = 0, $update_time = 0, $last_reply_time = 0,
-                             $type = '普通', $is_top = 0, $is_out_link=0, $link_url=null, $is_inner=0, $cover_id=0)
+                             $type = '普通', $is_top = 0, $is_out_link=0, $link_url=null, $is_inner=0, $cover_id=0, $community=1)
     {
         if (IS_POST) {
             //判断是否为编辑模式
@@ -392,7 +392,7 @@ class ForumController extends AdminController
             $model = M('ForumPost');
             $data = array('title' => $title, 'content' => $content, 'create_time' => $create_time, 'update_time' => $update_time,
                 'last_reply_time' => $last_reply_time, 'type'=>$type, 'is_top' => $is_top, 'is_out_link' => $is_out_link,
-                'link_url' => $link_url, 'is_inner' => $is_inner, 'cover_id' => $cover_id);
+                'link_url' => $link_url, 'is_inner' => $is_inner, 'cover_id' => $cover_id, 'community' => $community);
             $this->uploadLogoPicToOSS($cover_id);
             if ($isEdit) {
                 $result = $model->where(array('id' => $id))->save($data);

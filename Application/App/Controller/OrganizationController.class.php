@@ -3194,11 +3194,12 @@ class OrganizationController extends AppController
         } else {
             $select_where = "status=1 and application_status=2 and is_recommend=1";
         }
-        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication, sort')->order("sort asc")
+        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
