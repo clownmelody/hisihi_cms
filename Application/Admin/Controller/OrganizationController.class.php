@@ -2660,6 +2660,11 @@ class OrganizationController extends AdminController
             $cid = $_POST["cid"];
             $data["type"] = $_POST["type"];
             $data["value"] = $_POST["value"];
+            $pic_id = $_POST["picture"];
+            if(is_numeric($pic_id)){
+                $this->uploadLogoPicToOSS($pic_id);
+                $data["extra"] = $this->fetchCdnImage($pic_id);
+            }
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();
