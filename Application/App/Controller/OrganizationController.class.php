@@ -1694,7 +1694,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function localOrganizationList($uid=0, $city=null, $type=null, $name=null, $page=1, $count=10){
+    public function localOrganizationList($uid=0, $city=null, $type=null, $name=null, $page=1, $count=10, $version=0){
         if($uid==0){
             $uid = is_login();
         }
@@ -1713,7 +1713,7 @@ class OrganizationController extends AppController
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
         }
-        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication,sort')->order("sort asc")
+        $org_list = $model->field('id, name, slogan, city,type, view_count, logo, light_authentication,sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         /*if(!empty($city)&&!empty($type)){
@@ -1741,7 +1741,11 @@ class OrganizationController extends AppController
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
-
+            if(floatval($version) > 2.5){
+                $org['type_tag'] = $this->getOrganizationType($org['type']);
+            }else{
+                unset($org['type_tag']);
+            }
             //$user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
@@ -2722,6 +2726,15 @@ class OrganizationController extends AppController
         return $group_count;
     }
 
+    private function getOrganizationType($type=null){
+        $value = M('OrganizationTag')->where('status = 1 and type=7 and id='.$type)->getField('extra');
+        if(empty($value)){
+            return null;
+        }else{
+            return $value;
+        }
+    }
+
     /**
      * 上传图片到OSS
      * @param $picID
@@ -3121,11 +3134,12 @@ class OrganizationController extends AppController
         } else {
             $select_where = "status=1 and city like '%".$province."%' and application_status=2";
         }
-        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication, sort')->order("sort asc")
+        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
@@ -3180,11 +3194,12 @@ class OrganizationController extends AppController
         } else {
             $select_where = "status=1 and application_status=2 and is_recommend=1";
         }
-        $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication, sort')->order("sort asc")
+        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
