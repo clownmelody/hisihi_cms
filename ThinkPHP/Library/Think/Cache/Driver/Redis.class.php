@@ -44,6 +44,7 @@ class Redis extends Cache {
             $this->handler->$func($options['host'], $options['port']) :
             $this->handler->$func($options['host'], $options['port'], $options['timeout']);
         $this->handler->auth(C('REDIS_AUTH'));
+        $this->handler->select(C('DATA_CACHE_DB_INDEX'));
     }
 
     /**
