@@ -180,10 +180,19 @@ define(['zepto','common'],function(){
         /*显示具体信息*/
         fillInBasicInfoData:function(result){
             var data=result.data;
-            var  authen1=data.authenticationInfo[2].status,
-                class1=authen1?'certed':'unCerted',
-                authen2=data.authenticationInfo[3].status,
-                class2=authen2?'certed':'unCerted';
+
+            //var  authen1=data.authenticationInfo[2].status,
+            //    class1=authen1?'certed':'unCerted',
+            //    authen2=data.authenticationInfo[3].status,
+            //    class2=authen2?'certed':'unCerted';
+
+            var class1='certed',class2='certed';
+            /*20160408修改，诚信和机构和嘿设汇一起亮*/
+            if(data.light_authentication == '0'){
+                class1='unCerted';
+                class2='unCerted';
+            }
+
             var url=data.logo;
             if(this.deviceType.android){
                 url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
