@@ -3096,6 +3096,7 @@ class OrganizationController extends AppController
         $res = json_decode($res);
         if($res->errNum==0){
             $data['province'] = $res->retData->content->address_detail->province;
+            $data['province'] = mb_substr($data['province'], 0, mb_strlen($data['province'], 'utf-8')-1, 'utf-8');
         } else {
             $data['province'] = '湖北';
         }
@@ -3105,12 +3106,11 @@ class OrganizationController extends AppController
         $province_list = $model->field('province_name')->select();
         $result = array();
         foreach ($province_list as $province) {
-            if($data['province']==$province['province_name']){
-                continue;
+            if($data['province']!==$province['province_name']){
+                $object['province'] = $province['province_name'];
+                $object['value'] = $object['province'] . '机构';
+                $result[] = $object;
             }
-            $object['province'] = $province['province_name'];
-            $object['value'] = $object['province'] . '机构';
-            $result[] = $object;
         }
         array_unshift($result, array('value'=>'推荐机构'), $data);
         $this->apiSuccess('获取机构大全省份列表成功', null, array('data'=>$result));
