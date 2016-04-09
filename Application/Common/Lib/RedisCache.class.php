@@ -101,7 +101,7 @@ class RedisCache
      * @param array 部分key将被剔除
      * @return bool
      */
-    public function setPartResCache($suffix, $value, $ttl=60, $except_key=[]){
+    public function setPartResCache($suffix, $value, $ttl=60, $except_key=array()){
         $key = $this->bornKey($except_key);
         $key = $key.'$'.$suffix;
 
