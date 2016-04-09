@@ -102,8 +102,8 @@ body input[type="text"]:focus {
 }
 #wrapper .mainItem .nonData {
   text-align: center;
-  height: 45px;
-  line-height: 45px;
+  height: 60px;
+  line-height: 60px;
   color: #9A9292;
 }
 #wrapper .mainItem .noDataInHeader {
@@ -318,7 +318,7 @@ body input[type="text"]:focus {
   margin-right: 15px;
   height: 20px;
   line-height: 18px;
-  padding-top: 5px;
+  padding-top: 4px;
 }
 #wrapper .mainItem.mainItemTopNews .topNewsCon li .title a {
   width: 100%;
@@ -427,6 +427,8 @@ body input[type="text"]:focus {
   width: 100%;
   position: relative;
   text-align: center;
+  overflow: hidden;
+  margin-bottom: 15px;
 }
 #wrapper .mainItem.mainItemBasicInfo .mainContentItem.videoCon #videoPreviewBox img {
   max-width: 100%;

@@ -39,7 +39,7 @@ define(['zepto','common'],function(){
             });
         }
 
-        this.$wrapper.find('#videoPreviewBox img').bind('load',$.proxy(this,'controlPlayBtnStyle'));
+        //this.$wrapper.find('#videoPreviewBox img').bind('load',$.proxy(this,'controlPlayBtnStyle'));
         this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
 
         //重新加载数据
@@ -446,8 +446,7 @@ define(['zepto','common'],function(){
 
         /*加载我的视频信息*/
         loadMyVideoInfo:function(callback){
-            var that=this,
-                $target=that.$wrapper.find('.videoPreview');
+            var that=this;
             this.loadData({
                 url: window.urlObject.apiUrl + 'getPropagandaVideo',
                 paraData: {organization_id: this.oid},
