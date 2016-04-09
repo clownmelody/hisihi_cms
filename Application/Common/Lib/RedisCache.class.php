@@ -73,7 +73,7 @@ class RedisCache
     /** 获取缓存数据，其key有当前访问uri及其参数决定。
      *
      */
-    public function getPartResCache($suffix, $except_key=[]){
+    public function getPartResCache($suffix, $except_key=array()){
         $key = $this->bornKey($except_key);
         $key = $key.'$'.$suffix;
         $has = $this->cache->exists($key);
