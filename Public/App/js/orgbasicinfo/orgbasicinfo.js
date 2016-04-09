@@ -197,6 +197,10 @@ define(['zepto','common'],function(){
             if(this.deviceType.android){
                 url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
             }
+            var name=data.name;
+            if(name.length>10){
+                name=name.substr(0,9)+' …';
+            }
 
             var str='<div class="head mainContent">'+
                 '<div class="filter">'+
@@ -208,7 +212,7 @@ define(['zepto','common'],function(){
                 '<img id="myLogo" class="myLogo" src="'+data.logo+'" />'+
                 '</div>'+
                 '<div class="right">'+
-                '<div id="orgName">'+data.name+'</div>'+
+                '<div id="orgName">'+name+'</div>'+
                 '<div class="peopleInfo">'+
                 '<div class="peopleInfoItem">'+
                 '<div class="valInfo" id="viewedVal">'+data.view_count+'</div>'+
@@ -356,7 +360,8 @@ define(['zepto','common'],function(){
                     introduce=data.introduce,
                     advantage=data.advantage,
                     location=data.location,
-                    locationImg=data.location_img;
+                    locationImg=data.location_img,
+                    locationNum=0;
 
                 /*简介*/
                 if(introduce) {
@@ -372,12 +377,15 @@ define(['zepto','common'],function(){
                     }
                     $target.find('.itemContentDetail').html(str);
                 }
-                if(!location)
+                if(location) {
                     $location.find('#myLocation').text(location);
+                    locationNum++;
+                }
                 if(locationImg) {
                     $location.find('.locationMap img').attr('src', locationImg);
+                    locationNum++;
                 }
-                else{
+                if(locationNum==0){
                     $location.find('.noDataInHeader').html('&nbsp;&nbsp;&nbsp;&nbsp;地址信息暂无');
                 }
             }
