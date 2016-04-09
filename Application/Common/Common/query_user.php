@@ -199,9 +199,14 @@ function query_user($fields = null, $uid = null)
     }
 
     if (in_array('replycount', $fields)) {
-        $Model = new \Think\Model();
-        $totalCount = $Model->query('select count(*) as count from (select distinct post_id from hisihi_forum_post_reply where `status`>0 and `uid`='.$uid.')m');
-        $result['replycount'] = $totalCount[0]['count'];
+        if(!S('query_user_class_'.$uid.'replycount')){
+            $Model = new \Think\Model();
+            $totalCount = $Model->query('select count(*) as count from (select distinct post_id from hisihi_forum_post_reply where `status`>0 and `uid`='.$uid.')m');
+            $result['replycount'] = $totalCount[0]['count'];
+            S('query_user_class_'.$uid.'replycount', $result['replycount'], 600);
+        } else {
+            $result['replycount'] = S('query_user_class_'.$uid.'replycount');
+        }
     }
 
     //用户组

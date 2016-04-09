@@ -89,13 +89,23 @@ class ForumProtocolModel extends Model
         if ($tab == 'forum') {
             $map['status'] = 1;
             $map['is_top'] = 0;
-            $totalCount = $this->forum_postModel->where($map)->count();
+            if(!S('forum_is_top_0_status_1_totalcount')){
+                $totalCount = $this->forum_postModel->where($map)->count();
+                S('forum_is_top_0_status_1_totalcount', $totalCount, 600);
+            } else {
+                $totalCount = S('forum_is_top_0_status_1_totalcount');
+            }
         } elseif ($tab == 'forum_in') {
             $map_in = $this->_getInMap($map);
             unset($map_in['uid']);
             $map_in['status'] = 1;
             $map_in['is_top'] = 0;
-            $totalCount = $this->forum_postModel->where($map_in)->count();
+            if(!S('forum_in_is_top_0_status_1_totalcount')){
+                $totalCount = $this->forum_postModel->where($map_in)->count();
+                S('forum_in_is_top_0_status_1_totalcount', $totalCount, 600);
+            } else {
+                $totalCount = S('forum_in_is_top_0_status_1_totalcount');
+            }
         }
         return $totalCount;
     }

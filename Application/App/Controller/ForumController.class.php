@@ -646,8 +646,8 @@ class ForumController extends AppController
             $supportCount = $this->getSupportCountCache($map_support);
             $map_supported = array_merge($map_support, array('uid' => is_login()));
             $supported = D('Support')->where($map_supported)->count();
-            $post['supportCount'] = $supportCount;
-            $post['isSupportd'] = $supported;
+            $post['supportCount'] = (int)$supportCount;
+            $post['isSupportd'] = (int)$supported;
 
             $map_pos['type'] = 0;
             $map_pos['post_id'] = $id;
@@ -939,6 +939,7 @@ class ForumController extends AppController
      * 获取贴子详情
      * @param null $post_id
      * @param null $version
+     * @param int $community
      */
     public function getPostDetail($post_id=null, $version=null, $community=0){
         if(empty($post_id)){
@@ -1899,14 +1900,14 @@ class ForumController extends AppController
                         break;
                     case 3:
                         $toppost['show_type'] = 'origin';
-                        $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
+                        /*$configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
                         if($configCount){
                             $configCount['value'] = $configCount['value'] + $this->getAutoIncreseCount();
                             $toppost['title'] = "嘿设汇已经解决".$configCount['value']."个问题";
                         } else {
                             $fakeCount = 330212 + $this->getAutoIncreseCount();
                             $toppost['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
-                        }
+                        }*/
                         break;
                     case 4:
                         $toppost['show_type'] = "web";
