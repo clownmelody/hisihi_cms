@@ -39,7 +39,7 @@ define(['zepto','common'],function(){
             });
         }
 
-        this.$wrapper.find('#videoPreviewBox img').bind('load',$.proxy(this,'controlPlayBtnStyle'));
+        //this.$wrapper.find('#videoPreviewBox img').bind('load',$.proxy(this,'controlPlayBtnStyle'));
         this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
 
         //重新加载数据
@@ -180,13 +180,26 @@ define(['zepto','common'],function(){
         /*显示具体信息*/
         fillInBasicInfoData:function(result){
             var data=result.data;
-            var  authen1=data.authenticationInfo[2].status,
-                class1=authen1?'certed':'unCerted',
-                authen2=data.authenticationInfo[3].status,
-                class2=authen2?'certed':'unCerted';
+
+            //var  authen1=data.authenticationInfo[2].status,
+            //    class1=authen1?'certed':'unCerted',
+            //    authen2=data.authenticationInfo[3].status,
+            //    class2=authen2?'certed':'unCerted';
+
+            var class1='certed',class2='certed';
+            /*20160408修改，诚信和机构和嘿设汇一起亮*/
+            if(data.light_authentication == '0'){
+                class1='unCerted';
+                class2='unCerted';
+            }
+
             var url=data.logo;
             if(this.deviceType.android){
                 url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
+            }
+            var name=data.name;
+            if(name.length>10){
+                name=name.substr(0,9)+' …';
             }
 
             var str='<div class="head mainContent">'+
@@ -199,7 +212,7 @@ define(['zepto','common'],function(){
                 '<img id="myLogo" class="myLogo" src="'+data.logo+'" />'+
                 '</div>'+
                 '<div class="right">'+
-                '<div id="orgName">'+data.name+'</div>'+
+                '<div id="orgName">'+name+'</div>'+
                 '<div class="peopleInfo">'+
                 '<div class="peopleInfoItem">'+
                 '<div class="valInfo" id="viewedVal">'+data.view_count+'</div>'+
@@ -347,7 +360,8 @@ define(['zepto','common'],function(){
                     introduce=data.introduce,
                     advantage=data.advantage,
                     location=data.location,
-                    locationImg=data.location_img;
+                    locationImg=data.location_img,
+                    locationNum=0;
 
                 /*简介*/
                 if(introduce) {
@@ -363,12 +377,15 @@ define(['zepto','common'],function(){
                     }
                     $target.find('.itemContentDetail').html(str);
                 }
-                if(!location)
+                if(location) {
                     $location.find('#myLocation').text(location);
+                    locationNum++;
+                }
                 if(locationImg) {
                     $location.find('.locationMap img').attr('src', locationImg);
+                    locationNum++;
                 }
-                else{
+                if(locationNum==0){
                     $location.find('.noDataInHeader').html('&nbsp;&nbsp;&nbsp;&nbsp;地址信息暂无');
                 }
             }
@@ -429,8 +446,7 @@ define(['zepto','common'],function(){
 
         /*加载我的视频信息*/
         loadMyVideoInfo:function(callback){
-            var that=this,
-                $target=that.$wrapper.find('.videoPreview');
+            var that=this;
             this.loadData({
                 url: window.urlObject.apiUrl + 'getPropagandaVideo',
                 paraData: {organization_id: this.oid},
