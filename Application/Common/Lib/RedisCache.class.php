@@ -73,8 +73,8 @@ class RedisCache
     /** 获取缓存数据，其key有当前访问uri及其参数决定。
      *
      */
-    public function getPartResCache($suffix){
-        $key = $this->bornKey();
+    public function getPartResCache($suffix, $except_key=[]){
+        $key = $this->bornKey($except_key);
         $key = $key.'$'.$suffix;
         $has = $this->cache->exists($key);
 
@@ -98,10 +98,11 @@ class RedisCache
      * @param $suffix
      * @param $value
      * @param int $ttl
+     * @param array 部分key将被剔除
      * @return bool
      */
-    public function setPartResCache($suffix, $value, $ttl=60){
-        $key = $this->bornKey();
+    public function setPartResCache($suffix, $value, $ttl=60, $except_key=[]){
+        $key = $this->bornKey($except_key);
         $key = $key.'$'.$suffix;
 
         $value_type = gettype($value);
@@ -116,7 +117,7 @@ class RedisCache
     }
 
     // 排序规则， 生成一个controller的基础key，参数按照升序排列
-    private function bornKey(){
+    private function bornKey($except_key){
         $get_attrs = I('get.');
         $post_attrs = I('post.');
 
@@ -124,6 +125,7 @@ class RedisCache
         $post_attr_keys = array_keys($post_attrs);
 
         $keys_array = array_merge($get_attr_keys, $post_attr_keys);
+        $keys_array = $this->deleteKey($keys_array, $except_key);
         sort($keys_array);
 
         $get_post_attrs = array_merge($get_attrs, $post_attrs);
@@ -140,5 +142,16 @@ class RedisCache
         $key = $key_part1.'$'.$key_part2;
 
         return $key;
+    }
+
+    // 去除一些url中的参数，使之不成为key的一部分，比如sessionId这个参数就不应该作为缓存key
+    private function deleteKey($keys_array, $except_key){
+        foreach($except_key as $except){
+            $key_position = array_search($except, $keys_array);
+            if($key_position !== false){
+                unset($keys_array[$key_position]);
+            }
+        }
+        return $keys_array;
     }
 }
