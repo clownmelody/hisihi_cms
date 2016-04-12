@@ -13,7 +13,7 @@ use Think\Model;
 use Weibo\Api\WeiboApi;
 use Think\Hook;
 
-require('Application/Common/Lib/RedisCache.class.php');
+require('Application/Forum/Cache/ForumFilterCache.class.php');
 
 define('TOP_ALL', 2);
 define('TOP_FORUM', 1);
@@ -327,12 +327,17 @@ class ForumController extends AppController
      * forumFilter拦截器，用于缓存Api结果
      * created by leilei @2016.4.6
      */
-//    public function _before_forumFilter(){
-//        $cache = new \RedisCache();
-//        $cache->getResCache($this);
-//        $cache->close();
-//        return;
-//    }
+    public function _before_forumFilter(){
+        $cache = new \ForumFilterCache();
+        $res_array = $cache->getPublicResCache();
+        if(!$res_array){
+            return;
+        }
+        else{
+            $this->apiSuccess('获取提问列表成功', null, array( 'total_count' => $res_array['total_count'],
+                'forumList' => $res_array['list']));
+        }
+    }
 
     /**
      * 论坛数据筛选
@@ -477,6 +482,10 @@ class ForumController extends AppController
 //        $cache = new \RedisCache();
 //        $cache->setResCache($this, '获取提问列表成功', array( 'total_count' => $totalCount, 'forumList' => $list), 120);
 //        $cache->close();
+          $cache = new \ForumFilterCache();
+          $cache->setPublicResCache($list, $totalCount);
+          $cache->close();
+
           $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
 
 //        $data['total_count'] = $totalCount;
@@ -646,8 +655,8 @@ class ForumController extends AppController
             $supportCount = $this->getSupportCountCache($map_support);
             $map_supported = array_merge($map_support, array('uid' => is_login()));
             $supported = D('Support')->where($map_supported)->count();
-            $post['supportCount'] = $supportCount;
-            $post['isSupportd'] = $supported;
+            $post['supportCount'] = (int)$supportCount;
+            $post['isSupportd'] = (int)$supported;
 
             $map_pos['type'] = 0;
             $map_pos['post_id'] = $id;
@@ -939,6 +948,7 @@ class ForumController extends AppController
      * 获取贴子详情
      * @param null $post_id
      * @param null $version
+     * @param int $community
      */
     public function getPostDetail($post_id=null, $version=null, $community=0){
         if(empty($post_id)){
@@ -1899,14 +1909,14 @@ class ForumController extends AppController
                         break;
                     case 3:
                         $toppost['show_type'] = 'origin';
-                        $configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
+                        /*$configCount = M('CompanyConfig')->field('value')->where('status=1 and type=11')->find();
                         if($configCount){
                             $configCount['value'] = $configCount['value'] + $this->getAutoIncreseCount();
                             $toppost['title'] = "嘿设汇已经解决".$configCount['value']."个问题";
                         } else {
                             $fakeCount = 330212 + $this->getAutoIncreseCount();
                             $toppost['title'] = "嘿设汇已经解决". $fakeCount ."个问题";
-                        }
+                        }*/
                         break;
                     case 4:
                         $toppost['show_type'] = "web";
@@ -2106,6 +2116,7 @@ class ForumController extends AppController
      * 跳转到小嘿专栏列表网页
      */
     public function xiaoheicolumn(){
+        C('SHOW_PAGE_TRACE', false);
         $this->display('xiaoheicolumn');
     }
 
