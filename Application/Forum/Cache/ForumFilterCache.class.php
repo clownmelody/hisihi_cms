@@ -13,7 +13,7 @@ class ForumFilterCache extends \RedisCache
     private $public_suffix_post = 'post_list_no_supported';
     private $public_suffix_total_count = 'total_count';
     private $cache_time = 60;
-    private $public_except_key = ['session_id'];
+    private $public_except_key = array('session_id');
 
 
     public function setPublicResCache($post_list, $total_count){

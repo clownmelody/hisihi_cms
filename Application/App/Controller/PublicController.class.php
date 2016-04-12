@@ -585,9 +585,15 @@ class PublicController extends AppController {
         $now = time();
         $picKey = "advspic_".$width.'_'.$height;
         $result = $model->query("select link, ".$picKey." from hisihi_advs where ".
-            "position=3 and status=1 and ".$now." between create_time and end_time order by id desc");
+            "`position`=3 and status=1 and ".$now." between create_time and end_time order by id desc");
+        if(!$result || intval($result[0][$picKey]) == 0 || empty($result[0][$picKey])){
+            $result = $model->query("select link, advspic_default from hisihi_advs where `position`=3 and status=1 and ".$now." between create_time and end_time order by id desc");
+        }
         if($result){
             $picID = $result[0][$picKey];
+            if(!$picID){
+                $picID = $result[0]['advspic_default'];
+            }
             $data['link'] = $result[0]['link'];
             $result = $model->query("select path from hisihi_picture where id=".$picID);
             if($result){
