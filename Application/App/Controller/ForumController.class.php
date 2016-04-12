@@ -2116,6 +2116,7 @@ class ForumController extends AppController
      * 跳转到小嘿专栏列表网页
      */
     public function xiaoheicolumn(){
+        C('SHOW_PAGE_TRACE', false);
         $this->display('xiaoheicolumn');
     }
 
