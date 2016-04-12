@@ -212,14 +212,14 @@ class PublicController extends AppController {
         $this->apiSuccess('获取统计信息成功', null, $extra);
     }
 
-    public function suggest($content) {
-        $this->requireLogin();
+    public function suggest($content, $contact='') {
+        //$this->requireLogin();
         $this->requireSendInterval();
 
         $content = '#建议#'.$content;
 
         //写入数据库
-        $weibo_id = D('Weibo/Weibo')->addWeibo(get_uid(), $content, 'feed', '', '');
+        $weibo_id = D('Weibo/Weibo')->addWeibo(get_uid(), $content, 'feed', '', '',$contact);
         if (!$weibo_id) {
             $this->apiError(-1,D('Weibo/Weibo')->getError());
         }
