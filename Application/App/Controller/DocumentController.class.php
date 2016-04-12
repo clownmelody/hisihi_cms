@@ -340,10 +340,100 @@ class DocumentController extends AppController {
     }
 
     /**
-     * @param $condition
-     * @auth RFly
+     * 头条评论
+     * @param int $id
+     * @param null $content
      */
-    private function clearCache($condition,$type='support')
+    public function doCommentOnTopContent($id=0, $content=null){
+        if($id==0) {
+            $this->apiError(-1, '传入头条ID为空');
+        }
+        if($content==null){
+            $this->apiError(-1, '评论内容不能为空');
+        }
+        $this->requireLogin();
+        $data['app'] = 'document';
+        $data['mod'] = 'top_content';
+        $data['row_id'] = $id;
+        $data['uid'] = is_login();
+        $data['content'] = $content;
+        $data['create_time'] = time();
+        M('LocalComment')->add($data);
+        $this->apiSuccess('评论成功');
+    }
+
+    /**
+     * 头条评论点赞
+     * @param $comment_id
+     */
+    public function doTopContentCommentSupport($comment_id=0){
+        if($comment_id==0){
+            $this->apiError(-1, '评论ID不能为空');
+        }
+        $this->requireLogin();
+        $data['appname'] = 'Document';
+        $data['table'] = 'local_comment';
+        $data['row'] = $comment_id;
+        $data['uid'] = is_login();
+        $data['create_time'] = time();
+        M('Support')->add($data);
+        M('LocalComment')->where('id='.$comment_id)->setInc('support_count');
+        $this->apiSuccess('点赞成功');
+    }
+
+    /**
+     * 获取头条评论
+     * @param int $id
+     * @param int $page
+     * @param int $count
+     */
+    public function getTopContentComments($id=0, $page=1, $count=10){
+        if($id==0) {
+            $this->apiError(-1, '传入头条ID为空');
+        }
+        $where_array = array(
+            'status' => 1,
+            'row_id' => $id,
+            'app' => 'document',
+            'mod' => 'top_content'
+        );
+        $totalCount = M('LocalComment')->where($where_array)->count();
+        $comment_list = M('LocalComment')->field('id, uid, content, create_time, support_count')
+            ->page($page, $count)->where($where_array)->select();
+        foreach($comment_list as &$comment){
+            $comment['user_info'] = $this->getAuthorStructure((int)$comment['uid']);
+            $data['appname'] = 'Document';
+            $data['table'] = 'local_comment';
+            $data['row'] = $comment['id'];
+            $data['uid'] = is_login();
+            if(M('Support')->where($data)->count()){
+                $comment['isSupported'] = 1;
+            } else {
+                $comment['isSupported'] = 0;
+            }
+        }
+        $this->apiSuccess("获取评论列表成功", null, array('data'=>$comment_list, 'totalCount'=>$totalCount));
+    }
+
+    protected function getAuthorStructure($uid) {
+        //查询数据库中的基本信息
+        $map = array('id'=>$uid);
+        $user = D('User/UcenterMember')->where($map)->find();
+        //查询头像
+        $addon = new AvatarAddon;
+        $avatar = $addon->getAvatarUrl($uid);
+        //返回结果
+        return array(
+            'uid'=>$user['id'],
+            'avatar_url'=>$avatar,
+            'username'=>$user['username']);
+    }
+
+    /**
+     * @param $condition
+     * @param string $type
+     */
+    private function clearCache($condition, $type='support')
     {
         unset($condition['uid']);
         unset($condition['create_time']);
