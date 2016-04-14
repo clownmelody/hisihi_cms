@@ -3237,4 +3237,13 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构推荐列表成功', null, $data);
     }
 
+    /**
+     * 获取客服400电话
+     */
+    public function getServicePhoneNum(){
+        $phone = $this->get400PhoneNum();
+        $data['phone_num'] = $phone;
+        $this->apiSuccess('获取机构客服电话成功', null, $data);
+    }
+
 }
