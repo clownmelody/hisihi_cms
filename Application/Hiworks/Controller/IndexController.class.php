@@ -196,6 +196,80 @@ class IndexController extends HiworksController
         $this->display();
     }
 
+    /**
+     * @param int $cate
+     * @param int $base
+     * @param int $page
+     * @param int $count
+     */
+    public function getHiworksListByCate($cate=1, $base=0, $page=1, $count=12)
+    {
+        /* 分类信息 */
+        $category = $this->category($cate);
+        /* 获取当前分类列表 */
+        $Document = M('Document');
+        $Category = D('Category');
+        $tmp_cates = array();
+        if($base!=0){
+            $children = $Category->getChildrenId($base);
+        } else {
+            $children = $Category->getChildrenId($cate);
+        }
+        if(!empty($children)){
+            $children = explode(',', $children);
+            //将当前分类的文章和子分类的文章混合到一起
+            array_push($tmp_cates, $category['id']);
+            if($base==0){
+                foreach ($children as &$child) {
+                    array_push($tmp_cates, $child);
+                }
+            }
+            $where_array['category_id'] = array('in', implode(',', $tmp_cates));
+            $where_array['status'] = 1;
+            $list = $Document->field('id, category_id, title, cover_id')->order('id desc')->page($page, $count)->where($where_array)->select();
+            $totalCount = D('Document')->listCount(implode(',', $tmp_cates));
+        } else {
+            $tmp_cates = array();
+            array_push($tmp_cates, $category['id']);
+            $where_array['category_id'] = array('in', implode(',', $tmp_cates));
+            $where_array['status'] = 1;
+            $list = $Document->field('id, category_id, title, cover_id, pic_url')->order('id desc')->page($page, $count)->where($where_array)->select();
+            $totalCount = D('Document')->listCount(implode(',', $tmp_cates));
+        }
+
+        foreach ($list as &$info) {
+            $detail = D('Document')->detail($info['id']);
+            $cover_id = $info['cover_id'];
+            $model = M();
+            $result = $model->query("select path from hisihi_picture where id=".$cover_id);
+            if($result){
+                $path = $result[0]['path'];
+                $objKey = substr($path, 17);
+                $param["bucketName"] = "hisihi-other";
+                $param['objectKey'] = $objKey;
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://pic.hisihi.com/".$objKey."@50p";
+                    $data['showAdv'] = true;
+                    $data['pic'] = $picUrl;
+                    $info['pic_url'] = $picUrl;
+                } else {
+                    srand(microtime(true) * 1000);
+                    $index =  rand(1, 120);
+                    $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
+                }
+            } else {
+                srand(microtime(true) * 1000);
+                $index =  rand(1, 120);
+                $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
+            }
+            unset($info['cover_id']);
+            $info['size'] = $this->conversion($detail['size']);
+            $info['download'] = $detail['download'];
+        }
+        $this->apiSuccess('获取分类下云作业列表成功', null, array('data'=>$list, 'totalCount'=>(int)$totalCount));
+    }
+
     public function preview($cate = 1, $page = 1)
     {
         //if(session('is_scanned') != 1 || session('scan_uid') != get_uid())

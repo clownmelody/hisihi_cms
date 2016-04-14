@@ -832,12 +832,12 @@ class OrganizationController extends AdminController
         }
         /*获取一条记录的详细数据*/
         $Model = M('OrganizationEnroll');
-        $data = $Model->where('status=1 and id='.$id)->find();
+        $data = $Model->where('id='.$id)->find();
         if(!$data){
             $this->error($Model->getError());
         }
-        $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id'],'status'=>1))->getField('name');
-        $course_list = M('OrganizationConfig')->where('status=1 and type=1003 and organization_id='.$data['organization_id'])->select();
+        $data['organization'] = M('Organization')->where(array('id'=>$data['organization_id']))->getField('name');
+        $course_list = M('OrganizationConfig')->where('type=1003 and organization_id='.$data['organization_id'])->select();
         $this->assign('info', $data);
         $this->assign('course_list', $course_list);
         $this->display();

@@ -2554,6 +2554,37 @@ class ForumController extends AppController
     }
 
     /**
+     * 获取社区Banner
+     * @param int $page
+     * @param int $count
+     */
+    public function getBannerList($page=1, $count=3){
+        $model = M('InformationFlowBanner');
+        $totalCount = $model->where('status=1 and show_pos=2')->count();
+        $banner_list = $model->field('id, pic_url, url, jump_type')->where('status=1 and show_pos=2')
+            ->page($page, $count)->select();
+        foreach($banner_list as &$banner){
+            switch($banner['jump_type']){
+                case 1: // 网址
+                    break;
+                case 2: // 帖子
+                    $post_id = $banner['url'];
+                    $banner['url'] = 'hisihi://post/detailinfo?id='.$post_id;
+                    break;
+                case 3: // 视频
+                    $course_id = $banner['url'];
+                    $banner['url'] = 'hisihi://course/detailinfo?id='.$course_id;
+                    break;
+                case 4: // 机构主页
+                    $org_id = $banner['url'];
+                    $banner['url'] = 'hisihi://organization/detailinfo?id='.$org_id;
+                    break;
+            }
+        }
+        $this->apiSuccess('获取社区banner成功', null, array('data'=>$banner_list, 'totalCount'=>$totalCount));
+    }
+
+    /**
      * 定时执行的机器人
      */
     public function startAutoReplyRobot(){

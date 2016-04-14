@@ -35,10 +35,13 @@ class InformationFlowController extends AdminController {
             $cid = $_POST['cid'];
             $data['url'] = $_POST["url"];
             $data['show_pos'] = $_POST['show_pos'];
+            $data['jump_type'] = $_POST['jump_type'];
             $pic_id = $_POST["picture"];
-            A('Organization')->uploadLogoPicToOSS($pic_id);
-            $data['pic_url'] = A('Organization')->fetchCdnImage($pic_id);
-            $data['pic_id'] = $pic_id;
+            if(!empty($pic_id)){
+                A('Organization')->uploadLogoPicToOSS($pic_id);
+                $data['pic_url'] = A('Organization')->fetchCdnImage($pic_id);
+                $data['pic_id'] = $pic_id;
+            }
             if(empty($cid)){
                 $data["create_time"] = time();
                 try {
