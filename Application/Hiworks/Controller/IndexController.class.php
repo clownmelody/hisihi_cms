@@ -176,6 +176,7 @@ class IndexController extends HiworksController
                 $index =  rand(1, 120);
                 $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
             }
+
             $info['size'] = $this->conversion($detail['size']);
             $info['download'] = $detail['download'];
         }
@@ -264,10 +265,23 @@ class IndexController extends HiworksController
                 $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
             }
             unset($info['cover_id']);
+            $info['download_url'] = C('HOST_NAME_PREFIX').'/hiworks_list.php/file/downloadZip/key/'.$this->caesar_encode($info['id'], 'hisihi_hiworks_downlaod');
             $info['size'] = $this->conversion($detail['size']);
             $info['download'] = $detail['download'];
         }
         $this->apiSuccess('获取分类下云作业列表成功', null, array('data'=>$list, 'totalCount'=>(int)$totalCount));
+    }
+
+    private function caesar_encode($s, $k) {
+        $k = "$k";
+        for($i=0; $i<strlen($k); $i++) {
+            $d = base_convert($k{$i}, 36, 10);
+            $t = '';
+            for($j=0; $j<strlen($s); $j++)
+                $t .= base_convert((base_convert($s{$j}, 36, 10)+$d)%36, 10, 36);
+            $s = $t;
+        }
+        return $t;
     }
 
     public function preview($cate = 1, $page = 1)

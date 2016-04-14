@@ -33,4 +33,25 @@ class FileController extends HiworksController
             $this->error($logic->getError());
         }
     }
+
+    public function downloadZip($key){
+        $id = $this->caesar_decode($key, 'hisihi_hiworks_downlaod');
+        $logic = D('Download', 'Logic');
+        if (!$logic->download($id)) {
+            $this->error($logic->getError());
+        }
+    }
+
+    private function caesar_decode($s, $k) {
+        $k = "$k";
+        for($i=0; $i<strlen($k); $i++) {
+            $d = 36 - base_convert($k{$i}, 36, 10);
+            $t = '';
+            for($j=0; $j<strlen($s); $j++)
+                $t .= base_convert((base_convert($s{$j}, 36, 10)+$d)%36, 10, 36);
+            $s = $t;
+        }
+        return $t;
+    }
+
 }
