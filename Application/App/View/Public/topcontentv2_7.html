@@ -20,50 +20,32 @@
 	<div class="headlines-body">
 		<p>{$top_content_info.content}</p>
 	</div>
-	<div class="bottomVoteCon" data-id="{$articleId}">
-		<div class="bottomVoteConBox">
-			<div class="middleBox">
-				<div class="middle">
-					<div class="mainVoteBarCon">
-						<div class="up"></div>
-						<div class="arrowCon spriteBg">
-							<!--width="25" height="23"-->
-							<!--<canvas  id="arrowColor"></canvas>-->
-						</div>
-						<div class="down"></div>
-						<div class="title">VS</div>
-					</div>
-					<div class="mainVoteBtnCon">
-						<div class="totalVoteInfo">
-							<div class="totalVoteInfoMiddle">
-								<span>已有</span>
-								<span id="totalVoteNum"></span>
-								<span>人投票</span>
-							</div>
-							<div id="voteResult"></div>
-						</div>
-						<div class="spriteBg spriteBgBtn upBtn"></div>
-						<div class="spriteBg spriteBgBtn downBtn"></div>
-					</div>
-				</div>
+	<div class="bottom-voteCon" data-id="{$articleId}">
+		<div class="leftItem">
+			<div class="icon-container">
+				<span class="icon-thumb_up icon-thumb active"></span>
+				<span class="num active">123</span>
 			</div>
-			<div class="left upAndDownNum"><span></span>赞</div>
-			<div class="right upAndDownNum"><span></span>踩</div>
-
 		</div>
-		<div class="loadingResultTips" id="loadingTipForVote">
-			<div class="loadingImg active"></div>
+		<div class="rightItem">
+			<div class="icon-container">
+				<span class="icon-thumb_down icon-thumb"></span>
+				<span class="num">12313</span>
+			</div>
 		</div>
 	</div>
+
 </div>
+<div class="bottom-comment"></div>
+</body>
 <script>
 	window.hisihiUrlObj={
 		link_url:'http://{$Think.server.HTTP_HOST}/',
 		img_url:'__IMG__',
 		js: "__JS__"+'/topcontent/',
 	};
-	    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
-//	window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
+	window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+	//	window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
 	window.onload=function() {
 		document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
 	};
@@ -74,5 +56,4 @@
 	}
 </script>
 <script type="text/javascript" data-main="__JS__/topcontent/config"  src="__JS__/sharecommon/require.js" ></script>
-</body>
 </html>
