@@ -17,10 +17,18 @@
             <button class="btn ajax-post confirm" url="{:U('User/changeStatus',array('method'=>'deleteUser'))}"
                     target-form="ids">删 除
             </button>
-
             <button class="btn " onclick="post_select_form()"
                     target-form="ids">选择用户分组
             </button>
+            <button class="btn ajax-post confirm" url="{:U('User/changeStatus',array('method'=>'recommendUser'))}"
+                    target-form="ids">设为推荐
+            </button>
+            <button class="btn ajax-post confirm" url="{:U('User/changeStatus',array('method'=>'undoRecommend'))}"
+                    target-form="ids">取消推荐
+            </button>
+            <a class="btn "  href="{:U('User/index',array('recommend'=>'1'))}"
+                    target-form="ids">显示推荐用户
+            </a>
         </div>
         <script>
             function post_select_form(){
