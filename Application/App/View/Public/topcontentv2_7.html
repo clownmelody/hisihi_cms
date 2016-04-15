@@ -12,103 +12,9 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
-	<link type="text/css" href="__CSS__/v2content/vote.css" rel="stylesheet"/>
+	<link type="text/css" href="__CSS__/v2content/topcontentv2.7.css" rel="stylesheet"/>
 	<title>{:C('WEB_SITE_TITLE')}</title>
 </head>
-<style>
-	body{
-		margin: 0;
-		background: #eee;
-	}
-	a,a:hover,a:link,a:hover,a:active,a:visited{
-		text-decoration: none;
-	}
-	a:focus {
-		outline:none;
-		-moz-outline:none;
-	}
-	.headlines-box{
-		margin: 0px;
-		background: #fff;
-		border-radius: 5px;
-		box-shadow: 0 0 0 #ddd;
-		margin-bottom: 5px;
-	}
-	.headlines-top{
-		border-bottom: 1px solid #eee;
-		padding: 10px 10px 0;
-	}
-	.headlines-top h2{
-		margin: 10px 0;
-	}
-	.headlines-time{
-		color: #bbb;
-		font-size: 12px;
-		line-height: 30px;
-		margin: 5px 0 ;
-	}
-	.headlines-body{
-		padding: 10px;
-	}
-	.headlines-body img{
-		width: 100%;
-		min-width: 100%;
-		margin-bottom: 10px;
-	}
-	.headlines-body p{
-		width: 100%;
-		line-height: 25px;
-		/*font-style: 14px;*/
-		color: #333;
-		margin: 0 0 5px 0;
-	}
-	.headlines-fix{
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		background: #4A4A4B;
-		padding: 5px 10px;
-	}
-	.fix-img{
-		width: 50px;
-		height: 50px;
-		border-radius: 10px;
-		float: left;
-		margin-right: 10px;
-	}
-	.fix-btn{
-		padding: 7px 8px;
-		background: #2ABA00;
-		color: #fff;
-		font-style: 16px;
-		float: right;
-		border-radius: 5px;
-		margin-top: 7px;
-	}
-	.fix-body p{
-		margin: 0;
-	}
-	.fix-body-title{
-		color: #fff;
-		line-height: 30px;
-		margin-bottom: 5px;
-		font-style: 16px;
-	}
-	.fix-body-txt{
-		color: #AAA;
-		font-size: 12px;
-		line-height: 20px;
-	}
-	.fix-star{
-		margin-left: 10px;
-	}
-	.fix-star img{
-		width: 10px;
-		height: 10px;
-		margin-right: 2px;
-	}
-</style>
 <body>
 <div class="headlines-box">
 	<div class="headlines-body">
@@ -156,8 +62,8 @@
 		img_url:'__IMG__',
 		js: "__JS__"+'/topcontent/',
 	};
-	//    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
-	window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
+	    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+//	window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
 	window.onload=function() {
 		document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
 	};
