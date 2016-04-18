@@ -369,8 +369,6 @@ class IndexController extends HiworksController
         $this->setTitle('{$category.title|op_t} — 嘿云作业');
         $this->assign('list', $list);
         $this->assign('page', D('Document')->page); //分页
-
-
         $this->display();
     }
 
