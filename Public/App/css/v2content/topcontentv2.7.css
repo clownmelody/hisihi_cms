@@ -56,8 +56,9 @@ img {
   font-size: 20px;
 }
 .bottom-voteCon > div .icon-container span.num {
-  font-size: 20px;
+  font-size: 18px;
   color: #BDBDBD;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "����", "����", sans-serif;
 }
 .bottom-voteCon > div .icon-container span.active {
   color: #ff5a00;

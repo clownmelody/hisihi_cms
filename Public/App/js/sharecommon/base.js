@@ -5,14 +5,14 @@
 
 define(['$'],function() {
 
-    /**ÍÆ¼öÔÄ¶Á»ù´¡Àà**/
+    /**æ¨èé˜…è¯»åŸºç¡€ç±»**/
     var MoreInfoBase = function () {
 
     };
 
     MoreInfoBase.prototype = {
 
-        /*ÇëÇóÊı¾İ*/
+        /*è¯·æ±‚æ•°æ®*/
         getDataAsync: function (paras) {
             if (!paras.type) {
                 paras.type = 'post';
@@ -48,7 +48,7 @@ define(['$'],function() {
                             paras.eCallback && paras.eCallback();
                         }
                     }
-                    //³¬Ê±
+                    //è¶…æ—¶
                     else if (status == 'timeout') {
                         loginXhr.abort();
                         that.controlLoadingTips(-1);
@@ -63,10 +63,10 @@ define(['$'],function() {
         },
 
         /*
-         *¼ÓÔØµÈ´ı,
+         *åŠ è½½ç­‰å¾…,
          *para:
-         * status - {num} ×´Ì¬¿ØÖÆ Âë
-         * 0.ÏÔÊ¾¼ÓÔØµÈ´ı;  1 Òş²ØµÈ´ı; -1Òş²Ø×ªÈ¦Í¼Æ¬£¬ÏÔÊ¾¼ÓÔØÊ§°Ü£¬ÖØĞÂË¢ĞÂµÄ°´Å¥;
+         * status - {num} çŠ¶æ€æ§åˆ¶ ç 
+         * 0.æ˜¾ç¤ºåŠ è½½ç­‰å¾…;  1 éšè—ç­‰å¾…; -1éšè—è½¬åœˆå›¾ç‰‡ï¼Œæ˜¾ç¤ºåŠ è½½å¤±è´¥ï¼Œé‡æ–°åˆ·æ–°çš„æŒ‰é’®;
          */
         controlLoadingTips: function (status) {
             var $target = $('#loadingTip'),
@@ -87,14 +87,14 @@ define(['$'],function() {
         },
 
         /*
-         *×Ö·û´®½ØÈ¡
+         *å­—ç¬¦ä¸²æˆªå–
          * para
-         * str - {string} Ä¿±ê×Ö·û´®
-         * len - {int} ×î´ó³¤¶È
+         * str - {string} ç›®æ ‡å­—ç¬¦ä¸²
+         * len - {int} æœ€å¤§é•¿åº¦
          */
         substrLongStr: function (str, len) {
             if (str.length > len) {
-                str = str.substr(0, parseInt(len - 1)) + '¡­¡­';
+                str = str.substr(0, parseInt(len - 1)) + 'â€¦â€¦';
             }
             return str;
         },
@@ -104,21 +104,21 @@ define(['$'],function() {
         },
 
         /*
-         *ÅĞ¶ÏwebviewµÄÀ´Ô´
+         *åˆ¤æ–­webviewçš„æ¥æº
          */
         operationType:function() {
             var u = navigator.userAgent, app = navigator.appVersion;
-            return { //ÒÆ¶¯ÖÕ¶Ëä¯ÀÀÆ÷°æ±¾ĞÅÏ¢
-                trident: u.indexOf('Trident') > -1, //IEÄÚºË
-                presto: u.indexOf('Presto') > -1, //operaÄÚºË
-                webKit: u.indexOf('AppleWebKit') > -1, //Æ»¹û¡¢¹È¸èÄÚºË
-                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //»ğºüÄÚºË
-                mobile: !!u.match(/AppleWebKit.*Mobile.*/), //ÊÇ·ñÎªÒÆ¶¯ÖÕ¶Ë
-                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //iosÖÕ¶Ë
-                android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //androidÖÕ¶Ë»òucä¯ÀÀÆ÷
-                iPhone: u.indexOf('iPhone') > -1, //ÊÇ·ñÎªiPhone»òÕßQQHDä¯ÀÀÆ÷
-                iPad: u.indexOf('iPad') > -1, //ÊÇ·ñiPad
-                webApp: u.indexOf('Safari') == -1 //ÊÇ·ñwebÓ¦¸Ã³ÌĞò£¬Ã»ÓĞÍ·²¿Óëµ×²¿
+            return { //ç§»åŠ¨ç»ˆç«¯æµè§ˆå™¨ç‰ˆæœ¬ä¿¡æ¯
+                trident: u.indexOf('Trident') > -1, //IEå†…æ ¸
+                presto: u.indexOf('Presto') > -1, //operaå†…æ ¸
+                webKit: u.indexOf('AppleWebKit') > -1, //è‹¹æœã€è°·æ­Œå†…æ ¸
+                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //ç«ç‹å†…æ ¸
+                mobile: !!u.match(/AppleWebKit.*Mobile.*/), //æ˜¯å¦ä¸ºç§»åŠ¨ç»ˆç«¯
+                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //iosç»ˆç«¯
+                android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //androidç»ˆç«¯æˆ–ucæµè§ˆå™¨
+                iPhone: u.indexOf('iPhone') > -1, //æ˜¯å¦ä¸ºiPhoneæˆ–è€…QQHDæµè§ˆå™¨
+                iPad: u.indexOf('iPad') > -1, //æ˜¯å¦iPad
+                webApp: u.indexOf('Safari') == -1 //æ˜¯å¦webåº”è¯¥ç¨‹åºï¼Œæ²¡æœ‰å¤´éƒ¨ä¸åº•éƒ¨
             };
         }
 

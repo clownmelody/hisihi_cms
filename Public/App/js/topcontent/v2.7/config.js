@@ -34,5 +34,6 @@ requirejs.config({
 
 require(['home','prefixfree'],function(topContent){
     var id=$('body').data('id');
+    id=1264;
     new topContent(id,window.hisihiUrlObj.server_url);
 });
