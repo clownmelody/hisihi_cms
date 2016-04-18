@@ -29,7 +29,11 @@ class UserController extends AdminController
     public function index()
     {
         $nickname = I('nickname');
-        $map['status'] = array('egt', -1);
+        if(I('recommend')){
+            $map['status'] = array('eq', 4);
+        }else{
+            $map['status'] = array('egt', -1);
+        }
         if (is_numeric($nickname)) {
             $map['uid|nickname'] = array(intval($nickname), array('like', '%' . $nickname . '%'), '_multi' => true);
         } else {
@@ -659,6 +663,14 @@ str;
                 $newMap['id'] = $map['uid'];
                 M('UcenterMember')->where($newMap)->setField('status', -1);
                 $this->delete('Member', $map);
+                break;
+            case 'recommenduser':
+                M('Member')->where($map)->setField('status', 4);
+                $this->success('用户推荐成功！', U('index'));
+                break;
+            case 'undorecommend':
+                M('Member')->where($map)->setField('status', 1);
+                $this->success('取消推荐成功！', U('index'));
                 break;
             default:
                 $this->error('参数非法');

@@ -1,0 +1,110 @@
+.size(@width: 100%,@height: 100%){
+  width: @width;
+  height: @height;
+}
+
+body{
+  margin: 0;
+  background: #FFFFFF;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+a,a:hover,a:link,a:hover,a:active,a:visited{
+  text-decoration: none;
+}
+a:focus {
+  outline:none;
+  -moz-outline:none;
+}
+.bottom-voteCon{
+  .size(90%,35px);
+  margin:5px auto 20px auto;
+  >div{
+    box-sizing: border-box;
+    float: left;
+    .size(50%,100%);
+    margin: 0;
+    .icon-container{
+      background-color: #F2F2F2;
+      border: 1px solid #E4E4E4;
+      border-radius: 30px;
+      .size(90%,100%);
+      margin: 0 auto;
+      text-align: center;
+
+      span {
+        display: inline-block;
+        line-height: 20px;
+        &.icon-thumb {
+          line-height: 15px;
+          padding-top: 10px;
+          color: #BDBDBD;
+          font-size: 20px;
+        }
+        &.num{
+
+          font-size:20px;
+          color: #BDBDBD;
+          //padding-top: 10px;
+
+        }
+        &.active {
+           color: #FF5A00
+        }
+      }
+    }
+  }
+}
+
+.bottom-comment{
+  position: absolute;
+  bottom: 0;
+  .size(100%,40px);
+  background-color: #F2F2F2;
+  border-top:1px solid #ccc;
+}
+
+
+@font-face {
+  font-family: 'icomoon';
+  src:    url('fonts/icomoon.eot?7c9vhn');
+  src:    url('fonts/icomoon.eot?7c9vhn#iefix') format('embedded-opentype'),
+  url('fonts/icomoon.ttf?7c9vhn') format('truetype'),
+  url('fonts/icomoon.woff?7c9vhn') format('woff'),
+  url('fonts/icomoon.svg?7c9vhn#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-star_border:before {
+  content: "\e83a";
+}
+.icon-thumb_down:before {
+  content: "\e8db";
+}
+.icon-thumb_up:before {
+  content: "\e8dc";
+}
+.icon-open:before {
+  content: "\e128";
+}
+
