@@ -1,12 +1,7 @@
 body {
   margin: 0;
   background: #FFFFFF;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow: hidden;
+  max-width: 100%;
 }
 a,
 a:hover,
@@ -19,6 +14,15 @@ a:visited {
 a:focus {
   outline: none;
   -moz-outline: none;
+}
+img {
+  max-width: 100%;
+}
+.btn:active {
+  transform: scale(0.8);
+}
+.headlines-box {
+  margin-bottom: 70px;
 }
 .bottom-voteCon {
   width: 90%;
@@ -59,12 +63,76 @@ a:focus {
   color: #ff5a00;
 }
 .bottom-comment {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
-  height: 40px;
+  height: 48px;
   background-color: #F2F2F2;
   border-top: 1px solid #ccc;
+}
+.bottom-comment .comment-left-box {
+  margin-right: 110px;
+  height: 100%;
+}
+.bottom-comment .comment-left-box #comment-input {
+  font-size: 12px;
+  width: 85%;
+  height: 25px;
+  margin: 8px auto 10px auto;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  display: block;
+  background-color: white;
+  text-indent: 10px;
+  outline: none;
+}
+.bottom-comment .comment-right-box {
+  position: absolute;
+  right: 0px;
+  margin: 0;
+  top: 0;
+  width: 110px;
+  height: 100%;
+}
+.bottom-comment .comment-right-box .comment-right-item {
+  width: 30px;
+  height: 100%;
+  text-align: center;
+  margin-left: 5px;
+  float: left;
+}
+.bottom-comment .comment-right-box .comment-right-item .icon-font {
+  color: #BDBDBD;
+}
+.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-star_border {
+  font-size: 30px;
+  line-height: 45px;
+}
+.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-open {
+  font-size: 21px;
+  line-height: 48px;
+}
+.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-star_replay {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background: url(../../images/topcontent/reply1.png);
+  margin-top: 14px;
+}
+.bottom-comment .comment-right-box .comment-right-item.comment-bubble {
+  position: relative;
+  margin-left: 0;
+}
+.bottom-comment .comment-right-box .comment-right-item.comment-bubble .comment-red-bubble {
+  position: absolute;
+  left: 6px;
+  top: 7px;
+  height: 14px;
+  background-color: #FA4535;
+  border-radius: 10px;
+  font-size: 11px;
+  padding: 0 5px;
+  color: #FEF9F9;
 }
 @font-face {
   font-family: 'icomoon';
