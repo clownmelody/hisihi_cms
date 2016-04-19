@@ -9,6 +9,7 @@
 
 namespace App\Controller;
 
+use Addons\Email\HiWorkEmailUtils;
 use Think\Controller;
 use Think\Hook;
 
@@ -178,6 +179,79 @@ class HiworksController extends AppController
         }
         $extra['data'] = $result;
         $this->apiSuccess('获取云作业子列表成功', null, $extra);
+    }
+
+    /**
+     * 发送作业下载链接到用户邮箱
+     * @param int $uid
+     * @param int $hiwork_id
+     */
+    public function sendDownLoadURLToEMail($uid=0, $hiwork_id=0){
+        if($uid==0){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $user = M('UcenterMember')->field('email')->where('id='.$uid)->find();
+        if($user==null||empty($user['email'])){
+            $this->apiError(-1, '用户不存在或未绑定邮箱');
+        }
+        $this->sendHiworkToEmail($hiwork_id, $user['email']);
+    }
+
+    /**
+     * 绑定用户邮箱并发送云作业
+     * @param int $uid
+     * @param null $email
+     */
+    public function bindEmail($uid=0, $email=null, $hiwork_id=0){
+        if($uid==0){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        if($email==null){
+            $this->apiError(-1, '请填写邮箱');
+        }
+        if($hiwork_id==0){
+            $this->apiError(-2, '请输入下载的云作业的ID');
+        }
+        $data['email'] = $email;
+        M('UcenterMember')->where('id='.$uid)->data($data)->save();
+        $this->sendHiworkToEmail($hiwork_id, $email);
+    }
+
+    /**
+     * 发送云作业到邮箱
+     * @param int $hiwork_id
+     * @param null $email
+     */
+    private function sendHiworkToEmail($hiwork_id=0, $email=null){
+        $key = $this->caesar_encode($hiwork_id, 'hisihi_hiworks_downlaod');
+        $downloadurl = C('HOST_NAME_PREFIX') . "hiworks_list.php/file/downloadZip/key/" . $key;
+        $emailUtils = new HiWorkEmailUtils();
+        if($emailUtils->sendMail($email, $downloadurl)){
+            $tips = "已成功发送至邮箱 ". $email . " 请注意查收";
+            $this->apiSuccess('邮件发送成功', null, array('tips'=>$tips));
+        } else {
+            $this->apiSuccess('邮件发送失败');
+        }
+    }
+
+    /**
+     * 云作业 id 加密
+     * @param $s
+     * @param $k
+     * @return string
+     */
+    private function caesar_encode($s, $k) {
+        $k = "$k";
+        for($i=0; $i<strlen($k); $i++) {
+            $d = base_convert($k{$i}, 36, 10);
+            $t = '';
+            for($j=0; $j<strlen($s); $j++)
+                $t .= base_convert((base_convert($s{$j}, 36, 10)+$d)%36, 10, 36);
+            $s = $t;
+        }
+        return $t;
     }
 
     /**
