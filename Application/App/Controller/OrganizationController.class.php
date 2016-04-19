@@ -1002,7 +1002,7 @@ class OrganizationController extends AppController
      * @param int $count
      * @return array
      */
-    public function appGetCoursesList($organization_id=null,$type_id=null,$courses_id=null,$order=null,$type=null, $page=1, $count=5){
+    public function appGetCoursesList($organization_id=null,$type_id=null,$courses_id=null,$order=null,$type=null, $page=1, $count=5, $version=0){
         $model = M('OrganizationCourse');
         $issue_model = M('Issue');
         if($organization_id){//按机构查询/默认全部
@@ -1060,7 +1060,7 @@ class OrganizationController extends AppController
             ->order($order)->where($map)->page($page, $count)->select();
         $video_course = array();
         foreach($course_list as &$course){
-            $course = $this->findCoursesById($course['id']);
+            $course = $this->findCoursesById($course['id'], $version);
             $video_course[] = $course;
         }
         if($type=='view'){
@@ -1077,7 +1077,7 @@ class OrganizationController extends AppController
      * @param null $courses_id
      * @return mixed
      */
-    public function findCoursesById($courses_id=null){
+    public function findCoursesById($courses_id=null, $version=0){
         if(empty($courses_id)){
             $this->apiError(-1,"传入课程id不能为空");
         }
@@ -1107,7 +1107,14 @@ class OrganizationController extends AppController
         $course['organization_logo'] = $org_model->where(array('id'=>$course['organization_id'],'status'=>1))->getField('logo');
         $course_duration = $video_model->where(array('course_id'=>$course['id'],'status'=>1))->sum('duration');
         $course['duration'] = $course_duration;
-
+        if(floatval($version) > 2.6){
+            $org_name = $org_model->where(array('id'=>$course['organization_id'],'status'=>1))->getField('name');
+            if($org_name){
+                $course['organization_name'] = $org_name;
+            }else{
+                $course['organization_name'] = '';
+            }
+        }
         unset($course['category_id']);
         unset($course['img_str']);
         unset($course['view_count']);

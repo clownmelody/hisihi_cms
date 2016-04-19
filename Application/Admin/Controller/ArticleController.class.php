@@ -296,6 +296,8 @@ class ArticleController extends AdminController {
                         }
                 }
             }
+            $frontPageCategories = M('FrontPageCategory')->where('status=1')->select();
+            $this->assign('categories', $frontPageCategories);
             $this->assign('list_grids', $grids);
             $this->assign('model_list', $model);
             // 记录当前列表页的cookie
@@ -560,6 +562,57 @@ class ArticleController extends AdminController {
         $this->success("添加成功", 'index.php?s=/admin/article/topcommend');
     }
 
+    /**
+     * 添加到头条分类中
+     */
+    public function addToFrontPage(){
+        $id_str = I('ids');
+        if(empty($id_str)){
+            $this->error('请选择要操作的数据');
+        }
+        $ids = explode(',', I('request.ids'));
+        $categories = explode(',', I('categories'));
+        $model = M('FrontPage');
+        try {
+            $data_list = array();
+            foreach($ids as $rid){
+                foreach($categories as $category){
+                    $map['category'] = $category;
+                    $map['article_id'] = $rid;
+                    $content_detail = $model->where($map)->find();
+                    if($content_detail){
+                        if($content_detail['status']==-1){
+                            $model->where($map)->save(array('status'=>1));
+                        }
+                    } else {
+                        $document_model = D('Document');
+                        $document_detail = $document_model->where(array('id'=>$rid, 'status'=>1))->find();
+                        $name = $document_detail['title'];
+                        $data['article_id'] = $rid;
+                        $data['category'] = $category;
+                        $data['article_title'] = $name;
+                        $data['source_name'] = $this->getSourceName($rid);
+                        $data['cover_id'] = $document_detail['cover_id'];
+                        $data['article_format'] = $document_detail['cover_type'];
+                        $data['create_time'] = time();
+                        $data_list[] = $data;
+                    }
+                }
+            }
+            $model->addAll($data_list);
+        } catch (Exception $e){
+            $this->error('添加失败，请检查后重试');
+        }
+        $this->success("添加成功", 'index.php?s=/admin/article/topcommend');
+    }
+    private function getSourceName($id){
+        $model = M();
+        $result = $model->query('SELECT source_name FROM hisihi_document_article WHERE id='.$id);
+        if($result){
+            return $result[0]['source_name'];
+        }
+        return null;
+    }
     /**
      * 添加到推荐头条部分
      */
