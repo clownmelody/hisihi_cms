@@ -49,7 +49,7 @@ class FrontPageController extends AdminController {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('处理成功','index.php?s=/admin/frontPage/content');
+            $this->success('处理成功','index.php?s=/admin/FrontPage/content');
         } else {
             $this->error('未选择要处理的数据');
         }
@@ -87,10 +87,10 @@ class FrontPageController extends AdminController {
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/frontPage/config');
+                $this->success('添加成功', 'index.php?s=/admin/FrontPage/config');
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/frontPage/config');
+                $this->success('更新成功', 'index.php?s=/admin/FrontPage/config');
             }
         } else {
             $this->display('configAdd');
@@ -115,7 +115,7 @@ class FrontPageController extends AdminController {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('处理成功','index.php?s=/admin/frontPage/config');
+            $this->success('处理成功','index.php?s=/admin/FrontPage/config');
         } else {
             $this->error('未选择要处理的数据');
         }
@@ -157,10 +157,10 @@ class FrontPageController extends AdminController {
             $cid = intval($cid);
             $result = $model->where('category='.$config_type.' and article_id='.$article_id)->select();
             if($result){
-                $this->success('该文章已经存在于此分类下了','index.php?s=/admin/frontPage/content');
+                $this->success('该文章已经存在于此分类下了','index.php?s=/admin/FrontPage/content');
             }
             $model->where('id='.$cid)->save($data);
-            $this->success('处理成功','index.php?s=/admin/frontPage/content');
+            $this->success('处理成功','index.php?s=/admin/FrontPage/content');
         } else {
             $this->error('未选择要处理的数据');
         }
