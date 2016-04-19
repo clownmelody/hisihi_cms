@@ -214,7 +214,8 @@ class HiworksController extends AppController
         if($hiwork_id==0){
             $this->apiError(-2, '请输入下载的云作业的ID');
         }
-        M('UcenterMember')->where('id='.$uid)->save('email='.$email);
+        $data['email'] = $email;
+        M('UcenterMember')->where('id='.$uid)->data($data)->save();
         $this->sendHiworkToEmail($hiwork_id, $email);
     }
 
@@ -224,7 +225,7 @@ class HiworksController extends AppController
      * @param null $email
      */
     private function sendHiworkToEmail($hiwork_id=0, $email=null){
-        $key = $this->caesar_decode($hiwork_id, 'hisihi_hiworks_downlaod');
+        $key = $this->caesar_encode($hiwork_id, 'hisihi_hiworks_downlaod');
         $downloadurl = C('HOST_NAME_PREFIX') . "hiworks_list.php/file/downloadZip/key/" . $key;
         $emailUtils = new HiWorkEmailUtils();
         if($emailUtils->sendMail($email, $downloadurl)){
@@ -241,10 +242,10 @@ class HiworksController extends AppController
      * @param $k
      * @return string
      */
-    private function caesar_decode($s, $k) {
+    private function caesar_encode($s, $k) {
         $k = "$k";
         for($i=0; $i<strlen($k); $i++) {
-            $d = 36 - base_convert($k{$i}, 36, 10);
+            $d = base_convert($k{$i}, 36, 10);
             $t = '';
             for($j=0; $j<strlen($s); $j++)
                 $t .= base_convert((base_convert($s{$j}, 36, 10)+$d)%36, 10, 36);
