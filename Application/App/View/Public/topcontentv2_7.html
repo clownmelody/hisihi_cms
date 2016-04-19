@@ -15,19 +15,19 @@
 	<link type="text/css" href="__CSS__/v2content/topcontentv2.7.css" rel="stylesheet"/>
 	<title>{:C('WEB_SITE_TITLE')}</title>
 </head>
-<body>
+<body data-id="{$post.post_id}">
 <div class="headlines-box">
 	<div class="headlines-body">
 		<p>{$top_content_info.content}</p>
 	</div>
 	<div class="bottom-voteCon" data-id="{$articleId}">
-		<div class="leftItem">
+		<div class="leftItem btn">
 			<div class="icon-container">
-				<span class="icon-thumb_up icon-thumb active"></span>
-				<span class="num active">123</span>
+				<span class="icon-thumb_up icon-thumb"></span>
+				<span class="num">123</span>
 			</div>
 		</div>
-		<div class="rightItem">
+		<div class="rightItem btn">
 			<div class="icon-container">
 				<span class="icon-thumb_down icon-thumb"></span>
 				<span class="num">12313</span>
@@ -36,15 +36,32 @@
 	</div>
 
 </div>
-<div class="bottom-comment"></div>
+<div class="bottom-comment">
+	<div class="comment-left-box">
+		<input type="text" placeholder="写评论…" id="comment-input">
+	</div>
+	<div class="comment-right-box">
+		<div class="comment-right-item comment-bubble btn">
+			<div class="comment-red-bubble">1234</div>
+			<span class="icon-star_replay icon-font"></span>
+		</div>
+		<div class="comment-right-item comment-collect btn">
+			<span class="icon-star_border icon-font"></span>
+		</div>
+		<div class="comment-right-item comment-share btn">
+			<span class="icon-open icon-font"></span>
+		</div>
+	</div>
+</div>
 </body>
+
 <script>
 	window.hisihiUrlObj={
 		link_url:'http://{$Think.server.HTTP_HOST}/',
 		img_url:'__IMG__',
-		js: "__JS__"+'/topcontent/',
+		js: "__JS__"+'/topcontent',
 	};
-//	window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+	window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
 	window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
 	window.onload=function() {
 		document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
@@ -55,5 +72,5 @@
 		aLink[i].setAttribute("disabled", "disabled");
 	}
 </script>
-<script type="text/javascript" data-main="__JS__/topcontent/config"  src="__JS__/sharecommon/require.js" ></script>
+<script type="text/javascript" data-main="__JS__/topcontent/v2.7/config"  src="__JS__/sharecommon/require.js" ></script>
 </html>
