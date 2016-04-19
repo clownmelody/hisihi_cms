@@ -90,7 +90,7 @@ define(['fx','base'],function(fx,Base) {
             paraData: paraData,
             sCallback: function (data) {
                 that.fillInfoVoteInfo(data.data,false);
-                //that.saveCurrentVoteInfo(); //存储当前投票信息
+                that.saveCurrentVoteInfo(); //存储当前投票信息
             },
             eCallback: function (str) {
 
@@ -118,28 +118,21 @@ define(['fx','base'],function(fx,Base) {
             downCount = data.opposeCount | 0,
             isUp = data.isSupported == '1',
             isDown = data.isOpposed == '1';
-        var total = upCount + downCount | 0;
 
         var $voteItem = $('body').find('.icon-container'),
             $ups = $voteItem.eq(0),
-            $downs = $voteItem.eq(1),
-            $up=$ups.find('.icon-thumb'),
-            $down=$downs.find('.icon-thumb');
+            $downs = $voteItem.eq(1);
         $ups.find('.num').text(upCount);
         $downs.find('.num').text(downCount);
-
-        var upClass = 'icon-thumb_up',
-            downClass = 'icon-thumb_down';
+        $voteItem.find('.active').removeClass('active');
 
         //控制长度和 记录是否已经点过赞、踩
         if (isUp) {
-            upClass += ' active';
+            $ups.find('span').addClass('active');
         }
-        $up.addClass(upClass);
         if (isDown) {
-            downClass +=' active';
+            $downs.find('span').addClass('active');
         }
-        $down.addClass(downClass);
         if(flag){
             return;
         }
@@ -148,10 +141,14 @@ define(['fx','base'],function(fx,Base) {
 
     /*赞同投票*/
     t.execVoteUp=function (e) {
+        var $target = $(e.currentTarget);
+        if($target.hasClass('voting') || $target.find('span').hasClass('active')){
+            return;
+        }
         //没有登录
         if (this.userInfo.session_id==='') {
             //调app的登录框跳转方法
-            this.separateOperation();
+            this.getUserInfo();
             if (!this.usedAppLoginFn) {
                 this.execLoginFromApp();
                 return;
@@ -161,12 +158,9 @@ define(['fx','base'],function(fx,Base) {
         if (this.isVoting()) {
             return;
         }
-        var url = '', $target = $(e.currentTarget), that = this;
-        if ($target.hasClass('upBtnAble')) {
-            url = this.baseUrl + 'document/doSupport';
-        } else {
-            url = this.baseUrl + 'document/unDoSupport';
-        }
+        var url = this.baseUrl + 'document/doSupport',
+
+            that = this;
         $target.addClass('voting');
         that.finishVote(1);
         var para = {
@@ -178,27 +172,32 @@ define(['fx','base'],function(fx,Base) {
                 $target.removeClass('voting');
                 that.saveCurrentVoteInfo.call(that); //存储当前投票信息
             },
-            eCallback: function (code,txt) {
+            eCallback: function (data) {
                 $target.removeClass('voting');
-                that.showVoteResult.call(that,txt);
+                that.showVoteResult.call(that,data.txt);
                 var typeNum=-1;
                 //已经操作
-                if(code==-100){
+                if(data.code==-100){
                     typeNum=1;
                 }
                 that.finishVote.call(that, -1,typeNum);
 
             },
         };
-        this.loadDataAsync(para);
+        this.getDataAsync(para);
     };
 
     /*踩投票*/
     t.execVoteDown=function (e) {
+        var $target = $(e.currentTarget);
+        if($target.hasClass('voting') || $target.find('span').hasClass('active')){
+            return;
+        }
+
         //没有登录
         if (this.userInfo.session_id==='') {
             //调app的登录框跳转方法
-            this.separateOperation();
+            this.getUserInfo();
             if (!this.usedAppLoginFn) {
                 this.execLoginFromApp();
                 return;
@@ -208,41 +207,52 @@ define(['fx','base'],function(fx,Base) {
         if (this.isVoting()) {
             return;
         }
-        var url = '', that = this, $target = $(e.currentTarget);
-        if ($target.hasClass('downBtnAble')) {
-            url = this.baseUrl + 'document/doOppose';
-        } else {
-            url = this.baseUrl + 'document/undoOppose';
-        }
+        var url = this.baseUrl + 'document/doOppose',
+            that = this;
         $target.addClass('voting');
         that.finishVote(0);
         var para = {
             url: url,
             type: 'get',
             paraData: {session_id: this.userInfo.session_id, id: this.articleId},
-            sCallback: function () {
+            sCallback: function (data) {
                 //that.finishVote(0);
                 $target.removeClass('voting');
                 that.saveCurrentVoteInfo.call(that); //存储当前投票信息
             },
-            eCallback: function (code,txt) {
+            eCallback: function (data) {
                 $target.removeClass('voting');
-                that.showVoteResult.call(that,txt);
+                that.showVoteResult.call(that,data.txt);
                 var typeNum=-1;
                 //已经操作
-                if(code==-100){
+                if(data.code==-100){
                     typeNum=0;
                 }
                 that.finishVote.call(that, -1,typeNum);
             },
         };
-        this.loadDataAsync(para);
+        this.getDataAsync(para);
     };
 
 
     /*正在招待投票*/
     t.isVoting=function(){
         return $('body .bottom-voteCon>div').hasClass('voting');
+    };
+
+    /*
+     *显示操作结果
+     *para:
+     *tip - {string} 内容结果
+     */
+    t.showVoteResult=function(tip){
+        var $tip=$('body').find('.result-tips'),
+            $p=$tip.find('p').text(tip);
+        $tip.show();
+        window.setTimeout(function(){
+            $tip.hide();
+            $p.text('');
+        },1500);
     };
 
     /*
@@ -282,14 +292,12 @@ define(['fx','base'],function(fx,Base) {
 
             //按钮样式
             if (flag == 1) {
-                $up.removeClass('upBtnAble').addClass('upBtnDisabled');
-                $down.removeClass('downBtnDisabled').addClass('downBtnAble');
+                $up.add($left).addClass('active');
+                $down.add($right).removeClass('active');
             } else {
-                $up.removeClass('upBtnDisabled').addClass('upBtnAble');
-                $down.removeClass('downBtnAble').addClass('downBtnDisabled');
+                $up.add($left).removeClass('active');
+                $down.add($right).addClass('active');
             }
-            this.updateColorBar($left.text() | 0, $right.text() | 0);
-
         }
 
         //信息回滚 操作
@@ -325,6 +333,56 @@ define(['fx','base'],function(fx,Base) {
         }
         num += diff;
         $target.text(num);
+    };
+
+    /*
+     *是否参与过投票
+     */
+    t.havedVote=function(){
+        var $up = $('body').find('.icon-thumb');
+        if ($up.hasClass('active')) {
+            return true;
+        }
+        return false;
+    };
+
+    /*记录当前的信息状态，为回滚备用*/
+    t.saveCurrentVoteInfo=function () {
+        var $voteItem = $('body').find('.icon-container'),
+            $ups = $voteItem.eq(0),
+            $downs = $voteItem.eq(1),
+            $up=$ups.find('.icon-thumb'),
+            $down=$downs.find('.icon-thumb');
+
+        var up = $up.hasClass('active') ? '1' : '0',
+            down = $down.hasClass('active') ? '1' : '0',
+            uc = $ups.find('.num').text(),
+            dc = $downs.find('.num').text(),
+            oldData = {
+                isOpposed: down,
+                isSupported: up,
+                opposeCount: dc,
+                supportCount: uc
+            };
+       $('body').attr('data-oldinfo', JSON.stringify(oldData));
+    };
+
+    /*调用app的登录方法*/
+    t.execLoginFromApp=function () {
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof showLoginView != "undefined") {
+                    showLoginView();//调用app的方法，得到用户的基体信息
+
+                }
+            }
+        }
     };
 
 

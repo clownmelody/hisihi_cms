@@ -5,12 +5,12 @@
 
 define(['$'],function() {
 
-    /**推荐阅读基础类**/
-    var MoreInfoBase = function () {
+    /**基础类**/
+    var Base = function () {
 
     };
 
-    MoreInfoBase.prototype = {
+    Base.prototype = {
 
         /*请求数据*/
         getDataAsync: function (paras) {
@@ -26,7 +26,8 @@ define(['$'],function() {
                 url: paras.url,
                 type: paras.type,
                 data: paras.paraData,
-                timeout: 20000,
+                //timeout: 20000,
+                timeout: 5000,
                 contentType: 'application/json;charset=utf-8',
                 complete: function (xmlRequest, status) {
                     if (status == 'success') {
@@ -42,7 +43,6 @@ define(['$'],function() {
                             that.controlLoadingTips(0);
                             paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
-
                             var txt = result.message;
                             that.controlLoadingTips(-1);
                             paras.eCallback && paras.eCallback();
@@ -52,7 +52,7 @@ define(['$'],function() {
                     else if (status == 'timeout') {
                         loginXhr.abort();
                         that.controlLoadingTips(-1);
-                        paras.eCallback && paras.eCallback();
+                        paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
                         that.controlLoadingTips(-1);
@@ -123,5 +123,5 @@ define(['$'],function() {
         }
 
     };
-    return MoreInfoBase;
+    return Base;
 });

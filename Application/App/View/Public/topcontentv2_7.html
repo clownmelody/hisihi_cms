@@ -16,18 +16,20 @@
 	<title>{:C('WEB_SITE_TITLE')}</title>
 </head>
 <body data-id="{$post.post_id}">
+<div class="result-tips"><p>评论成功</p></div>
 <div class="headlines-box">
 	<div class="headlines-body">
 		<p>{$top_content_info.content}</p>
 	</div>
 	<div class="bottom-voteCon" data-id="{$articleId}">
-		<div class="leftItem btn">
+		<div id="voteResult"></div>
+		<div class="vote-item leftItem btn">
 			<div class="icon-container">
 				<span class="icon-thumb_up icon-thumb"></span>
 				<span class="num">123</span>
 			</div>
 		</div>
-		<div class="rightItem btn">
+		<div class="vote-item rightItem btn">
 			<div class="icon-container">
 				<span class="icon-thumb_down icon-thumb"></span>
 				<span class="num">12313</span>
