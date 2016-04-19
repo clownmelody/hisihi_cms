@@ -27,7 +27,7 @@ img {
 .bottom-voteCon {
   width: 90%;
   height: 35px;
-  margin: 5px auto 20px auto;
+  margin: 0px auto 20px auto;
 }
 .bottom-voteCon .vote-item {
   box-sizing: border-box;
@@ -55,13 +55,24 @@ img {
   color: #BDBDBD;
   font-size: 20px;
 }
+.bottom-voteCon .vote-item .icon-container span.icon-thumb.animate {
+  animation: do-thumb-animate 1s ease-out;
+}
 .bottom-voteCon .vote-item .icon-container span.num {
   font-size: 18px;
   color: #BDBDBD;
-  font-family: "Microsoft Yahei", "Microsoft YaHei", "����", "����", sans-serif;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
 }
 .bottom-voteCon .vote-item .icon-container span.active {
   color: #ff5a00;
+}
+@keyframes do-thumb-animate {
+  40% {
+    transform: scale(1.6);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 .bottom-comment {
   position: fixed;
@@ -155,7 +166,89 @@ img {
   color: white;
   font-size: 15px;
   text-align: center;
-  font-family: "Microsoft Yahei", "Microsoft YaHei", "����", "����", sans-serif;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+.write-comment-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+}
+.write-comment-container * {
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+.write-comment-container > div {
+  position: absolute;
+  top: 40%;
+  width: 100%;
+  height: 190px;
+}
+.write-comment-container > div .write-comment-box {
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 9px;
+}
+.write-comment-container > div .write-comment-box .write-header {
+  height: 43px;
+  border-bottom: 1px solid #B1B1B1;
+}
+.write-comment-container > div .write-comment-box .write-header > div {
+  font-size: 16px;
+  text-align: center;
+  line-height: 43px;
+}
+.write-comment-container > div .write-comment-box .write-header .header-middle-box {
+  width: 100%;
+  height: 100%;
+  float: left;
+}
+.write-comment-container > div .write-comment-box .write-header .header-middle-box #middle-box {
+  color: #000000;
+  height: 100%;
+  margin: auto 80px;
+}
+.write-comment-container > div .write-comment-box .write-header .no-middle {
+  height: 100%;
+  float: left;
+  width: 80px;
+}
+.write-comment-container > div .write-comment-box .write-header .no-middle#left-box {
+  color: #007AFF;
+  margin-left: -100%;
+}
+.write-comment-container > div .write-comment-box .write-header .no-middle#right-box {
+  color: #929292;
+  margin-left: -80px;
+}
+.write-comment-container > div .write-comment-box .write-main textarea {
+  display: block;
+  width: 92%;
+  height: 120px;
+  margin: 12px auto;
+  border: 1px solid #ccc;
+  background-color: #F2F2F2;
+  border-radius: 3px;
+  outline: none;
+  resize: none;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+@media screen and (max-width: 320px) {
+  .write-comment-container > div {
+    top: 50%;
+    width: 100%;
+    height: 160px;
+  }
+  .write-comment-container > div .write-comment-box .write-main textarea {
+    width: 92%;
+    height: 90px;
+  }
 }
 @font-face {
   font-family: 'icomoon';

@@ -13,15 +13,23 @@ define(['fx','base'],function(fx,Base) {
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
 
-        var eventName='click';
+        var eventName='click',that=this;
         this.deviceType = this.operationType();
         if(this.deviceType.mobile){
             eventName='touchend';
         }
         //加载投票信息
         this.getUserInfo(this.loadVoteInfo);
-        this.$wrapper.on('click', '.bottom-voteCon .leftItem', $.proxy(this, 'execVoteUp'));
-        this.$wrapper.on('click', '.bottom-voteCon .rightItem', $.proxy(this, 'execVoteDown'));
+        this.$wrapper.on(eventName, '.bottom-voteCon .leftItem', $.proxy(this, 'execVoteUp'));
+        this.$wrapper.on(eventName, '.bottom-voteCon .rightItem', $.proxy(this, 'execVoteDown'));
+
+        this.$wrapper.on(eventName, '#comment-input', function(){
+            that.showCommentBox();
+        });
+
+
+        this.$wrapper.on(eventName, '#left-box', $.proxy(this, 'closeCommentBox'));
+        //this.$wrapper.on(eventName, '#right-box', $.proxy(this, 'publishCommentBox'));
 
         $(document).on(eventName,'.btn',function(){});
 
@@ -141,8 +149,9 @@ define(['fx','base'],function(fx,Base) {
 
     /*赞同投票*/
     t.execVoteUp=function (e) {
-        var $target = $(e.currentTarget);
-        if($target.hasClass('voting') || $target.find('span').hasClass('active')){
+        var $target = $(e.currentTarget),
+            $thumb=$target.find('.icon-thumb');
+        if($target.hasClass('voting') || $thumb.hasClass('active')){
             return;
         }
         //没有登录
@@ -158,11 +167,13 @@ define(['fx','base'],function(fx,Base) {
         if (this.isVoting()) {
             return;
         }
-        var url = this.baseUrl + 'document/doSupport',
 
-            that = this;
+        $thumb.addClass('active animate');
         $target.addClass('voting');
-        that.finishVote(1);
+        this.finishVote(1);
+
+        var url = this.baseUrl + 'document/doSupport',
+            that = this;
         var para = {
             url: url,
             type: 'get',
@@ -170,10 +181,12 @@ define(['fx','base'],function(fx,Base) {
             sCallback: function () {
                 //that.finishVote(1);
                 $target.removeClass('voting');
+                $thumb.removeClass('animate');
                 that.saveCurrentVoteInfo.call(that); //存储当前投票信息
             },
             eCallback: function (data) {
                 $target.removeClass('voting');
+                $thumb.removeClass('animate');
                 that.showVoteResult.call(that,data.txt);
                 var typeNum=-1;
                 //已经操作
@@ -189,8 +202,9 @@ define(['fx','base'],function(fx,Base) {
 
     /*踩投票*/
     t.execVoteDown=function (e) {
-        var $target = $(e.currentTarget);
-        if($target.hasClass('voting') || $target.find('span').hasClass('active')){
+        var $target = $(e.currentTarget),
+            $thumb=$target.find('.icon-thumb');
+        if($target.hasClass('voting') || $thumb.hasClass('active')){
             return;
         }
 
@@ -207,10 +221,11 @@ define(['fx','base'],function(fx,Base) {
         if (this.isVoting()) {
             return;
         }
+        $thumb.addClass('active animate');
+        $target.addClass('voting');
+        this.finishVote(0);
         var url = this.baseUrl + 'document/doOppose',
             that = this;
-        $target.addClass('voting');
-        that.finishVote(0);
         var para = {
             url: url,
             type: 'get',
@@ -218,10 +233,12 @@ define(['fx','base'],function(fx,Base) {
             sCallback: function (data) {
                 //that.finishVote(0);
                 $target.removeClass('voting');
+                $thumb.removeClass('animate');
                 that.saveCurrentVoteInfo.call(that); //存储当前投票信息
             },
             eCallback: function (data) {
                 $target.removeClass('voting');
+                $thumb.removeClass('animate');
                 that.showVoteResult.call(that,data.txt);
                 var typeNum=-1;
                 //已经操作
@@ -385,6 +402,34 @@ define(['fx','base'],function(fx,Base) {
         }
     };
 
+    /*显示评论框*/
+    t.showCommentBox=function(){
+        this.controlCommentBox(1,function(){
+            $('#comment-area')[0].focus();
+        });
+    };
+
+    /*关闭评论框*/
+    t.closeCommentBox=function(){
+      this.controlCommentBox(0);
+    };
+
+
+
+    t.controlCommentBox=function(opacity,callback) {
+        $('.write-comment-container').animate(
+            {opacity: opacity},
+            100, 'swing',
+            function () {
+                if(opacity==0) {
+                    $(this).hide();
+                    callback && callback();
+                }else{
+                    $(this).show();
+                    callback && callback();
+                }
+            });
+    };
 
     return Topcontent;
 });
