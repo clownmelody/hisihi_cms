@@ -198,6 +198,7 @@ class IndexController extends HiworksController
     }
 
     /**
+     * 获取云作业分类列表
      * @param int $cate
      * @param int $base
      * @param int $page
@@ -234,7 +235,7 @@ class IndexController extends HiworksController
             array_push($tmp_cates, $category['id']);
             $where_array['category_id'] = array('in', implode(',', $tmp_cates));
             $where_array['status'] = 1;
-            $list = $Document->field('id, category_id, title, cover_id, pic_url')->order('id desc')->page($page, $count)->where($where_array)->select();
+            $list = $Document->field('id, category_id, title, cover_id')->order('id desc')->page($page, $count)->where($where_array)->select();
             $totalCount = D('Document')->listCount(implode(',', $tmp_cates));
         }
 
@@ -270,6 +271,57 @@ class IndexController extends HiworksController
             $info['download'] = $detail['download'];
         }
         $this->apiSuccess('获取分类下云作业列表成功', null, array('data'=>$list, 'totalCount'=>(int)$totalCount));
+    }
+
+    /**
+     * 根据关键词搜索云作业
+     * @param null $keyword
+     * @param int $page
+     * @param int $count
+     */
+    public function searchHiworksByKeyWords($keyword=null, $page=1, $count=12){
+        if($keyword==null){
+            $this->apiError(-1, '请输入关键词');
+        }
+        /* 获取当前分类列表 */
+        $Document = M('Document');
+        $where_array['status'] = 1;
+        $where_array['category_id'] = array('neq', 47);
+        $where_array['title'] = array('like', '%'.$keyword.'%');
+        $list = $Document->field('id, category_id, title, cover_id')->order('id desc')->page($page, $count)->where($where_array)->select();
+        $totalCount = D('Document')->where($where_array)->count();
+        foreach ($list as &$info) {
+            $detail = D('Document')->detail($info['id']);
+            $cover_id = $info['cover_id'];
+            $model = M();
+            $result = $model->query("select path from hisihi_picture where id=".$cover_id);
+            if($result){
+                $path = $result[0]['path'];
+                $objKey = substr($path, 17);
+                $param["bucketName"] = "hisihi-other";
+                $param['objectKey'] = $objKey;
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://pic.hisihi.com/".$objKey."@50p";
+                    $data['showAdv'] = true;
+                    $data['pic'] = $picUrl;
+                    $info['pic_url'] = $picUrl;
+                } else {
+                    srand(microtime(true) * 1000);
+                    $index =  rand(1, 120);
+                    $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
+                }
+            } else {
+                srand(microtime(true) * 1000);
+                $index =  rand(1, 120);
+                $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
+            }
+            unset($info['cover_id']);
+            $info['download_url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/file/downloadZip/key/'.$this->caesar_encode($info['id'], 'hisihi_hiworks_downlaod');
+            $info['size'] = $this->conversion($detail['size']);
+            $info['download'] = $detail['download'];
+        }
+        $this->apiSuccess('搜索云作业成功', null, array('data'=>$list, 'totalCount'=>(int)$totalCount));
     }
 
     private function caesar_encode($s, $k) {
