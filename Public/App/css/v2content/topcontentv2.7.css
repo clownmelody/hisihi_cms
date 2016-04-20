@@ -35,6 +35,17 @@ ul {
 ul li {
   list-style: none;
 }
+.icon-thumb.animate {
+  animation: do-thumb-animate 1s ease-out;
+}
+@keyframes do-thumb-animate {
+  40% {
+    transform: scale(1.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .headlines-box {
   margin-bottom: 50px;
 }
@@ -69,23 +80,12 @@ ul li {
   color: #BDBDBD;
   font-size: 20px;
 }
-.bottom-voteCon .vote-item .icon-container span.icon-thumb.animate {
-  animation: do-thumb-animate 1s ease-out;
-}
 .bottom-voteCon .vote-item .icon-container span.num {
   font-size: 18px;
   color: #BDBDBD;
 }
 .bottom-voteCon .vote-item .icon-container span.active {
   color: #ff5a00;
-}
-@keyframes do-thumb-animate {
-  40% {
-    transform: scale(1.6);
-  }
-  100% {
-    transform: scale(1);
-  }
 }
 .comment-list-box .list-header {
   height: 40px;
@@ -134,10 +134,21 @@ ul li {
   position: absolute;
   top: 18px;
   right: 18px;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
 }
 .comment-list-box .list-main li .up-comment-box > span {
   font-size: 22px;
   color: #BDBDBD;
+}
+.comment-list-box .list-main li .up-comment-box > span.active {
+  color: #ff5a00;
+}
+.comment-list-box .list-main li .up-comment-box > span.num {
+  font-size: 20px;
+  padding-left: 5px;
 }
 .comment-list-box .no-comment-info {
   height: 90px;
@@ -222,12 +233,13 @@ ul li {
 }
 .result-tips {
   position: fixed;
-  width: 110px;
-  height: auto;
+  width: 140px;
+  height: 60px;
   min-height: 40px;
   background: rgba(51, 51, 51, 0.65);
-  margin-left: -55px;
-  top: 45%;
+  margin-left: -70px;
+  margin-top: -30px;
+  top: 50%;
   left: 50%;
   z-index: 555;
   border-radius: 3px;
@@ -236,10 +248,10 @@ ul li {
   display: none;
 }
 .result-tips p {
-  margin: 15px;
   color: white;
   font-size: 15px;
   text-align: center;
+  line-height: 30px;
 }
 .model-box {
   background-color: rgba(0, 0, 0, 0.7);

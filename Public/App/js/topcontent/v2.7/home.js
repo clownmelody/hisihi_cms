@@ -28,6 +28,7 @@ define(['fx','base'],function(fx,Base) {
 
         this.$wrapper.on(eventName, '.bottom-voteCon .leftItem', $.proxy(this, 'execVoteUp'));
         this.$wrapper.on(eventName, '.bottom-voteCon .rightItem', $.proxy(this, 'execVoteDown'));
+        this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
 
         //控制输入框的状态，当有信息输入的时候才可用
         this.$wrapper.on('input', '#comment-area', $.proxy(this, 'controlCommitBtn'));
@@ -147,10 +148,25 @@ define(['fx','base'],function(fx,Base) {
                 $ul=$('#comment-list-ul'),
                 index=Number($ul.attr('data-index'))+1,
                 item,
+
                 totalPage=Math.ceil(count/this.commentListPageCount);
 
             for(var i=0;i<len;i++){
                 item=dataList[i];
+                var upNum= item.support_count | 0,
+                    nClass='num',
+                    uClass='icon-thumb_up icon-thumb';
+                if(upNum>0){
+                    if(upNum>9999){
+                        upNum='10k+';
+                    }
+                }else{
+                    upNum='';
+                }
+                if(item.isSupported){
+                    nClass+=' active';
+                    uClass +=' active';
+                }
                 str+='<li>'+
                         '<div class="list-main-left">'+
                             '<img src="'+item.user_info.avatar_url+'">'+
@@ -160,9 +176,9 @@ define(['fx','base'],function(fx,Base) {
                             '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
                             '<div>'+item.content +'</div>'+
                         '</div>'+
-                        '<div class="up-comment-box">'+
-                            '<span class="icon-thumb_up"></span>'+
-                            '<span></span>'+
+                        '<div class="up-comment-box" data-id="'+item.id+'">'+
+                            '<span class="'+uClass+'"></span>'+
+                            '<span class="'+nClass+'">'+upNum+'</span>'+
                         '</div>'+
                     '</li>';
             }
@@ -332,6 +348,54 @@ define(['fx','base'],function(fx,Base) {
                     typeNum=0;
                 }
                 that.finishVote.call(that, -1,typeNum);
+            },
+        };
+        this.getDataAsync(para);
+    };
+
+    /*赞同评论*/
+    t.execVotUpForComment=function(e){
+        var $target = $(e.currentTarget),
+            $thumb=$target.find('.icon-thumb_up');
+        if($target.hasClass('voting')){
+            return;
+        }
+        //没有登录
+        if (this.userInfo.session_id==='') {
+            //提示登录框跳转方法
+            this.controlModelBox(1,1);
+            return;
+        }
+        //不能取消点赞 和 重复点赞
+        if($thumb.hasClass('active')){
+            this.showTips('你已经点过赞了');
+            return;
+        }else{
+            $thumb.addClass('active')
+        }
+        $thumb.addClass('animate');
+        $target.addClass('voting');
+
+        var url = this.baseUrl + '/document/doTopContentCommentSupport',
+            that = this;
+        var para = {
+            url: url,
+            type: 'get',
+            paraData: {session_id: this.userInfo.session_id, id: $target.attr('data-id')},
+            sCallback: function (data) {
+                $target.removeClass('voting');
+                $thumb.removeClass('animate');
+                if(data.success){
+                    var $num=$target.find('.num'),
+                        num=$num.text() | 0;
+                    num++;
+                    $num.addClass('active').text(num);
+                }
+            },
+            eCallback: function (data) {
+                $target.removeClass('voting');
+                $thumb.removeClass('animate');
+                that.showTips.call(that,data.txt);
             },
         };
         this.getDataAsync(para);

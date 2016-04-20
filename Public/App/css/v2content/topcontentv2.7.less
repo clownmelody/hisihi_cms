@@ -42,6 +42,22 @@ ul{
     list-style: none;
   }
 }
+
+.icon-thumb {
+  &.animate{
+    animation: do-thumb-animate 1s ease-out;
+  }
+}
+
+@keyframes do-thumb-animate {
+  40%{
+    transform: scale(1.6);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
 .headlines-box {
   margin-bottom: 50px;
 }
@@ -70,9 +86,6 @@ ul{
           padding-top: 10px;
           color: #BDBDBD;
           font-size: 20px;
-          &.animate{
-            animation: do-thumb-animate 1s ease-out;
-          }
         }
         &.num{
           font-size:18px;
@@ -82,16 +95,6 @@ ul{
           color: #FF5A00
         }
       }
-
-      @keyframes do-thumb-animate {
-        40%{
-          transform: scale(1.6);
-        }
-        100%{
-          transform: scale(1);
-        }
-      }
-
     }
   }
 }
@@ -149,9 +152,19 @@ ul{
         position: absolute;
         top:@pl;
         right: @pl;
+        .size(40px,40px);
+        text-align: center;
+        line-height: 40px;
         >span{
           font-size: 22px;
           color: #BDBDBD;
+          &.active{
+            color:#ff5a00;
+          }
+          &.num{
+            font-size: 20px;
+            padding-left: 5px;
+          }
         }
       }
     }
@@ -240,11 +253,12 @@ ul{
 
 .result-tips{
   position: fixed;
-  .size(110px,auto);
+  .size(140px,60px);
   min-height: 40px;
   background: rgba(51,51,51,0.65);
-  margin-left: -55px;
-  top: 45%;
+  margin-left: -70px;
+  margin-top: -30px;
+  top: 50%;
   left: 50%;
   z-index: 555;
   border-radius: 3px;
@@ -252,10 +266,10 @@ ul{
   text-align: center;
   display: none;
   p{
-    margin: 15px;
     color:white;
     font-size: 15px;
     text-align: center;
+    line-height: 30px;
   }
 }
 
