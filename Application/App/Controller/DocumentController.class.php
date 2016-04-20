@@ -153,7 +153,7 @@ class DocumentController extends AppController {
      * 判断文章是否被收藏
      * @param $id
      */
-    public function isSupported($id){
+    public function isFavorited($id){
         $favorite['appname'] = 'Article';
         $favorite['table'] = 'article_content';
         $favorite['row'] = $id;
