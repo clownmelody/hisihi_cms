@@ -858,6 +858,13 @@ class ArticleController extends AdminController {
             if($result){
                 $this->uploadLogoPicToOSS($result[0]['cover_id']);
             }
+            $result = $model->query('SELECT multi_cover_pic FROM hisihi_document WHERE id='.$id);
+            if($result){
+                $result_array = explode(',',$result[0]['multi_cover_pic']);
+                foreach($result_array as $pic_id){
+                    $this->uploadLogoPicToOSS($pic_id);
+                }
+            }
             $this->success($res['id']?'更新成功':'新增成功', Cookie('__forward__'));
         }
     }

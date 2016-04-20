@@ -150,6 +150,22 @@ class DocumentController extends AppController {
     }
 
     /**
+     * 判断文章是否被收藏
+     * @param $id
+     */
+    public function isSupported($id){
+        $favorite['appname'] = 'Article';
+        $favorite['table'] = 'article_content';
+        $favorite['row'] = $id;
+        $favorite['uid'] = is_login();
+        if (D('Favorite')->where($favorite)->count()) {
+            $this->apiSuccess('已经收藏', null, array('status'=>1));
+        } else {
+            $this->apiSuccess('未收藏', null, array('status'=>-1));
+        }
+    }
+
+    /**
      * 设计头条点赞
      * @param $id
      */
