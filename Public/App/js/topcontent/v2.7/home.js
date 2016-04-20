@@ -152,7 +152,7 @@ define(['fx','base'],function(fx,Base) {
                             '<img src="'+item.user_info.avatar_url+'">'+
                             '</div>'+
                             '<div class="list-main-right">'+
-                            '<div>'+item.user_info.username+"</div>'+
+                            '<div>'+item.user_info.username+'</div>'+
                             '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
                             '<div>'+item.content +'</div>'+
                         '</div>'+
