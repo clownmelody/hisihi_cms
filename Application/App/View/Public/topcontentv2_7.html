@@ -37,8 +37,37 @@
 			</div>
 		</div>
 	</div>
+	<div style="height: 20px;background-color: #E3E3E3;"></div>
 
+	<!--评论内容-->
+	<div class="comment-list-box">
+		<div class="list-header">
+			<span>评论(</span>
+			<span id="comment-counts">0</span>
+			<span>)</span>
+		</div>
+		<ul class="list-main" id="comment-list-ul" data-index="1" data-page-count="0">
+			<!--<li>-->
+				<!--<div class="list-main-left">-->
+					<!--<img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e">-->
+				<!--</div>-->
+				<!--<div class="list-main-right">-->
+					<!--<div>嘿设汇</div>-->
+					<!--<div>2016-03-27 01:55</div>-->
+					<!--<div>PS打造《黑恶之场面》吧啦吧啦吧啦吧啦</div>-->
+				<!--</div>-->
+				<!--<div class="up-comment-box">-->
+					<!--<span class="icon-thumb_up"></span>-->
+				<!--</div>-->
+			<!--</li>-->
+		</ul>
+		<div class="no-comment-info">
+			评论信息暂无
+		</div>
+	</div>
 </div>
+
+<!--评论框-->
 <div class="bottom-comment">
 	<div class="comment-left-box">
 		<input type="text" placeholder="写评论…" id="comment-input" disabled>
@@ -56,19 +85,31 @@
 		</div>
 	</div>
 </div>
-<div class="write-comment-container">
-	<div>
+<!--模态窗口-->
+<div class="model-box">
+	<div class="model-box-item comment-box">
 		<div class="write-comment-box">
 			<div class="write-header">
 				<div class="header-middle-box">
 					<div id="middle-box">写评论</div>
 				</div>
 				<div class="no-middle btn" id="left-box">取消</div>
-				<div class="no-middle btn" id="right-box">发表</div>
+				<div class="no-middle" id="right-box">发表</div>
 			</div>
 			<div class="write-main">
 				<textarea id="comment-area"></textarea>
 			</div>
+		</div>
+	</div>
+	<div class="model-box-item login-tips-box">
+		<div class="login-header">
+			请先登录后再发表评论
+		</div>
+		<div class="login-main">
+			<div id="cancle-login">
+				<span class="btn">取消</span>
+			</div>
+			<div class="btn" id="do-login">去登录</div>
 		</div>
 	</div>
 </div>

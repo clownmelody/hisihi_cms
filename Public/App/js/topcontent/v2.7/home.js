@@ -12,6 +12,7 @@ define(['fx','base'],function(fx,Base) {
         this.userInfo = {session_id: ''};
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
+        this.commentListPageCount=20;  //每次加载20条评论
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
@@ -19,17 +20,34 @@ define(['fx','base'],function(fx,Base) {
             eventName='touchend';
         }
         //加载投票信息
-        this.getUserInfo(this.loadVoteInfo);
+        this.getUserInfo(function(){
+            that.loadVoteInfo();
+            that.loadCommentInfo(0);
+        });
+
+
         this.$wrapper.on(eventName, '.bottom-voteCon .leftItem', $.proxy(this, 'execVoteUp'));
         this.$wrapper.on(eventName, '.bottom-voteCon .rightItem', $.proxy(this, 'execVoteDown'));
 
+        //控制输入框的状态，当有信息输入的时候才可用
+        this.$wrapper.on('input', '#comment-area', $.proxy(this, 'controlCommitBtn'));
+
+        /*显示评论框*/
         this.$wrapper.on(eventName, '#comment-input', function(){
             that.showCommentBox();
         });
 
-
+        /*关闭评论框*/
         this.$wrapper.on(eventName, '#left-box', $.proxy(this, 'closeCommentBox'));
-        //this.$wrapper.on(eventName, '#right-box', $.proxy(this, 'publishCommentBox'));
+
+        /*发表评论*/
+        this.$wrapper.on(eventName, '#right-box', $.proxy(this, 'commitComment'));
+
+        /*关闭登录提示框*/
+        this.$wrapper.on(eventName, '#cancle-login', $.proxy(this, 'closeLoginBox'));
+        this.$wrapper.on(eventName, '#do-login', $.proxy(this, 'doLogin'));
+
+
 
         $(document).on(eventName,'.btn',function(){});
 
@@ -73,7 +91,6 @@ define(['fx','base'],function(fx,Base) {
                         that.userInfo = data;
                         callback && callback.call(that);
                     }
-
                 };
                 this.getDataAsync(para);
                 //callback && callback.call(that);
@@ -85,7 +102,69 @@ define(['fx','base'],function(fx,Base) {
 
     };
 
-    /*通过点赞和 踩的 人数，控制颜色条的长度*/
+    /*加载前10个评论信息*/
+    t.loadCommentInfo=function(index){
+        var that = this,
+            paraData={id: this.articleId,page:index,count:this.commentListPageCount};
+        if(this.userInfo.session_id!==''){
+            paraData.session_id=this.userInfo.session_id;
+        }
+        var para = {
+            url: this.baseUrl + 'document/getTopContentComments',
+            type: 'get',
+            paraData: paraData,
+            sCallback: function (data) {
+                that.fillInCommentInfo(data,false);
+            },
+            eCallback: function (data) {
+                that.showTips.call(that,data.txt);
+            },
+        };
+        this.getDataAsync(para);
+    },
+
+    /*
+     *展示评论信息
+     * para：
+     * data - {array} 查询结果数据 格式为：
+     *   {
+     *       isOpposed: "0"
+     *       isSupported: "0"
+     *       opposeCount: "0"
+     *       supportCount: "0"
+     *    }
+     */
+    t.fillInCommentInfo=function(data){
+        $('#comment-counts').text(data.totalCount);
+        if(data && data.totalCount>0){
+            var dataList=data.data,
+                len=dataList.length,
+                str='',
+                $ul=$('#comment-list-ul'),
+                index=Number($ul.attr('data-index'))+1,
+                totalPage=Math.ceil(data.totalCount/this.commentListPageCount);
+
+            for(var i=0;i<len;i++){
+                str+='<li>'+
+                        '<div class="list-main-left">'+
+                            '<img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e">'+
+                            '</div>'+
+                            '<div class="list-main-right">'+
+                            '<div>嘿设汇</div>'+
+                            '<div>2016-03-27 01:55</div>'+
+                            '<div>PS打造《黑恶之场面》吧啦吧啦吧啦吧啦</div>'+
+                        '</div>'+
+                        '<div class="up-comment-box">'+
+                            '<span class="icon-thumb_up"></span>'+
+                        '</div>'+
+                    '</li>';
+            }
+            $ul.next().hide();
+            $ul.attr({'data-page-count':totalPage,'data-index':index}).append(str);
+        }
+    };
+
+    /*通过点赞和 踩的 人数*/
     t.loadVoteInfo=function () {
         var that = this,
             paraData={id: this.articleId};
@@ -97,11 +176,11 @@ define(['fx','base'],function(fx,Base) {
             type: 'get',
             paraData: paraData,
             sCallback: function (data) {
-                that.fillInfoVoteInfo(data.data,false);
+                that.fillInVoteInfo(data.data,false);
                 that.saveCurrentVoteInfo(); //存储当前投票信息
             },
-            eCallback: function (str) {
-
+            eCallback: function (data) {
+                that.showTips.call(that,data.txt);
             },
         };
         this.getDataAsync(para);
@@ -118,7 +197,7 @@ define(['fx','base'],function(fx,Base) {
      *       supportCount: "0"
      *    }
      */
-    t.fillInfoVoteInfo=function (data,flag) {
+    t.fillInVoteInfo=function (data,flag) {
         if (!data) {
             return;
         }
@@ -156,12 +235,10 @@ define(['fx','base'],function(fx,Base) {
         }
         //没有登录
         if (this.userInfo.session_id==='') {
-            //调app的登录框跳转方法
-            this.getUserInfo();
-            if (!this.usedAppLoginFn) {
-                this.execLoginFromApp();
-                return;
-            }
+
+            //提示登录框跳转方法
+            this.controlModelBox(1,1);
+            return;
         }
         //正在投票
         if (this.isVoting()) {
@@ -187,7 +264,7 @@ define(['fx','base'],function(fx,Base) {
             eCallback: function (data) {
                 $target.removeClass('voting');
                 $thumb.removeClass('animate');
-                that.showVoteResult.call(that,data.txt);
+                that.showTips.call(that,data.txt);
                 var typeNum=-1;
                 //已经操作
                 if(data.code==-100){
@@ -210,12 +287,9 @@ define(['fx','base'],function(fx,Base) {
 
         //没有登录
         if (this.userInfo.session_id==='') {
-            //调app的登录框跳转方法
-            this.getUserInfo();
-            if (!this.usedAppLoginFn) {
-                this.execLoginFromApp();
-                return;
-            }
+            //提示登录框跳转方法
+            this.controlModelBox(1,1);
+            return;
         }
         //正在投票
         if (this.isVoting()) {
@@ -239,7 +313,7 @@ define(['fx','base'],function(fx,Base) {
             eCallback: function (data) {
                 $target.removeClass('voting');
                 $thumb.removeClass('animate');
-                that.showVoteResult.call(that,data.txt);
+                that.showTips.call(that,data.txt);
                 var typeNum=-1;
                 //已经操作
                 if(data.code==-100){
@@ -262,7 +336,7 @@ define(['fx','base'],function(fx,Base) {
      *para:
      *tip - {string} 内容结果
      */
-    t.showVoteResult=function(tip){
+    t.showTips=function(tip){
         var $tip=$('body').find('.result-tips'),
             $p=$tip.find('p').text(tip);
         $tip.show();
@@ -330,7 +404,7 @@ define(['fx','base'],function(fx,Base) {
                 oldData.isOpposed=0;
                 oldData.isSupported=1;
             }
-            this.fillInfoVoteInfo(oldData,false);
+            this.fillInVoteInfo(oldData,false);
             this.saveCurrentVoteInfo();
         }
     };
@@ -402,33 +476,103 @@ define(['fx','base'],function(fx,Base) {
         }
     };
 
+    /*控制按钮的可用性*/
+    t.controlCommitBtn=function(e){
+        var $this=$(e.currentTarget);
+        var txt=$this.val().trim(),
+            $btn=$('#right-box'),
+            nc='abled  btn';
+        if(txt){
+            $btn.addClass(nc);
+        }else{
+            $btn.removeClass(nc);
+        }
+    };
+
     /*显示评论框*/
     t.showCommentBox=function(){
-        this.controlCommentBox(1,function(){
+        var index=0;
+        if(!this.userInfo.session_id){
+            index=1;
+        }
+        this.controlModelBox(1,index,function(){
             $('#comment-area')[0].focus();
         });
     };
 
     /*关闭评论框*/
     t.closeCommentBox=function(){
-      this.controlCommentBox(0);
+      this.controlModelBox(0,0);
     };
 
-
-
-    t.controlCommentBox=function(opacity,callback) {
-        $('.write-comment-container').animate(
+    /*
+    *控模态窗口的显示 和 隐藏
+    * Para:
+    * opacity - {int} 透明度，1 表示显示，0表示隐藏
+    * index - {int} 控制的对象，1 登录提示框，0评论框
+    *
+    */
+    t.controlModelBox=function(opacity,index,callback) {
+        var $target=$('.model-box'),
+            $targetBox=$target.find('.model-box-item').eq(index),
+            that=this;
+        $target.animate(
             {opacity: opacity},
-            100, 'swing',
+            500, 'ease-out',
             function () {
                 if(opacity==0) {
                     $(this).hide();
+                    //that.forbidentScroll(false);
                     callback && callback();
                 }else{
                     $(this).show();
+                    $targetBox.show().siblings().hide();
+                    //that.forbidentScroll(true);
                     callback && callback();
                 }
             });
+    };
+
+    /*发表评论*/
+    t.commitComment=function(e){
+        var $textarea=$('#comment-area'),
+            str=$textarea.val().replace(/(^\s*)|(\s*$)/g,''),
+            that=this,
+            $target=$(e.currentTarget);
+        if(str==''){
+            that.showTips.call(that,'内容为空');
+            return;
+        }
+        if(!this.userInfo.session_id){
+            that.showTips.call(that,'请登录');
+            return;
+        }
+        $target.addClass('disabled').removeClass('abled');
+        var para = {
+            url: this.baseUrl+'document/doCommentOnTopContent',
+            type: 'post',
+            paraData: {session_id: this.userInfo.session_id,id: this.articleId,content:str},
+            sCallback: function (data) {
+                that.showTips.call('评论成功');
+                $textarea.val('');
+                that.fillInCommentInfo(data);
+
+            },
+            eCallback: function (data) {
+                that.showTips.call(that,data.txt);
+            },
+        };
+        this.getDataAsync(para);
+    };
+
+    /*关闭登录提示框*/
+    t.closeLoginBox=function(){
+        this.controlModelBox(0,1);
+    };
+
+    /*调用app登录*/
+    t.doLogin=function(){
+
     };
 
     return Topcontent;

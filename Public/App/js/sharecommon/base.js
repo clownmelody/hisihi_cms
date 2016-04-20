@@ -43,9 +43,10 @@ define(['$'],function() {
                             that.controlLoadingTips(0);
                             paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
-                            var txt = result.message;
+                            var txt = result.message,
+                                code=result.error_code;
                             that.controlLoadingTips(-1);
-                            paras.eCallback && paras.eCallback();
+                            paras.eCallback && paras.eCallback({code:code,txt:txt});
                         }
                     }
                     //超时
@@ -120,7 +121,32 @@ define(['$'],function() {
                 iPad: u.indexOf('iPad') > -1, //是否iPad
                 webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
             };
-        }
+        },
+
+        /*
+         *禁止（允许）滚动
+         * para：
+         * flag：{bool} 允许还是禁止
+         */
+        forbidentScroll:function(flag,$target,oldPosStyle){
+            if(!$target){
+                $target=$('body');
+            }
+            if(!oldPosStyle){
+                oldPosStyle='static';
+            }
+            if(flag) {
+                $target.css({
+                    'overflow': 'hidden',
+                    'position': 'fixed',
+                });
+            }else{
+                $target.css({
+                    'overflow': 'auto',
+                    'position': oldPosStyle,
+                });
+            }
+        },
 
     };
     return Base;
