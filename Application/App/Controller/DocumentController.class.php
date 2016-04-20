@@ -364,20 +364,20 @@ class DocumentController extends AppController {
 
     /**
      * 头条评论点赞
-     * @param $comment_id
+     * @param $id
      */
-    public function doTopContentCommentSupport($comment_id=0){
-        if($comment_id==0){
+    public function doTopContentCommentSupport($id=0){
+        if($id==0){
             $this->apiError(-1, '评论ID不能为空');
         }
         $this->requireLogin();
         $data['appname'] = 'Document';
         $data['table'] = 'local_comment';
-        $data['row'] = $comment_id;
+        $data['row'] = $id;
         $data['uid'] = is_login();
         $data['create_time'] = time();
         M('Support')->add($data);
-        M('LocalComment')->where('id='.$comment_id)->setInc('support_count');
+        M('LocalComment')->where('id='.$id)->setInc('support_count');
         $this->apiSuccess('点赞成功');
     }
 
