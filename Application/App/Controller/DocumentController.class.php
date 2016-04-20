@@ -360,8 +360,9 @@ class DocumentController extends AppController {
         $data['uid'] = is_login();
         $data['content'] = $content;
         $data['create_time'] = time();
-        M('LocalComment')->add($data);
-        $this->apiSuccess('评论成功', null, array('content'=>$content, 'create_time'=>$data['create_time']));
+        $comment_id = M('LocalComment')->add($data);
+        $this->apiSuccess('评论成功', null, array('content'=>$content,
+            'create_time'=>$data['create_time'], 'comment_id'=>$comment_id));
     }
 
     /**
