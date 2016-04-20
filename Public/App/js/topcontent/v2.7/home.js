@@ -12,7 +12,7 @@ define(['fx','base'],function(fx,Base) {
         this.userInfo = {session_id: ''};
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         this.usedAppLoginFn = false;  //是否使用app 的登录方法
-        this.commentListPageCount=20;  //每次加载20条评论
+        this.commentListPageCount=10;  //每次加载20条评论
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
@@ -142,20 +142,23 @@ define(['fx','base'],function(fx,Base) {
                 str='',
                 $ul=$('#comment-list-ul'),
                 index=Number($ul.attr('data-index'))+1,
+                item,
                 totalPage=Math.ceil(data.totalCount/this.commentListPageCount);
 
             for(var i=0;i<len;i++){
+                item=dataList[i];
                 str+='<li>'+
                         '<div class="list-main-left">'+
-                            '<img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e">'+
+                            '<img src="'+item.user_info.avatar_url+'">'+
                             '</div>'+
                             '<div class="list-main-right">'+
-                            '<div>嘿设汇</div>'+
-                            '<div>2016-03-27 01:55</div>'+
-                            '<div>PS打造《黑恶之场面》吧啦吧啦吧啦吧啦</div>'+
+                            '<div>item.user_info.username</div>'+
+                            '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
+                            '<div>'+item.content +'</div>'+
                         '</div>'+
                         '<div class="up-comment-box">'+
                             '<span class="icon-thumb_up"></span>'+
+                            '<span></span>'+
                         '</div>'+
                     '</li>';
             }
@@ -551,9 +554,9 @@ define(['fx','base'],function(fx,Base) {
         var para = {
             url: this.baseUrl+'document/doCommentOnTopContent',
             type: 'post',
-            paraData: {session_id: this.userInfo.session_id,id: this.articleId,content:str},
+            paraData: JSON.stringify({"id": this.articleId,"content":str,"session_id": this.userInfo.session_id}),
             sCallback: function (data) {
-                that.showTips.call('评论成功');
+                that.showTips.call(that,'评论成功');
                 $textarea.val('');
                 that.fillInCommentInfo(data);
 

@@ -8,6 +8,7 @@ requirejs.config({
         $:'../sharecommon/zepto.min',
         fx:'../sharecommon/fx_v1.1',
         prefixfree:'../sharecommon/prefixfree.min',
+        iscroll:'../sharecommon/iscroll.min',
         base:'../sharecommon/base',
         home:'v2.7/home',
     },
