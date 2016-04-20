@@ -26,8 +26,7 @@ define(['$'],function() {
                 url: paras.url,
                 type: paras.type,
                 data: paras.paraData,
-                //timeout: 20000,
-                timeout: 5000,
+                timeout: 20000,
                 contentType: 'application/json',
                 complete: function (xmlRequest, status) {
                     if (status == 'success') {

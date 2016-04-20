@@ -60,10 +60,10 @@
 	</div>
 	<div class="comment-right-box">
 		<div class="comment-right-item comment-bubble btn">
-			<div class="comment-red-bubble">1234</div>
+			<div class="comment-red-bubble">0</div>
 			<span class="icon-star_replay icon-font"></span>
 		</div>
-		<div class="comment-right-item comment-collect btn">
+		<div class="comment-right-item comment-collect">
 			<span class="icon-star_border icon-font"></span>
 		</div>
 		<div class="comment-right-item comment-share btn">
@@ -107,7 +107,7 @@
 		img_url:'__IMG__',
 		js: "__JS__"+'/topcontent',
 	};
-//	window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+	window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
 	window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
 	window.onload=function() {
 		document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件

@@ -47,6 +47,8 @@ define(['fx','base'],function(fx,Base) {
         this.$wrapper.on(eventName, '#cancle-login', $.proxy(this, 'closeLoginBox'));
         this.$wrapper.on(eventName, '#do-login', $.proxy(this, 'doLogin'));
 
+        /*收藏*/
+        this.$wrapper.on(eventName, '.comment-collect', $.proxy(this, 'doFavorite'));
 
 
         $(document).on(eventName,'.btn',function(){});
@@ -114,7 +116,7 @@ define(['fx','base'],function(fx,Base) {
             type: 'get',
             paraData: paraData,
             sCallback: function (data) {
-                that.fillInCommentInfo(data,false);
+                that.fillInCommentInfo(data);
             },
             eCallback: function (data) {
                 that.showTips.call(that,data.txt);
@@ -126,7 +128,7 @@ define(['fx','base'],function(fx,Base) {
     /*
      *展示评论信息
      * para：
-     * data - {array} 查询结果数据 格式为：
+     * result - {array} 查询结果数据 格式为：
      *   {
      *       isOpposed: "0"
      *       isSupported: "0"
@@ -134,16 +136,18 @@ define(['fx','base'],function(fx,Base) {
      *       supportCount: "0"
      *    }
      */
-    t.fillInCommentInfo=function(data){
-        $('#comment-counts').text(data.totalCount);
-        if(data && data.totalCount>0){
-            var dataList=data.data,
+    t.fillInCommentInfo=function(result){
+        var count=result.totalCount;
+        $('#comment-counts').text(count);
+
+        if(result && count>0){
+            var dataList=result.data,
                 len=dataList.length,
                 str='',
                 $ul=$('#comment-list-ul'),
                 index=Number($ul.attr('data-index'))+1,
                 item,
-                totalPage=Math.ceil(data.totalCount/this.commentListPageCount);
+                totalPage=Math.ceil(count/this.commentListPageCount);
 
             for(var i=0;i<len;i++){
                 item=dataList[i];
@@ -164,6 +168,11 @@ define(['fx','base'],function(fx,Base) {
             }
             $ul.next().hide();
             $ul.attr({'data-page-count':totalPage,'data-index':index}).append(str);
+
+            if(count>9999){
+                count='10k+';
+            }
+            $('.comment-red-bubble').text(count).show();
         }
     };
 
@@ -329,7 +338,7 @@ define(['fx','base'],function(fx,Base) {
     };
 
 
-    /*正在招待投票*/
+    /*正在投票*/
     t.isVoting=function(){
         return $('body .bottom-voteCon>div').hasClass('voting');
     };
@@ -553,13 +562,27 @@ define(['fx','base'],function(fx,Base) {
         $target.addClass('disabled').removeClass('abled');
         var para = {
             url: this.baseUrl+'document/doCommentOnTopContent',
-            type: 'post',
-            //paraData: JSON.stringify({"id": this.articleId,"content":str,"session_id": this.userInfo.session_id}),
+            type: 'get',
             paraData: {"id": this.articleId,"content":str,"session_id": this.userInfo.session_id},
             sCallback: function (data) {
                 that.showTips.call(that,'评论成功');
                 $textarea.val('');
-                that.fillInCommentInfo(data);
+                var c= Number($('#comment-counts').text());
+                c++;
+                var info={
+                    content: str,
+                    create_time: data.create_time,
+                    id: data.comment_id,
+                    isSupported: 0,
+                    support_count: "0",
+                    uid: that.userInfo.uid,
+                    user_info: {
+                        uid: that.userInfo.uid,
+                        avatar_url: that.userInfo.avatar_url,
+                        username: that.userInfo.name
+                    }
+                };
+                that.fillInCommentInfo({data:[info],totalCount:c});
 
             },
             eCallback: function (data) {
@@ -572,6 +595,23 @@ define(['fx','base'],function(fx,Base) {
     /*关闭登录提示框*/
     t.closeLoginBox=function(){
         this.controlModelBox(0,1);
+    };
+
+    /*收藏头条*/
+    t.doFavorite=function(e){
+        var $target=$(e.currentTarget).find('.icon-star_border');
+        $target.addClass('active animate');
+        $target.addClass('voting');
+        var para={
+            id:this.articleId,
+            sCallback:function(data){
+
+            },
+            eCallback:function(data){
+
+            },
+        }
+        this.getDataAsync(para);
     };
 
     /*调用app登录*/

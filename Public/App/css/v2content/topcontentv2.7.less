@@ -130,17 +130,17 @@ ul{
         >div{
           @mtop:5px;
           &:nth-child(1){
-            color:#313131;
+            color:#313131 !important;
             font-size: 18px;
           }
           &:nth-child(2){
             margin-top: @mtop;
-            color:#808080;
+            color:#808080 !important;
             font-size: 14px;
           }
           &:nth-child(3){
             margin-top: @mtop;
-            color:#212121;
+            color:#212121 !important;
             font-size: 14px;
           }
         }
@@ -221,6 +221,7 @@ ul{
         position: relative;
         margin-left:0;
         .comment-red-bubble{
+          display: none;
           position: absolute;
           left:6px;
           top:7px;
