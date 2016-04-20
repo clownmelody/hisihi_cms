@@ -35,7 +35,10 @@ ul {
 ul li {
   list-style: none;
 }
-.icon-thumb.animate {
+.icon-font-a.animate {
+  animation: do-thumb-animate 1s ease-out;
+}
+.icon-star_border.animate {
   animation: do-thumb-animate 1s ease-out;
 }
 @keyframes do-thumb-animate {
@@ -92,7 +95,7 @@ ul li {
   box-sizing: border-box;
   border-bottom: 1px solid #CCCCCC;
   padding-left: 18px;
-  color: #FF5A00;
+  color: #ff5a00;
   font-size: 16px;
   line-height: 40px;
 }
@@ -142,6 +145,7 @@ ul li {
 .comment-list-box .list-main li .up-comment-box > span {
   font-size: 22px;
   color: #BDBDBD;
+  display: inline-block;
 }
 .comment-list-box .list-main li .up-comment-box > span.active {
   color: #ff5a00;
@@ -202,6 +206,10 @@ ul li {
 .bottom-comment .comment-right-box .comment-right-item .icon-font.icon-star_border {
   font-size: 30px;
   line-height: 45px;
+  display: inline-block;
+}
+.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-star_border.active {
+  color: #ff5a00;
 }
 .bottom-comment .comment-right-box .comment-right-item .icon-font.icon-open {
   font-size: 21px;

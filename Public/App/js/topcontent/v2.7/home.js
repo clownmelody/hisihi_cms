@@ -21,6 +21,7 @@ define(['fx','base'],function(fx,Base) {
         }
         //加载投票信息
         this.getUserInfo(function(){
+            that.getFavoriteInfo();
             that.loadVoteInfo();
             that.loadCommentInfo(0);
         });
@@ -29,6 +30,13 @@ define(['fx','base'],function(fx,Base) {
         this.$wrapper.on(eventName, '.bottom-voteCon .leftItem', $.proxy(this, 'execVoteUp'));
         this.$wrapper.on(eventName, '.bottom-voteCon .rightItem', $.proxy(this, 'execVoteDown'));
         this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
+
+        /*查看评论，收藏，分享*/
+        this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
+        this.$wrapper.on(eventName, '.comment-collect', $.proxy(this, 'execFavorite'));
+        this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
+
+
 
         //控制输入框的状态，当有信息输入的时候才可用
         this.$wrapper.on('input', '#comment-area', $.proxy(this, 'controlCommitBtn'));
@@ -47,10 +55,6 @@ define(['fx','base'],function(fx,Base) {
         /*关闭登录提示框*/
         this.$wrapper.on(eventName, '#cancle-login', $.proxy(this, 'closeLoginBox'));
         this.$wrapper.on(eventName, '#do-login', $.proxy(this, 'doLogin'));
-
-        /*收藏*/
-        this.$wrapper.on(eventName, '.comment-collect', $.proxy(this, 'doFavorite'));
-
 
         $(document).on(eventName,'.btn',function(){});
 
@@ -155,7 +159,7 @@ define(['fx','base'],function(fx,Base) {
                 item=dataList[i];
                 var upNum= item.support_count | 0,
                     nClass='num',
-                    uClass='icon-thumb_up icon-thumb';
+                    uClass='icon-thumb_up icon-font-a';
                 if(upNum>0){
                     if(upNum>9999){
                         upNum='10k+';
@@ -190,6 +194,29 @@ define(['fx','base'],function(fx,Base) {
             }
             $('.comment-red-bubble').text(count).show();
         }
+    };
+
+    /*是否收藏了该文章*/
+    t.getFavoriteInfo=function(){
+        var that = this,
+            paraData={id: this.articleId};
+        if(this.userInfo.session_id!==''){
+            paraData.session_id=this.userInfo.session_id;
+        }
+        var para = {
+            url: this.baseUrl + '/document/isFavorited',
+            type: 'get',
+            paraData: paraData,
+            sCallback: function (data) {
+                if(data.status==1 && data.success){
+                    $('.comment-collect').find('span').addClass('active');
+                }
+            },
+            eCallback: function (data) {
+                that.showTips.call(that,data.txt);
+            },
+        };
+        this.getDataAsync(para);
     };
 
     /*通过点赞和 踩的 人数*/
@@ -270,6 +297,7 @@ define(['fx','base'],function(fx,Base) {
         }
         //正在投票
         if (this.isVoting()) {
+            this.showTips('操作过于频繁');
             return;
         }
 
@@ -321,6 +349,7 @@ define(['fx','base'],function(fx,Base) {
         }
         //正在投票
         if (this.isVoting()) {
+            this.showTips('操作过于频繁');
             return;
         }
         $thumb.addClass('active animate');
@@ -358,6 +387,7 @@ define(['fx','base'],function(fx,Base) {
         var $target = $(e.currentTarget),
             $thumb=$target.find('.icon-thumb_up');
         if($target.hasClass('voting')){
+            this.showTips('操作过于频繁');
             return;
         }
         //没有登录
@@ -407,12 +437,62 @@ define(['fx','base'],function(fx,Base) {
         return $('body .bottom-voteCon>div').hasClass('voting');
     };
 
+
+    /*收藏文章*/
+    t.execFavorite=function(e){
+        var $target = $(e.currentTarget),
+            $star=$target.find('.icon-star_border'),
+            url=this.baseUrl +'document/doFavorite';
+        if($target.hasClass('voting')){
+            this.showTips('操作过于频繁');
+            return;
+        }
+        //没有登录
+        if (this.userInfo.session_id==='') {
+            //提示登录框跳转方法
+            this.controlModelBox(1,1);
+            return;
+        }
+        if($star.hasClass('active')){
+            $star.removeClass('active');
+            url=this.baseUrl + 'document/deleteFavorite';
+        }else{
+            $star.addClass('active');
+        }
+        $star.addClass('animate');
+        $target.addClass('voting');
+        //alert($star.attr('class'));
+        var that = this,
+            para = {
+            url: url,
+            type: 'get',
+            paraData: {session_id: this.userInfo.session_id, id: this.articleId},
+            sCallback: function () {
+                $target.removeClass('voting');
+                $star.removeClass('animate');
+            },
+            eCallback: function (data) {
+                $target.removeClass('voting');
+                $star.removeClass('animate');
+                if(data.code==-102){
+                    data.txt='您还没有收藏过';
+                }
+                that.showTips.call(that,data.txt);
+            },
+        };
+        this.getDataAsync(para);
+    };
+
+
     /*
      *显示操作结果
      *para:
      *tip - {string} 内容结果
      */
     t.showTips=function(tip){
+        if(tip.length>8){
+            tip=tip.substr(0,7)+'…';
+        }
         var $tip=$('body').find('.result-tips'),
             $p=$tip.find('p').text(tip);
         $tip.show();
@@ -659,23 +739,6 @@ define(['fx','base'],function(fx,Base) {
     /*关闭登录提示框*/
     t.closeLoginBox=function(){
         this.controlModelBox(0,1);
-    };
-
-    /*收藏头条*/
-    t.doFavorite=function(e){
-        var $target=$(e.currentTarget).find('.icon-star_border');
-        $target.addClass('active animate');
-        $target.addClass('voting');
-        var para={
-            id:this.articleId,
-            sCallback:function(data){
-
-            },
-            eCallback:function(data){
-
-            },
-        }
-        this.getDataAsync(para);
     };
 
     /*调用app登录*/
