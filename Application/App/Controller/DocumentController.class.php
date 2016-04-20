@@ -361,7 +361,7 @@ class DocumentController extends AppController {
         $data['content'] = $content;
         $data['create_time'] = time();
         M('LocalComment')->add($data);
-        $this->apiSuccess('评论成功');
+        $this->apiSuccess('评论成功', null, array('content'=>$content, 'create_time'=>$data['create_time']));
     }
 
     /**
