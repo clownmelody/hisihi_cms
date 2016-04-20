@@ -152,7 +152,7 @@ define(['fx','base'],function(fx,Base) {
                             '<img src="'+item.user_info.avatar_url+'">'+
                             '</div>'+
                             '<div class="list-main-right">'+
-                            '<div>item.user_info.username</div>'+
+                            '<div>'+item.user_info.username+"</div>'+
                             '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
                             '<div>'+item.content +'</div>'+
                         '</div>'+
@@ -554,7 +554,8 @@ define(['fx','base'],function(fx,Base) {
         var para = {
             url: this.baseUrl+'document/doCommentOnTopContent',
             type: 'post',
-            paraData: JSON.stringify({"id": this.articleId,"content":str,"session_id": this.userInfo.session_id}),
+            //paraData: JSON.stringify({"id": this.articleId,"content":str,"session_id": this.userInfo.session_id}),
+            paraData: {"id": this.articleId,"content":str,"session_id": this.userInfo.session_id},
             sCallback: function (data) {
                 that.showTips.call(that,'评论成功');
                 $textarea.val('');
