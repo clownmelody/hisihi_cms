@@ -36,7 +36,7 @@ ul li {
   list-style: none;
 }
 .headlines-box {
-  margin-bottom: 70px;
+  margin-bottom: 50px;
 }
 .bottom-voteCon {
   width: 90%;
@@ -98,10 +98,14 @@ ul li {
 }
 .comment-list-box .list-main li {
   position: relative;
+  border-bottom: 1px solid #CCCCCC;
+}
+.comment-list-box .list-main li:last-child {
+  border-bottom: none;
 }
 .comment-list-box .list-main li .list-main-left {
   position: absolute;
-  padding: 18px;
+  padding: 14px 14px 14px 18px;
 }
 .comment-list-box .list-main li .list-main-left img {
   width: 56px;
@@ -109,8 +113,8 @@ ul li {
   border-radius: 28px;
 }
 .comment-list-box .list-main li .list-main-right {
-  margin-left: 95px;
-  padding: 18px 18px 18px 0;
+  margin-left: 90px;
+  padding: 14px 18px 14px 0;
 }
 .comment-list-box .list-main li .list-main-right > div:nth-child(1) {
   color: #313131;
@@ -132,7 +136,15 @@ ul li {
   right: 18px;
 }
 .comment-list-box .list-main li .up-comment-box > span {
+  font-size: 22px;
   color: #BDBDBD;
+}
+.comment-list-box .no-comment-info {
+  height: 90px;
+  text-align: center;
+  line-height: 70px;
+  font-size: 16px;
+  color: #ccc;
 }
 .bottom-comment {
   position: fixed;

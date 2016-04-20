@@ -43,9 +43,10 @@ define(['$'],function() {
                             that.controlLoadingTips(0);
                             paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
-                            var txt = result.message;
+                            var txt = result.message,
+                                code=result.error_code;
                             that.controlLoadingTips(-1);
-                            paras.eCallback && paras.eCallback();
+                            paras.eCallback && paras.eCallback({code:code,txt:txt});
                         }
                     }
                     //超时

@@ -43,7 +43,7 @@ ul{
   }
 }
 .headlines-box {
-  margin-bottom: 70px;
+  margin-bottom: 50px;
 }
 
 .bottom-voteCon{
@@ -98,6 +98,7 @@ ul{
 
 .comment-list-box{
   @pl:18px;
+  @pr:14px;
   .list-header{
     height: 40px;
     box-sizing: border-box;
@@ -110,19 +111,22 @@ ul{
   .list-main{
     li{
       position: relative;
+      border-bottom:1px solid #CCCCCC;
+      &:last-child{
+        border-bottom:none;
+      }
       @w:56px;
       .list-main-left{
         position: absolute;
-        //width:92px;
-        padding: @pl;
+        padding:@pr @pr @pr @pl;
         img{
           .size(@w,@w);
           border-radius: 28px;
         }
       }
       .list-main-right{
-        margin-left: 95px;
-        padding: @pl @pl @pl 0;
+        margin-left: 90px;
+        padding: @pr @pl @pr 0;
         >div{
           @mtop:5px;
           &:nth-child(1){
@@ -146,10 +150,18 @@ ul{
         top:@pl;
         right: @pl;
         >span{
+          font-size: 22px;
           color: #BDBDBD;
         }
       }
     }
+  }
+  .no-comment-info{
+    height: 90px;
+    text-align: center;
+    line-height: 70px;
+    font-size: 16px;
+    color: #ccc;
   }
 }
 
