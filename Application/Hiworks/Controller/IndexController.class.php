@@ -319,6 +319,8 @@ class IndexController extends HiworksController
                 $info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
             }
             unset($info['cover_id']);
+            $muliti_cover_pic = $this->getMultiCoverPicURLByHiworkId($info['id']);
+            $info['multi_cover_info'] = array('count'=>count($muliti_cover_pic), 'data'=>$muliti_cover_pic);
             $info['download_url'] = C('HOST_NAME_PREFIX').'hiworks_list.php/file/downloadZip/key/'.$this->caesar_encode($info['id'], 'hisihi_hiworks_downlaod');
             $info['size'] = $this->conversion($detail['size']);
             $info['download'] = $detail['download'];
@@ -338,7 +340,7 @@ class IndexController extends HiworksController
         $where_array['id'] = $hiwork_id;
         $info = $Document->field('multi_cover_pic')->where($where_array)->find();
         if($info){
-            $result_array = explode(',',$info[0]['multi_cover_pic']);
+            $result_array = explode(',',$info['multi_cover_pic']);
             foreach($result_array as $pic_id){
                 $result = $model->query("select path from hisihi_picture where id=".$pic_id);
                 if($result){
