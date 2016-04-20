@@ -117,17 +117,17 @@ ul li {
   padding: 14px 18px 14px 0;
 }
 .comment-list-box .list-main li .list-main-right > div:nth-child(1) {
-  color: #313131;
+  color: #313131 !important;
   font-size: 18px;
 }
 .comment-list-box .list-main li .list-main-right > div:nth-child(2) {
   margin-top: 5px;
-  color: #808080;
+  color: #808080 !important;
   font-size: 14px;
 }
 .comment-list-box .list-main li .list-main-right > div:nth-child(3) {
   margin-top: 5px;
-  color: #212121;
+  color: #212121 !important;
   font-size: 14px;
 }
 .comment-list-box .list-main li .up-comment-box {
@@ -208,6 +208,7 @@ ul li {
   margin-left: 0;
 }
 .bottom-comment .comment-right-box .comment-right-item.comment-bubble .comment-red-bubble {
+  display: none;
   position: absolute;
   left: 6px;
   top: 7px;
