@@ -341,10 +341,12 @@ class DocumentController extends AppController {
 
     /**
      * 头条评论
+     * @param int $id
+     * @param null $content
      */
-    public function doCommentOnTopContent(){
-        $id = $_POST['id'];
-        $content = $_POST['content'];
+    public function doCommentOnTopContent($id=0, $content=null){
+//        $id = $_POST['id'];
+//        $content = $_POST['content'];
         if($id==0) {
             $this->apiError(-1, '传入头条ID为空');
         }
