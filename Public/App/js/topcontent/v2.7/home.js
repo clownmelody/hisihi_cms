@@ -477,31 +477,7 @@ define(['fx','base','iscroll'],function(fx,Base) {
         return $('body .bottom-voteCon>div').hasClass('voting');
     };
 
-    /*滚动到评论列表*/
-    t.scrollToComment=function(){
-        var h=$('.headlines-body').height(),
-            top=$('body').scrollTop(),
-            viewH = $('html')[0].clientHeight+200;//可见高度
-        if(top>h-viewH){
-            window.scrollTo(0, h);
-        }
-        else{
-            this.showCommentListPanel();
-        }
-    };
 
-    t.showCommentListPanel=function(){
-        var style={top:0},that=this;
-        $('.comment-list-panel').animate(
-            style,
-            200, 'ease-in',
-            function () {
-                $('html').css('overflow','hidden');
-                document.addEventListener('touchmove',function(e){e.preventDefault(),false});
-                that.initIScroll();
-            }
-        );
-    };
 
 
 
@@ -820,6 +796,25 @@ define(['fx','base','iscroll'],function(fx,Base) {
 
     };
 
+
+    /*滚动到评论列表*/
+    t.scrollToComment=function(){
+        var h=$('.headlines-body').height(),
+            top=$('body').scrollTop(),
+            viewH = $('html')[0].clientHeight+200;//可见高度
+        //if(top>h-viewH){
+            window.scrollTo(0, h);
+        //}
+        //else{
+        //    this.showCommentListPanel();
+        //}
+    };
+
+    t.showCommentListPanel=function(){
+        $('.comment-list-panel').show();
+        //that.initIScroll();
+    };
+
     /*注册上拉加载更多数据*/
     t.initIScroll=function(){
         this.$pullDown=$('#pullDown');
@@ -835,12 +830,12 @@ define(['fx','base','iscroll'],function(fx,Base) {
 
 
 
-        this.myScroll=new IScroll('#list-panel-wrapper',{probeType: 3, mouseWheel: true,vScrollbar:false});
+        this.myScroll=new IScroll('#wrapper',{probeType: 3, mouseWheel: true,vScrollbar:false});
         this.myScroll.on("slideDown",function() {
             if(this.y > 40){
-                if(!this.$downIcon.hasClass('loading')){
-                    this.$downIcon.addClass('loading');
-                    this.$pullDown.find('.pullDownLabel').text('加载中...');
+                if(!that.$downIcon.hasClass('loading')){
+                    that.$downIcon.addClass('loading');
+                    that.$pullDown.find('.pullDownLabel').text('加载中...');
                     that.pullDownAction();
                 }
             }
@@ -887,20 +882,17 @@ define(['fx','base','iscroll'],function(fx,Base) {
 
     };
 
+    /*下拉关闭*/
    t.pullDownAction=function(){
        var that=this;
-        $.getJSON('test.json',function(data,state){
-            if(data && data.state==1 && state=='success'){
-                setTimeout(function(){
-                    $('#news-list').html(data.data);
-                    that.myScroll.refresh();
-                    that.$downIcon.removeClass('loading');
-                    that.$pullDown.find('.pullDownLabel').text('下拉刷新');
-                },600);
-            }
-        });
+        that.$downIcon.removeClass('loading');
+        that.$pullDown.find('.pullDownLabel').text('下拉刷新');
+       $('.comment-list-panel').hide();
+       //$('.comment-list-panel').css({'z-index':'-1','opacity':'0'});
+       //$('#wrapper').css('top','100%');
     };
 
+    /*上拉刷新*/
     t.pullUpAction=function (){
         var that=this;
         $.getJSON('test.json',function(data,state){

@@ -5,7 +5,6 @@ body {
 }
 * {
   font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
-  -webkit-overflow-scrolling: touch;
 }
 a,
 a:hover,
@@ -280,23 +279,36 @@ ul li {
   font-family: "Consolas";
 }
 .comment-list-panel {
-  position: absolute;
-  top: 100%;
+  position: fixed;
+  top: 0;
   bottom: 0;
   width: 100%;
-  background-color: red;
-  z-index: 10;
+  overflow-x: hidden;
+  display: none;
 }
-.comment-list-panel #list-panel-wrapper {
+.comment-list-panel .top {
+  top: 0;
+}
+.comment-list-panel .footer {
+  bottom: 0;
+}
+.comment-list-panel #wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0px;
+  width: 100%;
+  background-color: #fafafa;
+  z-index: 10;
   -webkit-transform: translate3d(0, 0, 0);
 }
-.comment-list-panel #list-panel-wrapper .news-lists .item {
+.comment-list-panel #wrapper .news-lists .item {
   height: 40px;
   line-height: 40px;
   border-bottom: 1px solid #cfcfcf;
 }
-.comment-list-panel #list-panel-wrapper #pullDown,
-.comment-list-panel #list-panel-wrapper #pullUp {
+.comment-list-panel #wrapper #pullDown,
+.comment-list-panel #wrapper #pullUp {
   background-color: #fff;
   height: 40px;
   line-height: 40px;
@@ -309,8 +321,8 @@ ul li {
   position: absolute;
   width: 100%;
 }
-.comment-list-panel #list-panel-wrapper #pullDown .loading,
-.comment-list-panel #list-panel-wrapper #pullUp .loading {
+.comment-list-panel #wrapper #pullDown .loading,
+.comment-list-panel #wrapper #pullUp .loading {
   background-position: 0 100%;
   -webkit-transform: rotate(0deg) translateZ(0);
   -webkit-transition-duration: 0ms;
@@ -319,10 +331,13 @@ ul li {
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
 }
-.comment-list-panel #list-panel-wrapper #pullUp {
+.comment-list-panel #wrapper #pullDown {
+  top: -40px;
+}
+.comment-list-panel #wrapper #pullUp {
   bottom: -40px;
 }
-.comment-list-panel #list-panel-wrapper .icon {
+.comment-list-panel #wrapper .icon {
   display: block;
   float: left;
   width: 40px;
@@ -330,22 +345,22 @@ ul li {
   background: url(../../images/topcontent/pull.png) 0 0 no-repeat;
   background-size: 40px 80px;
 }
-.comment-list-panel #list-panel-wrapper .icon.pullDownIcon.normal {
+.comment-list-panel #wrapper .icon.pullDownIcon.normal {
   -webkit-transform: rotate(0deg) translateZ(0);
 }
-.comment-list-panel #list-panel-wrapper .icon.pullDownIcon.flip {
+.comment-list-panel #wrapper .icon.pullDownIcon.flip {
   -webkit-transform: rotate(-180deg) translateZ(0);
 }
-.comment-list-panel #list-panel-wrapper .icon.pullDownIcon.loading {
+.comment-list-panel #wrapper .icon.pullDownIcon.loading {
   background-position: 0 100%;
 }
-.comment-list-panel #list-panel-wrapper .icon.pullUpIcon.normal {
+.comment-list-panel #wrapper .icon.pullUpIcon.normal {
   -webkit-transform: rotate(-180deg) translateZ(0);
 }
-.comment-list-panel #list-panel-wrapper .icon.pullUpIcon.flip {
+.comment-list-panel #wrapper .icon.pullUpIcon.flip {
   -webkit-transform: rotate(0deg) translateZ(0);
 }
-.comment-list-panel #list-panel-wrapper .icon.pullUpIcon.loading {
+.comment-list-panel #wrapper .icon.pullUpIcon.loading {
   background-position: 0 100%;
   -webkit-animation: loading 5s inifition linear;
 }
