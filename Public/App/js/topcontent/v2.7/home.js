@@ -23,7 +23,7 @@ define(['fx','base','iscroll'],function(fx,Base) {
         this.getUserInfo(function(){
             that.getFavoriteInfo();
             that.loadVoteInfo();
-            that.loadCommentInfo(0);
+            that.loadCommentInfo(1);
         });
 
 
@@ -32,7 +32,7 @@ define(['fx','base','iscroll'],function(fx,Base) {
         this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
 
         /*查看评论，收藏，分享*/
-        this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
+        this.$wrapper.on(eventName, '.comment-bubble', $.proxy(this, 'scrollToComment'));
         this.$wrapper.on(eventName, '.comment-collect', $.proxy(this, 'execFavorite'));
         this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
 
@@ -40,6 +40,11 @@ define(['fx','base','iscroll'],function(fx,Base) {
 
         //控制输入框的状态，当有信息输入的时候才可用
         this.$wrapper.on('input', '#comment-area', $.proxy(this, 'controlCommitBtn'));
+
+
+        this.$wrapper.on(eventName,'.loadCommentAgain', $.proxy(this, 'loadCommentAgain'));
+
+
 
         /*显示评论框*/
         this.$wrapper.on(eventName, '#comment-input', function(){
@@ -57,8 +62,6 @@ define(['fx','base','iscroll'],function(fx,Base) {
         this.$wrapper.on(eventName, '#do-login', $.proxy(this, 'doLogin'));
 
         /*滚动加载更多评论*/
-        //this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
-        //$('html').scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
         $(document).on('touchend','body',function(e){
             that.scrollContainer(e);
         });
@@ -123,16 +126,40 @@ define(['fx','base','iscroll'],function(fx,Base) {
         if(this.userInfo.session_id!==''){
             paraData.session_id=this.userInfo.session_id;
         }
+
+        //显示加载效果
+        var $loadingMore=$('.loading-more-tips'),
+            $loadingMoreMain=$loadingMore.find('.loadingMoreResultTipsMain');
+        $loadingMoreMain.show();
+        $loadingMore.addClass('active').show();
+
         var para = {
             url: this.baseUrl + 'document/getTopContentComments',
             type: 'get',
             paraData: paraData,
             sCallback: function (data) {
                 that.fillInCommentInfo(data);
+
+                /*标记分页信息*/
+                var totalPage=Math.ceil(data.totalCount/that.commentListPageCount),
+                $ul=$('#comment-list-ul');
+                $ul.attr({'data-page-count':totalPage,'data-index':index})
+                $loadingMore.removeClass('active').hide();
                 callback && callback();
             },
             eCallback: function (data) {
-                that.showTips.call(that,data.txt);
+                var txt=data.txt;
+                if(data.code=404){
+                    txt='评论信息加载失败';
+                }
+                that.showTips.call(that,txt);
+                $('.no-comment-info').hide();
+
+                $loadingMore.removeClass('active');
+                var $loadingError=$loadingMore.find('.loadError');  //加载失败对象
+                $loadingMoreMain.hide();
+                $loadingError.show();
+
                 callback && callback();
             },
         };
@@ -152,17 +179,12 @@ define(['fx','base','iscroll'],function(fx,Base) {
      */
     t.fillInCommentInfo=function(result){
         var count=result.totalCount;
-        $('#comment-counts').text(count);
-
         if(result && count>0){
             var dataList=result.data,
                 len=dataList.length,
                 str='',
                 $ul=$('#comment-list-ul'),
-                index=Number($ul.attr('data-index')),
-                item,
-
-                totalPage=Math.ceil(count/this.commentListPageCount);
+                item;
 
             for(var i=0;i<len;i++){
                 item=dataList[i];
@@ -196,12 +218,16 @@ define(['fx','base','iscroll'],function(fx,Base) {
                     '</li>';
             }
             $ul.next().hide();
-            $ul.attr({'data-page-count':totalPage,'data-index':index}).append(str);
-
+            $ul.append(str);
+            $('#comment-counts').text(count);
             if(count>9999){
                 count='10k+';
             }
             $('.comment-red-bubble').text(count).show();
+            $('.no-comment-info').hide();
+        }
+        else{
+            $('.no-comment-info').show();
         }
 
         if($('body').attr('data-loaded')=='false'){
@@ -451,6 +477,33 @@ define(['fx','base','iscroll'],function(fx,Base) {
         return $('body .bottom-voteCon>div').hasClass('voting');
     };
 
+    /*滚动到评论列表*/
+    t.scrollToComment=function(){
+        var h=$('.headlines-body').height(),
+            top=$('body').scrollTop(),
+            viewH = $('html')[0].clientHeight+200;//可见高度
+        if(top>h-viewH){
+            window.scrollTo(0, h);
+        }
+        else{
+            this.showCommentListPanel();
+        }
+    };
+
+    t.showCommentListPanel=function(){
+        var style={top:0},that=this;
+        $('.comment-list-panel').animate(
+            style,
+            200, 'ease-in',
+            function () {
+                $('html').css('overflow','hidden');
+                document.addEventListener('touchmove',function(e){e.preventDefault(),false});
+                that.initIScroll();
+            }
+        );
+    };
+
+
 
     /*收藏文章*/
     t.execFavorite=function(e){
@@ -659,6 +712,13 @@ define(['fx','base','iscroll'],function(fx,Base) {
         }
     };
 
+    /*两次再次加载*/
+    t.loadCommentAgain=function(e){
+        $(e.currentTarget).hide();
+        var index=$('.list-main').attr('data-index') | 0;
+        this.loadCommentInfo(index);
+    },
+
     /*显示评论框*/
     t.showCommentBox=function(){
         var index=0;
@@ -773,7 +833,9 @@ define(['fx','base','iscroll'],function(fx,Base) {
 
         var that=this;
 
-        this.myScroll=new IScroll('#wrapper',{probeType: 3, mouseWheel: true,vScrollbar:false});
+
+
+        this.myScroll=new IScroll('#list-panel-wrapper',{probeType: 3, mouseWheel: true,vScrollbar:false});
         this.myScroll.on("slideDown",function() {
             if(this.y > 40){
                 if(!this.$downIcon.hasClass('loading')){
@@ -800,7 +862,7 @@ define(['fx','base','iscroll'],function(fx,Base) {
 
                 downHasClass = that.$downIcon.hasClass("flip"),
                 upHasClass = that.$upIcon.hasClass("flip");
-
+            console.log(y);
             if(y >= 40){
                 !downHasClass && that.$downIcon.addClass("flip");
                 that.$pullDown.find('.pullDownLabel').text('释放刷新');
@@ -820,6 +882,7 @@ define(['fx','base','iscroll'],function(fx,Base) {
                 that.$pullUp.find('.pullUpLabel').text('上拉加载更多');
                 return;
             }
+
         });
 
     };
@@ -858,35 +921,61 @@ define(['fx','base','iscroll'],function(fx,Base) {
      * 同时通过 loadingData 类 来防止连续快速滚动导致的重复加载
      */
     t.scrollContainer=function(e){
+        var $ul=$('#comment-list-ul');
+        var pageIndex=Number($ul.attr('data-index')),
+            page= $ul.attr('data-page-count');
+        if(pageIndex==page || page=='0'){
+            //this.showTips('没有更多评论了');
+            return;
+        }
 
-        /*
-         var $this =$(this),
-         viewH =$(this).height(),//可见高度
-         contentH =$(this).get(0).scrollHeight,//内容高度
-         scrollTop =$(this).scrollTop();//滚动高度
-         //if(contentH - viewH - scrollTop <= 100) { //到达底部100px时,加载新内容
-        */
         var target= e.currentTarget,
-            viewH = $('html')[0].clientHeight,
-            contentH=target.scrollHeight,
-            scrollTop=$(target).scrollTop(),
+            viewH = $('html')[0].clientHeight,//可见高度
+            contentH=target.scrollHeight,//内容高度
+            scrollTop=$(target).scrollTop(),//滚动高度
             diff=contentH - viewH - scrollTop;
         if (diff<400 && !$(target).hasClass('loadingData')) {  //滚动到底部
-            var $ul=$('#comment-list-ul');
-            var pageIndex=Number($ul.attr('data-index')),
-            page= $ul.attr('data-page-count');
-            if(pageIndex==page){
-                this.showTips('没有更多评论了');
-                return;
-            }
             $(target).addClass('loadingData');
             pageIndex++;
+
             this.loadCommentInfo(pageIndex,function(){
-                $ul.attr('data-index',pageIndex);
                 $(target).removeClass('loadingData');
             });
         }
     };
+
+   function goTop(h,acceleration, time) {
+        acceleration = acceleration || 0.1;
+        time = time || 16;
+        var x1 = 0;
+        var y1 = 0;
+        var x2 = 0;
+        var y2 = 0;
+        var x3 = 0;
+        var y3 = 0;
+        if (document.documentElement) {
+            x1 = document.documentElement.scrollLeft || 0;
+            y1 = document.documentElement.scrollTop || 0;
+        }
+        if (document.body) {
+            x2 = document.body.scrollLeft || 0;
+            y2 = document.body.scrollTop || 0;
+        }
+        var x3 = window.scrollX || 0;
+        var y3 = window.scrollY || 0;
+        // 滚动条到页面顶部的水平距离
+        var x = Math.max(x1, Math.max(x2, x3));
+        // 滚动条到页面顶部的垂直距离
+        var y = Math.max(y1, Math.max(y2, y3));
+        // 滚动距离 = 目前距离 / 速度, 因为距离原来越小, 速度是大于 1 的数, 所以滚动距离会越来越小
+        var speed = 1 + acceleration;
+        window.scrollTo(Math.floor(x / speed), h);
+        // 如果距离不为零, 继续调用迭代本函数
+        if (x > 0 || y > 0) {
+            var invokeFunction = "goTop(" + acceleration + ", " + time + ")";
+            window.setTimeout(invokeFunction, time);
+        }
+    }
 
     return Topcontent;
 });
