@@ -2,7 +2,7 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base'],function(fx,Base) {
+define(['fx','base','iscroll'],function(fx,Base) {
     var Topcontent = function (id, url) {
         this.baseUrl = url;
         this.$wrapper = $('body');
@@ -193,6 +193,11 @@ define(['fx','base'],function(fx,Base) {
                 count='10k+';
             }
             $('.comment-red-bubble').text(count).show();
+        }
+
+        if($('body').attr('data-loaded')=='false'){
+            //$('body').attr('data-loaded','true');
+            //this.initIScroll();
         }
     };
 
@@ -744,6 +749,98 @@ define(['fx','base'],function(fx,Base) {
     /*调用app登录*/
     t.doLogin=function(){
 
+    };
+
+    /*注册上拉加载更多数据*/
+    t.initIScroll=function(){
+        this.$pullDown=$('#pullDown');
+        this.$pullUp=$('#pullUp');
+        this.$downIcon=this.$pullDown.find('.icon');
+        this.$upIcon=this.$pullUp.find('.icon');
+        this.pullDownEl=this.$pullDown[0];
+        this.pullDownOffset=this.pullDownEl.offsetHeight;
+        this.pullUpEl=this.$pullUp[0];
+        this.pullUpOffset=this.pullUpEl.offsetHeight;
+
+        var that=this;
+
+        this.myScroll=new IScroll('#wrapper',{probeType: 3, mouseWheel: true,vScrollbar:false});
+        this.myScroll.on("slideDown",function() {
+            if(this.y > 40){
+                if(!this.$downIcon.hasClass('loading')){
+                    this.$downIcon.addClass('loading');
+                    this.$pullDown.find('.pullDownLabel').text('加载中...');
+                    that.pullDownAction();
+                }
+            }
+        });
+
+        this.myScroll.on("slideUp",function(){
+            if(that.maxScrollY - this.y > 40){
+                if(!that.$upIcon.hasClass('loading')){
+                    that.$upIcon.addClass('loading');
+                    that.$pullUp.find('.pullUpLabel').text('加载中...');
+                    that.pullUpAction();
+                }
+            }
+        });
+
+        this.myScroll.on("scroll",function(){
+            var y = this.y,
+                maxY = this.maxScrollY - y,
+
+                downHasClass = that.$downIcon.hasClass("flip"),
+                upHasClass = that.$upIcon.hasClass("flip");
+
+            if(y >= 40){
+                !downHasClass && that.$downIcon.addClass("flip");
+                that.$pullDown.find('.pullDownLabel').text('释放刷新');
+                return;
+            }else if(y < 40 && y > 0){
+                downHasClass && that.$downIcon.removeClass("flip");
+                that.$pullDown.find('.pullDownLabel').text('下拉刷新');
+                return "";
+            }
+
+            if(maxY >= 40){
+                !upHasClass && that.$upIcon.addClass("flip");
+                that.$pullUp.find('.pullUpLabel').text('释放刷新');
+                return;
+            }else if(maxY < 40 && maxY >=0){
+                upHasClass && that.$upIcon.removeClass("flip");
+                that.$pullUp.find('.pullUpLabel').text('上拉加载更多');
+                return;
+            }
+        });
+
+    };
+
+   t.pullDownAction=function(){
+       var that=this;
+        $.getJSON('test.json',function(data,state){
+            if(data && data.state==1 && state=='success'){
+                setTimeout(function(){
+                    $('#news-list').html(data.data);
+                    that.myScroll.refresh();
+                    that.$downIcon.removeClass('loading');
+                    that.$pullDown.find('.pullDownLabel').text('下拉刷新');
+                },600);
+            }
+        });
+    };
+
+    t.pullUpAction=function (){
+        var that=this;
+        $.getJSON('test.json',function(data,state){
+            if(data && data.state==1 && state=='success'){
+                setTimeout(function(){
+                    $('#news-list').append(data.data);
+                    that.myScroll.refresh();
+                    that.$upIcon.removeClass('loading');
+                    that.$up.find('.pullUpLabel').text('上拉加载更多');
+                },600);
+            }
+        });
     };
 
     return Topcontent;
