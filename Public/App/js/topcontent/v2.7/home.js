@@ -2,7 +2,7 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','iscroll'],function(fx,Base) {
+define(['fx','base'],function(fx,Base) {
     var Topcontent = function (id, url) {
         this.baseUrl = url;
         this.$wrapper = $('body');
@@ -724,7 +724,7 @@ define(['fx','base','iscroll'],function(fx,Base) {
             that=this;
         $target.animate(
             {opacity: opacity},
-            500, 'ease-out',
+            10, 'ease-out',
             function () {
                 if(opacity==0) {
                     $(this).hide();
