@@ -56,6 +56,13 @@ define(['fx','base','iscroll'],function(fx,Base) {
         this.$wrapper.on(eventName, '#cancle-login', $.proxy(this, 'closeLoginBox'));
         this.$wrapper.on(eventName, '#do-login', $.proxy(this, 'doLogin'));
 
+        /*滚动加载更多评论*/
+        //this.$wrapper.scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
+        //$('html').scroll($.proxy(this,'scrollContainer'));  //滚动加载更多数据
+        $(document).on('touchend','body',function(e){
+            that.scrollContainer(e);
+        });
+
         $(document).on(eventName,'.btn',function(){});
 
 
@@ -110,7 +117,7 @@ define(['fx','base','iscroll'],function(fx,Base) {
     };
 
     /*加载前10个评论信息*/
-    t.loadCommentInfo=function(index){
+    t.loadCommentInfo=function(index,callback){
         var that = this,
             paraData={id: this.articleId,page:index,count:this.commentListPageCount};
         if(this.userInfo.session_id!==''){
@@ -122,9 +129,11 @@ define(['fx','base','iscroll'],function(fx,Base) {
             paraData: paraData,
             sCallback: function (data) {
                 that.fillInCommentInfo(data);
+                callback && callback();
             },
             eCallback: function (data) {
                 that.showTips.call(that,data.txt);
+                callback && callback();
             },
         };
         this.getDataAsync(para);
@@ -150,7 +159,7 @@ define(['fx','base','iscroll'],function(fx,Base) {
                 len=dataList.length,
                 str='',
                 $ul=$('#comment-list-ul'),
-                index=Number($ul.attr('data-index'))+1,
+                index=Number($ul.attr('data-index')),
                 item,
 
                 totalPage=Math.ceil(count/this.commentListPageCount);
@@ -841,6 +850,42 @@ define(['fx','base','iscroll'],function(fx,Base) {
                 },600);
             }
         });
+    };
+
+    /*
+     *滚动加载更多的数据
+     * 通过滚动条是否在底部来确定
+     * 同时通过 loadingData 类 来防止连续快速滚动导致的重复加载
+     */
+    t.scrollContainer=function(e){
+
+        /*
+         var $this =$(this),
+         viewH =$(this).height(),//可见高度
+         contentH =$(this).get(0).scrollHeight,//内容高度
+         scrollTop =$(this).scrollTop();//滚动高度
+         //if(contentH - viewH - scrollTop <= 100) { //到达底部100px时,加载新内容
+        */
+        var target= e.currentTarget,
+            viewH = $('html')[0].clientHeight,
+            contentH=target.scrollHeight,
+            scrollTop=$(target).scrollTop(),
+            diff=contentH - viewH - scrollTop;
+        if (diff<400 && !$(target).hasClass('loadingData')) {  //滚动到底部
+            var $ul=$('#comment-list-ul');
+            var pageIndex=Number($ul.attr('data-index')),
+            page= $ul.attr('data-page-count');
+            if(pageIndex==page){
+                this.showTips('没有更多评论了');
+                return;
+            }
+            $(target).addClass('loadingData');
+            pageIndex++;
+            this.loadCommentInfo(pageIndex,function(){
+                $ul.attr('data-index',pageIndex);
+                $(target).removeClass('loadingData');
+            });
+        }
     };
 
     return Topcontent;
