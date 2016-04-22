@@ -211,7 +211,7 @@ define(['fx','base'],function(fx,Base) {
                             '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
                             '<div>'+item.content +'</div>'+
                         '</div>'+
-                        '<div class="up-comment-box" data-id="'+item.id+'">'+
+                        '<div class="up-comment-box" data-id="'+item.id+'" id="up-comment-'+item.id +'">'+
                             '<span class="'+uClass+'"></span>'+
                             '<span class="'+nClass+'">'+upNum+'</span>'+
                         '</div>'+
@@ -259,7 +259,9 @@ define(['fx','base'],function(fx,Base) {
         this.getDataAsync(para);
     };
 
-    /*通过点赞和 踩的 人数*/
+    /*
+    *通过点赞和 踩的 人数
+    */
     t.loadVoteInfo=function () {
         var that = this,
             paraData={id: this.articleId};
@@ -332,7 +334,7 @@ define(['fx','base'],function(fx,Base) {
         if (this.userInfo.session_id==='') {
 
             //提示登录框跳转方法
-            this.controlModelBox(1,1);
+            this.controlModelBox(1,1,'请先登录后再点赞');
             return;
         }
         //正在投票
@@ -384,7 +386,7 @@ define(['fx','base'],function(fx,Base) {
         //没有登录
         if (this.userInfo.session_id==='') {
             //提示登录框跳转方法
-            this.controlModelBox(1,1);
+            this.controlModelBox(1,1,'请先登录后再点踩');
             return;
         }
         //正在投票
@@ -433,7 +435,7 @@ define(['fx','base'],function(fx,Base) {
         //没有登录
         if (this.userInfo.session_id==='') {
             //提示登录框跳转方法
-            this.controlModelBox(1,1);
+            this.controlModelBox(1,1,'请先登录后再点赞');
             return;
         }
         //不能取消点赞 和 重复点赞
@@ -471,15 +473,10 @@ define(['fx','base'],function(fx,Base) {
         this.getDataAsync(para);
     };
 
-
     /*正在投票*/
     t.isVoting=function(){
         return $('body .bottom-voteCon>div').hasClass('voting');
     };
-
-
-
-
 
     /*收藏文章*/
     t.execFavorite=function(e){
@@ -493,7 +490,7 @@ define(['fx','base'],function(fx,Base) {
         //没有登录
         if (this.userInfo.session_id==='') {
             //提示登录框跳转方法
-            this.controlModelBox(1,1);
+            this.controlModelBox(1,1,'请先登录后再收藏');
             return;
         }
         if($star.hasClass('active')){
@@ -700,7 +697,7 @@ define(['fx','base'],function(fx,Base) {
         if(!this.userInfo.session_id){
             index=1;
         }
-        this.controlModelBox(1,index,function(){
+        this.controlModelBox(1,index,'请先登录后再发表评论',function(){
             $('#comment-area')[0].focus();
         });
     };
@@ -715,12 +712,19 @@ define(['fx','base'],function(fx,Base) {
     * Para:
     * opacity - {int} 透明度，1 表示显示，0表示隐藏
     * index - {int} 控制的对象，1 登录提示框，0评论框
-    *
-    */
-    t.controlModelBox=function(opacity,index,callback) {
+    * title - {string} 提示标题
+    * callback - {string} 回调方法
+     */
+    t.controlModelBox=function(opacity,index,title,callback) {
         var $target=$('.model-box'),
             $targetBox=$target.find('.model-box-item').eq(index),
             that=this;
+        if(index==1){
+            if(!title){
+                title='请登录';
+            }
+            $('.login-header').text(title);
+        }
         $target.animate(
             {opacity: opacity},
             10, 'ease-out',
@@ -949,10 +953,42 @@ define(['fx','base'],function(fx,Base) {
         }
     };
 
-    //登录后更新评论的点赞信息
-    t.updateCommentInfo=function(data){
 
+    //登录后更新评论的点赞信息
+    t.updateCommentInfo=function(){
+        var that = this,
+            $li=$('#comment-list-ul li'),
+            paraData={id: this.articleId,page:0,count:$li.length};
+        if(this.userInfo.session_id!==''){
+            paraData.session_id=this.userInfo.session_id;
+        }
+        var para = {
+            url: this.baseUrl + 'document/getTopContentComments',
+            type: 'get',
+            paraData: paraData,
+            sCallback: $.proxy(this,'updateUpsInfoForComment')
+        };
+        this.getDataAsync(para);
     };
+
+    /*更新相对应的点赞信息*/
+    t.updateUpsInfoForComment=function(result){
+        if(result && result.data){
+            var data=result.data,
+                len=data.length;
+            for(var i=0;i<len;i++){
+                var item=data[i],
+                    id=item.id;
+                if(item.isSupported){
+                    var $up=$('#up-comment-'+id);
+                    if($up.length>0) {
+                        $up.find('span').eq(0).addClass('active');
+                    }
+                }
+            }
+        }
+    };
+
    function goTop(h,acceleration, time) {
         acceleration = acceleration || 0.1;
         time = time || 16;
@@ -996,10 +1032,14 @@ define(['fx','base'],function(fx,Base) {
     */
     window.loginSuccessCallback=function(){
         alert('登录成功');
-        window.topContentObj.loadVoteInfo(); //点赞信息
-        window.topContentObj.getFavoriteInfo(); //收藏信息
-        //var $li=$('#comment-list-ul li');
-        //window.topContentObj.loadCommentInfo(1,$li.length); //评论信息
+        var obj=window.topContentObj;
+
+        //得到用户基本信息
+        obj.getUserInfo(function(){
+            obj.loadVoteInfo(); //点赞信息
+            obj.getFavoriteInfo(); //收藏信息
+            window.topContentObj.updateCommentInfo();  //更新评论的点赞信息
+        });
     };
 
     window.getShareInfo=function(){
