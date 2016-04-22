@@ -247,7 +247,11 @@ class PublicController extends AppController {
             //解析并成立图片数据
             $topic['img'] = $this->fetchImage($topic['cover_id']);
             if((float)$version>=2.0){
-                $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
+                if((float)$version>=2.7){
+                    $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$topic['id'];
+                } else {
+                    $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
+                }
                 if((float)$version>=2.4){
                     $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$topic['id'].'/version/'.$version;
                 } else {
@@ -321,7 +325,11 @@ class PublicController extends AppController {
             //解析并成立图片数据
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
-                $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$id;
+                if((float)$version>=2.7){
+                    $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$id;
+                } else {
+                    $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$id;
+                }
                 if((float)$version>=2.4){
                     $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$id;
                 } else {
@@ -402,9 +410,16 @@ class PublicController extends AppController {
 
         if($type == 'view'){
             if((float)$version >=2.0){
-                $cacheHtml = S('topcontent-v2-'.$id);
-                if($cacheHtml){
-                    $this->responseHtml($cacheHtml);
+                if((float)$version >=2.7){
+                    $cacheHtml = S('topcontent-v2-7-'.$id);
+                    if($cacheHtml){
+                        $this->responseHtml($cacheHtml);
+                    }
+                } else {
+                    $cacheHtml = S('topcontent-v2-'.$id);
+                    if($cacheHtml){
+                        $this->responseHtml($cacheHtml);
+                    }
                 }
             } else {
                 $cacheHtml = S('topcontent-v1-'.$id);
@@ -432,6 +447,14 @@ class PublicController extends AppController {
             $this->assign('articleId', $id);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
+                if((float)$version >=2.7){
+                    if(!S('topcontent-v2-7-'.$id)){
+                        $html = $this->fetch('topcontentv2_7');
+                        S('topcontent-v2-7-'.$id, null);
+                        S('topcontent-v2-7-'.$id, $html, 3600);
+                    }
+                    $this->responseHtml($html);
+                }
                 // 如果未缓存
                 if(!S('topcontent-v2-'.$id)){
                     $html = $this->fetch('v2content');
@@ -452,7 +475,11 @@ class PublicController extends AppController {
         } else {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
-                $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
+                if((float)$version>=2.7){
+                    $info['content_url'] = 'app.php/public/topcontent/version/2.7/type/view/id/'.$info['id'];
+                } else {
+                    $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
+                }
                 if((float)$version>=2.4){
                     $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$info['id'].'/version/'.$version;
                 } else {
