@@ -11,7 +11,9 @@ define(['fx','base'],function(fx,Base) {
         this.articleId = id;
         this.userInfo = {session_id: ''};
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
-        this.usedAppLoginFn = false;  //是否使用app 的登录方法
+        if(!this.isFromApp){
+            $('.bottom-comment').hide();
+        }
         this.commentListPageCount=10;  //每次加载20条评论
 
         var eventName='click',that=this;
@@ -97,7 +99,6 @@ define(['fx','base'],function(fx,Base) {
             }
             if (userStr != '') {
                 this.userInfo = JSON.parse(userStr);
-                this.usedAppLoginFn = true;
                 callback && callback.call(that);
             } else {
                 var para = {
@@ -253,7 +254,7 @@ define(['fx','base'],function(fx,Base) {
                 }
             },
             eCallback: function (data) {
-                that.showTips.call(that,data.txt);
+                //that.showTips.call(that,data.txt);
             },
         };
         this.getDataAsync(para);
@@ -1033,6 +1034,7 @@ define(['fx','base'],function(fx,Base) {
     window.loginSuccessCallback=function(){
         alert('登录成功');
         var obj=window.topContentObj;
+        obj.controlModelBox(0,1);
 
         //得到用户基本信息
         obj.getUserInfo(function(){
