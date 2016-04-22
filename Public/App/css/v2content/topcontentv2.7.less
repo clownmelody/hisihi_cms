@@ -8,12 +8,6 @@ body{
   margin: 0;
   background: #FFFFFF;
   max-width: 100%;
-  //position: absolute;
-  //top: 0;
-  //bottom: 0;
-  //left: 0;
-  //right: 0;
-  //overflow: hidden;
 }
 *{
   font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
@@ -69,7 +63,14 @@ ul{
 }
 
 .headlines-box {
-  margin-bottom: 50px;
+  margin-bottom:50px;
+  .headlines-body{
+    margin:0 10px;
+  }
+  .headlines-head{
+    margin:0 10px;
+    display: none;
+  }
 }
 
 .bottom-voteCon{
@@ -225,6 +226,7 @@ ul{
 }
 
 .bottom-comment{
+  display: none;
   position: fixed;
   bottom: 0;
   .size(100%,48px);

@@ -57,7 +57,8 @@ define(['$'],function() {
                     }
                     else {
                         that.controlLoadingTips(-1);
-                        paras.eCallback && paras.eCallback()
+                        paras.eCallback && paras.eCallback({code:'404',txt:'no found'});
+                        loginXhr.abort();
                     }
                 }
             });

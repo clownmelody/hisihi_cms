@@ -55,6 +55,13 @@ ul li {
 .headlines-box {
   margin-bottom: 50px;
 }
+.headlines-box .headlines-body {
+  margin: 0 10px;
+}
+.headlines-box .headlines-head {
+  margin: 0 10px;
+  display: none;
+}
 .bottom-voteCon {
   width: 90%;
   height: 35px;
@@ -201,6 +208,7 @@ ul li {
   }
 }
 .bottom-comment {
+  display: none;
   position: fixed;
   bottom: 0;
   width: 100%;

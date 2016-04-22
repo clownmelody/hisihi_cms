@@ -12,7 +12,9 @@ define(['fx','base'],function(fx,Base) {
         this.userInfo = {session_id: ''};
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         if(!this.isFromApp){
-            $('.bottom-comment').hide();
+            $('.headlines-head').show();
+        }else{
+            $('.bottom-comment').show();
         }
         this.commentListPageCount=10;  //每次加载20条评论
 
@@ -278,6 +280,9 @@ define(['fx','base'],function(fx,Base) {
                 that.saveCurrentVoteInfo(); //存储当前投票信息
             },
             eCallback: function (data) {
+                if(data.code=='404'){
+                    data.txt='投票信息加载失败';
+                }
                 that.showTips.call(that,data.txt);
             },
         };
@@ -326,6 +331,9 @@ define(['fx','base'],function(fx,Base) {
 
     /*赞同投票*/
     t.execVoteUp=function (e) {
+        if(!this.isFromApp){
+            return;
+        }
         var $target = $(e.currentTarget),
             $thumb=$target.find('.icon-thumb');
         if($target.hasClass('voting') || $thumb.hasClass('active')){
@@ -378,6 +386,9 @@ define(['fx','base'],function(fx,Base) {
 
     /*踩投票*/
     t.execVoteDown=function (e) {
+        if(!this.isFromApp){
+            return;
+        }
         var $target = $(e.currentTarget),
             $thumb=$target.find('.icon-thumb');
         if($target.hasClass('voting') || $thumb.hasClass('active')){
@@ -427,6 +438,9 @@ define(['fx','base'],function(fx,Base) {
 
     /*赞同评论*/
     t.execVotUpForComment=function(e){
+        if(!this.isFromApp){
+            return;
+        }
         var $target = $(e.currentTarget),
             $thumb=$target.find('.icon-thumb_up');
         if($target.hasClass('voting')){
