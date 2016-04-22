@@ -307,8 +307,12 @@ class ForumController extends AppController
             $map['reply_count'] = array('gt',0);
         $map['is_top'] = 0;
         $list = D('ForumPost')->where($map)->order($order)->page($page, $count)->select();
-        $totalCount = D('ForumPost')->where($map)->count();
-
+        if(S('app_forum_forum_post_total_count'.md5($map))){
+            $totalCount = S('app_forum_forum_post_total_count'.md5($map));
+        } else {
+            $totalCount = D('ForumPost')->where($map)->count();
+            S('app_forum_forum_post_total_count'.md5($map), $totalCount, 600);
+        }
         $list = $this->formatList($list);
 
         if($show_adv==true){
@@ -464,7 +468,12 @@ class ForumController extends AppController
         }
         $map['is_top'] = 0;
         $forumPost = M('ForumPost');
-        $totalCount = $forumPost->where($map)->count();
+        if(S('app_forum_forumfilter_post_total_count'.md5($map))){
+            $totalCount = S('app_forum_forumfilter_post_total_count'.md5($map));
+        } else {
+            $totalCount = $forumPost->where($map)->count();
+            S('app_forum_forumfilter_post_total_count'.md5($map), $totalCount, 600);
+        }
         $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
