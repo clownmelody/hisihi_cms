@@ -19,10 +19,13 @@ class HiworksController extends AppController
     {
 
     }
+
     /**
      * 分类信息
+     * @param int $cate
+     * @param float $version
      */
-    public function category($cate = 1)
+    public function category($cate = 1, $version=2.6)
     {
         /* 分类信息 */
         $category = $this->cate($cate);
@@ -66,6 +69,9 @@ class HiworksController extends AppController
                 $childcategory['download'] += array_sum(getSubByKey($subview,'view'));
             }
             /* -- */
+            if((float)$version>=2.7){
+                $childcategory['web_url'] = C('HOST_NAME_PREFIX') . 'api.php?s=/hiworks/hiwork_web/cate_id/'.$childcategory['id'];
+            }
             $categorylist[] = $childcategory;
         }
         $allCateTotalDownloadCount = 0;
@@ -74,6 +80,15 @@ class HiworksController extends AppController
             C('fake_all_category_hiworks_download', $allCateTotalDownloadCount);
         }
         $this->apiSuccess("获取云作业列表成功", null, array('category' => $categorylist));
+    }
+
+    /**
+     * 云作业分类web页面跳转
+     * @param int $cate_id
+     */
+    public function hiwork_web($cate_id=0){
+        $this->assign('cate_id', $cate_id);
+        $this->display('hiwork_web');
     }
 
 
@@ -183,19 +198,14 @@ class HiworksController extends AppController
 
     /**
      * 发送作业下载链接到用户邮箱
-     * @param int $uid
+     * @param null $email
      * @param int $hiwork_id
      */
-    public function sendDownLoadURLToEMail($uid=0, $hiwork_id=0){
-        if($uid==0){
-            $this->requireLogin();
-            $uid = $this->getUid();
+    public function sendDownLoadURLToEMail($email=null, $hiwork_id=0){
+        if($email==null||$hiwork_id==0){
+            $this->apiError(-1, '参数不能为空');
         }
-        $user = M('UcenterMember')->field('email')->where('id='.$uid)->find();
-        if($user==null||empty($user['email'])){
-            $this->apiError(-1, '用户不存在或未绑定邮箱');
-        }
-        $this->sendHiworkToEmail($hiwork_id, $user['email']);
+        $this->sendHiworkToEmail($hiwork_id, $email);
     }
 
     /**

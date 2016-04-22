@@ -273,8 +273,12 @@ class ForumController extends AdminController
         if ($forum_id) $map['forum_id'] = $forum_id;
         $model = M('ForumPost');
         $list = $model->where($map)->order('last_reply_time desc')->page($page, $r)->select();
-        $totalCount = $model->where($map)->count();
-
+        if(S('admin_forum_forum_post_total_count'.md5($map))){
+            $totalCount = S('admin_forum_forum_post_total_count'.md5($map));
+        } else {
+            $totalCount = $model->where($map)->count();
+            S('admin_forum_forum_post_total_count'.md5($map), $totalCount, 600);
+        }
         foreach ($list as &$v) {
             if ($v['is_top'] == 1) {
                 $v['top'] = '版内置顶';
