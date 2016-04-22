@@ -1046,7 +1046,6 @@ define(['fx','base'],function(fx,Base) {
     * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
     */
     window.loginSuccessCallback=function(){
-        alert('登录成功');
         var obj=window.topContentObj;
         obj.controlModelBox(0,1);
 
