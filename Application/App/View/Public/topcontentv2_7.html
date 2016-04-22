@@ -15,8 +15,7 @@
 	<link type="text/css" href="__CSS__/v2content/topcontentv2.7.css" rel="stylesheet"/>
 	<title>{:C('WEB_SITE_TITLE')}</title>
 </head>
-<body data-id="{$post.post_id}">
-
+<body data-id="{$articleId}" data-loaded="false">
 <div class="result-tips"><p></p></div>
 <div class="headlines-box">
 	<div class="headlines-body">
@@ -26,13 +25,13 @@
 		<div id="voteResult"></div>
 		<div class="vote-item leftItem">
 			<div class="icon-container">
-				<span class="icon-thumb_up icon-thumb"></span>
+				<span class="icon-thumb_up icon-thumb icon-font-a"></span>
 				<span class="num">123</span>
 			</div>
 		</div>
 		<div class="vote-item rightItem">
 			<div class="icon-container">
-				<span class="icon-thumb_down icon-thumb"></span>
+				<span class="icon-thumb_down icon-thumb icon-font-a"></span>
 				<span class="num">12313</span>
 			</div>
 		</div>
@@ -47,6 +46,13 @@
 			<span>)</span>
 		</div>
 		<ul class="list-main" id="comment-list-ul" data-index="1" data-page-count="0"></ul>
+		<div class="loading-more-tips">
+			<div class="loadingMoreResultTipsMain">
+				<i class="loading-img"></i>
+				<span>正在加载…</span>
+			</div>
+			<a class="loadError loadCommentAgain" href="javascript:void(0)">加载失败，点击重新加载</a>
+		</div>
 		<div class="no-comment-info">
 			评论信息暂无
 		</div>
@@ -71,6 +77,7 @@
 		</div>
 	</div>
 </div>
+
 <!--模态窗口-->
 <div class="model-box">
 	<div class="model-box-item comment-box">
@@ -99,6 +106,7 @@
 		</div>
 	</div>
 </div>
+
 </body>
 
 <script>
@@ -107,7 +115,7 @@
 		img_url:'__IMG__',
 		js: "__JS__"+'/topcontent',
 	};
-	window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+//	window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
 	window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
 	window.onload=function() {
 		document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件

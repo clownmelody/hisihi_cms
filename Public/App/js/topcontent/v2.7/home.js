@@ -21,16 +21,30 @@ define(['fx','base'],function(fx,Base) {
         }
         //加载投票信息
         this.getUserInfo(function(){
+            that.getFavoriteInfo();
             that.loadVoteInfo();
-            that.loadCommentInfo(0);
+            that.loadCommentInfo(1,this.commentListPageCount);
         });
 
 
         this.$wrapper.on(eventName, '.bottom-voteCon .leftItem', $.proxy(this, 'execVoteUp'));
         this.$wrapper.on(eventName, '.bottom-voteCon .rightItem', $.proxy(this, 'execVoteDown'));
+        this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
+
+        /*查看评论，收藏，分享*/
+        this.$wrapper.on(eventName, '.comment-bubble', $.proxy(this, 'scrollToComment'));
+        this.$wrapper.on(eventName, '.comment-collect', $.proxy(this, 'execFavorite'));
+        this.$wrapper.on(eventName, '.comment-share', $.proxy(this, 'execShare'));
+
+
 
         //控制输入框的状态，当有信息输入的时候才可用
         this.$wrapper.on('input', '#comment-area', $.proxy(this, 'controlCommitBtn'));
+
+
+        this.$wrapper.on(eventName,'.loadCommentAgain', $.proxy(this, 'loadCommentAgain'));
+
+
 
         /*显示评论框*/
         this.$wrapper.on(eventName, '#comment-input', function(){
@@ -47,9 +61,10 @@ define(['fx','base'],function(fx,Base) {
         this.$wrapper.on(eventName, '#cancle-login', $.proxy(this, 'closeLoginBox'));
         this.$wrapper.on(eventName, '#do-login', $.proxy(this, 'doLogin'));
 
-        /*收藏*/
-        this.$wrapper.on(eventName, '.comment-collect', $.proxy(this, 'doFavorite'));
-
+        /*滚动加载更多评论*/
+        $(document).on('touchend','body',function(e){
+            that.scrollContainer(e);
+        });
 
         $(document).on(eventName,'.btn',function(){});
 
@@ -105,21 +120,47 @@ define(['fx','base'],function(fx,Base) {
     };
 
     /*加载前10个评论信息*/
-    t.loadCommentInfo=function(index){
+    t.loadCommentInfo=function(index,pCount,callback){
         var that = this,
-            paraData={id: this.articleId,page:index,count:this.commentListPageCount};
+            paraData={id: this.articleId,page:index,count:pCount};
         if(this.userInfo.session_id!==''){
             paraData.session_id=this.userInfo.session_id;
         }
+
+        //显示加载效果
+        var $loadingMore=$('.loading-more-tips'),
+            $loadingMoreMain=$loadingMore.find('.loadingMoreResultTipsMain');
+        $loadingMoreMain.show();
+        $loadingMore.addClass('active').show();
+
         var para = {
             url: this.baseUrl + 'document/getTopContentComments',
             type: 'get',
             paraData: paraData,
             sCallback: function (data) {
                 that.fillInCommentInfo(data);
+
+                /*标记分页信息*/
+                var totalPage=Math.ceil(data.totalCount/that.commentListPageCount),
+                $ul=$('#comment-list-ul');
+                $ul.attr({'data-page-count':totalPage,'data-index':index})
+                $loadingMore.removeClass('active').hide();
+                callback && callback(data);
             },
             eCallback: function (data) {
-                that.showTips.call(that,data.txt);
+                var txt=data.txt;
+                if(data.code=404){
+                    txt='评论信息加载失败';
+                }
+                that.showTips.call(that,txt);
+                $('.no-comment-info').hide();
+
+                $loadingMore.removeClass('active');
+                var $loadingError=$loadingMore.find('.loadError');  //加载失败对象
+                $loadingMoreMain.hide();
+                $loadingError.show();
+
+                callback && callback();
             },
         };
         this.getDataAsync(para);
@@ -138,19 +179,29 @@ define(['fx','base'],function(fx,Base) {
      */
     t.fillInCommentInfo=function(result){
         var count=result.totalCount;
-        $('#comment-counts').text(count);
-
         if(result && count>0){
             var dataList=result.data,
                 len=dataList.length,
                 str='',
                 $ul=$('#comment-list-ul'),
-                index=Number($ul.attr('data-index'))+1,
-                item,
-                totalPage=Math.ceil(count/this.commentListPageCount);
+                item;
 
             for(var i=0;i<len;i++){
                 item=dataList[i];
+                var upNum= item.support_count | 0,
+                    nClass='num',
+                    uClass='icon-thumb_up icon-font-a';
+                if(upNum>0){
+                    if(upNum>9999){
+                        upNum='10k+';
+                    }
+                }else{
+                    upNum='';
+                }
+                if(item.isSupported){
+                    nClass+=' active';
+                    uClass +=' active';
+                }
                 str+='<li>'+
                         '<div class="list-main-left">'+
                             '<img src="'+item.user_info.avatar_url+'">'+
@@ -160,20 +211,52 @@ define(['fx','base'],function(fx,Base) {
                             '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
                             '<div>'+item.content +'</div>'+
                         '</div>'+
-                        '<div class="up-comment-box">'+
-                            '<span class="icon-thumb_up"></span>'+
-                            '<span></span>'+
+                        '<div class="up-comment-box" data-id="'+item.id+'">'+
+                            '<span class="'+uClass+'"></span>'+
+                            '<span class="'+nClass+'">'+upNum+'</span>'+
                         '</div>'+
                     '</li>';
             }
             $ul.next().hide();
-            $ul.attr({'data-page-count':totalPage,'data-index':index}).append(str);
-
+            $ul.append(str);
+            $('#comment-counts').text(count);
             if(count>9999){
                 count='10k+';
             }
             $('.comment-red-bubble').text(count).show();
+            $('.no-comment-info').hide();
         }
+        else{
+            $('.no-comment-info').show();
+        }
+
+        if($('body').attr('data-loaded')=='false'){
+            //$('body').attr('data-loaded','true');
+            //this.initIScroll();
+        }
+    };
+
+    /*是否收藏了该文章*/
+    t.getFavoriteInfo=function(){
+        var that = this,
+            paraData={id: this.articleId};
+        if(this.userInfo.session_id!==''){
+            paraData.session_id=this.userInfo.session_id;
+        }
+        var para = {
+            url: this.baseUrl + '/document/isFavorited',
+            type: 'get',
+            paraData: paraData,
+            sCallback: function (data) {
+                if(data.status==1 && data.success){
+                    $('.comment-collect').find('span').addClass('active');
+                }
+            },
+            eCallback: function (data) {
+                that.showTips.call(that,data.txt);
+            },
+        };
+        this.getDataAsync(para);
     };
 
     /*通过点赞和 踩的 人数*/
@@ -254,6 +337,7 @@ define(['fx','base'],function(fx,Base) {
         }
         //正在投票
         if (this.isVoting()) {
+            this.showTips('操作过于频繁');
             return;
         }
 
@@ -305,6 +389,7 @@ define(['fx','base'],function(fx,Base) {
         }
         //正在投票
         if (this.isVoting()) {
+            this.showTips('操作过于频繁');
             return;
         }
         $thumb.addClass('active animate');
@@ -337,11 +422,126 @@ define(['fx','base'],function(fx,Base) {
         this.getDataAsync(para);
     };
 
+    /*赞同评论*/
+    t.execVotUpForComment=function(e){
+        var $target = $(e.currentTarget),
+            $thumb=$target.find('.icon-thumb_up');
+        if($target.hasClass('voting')){
+            this.showTips('操作过于频繁');
+            return;
+        }
+        //没有登录
+        if (this.userInfo.session_id==='') {
+            //提示登录框跳转方法
+            this.controlModelBox(1,1);
+            return;
+        }
+        //不能取消点赞 和 重复点赞
+        if($thumb.hasClass('active')){
+            this.showTips('你已经点过赞了');
+            return;
+        }else{
+            $thumb.addClass('active')
+        }
+        $thumb.addClass('animate');
+        $target.addClass('voting');
+
+        var url = this.baseUrl + '/document/doTopContentCommentSupport',
+            that = this;
+        var para = {
+            url: url,
+            type: 'get',
+            paraData: {session_id: this.userInfo.session_id, id: $target.attr('data-id')},
+            sCallback: function (data) {
+                $target.removeClass('voting');
+                $thumb.removeClass('animate');
+                if(data.success){
+                    var $num=$target.find('.num'),
+                        num=$num.text() | 0;
+                    num++;
+                    $num.addClass('active').text(num);
+                }
+            },
+            eCallback: function (data) {
+                $target.removeClass('voting');
+                $thumb.removeClass('animate');
+                that.showTips.call(that,data.txt);
+            },
+        };
+        this.getDataAsync(para);
+    };
+
 
     /*正在投票*/
     t.isVoting=function(){
         return $('body .bottom-voteCon>div').hasClass('voting');
     };
+
+
+
+
+
+    /*收藏文章*/
+    t.execFavorite=function(e){
+        var $target = $(e.currentTarget),
+            $star=$target.find('.icon-star_border'),
+            url=this.baseUrl +'document/doFavorite';
+        if($target.hasClass('voting')){
+            this.showTips('操作过于频繁');
+            return;
+        }
+        //没有登录
+        if (this.userInfo.session_id==='') {
+            //提示登录框跳转方法
+            this.controlModelBox(1,1);
+            return;
+        }
+        if($star.hasClass('active')){
+            $star.removeClass('active');
+            url=this.baseUrl + 'document/deleteFavorite';
+        }else{
+            $star.addClass('active');
+        }
+        $star.addClass('animate');
+        $target.addClass('voting');
+        //alert($star.attr('class'));
+        var that = this,
+            para = {
+            url: url,
+            type: 'get',
+            paraData: {session_id: this.userInfo.session_id, id: this.articleId},
+            sCallback: function () {
+                $target.removeClass('voting');
+                $star.removeClass('animate');
+            },
+            eCallback: function (data) {
+                $target.removeClass('voting');
+                $star.removeClass('animate');
+                if(data.code==-102){
+                    data.txt='您还没有收藏过';
+                }
+                that.showTips.call(that,data.txt);
+            },
+        };
+        this.getDataAsync(para);
+    };
+
+    /*分享文章*/
+    t.execShare=function(){
+        if (this.deviceType.android) {
+            if (typeof AppFunction.share != "undefined") {
+                AppFunction.share();//调用app的方法，得到用户的基体信息
+            }
+
+        }
+        else if(this.deviceType.ios){
+            //如果方法存在
+            if (typeof beginShare != "undefined") {
+                beginShare();//调用app的方法，得到用户的基体信息
+            }
+        }
+    };
+
 
     /*
      *显示操作结果
@@ -349,6 +549,9 @@ define(['fx','base'],function(fx,Base) {
      *tip - {string} 内容结果
      */
     t.showTips=function(tip){
+        if(tip.length>8){
+            tip=tip.substr(0,7)+'…';
+        }
         var $tip=$('body').find('.result-tips'),
             $p=$tip.find('p').text(tip);
         $tip.show();
@@ -470,23 +673,6 @@ define(['fx','base'],function(fx,Base) {
        $('body').attr('data-oldinfo', JSON.stringify(oldData));
     };
 
-    /*调用app的登录方法*/
-    t.execLoginFromApp=function () {
-        if (this.isFromApp) {
-            if (this.deviceType.android) {
-                //如果方法存在
-                if (typeof AppFunction != "undefined") {
-                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
-                }
-            } else {
-                //如果方法存在
-                if (typeof showLoginView != "undefined") {
-                    showLoginView();//调用app的方法，得到用户的基体信息
-
-                }
-            }
-        }
-    };
 
     /*控制按钮的可用性*/
     t.controlCommitBtn=function(e){
@@ -500,6 +686,13 @@ define(['fx','base'],function(fx,Base) {
             $btn.removeClass(nc);
         }
     };
+
+    /*两次再次加载*/
+    t.loadCommentAgain=function(e){
+        $(e.currentTarget).hide();
+        var index=$('.list-main').attr('data-index') | 0;
+        this.loadCommentInfo(index,this.commentListPageCount);
+    },
 
     /*显示评论框*/
     t.showCommentBox=function(){
@@ -530,7 +723,7 @@ define(['fx','base'],function(fx,Base) {
             that=this;
         $target.animate(
             {opacity: opacity},
-            500, 'ease-out',
+            10, 'ease-out',
             function () {
                 if(opacity==0) {
                     $(this).hide();
@@ -597,27 +790,220 @@ define(['fx','base'],function(fx,Base) {
         this.controlModelBox(0,1);
     };
 
-    /*收藏头条*/
-    t.doFavorite=function(e){
-        var $target=$(e.currentTarget).find('.icon-star_border');
-        $target.addClass('active animate');
-        $target.addClass('voting');
-        var para={
-            id:this.articleId,
-            sCallback:function(data){
-
-            },
-            eCallback:function(data){
-
-            },
-        }
-        this.getDataAsync(para);
-    };
-
     /*调用app登录*/
     t.doLogin=function(){
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof showLoginView != "undefined") {
+                    showLoginView();//调用app的方法，得到用户的基体信息
+
+                }
+            }
+        }
+    };
+
+
+    /*滚动到评论列表*/
+    t.scrollToComment=function(){
+        var h=$('.headlines-body').height(),
+            top=$('body').scrollTop(),
+            viewH = $('html')[0].clientHeight+200;//可见高度
+        //if(top>h-viewH){
+            window.scrollTo(0, h);
+        window.loginSuccessCallback();
+        //}
+        //else{
+        //    this.showCommentListPanel();
+        //}
+    };
+
+    t.showCommentListPanel=function(){
+        $('.comment-list-panel').show();
+        //that.initIScroll();
+    };
+
+    /*注册上拉加载更多数据*/
+    t.initIScroll=function(){
+        this.$pullDown=$('#pullDown');
+        this.$pullUp=$('#pullUp');
+        this.$downIcon=this.$pullDown.find('.icon');
+        this.$upIcon=this.$pullUp.find('.icon');
+        this.pullDownEl=this.$pullDown[0];
+        this.pullDownOffset=this.pullDownEl.offsetHeight;
+        this.pullUpEl=this.$pullUp[0];
+        this.pullUpOffset=this.pullUpEl.offsetHeight;
+
+        var that=this;
+
+
+
+        this.myScroll=new IScroll('#wrapper',{probeType: 3, mouseWheel: true,vScrollbar:false});
+        this.myScroll.on("slideDown",function() {
+            if(this.y > 40){
+                if(!that.$downIcon.hasClass('loading')){
+                    that.$downIcon.addClass('loading');
+                    that.$pullDown.find('.pullDownLabel').text('加载中...');
+                    that.pullDownAction();
+                }
+            }
+        });
+
+        this.myScroll.on("slideUp",function(){
+            if(that.maxScrollY - this.y > 40){
+                if(!that.$upIcon.hasClass('loading')){
+                    that.$upIcon.addClass('loading');
+                    that.$pullUp.find('.pullUpLabel').text('加载中...');
+                    that.pullUpAction();
+                }
+            }
+        });
+
+        this.myScroll.on("scroll",function(){
+            var y = this.y,
+                maxY = this.maxScrollY - y,
+
+                downHasClass = that.$downIcon.hasClass("flip"),
+                upHasClass = that.$upIcon.hasClass("flip");
+            console.log(y);
+            if(y >= 40){
+                !downHasClass && that.$downIcon.addClass("flip");
+                that.$pullDown.find('.pullDownLabel').text('释放刷新');
+                return;
+            }else if(y < 40 && y > 0){
+                downHasClass && that.$downIcon.removeClass("flip");
+                that.$pullDown.find('.pullDownLabel').text('下拉刷新');
+                return "";
+            }
+
+            if(maxY >= 40){
+                !upHasClass && that.$upIcon.addClass("flip");
+                that.$pullUp.find('.pullUpLabel').text('释放刷新');
+                return;
+            }else if(maxY < 40 && maxY >=0){
+                upHasClass && that.$upIcon.removeClass("flip");
+                that.$pullUp.find('.pullUpLabel').text('上拉加载更多');
+                return;
+            }
+
+        });
 
     };
 
+    /*下拉关闭*/
+   t.pullDownAction=function(){
+       var that=this;
+        that.$downIcon.removeClass('loading');
+        that.$pullDown.find('.pullDownLabel').text('下拉刷新');
+       $('.comment-list-panel').hide();
+       //$('.comment-list-panel').css({'z-index':'-1','opacity':'0'});
+       //$('#wrapper').css('top','100%');
+    };
+
+    /*上拉刷新*/
+    t.pullUpAction=function (){
+        var that=this;
+        $.getJSON('test.json',function(data,state){
+            if(data && data.state==1 && state=='success'){
+                setTimeout(function(){
+                    $('#news-list').append(data.data);
+                    that.myScroll.refresh();
+                    that.$upIcon.removeClass('loading');
+                    that.$up.find('.pullUpLabel').text('上拉加载更多');
+                },600);
+            }
+        });
+    };
+
+    /*
+     *滚动加载更多的数据
+     * 通过滚动条是否在底部来确定
+     * 同时通过 loadingData 类 来防止连续快速滚动导致的重复加载
+     */
+    t.scrollContainer=function(e){
+        var $ul=$('#comment-list-ul');
+        var pageIndex=Number($ul.attr('data-index')),
+            page= $ul.attr('data-page-count');
+        if(pageIndex==page || page=='0'){
+            //this.showTips('没有更多评论了');
+            return;
+        }
+
+        var target= e.currentTarget,
+            viewH = $('html')[0].clientHeight,//可见高度
+            contentH=target.scrollHeight,//内容高度
+            scrollTop=$(target).scrollTop(),//滚动高度
+            diff=contentH - viewH - scrollTop;
+        if (diff<400 && !$(target).hasClass('loadingData')) {  //滚动到底部
+            $(target).addClass('loadingData');
+            pageIndex++;
+
+            this.loadCommentInfo(pageIndex,this.commentListPageCount,function(){
+                $(target).removeClass('loadingData');
+            });
+        }
+    };
+
+    //登录后更新评论的点赞信息
+    t.updateCommentInfo=function(data){
+
+    };
+   function goTop(h,acceleration, time) {
+        acceleration = acceleration || 0.1;
+        time = time || 16;
+        var x1 = 0;
+        var y1 = 0;
+        var x2 = 0;
+        var y2 = 0;
+        var x3 = 0;
+        var y3 = 0;
+        if (document.documentElement) {
+            x1 = document.documentElement.scrollLeft || 0;
+            y1 = document.documentElement.scrollTop || 0;
+        }
+        if (document.body) {
+            x2 = document.body.scrollLeft || 0;
+            y2 = document.body.scrollTop || 0;
+        }
+        var x3 = window.scrollX || 0;
+        var y3 = window.scrollY || 0;
+        // 滚动条到页面顶部的水平距离
+        var x = Math.max(x1, Math.max(x2, x3));
+        // 滚动条到页面顶部的垂直距离
+        var y = Math.max(y1, Math.max(y2, y3));
+        // 滚动距离 = 目前距离 / 速度, 因为距离原来越小, 速度是大于 1 的数, 所以滚动距离会越来越小
+        var speed = 1 + acceleration;
+        window.scrollTo(Math.floor(x / speed), h);
+        // 如果距离不为零, 继续调用迭代本函数
+        if (x > 0 || y > 0) {
+            var invokeFunction = "goTop(" + acceleration + ", " + time + ")";
+            window.setTimeout(invokeFunction, time);
+        }
+    }
+
+
+    /*
+    *登录功能的回调方法
+    *要做三件事：
+    * 1，更新点赞 和点踩的信息
+    * 2，收藏更新
+    * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
+    */
+    window.loginSuccessCallback=function(){
+        alert('登录成功');
+        window.topContentObj.loadVoteInfo(); //点赞信息
+        window.topContentObj.getFavoriteInfo(); //收藏信息
+        //var $li=$('#comment-list-ul li');
+        //window.topContentObj.loadCommentInfo(1,$li.length); //评论信息
+    };
+
+    window.getShareInfo=function(){
+        return {title:'123',url:'123123',thumb:'',description:''};
+    };
     return Topcontent;
 });
