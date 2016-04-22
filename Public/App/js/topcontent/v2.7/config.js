@@ -39,6 +39,6 @@ requirejs.config({
 
 require(['home','prefixfree'],function(topContent){
     var id=$('body').data('id');
-    id=1264;
-    new topContent(id,window.hisihiUrlObj.server_url);
+    //id=1264;
+    window.topContentObj = new topContent(id,window.hisihiUrlObj.server_url);
 });

@@ -23,7 +23,7 @@ define(['fx','base'],function(fx,Base) {
         this.getUserInfo(function(){
             that.getFavoriteInfo();
             that.loadVoteInfo();
-            that.loadCommentInfo(1);
+            that.loadCommentInfo(1,this.commentListPageCount);
         });
 
 
@@ -34,7 +34,7 @@ define(['fx','base'],function(fx,Base) {
         /*查看评论，收藏，分享*/
         this.$wrapper.on(eventName, '.comment-bubble', $.proxy(this, 'scrollToComment'));
         this.$wrapper.on(eventName, '.comment-collect', $.proxy(this, 'execFavorite'));
-        this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
+        this.$wrapper.on(eventName, '.comment-share', $.proxy(this, 'execShare'));
 
 
 
@@ -120,9 +120,9 @@ define(['fx','base'],function(fx,Base) {
     };
 
     /*加载前10个评论信息*/
-    t.loadCommentInfo=function(index,callback){
+    t.loadCommentInfo=function(index,pCount,callback){
         var that = this,
-            paraData={id: this.articleId,page:index,count:this.commentListPageCount};
+            paraData={id: this.articleId,page:index,count:pCount};
         if(this.userInfo.session_id!==''){
             paraData.session_id=this.userInfo.session_id;
         }
@@ -145,7 +145,7 @@ define(['fx','base'],function(fx,Base) {
                 $ul=$('#comment-list-ul');
                 $ul.attr({'data-page-count':totalPage,'data-index':index})
                 $loadingMore.removeClass('active').hide();
-                callback && callback();
+                callback && callback(data);
             },
             eCallback: function (data) {
                 var txt=data.txt;
@@ -526,6 +526,22 @@ define(['fx','base'],function(fx,Base) {
         this.getDataAsync(para);
     };
 
+    /*分享文章*/
+    t.execShare=function(){
+        if (this.deviceType.android) {
+            if (typeof AppFunction.share != "undefined") {
+                AppFunction.share();//调用app的方法，得到用户的基体信息
+            }
+
+        }
+        else if(this.deviceType.ios){
+            //如果方法存在
+            if (typeof beginShare != "undefined") {
+                beginShare();//调用app的方法，得到用户的基体信息
+            }
+        }
+    };
+
 
     /*
      *显示操作结果
@@ -657,23 +673,6 @@ define(['fx','base'],function(fx,Base) {
        $('body').attr('data-oldinfo', JSON.stringify(oldData));
     };
 
-    /*调用app的登录方法*/
-    t.execLoginFromApp=function () {
-        if (this.isFromApp) {
-            if (this.deviceType.android) {
-                //如果方法存在
-                if (typeof AppFunction != "undefined") {
-                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
-                }
-            } else {
-                //如果方法存在
-                if (typeof showLoginView != "undefined") {
-                    showLoginView();//调用app的方法，得到用户的基体信息
-
-                }
-            }
-        }
-    };
 
     /*控制按钮的可用性*/
     t.controlCommitBtn=function(e){
@@ -692,7 +691,7 @@ define(['fx','base'],function(fx,Base) {
     t.loadCommentAgain=function(e){
         $(e.currentTarget).hide();
         var index=$('.list-main').attr('data-index') | 0;
-        this.loadCommentInfo(index);
+        this.loadCommentInfo(index,this.commentListPageCount);
     },
 
     /*显示评论框*/
@@ -793,7 +792,20 @@ define(['fx','base'],function(fx,Base) {
 
     /*调用app登录*/
     t.doLogin=function(){
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof showLoginView != "undefined") {
+                    showLoginView();//调用app的方法，得到用户的基体信息
 
+                }
+            }
+        }
     };
 
 
@@ -804,6 +816,7 @@ define(['fx','base'],function(fx,Base) {
             viewH = $('html')[0].clientHeight+200;//可见高度
         //if(top>h-viewH){
             window.scrollTo(0, h);
+        window.loginSuccessCallback();
         //}
         //else{
         //    this.showCommentListPanel();
@@ -930,12 +943,16 @@ define(['fx','base'],function(fx,Base) {
             $(target).addClass('loadingData');
             pageIndex++;
 
-            this.loadCommentInfo(pageIndex,function(){
+            this.loadCommentInfo(pageIndex,this.commentListPageCount,function(){
                 $(target).removeClass('loadingData');
             });
         }
     };
 
+    //登录后更新评论的点赞信息
+    t.updateCommentInfo=function(data){
+
+    };
    function goTop(h,acceleration, time) {
         acceleration = acceleration || 0.1;
         time = time || 16;
@@ -969,5 +986,24 @@ define(['fx','base'],function(fx,Base) {
         }
     }
 
+
+    /*
+    *登录功能的回调方法
+    *要做三件事：
+    * 1，更新点赞 和点踩的信息
+    * 2，收藏更新
+    * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
+    */
+    window.loginSuccessCallback=function(){
+        alert('登录成功');
+        window.topContentObj.loadVoteInfo(); //点赞信息
+        window.topContentObj.getFavoriteInfo(); //收藏信息
+        //var $li=$('#comment-list-ul li');
+        //window.topContentObj.loadCommentInfo(1,$li.length); //评论信息
+    };
+
+    window.getShareInfo=function(){
+        return {title:'123',url:'123123',thumb:'',description:''};
+    };
     return Topcontent;
 });
