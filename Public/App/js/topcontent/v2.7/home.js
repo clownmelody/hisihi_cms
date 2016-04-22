@@ -821,10 +821,10 @@ define(['fx','base'],function(fx,Base) {
                 //如果方法存在
                 if (typeof showLoginView != "undefined") {
                     showLoginView();//调用app的方法，得到用户的基体信息
-
                 }
             }
         }
+        this.controlModelBox(0,1);
     };
 
 
@@ -835,7 +835,7 @@ define(['fx','base'],function(fx,Base) {
             viewH = $('html')[0].clientHeight+200;//可见高度
         //if(top>h-viewH){
             window.scrollTo(0, h);
-        window.loginSuccessCallback();
+        //window.loginSuccessCallback();
         //}
         //else{
         //    this.showCommentListPanel();
