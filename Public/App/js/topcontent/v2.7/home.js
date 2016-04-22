@@ -109,8 +109,8 @@ define(['fx','base'],function(fx,Base) {
                         callback && callback.call(that);
                     }
                 };
-                this.getDataAsync(para);
-                //callback && callback.call(that);
+                //this.getDataAsync(para);
+                callback && callback.call(that);
             }
         }
         else {
