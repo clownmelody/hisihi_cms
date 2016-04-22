@@ -2,6 +2,10 @@
   width: @width;
   height: @height;
 }
+.border-radius(@r:3px){
+  border-radius: @r;
+  background-clip: padding-box;
+}
 @activeColor:#ff5a00;
 
 body{
@@ -84,7 +88,8 @@ ul{
     .icon-container{
       background-color: #F2F2F2;
       border: 1px solid #E4E4E4;
-      border-radius: 30px;
+      //border-radius: 30px;
+      .border-radius(30px);
       .size(90%,100%);
       margin: 0 auto;
       text-align: center;
@@ -135,7 +140,8 @@ ul{
         padding: @pr @pr @pr @pl;
         img {
           .size(@w, @w);
-          border-radius: 28px;
+          //border-radius: 28px;
+          .border-radius(28px);
         }
       }
       .list-main-right {
@@ -241,7 +247,8 @@ ul{
       font-size: 14px;
       .size(85%,25px);
       margin: 8px auto 10px auto;
-      border-radius: 25px;
+      //border-radius: 25px;
+      .border-radius(25px);
       border:1px solid #ccc;
       display: block;
       background-color: white;
@@ -298,7 +305,8 @@ ul{
           top:7px;
           height: 14px;
           background-color: #EF3A2A;
-          border-radius: 10px;
+          //border-radius: 10px;
+          .border-radius(10px);
           font-size: 11px;
           padding: 0 5px;
           color: #FEF9F9;
@@ -320,7 +328,8 @@ ul{
   top: 50%;
   left: 50%;
   z-index: 555;
-  border-radius: 3px;
+  //border-radius: 3px;
+  .border-radius(3px);
   color: #fff;
   text-align: center;
   display: none;
@@ -350,7 +359,8 @@ ul{
       .size(88%, 100%);
       margin: 0 auto;
       background-color: white;
-      border-radius: 9px;
+      //border-radius: 9px;
+      .border-radius(9px);
       .write-header{
         @width:60px;
         height: 43px;
@@ -394,7 +404,8 @@ ul{
           margin: 12px auto;
           border: 1px solid #ccc;
           background-color:#F2F2F2;
-          border-radius: 3px;
+          //border-radius: 3px;
+          .border-radius(3px);
           outline: none;
           resize:none;
           padding: 10px;
@@ -414,7 +425,8 @@ ul{
     margin-left: -@w;
     .size(2*@w,2*@h);
     background-color: white;
-    border-radius: 9px;
+    //border-radius: 9px;
+    .border-radius(9px);
     *{
       font-size: 16px;
     }
