@@ -242,6 +242,12 @@ ul li {
 .bottom-comment .comment-right-box .comment-right-item .icon-font {
   color: #BDBDBD;
 }
+.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-chat-3 {
+  display: inline-block;
+  font-size: 23px;
+  line-height: 47px;
+  transform: rotateY(180deg);
+}
 .bottom-comment .comment-right-box .comment-right-item .icon-font.icon-star_border {
   font-size: 30px;
   line-height: 45px;
@@ -268,7 +274,7 @@ ul li {
 .bottom-comment .comment-right-box .comment-right-item.comment-bubble .comment-red-bubble {
   display: none;
   position: absolute;
-  left: 6px;
+  left: 13px;
   top: 7px;
   height: 14px;
   background-color: #EF3A2A;
@@ -277,6 +283,7 @@ ul li {
   padding: 0 5px;
   color: #FEF9F9;
   font-family: "Consolas";
+  z-index: 1;
 }
 .result-tips {
   position: fixed;
@@ -408,7 +415,7 @@ ul li {
 .model-box .login-tips-box .login-main > div:nth-child(1) {
   border-right: 1px solid #ccc;
 }
-.model-box .login-tips-box .login-main > div:nth-child(1) span {
+.model-box .login-tips-box .login-main > div:nth-child(1) div {
   display: block;
   width: 100%;
   height: 100%;
@@ -426,8 +433,8 @@ ul li {
 }
 @font-face {
   font-family: 'icomoon';
-  src: url('fonts/icomoon.eot?7c9vhn');
-  src: url('fonts/icomoon.eot?7c9vhn#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?7c9vhn') format('truetype'), url('fonts/icomoon.woff?7c9vhn') format('woff'), url('fonts/icomoon.svg?7c9vhn#icomoon') format('svg');
+  src: url('fonts/icomoon.eot?4e1015');
+  src: url('fonts/icomoon.eot?4e1015#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?4e1015') format('truetype'), url('fonts/icomoon.woff?4e1015') format('woff'), url('fonts/icomoon.svg?4e1015#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -445,6 +452,15 @@ ul li {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon-chat_bubble_outline:before {
+  content: "\e0cb";
+}
+.icon-insert_comment:before {
+  content: "\e24c";
+}
+.icon-mode_comment:before {
+  content: "\e253";
+}
 .icon-star_border:before {
   content: "\e83a";
 }
@@ -453,6 +469,9 @@ ul li {
 }
 .icon-thumb_up:before {
   content: "\e8dc";
+}
+.icon-chat-3:before {
+  content: "\e901";
 }
 .icon-open:before {
   content: "\e128";
