@@ -46,9 +46,11 @@ ul li {
 }
 .icon-font-a.animate {
   animation: do-thumb-animate 1s ease-out;
+  animation-fill-mode: forwards;
 }
 .icon-stars.animate {
   animation: do-thumb-animate 1s ease-out;
+  animation-fill-mode: forwards;
 }
 @keyframes do-thumb-animate {
   40% {
@@ -385,6 +387,9 @@ ul li {
   color: #000;
 }
 .model-box .comment-box .write-comment-box .write-main textarea {
+  -webkit-user-select: text;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: text;
   display: block;
   width: 92%;
   height: 123px;
@@ -401,7 +406,7 @@ ul li {
 }
 .model-box .login-tips-box {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   margin-top: -47px;
   margin-left: -140px;

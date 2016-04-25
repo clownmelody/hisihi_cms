@@ -53,11 +53,13 @@ ul{
 .icon-font-a{
   &.animate{
     animation: do-thumb-animate 1s ease-out;
+    animation-fill-mode:forwards;
   }
 }
 .icon-stars{
   &.animate{
     animation: do-thumb-animate 1s ease-out;
+    animation-fill-mode:forwards;
   }
 }
 
@@ -402,6 +404,8 @@ ul{
       }
       .write-main{
         textarea {
+          -webkit-user-select:text; /*禁用手机浏览器的用户选择功能 */
+          -moz-user-select: text;
           display: block;
           .size(92%, 123px);
           margin: 12px auto;
@@ -420,7 +424,7 @@ ul{
   }
   .login-tips-box{
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     @h:47px;
     @w:140px;

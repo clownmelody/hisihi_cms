@@ -495,7 +495,7 @@ define(['fx','base'],function(fx,Base) {
     /*收藏文章*/
     t.execFavorite=function(e){
         var $target = $(e.currentTarget),
-            $star=$target.find('.icon-star'),
+            $star=$target.find('.icon-stars'),
             url=this.baseUrl +'document/doFavorite';
         if($target.hasClass('voting')){
             this.showTips('操作过于频繁');
