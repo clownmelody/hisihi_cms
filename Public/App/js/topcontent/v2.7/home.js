@@ -794,12 +794,11 @@ define(['fx','base'],function(fx,Base) {
                     uid: that.userInfo.uid,
                     user_info: {
                         uid: that.userInfo.uid,
-                        avatar_url: that.userInfo.avatar_url,
+                        avatar_url: that.userInfo.pic,
                         username: that.userInfo.name
                     }
 
                 };
-                alert(info.user_info.avatar_url);
                 that.fillInCommentInfo({data:[info],totalCount:c});
 
             },
