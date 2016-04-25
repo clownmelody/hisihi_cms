@@ -529,7 +529,12 @@ define(['fx','base'],function(fx,Base) {
                 $target.removeClass('voting');
                 $star.removeClass('animate');
                 if(data.code==-102){
-                    data.txt='您还没有收藏过';
+                    data.txt='您还未收藏过';
+                    $star.removeClass('active').addClass('icon-star_border');
+                }
+                if(data.code==-100){
+                    data.txt='您已收藏';
+                    $star.removeClass('icon-star_border').addClass('active icon-star');
                 }
                 that.showTips.call(that,data.txt);
             },

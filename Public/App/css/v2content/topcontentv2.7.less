@@ -15,11 +15,14 @@ body{
   overflow-x: hidden;
 }
 *{
+  -webkit-user-select: none; /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
   font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
   -webkit-overflow-scrolling:touch;
 }
 a,a:hover,a:link,a:hover,a:active,a:visited{
   text-decoration: none;
+  word-break: break-all;
 }
 a:focus {
   outline:none;
@@ -238,7 +241,7 @@ ul{
   .size(100%,48px);
   background-color: #F2F2F2;
   border-top:1px solid #ccc;
-  @width:110px;
+  @width:120px;
   .comment-left-box{
     //background-color: red;
     margin-right: @width;
@@ -252,7 +255,7 @@ ul{
       border:1px solid #ccc;
       display: block;
       background-color: white;
-      text-indent: 5px;
+      text-indent: 16px;
       outline:none;
     }
   }
@@ -261,12 +264,11 @@ ul{
     right: 0px;
     margin: 0;
     top:0;
-
     .size(@width,100%);
     .comment-right-item{
-      .size(30px,100%);
+      .size(34px,100%);
       text-align: center;
-      margin-left: 5px;
+      margin:0 3px;
       float: left;
       .icon-font{
         color: #BDBDBD;
@@ -297,7 +299,6 @@ ul{
       }
       &.comment-bubble{
         position: relative;
-        margin-left:0;
         .comment-red-bubble{
           display: none;
           position: absolute;
@@ -313,6 +314,8 @@ ul{
           font-family: "Consolas";
           z-index: 1;
         }
+      }
+      &.comment-share{
       }
     }
   }
@@ -466,12 +469,13 @@ ul{
   .model-box {
     .comment-box{
       top: 50%;
-      .size(100%, 160px);
+      .size(100%, 145px);
       .write-comment-box {
         margin-top: 30px;
         .write-main {
           textarea {
-            .size(92%, 90px);
+            .size(95%, 90px);
+            margin: 5px auto;
           }
         }
       }
