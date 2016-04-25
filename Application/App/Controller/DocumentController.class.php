@@ -418,7 +418,7 @@ class DocumentController extends AppController {
         );
         $totalCount = M('LocalComment')->where($where_array)->count();
         $comment_list = M('LocalComment')->field('id, uid, content, create_time, support_count')
-            ->page($page, $count)->where($where_array)->select();
+            ->page($page, $count)->where($where_array)->order('create_time desc')->select();
         foreach($comment_list as &$comment){
             $comment['user_info'] = $this->getAuthorStructure((int)$comment['uid']);
             $data['appname'] = 'Document';
