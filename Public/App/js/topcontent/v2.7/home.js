@@ -11,12 +11,10 @@ define(['fx','base'],function(fx,Base) {
         this.articleId = id;
         this.userInfo = {session_id: ''};
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
-        if(!this.isFromApp){
-            $('.headlines-head').show();
-        }else{
+        if(this.isFromApp){
             $('.bottom-comment').show();
         }
-        this.commentListPageCount=10;  //每次加载20条评论
+        this.commentListPageCount=10;  //每次加载10条评论
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
@@ -40,15 +38,10 @@ define(['fx','base'],function(fx,Base) {
         this.$wrapper.on(eventName, '.comment-collect', $.proxy(this, 'execFavorite'));
         this.$wrapper.on(eventName, '.comment-share', $.proxy(this, 'execShare'));
 
-
-
         //控制输入框的状态，当有信息输入的时候才可用
         this.$wrapper.on('input', '#comment-area', $.proxy(this, 'controlCommitBtn'));
 
-
         this.$wrapper.on(eventName,'.loadCommentAgain', $.proxy(this, 'loadCommentAgain'));
-
-
 
         /*显示评论框*/
         this.$wrapper.on(eventName, '#comment-input', function(){
@@ -112,8 +105,8 @@ define(['fx','base'],function(fx,Base) {
                         callback && callback.call(that);
                     }
                 };
-                //this.getDataAsync(para);
-                callback && callback.call(that);
+                this.getDataAsync(para);
+                //callback && callback.call(that);
             }
         }
         else {
@@ -179,8 +172,10 @@ define(['fx','base'],function(fx,Base) {
      *       opposeCount: "0"
      *       supportCount: "0"
      *    }
+     *
+     * flag - {bool} 是列表添加（true）还是发表之后（false）添加
      */
-    t.fillInCommentInfo=function(result){
+    t.fillInCommentInfo=function(result,flag){
         var count=result.totalCount;
         if(result && count>0){
             var dataList=result.data,
@@ -221,7 +216,11 @@ define(['fx','base'],function(fx,Base) {
                     '</li>';
             }
             $ul.next().hide();
-            $ul.append(str);
+            if(flag) {
+                $ul.append(str);
+            }else{
+                $ul.prepend(str);
+            }
             $('#comment-counts').text(count);
             if(count>9999){
                 count='10k+';
@@ -252,7 +251,7 @@ define(['fx','base'],function(fx,Base) {
             paraData: paraData,
             sCallback: function (data) {
                 if(data.status==1 && data.success){
-                    $('.comment-collect').find('span').addClass('active');
+                    $('.comment-collect').find('span').removeClass('icon-star_border').addClass('icon-star active');
                 }
             },
             eCallback: function (data) {
@@ -496,7 +495,7 @@ define(['fx','base'],function(fx,Base) {
     /*收藏文章*/
     t.execFavorite=function(e){
         var $target = $(e.currentTarget),
-            $star=$target.find('.icon-star_border'),
+            $star=$target.find('.icon-star'),
             url=this.baseUrl +'document/doFavorite';
         if($target.hasClass('voting')){
             this.showTips('操作过于频繁');
@@ -509,10 +508,10 @@ define(['fx','base'],function(fx,Base) {
             return;
         }
         if($star.hasClass('active')){
-            $star.removeClass('active');
+            $star.removeClass('active').addClass('icon-star_border');
             url=this.baseUrl + 'document/deleteFavorite';
         }else{
-            $star.addClass('active');
+            $star.removeClass('icon-star_border').addClass('active icon-star');
         }
         $star.addClass('animate');
         $target.addClass('voting');
@@ -829,12 +828,17 @@ define(['fx','base'],function(fx,Base) {
 
 
     /*滚动到评论列表*/
-    t.scrollToComment=function(){
-        var h=$('.headlines-body').height(),
-            top=$('body').scrollTop(),
-            viewH = $('html')[0].clientHeight+200;//可见高度
-        //if(top>h-viewH){
-            window.scrollTo(0, h);
+    t.scrollToComment=function(e){
+        var $target=$(e.currentTarget),h=0;
+        if(!$target.hasClass('toComment')){
+            $target.addClass('toComment');
+            h=$('.headlines-body').height();
+            //var top=$('body').scrollTop(),
+            //viewH = $('html')[0].clientHeight+200;//可见高度
+        }else{
+            $target.removeClass('toComment');
+        }
+        window.scrollTo(0, h);
         //window.loginSuccessCallback();
         //}
         //else{

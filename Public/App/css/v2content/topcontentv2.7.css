@@ -2,6 +2,7 @@ body {
   margin: 0;
   background: #FFFFFF;
   max-width: 100%;
+  overflow-x: hidden;
 }
 * {
   font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
@@ -41,7 +42,7 @@ ul li {
 .icon-font-a.animate {
   animation: do-thumb-animate 1s ease-out;
 }
-.icon-star_border.animate {
+.icon-stars.animate {
   animation: do-thumb-animate 1s ease-out;
 }
 @keyframes do-thumb-animate {
@@ -60,7 +61,6 @@ ul li {
 }
 .headlines-box .headlines-head {
   margin: 0 10px;
-  display: none;
 }
 .bottom-voteCon {
   width: 90%;
@@ -78,6 +78,7 @@ ul li {
   background-color: #F2F2F2;
   border: 1px solid #E4E4E4;
   border-radius: 30px;
+  background-clip: padding-box;
   width: 90%;
   height: 100%;
   margin: 0 auto;
@@ -124,6 +125,7 @@ ul li {
   width: 56px;
   height: 56px;
   border-radius: 28px;
+  background-clip: padding-box;
 }
 .comment-list-box .list-main li .list-main-right {
   margin-left: 90px;
@@ -226,6 +228,7 @@ ul li {
   height: 25px;
   margin: 8px auto 10px auto;
   border-radius: 25px;
+  background-clip: padding-box;
   border: 1px solid #ccc;
   display: block;
   background-color: white;
@@ -256,12 +259,12 @@ ul li {
   line-height: 47px;
   transform: rotateY(180deg);
 }
-.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-star_border {
-  font-size: 30px;
+.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-stars {
+  font-size: 27px;
   line-height: 45px;
   display: inline-block;
 }
-.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-star_border.active {
+.bottom-comment .comment-right-box .comment-right-item .icon-font.icon-stars.active {
   color: #ff5a00;
 }
 .bottom-comment .comment-right-box .comment-right-item .icon-font.icon-open {
@@ -287,6 +290,7 @@ ul li {
   height: 14px;
   background-color: #EF3A2A;
   border-radius: 10px;
+  background-clip: padding-box;
   font-size: 11px;
   padding: 0 5px;
   color: #FEF9F9;
@@ -305,6 +309,7 @@ ul li {
   left: 50%;
   z-index: 555;
   border-radius: 3px;
+  background-clip: padding-box;
   color: #fff;
   text-align: center;
   display: none;
@@ -338,6 +343,7 @@ ul li {
   margin: 0 auto;
   background-color: white;
   border-radius: 9px;
+  background-clip: padding-box;
 }
 .model-box .comment-box .write-comment-box .write-header {
   height: 43px;
@@ -382,6 +388,7 @@ ul li {
   border: 1px solid #ccc;
   background-color: #F2F2F2;
   border-radius: 3px;
+  background-clip: padding-box;
   outline: none;
   resize: none;
   padding: 10px;
@@ -398,6 +405,7 @@ ul li {
   height: 94px;
   background-color: white;
   border-radius: 9px;
+  background-clip: padding-box;
 }
 .model-box .login-tips-box * {
   font-size: 16px;
@@ -441,8 +449,8 @@ ul li {
 }
 @font-face {
   font-family: 'icomoon';
-  src: url('fonts/icomoon.eot?4e1015');
-  src: url('fonts/icomoon.eot?4e1015#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?4e1015') format('truetype'), url('fonts/icomoon.woff?4e1015') format('woff'), url('fonts/icomoon.svg?4e1015#icomoon') format('svg');
+  src: url('fonts/icomoon.eot?iwxqpj');
+  src: url('fonts/icomoon.eot?iwxqpj#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?iwxqpj') format('truetype'), url('fonts/icomoon.woff?iwxqpj') format('woff'), url('fonts/icomoon.svg?iwxqpj#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -460,14 +468,8 @@ ul li {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.icon-chat_bubble_outline:before {
-  content: "\e0cb";
-}
-.icon-insert_comment:before {
-  content: "\e24c";
-}
-.icon-mode_comment:before {
-  content: "\e253";
+.icon-star:before {
+  content: "\e838";
 }
 .icon-star_border:before {
   content: "\e83a";
