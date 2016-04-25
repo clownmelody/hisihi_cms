@@ -797,6 +797,7 @@ define(['fx','base'],function(fx,Base) {
 
             },
             eCallback: function (data) {
+                $target.removeClass('disabled').addClass('abled');
                 that.showTips.call(that,data.txt);
             },
         };
