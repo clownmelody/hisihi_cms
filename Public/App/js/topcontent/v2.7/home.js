@@ -797,7 +797,9 @@ define(['fx','base'],function(fx,Base) {
                         avatar_url: that.userInfo.avatar_url,
                         username: that.userInfo.name
                     }
+
                 };
+                alert(info.user_info.avatar_url);
                 that.fillInCommentInfo({data:[info],totalCount:c});
 
             },
