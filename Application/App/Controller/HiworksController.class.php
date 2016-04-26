@@ -15,9 +15,8 @@ use Think\Hook;
 
 class HiworksController extends AppController
 {
-    public function _initialize()
-    {
-
+    public function _initialize(){
+        C('SHOW_PAGE_TRACE', false);
     }
 
     /**
