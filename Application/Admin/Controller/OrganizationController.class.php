@@ -3374,4 +3374,76 @@ class OrganizationController extends AdminController
         }
         return $str;
     }
+
+     /**
+     * 显示诚信机构列表
+     */
+    public function integrity_org(){
+        $model = M('Organization');
+        $count = $model->where('light_authentication=1 and status=1')->count();
+        $Page = new Page($count, 5);
+        $show = $Page->show();
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['name'] = array('like','%'.$name.'%');
+            $list = $model->where($map)->where("light_authentication=1 and status=1")->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where('light_authentication=1 and status=1')->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        foreach($list as &$org){
+            $has_admin = M('OrganizationAdmin')->where('status=1 and id='.$org['uid'])->count();
+            if($has_admin){
+                $org['has_admin'] = 1;
+            }else{
+                $org['has_admin'] = 0;
+            }
+            $org['type'] = M('OrganizationTag')->where('type=7 and id='.$org['type'])->getField('value');
+        }
+
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","机构列表");
+        $this->display();
+    }
+
+    /**
+     * 诚信机构设置为精选
+     */
+    public function set_well_chosen(){
+        $ids = I('post.id');
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        $model = M('Organization');
+        try {
+            foreach($ids as $rid){
+                $model->where('id='.$rid)->save(array('well_chosen'=>1));
+            }
+        } catch (Exception $e){
+            $this->error('添加失败，请检查后重试');
+        }
+        $this->success("设置成功", 'index.php?s=/admin/organization/integrity_org');
+    }
+
+    /**
+     *取消诚信机构为精选
+     */
+    public function undo_well_chosen(){
+        $ids = I('post.id');
+        if(empty($ids)){
+            $this->error('请选择要操作的数据');
+        }
+        $model = M('Organization');
+        try {
+            foreach($ids as $rid){
+                $model->where('id='.$rid)->save(array('well_chosen'=>0));
+            }
+        } catch (Exception $e){
+            $this->error('添加失败，请检查后重试');
+        }
+        $this->success("取消成功", 'index.php?s=/admin/organization/integrity_org');
+    }
+
 }
