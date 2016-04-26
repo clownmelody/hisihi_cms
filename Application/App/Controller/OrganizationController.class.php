@@ -3253,4 +3253,54 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构客服电话成功', null, $data);
     }
 
+    public function getIntegrityOrganization($well_chosen=false, $page=1, $count=10){
+        $uid = is_login();
+        $model = M('Organization');
+        if($well_chosen){
+            $select_where = "status=1 and application_status=2 and light_authentication=1 and well_chosen=1";
+        } else {
+            $select_where = "status=1 and application_status=2 and light_authentication=1";
+        }
+        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
+            ->where($select_where)->page($page, $count)->select();
+        $totalCount = $model->where($select_where)->count();
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            $org['type_tag'] = $this->getOrganizationType($org['type']);
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $org['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $org['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $org['relationship'] = 1;
+            } else {
+                $org['relationship'] = 0;
+            }
+        }
+        //机构列表按报名数排序
+        $sort = array(
+            'direction'=>'SORT_DESC',
+            'field'=>'enrollCount'
+        );
+        $org_list = $this->sort_list($sort, $org_list);
+
+        //机构列表按排序字段排序
+        $sort2 = array(
+            'direction'=>'SORT_ASC',
+            'field'=>'sort'
+        );
+        $org_list = $this->sort_list($sort2, $org_list);
+        //去掉sort字段
+        foreach($org_list as &$org){
+            unset($org['sort']);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('获取诚信机构列表成功', null, $data);
+    }
 }
