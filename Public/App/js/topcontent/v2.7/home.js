@@ -202,12 +202,14 @@ define(['fx','base'],function(fx,Base) {
                     nClass+=' active';
                     uClass +=' active';
                 }
+                var name=item.user_info.username;
+                name=this.substrLongStr(name,12);
                 str+='<li>'+
                         '<div class="list-main-left">'+
                             '<img src="'+item.user_info.avatar_url+'">'+
                             '</div>'+
                             '<div class="list-main-right">'+
-                            '<div>'+item.user_info.username+'</div>'+
+                            '<div>'+name+'</div>'+
                             '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
                             '<div>'+item.content +'</div>'+
                         '</div>'+
