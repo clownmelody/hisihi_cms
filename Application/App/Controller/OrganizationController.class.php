@@ -3253,7 +3253,6 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构客服电话成功', null, $data);
     }
 
-
     /**
      * 2.8机构列表软件热门视频
      * @param null $city
@@ -3288,6 +3287,68 @@ class OrganizationController extends AppController
         $list = M('OrganizationTeachingCourse')->field('id, course_name, cover_pic')
             ->where($where)->order('create_time desc')->page($page, $count)->select();
         $this->apiSuccess('获取热门视频列表成功', null, array('data'=>$list, 'totalCount'=>$totalCount));
+    }
+
+    /**
+     * 获取诚信机构列表
+     * @param bool|false $well_chosen
+     * @param string $type
+     * @param int $page
+     * @param int $count
+     */
+    public function getIntegrityOrganization($well_chosen=false, $type='软件', $page=1, $count=10){
+        $uid = is_login();
+        $model = M('Organization');
+        if($type != '软件' && $type != '留学' && $type != '手绘'){
+            $type = '软件';
+        }
+        $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+        if($well_chosen){
+            $select_where = "status=1 and application_status=2 and light_authentication=1 and well_chosen=1 and type=".$type_id;
+        } else {
+            $select_where = "status=1 and application_status=2 and light_authentication=1 and type=".$type_id;
+        }
+        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
+            ->where($select_where)->page($page, $count)->select();
+        $totalCount = $model->where($select_where)->count();
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            $org['type_tag'] = $this->getOrganizationType($org['type']);
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $org['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $org['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $org['relationship'] = 1;
+            } else {
+                $org['relationship'] = 0;
+            }
+        }
+        //机构列表按报名数排序
+        $sort = array(
+            'direction'=>'SORT_DESC',
+            'field'=>'enrollCount'
+        );
+        $org_list = $this->sort_list($sort, $org_list);
+
+        //机构列表按排序字段排序
+        $sort2 = array(
+            'direction'=>'SORT_ASC',
+            'field'=>'sort'
+        );
+        $org_list = $this->sort_list($sort2, $org_list);
+        //去掉sort字段
+        foreach($org_list as &$org){
+            unset($org['sort']);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('获取诚信机构列表成功', null, $data);
     }
 
 }
