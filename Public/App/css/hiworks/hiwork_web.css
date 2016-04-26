@@ -158,13 +158,15 @@ ul li {
   left: 50%;
   z-index: 555;
   text-align: center;
+  display: none;
 }
-#loading-data .font-icon {
-  color: #017AFF;
-  font-size: 40px;
+#loading-data .loding-img {
+  width: 40;
+  height: 40px;
+  display: inline-block;
 }
-#loading-data.acvie .font-icon {
-  animation: turning 5.3s linear infinite;
+#loading-data.active .loding-img {
+  animation: turning 1s linear infinite;
 }
 @keyframes turning {
   to {

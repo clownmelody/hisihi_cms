@@ -168,14 +168,14 @@ ul{
   left: 50%;
   z-index: 555;
   text-align: center;
-  //display: none;
-  .font-icon{
-    color:#017AFF;
-    font-size: 40px;
+  display: none;
+  .loding-img{
+    .size(40,40px);
+    display: inline-block;
   }
-  &.acvie{
-    .font-icon{
-      animation: turning 5.3s linear infinite;
+  &.active{
+    .loding-img{
+      animation: turning 1s linear infinite;
     }
   }
 }
