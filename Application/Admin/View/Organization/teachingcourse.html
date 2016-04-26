@@ -10,6 +10,10 @@
         <div class="fl">
             <div class="btn-group">
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/teachingcourse_delete',array('status'=>-1))}">删 除</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/teachingcourse_delete',array('status'=>1))}">恢 复</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/teachingcourse_sethot',array('is_hot'=>1))}">设为热门</button>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/teachingcourse_sethot',array('is_hot'=>-1))}">取消热门</button>
+                <a class="btn" href="{:U('Organization/teachingcourse',array('is_hot'=>1))}">显示热门课程</a>
             </div>
         </div>
     </div>
@@ -27,6 +31,7 @@
                 <th class="">班级人数</th>
                 <th class="">讲师</th>
                 <th class="">价格</th>
+                <th class="">是否热门</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -45,12 +50,17 @@
                         <td>{$vo.student_num}</td>
                         <td>{$vo.lecture_name}</td>
                         <td>{$vo.price}</td>
+                        <td><if condition="($vo.is_hot eq 1) "> 热门
+                            <else /> 正常
+                        </if>
+                        </td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                             </if>
                         </td>
                         <td>
+                            <a href="{:U('Organization/teachingcourse_sethot?id='.$vo['id'])}" class="ajax-get confirm">设为热门</a>
                             <a href="{:U('Organization/teachingcourse_delete?id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>

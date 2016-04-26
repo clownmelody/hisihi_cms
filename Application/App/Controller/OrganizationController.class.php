@@ -3253,4 +3253,41 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构客服电话成功', null, $data);
     }
 
+
+    /**
+     * 2.8机构列表软件热门视频
+     * @param null $city
+     * @param null $type
+     * @param int $page
+     * @param int $count
+     */
+    public function getLocationSoftwareHotTeachingCourse($city=null, $type=null, $page=1, $count=2){
+        $model = M('Organization');
+        $select_where = "application_status=2 and status=1";
+        if(!empty($city)){
+            if($city == '吉林'){//区分吉林省和吉林市
+                $select_where = $select_where . " and city like '% " .$city . "%'";
+            }else{
+                $select_where = $select_where . " and city like '%" .$city . "%'";
+            }
+        }
+        if(!empty($type)){
+            $select_where = $select_where . " and type=".$type;
+        }
+        if(!empty($name)){
+            $select_where = $select_where . " and name like '%".$name."%'";
+        }
+        $org_list = $model->field('id')->where($select_where)->select();
+        $org_id_list = array();
+        foreach($org_list as $org){
+            $org_id_list[] = $org['id'];
+        }
+        $where['organization_id'] = array('in', $org_id_list);
+        $where['is_hot'] = 1;
+        $totalCount = M('OrganizationTeachingCourse')->where($where)->count();
+        $list = M('OrganizationTeachingCourse')->field('id, course_name, cover_pic')
+            ->where($where)->order('create_time desc')->page($page, $count)->select();
+        $this->apiSuccess('获取热门视频列表成功', null, array('data'=>$list, 'totalCount'=>$totalCount));
+    }
+
 }

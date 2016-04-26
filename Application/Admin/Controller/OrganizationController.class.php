@@ -3307,10 +3307,14 @@ class OrganizationController extends AdminController
     /**
      * 机构培训课程列表
      * @param int $organization_id
+     * @param int $is_hot
      */
-    public function teachingcourse($organization_id=0){
+    public function teachingcourse($organization_id=0, $is_hot=0){
         $model = M('OrganizationTeachingCourse');
-        $map['status']=array('egt',0);
+        //$map['status']=array('egt',0);
+        if($is_hot==1){
+            $map['is_hot'] = $is_hot;
+        }
         if($organization_id){
             $map['organization_id'] = $organization_id;
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
@@ -3341,11 +3345,12 @@ class OrganizationController extends AdminController
     /**
      * 删除机构培训课程
      * @param $id
+     * @param int $status
      */
-    public function teachingcourse_delete($id){
+    public function teachingcourse_delete($id, $status=-1){
         if(!empty($id)){
             $model = M('OrganizationTeachingCourse');
-            $data['status'] = -1;
+            $data['status'] = $status;
             if(is_array($id)){
                 foreach ($id as $i) {
                     $model->where('id='.$i)->save($data);
@@ -3354,7 +3359,34 @@ class OrganizationController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('删除成功','index.php?s=/admin/organization/teachingcourse');
+            if($status!=1){
+                $this->success('删除成功','index.php?s=/admin/organization/teachingcourse');
+            } else {
+                $this->success('恢复成功','index.php?s=/admin/organization/teachingcourse');
+            }
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
+     * 设置培训课程为热门
+     * @param $id
+     * @param int $is_hot
+     */
+    public function teachingcourse_sethot($id, $is_hot=1){
+        if(!empty($id)){
+            $model = M('OrganizationTeachingCourse');
+            $data['is_hot'] = $is_hot;
+            if(is_array($id)){
+                foreach ($id as $i) {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('设置成功','index.php?s=/admin/organization/teachingcourse');
         } else {
             $this->error('未选择要删除的数据');
         }
