@@ -3253,13 +3253,23 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构客服电话成功', null, $data);
     }
 
-    public function getIntegrityOrganization($well_chosen=false, $page=1, $count=10){
+    /**获取诚信机构列表
+     * @param bool|false $well_chosen
+     * @param string $type
+     * @param int $page
+     * @param int $count
+     */
+    public function getIntegrityOrganization($well_chosen=false, $type='软件', $page=1, $count=10){
         $uid = is_login();
         $model = M('Organization');
+        if($type != '软件' && $type != '留学' && $type != '手绘'){
+            $type = '软件';
+        }
+        $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
         if($well_chosen){
-            $select_where = "status=1 and application_status=2 and light_authentication=1 and well_chosen=1";
+            $select_where = "status=1 and application_status=2 and light_authentication=1 and well_chosen=1 and type=".$type_id;
         } else {
-            $select_where = "status=1 and application_status=2 and light_authentication=1";
+            $select_where = "status=1 and application_status=2 and light_authentication=1 and type=".$type_id;
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
