@@ -253,7 +253,11 @@ class PublicController extends AppController {
                     $topic['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$topic['id'];
                 }
                 if((float)$version>=2.4){
-                    $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$topic['id'].'/version/'.$version;
+                    if((float)$version>=2.7){
+                        $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$topic['id'];
+                    } else {
+                        $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$topic['id'].'/version/'.$version;
+                    }
                 } else {
                     $topic['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$topic['id'];
                 }
@@ -331,7 +335,11 @@ class PublicController extends AppController {
                     $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$id;
                 }
                 if((float)$version>=2.4){
-                    $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$id;
+                    if((float)$version>=2.7){
+                        $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$id;
+                    } else {
+                        $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$id;
+                    }
                 } else {
                     $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$id;
                 }
@@ -481,7 +489,11 @@ class PublicController extends AppController {
                     $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
                 }
                 if((float)$version>=2.4){
-                    $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$info['id'].'/version/'.$version;
+                    if((float)$version>=2.7){
+                        $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$id;
+                    } else {
+                        $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$info['id'].'/version/'.$version;
+                    }
                 } else {
                     $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/type/view/id/'.$info['id'];
                 }
