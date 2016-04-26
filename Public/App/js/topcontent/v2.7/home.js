@@ -63,7 +63,9 @@ define(['fx','base'],function(fx,Base) {
             that.scrollContainer(e);
         });
 
-        $(document).on(eventName,'.btn',function(){});
+        $(document).on(eventName,'.btn',function(){
+            event.stopPropagation();
+        });
 
 
     };
@@ -781,6 +783,7 @@ define(['fx','base'],function(fx,Base) {
             type: 'get',
             paraData: {"id": this.articleId,"content":str,"session_id": this.userInfo.session_id},
             sCallback: function (data) {
+                that.closeCommentBox();
                 that.showTips.call(that,'评论成功');
                 $textarea.val('');
                 var c= Number($('#comment-counts').text());
