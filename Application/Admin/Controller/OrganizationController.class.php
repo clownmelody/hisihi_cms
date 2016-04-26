@@ -3305,6 +3305,62 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 机构培训课程列表
+     * @param int $organization_id
+     */
+    public function teachingcourse($organization_id=0){
+        $model = M('OrganizationTeachingCourse');
+        $map['status']=array('egt',0);
+        if($organization_id){
+            $map['organization_id'] = $organization_id;
+            $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
+        }
+        $count = $model->where($map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$course){
+            if($organization_id){
+                $course['organization_name'] = $organization_name;
+            }else{
+                $course['organization_name'] = M('Organization')->where('status=1 and id='.$course['organization_id'])->getField("name");
+            }
+        }
+
+        if($organization_id){
+            $this->assign('organization_id', $organization_id);
+            $this->assign('organization_name', $organization_name);
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","机构培训视频课程");
+        $this->display();
+    }
+
+    /**
+     * 删除机构培训课程
+     * @param $id
+     */
+    public function teachingcourse_delete($id){
+        if(!empty($id)){
+            $model = M('OrganizationTeachingCourse');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i) {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/teachingcourse');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
+    /**
      * 获取随机字符串
      * @param $length
      * @return null|string
