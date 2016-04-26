@@ -1,0 +1,74 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <!-- 标题栏 -->
+    <div class="main-title">
+        <h2>{$organization_name|default='机构'}-视频培训课程列表(共：{$total|default=0} 个)</h2>
+        <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id | default=0}"/>
+    </div>
+    <div class="cf">
+        <div class="fl">
+            <div class="btn-group">
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/teachingcourse_delete',array('status'=>-1))}">删 除</button>
+            </div>
+        </div>
+    </div>
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+        <table class="">
+            <thead>
+            <tr>
+                <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                <th class="">ID</th>
+                <th class="">机构名称</th>
+                <th class="">课程名称</th>
+                <th class="">开课时间</th>
+                <th class="">课时</th>
+                <th class="">班级人数</th>
+                <th class="">讲师</th>
+                <th class="">价格</th>
+                <th class="">创建时间</th>
+                <th class="">状态</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="_list">
+                <volist name="_list" id="vo">
+                    <tr>
+                        <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.course_name}</td>
+                        <td>{$vo.start_course_time}</td>
+                        <td>{$vo.lesson_period}</td>
+                        <td>{$vo.student_num}</td>
+                        <td>{$vo.lecture_name}</td>
+                        <td>{$vo.price}</td>
+                        <td><span>{$vo.create_time|time_format}</span></td>
+                        <td><if condition="($vo.status eq 1) "> 正常
+                            <else /> 已删除
+                            </if>
+                        </td>
+                        <td>
+                            <a href="{:U('Organization/teachingcourse_delete?id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <div class="page">
+        {$_page}
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        //导航高亮
+        highlight_subnav("{:U('Organization/teachingcourse')}");
+    </script>
+</block>
