@@ -16,8 +16,72 @@
     <title>嘿云作业</title>
 </head>
 <body>
-    <div id="nav-bar"></div>
-    <div id="tabs-bar"></div>
-    <div id="main-content"></div>
+    <div id="loading-data" class="acvie">
+        <span class="icon-spinner8 font-icon"></span>
+    </div>
+    <div class="header">
+        <div id="nav-bar"></div>
+        <div id="tabs-bar"></div>
+    </div>
+    <div id="wrapper">
+        <div id="scroller">
+            <div id="pullDown">
+                <span class="pullDownIcon icon normal"></span>
+                <span class="pullDownLabel">下拉刷新</span>
+            </div>
+            <div class="news-lists" id="news-list">
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+                <div class="item">根据市场奖惩制度，结合市场各部门提供的数据</div>
+            </div>
+            <div id="pullUp">
+                <span class="pullUpIcon icon normal"></span>
+                <span class="pullUpLabel">上拉加载更多</span>
+            </div>
+        </div>
+    </div>
 </body>
+<script>
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/',
+        img_url:'__IMG__',
+        js: "__JS__",
+    };
+    	window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+    window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+    var aLink=document.getElementsByTagName("a");
+    for(var i=0; i<aLink.length; i++){
+        aLink[i].href = "javascript:void(0);";
+        aLink[i].setAttribute("disabled", "disabled");
+    }
+</script>
+<script type="text/javascript" data-main="__JS__/hiworks/config"  src="__JS__/sharecommon/require.js" ></script>
 </html>

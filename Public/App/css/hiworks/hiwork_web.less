@@ -20,9 +20,9 @@ body{
   bottom: 0;
 }
 *{
-  -webkit-user-select: none; /*禁用手机浏览器的用户选择功能 */
+  -webkit-user-select: none; /*绂佺敤鎵嬫満娴忚鍣ㄧ殑鐢ㄦ埛閫夋嫨鍔熻兘 */
   -moz-user-select: none;
-  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "榛戜綋", "瀹嬩綋", sans-serif;
   -webkit-overflow-scrolling:touch;
 }
 a,a:hover,a:link,a:hover,a:active,a:visited{
@@ -44,6 +44,9 @@ img{
     transform: scale(.8);
   }
 }
+.font-icon{
+  display: inline-block;
+}
 ul{
   margin: 0;
   padding: 0;
@@ -53,20 +56,133 @@ ul{
 }
 
 @main-w:90%;
-#nav-bar{
-  .size(100%,30px);
-  background-color: #000;
-  color: white;
+.header {
+  position: absolute;
+  z-index: 100;
+  .size(100%, 61px);
+  #nav-bar {
+    .size(100%, 30px);
+    background-color: #000;
+    color: white;
+  }
+  #tabs-bar {
+    .size(100%, 30px);
+    background-color: #fff;
+    color: white;
+    border-bottom: 1px solid #ccc;
+  }
+}
+#wrapper{
+  position: absolute;
+  left: 0;
+  top: 50px;
+  bottom: 50px;
+  width: 100%;
+  background-color: #fafafa;
+  z-index: 10;
+  -webkit-transform:translate3d(0,0,0);
+  .news-lists{
+    .item{
+      height: 40px;
+      line-height: 40px;
+      border-bottom: 1px solid #cfcfcf;
+    }
+  }
+
+  #pullDown, #pullUp{
+    background-color: #fff;
+    height: 40px;
+    line-height: 40px;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+    font-size: 14px;
+    color: #888;
+    text-aling:center;
+    position: absolute;
+    width: 100%;
+    .loading {
+      background-position: 0 100%;
+      -webkit-transform: rotate(0deg) translateZ(0);
+      -webkit-transition-duration: 0ms;
+
+      -webkit-animation-name: loading;
+      -webkit-animation-duration: 2s;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+    }
+  }
+  #pullDown{
+    top: -40px;
+  }
+  #pullUp{
+    bottom: -40px;
+  }
+  .icon{
+    display:block; float:left;
+    width:40px;
+    height:40px;
+    background: url('pull-icon@2x.png') 0 0 no-repeat;
+    background-size:40px 80px;
+    &.pullDownIcon {
+      &.normal{
+        -webkit-transform:rotate(0deg) translateZ(0);
+      }
+
+      &.flip {
+        -webkit-transform:rotate(-180deg) translateZ(0);
+      }
+      &.loading{
+        background-position:0 100%;
+      }
+    }
+    &.pullUpIcon  {
+      &.normal{
+        -webkit-transform:rotate(-180deg) translateZ(0);
+      }
+      &.flip {
+        -webkit-transform: rotate(0deg) translateZ(0);
+      }
+      &.loading{
+        background-position:0 100%;
+        -webkit-animation:loading 5s inifition linear;
+      }
+    }
+  }
+
+  @-webkit-keyframes loading {
+    from { -webkit-transform:rotate(0deg) translateZ(0); }
+    to { -webkit-transform:rotate(360deg) translateZ(0); }
+  }
+
+
 }
 
-#tabs-bar{
-  .size(100%,30px);
-  background-color: #fff;
-  color: white;
-  border-bottom: 1px solid #ccc;
+#loading-data{
+  position: fixed;
+  @wh:50px;
+  .size(@wh*2,@wh*2);
+  margin-left: -@wh;
+  margin-top: -@wh;
+  top: 50%;
+  left: 50%;
+  z-index: 555;
+  text-align: center;
+  //display: none;
+  .font-icon{
+    color:#017AFF;
+    font-size: 40px;
+  }
+  &.acvie{
+    .font-icon{
+      animation: turning 5.3s linear infinite;
+    }
+  }
 }
-#main-content{
-  position: absolute;
+@keyframes turning {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 
