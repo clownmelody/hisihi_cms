@@ -3269,6 +3269,42 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 展示用户询问课程低价
+     */
+    public function courselowprice(){
+        $model = M('UserFindLowPrice');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where('status=1')->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "用户询低价");
+        $this->display('courselowprice');
+    }
+
+    public function courselowprice_delete($id=0){
+        if(!empty($id)){
+            $model = M('UserFindLowPrice');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/organization/courselowprice');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    /**
      * 获取随机字符串
      * @param $length
      * @return null|string
