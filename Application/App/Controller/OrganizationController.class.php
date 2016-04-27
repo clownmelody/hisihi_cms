@@ -1714,7 +1714,11 @@ class OrganizationController extends AppController
             }
         }
         if(!empty($type)){
-            $select_where = $select_where . " and type=".$type;
+            if($type != '软件' && $type != '留学' && $type != '手绘'){
+                $type = '软件';
+            }
+            $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+            $select_where = $select_where . " and type=".$type_id;
         }
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
