@@ -2411,7 +2411,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function appGetStudentWorks($organization_id=null,$page=1,$count=3,$type=null){
+    public function appGetStudentWorks($organization_id=null,$page=1,$count=3,$type=null, $version=0){
         if(!$organization_id){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -2420,7 +2420,11 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, url, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $field = 'id, url, description, create_time';
+        if(floatval($version) > 2.7){
+            $field = $field.', author_avatar, author_name, author_company';
+        }
+        $list = $model->field($field)->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_url = $work['url'];
             $origin_img_info = getimagesize($pic_url);
