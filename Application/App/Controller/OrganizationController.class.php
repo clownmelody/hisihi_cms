@@ -16,7 +16,6 @@ use Think\Model;
 
 require_once(APP_PATH . 'User/Conf/config.php');
 require_once(APP_PATH . 'User/Common/common.php');
-require_once(APP_PATH . 'App/Common/Mobile_Detect.php');
 
 class OrganizationController extends AppController
 {
