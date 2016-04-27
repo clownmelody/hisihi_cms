@@ -86,7 +86,30 @@
                             }
                         </script>
                     </div>
+                    <div class="form-item cf">
+                        <label class="item-label">展示位置</label>
+                        <input type="radio" value="1" name="show_pos" checked/>资讯流 &nbsp;&nbsp;
+                        <input type="radio" value="0" name="show_pos" />机构列表 &nbsp;&nbsp;
+                        <input type="radio" value="2" name="show_pos" />社区
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">选择跳转类型</label>
+                        <div class="controls">
+                            <select name="jump_type" id="jump_type">
+                                <option value="1" selected>网址</option>
+                                <option value="2" selected>帖子</option>
+                                <option value="3" selected>视频</option>
+                                <option value="4" selected>机构主页</option>
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="form-item cf">
+                        <label class="item-label">跳转目标<span class="check-tips">（网址类型填写完整url，其他类型填写目标ID）</span></label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="url" value="">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 按钮 -->

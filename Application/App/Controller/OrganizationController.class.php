@@ -17,7 +17,6 @@ use Think\Model;
 require_once(APP_PATH . 'User/Conf/config.php');
 require_once(APP_PATH . 'User/Common/common.php');
 
-
 class OrganizationController extends AppController
 {
     public function _initialize(){
@@ -3132,6 +3131,13 @@ class OrganizationController extends AppController
      * @param int $count
      */
     public function filterOrgByProvinceAndType($uid=0, $province=null, $type=0, $page=1, $count=10){
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $tmparray = explode('com.xuniu.hisihi/16041801', $user_agent);
+        if(count($tmparray)>1){
+            $page += 1;
+
+        }
+
         if($uid==0){
             $uid = is_login();
         }
@@ -3192,6 +3198,12 @@ class OrganizationController extends AppController
      * @param int $count
      */
     public function getRecommendOrganization($uid=0, $type=0, $page=1, $count=10){
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $tmparray = explode('com.xuniu.hisihi/16041801', $user_agent);
+        if(count($tmparray)>1){
+            $page += 1;
+
+        }
         if($uid==0){
             $uid = is_login();
         }

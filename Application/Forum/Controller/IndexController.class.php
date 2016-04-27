@@ -66,7 +66,7 @@ class IndexController extends Controller
             $count['forum'] = D('Forum')->where($map)->count();
             $count['post'] = D('ForumPost')->where($map)->count();
             $count['all'] = $count['post'] + D('ForumPostReply')->where($map)->count() + D('ForumLzlReply')->where($map)->count();
-            S('forum_count', $count, 60);
+            S('forum_count' . $id, $count, 120);
         }
         $this->assign('count', $count);
         $id = intval($id);
