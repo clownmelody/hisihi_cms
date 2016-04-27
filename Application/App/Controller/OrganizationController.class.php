@@ -3312,7 +3312,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function getIntegrityOrganization($well_chosen=false, $type='软件', $city='北京', $page=1, $count=10){
+    public function getIntegrityOrganization($well_chosen=false, $type='软件', $city=null, $page=1, $count=10){
         $uid = is_login();
         $model = M('Organization');
         if($type != '软件' && $type != '留学' && $type != '手绘'){
@@ -3323,7 +3323,9 @@ class OrganizationController extends AppController
         $select_where['application_status'] = 2;
         $select_where['light_authentication'] = 1;
         $select_where['type'] = $type_id;
-        $select_where['city'] = array('like','%'.$city.'%');
+        if(!empty($city)){
+            $select_where['city'] = array('like','%'.$city.'%');
+        }
         if($well_chosen){
             $select_where['well_chosen'] = 1;
         }
