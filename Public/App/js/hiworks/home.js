@@ -2,33 +2,37 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','iscroll'],function(fx,Base) {
-    var HiWorks = function (url) {
+define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
+    var HiWorks = function (url,baseId) {
         this.baseUrl = url;
         this.$wrapper = $('body');
         //访问来源
         var userAgent = window.location.href;
+        this.baseId=baseId;
         this.userInfo = {session_id: ''};
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         if(this.isFromApp){
             $('.bottom-comment').show();
         }
-        this.commentListPageCount=10;  //每次加载10条评论
+        this.perPageCount=16;  //每次加载10条评论
+        this.scrollObjArr=[];
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
         if(this.deviceType.mobile){
             eventName='touchend';
         }
-        this.initIScroll();
-
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
         });
 
+        $(document).on(eventName,'#tabs-bar ul li', $.proxy(this,'switchTabs'));
+
+        this.loadClassInfo();
+
 
     };
-    HiWorks.prototype =new Base();
+    HiWorks.prototype =new Base(true);
     HiWorks.constructor=HiWorks;
 
     var t=HiWorks.prototype;
@@ -76,38 +80,28 @@ define(['fx','base','iscroll'],function(fx,Base) {
 
     };
 
-    /*加载前10个评论信息*/
-    t.loadCommentInfo=function(index,pCount,callback){
+    /*加载二级分类*/
+    t.loadClassInfo=function(index,pCount,callback){
         var that = this,
-            paraData={id: this.articleId,page:index,count:pCount};
+            paraData={cate: this.baseId};
         if(this.userInfo.session_id!==''){
             paraData.session_id=this.userInfo.session_id;
         }
 
-        //显示加载效果
-        var $loadingMore=$('.loading-more-tips'),
-            $loadingMoreMain=$loadingMore.find('.loadingMoreResultTipsMain');
-        $loadingMoreMain.show();
-        $loadingMore.addClass('active').show();
-
         var para = {
-            url: this.baseUrl + 'document/getTopContentComments',
+            url: this.baseUrl + 'hiworks/category',
             type: 'get',
             paraData: paraData,
-            sCallback: function (data) {
-                that.fillInCommentInfo(data);
-
-                /*标记分页信息*/
-                var totalPage=Math.ceil(data.totalCount/that.commentListPageCount),
-                $ul=$('#comment-list-ul');
-                $ul.attr({'data-page-count':totalPage,'data-index':index})
-                $loadingMore.removeClass('active').hide();
+            sCallback: function (resutl) {
+                that.fillInClassInfo(resutl);
+                that.initMyScroll();
+                $('#main-content').css('opacity','1');
                 callback && callback(data);
             },
             eCallback: function (data) {
                 var txt=data.txt;
                 if(data.code=404){
-                    txt='评论信息加载失败';
+                    txt='分类信息加载失败';
                 }
                 that.showTips.call(that,txt);
                 $('.no-comment-info').hide();
@@ -121,177 +115,165 @@ define(['fx','base','iscroll'],function(fx,Base) {
             },
         };
         this.getDataAsync(para);
-    },
+    };
+
+    /*填入分类信息*/
+    t.fillInClassInfo=function(result){
+        var str='';
+        if(result && result.category.length>0){
+            var category=result.category,
+                len=category.length,
+                item;
+            for(var i=0;i<len;i++){
+                item=category[i];
+                var className='';
+                if(i==0){
+                    className='active';
+                }
+                str+='<li data-loaded="false" data-init="false" class="'+className+'" data-id="'+item.id+'">'+item.title+'</li>';
+            }
+            $('#tabs-bar ul').append(str);
+
+        }
+    };
+
+    /*填入所有的容器，但只实例化第一个*/
+    t.initMyScroll=function(){
+        var $li= $('#tabs-bar ul li'),str='';
+        for(var i=0;i<$li.length;i++){
+            str+=this.getScrollContent(i);
+        }
+        $('#all-scroll-wrapper').append(str);
+        var $wrappers=$('#all-scroll-wrapper .wrapper');
+        this.initScrollLogical($wrappers.eq(0));
+        this.loadCategoryInfo($li.attr('data-id'),0);  //加载第一类
+    };
+
+    /*容器内容*/
+    t.getScrollContent=function(i){
+        var str='<div class="wrapper" id="'+i+'">'+
+                    '<div class="scroller">'+
+                        '<div class="pullDown">'+
+                            '<span class="pullDownIcon icon normal"></span>'+
+                            '<span class="pullDownLabel">下拉刷新</span>'+
+                        '</div>'+
+                        '<div class="news-lists">'+
+
+                        '</div>'+
+                        '<div class="pullUp">'+
+                            '<span class="pullUpIcon icon normal"></span>'+
+                            '<span class="pullUpLabel">上拉加载更多</span>'+
+                        '</div>'+
+                    '</div>'+
+            '</div>';
+        return str;
+    };
+
+    /*初始化滑动实例*/
+    t.initScrollLogical=function($target){
+        var s = new MyScroll($target, {
+            pullDownAction: function () {
+                alert('down');
+            },
+            pullUpAction: function () {
+                alert('up');
+            },
+        });
+        $target.attr('data-init','true');
+        this.scrollObjArr.push(s);
+    };
 
     /*
-     *展示评论信息
-     * para：
-     * result - {array} 查询结果数据 格式为：
-     *   {
-     *       isOpposed: "0"
-     *       isSupported: "0"
-     *       opposeCount: "0"
-     *       supportCount: "0"
-     *    }
-     *
-     * flag - {bool} 是列表添加（true）还是发表之后（false）添加
+    *切换分类标签
+    *三种情况：1，点的不是当前在显示的，但是数据没有加载过;2.点的不是当前在显示的，但是数据加载过；3.点的是当前在显示的
+    */
+    t.switchTabs=function(e){
+        var $target=$(e.currentTarget),
+            index=$target.index();
+
+        //情况3
+        if($target.hasClass('active')){
+            return;
+        }
+        $target.addClass('active').siblings().removeClass('active');
+        var $wrapper=$('#all-scroll-wrapper .wrapper');
+        $wrapper.eq(index).show().siblings().hide();
+
+        //情况1
+        if($target.attr('data-loaded')!='true'){
+            $('#loading-data').addClass('active');
+            var id=$target.attr('data-id');
+            this.loadCategoryInfo(id,0);
+        }
+
+        if($target.attr('data-init')=='false') {
+            this.initScrollLogical($wrapper.eq(index));
+        }
+
+        //情况2
+    };
+
+    /*
+    *加载分类下的云作业信息
+    * @para：
+    * id - {int}
+    */
+    t.loadCategoryInfo=function(id,page){
+        var that = this,
+            paraData={base: this.baseId,cate:id,page:page,count:this.perPageCount};
+        if(this.userInfo.session_id!==''){
+            paraData.session_id=this.userInfo.session_id;
+        }
+
+        var para = {
+            url: window.hisihiUrlObj.link_url + 'hiworks_list.php/index/getHiworksListByCate',
+            type: 'get',
+            paraData: paraData,
+            sCallback: function (resutl) {
+                that.fillInClassInfo(resutl);
+                //$('#main-content').css('opacity','1');
+                callback && callback(data);
+            },
+            eCallback: function (data) {
+                var txt=data.txt;
+                if(data.code=404){
+                    txt='分类信息加载失败';
+                }
+                that.showTips.call(that,txt);
+                $('.no-comment-info').hide();
+
+                $loadingMore.removeClass('active');
+                var $loadingError=$loadingMore.find('.loadError');  //加载失败对象
+                $loadingMoreMain.hide();
+                $loadingError.show();
+
+                callback && callback();
+            },
+        };
+        this.getDataAsync(para);
+    };
+
+    /*控制加载等待框*/
+    t.controlLoadingBox=function(flag){
+
+    };
+
+    /*
+     *显示操作结果
+     *para:
+     *tip - {string} 内容结果
      */
-    t.fillInCommentInfo=function(result,flag){
-        var count=result.totalCount;
-        if(result && count>0){
-            var dataList=result.data,
-                len=dataList.length,
-                str='',
-                $ul=$('#comment-list-ul'),
-                item;
-
-            for(var i=0;i<len;i++){
-                item=dataList[i];
-                var upNum= item.support_count | 0,
-                    nClass='num',
-                    uClass='icon-thumb_up icon-font-a';
-                if(upNum>0){
-                    if(upNum>9999){
-                        upNum='10k+';
-                    }
-                }else{
-                    upNum='';
-                }
-                if(item.isSupported){
-                    nClass+=' active';
-                    uClass +=' active';
-                }
-                var name=item.user_info.username;
-                name=this.substrLongStr(name,12);
-                str+='<li>'+
-                        '<div class="list-main-left">'+
-                            '<img src="'+item.user_info.avatar_url+'">'+
-                            '</div>'+
-                            '<div class="list-main-right">'+
-                            '<div>'+name+'</div>'+
-                            '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
-                            '<div>'+item.content +'</div>'+
-                        '</div>'+
-                        '<div class="up-comment-box" data-id="'+item.id+'" id="up-comment-'+item.id +'">'+
-                            '<span class="'+uClass+'"></span>'+
-                            '<span class="'+nClass+'">'+upNum+'</span>'+
-                        '</div>'+
-                    '</li>';
-            }
-            $ul.next().hide();
-            if(flag) {
-                $ul.append(str);
-            }else{
-                $ul.prepend(str);
-            }
-            $('#comment-counts').text(count);
-            if(count>9999){
-                count='10k+';
-            }
-            $('.comment-red-bubble').text(count).show();
-            $('.no-comment-info').hide();
+    t.showTips=function(tip){
+        if(tip.length>8){
+            tip=tip.substr(0,7)+'…';
         }
-        else{
-            $('.no-comment-info').show();
-        }
-
-        if($('body').attr('data-loaded')=='false'){
-            //$('body').attr('data-loaded','true');
-            //this.initIScroll();
-        }
-    };
-
-    /*注册上拉加载更多数据*/
-    t.initIScroll=function(){
-        this.$pullDown=$('#pullDown');
-        this.$pullUp=$('#pullUp');
-        this.$downIcon=this.$pullDown.find('.icon');
-        this.$upIcon=this.$pullUp.find('.icon');
-        this.pullDownEl=this.$pullDown[0];
-        this.pullDownOffset=this.pullDownEl.offsetHeight;
-        this.pullUpEl=this.$pullUp[0];
-        this.pullUpOffset=this.pullUpEl.offsetHeight;
-
-        var that=this;
-
-
-
-        this.myScroll=new IScroll('#wrapper',{probeType: 3, mouseWheel: true,vScrollbar:false});
-        this.myScroll.on("slideDown",function() {
-            if(this.y > 40){
-                if(!that.$downIcon.hasClass('loading')){
-                    that.$downIcon.addClass('loading');
-                    that.$pullDown.find('.pullDownLabel').text('加载中...');
-                    //that.pullDownAction();
-                }
-            }
-        });
-
-        this.myScroll.on("slideUp",function(){  that.$pullUp.show();
-            if(that.maxScrollY - this.y > 40){
-                if(!that.$upIcon.hasClass('loading')){
-
-                    that.$upIcon.addClass('loading');
-                    that.$pullUp.find('.pullUpLabel').text('加载中...');
-                    //that.pullUpAction();
-                }
-            }
-        });
-
-        this.myScroll.on("scroll",function(){
-            var y = this.y,
-                maxY = this.maxScrollY - y,
-
-                downHasClass = that.$downIcon.hasClass("flip"),
-                upHasClass = that.$upIcon.hasClass("flip");
-            console.log(y);
-            if(y >= 40){
-                !downHasClass && that.$downIcon.addClass("flip");
-                that.$pullDown.find('.pullDownLabel').text('释放刷新');
-                return;
-            }else if(y < 40 && y > 0){
-                downHasClass && that.$downIcon.removeClass("flip");
-                that.$pullDown.find('.pullDownLabel').text('下拉刷新');
-                return "";
-            }
-
-            if(maxY >= 40){
-                !upHasClass && that.$upIcon.addClass("flip");
-                that.$pullUp.find('.pullUpLabel').text('释放刷新');
-                return;
-            }else if(maxY < 40 && maxY >=0){
-                upHasClass && that.$upIcon.removeClass("flip");
-                that.$pullUp.find('.pullUpLabel').text('上拉加载更多');
-                return;
-            }
-
-        });
-
-    };
-
-    /*下拉关闭*/
-   t.pullDownAction=function(){
-       var that=this;
-        that.$downIcon.removeClass('loading');
-        that.$pullDown.find('.pullDownLabel').text('下拉刷新');
-       $('.comment-list-panel').hide();
-       //$('.comment-list-panel').css({'z-index':'-1','opacity':'0'});
-       //$('#wrapper').css('top','100%');
-    };
-
-    /*上拉刷新*/
-    t.pullUpAction=function (){
-        var that=this;
-        $.getJSON('test.json',function(data,state){
-            if(data && data.state==1 && state=='success'){
-                setTimeout(function(){
-                    $('#news-list').append(data.data);
-                    that.myScroll.refresh();
-                    that.$upIcon.removeClass('loading');
-                    that.$up.find('.pullUpLabel').text('上拉加载更多');
-                },600);
-            }
-        });
+        var $tip=$('body').find('.result-tips'),
+            $p=$tip.find('p').text(tip);
+        $tip.show();
+        window.setTimeout(function(){
+            $tip.hide();
+            $p.text('');
+        },1500);
     };
 
 

@@ -6,9 +6,11 @@
 define(['$'],function() {
 
     /**基础类**/
-    var Base = function () {
+    var Base = function (flag) {
         this._initTimeFormat();
-        this._stopTouchendPropagationAfterScroll();
+        if(!flag) {
+            this._stopTouchendPropagationAfterScroll();
+        }
     };
 
     Base.prototype = {

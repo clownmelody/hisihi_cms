@@ -10,6 +10,7 @@ requirejs.config({
         prefixfree:'sharecommon/prefixfree.min',
         iscroll:'sharecommon/iscroll',
         base:'sharecommon/base',
+        myscroll:'hiworks/myscroll',
         home:'hiworks/home',
     },
     shim: {
@@ -24,21 +25,14 @@ requirejs.config({
             output:'prefixfree'
         },
         iscroll:{
-            steps:['$'],
-            output:'IScroll'
-        },
-        base:{
-            output:'Base'
-        },
-        home:{
-            output:'home'
+            output:'iscroll'
         },
     }
 });
 
 
-require(['home','prefixfree'],function(work){
+require(['home','prefixfree'],function(works){
     var id=$('body').data('id');
-    //id=1264;
-    window.topContentObj = new work(window.hisihiUrlObj.server_url);
+    id=45;
+    window.hiworks = new works(window.hisihiUrlObj.server_url,id);
 });

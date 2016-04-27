@@ -2,7 +2,7 @@ body {
   margin: 0;
   background: #FFFFFF;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -49,105 +49,6 @@ ul {
 ul li {
   list-style: none;
 }
-.header {
-  position: absolute;
-  z-index: 100;
-  width: 100%;
-  height: 61px;
-}
-.header #nav-bar {
-  width: 100%;
-  height: 30px;
-  background-color: #000;
-  color: white;
-}
-.header #tabs-bar {
-  width: 100%;
-  height: 30px;
-  background-color: #fff;
-  color: white;
-  border-bottom: 1px solid #ccc;
-}
-#wrapper {
-  position: absolute;
-  left: 0;
-  top: 50px;
-  bottom: 50px;
-  width: 100%;
-  background-color: #fafafa;
-  z-index: 10;
-  -webkit-transform: translate3d(0, 0, 0);
-}
-#wrapper .news-lists .item {
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #cfcfcf;
-}
-#wrapper #pullDown,
-#wrapper #pullUp {
-  background-color: #fff;
-  height: 40px;
-  line-height: 40px;
-  padding: 5px 10px;
-  border-bottom: 1px solid #ccc;
-  font-weight: bold;
-  font-size: 14px;
-  color: #888;
-  text-aling: center;
-  position: absolute;
-  width: 100%;
-}
-#wrapper #pullDown .loading,
-#wrapper #pullUp .loading {
-  background-position: 0 100%;
-  -webkit-transform: rotate(0deg) translateZ(0);
-  -webkit-transition-duration: 0ms;
-  -webkit-animation-name: loading;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-}
-#wrapper #pullDown {
-  top: -40px;
-}
-#wrapper #pullUp {
-  bottom: -40px;
-}
-#wrapper .icon {
-  display: block;
-  float: left;
-  width: 40px;
-  height: 40px;
-  background: url('pull-icon@2x.png') 0 0 no-repeat;
-  background-size: 40px 80px;
-}
-#wrapper .icon.pullDownIcon.normal {
-  -webkit-transform: rotate(0deg) translateZ(0);
-}
-#wrapper .icon.pullDownIcon.flip {
-  -webkit-transform: rotate(-180deg) translateZ(0);
-}
-#wrapper .icon.pullDownIcon.loading {
-  background-position: 0 100%;
-}
-#wrapper .icon.pullUpIcon.normal {
-  -webkit-transform: rotate(-180deg) translateZ(0);
-}
-#wrapper .icon.pullUpIcon.flip {
-  -webkit-transform: rotate(0deg) translateZ(0);
-}
-#wrapper .icon.pullUpIcon.loading {
-  background-position: 0 100%;
-  -webkit-animation: loading 5s inifition linear;
-}
-@-webkit-keyframes loading {
-  from {
-    -webkit-transform: rotate(0deg) translateZ(0);
-  }
-  to {
-    -webkit-transform: rotate(360deg) translateZ(0);
-  }
-}
 #loading-data {
   position: fixed;
   width: 100px;
@@ -165,8 +66,171 @@ ul li {
   height: 40px;
   display: inline-block;
 }
+#loading-data.active {
+  display: block;
+}
 #loading-data.active .loding-img {
   animation: turning 1s linear infinite;
+}
+#main-content {
+  opacity: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#main-content .header {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  height: 61px;
+}
+#main-content .header #nav-bar {
+  width: 100%;
+  height: 40px;
+  background-color: #000;
+  color: white;
+}
+#main-content .header #nav-bar > div {
+  float: left;
+  text-align: center;
+}
+#main-content .header #nav-bar > div > span {
+  line-height: 40px;
+  display: inline-block;
+}
+#main-content .header #nav-bar .nav-bar-title {
+  width: 100%;
+}
+#main-content .header #nav-bar .nav-bar-title .nav-bar-middle {
+  line-height: 40px;
+  font-size: 18px;
+}
+#main-content .header #nav-bar .nav-bar-left {
+  width: 40px;
+  margin-left: -100%;
+}
+#main-content .header #nav-bar .nav-bar-left > span {
+  font-size: 35px;
+}
+#main-content .header #nav-bar .nav-bar-right {
+  width: 40px;
+  margin-left: -40px;
+}
+#main-content .header #nav-bar .nav-bar-right > span {
+  font-size: 21px;
+}
+#main-content .header #tabs-bar {
+  width: 100%;
+  height: 50px;
+  background-color: #fff;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 1px solid #ccc;
+}
+#main-content .header #tabs-bar ul {
+  height: 100%;
+  white-space: nowrap;
+  width: 100%;
+}
+#main-content .header #tabs-bar ul li {
+  color: #212121;
+  height: 42px;
+  display: inline-block;
+  text-align: center;
+  margin-left: 8px;
+  line-height: 40px;
+  border-bottom: 2px solid white;
+}
+#main-content .header #tabs-bar ul li:first-child {
+  margin-left: 14px;
+}
+#main-content .header #tabs-bar ul li.active {
+  color: #ff5a00;
+  border-bottom: 2px solid #ff5a00;
+}
+#main-content #all-scroll-wrapper .wrapper {
+  position: absolute;
+  left: 0;
+  top: 81px;
+  bottom: 50px;
+  width: 100%;
+  background-color: #fafafa;
+  z-index: 10;
+  -webkit-transform: translate3d(0, 0, 0);
+  display: none;
+}
+#main-content #all-scroll-wrapper .wrapper:first-child {
+  display: block;
+}
+#main-content #all-scroll-wrapper .wrapper .news-lists .item {
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid #cfcfcf;
+}
+#main-content #all-scroll-wrapper .wrapper .pullDown,
+#main-content #all-scroll-wrapper .wrapper .pullUp {
+  background-color: #fff;
+  height: 40px;
+  line-height: 40px;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ccc;
+  font-weight: bold;
+  font-size: 14px;
+  color: #888;
+  text-aling: center;
+  position: absolute;
+  width: 100%;
+}
+#main-content #all-scroll-wrapper .wrapper .pullDown .loading,
+#main-content #all-scroll-wrapper .wrapper .pullUp .loading {
+  background-position: 0 100%;
+  -webkit-transform: rotate(0deg) translateZ(0);
+  -webkit-transition-duration: 0ms;
+  -webkit-animation-name: loading;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+}
+#main-content #all-scroll-wrapper .wrapper .pullDown {
+  top: -40px;
+}
+#main-content #all-scroll-wrapper .wrapper .pullUp {
+  bottom: -40px;
+}
+#main-content #all-scroll-wrapper .wrapper .icon {
+  display: block;
+  float: left;
+  width: 40px;
+  height: 40px;
+  background: url('pull-icon@2x.png') 0 0 no-repeat;
+  background-size: 40px 80px;
+}
+#main-content #all-scroll-wrapper .wrapper .icon.pullDownIcon.normal {
+  -webkit-transform: rotate(0deg) translateZ(0);
+}
+#main-content #all-scroll-wrapper .wrapper .icon.pullDownIcon.flip {
+  -webkit-transform: rotate(-180deg) translateZ(0);
+}
+#main-content #all-scroll-wrapper .wrapper .icon.pullDownIcon.loading {
+  background-position: 0 100%;
+}
+#main-content #all-scroll-wrapper .wrapper .icon.pullUpIcon.normal {
+  -webkit-transform: rotate(-180deg) translateZ(0);
+}
+#main-content #all-scroll-wrapper .wrapper .icon.pullUpIcon.flip {
+  -webkit-transform: rotate(0deg) translateZ(0);
+}
+#main-content #all-scroll-wrapper .wrapper .icon.pullUpIcon.loading {
+  background-position: 0 100%;
+  -webkit-animation: loading 5s inifition linear;
+}
+@-webkit-keyframes loading {
+  from {
+    -webkit-transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translateZ(0);
+  }
 }
 @keyframes turning {
   to {
