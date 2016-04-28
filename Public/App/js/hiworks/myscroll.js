@@ -7,40 +7,48 @@ define(['$','iscroll'],function() {
     var MyScroll = function ($target,options) {
         this.$target=$target;
         this.options=options;
-        this.init();
+        this._init();
     };
 
     MyScroll.prototype = {
 
-        pullDownAction: function () {
+        _pullDownAction: function () {
+            var that=this;
             this.options.pullDownAction && this.options.pullDownAction();
-            //$.getJSON('test.json', function (data, state) {
-            //    if (data && data.state == 1 && state == 'success') {
-            //        setTimeout(function () {
-            //            $('#news-list').html(data.data);
-            //            myScroll.refresh();
-            //            $downIcon.removeClass('loading');
-            //            $down.find('.pullDownLabel').text('下拉刷新');
-            //        }, 600);
-            //    }
-            //});
         },
 
-        pullUpAction: function () {
+        /*还原上拉效果*/
+        resetDownStyle:function(){
+            this.myScroll.refresh();
+            this.$downIcon.removeClass('loading');
+            this.$down.find('.pullUpLabel').text('上拉加载更多');
+            this.controlDownTipsStyle(true);
+        },
+
+        //是否 显示 隐藏上拉加载更多提示
+        controlDownTipsStyle:function(flag){
+            if(flag){
+                this.$up.show();
+                this.$up.show();
+            }else {
+                this.$up.hide();
+                this.$up.hide();
+            }
+        },
+
+        _pullUpAction: function () {
+            var that=this;
             this.options.pullUpAction && this.options.pullUpAction();
-            //$.getJSON('test.json', function (data, state) {
-            //    if (data && data.state == 1 && state == 'success') {
-            //        setTimeout(function () {
-            //            $('#news-list').append(data.data);
-            //            myScroll.refresh();
-            //            $upIcon.removeClass('loading');
-            //            $up.find('.pullUpLabel').text('上拉加载更多');
-            //        }, 600);
-            //    }
-            //});
         },
 
-        init: function () {
+        /*还原下拉效果*/
+        resetUpStyle:function(){
+            this.myScroll.refresh();
+            this.$upIcon.removeClass('loading');
+            this.$up.find('.pullUpLabel').text('下拉刷新');
+        },
+
+        _init: function () {
             this.$down = this.$target.find('.pullDown');
             this.$up = this.$target.find('.pullUp');
             this.$downIcon = this.$down.find('.icon');
@@ -54,20 +62,20 @@ define(['$','iscroll'],function() {
             var myScroll = new IScroll(this.$target[0], {probeType: 3, mouseWheel: true, vScrollbar: false});
             myScroll.on("slideDown", function () {
                 if (this.y > 40) {
-                    if (!that.$downIcon.hasClass('loading')) {
+                    if (!that.$downIcon.hasClass('loading') && !that.$upIcon.hasClass('loading')) {
                         that.$downIcon.addClass('loading');
                         that.$down.find('.pullDownLabel').text('加载中...');
-                        pullDownAction();
+                        that._pullDownAction();
                     }
                 }
             });
 
             myScroll.on("slideUp", function () {
                 if (this.maxScrollY - this.y > 40) {
-                    if (!that.$upIcon.hasClass('loading')) {
+                    if (!that.$upIcon.hasClass('loading') && !that.$downIcon.hasClass('loading') ) {
                         that.$upIcon.addClass('loading');
                         that.$up.find('.pullUpLabel').text('加载中...');
-                        that.pullUpAction();
+                        that._pullUpAction();
                     }
                 }
             });
@@ -91,7 +99,7 @@ define(['$','iscroll'],function() {
 
                 if (maxY >= 40) {
                     !upHasClass && that.$upIcon.addClass("flip");
-                    that.$up.find('.pullUpLabel').text('释放刷新');
+                    that.$up.find('.pullUpLabel').text('释放加载');
                     return;
                 } else if (maxY < 40 && maxY >= 0) {
                     upHasClass && that.$upIcon.removeClass("flip");
@@ -102,6 +110,10 @@ define(['$','iscroll'],function() {
             this.myScroll=myScroll;
             return myScroll;
         },
+        refresh:function(){
+            this.myScroll.refresh();
+        },
+
     };
     return MyScroll;
 });

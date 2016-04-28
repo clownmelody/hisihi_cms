@@ -152,9 +152,9 @@ ul li {
   position: absolute;
   left: 0;
   top: 81px;
-  bottom: 50px;
+  bottom: 0;
   width: 100%;
-  background-color: #fafafa;
+  background-color: #fff;
   z-index: 10;
   -webkit-transform: translate3d(0, 0, 0);
   display: none;
@@ -162,10 +162,44 @@ ul li {
 #main-content #all-scroll-wrapper .wrapper:first-child {
   display: block;
 }
-#main-content #all-scroll-wrapper .wrapper .news-lists .item {
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #cfcfcf;
+#main-content #all-scroll-wrapper .wrapper .lists-ul {
+  width: 90%;
+  margin: 6px auto;
+  padding-top: 15px;
+}
+#main-content #all-scroll-wrapper .wrapper .lists-ul > ul {
+  border-top: 1px solid #E6E6E6;
+}
+#main-content #all-scroll-wrapper .wrapper .lists-ul > ul:first-child {
+  border: none;
+}
+#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li {
+  float: left;
+  margin: 12px 0;
+  width: 30%;
+  min-height: 130px;
+  overflow: hidden;
+}
+#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li .img-box img {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+}
+#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li:nth-child(3n-1) {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li.border {
+  border-bottom: 1px;
+}
+#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li.marginTop {
+  margin-top: 20px;
+}
+#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li .title {
+  color: #525252;
+  margin-top: 5px;
+  font-size: 12px;
+  overflow: hidden;
 }
 #main-content #all-scroll-wrapper .wrapper .pullDown,
 #main-content #all-scroll-wrapper .wrapper .pullUp {
@@ -173,7 +207,6 @@ ul li {
   height: 40px;
   line-height: 40px;
   padding: 5px 10px;
-  border-bottom: 1px solid #ccc;
   font-weight: bold;
   font-size: 14px;
   color: #888;
