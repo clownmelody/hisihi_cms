@@ -132,13 +132,15 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
                 item;
             for(var i=0;i<len;i++){
                 item=category[i];
-                var className='';
+                var className='',
+                    title=item.title;
                 if(i==0){
                     className='active';
+                    var temp=this.substrLongStr(title,16);
+                    $('.nav-bar-middle').text(temp);
                 }
-                var title=item.title;
-                title=this.substrLongStr(title,6);
-                str+='<li data-loaded="false" data-init="false" class="'+className+'" data-id="'+item.id+'">'+title+'</li>';
+                title=this.substrLongStr(title,8);
+                str+='<li data-loaded="false" data-init="false" class="'+className+'" data-id="'+item.id+'" data-name="'+item.title+'">'+title+'</li>';
             }
             $('#tabs-bar ul').append(str);
 
@@ -217,6 +219,9 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
         $target.addClass('active').siblings().removeClass('active');
         var $wrapper=$('#all-scroll-wrapper .wrapper'),that=this;
         $wrapper.eq(index).show().siblings().hide();
+        var title = $('#tabs-bar .active').attr('data-name');
+        title=this.substrLongStr(title,18);
+        $('.nav-bar-middle').text(title);
 
         //情况1
         if($target.attr('data-loaded')!='true'){
@@ -296,7 +301,7 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
             var category=result.data,
                 len=category.length,
                 item;
-            var tempStr='',flag,flag1=false;
+            var tempStr='',flag;
             var j=0;
             for(var i=0;i<len;i++){
                 item=category[i];
@@ -306,7 +311,6 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
                 flag=i==0 || i%3==0;
                 if(flag){
                     str+='<ul>';
-                    flag1=true;
                 }
                 j++;
                 str+='<li class="'+className+' '+marginTopClass+'">'+
