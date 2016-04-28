@@ -97,20 +97,23 @@ define(['$','iscroll'],function() {
                     return "";
                 }
 
-                if (maxY >= 40) {
+                if (maxY >= 60) {
                     !upHasClass && that.$upIcon.addClass("flip");
                     that.$up.find('.pullUpLabel').text('释放加载');
                     return;
-                } else if (maxY < 40 && maxY >= 0) {
+                } else if (maxY < 60 && maxY >= 0) {
                     upHasClass && that.$upIcon.removeClass("flip");
                     that.$up.find('.pullUpLabel').text('上拉加载更多');
                     return;
                 }
             });
             this.myScroll=myScroll;
+
             return myScroll;
+
         },
         refresh:function(){
+            this.controlDownTipsStyle(true);
             this.myScroll.refresh();
         },
 
