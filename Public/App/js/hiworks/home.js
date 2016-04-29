@@ -33,10 +33,12 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
         //显示搜寻框
         $(document).on(eventName,'.nav-bar-right', function(){
             that.controlSearchPanel(true);
+            that.initSearchPanelScrollFn();
         });
         //隐藏搜寻框
         $(document).on(eventName,'#quit-search', function(){
             that.controlSearchPanel(false);
+            $('#search-result-panel .lists-ul').html('');  //清空上次结果
         });
 
         //搜寻框可用性控制
@@ -425,26 +427,27 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
         if(!keyWord){
             return;
         }
-        var str=this.getScrollContent('search');
-        $('#search-result-panel').append(str);
         this.execSearch(keyWord,1,true,function(){
             //初始化搜索面板的 滑动事件
-            that.initSearchPanelScrollFn();
             that.sScrollObj.refresh();
         });
 
     };
 
     t.initSearchPanelScrollFn=function(){
-        //var str=this.getScrollContent('search');
-        var $target=$('#search-result-panel .wrapper');
-        this.sScrollObj = new MyScroll($target, {
+        var str=this.getScrollContent('search'),
+            $target = $('#search-result-panel').append(str),
+            $wrapper=$target.find('.wrapper');
+        if($wrapper.attr('data-init')=='true'){
+            return;
+        }
+        this.sScrollObj = new MyScroll($wrapper, {
             //下拉刷新
             pullDownAction:$.proxy(this,'reloadWorksListInfoByKetWord'),
             //上拉加载更多
             pullUpAction: $.proxy(this,'loadMoreWorksListInfoByKetWord'),
         });
-        $target.attr('data-init','true');
+        $wrapper.attr('data-init','true');
     };
 
     t.reloadWorksListInfoByKetWord=function(){
