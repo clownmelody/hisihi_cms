@@ -627,6 +627,13 @@ class OrganizationController extends AdminController
             $data["description"] = $_POST["description"];
             $data['organization_id'] = $_POST["organization_id"];
             $data['type'] = 1;
+            $data["author_name"] = $_POST["author_name"];
+            $data['author_company'] = $_POST["author_company"];
+            $avatar_id = $_POST["author_avatar"];
+            if(is_numeric($avatar_id)){
+                $this->uploadLogoPicToOSS($avatar_id);
+                $data["author_avatar"] = $this->fetchCdnImage($avatar_id);
+            }
             if(empty($cid)){
                 try {
                     $data["create_time"] = time();

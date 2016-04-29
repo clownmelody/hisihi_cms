@@ -97,7 +97,7 @@ define(['zepto'],function() {
             if (!this.isFromApp) {
                 $voteCon.find('.mainVoteBtnCon').hide();
             }
-            $voteCon.find('.bottomVoteConBox').css('opacity', 1);
+            $voteCon.find('.bottomVoteConBox').css('opacity', '1');
         },
 
         //绘制箭头
@@ -133,7 +133,7 @@ define(['zepto'],function() {
                 url: paras.url,
                 type: paras.type,
                 data: paras.paraData,
-                timeOut: 10,
+                timeOut: 1000*60*2,
                 contentType: 'application/json;charset=utf-8',
                 complete: function (xmlRequest, status) {
                     if (status == 'success') {

@@ -8,6 +8,7 @@ define(['$'],function() {
     /**基础类**/
     var Base = function () {
         this._initTimeFormat();
+        this._stopTouchendPropagationAfterScroll();
     };
 
     Base.prototype = {
@@ -96,7 +97,7 @@ define(['$'],function() {
          */
         substrLongStr: function (str, len) {
             if (str.length > len) {
-                str = str.substr(0, parseInt(len - 1)) + '……';
+                str = str.substr(0, parseInt(len - 1)) + '…';
             }
             return str;
         },
@@ -180,6 +181,21 @@ define(['$'],function() {
                     'overflow': 'auto',
                     'position': oldPosStyle,
                 });
+            }
+        },
+
+        /*滚动时，禁用touchend*/
+        _stopTouchendPropagationAfterScroll:function(){
+            var flag = false;
+            window.addEventListener('touchmove', function(ev){
+                flag || (flag = true, window.addEventListener('touchend', stopTouchendPropagation, true));
+            }, false);
+            function stopTouchendPropagation(ev){
+                ev.stopPropagation();
+                setTimeout(function(){
+                    window.removeEventListener('touchend', stopTouchendPropagation, true);
+                    flag = false;
+                }, 50);
             }
         },
 

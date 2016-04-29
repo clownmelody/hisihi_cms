@@ -17,7 +17,6 @@ use Think\Model;
 require_once(APP_PATH . 'User/Conf/config.php');
 require_once(APP_PATH . 'User/Common/common.php');
 
-
 class OrganizationController extends AppController
 {
     public function _initialize(){
@@ -1715,7 +1714,11 @@ class OrganizationController extends AppController
             }
         }
         if(!empty($type)){
-            $select_where = $select_where . " and type=".$type;
+            if($type != '软件' && $type != '留学' && $type != '手绘'){
+                $type = '软件';
+            }
+            $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+            $select_where = $select_where . " and type=".$type_id;
         }
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
@@ -2411,7 +2414,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function appGetStudentWorks($organization_id=null,$page=1,$count=3,$type=null){
+    public function appGetStudentWorks($organization_id=null,$page=1,$count=3,$type=null, $version=0){
         if(!$organization_id){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -2420,7 +2423,11 @@ class OrganizationController extends AppController
         $map['type'] = 1;
         $map['status'] = 1;
         $totalCount = $model->where($map)->count();
-        $list = $model->field('id, url, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
+        $field = 'id, url, description, create_time';
+        if(floatval($version) > 2.7){
+            $field = $field.', author_avatar, author_name, author_company';
+        }
+        $list = $model->field($field)->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_url = $work['url'];
             $origin_img_info = getimagesize($pic_url);
@@ -3132,6 +3139,13 @@ class OrganizationController extends AppController
      * @param int $count
      */
     public function filterOrgByProvinceAndType($uid=0, $province=null, $type=0, $page=1, $count=10){
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $tmparray = explode('com.xuniu.hisihi/16041801', $user_agent);
+        if(count($tmparray)>1){
+            $page += 1;
+
+        }
+
         if($uid==0){
             $uid = is_login();
         }
@@ -3192,6 +3206,12 @@ class OrganizationController extends AppController
      * @param int $count
      */
     public function getRecommendOrganization($uid=0, $type=0, $page=1, $count=10){
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $tmparray = explode('com.xuniu.hisihi/16041801', $user_agent);
+        if(count($tmparray)>1){
+            $page += 1;
+
+        }
         if($uid==0){
             $uid = is_login();
         }
@@ -3308,17 +3328,22 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function getIntegrityOrganization($well_chosen=false, $type='软件', $page=1, $count=10){
+    public function getIntegrityOrganization($well_chosen=false, $type='软件', $city=null, $page=1, $count=10){
         $uid = is_login();
         $model = M('Organization');
         if($type != '软件' && $type != '留学' && $type != '手绘'){
             $type = '软件';
         }
         $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+        $select_where['status'] = 1;
+        $select_where['application_status'] = 2;
+        $select_where['light_authentication'] = 1;
+        $select_where['type'] = $type_id;
+        if(!empty($city)){
+            $select_where['city'] = array('like','%'.$city.'%');
+        }
         if($well_chosen){
-            $select_where = "status=1 and application_status=2 and light_authentication=1 and well_chosen=1 and type=".$type_id;
-        } else {
-            $select_where = "status=1 and application_status=2 and light_authentication=1 and type=".$type_id;
+            $select_where['well_chosen'] = 1;
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();

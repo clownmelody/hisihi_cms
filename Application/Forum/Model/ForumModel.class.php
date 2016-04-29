@@ -56,7 +56,7 @@ class ForumModel extends Model
                 $f['total_count'] = $f['topic_count'] + $forumPostReplyModel->where($map)->count();
             }
             unset($f);
-            S($tag, $forum_list, $cache_time);
+            S($tag, $forum_list, 600);
         }
         return $forum_list;
     }

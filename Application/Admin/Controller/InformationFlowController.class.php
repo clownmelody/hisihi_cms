@@ -202,6 +202,9 @@ class InformationFlowController extends AdminController {
             if(is_array($id)){
                 foreach ($id as $i)
                 {
+                    if($i == 1 && $status == -1){
+                        $this->error('特殊分类不能删除');
+                    }
                     $model->where('id='.$i)->save($data);
                 }
             } else {
@@ -234,7 +237,7 @@ class InformationFlowController extends AdminController {
 
     public function setConfigType($id){
         $model = M('InformationFlowConfig');
-        $config_type = $model->where('status=1')->order('id')->select();
+        $config_type = $model->where('status>-1')->order('id')->select();
         $this->assign('_config_type', $config_type);
         $this->assign('cid', $id);
         $this->display();

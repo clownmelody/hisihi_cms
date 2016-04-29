@@ -63,7 +63,9 @@ define(['fx','base'],function(fx,Base) {
             that.scrollContainer(e);
         });
 
-        $(document).on(eventName,'.btn',function(){});
+        $(document).on(eventName,'.btn',function(){
+            event.stopPropagation();
+        });
 
 
     };
@@ -200,12 +202,14 @@ define(['fx','base'],function(fx,Base) {
                     nClass+=' active';
                     uClass +=' active';
                 }
+                var name=item.user_info.username;
+                name=this.substrLongStr(name,12);
                 str+='<li>'+
                         '<div class="list-main-left">'+
                             '<img src="'+item.user_info.avatar_url+'">'+
                             '</div>'+
                             '<div class="list-main-right">'+
-                            '<div>'+item.user_info.username+'</div>'+
+                            '<div>'+name+'</div>'+
                             '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
                             '<div>'+item.content +'</div>'+
                         '</div>'+
@@ -781,6 +785,7 @@ define(['fx','base'],function(fx,Base) {
             type: 'get',
             paraData: {"id": this.articleId,"content":str,"session_id": this.userInfo.session_id},
             sCallback: function (data) {
+                that.closeCommentBox();
                 that.showTips.call(that,'评论成功');
                 $textarea.val('');
                 var c= Number($('#comment-counts').text());
