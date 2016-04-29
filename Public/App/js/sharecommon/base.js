@@ -8,6 +8,7 @@ define(['$'],function() {
     /**基础类**/
     var Base = function (flag) {
         this._initTimeFormat();
+        this._initStringExtentFn();
         if(!flag) {
             this._stopTouchendPropagationAfterScroll();
         }
@@ -140,6 +141,20 @@ define(['$'],function() {
                         ("00" + o[k]).substr(("" + o[k]).length));
             return format;
             };
+        },
+
+
+        _initStringExtentFn:function(){
+            String.prototype.substrLongStr=function(){
+                var str=this;
+                if (this.length > len) {
+                    str = this.substr(0, parseInt(len - 1)) + '…';
+                }
+                return str;
+            };
+            String.prototype.trim=function(){
+                return this.replace(/(^\s*)|(\s*$)/g,'');
+            }
         },
 
         /*

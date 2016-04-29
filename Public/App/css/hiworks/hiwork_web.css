@@ -150,11 +150,12 @@ ul li {
 }
 #main-content .header #search-bar {
   display: none;
-  position: relative;
+  position: absolute;
   height: 48px;
   background-color: #E3E3E3;
   padding: 10px 15px;
   box-sizing: border-box;
+  width: 100%;
 }
 #main-content .header #search-bar .search-box {
   margin-right: 120px;
@@ -209,12 +210,7 @@ ul li {
 #main-content .header #search-bar .search-btns > div.active {
   color: #000;
 }
-#main-content #all-scroll-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-#main-content #all-scroll-wrapper .wrapper {
+#main-content .wrapper {
   position: absolute;
   top: 81px;
   left: 0;
@@ -226,50 +222,50 @@ ul li {
   -webkit-transform: translate3d(0, 0, 0);
   display: none;
 }
-#main-content #all-scroll-wrapper .wrapper:first-child {
+#main-content .wrapper:first-child {
   display: block;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul {
+#main-content .wrapper .lists-ul {
   width: 90%;
   margin: 6px auto;
   padding-top: 15px;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul > ul {
+#main-content .wrapper .lists-ul > ul {
   border-top: 1px solid #E6E6E6;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul > ul:first-child {
+#main-content .wrapper .lists-ul > ul:first-child {
   border: none;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li {
+#main-content .wrapper .lists-ul > ul li {
   float: left;
   margin: 12px 0;
   width: 30%;
   min-height: 130px;
   overflow: hidden;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li .img-box img {
+#main-content .wrapper .lists-ul > ul li .img-box img {
   max-width: 100%;
   width: 100%;
   height: 100%;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li:nth-child(3n-1) {
+#main-content .wrapper .lists-ul > ul li:nth-child(3n-1) {
   margin-left: 5%;
   margin-right: 5%;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li.border {
+#main-content .wrapper .lists-ul > ul li.border {
   border-bottom: 1px;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li.marginTop {
+#main-content .wrapper .lists-ul > ul li.marginTop {
   margin-top: 20px;
 }
-#main-content #all-scroll-wrapper .wrapper .lists-ul > ul li .title {
+#main-content .wrapper .lists-ul > ul li .title {
   color: #525252;
   margin-top: 5px;
   font-size: 12px;
   overflow: hidden;
 }
-#main-content #all-scroll-wrapper .wrapper .pullDown,
-#main-content #all-scroll-wrapper .wrapper .pullUp {
+#main-content .wrapper .pullDown,
+#main-content .wrapper .pullUp {
   background-color: #fff;
   height: 40px;
   line-height: 40px;
@@ -280,9 +276,10 @@ ul li {
   text-aling: center;
   position: absolute;
   width: 100%;
+  display: none;
 }
-#main-content #all-scroll-wrapper .wrapper .pullDown .loading,
-#main-content #all-scroll-wrapper .wrapper .pullUp .loading {
+#main-content .wrapper .pullDown .loading,
+#main-content .wrapper .pullUp .loading {
   background-position: 0 100%;
   -webkit-transform: rotate(0deg) translateZ(0);
   -webkit-transition-duration: 0ms;
@@ -291,14 +288,13 @@ ul li {
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-timing-function: linear;
 }
-#main-content #all-scroll-wrapper .wrapper .pullDown {
+#main-content .wrapper .pullDown {
   top: -40px;
 }
-#main-content #all-scroll-wrapper .wrapper .pullUp {
+#main-content .wrapper .pullUp {
   bottom: -40px;
-  display: none;
 }
-#main-content #all-scroll-wrapper .wrapper .icon {
+#main-content .wrapper .icon {
   display: block;
   float: left;
   width: 40px;
@@ -306,22 +302,22 @@ ul li {
   background: url('pull-icon@2x.png') 0 0 no-repeat;
   background-size: 40px 80px;
 }
-#main-content #all-scroll-wrapper .wrapper .icon.pullDownIcon.normal {
+#main-content .wrapper .icon.pullDownIcon.normal {
   -webkit-transform: rotate(0deg) translateZ(0);
 }
-#main-content #all-scroll-wrapper .wrapper .icon.pullDownIcon.flip {
+#main-content .wrapper .icon.pullDownIcon.flip {
   -webkit-transform: rotate(-180deg) translateZ(0);
 }
-#main-content #all-scroll-wrapper .wrapper .icon.pullDownIcon.loading {
+#main-content .wrapper .icon.pullDownIcon.loading {
   background-position: 0 100%;
 }
-#main-content #all-scroll-wrapper .wrapper .icon.pullUpIcon.normal {
+#main-content .wrapper .icon.pullUpIcon.normal {
   -webkit-transform: rotate(-180deg) translateZ(0);
 }
-#main-content #all-scroll-wrapper .wrapper .icon.pullUpIcon.flip {
+#main-content .wrapper .icon.pullUpIcon.flip {
   -webkit-transform: rotate(0deg) translateZ(0);
 }
-#main-content #all-scroll-wrapper .wrapper .icon.pullUpIcon.loading {
+#main-content .wrapper .icon.pullUpIcon.loading {
   background-position: 0 100%;
   -webkit-animation: loading 5s inifition linear;
 }
@@ -333,13 +329,27 @@ ul li {
     -webkit-transform: rotate(360deg) translateZ(0);
   }
 }
-#main-content #search-result-panel {
-  z-index: 100;
+#main-content #all-scroll-wrapper {
   position: absolute;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+#main-content #search-result-panel {
+  z-index: 10;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 100%;
   left: 0;
   right: 0;
   background-color: #fff;
+}
+#main-content #search-result-panel .wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 @keyframes turning {
   to {

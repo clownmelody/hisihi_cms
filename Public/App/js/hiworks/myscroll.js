@@ -29,10 +29,10 @@ define(['$','iscroll'],function() {
         controlDownTipsStyle:function(flag){
             if(flag){
                 this.$up.show();
-                this.$up.show();
+                this.$down.show();
             }else {
                 this.$up.hide();
-                this.$up.hide();
+                this.$down.hide();
             }
         },
 
