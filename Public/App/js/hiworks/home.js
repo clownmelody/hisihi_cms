@@ -27,7 +27,20 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
             event.stopPropagation();
         });
 
+        //标签分类切换
         $(document).on(eventName,'#tabs-bar ul li', $.proxy(this,'switchTabs'));
+
+        //显示搜寻框
+        $(document).on(eventName,'.nav-bar-right', function(){
+            that.controlSearchPanel(true);
+        });
+        //隐藏搜寻框
+        $(document).on(eventName,'#quit-search', function(){
+            that.controlSearchPanel(false);
+        });
+
+        //搜寻框可用性控制
+        $(document).on('input','#search-txt', $.proxy(this,'controlSearchTxt'));
 
         //$('.lists-ul img').imglazyload({
         //    container:''
@@ -361,6 +374,44 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
             var scrollObj=that.scrollObjArr[index];
             scrollObj.resetDownStyle();
         });
+    };
+
+
+    //显示和搜索功能相关的容器
+    t.controlSearchPanel=function(flag){
+        var $navTabsBar=$('#nav-tabs-bar'),
+            //$serchBar=$navTabsBar.next(),
+            $allWrapper=$('#all-scroll-wrapper'),
+            $searchPanel=$allWrapper.next();
+        if(flag){
+            $navTabsBar.hide().siblings().show();
+            $searchPanel.animate(
+            {'top':'50px'},
+            100,'ease-out',
+            function(){
+
+            });
+        }else{
+            $navTabsBar.show().siblings().hide();
+            $searchPanel.animate(
+                {'top':'100%'},
+                100,'ease-out',
+                function(){
+
+                });
+        }
+    };
+
+    t.controlSearchTxt=function(e){
+        var $this=$(e.currentTarget);
+        var txt=$this.val().trim(),
+            $btn=$('#do-search'),
+            nc='active btn';
+        if(txt){
+            $btn.addClass(nc);
+        }else{
+            $btn.removeClass(nc);
+        }
     };
 
     /*

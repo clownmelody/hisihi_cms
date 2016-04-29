@@ -21,25 +21,45 @@
     </div>
     <div id="main-content">
         <div class="header">
-            <div id="nav-bar">
-                <div class="nav-bar-title">
-                    <div class="nav-bar-middle">
-                        全部
+            <div id="nav-tabs-bar">
+                <div id="nav-bar">
+                    <div class="nav-bar-title">
+                        <div class="nav-bar-middle">
+                            全部
+                        </div>
+                    </div>
+                    <div class="nav-bar-left btn">
+                        <span class="icon-keyboard_arrow_left font-icon"></span>
+                    </div>
+                    <div class="nav-bar-right btn">
+                        <span class="icon-search font-icon"></span>
                     </div>
                 </div>
-                <div class="nav-bar-left btn">
-                    <span class="icon-keyboard_arrow_left font-icon"></span>
+                <div id="tabs-bar">
+                <ul></ul>
+            </div>
+            </div>
+            <div id="search-bar">
+                <div class="search-box">
+                    <div class="search-box-bg">
+                        <span class="icon-search font-icon"></span>
+                        <input type="text" placeholder="输入关键字快速查找" id="search-txt">
+                    </div>
                 </div>
-                <div class="nav-bar-right btn">
-                    <span class="icon-search font-icon"></span>
+                <div class="search-btns">
+                    <div class="btn" id="do-search">
+                        搜索
+                    </div>
+                    <div class="btn" id="quit-search">
+                        取消
+                    </div>
                 </div>
             </div>
-            <div id="tabs-bar">
-            <ul></ul>
-
-        </div>
         </div>
         <div id="all-scroll-wrapper"></div>
+        <div id="search-result-panel">
+
+        </div>
     </div>
 </body>
 <script type="application/javascript">
