@@ -1,0 +1,69 @@
+<extend name="Public/base" />
+<block name="body">
+    <div class="main-title cf">
+        <h2>新增机构评论信息</h2>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="tab-wrap">
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('comment_update')}" method="post" class="form-horizontal doc-modal-form">
+                <input type="hidden" name="id" id="id" value=""/>
+                <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id}"/>
+                <input type="hidden" name="from_org" id="from_org" value="{$from_org|default=0}"/>
+                <!-- 基础 -->
+                <div id="tab1" class="tab-pane in tab1">
+                    <div class="form-item cf">
+                        <label class="item-label">评论机构：{$organization_name}</label>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">评论用户</label>
+                        <div class="controls">
+                            <notempty name="student_list">
+                                <select class="text input-large" name="uid" style="height: 30px;width: 400px;">
+                                    <volist name="student_list" id="vo">
+                                        <option value="{$vo.id}">{$vo.name}</option>
+                                    </volist>
+                                </select>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">综合评分</label>
+                        <select name="comprehensive_score">
+                            <option value="1" selected>一星</option>
+                            <option value="2" >二星</option>
+                            <option value="3" >三星</option>
+                            <option value="4" >四星</option>
+                            <option value="5" >五星</option>
+                        </select>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">评论内容</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="comment" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="form-item cf">
+                    <label class="item-label"></label>
+                    <div class="controls edit_sort_btn">
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">确 定</button>
+                        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+
+<script>
+    //导航高亮
+    highlight_subnav('{:U('Organization/comment')}');
+</script>
+

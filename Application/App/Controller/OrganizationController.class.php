@@ -3256,11 +3256,11 @@ class OrganizationController extends AppController
     /**
      * 2.8机构列表软件热门视频
      * @param null $city
-     * @param null $type
+     * @param string $type
      * @param int $page
      * @param int $count
      */
-    public function getLocationSoftwareHotTeachingCourse($city=null, $type=null, $page=1, $count=2){
+    public function getLocationSoftwareHotTeachingCourse($city=null, $type='软件', $page=1, $count=2){
         $model = M('Organization');
         $select_where = "application_status=2 and status=1";
         if(!empty($city)){
@@ -3270,8 +3270,12 @@ class OrganizationController extends AppController
                 $select_where = $select_where . " and city like '%" .$city . "%'";
             }
         }
-        if(!empty($type)){
-            $select_where = $select_where . " and type=".$type;
+        if($type != '软件' && $type != '留学' && $type != '手绘'){
+            $type = '软件';
+        }
+        $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+        if(!empty($type_id)){
+            $select_where = $select_where . " and type=".$type_id;
         }
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
@@ -3284,8 +3288,16 @@ class OrganizationController extends AppController
         $where['organization_id'] = array('in', $org_id_list);
         $where['is_hot'] = 1;
         $totalCount = M('OrganizationTeachingCourse')->where($where)->count();
-        $list = M('OrganizationTeachingCourse')->field('id, course_name, cover_pic')
+        $list = M('OrganizationTeachingCourse')->field('id, organization_id, course_name, cover_pic, start_course_time, lesson_period, student_num, lecture_name, price, already_registered')
             ->where($where)->order('create_time desc')->page($page, $count)->select();
+        foreach($list as &$course){
+            $org_info = $model->field('name')->where('id='.$course['organization_id'])->find();
+            if($org_info){
+                $course['organization_name'] = $org_info['name'];
+            } else {
+                $course['organization_name'] = null;
+            }
+        }
         $this->apiSuccess('获取热门视频列表成功', null, array('data'=>$list, 'totalCount'=>$totalCount));
     }
 

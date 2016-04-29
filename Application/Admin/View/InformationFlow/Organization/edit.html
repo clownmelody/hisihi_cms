@@ -1,0 +1,471 @@
+<extend name="Public/base" />
+<block name="body">
+    <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+    <div class="main-title cf">
+        <h2>修改机构信息</h2>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="tab-wrap">
+        <div class="tab-content">
+            <!-- 表单 -->
+            <form id="form" action="{:U('update')}" method="post" class="form-horizontal doc-modal-form">
+                <input type="hidden" name="id" id="id" value="{$organization.id}"/>
+                <!-- 基础 -->
+                <div id="tab1" class="tab-pane in tab1">
+                    <div class="form-item cf">
+                        <label class="item-label">机构名称</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="name" value="{$organization.name}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构签名</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="slogan" value="{$organization.slogan}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构简介</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="introduce" value="{$organization.introduce}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">所在城市</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="city" value="{$organization.city}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构地址</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="location" value="{$organization.location}">
+<!--                            <input type="hidden" id="longitude" class="text input-large" name="longitude" value="{$organization.longitude}">
+                            <input type="hidden" id="latitude" class="text input-large" name="latitude" value="{$organization.latitude}">
+                            <button class="btn" style="margin-left: 20px;" onclick="javascript:locationSearch();return false;">查  找</button>
+                            <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+                            <div id="allmap"></div>-->
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构联系电话</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="phone_num" value="{$organization.phone_num}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构类型</label>
+                        <div class="controls">
+                            <notempty name="_type">
+                                <ul class="dowebok" id="type_list">
+                                    <volist name="_type" id="vo">
+                                        <li><input type="checkbox" id="{$vo.id}" <in name="vo['id']" value="$type_array">checked</in> data-labelauty="{$vo.value}" value="{$vo.value}"></li>
+                                    </volist>
+                                </ul>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                            <input type="hidden" class="text input-large" name="type" id="type" value="{$organization.type}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">是否设为推荐机构</label>
+                        <div class="controls">
+                            <ul class="dowebok">
+                                <li><input type="radio" value="0" data-labelauty="否" name="is_recommend" <eq name="organization['is_recommend']" value="0">checked</eq>/></li>
+                                <li><input type="radio" value="1" data-labelauty="是" name="is_recommend" <eq name="organization['is_recommend']" value="1">checked</eq>/></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">优势标签</label>
+                        <div class="controls">
+                            <notempty name="_marks">
+                                <ul class="dowebok" id="advantage_ul">
+                                    <volist name="_marks" id="vo">
+                                        <li><input type="checkbox" <in name="vo['ischecked']" value="1">checked</in> data-labelauty="{$vo.value}" value="{$vo.value}"></li>&nbsp;
+                                    </volist>
+                                </ul>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                            <input type="hidden" class="text input-large" name="advantage" id="advantage" value="{$organization.advantage}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构视频</label>
+                        <div class="controls">
+                            <input type="file" id="upload_video_cover">
+                            <input type="hidden" name="video_img" id="video_img" value="{$organization.video_img}"/>
+                            <div class="upload-img-box">
+                                <notempty name="organization['video_img']">
+                                    <div class="upload-pre-item"><img src="{$organization['video_img']}"/></div>
+                                </notempty>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <input type="file" id="upload_video">
+                            <input type="hidden" name="video" id="video_id" value="{$organization.video}"/>
+                            <div class="upload-img-box">
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            //上传图片
+                            /* 初始化上传插件 */
+                            $("#upload_video_cover").uploadify({
+                                "height"          : 30,
+                                "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                                "fileObjName"     : "download",
+                                "buttonText"      : "上传视频封面",
+                                "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                                "width"           : 120,
+                                'removeTimeout'	  : 1,
+                                'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                                "onUploadSuccess" : uploadVideoPicture,
+                                'onFallback' : function() {
+                                    alert('未检测到兼容版本的Flash.');
+                                }
+                            });
+                            function uploadVideoPicture(file, data,response){
+                                var data = $.parseJSON(data);
+                                var src = '';
+                                if(data.status){
+                                    $("#video_img").val(data.id);
+                                    src = data.url ||  data.path
+                                    $("#video_img").parent().find('.upload-img-box').html(
+                                            '<div class="upload-pre-item"><img src="' + src + '"/></div>'
+                                    );
+                                } else {
+                                    updateAlert(data.info);
+                                    setTimeout(function(){
+                                        $('#top-alert').find('button').click();
+                                        $(that).removeClass('disabled').prop('disabled',false);
+                                    },1500);
+                                }
+                            }
+                            var url = 'http://121.42.44.208:8082/MIS/addOrganizationVideo';
+                            var options = {
+//                                        'url': url,
+                                'height': 30,
+                                'width': 120,
+                                'swf': "__STATIC__/uploadify/uploadify.swf",
+                                'buttonText': '上传视频',
+//                                        'queueID': 'uploadProConForVideo',
+                                'uploader': url,
+                                'formData': {course_id: 0},
+                                'fileDataName': 'video',
+                                'fileObjName': 'video',
+                                'fileSizeLimit': '100MB',//上传文件大小限制
+                                'fileTypeDesc': '视频文件',
+                                'fileTypeExts': '*.avi; *.mp4; *.mov; *.wmv',//文件类型过滤
+                                'auto':true,
+                                'errorCallback': uploadErrorCallback,
+                                'onUploadSuccess':uploadVideo
+                            };
+                            $("#upload_video").uploadify(options);
+                            function uploadVideo(file, data,response){
+                                var data = $.parseJSON(data);
+                                if(data['success']){
+                                    $("#video_id").val(data['data']['id']);
+                                    $("#video_id").parent().find('.upload-img-box').html(
+                                            '<div class="upload-pre-item"><p>'+ data['data']['name'] + file['type'] +'</p></div>'
+                                    );
+                                } else {
+                                    updateAlert(data['message']);
+                                    setTimeout(function(){
+                                        $('#top-alert').find('button').click();
+                                        $(that).removeClass('disabled').prop('disabled',false);
+                                    },1500);
+                                }
+                            }
+                            function uploadErrorCallback(data){
+                                console.log(data);
+                            }
+                        </script>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构担保名额</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="guarantee_num" value="{$organization.guarantee_num}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构浏览量</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="view_count" value="{$organization.view_count}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构粉丝数</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="fake_fans_count" value="{$organization.fake_fans_count}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构LOGO</label>
+                        <div class="controls">
+                            <input type="file" id="upload_organization_picture">
+                            <input type="hidden" name="picture" id="cover_id_organization" value="{$organization.logo}"/>
+                            <div class="upload-img-box">
+                                <notempty name="organization['logo']">
+                                    <div class="upload-pre-item"><img src="{$organization['logo']}"/></div>
+                                </notempty>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            //上传图片
+                            /* 初始化上传插件 */
+                            $("#upload_organization_picture").uploadify({
+                                "height"          : 30,
+                                "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                                "fileObjName"     : "download",
+                                "buttonText"      : "上传图片",
+                                "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                                "width"           : 120,
+                                'removeTimeout'	  : 1,
+                                'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                                "onUploadSuccess" : uploadPictureCompany,
+                                'onFallback' : function() {
+                                    alert('未检测到兼容版本的Flash.');
+                                }
+                            });
+                            function uploadPictureCompany(file, data){
+                                var data = $.parseJSON(data);
+                                var src = '';
+                                if(data.status){
+                                    $("#cover_id_organization").val(data.id);
+                                    src = data.url ||  data.path
+                                    $("#cover_id_organization").parent().find('.upload-img-box').html(
+                                            '<div class="upload-pre-item"><img src="' + src + '"/></div>'
+                                    );
+                                } else {
+                                    updateAlert(data.info);
+                                    setTimeout(function(){
+                                        $('#top-alert').find('button').click();
+                                        $(that).removeClass('disabled').prop('disabled',false);
+                                    },1500);
+                                }
+                            }
+                        </script>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">机构地图图片</label>
+                        <div class="controls">
+                            <input type="file" id="upload_organization_location_img">
+                            <input type="hidden" name="location_img" id="location_img"/>
+                            <div class="upload-img-box">
+                                <notempty name="organization['location_img']">
+                                    <div class="upload-pre-item"><img src="{$organization['location_img']}"/></div>
+                                </notempty>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            //上传图片
+                            /* 初始化上传插件 */
+                            $("#upload_organization_location_img").uploadify({
+                                "height"          : 30,
+                                "swf"             : "__STATIC__/uploadify/uploadify.swf",
+                                "fileObjName"     : "download",
+                                "buttonText"      : "上传图片",
+                                "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                                "width"           : 120,
+                                'removeTimeout'	  : 1,
+                                'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+                                "onUploadSuccess" : uploadPictureOrganizationLocation,
+                                'onFallback' : function() {
+                                    alert('未检测到兼容版本的Flash.');
+                                }
+                            });
+                            function uploadPictureOrganizationLocation(file, data){
+                                var data = $.parseJSON(data);
+                                var src = '';
+                                if(data.status){
+                                    $("#location_img").val(data.id);
+                                    src = data.url ||  data.path
+                                    $("#location_img").parent().find('.upload-img-box').html(
+                                            '<div class="upload-pre-item"><img src="' + src + '"/></div>'
+                                    );
+                                } else {
+                                    updateAlert(data.info);
+                                    setTimeout(function(){
+                                        $('#top-alert').find('button').click();
+                                        $(that).removeClass('disabled').prop('disabled',false);
+                                    },1500);
+                                }
+                            }
+                        </script>
+                    </div>
+
+                    <div class="form-item cf">
+                        <label class="item-label">设置排序字段(默认100)</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="sort" value="{$organization.sort|default=100}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="form-item cf">
+                    <label class="item-label"></label>
+                    <div class="controls edit_sort_btn">
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" onclick="setAdvantage();" target-form="form-horizontal">确 定</button>
+                        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <link href="__STATIC__/labelauty/jquery-labelauty.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="__STATIC__/labelauty/jquery-labelauty.js"></script>
+<!--    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=fajluFy9hkTUcOBXLZHU5HpK"></script>
+    &lt;!&ndash;[if IE 6]>
+    <script type="text/javascript" src="http://dev.baidu.com/wiki/static/map/tuan/js/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix("#float_search_bar");</script>
+    <![endif]&ndash;&gt;-->
+    <style type="text/css">
+        #allmap{  border: 1px solid #bfd2e1;  width: 500px;  height: 400px;  font-family: Arial, Helvetica, sans-serif,"宋体";  }
+        .dowebok{list-style-type: none;}
+        .dowebok li{display: inline-block;}
+        .dowebok li{margin: 10px 0;}
+        input.labelauty + label{font:12px "Microsoft Yahei";}
+    </style>
+    <script>
+        //导航高亮
+        highlight_subnav('{:U('Organization/index')}');
+        $(function(){
+            $(':input').labelauty();
+
+/*            var longitude = Number($("#longitude").val());
+            var latitude = Number($("#latitude").val());
+            var point1 = new BMap.Point(longitude,latitude);
+            map.centerAndZoom(point1,16);
+            map.addOverlay(new BMap.Marker(point1));
+
+            myGeo.getLocation(point1, function(rs){
+                var addComp = rs.addressComponents;
+                //alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+                localcity =  addComp.city;
+            });*/
+        });
+
+        function setAdvantage(){
+            var advantage = '';
+            $.each($("#advantage_ul li"),function(i,n){
+                var li = $(this);
+                var span = li.find("span:visible");
+                var input = li.find("input");
+                var classattr = span.attr("class");
+                var id = input.attr("id");
+                var value = input.val();
+                if(classattr == "labelauty-checked-image"){
+                    advantage += (input.attr("value") + "#");
+                }
+            });
+            var advantage_str = advantage.substring(0,advantage.length - 1);
+            $("#advantage").val(advantage_str);
+
+            var type = "";
+            $.each($("#type_list li"),function(i,n){
+                var li = $(this);
+                var span = li.find("span:visible");
+                var input = li.find("input");
+                var classattr = span.attr("class");
+                var id = input.attr("id");
+                var value = input.val();
+                if(classattr == "labelauty-checked-image"){
+                    type += (input.attr("id") + "#");
+                }
+            });
+            var type_str = type.substring(0,type.length - 1);
+            $("#type").val(type_str);
+
+            /*if($("#longitude").val() == "" || $("#latitude").val() == "" ){
+                locationSearch();
+            }*/
+        }
+/*
+
+        // 百度地图API功能
+        var map = new BMap.Map("allmap");
+        var point = new BMap.Point(116.331398,39.897445);
+        map.centerAndZoom(point,12);
+        // 创建地址解析器实例
+        var myGeo = new BMap.Geocoder();
+        //根据ip获取城市
+        var city = new BMap.LocalCity();
+        var localcity = "";
+
+        function locationSearch(){
+            var location = $("#location").val();
+            if(location != ""){
+                // 将地址解析结果显示在地图上,并调整地图视野
+                myGeo.getPoint(location, function(point){
+                    if (point) {
+                        map.centerAndZoom(point, 16);
+                        map.addOverlay(new BMap.Marker(point));
+                        $("#longitude").val(point.lng);
+                        $("#latitude").val(point.lat);
+                    }else{
+                        alert("您选择地址没有解析到结果!");
+                    }
+                },localcity);
+            }
+        }
+        //输入提示功能
+        // 百度地图API功能
+        function G(id) {
+            return document.getElementById(id);
+        }
+        var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+                {"input" : "location"
+                    ,"location" : map
+                });
+        ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+            var str = "";
+            var _value = e.fromitem.value;
+            var value = "";
+            if (e.fromitem.index > -1) {
+                value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                localcity = _value.city;
+            }
+            str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+            value = "";
+            if (e.toitem.index > -1) {
+                _value = e.toitem.value;
+                value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                localcity = _value.city;
+            }
+            str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+            G("searchResultPanel").innerHTML = str;
+        });
+        var myValue;
+        ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+            var _value = e.item.value;
+            myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+            G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+            setPlace();
+            localcity = _value.city;
+            locationSearch();
+        });
+
+        function setPlace(){
+            map.clearOverlays();    //清除地图上所有覆盖物
+            function myFun(){
+                var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+                map.centerAndZoom(pp, 18);
+                map.addOverlay(new BMap.Marker(pp));    //添加标注
+            }
+            var local = new BMap.LocalSearch(map, { //智能搜索
+                onSearchComplete: myFun
+            });
+            local.search(myValue);
+        }
+*/
+
+    </script>
+</block>
+

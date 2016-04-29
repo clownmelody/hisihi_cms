@@ -1,0 +1,111 @@
+<extend name="Public/base"/>
+
+<block name="body">
+	<!-- 标题 -->
+	<div class="main-title">
+		<h2>
+		资讯流类型配置
+		</h2>
+	</div>
+
+	<!-- 按钮工具栏 -->
+	<div class="cf">
+		<div class="fl">
+			<div class="btn-group">
+				<button class="btn document_add" url="{:U('configAdd')}">新 增</button>
+			</div>
+            <button class="btn ajax-post" target-form="ids" url="{:U("informationflow/setConfigStatus",array("status"=>1))}">启 用</button>
+			<button class="btn ajax-post confirm" target-form="ids" url="{:U("informationflow/setConfigStatus",array("status"=>-1))}">删 除</button>
+		</div>
+	</div>
+
+	<!-- 数据表格 -->
+	<div class="data-table table-striped">
+		<table class="">
+			<thead>
+			<tr>
+				<th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+				<th class="">ID</th>
+				<th class="">类型名称</th>
+				<th class="">创建时间</th>
+				<th class="">状态</th>
+				<th class="">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			<notempty name="_list">
+				<volist name="_list" id="vo">
+					<tr>
+						<td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+						<td>{$vo.id}</td>
+						<td>{$vo.title}</td>
+						<td><span>{$vo.create_time|time_format}</span></td>
+						<td><if condition="($vo.status eq 1) "> 正常
+							<else /> 删除
+						</if>
+						</td>
+						<td>
+							<a href="{:U('informationFlow/editConfig?id='.$vo['id'])}" >编辑</a>
+							<a href="{:U('informationFlow/setConfigStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>
+							<a href="{:U('informationFlow/setConfigStatus?status=-1&id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+						</td>
+					</tr>
+				</volist>
+				<else/>
+				<td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+			</notempty>
+			</tbody>
+		</table>
+	</div>
+	<div class="page">
+		{$_page}
+	</div>
+</div>
+
+</block>
+<block name="script">
+<script type="text/javascript">
+$(function(){
+	//搜索功能
+	$("#search").click(function(){
+		var url = $(this).attr('url');
+		var status = $("#sch-sort-txt").attr("data");
+        var query  = $('.search-form').find('input').serialize();
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+        query = query.replace(/^&/g,'');
+		if(status != ''){
+			query += 'status=' + status + "&" + query;
+        }
+        if( url.indexOf('?')>0 ){
+            url += '&' + query;
+        }else{
+            url += '?' + query;
+        }
+		window.location.href = url;
+	});
+
+	/* 状态搜索子菜单 */
+	$(".search-form").find(".drop-down").hover(function(){
+		$("#sub-sch-menu").removeClass("hidden");
+	},function(){
+		$("#sub-sch-menu").addClass("hidden");
+	});
+	$("#sub-sch-menu li").find("a").each(function(){
+		$(this).click(function(){
+			var text = $(this).text();
+			$("#sch-sort-txt").text(text).attr("data",$(this).attr("value"));
+			$("#sub-sch-menu").addClass("hidden");
+		})
+	});
+
+	//只有一个模型时，点击新增
+	$('.document_add').click(function(){
+		var url = $(this).attr('url');
+		if(url != undefined && url != ''){
+			window.location.href = url;
+		}
+	});
+
+})
+</script>
+</block>

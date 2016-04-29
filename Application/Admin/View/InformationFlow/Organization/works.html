@@ -1,0 +1,131 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <!-- 标题栏 -->
+    <div class="main-title">
+        <h2>{$organization_name|default='机构'}-学生作品列表(共：{$total|default=0} 张)</h2>
+        <input type="hidden" name="organization_id" id="organization_id" value="{$organization_id | default=0}"/>
+    </div>
+    <div class="cf">
+        <div class="fl">
+            <div class="btn-group">
+                <gt name="organization_id" value="0">
+                    <a id="add" class="btn" href="javascript:void(0)">新 增</a>
+                </gt>
+                <button class="btn ajax-post confirm" target-form="ids" url="{:U('Organization/works_delete',array('status'=>-1))}">删 除</button>
+            </div>
+        </div>
+        <!-- 高级搜索 -->
+        <div class="search-form fr cf">
+            <div class="sleft">
+                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入图片描述">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('organization/works')}"><i class="btn-search"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+        <table class="">
+            <thead>
+            <tr>
+                <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                <th class="">ID</th>
+                <th class="">机构名称</th>
+                <th class="">图片url</th>
+                <th class="">图片描述</th>
+                <th class="">创建时间</th>
+                <th class="">状态</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="_list">
+                <volist name="_list" id="vo">
+                    <tr>
+                        <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.url}</td>
+                        <td>{$vo.description}</td>
+                        <td><span>{$vo.create_time|time_format}</span></td>
+                        <td><if condition="($vo.status eq 1) "> 正常
+                            <else /> 已删除
+                            </if>
+                        </td>
+                        <td>
+                            <gt name="organization_id" value="0">
+                                <a href="{:U('Organization/works_edit?from_org=1&id='.$vo['id'])}" >编辑</a>
+                                <a href="{:U('Organization/works_delete?from_org=1&id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">删除</a>
+                                <else/>
+                                <a href="{:U('Organization/works_edit?id='.$vo['id'])}" >编辑</a>
+                                <a href="{:U('Organization/works_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            </gt>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <div class="page">
+        {$_page}
+    </div>
+</block>
+
+<block name="script">
+    <script src="__STATIC__/thinkbox/jquery.thinkbox.js"></script>
+
+    <script type="text/javascript">
+        //搜索功能
+        $("#search").click(function () {
+            var url = $(this).attr('url');
+            var query = $('.search-form').find('input').serialize();
+            query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g, '');
+            query = query.replace(/^&/g, '');
+            if (url.indexOf('?') > 0) {
+                url += '&' + query;
+            } else {
+                url += '?' + query;
+            }
+            var organization_id = $("#organization_id").val();
+            if(organization_id != 0){
+                url += '&organization_id=' + organization_id;
+            }
+            window.location.href = url;
+        });
+
+        $("#add").click(function () {
+            var url = '{:U('Organization/works_add')}';
+            var organization_id = $("#organization_id").val();
+            if(organization_id != 0){
+                url += '&from_org=1&organization_id=' + organization_id;
+            }
+            window.location.href = url;
+        });
+
+        /* 状态搜索子菜单 */
+        $(".search-form").find(".drop-down").hover(function(){
+            $("#sub-sch-menu").removeClass("hidden");
+        },function(){
+            $("#sub-sch-menu").addClass("hidden");
+        });
+        $("#sub-sch-menu li").find("a").each(function(){
+            $(this).click(function(){
+                var text = $(this).text();
+                $("#sch-sort-txt").text(text).attr("data",$(this).attr("value"));
+                $("#sub-sch-menu").addClass("hidden");
+            })
+        });
+        //回车搜索
+        $(".search-input").keyup(function (e) {
+            if (e.keyCode === 13) {
+                $("#search").click();
+                return false;
+            }
+        });
+        //导航高亮
+        highlight_subnav("{:U('Organization/works')}");
+    </script>
+</block>
