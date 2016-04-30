@@ -190,6 +190,8 @@ ul{
           outline: none;
           color: #212121;
           box-sizing: border-box;
+          -webkit-user-select:text;
+          font-size: 14px;
           //width: 100%;
         }
       }
@@ -372,7 +374,9 @@ ul{
 
 }
 
+/*详情页面*/
 #work-detail-panel{
+  //display: none;
   z-index: 100;
   position: absolute;
   .size(100%,100%);
@@ -380,7 +384,96 @@ ul{
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #000;
+  background-color: #E3E3E3;
+  @bottom:100px;
+  #detail-main{
+    overflow: hidden;
+    margin: 40px 0;
+    opacity:0;
+    .touchSlider {
+      .size(90%, 100%);
+      margin: 0 auto;
+      ul {
+        height: 100%;
+        white-space: nowrap;
+        width: 100%;
+        li {
+          margin: 20px auto;
+          display: inline-block;
+          text-align: center;
+          padding: 5px;
+          background-color:transparent;
+          a {
+            display: block;
+            .size(90%, 100%);
+            margin: 0 auto;
+            text-align: center;
+            .border-radius(3px);
+            overflow: hidden;
+            box-shadow: 0px 0px 10px 4px #ADA8A8;
+            img {
+              display: block;
+
+            }
+          }
+        }
+      }
+    }
+  }
+  .detail-bottom-btns{
+    .size(100%,@bottom);
+    margin: 0 auto;
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    @width:53px;
+    >div{
+      .size(90%,100%);
+      margin: 0 auto;
+    }
+    .item{
+      float: left;
+      width: 30%;
+      text-align: center;
+      .btn {
+        .size(@width, @width+20);
+        margin: 14px auto;
+        .color-block {
+          .size(@width, @width);
+          margin: 0 auto;
+          text-align: center;
+          .border-radius(5px);
+          &.down {
+            background-color: #FF8638;
+          }
+          &.link {
+            margin: 0 3%;
+            background-color: #039BE5
+          }
+          &.share {
+            margin: 0 3%;
+            background-color: #23A438
+          }
+          span {
+            color: white;
+            font-size: 26px;
+            display: inline-block;
+            line-height: @width;
+          }
+        }
+        .label{
+          margin-top: 5px;
+          font-size: 13px;
+          color: #838383;
+        }
+      }
+      &:nth-child(2){
+        margin-left:3%;
+        margin-right: 3%;
+      }
+    }
+  }
+
 }
 
 @keyframes turning {

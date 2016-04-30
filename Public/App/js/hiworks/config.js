@@ -10,6 +10,7 @@ requirejs.config({
         lazyloading:'hiworks/imglazyload.min',
         prefixfree:'sharecommon/prefixfree.min',
         iscroll:'sharecommon/iscroll',
+        touchslider:'hiworks/touchSlider-lib',
         base:'sharecommon/base',
         myscroll:'hiworks/myscroll',
         home:'hiworks/home',
@@ -22,6 +23,10 @@ requirejs.config({
             steps:['$'],
             output:'fx'
         },
+        //touchslider:{
+        //    steps:['$'],
+        //    output:'TouchSlider'
+        //},
         lazyloading:{
             steps:['$'],
             output:'lazyloading'
