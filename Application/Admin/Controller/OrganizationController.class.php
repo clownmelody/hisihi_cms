@@ -1906,7 +1906,10 @@ class OrganizationController extends AdminController
     /**
      * 机构视频列表
      */
-    public function video($id){
+    public function video($id=0){
+        if(empty($id)){
+            $id = 0;
+        }
         $model = M('OrganizationVideo');
         $map['status'] = array('egt',0);
         $map['course_id'] = $id;
