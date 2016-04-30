@@ -80,147 +80,149 @@ ul{
     }
   }
 }
+
+.header {
+  position: absolute;
+  z-index: 100;
+  .size(100%, auto);
+  @h: 40px;
+  .nav-tabs-bar {
+    //display: none;
+    .nav-bar {
+      .size(100%, @h);
+      background-color: #000;
+      color: white;
+      > div {
+        float: left;
+        text-align: center;
+        > span {
+          line-height: @h;
+          display: inline-block;
+        }
+      }
+      .nav-bar-title {
+        width: 100%;
+        .nav-bar-middle {
+          line-height: @h;
+          font-size: 18px;
+        }
+      }
+      .nav-bar-left {
+        width: @h;
+        margin-left: -100%;
+        > span {
+          font-size: 35px;
+        }
+      }
+      .nav-bar-right {
+        width: @h;
+        margin-left: -@h;
+        > span {
+          font-size: 21px;
+        }
+      }
+    }
+    #tabs-bar {
+      .size(100%, @h+10);
+      background-color: #fff;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      border-bottom: 1px solid #ccc;
+      ul {
+        height: 100%;
+        white-space: nowrap;
+        width: 100%;
+        li {
+          color: #212121;
+          height: 42px;
+          display: inline-block;
+          text-align: center;
+          margin-left: 8px;
+          line-height: @h;
+          border-bottom: 2px solid white;
+          &:first-child {
+            margin-left: 14px;
+          }
+          &.active {
+            color: #ff5a00;
+            border-bottom: 2px solid #ff5a00;
+          }
+        }
+      }
+    }
+  }
+
+  #search-bar{
+    display: none;
+    position: absolute;
+    @width:120px;
+    height: 48px;
+    background-color: #E3E3E3;
+    padding:10px 15px;
+    box-sizing: border-box;
+    width: 100%;
+    .search-box{
+      margin-right: @width;
+      height: 100%;
+      .search-box-bg{
+        position: relative;
+        .size(100%,28px);
+        background-color: #fff;
+        .border-radius(13px);
+        .font-icon{
+          display: block;
+          .size(24px,24px);
+          position: absolute;
+          color: #BDBDBD;
+          text-align: center;
+          line-height: 24px;
+          margin-top: 3px;
+          margin-left: 5px;
+          .border-radius(13px);
+        }
+        #search-txt{
+          display: block;
+          border: none;
+          margin-left: 32px;
+          height: 100%;
+          width: 80%;
+          outline: none;
+          color: #212121;
+          box-sizing: border-box;
+          //width: 100%;
+        }
+      }
+    }
+    .search-btns{
+      position: absolute;
+      right: 0;
+      top: 0;
+      .size(@width,100%);
+      >div{
+        line-height:48px;
+        display: inline-block;
+        width: 35%;
+        margin-right: 10px;
+        text-align: center;
+        color: #929292;
+        &:last-child{
+
+        }
+        &.active{
+          color: #000;
+        }
+      }
+    }
+  }
+}
+
 #main-content {
   //display: none;
   opacity: 1;
   position: absolute;
   .size(100%,100%);
   @main-w: 90%;
-  .header {
-    position: absolute;
-    z-index: 100;
-    .size(100%, auto);
-    @h: 40px;
-    #nav-tabs-bar {
-      //display: none;
-      #nav-bar {
-        .size(100%, @h);
-        background-color: #000;
-        color: white;
-        > div {
-          float: left;
-          text-align: center;
-          > span {
-            line-height: @h;
-            display: inline-block;
-          }
-        }
-        .nav-bar-title {
-          width: 100%;
-          .nav-bar-middle {
-            line-height: @h;
-            font-size: 18px;
-          }
-        }
-        .nav-bar-left {
-          width: @h;
-          margin-left: -100%;
-          > span {
-            font-size: 35px;
-          }
-        }
-        .nav-bar-right {
-          width: @h;
-          margin-left: -@h;
-          > span {
-            font-size: 21px;
-          }
-        }
-      }
-      #tabs-bar {
-        .size(100%, @h+10);
-        background-color: #fff;
-        overflow-x: auto;
-        overflow-y: hidden;
-
-        border-bottom: 1px solid #ccc;
-        ul {
-          height: 100%;
-          white-space: nowrap;
-          width: 100%;
-          li {
-            color: #212121;
-            height: 42px;
-            display: inline-block;
-            text-align: center;
-            margin-left: 8px;
-            line-height: @h;
-            border-bottom: 2px solid white;
-            &:first-child {
-              margin-left: 14px;
-            }
-            &.active {
-              color: #ff5a00;
-              border-bottom: 2px solid #ff5a00;
-            }
-          }
-        }
-      }
-    }
-
-    #search-bar{
-      display: none;
-      position: absolute;
-      @width:120px;
-      height: 48px;
-      background-color: #E3E3E3;
-      padding:10px 15px;
-      box-sizing: border-box;
-      width: 100%;
-      .search-box{
-        margin-right: @width;
-        height: 100%;
-        .search-box-bg{
-          position: relative;
-          .size(100%,28px);
-          background-color: #fff;
-          .border-radius(13px);
-          .font-icon{
-            display: block;
-            .size(24px,24px);
-            position: absolute;
-            color: #BDBDBD;
-            text-align: center;
-            line-height: 24px;
-            margin-top: 3px;
-            margin-left: 5px;
-            .border-radius(13px);
-          }
-          #search-txt{
-            display: block;
-            border: none;
-            margin-left: 32px;
-            height: 100%;
-            width: 80%;
-            outline: none;
-            color: #212121;
-            box-sizing: border-box;
-            //width: 100%;
-          }
-        }
-      }
-      .search-btns{
-        position: absolute;
-        right: 0;
-        top: 0;
-        .size(@width,100%);
-        >div{
-          line-height:48px;
-          display: inline-block;
-          width: 35%;
-          margin-right: 10px;
-          text-align: center;
-          color: #929292;
-          &:last-child{
-
-          }
-          &.active{
-            color: #000;
-          }
-        }
-      }
-    }
-  }
   .wrapper {
     .abs-all-zero(81px);
     width: 100%;
@@ -366,7 +368,21 @@ ul{
   }
 
 
+
+
 }
+
+#work-detail-panel{
+  z-index: 100;
+  position: absolute;
+  .size(100%,100%);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #000;
+}
+
 @keyframes turning {
   to {
     transform: rotate(360deg);

@@ -44,9 +44,11 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
         //搜寻框可用性控制
         $(document).on('input','#search-txt', $.proxy(this,'controlSearchTxt'));
 
+        //执行搜索
         $(document).on(eventName,'#do-search', $.proxy(this,'doSearchByKeyWord'));
 
-        $(document).on(eventName,'#search-result-panel .wrapper', function(){});
+        //源作业详细信息查询
+        $(document).on(eventName,'.lists-ul li',$.proxy(this,'viewWorksDetailInfo'));
 
 
 
@@ -316,7 +318,7 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
     };
 
     /*填充显示云作业列表信息*/
-    t.getWorksListInfoStr=function(result,id){
+    t.getWorksListInfoStr=function(result,id,keyword){
         var str='',w=$(document).width()*0.27;
         if(result && result.data.length>0){
             var category=result.data,
@@ -329,12 +331,16 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
                 var className='',marginTopClass='';
                 var title=item.title;
                 title=this.substrLongStr(title,12);
+                if(keyword) {
+                    title = title.replace(keyword, '<span style="color:#FA4535">' + keyword + '</span>');
+                }
                 flag=i==0 || i%3==0;
                 if(flag){
                     str+='<ul>';
                 }
                 j++;
-                str+='<li class="'+className+' '+marginTopClass+'">'+
+                var jsonStr=JSON.stringify(item);
+                str+='<li class="'+className+' '+marginTopClass+'" data-json="'+jsonStr+'">'+
                         '<div class="img-box" style="height:'+w+'px;width:'+w+'px">'+
                             '<img src="'+ item.pic_url +'" data-alt="加载中…">'+
                         '</div>'+
@@ -385,6 +391,8 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
     };
 
 
+    /**************搜索功能******************/
+
     //显示和搜索功能相关的容器
     t.controlSearchPanel=function(flag){
         var $navTabsBar=$('#nav-tabs-bar'),
@@ -421,19 +429,18 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
         }
     };
 
+    /*关键字搜索*/
     t.doSearchByKeyWord=function(){
-        var keyWord=$('#search-txt').val().trim(),
-            that=this;
-        if(!keyWord){
-            return;
-        }
-        this.execSearch(keyWord,1,true,function(){
-            //初始化搜索面板的 滑动事件
+        var that=this;
+        this.execSearch(1,true,function(result){
+            var pcount=Math.ceil(result.totalCount/that.perPageCount);
+            $('#list-wrapper-search').attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
             that.sScrollObj.refresh();
+            that.sScrollObj.resetDownStyle();
         });
-
     };
 
+    /*初始化搜索面板*/
     t.initSearchPanelScrollFn=function(){
         var str=this.getScrollContent('search'),
             $target = $('#search-result-panel').append(str),
@@ -450,23 +457,51 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
         $wrapper.attr('data-init','true');
     };
 
+    /*刷新查询结果*/
     t.reloadWorksListInfoByKetWord=function(){
+        this.doSearchByKeyWord(function(result){
+            //var pcount=Math.ceil(result.totalCount/that.perPageCount);
+            //$('#list-wrapper-search').attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
+            //that.sScrollObj.refresh();
+            //that.sScrollObj.resetDownStyle();
+        });
+
 
     };
 
+    /*加载更新查询结果*/
     t.loadMoreWorksListInfoByKetWord=function(){
+        var $target=$('#list-wrapper-search'),
+            pindex=$target.attr('data-pindex'),
+            pcount=$target.attr('data-pcount'),
+            that=this,
+            scrollObj=that.sScrollObj;
 
+        if(pindex<pcount){
+            pindex++;
+            this.execSearch(pindex,false,function(result){
+                that.sScrollObj.refresh();
+                that.sScrollObj.resetUpStyle();
+                $('#list-wrapper-search').attr({'data-pindex':pindex});
+                if(pindex==pcount){
+                    scrollObj.controlDownTipsStyle(false);
+                }
+            });
+        }
     };
 
     /*
      * 执行搜索云作业信息
      * @para：
-     * keyWord - {string} 关键字
      * page - {int} 当前页码
      * reload  - {bool}操作方式 重新加载（true），还是滚动加载（false）
      * callback - {fn object} 回调方法
      */
-    t.execSearch=function(keyWord,page,reload,callback){
+    t.execSearch=function(page,reload,callback){
+        var keyWord=$('#search-txt').val().trim();
+        if(!keyWord){
+            return;
+        }
         if(!keyWord){
             return;
         }
@@ -482,7 +517,7 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
             paraData: paraData,
             sCallback: function (resutl) {
                 that.controlLoadingBox();
-                var str= that.getWorksListInfoStr(resutl,'search'),
+                var str= that.getWorksListInfoStr(resutl,'search',keyWord),
                     $targetUl=$('#search-result-panel').find('.lists-ul');
                 if(reload) {
                     $targetUl.html(str);
@@ -509,6 +544,18 @@ define(['fx','base','myscroll','lazyloading'],function(fx,Base,MyScroll) {
         };
         this.getDataAsync(para);
     };
+
+
+    /*******************作业详细信息查看**********************/
+
+    t.viewWorksDetailInfo=function(e){
+        var $target=$(e.currentTarget),
+            jsonObj=JSON.parse($target.attr('data-json'));
+
+    };
+
+
+    /*******************通用功能*********************/
 
     /*
     *控制加载等待框

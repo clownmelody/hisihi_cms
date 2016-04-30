@@ -28,11 +28,10 @@ define(['$','iscroll'],function() {
         //是否 显示 隐藏上拉加载更多提示
         controlDownTipsStyle:function(flag){
             if(flag){
-                this.$up.show();
                 this.$down.show();
+                this.$up.show();
             }else {
                 this.$up.hide();
-                this.$down.hide();
             }
         },
 
@@ -72,7 +71,7 @@ define(['$','iscroll'],function() {
 
             myScroll.on("slideUp", function () {
                 if (this.maxScrollY - this.y > 40) {
-                    if (!that.$upIcon.hasClass('loading') && !that.$downIcon.hasClass('loading') ) {
+                    if (!that.$upIcon.hasClass('loading') && !that.$downIcon.hasClass('loading') && that.$up.css('display')!='none' ) {
                         that.$upIcon.addClass('loading');
                         that.$up.find('.pullUpLabel').text('加载中...');
                         that._pullUpAction();
