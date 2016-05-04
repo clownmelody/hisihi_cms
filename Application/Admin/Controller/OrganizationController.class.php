@@ -2686,7 +2686,7 @@ class OrganizationController extends AdminController
      */
     public  function tag(){
         $model = M('OrganizationTag');
-        $map['status'] = 1;
+        $map['status'] = array('gt', 0);
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
@@ -2789,6 +2789,51 @@ class OrganizationController extends AdminController
             $this->error('未选择要删除的数据');
         }
     }
+
+    /**设置为热门标签
+     * @param $id
+     */
+    public function setTagHot($id){
+        if(!empty($id)){
+            $model = M('OrganizationTag');
+            $data['status'] = 2;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('设置成功','index.php?s=/admin/organization/tag');
+        } else {
+            $this->error('未选择要设置的数据');
+        }
+    }
+
+    /**取消设置为热门标签
+     * @param $id
+     */
+    public function undoSetTagHot($id){
+        if(!empty($id)){
+            $model = M('OrganizationTag');
+            $data['status'] = 1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('设置成功','index.php?s=/admin/organization/tag');
+        } else {
+            $this->error('未选择要设置的数据');
+        }
+    }
+
 
     /**
      * 机构老师分组

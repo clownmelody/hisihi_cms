@@ -57,10 +57,15 @@
                         <td>{$vo.value}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
+                            <elseif condition="($vo.status eq 2) "/>热门
                             <else /> 已删除
                             </if>
                         </td>
                         <td>
+                            <if condition="($vo.type eq 8) ">
+                                <a href="{:U('Organization/setTagHot?id='.$vo['id'])}" class="ajax-get confirm">设为热门</a>
+                                <a href="{:U('Organization/undoSetTagHot?id='.$vo['id'])}" class="ajax-get confirm">取消热门</a>
+                            </if>
                             <a href="{:U('Organization/tag_edit?id='.$vo['id'])}" >编辑</a>
                             <a href="{:U('Organization/tag_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
