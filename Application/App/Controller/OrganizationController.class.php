@@ -378,7 +378,7 @@ class OrganizationController extends AppController
      * app获取机构基本信息
      * @param $organization_id
      */
-    public function appGetBaseInfo($organization_id, $uid=0,$type=null){
+    public function appGetBaseInfo($organization_id, $uid=0, $type=null){
         if($uid==0){
             $uid = $this->getUid();
         }

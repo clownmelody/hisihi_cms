@@ -3368,6 +3368,51 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 机构培训课程报名列表
+     */
+    public function teachingcourseenroll(){
+        $model = M('OrganizationTeachingCourseEnroll');
+        $courseModel = M('OrganizationTeachingCourse');
+        $orgModel = M('Organization');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where('status=1')->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$enroll){
+            $course = $courseModel->field('organization_id, course_name')->where('id='.$enroll['course_id'])->find();
+            $org = $orgModel->field('name')->where('id='.$course['organization_id'])->find();
+            $enroll['course_name'] = $course['course_name'];
+            $enroll['organization_id'] = $course['organization_id'];
+            $enroll['organization_name'] = $org['name'];
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "培训课程报名");
+        $this->display('teachingcourseenroll');
+    }
+
+    public function teachingcourseenroll_delete($id=0){
+        if(!empty($id)){
+            $model = M('OrganizationTeachingCourseEnroll');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/organization/teachingcourseenroll');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    /**
      * 机构培训课程列表
      * @param int $organization_id
      * @param int $is_hot
