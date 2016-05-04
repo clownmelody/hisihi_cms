@@ -2090,26 +2090,35 @@ class OrganizationController extends AppController
      * @param int $organization_id
      * @param int $page
      * @param int $count
+     * @param null $type
+     * @param null $version
+     * @return mixed
      */
-    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10,$type=null){
+    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10, $type=null, $version=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
         $Model = new \Think\Model();
         $totalCount = $Model->query('select count(*) as count from (select distinct uid from hisihi_organization_relation where `status`=1 and `group`=6 and `organization_id`='.$organization_id.')m');
         $totalCount = $totalCount[0]['count'];
-        $teacher_ids = M('OrganizationRelation')->distinct('uid')->field('uid')
-            ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))
-            ->page($page, $count)->select();
+        if((float)$version>=2.8){
+            $teacher_ids = M('OrganizationRelation')->distinct('uid')->field('uid')
+                ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))
+                ->select();
+        } else {
+            $teacher_ids = M('OrganizationRelation')->distinct('uid')->field('uid')
+                ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))
+                ->page($page, $count)->select();
+        }
         $org_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');
         foreach($teacher_ids as &$teacher){
-            $teacher = $this->findTeacherById($teacher['uid']);
+            $teacher = $this->findTeacherById($teacher['uid'], $version);
             $teacher['info']['institution'] = $org_name;
         }
         unset($teacher);
-        if($type=="view"){
+        if($type=="view") {
             return $teacher_ids;
-        }else{
+        } else {
             //返回成功结果
             $this->apiSuccess("获取机构老师列表成功", null, array('totalCount' => $totalCount,'teacherList' => $teacher_ids));
         }
@@ -2946,20 +2955,25 @@ class OrganizationController extends AppController
     /**
      * 根据id获取机构老师信息
      * @param null $teacher_id
-     * @return mixed
+     * @param null $version
+     * @return null
      */
-    private function findTeacherById($teacher_id=null){
+    private function findTeacherById($teacher_id=null, $version=null){
         if(empty($teacher_id)){
             return null;
             //$this->apiError(-1,'老师id不能为空');
         }
         $teacher['uid'] = $teacher_id;
-        $isfollowing = M('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$teacher_id))->find();
-        $isfans = M('Follow')->where(array('who_follow'=>$teacher_id,'follow_who'=>get_uid()))->find();
-        $isfollowing = $isfollowing ? 2:0;
-        $isfans = $isfans ? 1:0;
-        $teacher['relationship'] = $isfollowing | $isfans;
-        $teacher['info'] = query_user(array('avatar256', 'avatar128','group','nickname'), $teacher_id);
+        if((float)$version>=2.8){
+            $teacher['info'] = query_user(array('avatar256', 'avatar128', 'group', 'nickname'), $teacher_id);
+        } else {
+            $isfollowing = M('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$teacher_id))->find();
+            $isfans = M('Follow')->where(array('who_follow'=>$teacher_id,'follow_who'=>get_uid()))->find();
+            $isfollowing = $isfollowing ? 2:0;
+            $isfans = $isfans ? 1:0;
+            $teacher['relationship'] = $isfollowing | $isfans;
+            $teacher['info'] = query_user(array('avatar256', 'avatar128', 'group', 'nickname'), $teacher_id);
+        }
         return $teacher;
     }
 
@@ -3318,7 +3332,13 @@ class OrganizationController extends AppController
                 $course['organization_name'] = null;
             }
         }
-        $this->apiSuccess('获取热门视频列表成功', null, array('data'=>$list, 'totalCount'=>$totalCount));
+        if(empty($list)){
+            $list = null;
+        }
+        if(empty($totalCount)){
+            $totalCount=0;
+        }
+        $this->apiSuccess('获取热门课程列表成功', null, array('data'=>$list, 'totalCount'=>$totalCount));
     }
 
     /**
