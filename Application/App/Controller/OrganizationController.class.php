@@ -3388,4 +3388,19 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取诚信机构列表成功', null, $data);
     }
 
+    /**获取机构专业列表
+     * @param bool|false $is_hot
+     */
+    public function getOrganizationMajor($is_hot=false){
+        $map['type'] = 8;
+        if($is_hot){
+            $map['status'] = 2;
+        }else{
+            $map['status'] = array('gt', 0);
+        }
+        $major = M('OrganizationTag')->field('id, value, extra')->where($map)->select();
+        $data['list'] = $major;
+        $this->apiSuccess('获取机构专业列表成功', null, $data);
+    }
+
 }
