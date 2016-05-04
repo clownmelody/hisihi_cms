@@ -717,14 +717,19 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         }
 
         var para = {
-            url: this.baseUrl + 'hiworks//sendDownLoadURLToEMail',
+            url: this.baseUrl + 'hiworks/sendDownLoadURLToEMail',
             type: 'get',
-            paraData: {email: email, hiwork_id:this.currentWorksObj.download_url.trim()},
+            paraData: {email: email, hiwork_id:this.currentWorksObj.id},
             sCallback: function (data) {
-                that.userInfo = data;
-                that.showTips('','<p>已成功发送至邮箱</p><p>'+email+'</p><p>请注意查收</p>');
+                if(data.success) {
+                    email = that.substrLongStr(email, 20);
+                    that.showTips('', '<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
+                    that.controlModelBox(0,0);
+                }else{
+                    that.showTips('邮件发送失败');
+                }
             },eCallback: function (data) {
-                that.showTips(data.txt);
+                that.showTips('邮件发送失败');
             }
         };
         this.getDataAsync(para);
