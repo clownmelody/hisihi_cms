@@ -62,9 +62,12 @@ class OrganizationController extends AdminController
             }else{
                 $org['has_admin'] = 0;
             }
+            $org['type'] = M('OrganizationTag')->where('type=7 and status=1 and id='.$org['type'])->getField('value');
         }
-
-
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status=1')->select();
+        $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
+        $this->assign('type', $type);
+        $this->assign('major', $major);
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("_total", $count);
@@ -142,7 +145,34 @@ class OrganizationController extends AdminController
                 $all_marks[] = $mark;
             }
         }
+        $org_major = M('OrganizationTagRelation')->where('tag_type=8 and status=1 and organization_id='.$id)->select();
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status=1')->select();
+        $major_str = '';
+        foreach($major as $all_major){
+            $is_exist = false;
+            foreach($org_major as $major_tag){
+                if($all_major['id'] == $major_tag['tag_id']){
+                    $is_exist = true;
+                }
+            }
+            if(!$is_exist){
+                $all_major['ischecked'] = 0;
+                $major_list[] = $all_major;
+            }else{
+                $all_major['ischecked'] = 1;
+                $major_list[] = $all_major;
+            }
+        }
+        foreach($org_major as $major_tag){
+            $major_str = $major_tag['tag_id'].'#'.$major_str;
+        }
+        if(empty($major_str)){
+            $data['major'] = $major_str;
+        }else{
+            $data['major'] = substr($major_str,0,strlen($major_str)-1);
+        }
 
+        $this->assign('major', $major_list);
         $this->assign('_type', $type_array);
         $this->assign('type_array', $_type_array);
         $this->assign('_marks', $all_marks);
@@ -275,6 +305,27 @@ class OrganizationController extends AdminController
                         M('Field')->where($map)->data($field_data)->save();
                     }
                 }
+                /*修改机构的专业*/
+                $major_str = $_POST["major"];
+                $major = explode("#",$major_str);
+                M('OrganizationTagRelation')->where('tag_type=8 and organization_id='.$cid)
+                    ->save(array('status'=>-1));
+                foreach($major as $item){
+                    $result = M('OrganizationTagRelation')->where('tag_type=8 and organization_id='.$cid.' and tag_id='.$item)
+                        ->find();
+                    if($result){
+                        M('OrganizationTagRelation')->where('tag_type=8 and organization_id='.$cid.' and tag_id='.$item)
+                            ->save(array('status'=>1));
+                    }else{
+                        $major_data['organization_id'] = $cid;
+                        $major_data['tag_id'] = $item;
+                        $major_data['tag_type'] = 8;
+                        $major_data['create_time'] = time();
+                        $major_data['status'] = 1;
+                        M('OrganizationTagRelation')->add($major_data);
+                    }
+                }
+
                 $model = $this->organizationModel;
                 $model->updateOrganization($cid, $data);
                 $this->success('更新成功', 'index.php?s=/admin/organization/index');
@@ -316,6 +367,7 @@ class OrganizationController extends AdminController
                     M('OrganizationEnroll')->where(array('organization_id'=>$i))->save($data);
                     M('OrganizationCommentStar')->where(array('organization_id'=>$i))->save($data);
                     M('OrganizationLectureGroup')->where(array('organization_id'=>$i))->save($data);
+                    M('OrganizationTagRelation')->where(array('organization_id'=>$i))->save($data);
                 }
             } else {
                 $id = intval($id);
@@ -340,6 +392,7 @@ class OrganizationController extends AdminController
                 M('OrganizationEnroll')->where(array('organization_id'=>$id))->save($data);
                 M('OrganizationCommentStar')->where(array('organization_id'=>$id))->save($data);
                 M('OrganizationLectureGroup')->where(array('organization_id'=>$id))->save($data);
+                M('OrganizationTagRelation')->where(array('organization_id'=>$id))->save($data);
             }
             $this->success('删除成功','index.php?s=/admin/organization');
         } else {
@@ -1906,7 +1959,10 @@ class OrganizationController extends AdminController
     /**
      * 机构视频列表
      */
-    public function video($id){
+    public function video($id=0){
+        if(empty($id)){
+            $id = 0;
+        }
         $model = M('OrganizationVideo');
         $map['status'] = array('egt',0);
         $map['course_id'] = $id;
@@ -3485,4 +3541,124 @@ class OrganizationController extends AdminController
         $this->success("取消成功", 'index.php?s=/admin/organization/integrity_org');
     }
 
+    /**
+     * 添加到专业
+     */
+    public function addToMajor(){
+        $id_str = I('ids');
+        if(empty($id_str)){
+            $this->error('请选择要操作的机构');
+        }
+        $ids = explode(',', I('request.ids'));
+        $categories = explode(',', I('major'));
+        $model = M('OrganizationTagRelation');
+        try {
+            $data_list = array();
+            foreach($ids as $rid){
+                foreach($categories as $category){
+                    $map['tag_id'] = $category;
+                    $map['organization_id'] = $rid;
+                    $map['tag_type'] = 8;
+                    $content_detail = $model->where($map)->find();
+                    if($content_detail){
+                        if($content_detail['status']==-1){
+                            $model->where($map)->save(array('status'=>1));
+                        }
+                    } else {
+                        $data['tag_id'] = $category;
+                        $data['organization_id'] = $rid;
+                        $data['tag_type'] = 8;
+                        $data['create_time'] = time();
+                        $data_list[] = $data;
+                    }
+                }
+            }
+            $model->addAll($data_list);
+        } catch (Exception $e){
+            $this->error('添加失败，请检查后重试');
+        }
+        $this->success("添加成功", 'index.php?s=/admin/organization/index');
+    }
+
+    public function searchMajor(){
+        $model = M('Organization');
+        $major_id = I('major');
+        if(!empty($major_id)){
+            $org_id = M('OrganizationTagRelation')->field('organization_id')->where('status=1 and tag_id = '.$major_id)->select();
+            foreach($org_id as $oid){
+                $org[] = $oid['organization_id'];
+            }
+            $map['id'] = array('in', $org);
+        }
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['name'] = array('like','%'.$name.'%');
+            $count = $model->where($map)->where('status=1')->count();
+            $Page = new Page($count, 5);
+            $list = $model->where($map)->where("status=1")->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $count = $model->where($map)->where('status=1')->count();
+            $Page = new Page($count, 5);
+            $list = $model->where($map)->where('status=1')->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        $show = $Page->show();
+        foreach($list as &$org){
+            $has_admin = M('OrganizationAdmin')->where('status=1 and id='.$org['uid'])->count();
+            if($has_admin){
+                $org['has_admin'] = 1;
+            }else{
+                $org['has_admin'] = 0;
+            }
+            $org['type'] = M('OrganizationTag')->where('type=7 and status=1 and id='.$org['type'])->getField('value');
+        }
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status=1')->select();
+        $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
+        $this->assign('type', $type);
+        $this->assign('major', $major);
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","机构列表");
+        $this->display('index');
+    }
+
+    public function searchType(){
+        $model = M('Organization');
+        $type_id = I('type');
+        if(!empty($type_id)){
+            $map['type'] = $type_id;
+        }
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $map['name'] = array('like','%'.$name.'%');
+            $count = $model->where($map)->where('status=1')->count();
+            $Page = new Page($count, 5);
+            $list = $model->where($map)->where("status=1")->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $count = $model->where($map)->where('status=1')->count();
+            $Page = new Page($count, 5);
+            $list = $model->where($map)->where('status=1')->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        $show = $Page->show();
+        foreach($list as &$org){
+            $has_admin = M('OrganizationAdmin')->where('status=1 and id='.$org['uid'])->count();
+            if($has_admin){
+                $org['has_admin'] = 1;
+            }else{
+                $org['has_admin'] = 0;
+            }
+            $org['type'] = M('OrganizationTag')->where('type=7 and status=1 and id='.$org['type'])->getField('value');
+        }
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status=1')->select();
+        $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
+        $this->assign('type', $type);
+        $this->assign('major', $major);
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","机构列表");
+        $this->display('index');
+    }
 }

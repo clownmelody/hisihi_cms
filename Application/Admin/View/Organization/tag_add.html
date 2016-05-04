@@ -24,6 +24,7 @@
                                 <option value="5">400热线</option>
                                 <option value="6">一键找机构成功人数</option>
                                 <option value="7">机构大全筛选类型</option>
+                                <option value="8">机构专业</option>
                             </select>
                         </div>
                     </div>
@@ -102,7 +103,7 @@
     $(function(){
         $('#s_type').change(function(){
             var value = $('#s_type').val();
-            if(value == '7'){
+            if(value == '7' || value == '8'){
                 $('#extra_pic').show();
             }else {
                 $('#extra_pic').hide();

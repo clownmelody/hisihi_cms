@@ -45,7 +45,7 @@
                         <td>
                             <a href="{:U('Organization/video_edit?id='.$vo['id'])}" >编辑</a>
                             <a href="{:U('Organization/video_delete?id='.$vo['id'].'&course_id='.$course_id)}" class="ajax-get confirm">删除</a>
-                            <a href="{:U('Organization/video_play?id='.$vo['id'])}" class="confirm">在线审核(下载)</a>
+                            <a href="{:U('Organization/video_play?id='.$vo['id'])}" class="confirm" target="_blank">在线审核(下载)</a>
                             <a href="{:U('Organization/video_checked?id='.$vo['id'].'&course_id='.$course_id)}" class="ajax-get confirm">审核通过</a>
                         </td>
                     </tr>
