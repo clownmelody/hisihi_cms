@@ -15,7 +15,10 @@
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/delete",array("status"=>-1))}">删 除</button>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/light_authentication")}">点亮认证</button>
                 <button class="btn ajax-post confirm" target-form="ids" url="{:U("organization/undo_authentication")}">取消认证</button>
-                <!--设置作业数量-->
+                <button id="addmajor" class="btn" >添加专业</button>
+                <button id="searchmajor" class="btn" >按专业查询</button>
+                <button id="searchtype" class="btn" >按类型查询</button>
+
                 <div class="btn-group-click adv-sch-pannel fl">
                     <button class="btn">批量生成帐号</button>
                     <div class="dropdown cf">
@@ -37,7 +40,48 @@
             </div>
         </div>
     </div>
-
+    <!--专业分类-->
+    <div id="category" style="display:none;position: fixed;top: 30%;left: 40%;width: 400px;background: white;border: 1px solid grey;">
+        <p style="height: 30px;border-bottom: 1px solid lightgray;">请选择专业
+            <span id="category_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
+        </p>
+        <div style="height: 30px;">
+            <volist name="major" id="data">
+                &nbsp;&nbsp;<input class="categories" type="checkbox" value="{$data['id']}" name="categories[]">{$data.value}&nbsp;&nbsp;
+            </volist>
+        </div>
+        <div style="height: 35px;">
+            <button id="add2major" class="btn" style="float: right;">提交</button>
+        </div>
+    </div>
+    <!--专业查询-->
+    <div id="major" style="display:none;position: fixed;top: 30%;left: 40%;width: 400px;background: white;border: 1px solid grey;">
+        <p style="height: 30px;border-bottom: 1px solid lightgray;">请选择专业
+            <span id="major_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
+        </p>
+        <div style="height: 30px;">
+            <volist name="major" id="data">
+                &nbsp;&nbsp;<input class="major" type="radio" value="{$data['id']}" name="major">{$data.value}&nbsp;&nbsp;
+            </volist>
+        </div>
+        <div style="height: 35px;">
+            <button id="search4major" class="btn" style="float: right;">查询</button>
+        </div>
+    </div>
+    <!--类型查询-->
+    <div id="org_type" style="display:none;position: fixed;top: 30%;left: 40%;width: 400px;background: white;border: 1px solid grey;">
+        <p style="height: 30px;border-bottom: 1px solid lightgray;">请选择类型
+            <span id="type_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
+        </p>
+        <div style="height: 30px;">
+            <volist name="type" id="data">
+                &nbsp;&nbsp;<input class="type" type="radio" value="{$data['id']}" name="type">{$data.value}&nbsp;&nbsp;
+            </volist>
+        </div>
+        <div style="height: 35px;">
+            <button id="search4type" class="btn" style="float: right;">查询</button>
+        </div>
+    </div>
     <!-- 数据列表 -->
     <div class="data-table table-striped">
         <table class="table_nowrap">
@@ -48,6 +92,7 @@
                 <th class="" style="width: 100px;">机构名称</th>
                 <th class="" style="width: 100px;">地址</th>
                 <th class="">联系电话</th>
+                <th class="">类型</th>
                 <th class="" >审核状态</th>
                 <th class="" >认证状态</th>
                 <th class="">创建时间</th>
@@ -65,6 +110,7 @@
                         <td >{$vo.name}</td>
                         <td >{$vo.location}</td>
                         <td>{$vo.phone_num}</td>
+                        <td>{$vo.type}</td>
                         <td >
                             <if condition="($vo.application_status eq 1) "> 申请中
                                 <elseif condition="($vo.application_status eq 2)" />已审核
@@ -213,6 +259,66 @@
                 language:"zh-CN",
                 minView:2,
                 autoclose:true
+            });
+
+            $('#category_close').click(function(){
+                $('#category').hide();
+            })
+
+            $('#major_close').click(function(){
+                $('#major').hide();
+            })
+
+            $('#type_close').click(function(){
+                $('#org_type').hide();
+            })
+
+            $('#addmajor').click(function(){
+                $('#category').show();
+            })
+
+            $('#searchmajor').click(function(){
+                $('#major').show();
+            })
+
+            $('#searchtype').click(function(){
+                $('#org_type').show();
+            })
+
+            $('#add2major').click(function(){
+                var ids = $('.ids:checked');
+                var param1 = '';
+                if(ids.length > 0){
+                    var str = new Array();
+                    ids.each(function(){
+                        str.push($(this).val());
+                    });
+                    param1 = str.join(',');
+                }
+                var categories = $('.categories:checked');
+                var param2 = '';
+                if(categories.length > 0){
+                    var str = new Array();
+                    categories.each(function(){
+                        str.push($(this).val());
+                    });
+                    param2 = str.join(',');
+                }
+
+                window.location.href = '{:U("Organization/addToMajor")}' + '&ids=' + param1 + '&major=' + param2;
+
+            });
+
+            $('#search4major').click(function(){
+                var major = $('.major:checked');
+                var param2 = major.val();
+                window.location.href = '{:U("Organization/searchMajor")}' + '&major=' + param2;
+            });
+
+            $('#search4type').click(function(){
+                var type = $('.type:checked');
+                var param2 = type.val();
+                window.location.href = '{:U("Organization/searchType")}' + '&type=' + param2;
             });
         })
     </script>

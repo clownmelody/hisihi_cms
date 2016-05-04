@@ -24,6 +24,7 @@
                                 <option value="5" <if condition="$info.type eq 5">selected</if>>400热线</option>
                                 <option value="6" <if condition="$info.type eq 6">selected</if>>一键找机构成功人数</option>
                                 <option value="7" <if condition="$info.type eq 7">selected</if>>机构大全筛选类型</option>
+                                <option value="8" <if condition="$info.type eq 8">selected</if>>机构专业</option>
                             </select>
                         </div>
                     </div>
@@ -102,7 +103,7 @@
         $(function(){
             $('#s_type').change(function(){
                 var value = $('#s_type').val();
-                if(value == '7'){
+                if(value == '7' || value == '8'){
                     $('#extra_pic').show();
                 }else {
                     $('#extra_pic').hide();
