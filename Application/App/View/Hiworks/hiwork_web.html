@@ -16,9 +16,13 @@
     <title>嘿云作业</title>
 </head>
 <body>
+    <!--加载等待-->
     <div id="loading-data">
         <img class="loding-img" src="__IMG__/hiworks/1.png"/>
     </div>
+    <!--操作结果-->
+    <div class="result-tips"><p></p></div>
+    <!--主要列表-->
     <div id="main-content">
         <div class="header">
             <div id="nav-tabs-bar" class="nav-tabs-bar">
@@ -59,6 +63,7 @@
         <div id="all-scroll-wrapper"></div>
         <div id="search-result-panel"></div>
     </div>
+    <!--详情信息-->
     <div id="work-detail-panel">
         <div class="header">
             <div id="nav-detail-bar" class="nav-tabs-bar">
@@ -68,7 +73,7 @@
                             全部
                         </div>
                     </div>
-                    <div class="nav-bar-left btn">
+                    <div class="nav-bar-left btn" id="back-to-list">
                         <span class="icon-keyboard_arrow_left font-icon"></span>
                     </div>
                     <div class="nav-bar-right btn">
@@ -81,11 +86,7 @@
         <div id="detail-main">
             <div class="touchSlider">
                 <ul id="slider4" >
-                    <li >
-                        <a href="#">
-                            <img src="__IMG__/hiworks/assets/1.png" alt="">
-                        </a>
-                    </li>
+
                     <li >
                         <a href="#">
                             <img src="__IMG__/hiworks/assets/2.png" alt="">
@@ -102,8 +103,16 @@
                         </a>
                         </li>
                 </ul>
+
             </div>
-            <div id="currentPage"></div>
+            <div id="currentPage">
+                <ul>
+                    <li class="active"></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
         </div>
         <div class="detail-bottom-btns">
             <div>
@@ -125,6 +134,38 @@
                         <div class="label">分享</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div></div>
+    </div>
+    <!--模态窗口-->
+    <div class="model-box">
+        <div class="model-box-item email-box">
+            <div class="email-box-item">
+                绑定邮箱
+            </div>
+            <div class="email-box-item">
+                <input type="text" placeholder="邮箱地址" id="email">
+            </div>
+            <div class="email-box-item">
+                <div class="btns-main">
+                    <div id="cancle-bind">
+                        <div class="btn">取消</div>
+                    </div>
+                    <div id="do-bind">确定</div>
+                </div>
+            </div>
+        </div>
+        <div class="model-box-item login-tips-box">
+            <div class="login-header">
+                请先登录再进行操作
+            </div>
+            <div class="btns-main">
+                <div id="cancle-login">
+                    <div class="btn">取消</div>
+                </div>
+                <div class="btn" id="do-login">去登录</div>
             </div>
         </div>
     </div>

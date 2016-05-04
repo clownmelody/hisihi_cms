@@ -48,18 +48,29 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         $(document).on(eventName,'#do-search', $.proxy(this,'doSearchByKeyWord'));
 
         //源作业详细信息查询
-        $(document).on(eventName,'.lists-ul li',$.proxy(this,'viewWorksDetailInfo'));
+        $(document).on('tap','.lists-ul li',$.proxy(this,'viewWorksDetailInfo'));
 
+        //返回到列表
+        $(document).on(eventName,'#back-to-list',$.proxy(this,'backToList'));
 
+        //控制输入框
+        $(document).on('input','#email',$.proxy(this,'controlCommitBtn'));
+
+        //绑定邮箱
+        $(document).on(eventName,'#do-bind',$.proxy(this,'bindEmail'));
+
+        //下载、复制、分享
+        $(document).on(eventName,'.detail-bottom-btns .item',$.proxy(this,'doOperationForWork'));
+
+        //登录
+        $(document).on(eventName,'#cancle-login',$.proxy(this,'closeLoginBox'));
+        $(document).on(eventName, '#do-login', $.proxy(this, 'doLogin'));
 
         //$('.lists-ul img').imglazyload({
         //    container:''
         //    //backgroundImg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAE4CAIAAABAHXg9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzQ0QjQxNTJFQjU0MTFFNUJEMzZGNkVENzY4QjMyOTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzQ0QjQxNTNFQjU0MTFFNUJEMzZGNkVENzY4QjMyOTEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3NDRCNDE1MEVCNTQxMUU1QkQzNkY2RUQ3NjhCMzI5MSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3NDRCNDE1MUVCNTQxMUU1QkQzNkY2RUQ3NjhCMzI5MSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmWADtgAAAiQSURBVHja7Nzfj1xl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"//,
         //});
-
-        //this.loadClassInfo();
-
-        this.initTouchSlider();
+        this.getUserInfo(function(){ that.loadClassInfo();});
 
     };
     HiWorks.prototype =new Base(true);
@@ -100,8 +111,8 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
                         callback && callback.call(that);
                     }
                 };
-                //this.getDataAsync(para);
-                callback && callback.call(that);
+                this.getDataAsync(para);
+                //callback && callback.call(that);
             }
         }
         else {
@@ -341,7 +352,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
                     str+='<ul>';
                 }
                 j++;
-                var jsonStr=JSON.stringify(item),
+                var jsonStr=JSON.stringify(item).replace(/"/g,"'"),
                     pic_url=item.pic_url;
                 if(!pic_url){
                     pic_url=window.urlObj.img_url+'/hiworks/hisihi.png';
@@ -465,12 +476,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
 
     /*刷新查询结果*/
     t.reloadWorksListInfoByKetWord=function(){
-        this.doSearchByKeyWord(function(result){
-            //var pcount=Math.ceil(result.totalCount/that.perPageCount);
-            //$('#list-wrapper-search').attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
-            //that.sScrollObj.refresh();
-            //that.sScrollObj.resetDownStyle();
-        });
+        this.doSearchByKeyWord();
 
 
     };
@@ -555,39 +561,160 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     /*******************作业详细信息查看**********************/
 
     t.viewWorksDetailInfo=function(e){
-        var $target=$(e.currentTarget),
-            jsonObj=JSON.parse($target.attr('data-json')),
-            title=this.substrLongStr(jsonObj.title,12);
+        var $target=$(e.currentTarget);
+        var jsonObj=JSON.parse($target.attr('data-json').replace(/'/g,'"'));
+        console.log(jsonObj);
+        var title=this.substrLongStr(jsonObj.title,12);
         $('#detail-title').text(title);
-        var pic_url=item.pic_url;
-        if(!pic_url){
-            pic_url=window.urlObj.img_url+'/hiworks/hisihi.png';
+        var covers=jsonObj.multi_cover_info,
+            flag=true;
+        if(covers.count==0){
+            flag=false;
+            covers.count=1;
+            covers.data=[window.hisihiUrlObj.img_url+'/hiworks/hisihi.png'];
         }
+        $('#work-detail-panel').show().attr('data-id',jsonObj.id);
+        $('#main-content').hide();
+        this.fillInTouchSliderItem(covers,flag);
     };
 
+    /*返回作业列表*/
+    t.backToList=function(){
+        $('#work-detail-panel').hide();
+        $('#main-content').show();
+    };
 
 
     /*滑动图片*/
     t.initTouchSlider=function(){
-        var h=$('body').height();
+        var h=$('body').height(),
+            flag=$('#slider4').attr('data-init');
         $('#detail-main').height(h-135).css('opacity','1');
         var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:1000000, fullsize:true});
-        t4.on('before',function(m,n){
-            console.log(m+','+n);
-            // as[m].className='';
-            // as[n].className='active';
-        });
-        $('#currentPage').on('touchend',function (e) {
-            $(this).hide();
-            // $('#slider4').show();
-            window.setTimeout(function (argument) {
-                flag=true;
-                // body...
-            },500);
-
-            // body...
-        })
+        if(!flag) {
+            t4.on('before', function (m, n) {
+                $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
+            });
+            $('#currentPage ul li').on('touchend', function (e) {
+                var index = $(this).index();
+                t4.slide(index);
+            });
+            $('#slider4').attr('data-init','true');
+        }
     };
+
+    /*填充滚动区域的图片*/
+    t.fillInTouchSliderItem=function(covers,flag){
+        var data=covers.data,
+            len=data.length,
+            str='',str1='',
+            className='',className1='nocover';
+        if(flag){
+            className1='';
+        }
+        for(var i=0;i<len;i++){
+            str+='<li >'+
+                    '<a href="#">'+
+                        '<img src="'+data[i]+'" alt="" class="'+ className1 +'">'+
+                    '</a>'+
+                  '</li>';
+            className='';
+            if(i==0){
+                className='active';
+            }
+            str1+='<li class="'+className+'"></li>';
+        }
+        $('#slider4').html(str);
+        $('#currentPage ul').html(str1);
+        this.initTouchSlider();
+    };
+
+
+
+    /*控制按钮的可用性*/
+    t.controlCommitBtn=function(e){
+        var $this=$(e.currentTarget);
+        var txt=$this.val().trim(),
+            $btn=$('#do-bind'),
+            nc='abled  btn';
+        if(txt){
+            $btn.addClass(nc);
+        }else{
+            $btn.removeClass(nc);
+        }
+    };
+
+    /*下载、分享、复制*/
+    t.doOperationForWork=function(e){
+        var $target=$(e.currentTarget),
+            index=$target.index();
+        if(this.userInfo.session_id==''){
+            this.controlModelBox(1,1);
+            return;
+        }
+        if(index==0){
+            this.controlModelBox(1,0);
+        }
+        else if(index==1){
+
+        }
+        else{
+
+        }
+    };
+
+    /*关闭登录提示框*/
+    t.closeLoginBox=function(){
+        this.controlModelBox(0,1);
+    };
+
+    /*调用app登录*/
+    t.doLogin=function(){
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof showLoginView != "undefined") {
+                    showLoginView();//调用app的方法，得到用户的基体信息
+                }
+            }
+        }
+        this.controlModelBox(0,1);
+    };
+
+    //确定邮箱
+    t.bindEmail=function(e){
+        var $target=$(e.currentTarget),that=this;
+        if(!$target.hasClass('abled')){
+            return;
+        }
+        var $email=$('#email'),
+            email=$email.val().trim(),
+            reg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+        if(!reg.test(email)){
+            this.showTips('邮箱格式有误，请重新输入');
+
+            return;
+        }
+
+        var para = {
+            url: this.baseUrl + '/api.php?s=/hiworks/bindEmail',
+            type: 'get',
+            paraData: {session_id: this.userInfo.session_id, email: email, hiwork_id:$('#work-detail-panel').attr('data-id')},
+            sCallback: function (data) {
+                that.userInfo = data;
+                callback && callback.call(that);
+                that.showTips('','<p>已成功发送至邮箱</p><p>124569874125@163.com</p><p>请注意查收</p>');
+            }
+        };
+        this.getDataAsync(para);
+    };
+
+
 
 
     /*******************通用功能*********************/
@@ -610,18 +737,47 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
      *显示操作结果
      *para:
      *tip - {string} 内容结果
+     *strFormat - {bool} 自定义的简单格式
      */
-    t.showTips=function(tip){
-        if(tip.length>8){
-            tip=tip.substr(0,7)+'…';
-        }
+    t.showTips=function(tip,strFormat){
         var $tip=$('body').find('.result-tips'),
             $p=$tip.find('p').text(tip);
+        if(strFormat){
+            $tip.html(strFormat);
+        }
         $tip.show();
         window.setTimeout(function(){
             $tip.hide();
             $p.text('');
         },1500);
+    };
+
+
+    /*
+     *控模态窗口的显示 和 隐藏
+     * Para:
+     * opacity - {int} 透明度，1 表示显示，0表示隐藏
+     * index - {int} 控制的对象，1 登录提示框，0评论框
+     * title - {string} 提示标题
+     * callback - {string} 回调方法
+     */
+    t.controlModelBox=function(opacity,index,title,callback) {
+        var $target=$('.model-box'),
+            $targetBox=$target.find('.model-box-item').eq(index),
+            that=this;
+        $target.animate(
+            {opacity: opacity},
+            10, 'ease-out',
+            function () {
+                if(opacity==0) {
+                    $(this).hide();
+                    callback && callback();
+                }else{
+                    $(this).show();
+                    $targetBox.show().siblings().hide();
+                    callback && callback();
+                }
+            });
     };
 
     /*

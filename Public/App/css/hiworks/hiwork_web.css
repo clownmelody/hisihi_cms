@@ -355,6 +355,7 @@ ul li {
 }
 /*详情页面*/
 #work-detail-panel {
+  display: none;
   z-index: 100;
   position: absolute;
   width: 100%;
@@ -369,10 +370,11 @@ ul li {
   overflow: hidden;
   margin: 40px 0;
   opacity: 0;
+  position: relative;
 }
 #work-detail-panel #detail-main .touchSlider {
   width: 90%;
-  height: 100%;
+  height: 95%;
   margin: 0 auto;
 }
 #work-detail-panel #detail-main .touchSlider ul {
@@ -386,11 +388,15 @@ ul li {
   text-align: center;
   padding: 5px;
   background-color: transparent;
+  overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
 }
 #work-detail-panel #detail-main .touchSlider ul li a {
+  position: relative;
   display: block;
   width: 90%;
-  height: 100%;
+  height: 90%;
   margin: 0 auto;
   text-align: center;
   border-radius: 3px;
@@ -400,6 +406,37 @@ ul li {
 }
 #work-detail-panel #detail-main .touchSlider ul li a img {
   display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#work-detail-panel #detail-main .touchSlider ul li a img.nocover {
+  max-width: 70%;
+}
+#work-detail-panel #detail-main #currentPage {
+  width: 100%;
+  height: 15px;
+  position: absolute;
+  bottom: 8px;
+  text-align: center;
+}
+#work-detail-panel #detail-main #currentPage ul {
+  margin: 0 auto;
+  display: inline-block;
+  height: 100%;
+}
+#work-detail-panel #detail-main #currentPage ul li {
+  float: left;
+  width: 12px;
+  height: 12px;
+  list-style: none;
+  background-color: #ccc;
+  margin: 0 10px;
+  border-radius: 12px;
+}
+#work-detail-panel #detail-main #currentPage ul li.active {
+  background-color: white;
 }
 #work-detail-panel .detail-bottom-btns {
   width: 100%;
@@ -457,6 +494,133 @@ ul li {
 #work-detail-panel .detail-bottom-btns .item:nth-child(2) {
   margin-left: 3%;
   margin-right: 3%;
+}
+/*模态窗口*/
+.model-box {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  z-index: 1000;
+}
+.model-box .btns-main {
+  height: 43px;
+}
+.model-box .btns-main > div {
+  width: 50%;
+  box-sizing: border-box;
+  float: left;
+  color: #007AFF;
+  text-align: center;
+  line-height: 43px;
+}
+.model-box .btns-main > div:nth-child(1) {
+  border-right: 1px solid #ccc;
+}
+.model-box .btns-main > div:nth-child(1) div {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.model-box .email-box {
+  position: absolute;
+  background-color: #fff;
+  top: 45%;
+  left: 50%;
+  width: 280px;
+  height: 150px;
+  border-radius: 9px;
+  background-clip: padding-box;
+  margin-top: -75px;
+  margin-left: -140px;
+}
+.model-box .email-box .email-box-item {
+  width: 88%;
+  height: 43px;
+  margin: 5px auto;
+  line-height: 43px;
+  text-align: center;
+}
+.model-box .email-box .email-box-item input {
+  -webkit-user-select: text;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: text;
+  display: block;
+  width: 100%;
+  height: 35px;
+  margin: 12px auto;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 6px;
+  background-clip: padding-box;
+  outline: none;
+  resize: none;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.model-box .email-box .email-box-item:last-child {
+  width: 100%;
+  border-top: 1px solid #ccc;
+}
+.model-box .email-box .email-box-item:first-child {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+}
+.model-box .email-box .email-box-item .btns-main div {
+  color: #808080;
+}
+.model-box .email-box .email-box-item .btns-main div.abled {
+  color: #000;
+}
+.model-box .login-tips-box {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  margin-top: -47px;
+  margin-left: -140px;
+  width: 280px;
+  height: 94px;
+  background-color: white;
+  border-radius: 9px;
+  background-clip: padding-box;
+  display: none;
+}
+.model-box .login-tips-box * {
+  font-size: 16px;
+}
+.model-box .login-tips-box .login-header {
+  height: 50px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+  line-height: 50px;
+  color: #000;
+}
+.result-tips {
+  position: fixed;
+  width: 200px;
+  height: auto;
+  min-height: 50px;
+  background: rgba(51, 51, 51, 0.85);
+  margin-left: -100px;
+  margin-top: -35px;
+  top: 40%;
+  left: 50%;
+  z-index: 1001;
+  border-radius: 3px;
+  background-clip: padding-box;
+  color: #fff;
+  text-align: center;
+  display: none;
+}
+.result-tips p {
+  color: white;
+  font-size: 15px;
+  text-align: center;
 }
 @keyframes turning {
   to {
