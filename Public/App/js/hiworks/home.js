@@ -59,6 +59,9 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         //绑定邮箱
         $(document).on(eventName,'#do-bind',$.proxy(this,'bindEmail'));
 
+        //取消绑定
+        $(document).on(eventName,'#cancle-bind',$.proxy(this,'hideBindEmail'));
+
         //下载、复制、分享
         $(document).on(eventName,'.detail-bottom-btns .item',$.proxy(this,'doOperationForWork'));
 
@@ -352,11 +355,14 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
                     str+='<ul>';
                 }
                 j++;
-                var jsonStr=JSON.stringify(item).replace(/"/g,"'"),
-                    pic_url=item.pic_url;
+                var pic_url=item.pic_url;
                 if(!pic_url){
                     pic_url=window.urlObj.img_url+'/hiworks/hisihi.png';
                 }
+                item.pic_url=pic_url;
+
+                var jsonStr=JSON.stringify(item).replace(/"/g,"'");
+
                 str+='<li class="'+className+' '+marginTopClass+'" data-json="'+jsonStr+'">'+
                         '<div class="img-box" style="height:'+w+'px;width:'+w+'px">'+
                             '<img src="'+ pic_url +'" data-alt="加载中…">'+
@@ -562,18 +568,19 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
 
     t.viewWorksDetailInfo=function(e){
         var $target=$(e.currentTarget);
-        var jsonObj=JSON.parse($target.attr('data-json').replace(/'/g,'"'));
-        console.log(jsonObj);
-        var title=this.substrLongStr(jsonObj.title,12);
+        this.currentWorksObj=JSON.parse($target.attr('data-json').replace(/'/g,'"'));  //当前选中的作业信息
+
+        var title=this.substrLongStr(this.currentWorksObj.title,12);
         $('#detail-title').text(title);
-        var covers=jsonObj.multi_cover_info,
+        var covers=this.currentWorksObj.multi_cover_info,
             flag=true;
         if(covers.count==0){
             flag=false;
             covers.count=1;
             covers.data=[window.hisihiUrlObj.img_url+'/hiworks/hisihi.png'];
         }
-        $('#work-detail-panel').show().attr('data-id',jsonObj.id);
+
+        $('#work-detail-panel').show();
         $('#main-content').hide();
         this.fillInTouchSliderItem(covers,flag);
     };
@@ -582,6 +589,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     t.backToList=function(){
         $('#work-detail-panel').hide();
         $('#main-content').show();
+        this.currentWorksObj=null; //取消当前选中
     };
 
 
@@ -603,7 +611,12 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         }
     };
 
-    /*填充滚动区域的图片*/
+    /*
+     *填充滚动区域的图片
+     *@para:
+     *covers - {obj} 内容信息，包括地址数组等
+     *flag - {bool} 是否没有图片，false 则使用 nocover 样式 控制
+     */
     t.fillInTouchSliderItem=function(covers,flag){
         var data=covers.data,
             len=data.length,
@@ -652,14 +665,17 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
             this.controlModelBox(1,1);
             return;
         }
+        //下载
         if(index==0){
             this.controlModelBox(1,0);
         }
+        //复制链接
         else if(index==1){
-
+            this.copyLink();
         }
+        //分享
         else{
-
+            this.execShare();
         }
     };
 
@@ -702,19 +718,57 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         }
 
         var para = {
-            url: this.baseUrl + '/api.php?s=/hiworks/bindEmail',
+            url: this.baseUrl + 'hiworks/bindEmail',
             type: 'get',
-            paraData: {session_id: this.userInfo.session_id, email: email, hiwork_id:$('#work-detail-panel').attr('data-id')},
+            paraData: {session_id: this.userInfo.session_id, email: email, hiwork_id:this.currentWorksObj.download_url.trim()},
             sCallback: function (data) {
                 that.userInfo = data;
-                callback && callback.call(that);
                 that.showTips('','<p>已成功发送至邮箱</p><p>124569874125@163.com</p><p>请注意查收</p>');
+            },eCallback: function (data) {
+                that.showTips(data.txt);
             }
         };
         this.getDataAsync(para);
     };
 
+    //取消绑定邮箱
+    t.hideBindEmail=function(){
+        this.controlModelBox(0,0);
+    };
 
+    /*分享文章*/
+    t.execShare=function(){
+        if (this.deviceType.android) {
+            if (typeof AppFunction.share != "undefined") {
+                AppFunction.share();//调用app的方法，得到用户的基体信息
+            }
+
+        }
+        else if(this.deviceType.ios){
+            //如果方法存在
+            if (typeof beginShare != "undefined") {
+                beginShare();//调用app的方法，得到用户的基体信息
+            }
+        }
+    };
+
+    /*复制链接*/
+    t.copyLink=function(){
+        var link=this.currentWorksObj.download_url.trim();
+        if (this.deviceType.android) {
+            if (typeof AppFunction != "undefined" && typeof AppFunction.setClipboardInfo != "undefined") {
+                AppFunction.setClipboardInfo(link);//调用app的方法，调用系统粘贴板
+            }
+
+        }
+        else if(this.deviceType.ios){
+            //如果方法存在
+            if (typeof setClipboardInfo != "undefined") {
+                setClipboardInfo('getClipboradInfo()');//调用app的方法，调用系统粘贴板
+            }
+        }
+        this.showTips('链接已经复制到粘贴板');
+    };
 
 
     /*******************通用功能*********************/
@@ -799,8 +853,20 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         });
     };
 
+    //返回分享信息，供app调用
     window.getShareInfo=function(){
-        return {title:'123',url:'123123',thumb:'',description:''};
+        var obj={
+            tile: window.hiworks.currentWorksObj.title.trim(),
+            url: window.hiworks.hisihiUrlObj.link_url+'1121',
+            thumb: window.hiworks.currentWorksObj.pic_url.trim(),
+            description:'我在嘿设汇发现了⼀一个很棒的作业源⽂文件，居然可以直接下载'
+        };
+        return JSON.stringify(obj);
+    };
+
+    /*返回链接地址给IOS，用于粘贴板*/
+    window.getClipboradInfo=function(){
+        return  window.hiworks.currentWorksObj.download_url.trim();
     };
 
     return HiWorks;

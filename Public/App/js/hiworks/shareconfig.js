@@ -7,13 +7,11 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         fx:'sharecommon/fx_v1.1',
-        lazyloading:'hiworks/imglazyload.min',
         prefixfree:'sharecommon/prefixfree.min',
-        iscroll:'sharecommon/iscroll',
         touchslider:'hiworks/touchSlider-lib',
         base:'sharecommon/base',
         myscroll:'hiworks/myscroll',
-        home:'hiworks/home',
+        home:'hiworks/sharehome',
     },
     shim: {
         $:{
@@ -22,10 +20,6 @@ requirejs.config({
         fx:{
             steps:['$'],
             output:'fx'
-        },
-        lazyloading:{
-            steps:['$'],
-            output:'lazyloading'
         },
         prefixfree:{
             output:'prefixfree'
