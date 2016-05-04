@@ -2,12 +2,9 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
+define(['fx','base'],function(fx,Base) {
     var HiWorks = function (url,baseId) {
         this.baseUrl = url;
-        this.$wrapper = $('body');
-
-        //·ÃÎÊÀ´Ô´
         this.baseId=baseId;
 
         var eventName='click',that=this;
@@ -19,19 +16,25 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
             event.stopPropagation();
         });
 
-        //¿ØÖÆÊäÈë¿ò
+        //æ§åˆ¶è¾“å…¥æ¡†
         $(document).on('input','#email',$.proxy(this,'controlCommitBtn'));
 
-        //°ó¶¨ÓÊÏä
+        //ç»‘å®šé‚®ç®±
         $(document).on(eventName,'#do-bind',$.proxy(this,'bindEmail'));
 
-        //È¡Ïû°ó¶¨
+        //å–æ¶ˆç»‘å®š
         $(document).on(eventName,'#cancle-bind',$.proxy(this,'hideBindEmail'));
 
-        //ÏÂÔØ¡¢¸´ÖÆ¡¢·ÖÏí
-        $(document).on(eventName,'.detail-bottom-btns .item',$.proxy(this,'doOperationForWork'));
+        //ä¸‹è½½ã€å¤åˆ¶ã€åˆ†äº«
+        $(document).on(eventName,'.detail-bottom-btns .btn',$.proxy(this,'doOperationForWork'));
 
-        this.viewWorksDetailInfo();
+        $('#downloadCon .btnElement').on(eventName,function(){
+            window.location.href = "http://www.hisihi.com/download.php";
+        });
+
+        this.viewWorksDetailInfo();  //åŠ è½½å›¾ç‰‡
+
+        this.controlCoverFootStyle();  //æ§åˆ¶ä¸‹è½½æ¡æ ·å¼
 
     };
     HiWorks.prototype =new Base(true);
@@ -40,24 +43,31 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     var t=HiWorks.prototype;
 
 
-    /*******************×÷ÒµÏêÏ¸ĞÅÏ¢²é¿´**********************/
+    /*******************ä½œä¸šè¯¦ç»†ä¿¡æ¯æŸ¥çœ‹**********************/
 
     t.viewWorksDetailInfo=function(){
+        var that=this;
         var para = {
-            url: this.baseUrl + 'hiworks/bindEmail',
+            url: window.hisihiUrlObj.link_url + 'hiworks_list.php/index/getHiworkDetailById',
             type: 'get',
-            paraData: {id:this.this.baseId},
-            sCallback: function (data) {
-                var title=that.substrLongStr(this.currentWorksObj.title,12);
+            paraData: {hiwork_id:this.baseId},
+            sCallback: function (result) {
+                if(!result.success){
+                    return;
+                }
+                var data=result.data;
+                that.currentWorksObj=data;
+
+                var title=that.substrLongStr(data.title,12);
                 $('#detail-title').text(title);
-                var covers=this.currentWorksObj.multi_cover_info,
+                var covers=data.multi_cover_info,
                     flag=true;
                 if(covers.count==0){
                     flag=false;
                     covers.count=1;
                     covers.data=[window.hisihiUrlObj.img_url+'/hiworks/hisihi.png'];
                 }
-                this.fillInTouchSliderItem(covers,flag);
+                that.fillInTouchSliderItem(covers,flag);
             },eCallback: function (data) {
                 that.showTips(data.txt);
             }
@@ -67,7 +77,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
 
     };
 
-    /*»¬¶¯Í¼Æ¬*/
+    /*æ»‘åŠ¨å›¾ç‰‡*/
     t.initTouchSlider=function(){
         var h=$('body').height(),
             flag=$('#slider4').attr('data-init');
@@ -86,11 +96,11 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     };
 
     /*
-    *Ìî³ä¹ö¶¯ÇøÓòµÄÍ¼Æ¬
-    *@para:
-    *covers - {obj} ÄÚÈİĞÅÏ¢£¬°üÀ¨µØÖ·Êı×éµÈ
-    *flag - {bool} ÊÇ·ñÃ»ÓĞÍ¼Æ¬£¬false ÔòÊ¹ÓÃ nocover ÑùÊ½ ¿ØÖÆ
-    */
+     *å¡«å……æ»šåŠ¨åŒºåŸŸçš„å›¾ç‰‡
+     *@para:
+     *covers - {obj} å†…å®¹ä¿¡æ¯ï¼ŒåŒ…æ‹¬åœ°å€æ•°ç»„ç­‰
+     *flag - {bool} æ˜¯å¦æ²¡æœ‰å›¾ç‰‡ï¼Œfalse åˆ™ä½¿ç”¨ nocover æ ·å¼ æ§åˆ¶
+     */
     t.fillInTouchSliderItem=function(covers,flag){
         var data=covers.data,
             len=data.length,
@@ -116,7 +126,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         this.initTouchSlider();
     };
 
-    /*¿ØÖÆ°´Å¥µÄ¿ÉÓÃĞÔ*/
+    /*æ§åˆ¶æŒ‰é’®çš„å¯ç”¨æ€§*/
     t.controlCommitBtn=function(e){
         var $this=$(e.currentTarget);
         var txt=$this.val().trim(),
@@ -129,19 +139,15 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         }
     };
 
-    /*ÏÂÔØ¡¢·ÖÏí¡¢¸´ÖÆ*/
+    /*ä¸‹è½½ã€åˆ†äº«ã€å¤åˆ¶*/
     t.doOperationForWork=function(e){
         var $target=$(e.currentTarget),
             index=$target.index();
-        if(this.userInfo.session_id==''){
-            this.controlModelBox(1,1);
-            return;
-        }
-        //ÏÂÔØ
+        //ä¸‹è½½
         this.controlModelBox(1,0);
     };
 
-    //È·¶¨ÓÊÏä
+    //ç¡®å®šé‚®ç®±
     t.bindEmail=function(e){
         var $target=$(e.currentTarget),that=this;
         if(!$target.hasClass('abled')){
@@ -151,36 +157,41 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
             email=$email.val().trim(),
             reg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
         if(!reg.test(email)){
-            this.showTips('ÓÊÏä¸ñÊ½ÓĞÎó£¬ÇëÖØĞÂÊäÈë');
+            this.showTips('é‚®ç®±æ ¼å¼æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥');
             return;
         }
 
         var para = {
-            url: this.baseUrl + 'hiworks/bindEmail',
+            url: this.baseUrl + 'hiworks/sendDownLoadURLToEMail',
             type: 'get',
-            paraData: {session_id: this.userInfo.session_id, email: email, hiwork_id:this.currentWorksObj.download_url.trim()},
+            paraData: { email: email, hiwork_id:this.currentWorksObj.id},
             sCallback: function (data) {
-                that.userInfo = data;
-                that.showTips('','<p>ÒÑ³É¹¦·¢ËÍÖÁÓÊÏä</p><p>124569874125@163.com</p><p>Çë×¢Òâ²éÊÕ</p>');
+                if(data.success) {
+                    email = that.substrLongStr(email, 20);
+                    that.showTips('', '<p>å·²æˆåŠŸå‘é€è‡³é‚®ç®±</p><p>' + email + '</p><p>è¯·æ³¨æ„æŸ¥æ”¶</p>');
+                    that.controlModelBox(0,0);
+                }else{
+                    that.showTips('é‚®ä»¶å‘é€å¤±è´¥');
+                }
             },eCallback: function (data) {
-                that.showTips(data.txt);
+                that.showTips('é‚®ä»¶å‘é€å¤±è´¥');
             }
         };
         this.getDataAsync(para);
     };
 
-    //È¡Ïû°ó¶¨ÓÊÏä
+    //å–æ¶ˆç»‘å®šé‚®ç®±
     t.hideBindEmail=function(){
         this.controlModelBox(0,0);
     };
 
 
-    /*******************Í¨ÓÃ¹¦ÄÜ*********************/
+    /*******************é€šç”¨åŠŸèƒ½*********************/
 
     /*
-     *¿ØÖÆ¼ÓÔØµÈ´ı¿ò
+     *æ§åˆ¶åŠ è½½ç­‰å¾…æ¡†
      *@para
-     * flag - {bool} Ä¬ÈÏÒş²Ø
+     * flag - {bool} é»˜è®¤éšè—
      */
     t.controlLoadingBox=function(flag){
         var $target=$('#loading-data');
@@ -192,10 +203,10 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     };
 
     /*
-     *ÏÔÊ¾²Ù×÷½á¹û
+     *æ˜¾ç¤ºæ“ä½œç»“æœ
      *para:
-     *tip - {string} ÄÚÈİ½á¹û
-     *strFormat - {bool} ×Ô¶¨ÒåµÄ¼òµ¥¸ñÊ½
+     *tip - {string} å†…å®¹ç»“æœ
+     *strFormat - {bool} è‡ªå®šä¹‰çš„ç®€å•æ ¼å¼
      */
     t.showTips=function(tip,strFormat){
         var $tip=$('body').find('.result-tips'),
@@ -212,12 +223,12 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
 
 
     /*
-     *¿ØÄ£Ì¬´°¿ÚµÄÏÔÊ¾ ºÍ Òş²Ø
+     *æ§æ¨¡æ€çª—å£çš„æ˜¾ç¤º å’Œ éšè—
      * Para:
-     * opacity - {int} Í¸Ã÷¶È£¬1 ±íÊ¾ÏÔÊ¾£¬0±íÊ¾Òş²Ø
-     * index - {int} ¿ØÖÆµÄ¶ÔÏó£¬1 µÇÂ¼ÌáÊ¾¿ò£¬0ÆÀÂÛ¿ò
-     * title - {string} ÌáÊ¾±êÌâ
-     * callback - {string} »Øµ÷·½·¨
+     * opacity - {int} é€æ˜åº¦ï¼Œ1 è¡¨ç¤ºæ˜¾ç¤ºï¼Œ0è¡¨ç¤ºéšè—
+     * index - {int} æ§åˆ¶çš„å¯¹è±¡ï¼Œ1 ç™»å½•æç¤ºæ¡†ï¼Œ0è¯„è®ºæ¡†
+     * title - {string} æç¤ºæ ‡é¢˜
+     * callback - {string} å›è°ƒæ–¹æ³•
      */
     t.controlModelBox=function(opacity,index,title,callback) {
         var $target=$('.model-box'),
@@ -236,6 +247,24 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
                     callback && callback();
                 }
             });
+    };
+
+
+    /*æ§åˆ¶åº•éƒ¨logoçš„ä½ç½®æ ·å¼*/
+    t.controlCoverFootStyle=function () {
+        var $target = $('#downloadCon'),
+            $a = $target.find('a'),
+            aw = $a.width(),
+            ah = aw * 0.40,
+            bw = $target.width(),
+            h = bw * 120 / 750;
+        $target.css({'height': h + 'px', 'left': ($('body').width() - bw) / 2, 'opacity': 1});
+        $('#work-detail-panel').css('padding-top', h + 'px');
+        var fontSize = '16px';
+        if (bw < 375) {
+            fontSize = '14px';
+        }
+        $a.css({'top': (h - ah) / 2, 'height': ah + 'px', 'line-height': ah + 'px', 'font-size': fontSize});
     };
 
     return HiWorks;

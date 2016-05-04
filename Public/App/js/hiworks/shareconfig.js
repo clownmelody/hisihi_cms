@@ -10,7 +10,6 @@ requirejs.config({
         prefixfree:'sharecommon/prefixfree.min',
         touchslider:'hiworks/touchSlider-lib',
         base:'sharecommon/base',
-        myscroll:'hiworks/myscroll',
         home:'hiworks/sharehome',
     },
     shim: {
@@ -23,16 +22,12 @@ requirejs.config({
         },
         prefixfree:{
             output:'prefixfree'
-        },
-        iscroll:{
-            output:'iscroll'
-        },
+        }
     }
 });
 
 
 require(['home','prefixfree'],function(works){
     var id=$('body').data('id');
-    id=45;
     window.hiworks = new works(window.hisihiUrlObj.server_url,id);
 });

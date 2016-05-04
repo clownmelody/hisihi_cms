@@ -84,19 +84,15 @@ ul{
 
 /*详情页面*/
 #work-detail-panel{
-  display: none;
   z-index: 100;
-  position: absolute;
+  position: relative;
   .size(100%,100%);
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background-color: #E3E3E3;
-  @bottom:100px;
+  box-sizing: border-box;
+  @bottom:80px;
   #detail-main{
     overflow: hidden;
-    margin: 40px 0;
+    margin:0 0 40px 0;
     opacity:0;
     position: relative;
     .touchSlider {
@@ -168,54 +164,33 @@ ul{
     background-color: white;
     position: absolute;
     bottom: 0;
-    @width:53px;
-    >div{
-      .size(90%,100%);
-      margin: 0 auto;
-    }
-    .item{
-      float: left;
-      width: 30%;
+    @h:45px;
+    .color-block {
+      .size(185px,@h);
+      margin: 20px auto;
       text-align: center;
-      .btn {
-        .size(@width, @width+20);
-        margin: 14px auto;
-        .color-block {
-          .size(@width, @width);
-          margin: 0 auto;
-          text-align: center;
-          .border-radius(5px);
-          &.down {
-            background-color: #FF8638;
-          }
-          &.link {
-            margin: 0 3%;
-            background-color: #039BE5
-          }
-          &.share {
-            margin: 0 3%;
-            background-color: #23A438
-          }
-          span {
-            color: white;
-            font-size: 26px;
-            display: inline-block;
-            line-height: @width;
-          }
-        }
-        .label{
-          margin-top: 5px;
-          font-size: 13px;
-          color: #838383;
-        }
+      .border-radius(5px);
+      &.down {
+        background-color: #FF8638;
       }
-      &:nth-child(2){
-        margin-left:3%;
-        margin-right: 3%;
+      span {
+        color: white;
+        font-size: 28px;
+        display: inline-block;
+
+        float: left;
+        &:first-child{
+          margin-left: 30px;
+          line-height: @h;
+        }
+        &.label{
+          font-size: 18px;
+          margin-left: 6px;
+          line-height: @h+5;
+        }
       }
     }
   }
-
 }
 
 /*模态窗口*/
@@ -361,7 +336,7 @@ ul{
   .size(100%,atuo);
   position: absolute;
   z-index: 1000;
-  bottom: 0;
+  top: 0;
   background-color:#9E9A98;
   opacity: 0;
   .allDownImg {

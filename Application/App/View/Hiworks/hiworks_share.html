@@ -15,7 +15,7 @@
     <link type="text/css" href="__CSS__/hiworks/hiwork_share.css" rel="stylesheet">
     <title>嘿云作业</title>
 </head>
-<body>
+<body data-id="{$hiwork_id}">
 <!--加载等待-->
 <div id="loading-data">
     <img class="loding-img" src="__IMG__/hiworks/1.png"/>
@@ -25,24 +25,6 @@
 
 <!--详情信息-->
 <div id="work-detail-panel">
-    <div class="header">
-        <div id="nav-detail-bar" class="nav-tabs-bar">
-            <div id="detail-bar" class="nav-bar">
-                <div class="nav-bar-title">
-                    <div class="nav-bar-middle" id="detail-title">
-                        全部
-                    </div>
-                </div>
-                <div class="nav-bar-left btn" id="back-to-list">
-                    <span class="icon-keyboard_arrow_left font-icon"></span>
-                </div>
-                <div class="nav-bar-right btn">
-
-                </div>
-            </div>
-
-        </div>
-    </div>
     <div id="detail-main">
         <div class="touchSlider">
             <ul id="slider4" >
@@ -75,26 +57,7 @@
         </div>
     </div>
     <div class="detail-bottom-btns">
-        <div>
-            <div class="item">
-                <div class="btn">
-                    <div class="color-block down"><span class="icon-download"></span></div>
-                    <div class="label">下载</div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="btn">
-                    <div class="color-block link"><span class="icon-link"></span></div>
-                    <div class="label">复制链接</div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="btn">
-                    <div class="color-block share"><span class="icon-open"></span></div>
-                    <div class="label">分享</div>
-                </div>
-            </div>
-        </div>
+        <div class="color-block down btn"><span class="icon-download"></span><span class="label">下载源文件</span></div>
     </div>
 </div>
 <!--模态窗口-->
@@ -146,11 +109,6 @@
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
     };
-    var aLink=document.getElementsByTagName("a");
-    for(var i=0; i<aLink.length; i++){
-        aLink[i].href = "javascript:void(0);";
-        aLink[i].setAttribute("disabled", "disabled");
-    }
 </script>
 <script type="text/javascript" src="__JS__/hiworks/touchSlider-lib.js"></script>
 <script type="text/javascript" data-main="__JS__/hiworks/shareconfig"  src="__JS__/sharecommon/require.js" ></script>

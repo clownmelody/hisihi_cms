@@ -713,17 +713,16 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
             reg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
         if(!reg.test(email)){
             this.showTips('邮箱格式有误，请重新输入');
-
             return;
         }
 
         var para = {
-            url: this.baseUrl + 'hiworks/bindEmail',
+            url: this.baseUrl + 'hiworks//sendDownLoadURLToEMail',
             type: 'get',
-            paraData: {session_id: this.userInfo.session_id, email: email, hiwork_id:this.currentWorksObj.download_url.trim()},
+            paraData: {email: email, hiwork_id:this.currentWorksObj.download_url.trim()},
             sCallback: function (data) {
                 that.userInfo = data;
-                that.showTips('','<p>已成功发送至邮箱</p><p>124569874125@163.com</p><p>请注意查收</p>');
+                that.showTips('','<p>已成功发送至邮箱</p><p>'+email+'</p><p>请注意查收</p>');
             },eCallback: function (data) {
                 that.showTips(data.txt);
             }
