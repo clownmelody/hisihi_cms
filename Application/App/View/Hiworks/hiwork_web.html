@@ -16,8 +16,177 @@
     <title>嘿云作业</title>
 </head>
 <body>
-    <div id="nav-bar"></div>
-    <div id="tabs-bar"></div>
-    <div id="main-content"></div>
+    <!--加载等待-->
+    <div id="loading-data">
+        <img class="loding-img" src="__IMG__/hiworks/1.png"/>
+    </div>
+    <!--操作结果-->
+    <div class="result-tips"><p></p></div>
+    <!--主要列表-->
+    <div id="main-content">
+        <div class="header">
+            <div id="nav-tabs-bar" class="nav-tabs-bar">
+                <div id="nav-bar" class="nav-bar">
+                    <div class="nav-bar-title">
+                        <div class="nav-bar-middle" id="category-title">
+                            全部
+                        </div>
+                    </div>
+                    <div class="nav-bar-left btn">
+                        <span class="icon-keyboard_arrow_left font-icon"></span>
+                    </div>
+                    <div class="nav-bar-right btn">
+                        <span class="icon-search font-icon"></span>
+                    </div>
+                </div>
+                <div id="tabs-bar">
+                <ul></ul>
+            </div>
+            </div>
+            <div id="search-bar">
+                <div class="search-box">
+                    <div class="search-box-bg">
+                        <span class="icon-search font-icon"></span>
+                        <input type="text" placeholder="输入关键字快速查找" id="search-txt">
+                    </div>
+                </div>
+                <div class="search-btns">
+                    <div class="btn" id="do-search">
+                        搜索
+                    </div>
+                    <div class="btn" id="quit-search">
+                        取消
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="all-scroll-wrapper"></div>
+        <div id="search-result-panel"></div>
+    </div>
+    <!--详情信息-->
+    <div id="work-detail-panel">
+        <div class="header">
+            <div id="nav-detail-bar" class="nav-tabs-bar">
+                <div id="detail-bar" class="nav-bar">
+                    <div class="nav-bar-title">
+                        <div class="nav-bar-middle" id="detail-title">
+                            全部
+                        </div>
+                    </div>
+                    <div class="nav-bar-left btn" id="back-to-list">
+                        <span class="icon-keyboard_arrow_left font-icon"></span>
+                    </div>
+                    <div class="nav-bar-right btn">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="detail-main">
+            <div class="touchSlider">
+                <ul id="slider4" >
+
+                    <li >
+                        <a href="#">
+                            <img src="__IMG__/hiworks/assets/2.png" alt="">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="__IMG__/hiworks/assets/9.png" alt="">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="__IMG__/hiworks/assets/1.png" alt="">
+                        </a>
+                        </li>
+                </ul>
+
+            </div>
+            <div id="currentPage">
+                <ul>
+                    <li class="active"></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+        <div class="detail-bottom-btns">
+            <div>
+                <div class="item">
+                    <div class="btn">
+                        <div class="color-block down"><span class="icon-download"></span></div>
+                        <div class="label">下载</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="btn">
+                        <div class="color-block link"><span class="icon-link"></span></div>
+                        <div class="label">复制链接</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="btn">
+                        <div class="color-block share"><span class="icon-open"></span></div>
+                        <div class="label">分享</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div></div>
+    </div>
+    <!--模态窗口-->
+    <div class="model-box">
+        <div class="model-box-item email-box">
+            <div class="email-box-item">
+                绑定邮箱
+            </div>
+            <div class="email-box-item">
+                <input type="text" placeholder="邮箱地址" id="email">
+            </div>
+            <div class="email-box-item">
+                <div class="btns-main">
+                    <div id="cancle-bind">
+                        <div class="btn">取消</div>
+                    </div>
+                    <div id="do-bind">确定</div>
+                </div>
+            </div>
+        </div>
+        <div class="model-box-item login-tips-box">
+            <div class="login-header">
+                请先登录再进行操作
+            </div>
+            <div class="btns-main">
+                <div id="cancle-login">
+                    <div class="btn">取消</div>
+                </div>
+                <div class="btn" id="do-login">去登录</div>
+            </div>
+        </div>
+    </div>
 </body>
+<script type="application/javascript">
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/',
+        img_url:'__IMG__',
+        js: "__JS__",
+    };
+    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+    window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+    var aLink=document.getElementsByTagName("a");
+    for(var i=0; i<aLink.length; i++){
+        aLink[i].href = "javascript:void(0);";
+        aLink[i].setAttribute("disabled", "disabled");
+    }
+</script>
+<script type="text/javascript" src="__JS__/hiworks/touchSlider-lib.js"></script>
+<script type="text/javascript" data-main="__JS__/hiworks/config"  src="__JS__/sharecommon/require.js" ></script>
 </html>
