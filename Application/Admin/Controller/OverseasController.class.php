@@ -274,12 +274,15 @@ class OverseasController extends AdminController
             $data['status'] = $status;
             if (is_array($id)) {
                 foreach ($id as $i) {
-                    $model->where('id='.$i)->save($data);
+                    $model->where('id=' . $i)->save($data);
                 }
-                $this->success('处理成功', 'index.php?s=/admin/overseas/university');
             } else {
-                $this->error('未选择要处理的数据');
+                $id = intval($id);
+                $model->where('id=' . $id)->save($data);
             }
+            $this->success('处理成功', 'index.php?s=/admin/overseas/university');
+        } else {
+                $this->error('未选择要处理的数据');
         }
     }
 
@@ -358,11 +361,13 @@ class OverseasController extends AdminController
                 foreach ($id as $i) {
                     $model->where('id=' . $i)->save($data);
                 }
-                $this->success('处理成功', 'index.php?s=/admin/overseas/university');
             } else {
-                $this->error('未选择要处理的数据');
+                $id = intval($id);
+                $model->where('id=' . $id)->save($data);
             }
+            $this->success('处理成功', 'index.php?s=/admin/overseas/university');
         }
+        $this->error('未选择要处理的数据');
     }
 
     /**
@@ -386,4 +391,52 @@ class OverseasController extends AdminController
             $this->error('未选择要操作的数据');
         }
     }
+
+    public function university_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('AbroadUniversity');
+        $data = $Model->where('id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $majorModel = M('AbroadUniversityMajors');
+        $undergraduate_majors_list = $majorModel->field('id, name')->where('status=1 and type=1')->select();
+        $graduate_majors_list = $majorModel->field('id, name')->where('status=1 and type=2')->select();
+        $undergraduate_majors = explode("#",$data['undergraduate_majors']);
+        $graduate_majors = explode("#",$data['graduate_majors']);
+        foreach($undergraduate_majors_list as &$all_major){
+            $is_exist = false;
+            if(in_array($all_major['id'], $undergraduate_majors)){
+                $is_exist = true;
+            }
+            if(!$is_exist){
+                $all_major['ischecked'] = 0;
+            }else{
+                $all_major['ischecked'] = 1;
+            }
+        }
+        foreach($graduate_majors_list as &$all_major){
+            $is_exist = false;
+            if(in_array($all_major['id'], $graduate_majors)){
+                $is_exist = true;
+            }
+            if(!$is_exist){
+                $all_major['ischecked'] = 0;
+            }else{
+                $all_major['ischecked'] = 1;
+            }
+        }
+        $countryModel = M('AbroadCountry');
+        $country_list = $countryModel->field('id, name')->where('status=1')->select();
+        $this->assign('_country', $country_list);
+        $this->assign('_undergraduate_majors', $undergraduate_majors_list);
+        $this->assign('_graduate_majors', $graduate_majors_list);
+        $this->assign('university', $data);
+        $this->meta_title = '编辑大学';
+        $this->display();
+    }
+
 }
