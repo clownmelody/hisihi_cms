@@ -114,8 +114,8 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
                         callback && callback.call(that);
                     }
                 };
-                this.getDataAsync(para);
-                //callback && callback.call(that);
+                //this.getDataAsync(para);
+                callback && callback.call(that);
             }
         }
         else {
