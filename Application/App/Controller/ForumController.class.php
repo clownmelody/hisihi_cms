@@ -491,10 +491,12 @@ class ForumController extends AppController
 //        $cache = new \RedisCache();
 //        $cache->setResCache($this, '获取提问列表成功', array( 'total_count' => $totalCount, 'forumList' => $list), 120);
 //        $cache->close();
-          $cache = new \ForumFilterCache();
-          $cache->setPublicResCache($list, $totalCount);
-          $cache->close();
-
+          if($circle_type != 3){
+              // 不缓存朋友圈数据
+              $cache = new \ForumFilterCache();
+              $cache->setPublicResCache($list, $totalCount);
+              $cache->close();
+          }
           $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
 
 //        $data['total_count'] = $totalCount;
