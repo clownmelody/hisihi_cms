@@ -716,7 +716,6 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
             if (this.deviceType.android) {
                 //如果方法存在
                 if (typeof AppFunction != "undefined" && typeof AppFunction.backToPrePage!= "undefined") {
-                    alert();
                     AppFunction.backToPrePage();
                 }
             } else {
@@ -742,6 +741,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
             return;
         }
         that.controlModelBox(0,0);
+        $('#email').val('');
         var para = {
             url: this.baseUrl + 'hiworks/sendDownLoadURLToEMail',
             type: 'get',
@@ -750,12 +750,13 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
                 if(data.success) {
                     email = that.substrLongStr(email, 20);
                     that.showTips('', '<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
+                    $('#email').val('');
                 }else{
-                    that.showTips('邮件发送失败');
+                    //that.showTips('邮件发送失败');
                     that.controlModelBox(1,0);
                 }
             },eCallback: function (data) {
-                that.showTips('邮件发送失败');
+                //that.showTips('邮件发送失败');
                 that.controlModelBox(1,0);
             }
         };
@@ -828,15 +829,15 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
      *strFormat - {bool} 自定义的简单格式
      */
     t.showTips=function(tip,strFormat){
-        var $tip=$('body').find('.result-tips'),
-            $p=$tip.find('p').text(tip);
+        var $tip=$('body').find('.result-tips');
         if(strFormat){
             $tip.html(strFormat);
+        }else{
+            $tip.html('<p>'+tip+'</p>');
         }
         $tip.show();
         window.setTimeout(function(){
-            $tip.hide();
-            $p.text('');
+            $tip.hide().html('');
         },1500);
     };
 
