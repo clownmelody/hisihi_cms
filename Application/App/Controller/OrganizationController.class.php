@@ -3552,6 +3552,7 @@ class OrganizationController extends AppController
             } else {
                 $org['relationship'] = 0;
             }
+            $org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
         }
         //机构列表按报名数排序
         $sort = array(
@@ -3576,12 +3577,21 @@ class OrganizationController extends AppController
     }
 
     public function getUniversityCourses($organization_id=null, $university_id=null){
-        $courses = M('OrganizationToUniversity')->alias('a')
-            ->join('hisihi_organization_teaching_course b  ON b.id = a.teaching_course_id')
-            ->field('a.teaching_course_id, b.id')
+        $courses = M('OrganizationToUniversity')
+            ->field('teaching_course_id')
             ->where('status=1 and teaching_course_id>0 and university_id='.$university_id.' and organization_id='.$organization_id)
             ->select();
-        $this->apiSuccess('获取机构列表成功', null, $courses);
-        //return $courses;
+        $courses_list = null;
+        if($courses){
+            $courses_id = array();
+            foreach($courses as $item){
+                $courses_id[] = $item['teaching_course_id'];
+            }
+            $map['id'] = array('in', $courses_id);
+            $map['status'] = 1;
+            $map['organization_id'] = $organization_id;
+            $courses_list = M('OrganizationTeachingCourse')->field('id, course_name')->where($map)->select();
+        }
+        return $courses_list;
     }
 }
