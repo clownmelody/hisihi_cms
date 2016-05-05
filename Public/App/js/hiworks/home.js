@@ -722,7 +722,6 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
             } else {
                 //如果方法存在
                 if (typeof backToPrePage != "undefined") {
-                    alert();
                     backToPrePage();
                 }
             }
@@ -775,7 +774,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
                 var info= window.getShareInfo();
                 alert(info);
                 alert('android');
-                AppFunction.share(info);//调用app的方法，得到用户的基体信息
+                AppFunction.share('info');//调用app的方法，得到用户的基体信息
             }
 
         }
@@ -908,7 +907,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         var workObj=window.hiworks.currentWorksObj;
         var obj={
             tile: workObj.title.trim(),
-            url: window.hisihiUrlObj.link_url+'api.php?s=/Hiworks/hiworks_share/hiword_id/'+workObj.id,
+            url: 'hisihi.com/api.php?s=/Hiworks/hiworks_share/hiword_id/'+workObj.id,
             thumb: workObj.pic_url.trim(),
             description:'我在嘿设汇发现了⼀一个很棒的作业源⽂文件，居然可以直接下载'
         };

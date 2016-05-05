@@ -36,10 +36,7 @@ textarea {
 }
 input:focus,
 textarea:focus {
-  outline: 0;
-  box-shadow: 0 0 5px #ccc;
-  border-color: #fff;
-  background: #fff;
+  outline: none;
 }
 img {
   max-width: 100%;
