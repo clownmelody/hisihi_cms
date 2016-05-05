@@ -2,7 +2,8 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
+define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
+    FastClick.attach(document.body);
     var HiWorks = function (url,baseId) {
         this.baseUrl = url;
         this.$wrapper = $('body');
@@ -20,9 +21,10 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
-        if(this.deviceType.mobile){
-            eventName='touchend';
-        }
+        //if(this.deviceType.mobile){
+        //    //eventName='touchend';
+        //    eventName='click';
+        //}
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
         });
@@ -42,6 +44,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         $(document).on(eventName,'#quit-search', function(){
             that.controlSearchPanel(false);
             $('#search-result-panel .lists-ul').html('');  //清空上次结果
+            that.controlLoadingBox(false);
         });
 
         //搜寻框可用性控制
@@ -632,7 +635,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         }
         for(var i=0;i<len;i++){
             str+='<li >'+
-                    '<a href="#">'+
+                    '<a href="javascript:showFullImg('+i+')">'+
                         '<img src="'+data[i]+'" alt="" class="'+ className1 +'">'+
                     '</a>'+
                   '</li>';
@@ -713,11 +716,13 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
             if (this.deviceType.android) {
                 //如果方法存在
                 if (typeof AppFunction != "undefined" && typeof AppFunction.backToPrePage!= "undefined") {
+                    alert();
                     AppFunction.backToPrePage();
                 }
             } else {
                 //如果方法存在
                 if (typeof backToPrePage != "undefined") {
+                    alert();
                     backToPrePage();
                 }
             }
@@ -862,6 +867,24 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
                     callback && callback();
                 }
             });
+    };
+
+    /*
+     *显示全图
+     *@para:
+     *index - {index} 图片数组下标
+     */
+    t.showFullImg=function(index){
+        //alert(index);
+    };
+
+    /*
+    *显示全图
+    *@para:
+    *index - {index} 图片数组下标
+    */
+    window.showFullImg=function(index){
+        window.hiworks.showFullImg(index);
     };
 
     /*
