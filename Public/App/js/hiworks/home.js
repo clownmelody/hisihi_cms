@@ -31,6 +31,11 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         $(document).on(eventName,'#tabs-bar ul li', $.proxy(this,'switchTabs'));
 
         //显示搜寻框
+        $(document).on(eventName,'.nav-bar-left', function(){
+
+        });
+
+        //显示搜寻框
         $(document).on(eventName,'.nav-bar-right', function(){
             that.controlSearchPanel(true);
             that.initSearchPanelScrollFn();
@@ -746,7 +751,8 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     t.execShare=function(){
         if (this.deviceType.android) {
             if (typeof AppFunction.share != "undefined") {
-                AppFunction.share();//调用app的方法，得到用户的基体信息
+                var info= window.getShareInfo();
+                AppFunction.share(info);//调用app的方法，得到用户的基体信息
             }
 
         }
@@ -861,10 +867,11 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
 
     //返回分享信息，供app调用
     window.getShareInfo=function(){
+        var workObj=window.hiworks.currentWorksObj;
         var obj={
-            tile: window.hiworks.currentWorksObj.title.trim(),
-            url: window.hiworks.hisihiUrlObj.link_url+'api.php?s=/Hiworks/hiworks_share/hiword_id/'+window.hiworks.currentWorksObj.id,
-            thumb: window.hiworks.currentWorksObj.pic_url.trim(),
+            tile: workObj.title.trim(),
+            url: window.hisihiUrlObj.link_url+'api.php?s=/Hiworks/hiworks_share/hiword_id/'+workObj.id,
+            thumb: workObj.pic_url.trim(),
             description:'我在嘿设汇发现了⼀一个很棒的作业源⽂文件，居然可以直接下载'
         };
         return JSON.stringify(obj);
