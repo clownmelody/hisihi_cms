@@ -3357,13 +3357,19 @@ class OrganizationController extends AppController
         $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
         $select_where['status'] = 1;
         $select_where['application_status'] = 2;
-        $select_where['light_authentication'] = 1;
+        if($type != '留学'){
+            $select_where['light_authentication'] = 1;
+        }
         $select_where['type'] = $type_id;
         if(!empty($city)){
             $select_where['city'] = array('like','%'.$city.'%');
         }
         if($well_chosen){
-            $select_where['well_chosen'] = 1;
+            if($type == '留学'){
+                $select_where['is_hot'] = 1;
+            }else{
+                $select_where['well_chosen'] = 1;
+            }
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
