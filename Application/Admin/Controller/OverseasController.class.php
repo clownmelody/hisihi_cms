@@ -121,4 +121,88 @@ class OverseasController extends AdminController
         }
     }
 
+    /**留学机构列表
+     * @param string $type
+     */
+    public function org_list($type='留学'){
+        $map['value'] = $type;
+        $map['status'] = 1;
+        $type_id = M('OrganizationTag')->where($map)->getField('id');
+        $model = M('Organization');
+        $where_map['status'] = 1;
+        $where_map['type'] = $type_id;
+        $count = $model->where($where_map)->count();
+        $Page = new Page($count, 5);
+        $show = $Page->show();
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if($name){
+            $where_map['name'] = array('like','%'.$name.'%');
+            $list = $model->where($where_map)->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where($where_map)->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        foreach($list as &$org){
+            $has_admin = M('OrganizationAdmin')->where('status=1 and id='.$org['uid'])->count();
+            if($has_admin){
+                $org['has_admin'] = 1;
+            }else{
+                $org['has_admin'] = 0;
+            }
+            $org['type'] = M('OrganizationTag')->where('type=7 and status=1 and id='.$org['type'])->getField('value');
+        }
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status>0')->select();
+        $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
+        $this->assign('type', $type);
+        $this->assign('major', $major);
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","机构列表");
+        $this->display();
+    }
+
+    /**
+     * @param $id
+     */
+    public function setHot($id){
+        if(!empty($id)){
+            $model = M('Organization');
+            $data['is_hot'] = 1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('设置成功','index.php?s=/admin/overseas/org_list');
+        } else {
+            $this->error('未选择要操作的数据');
+        }
+    }
+
+    /**
+     * @param $id
+     */
+    public function undoSetHot($id){
+        if(!empty($id)){
+            $model = M('Organization');
+            $data['is_hot'] = 0;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('取消成功','index.php?s=/admin/overseas/org_list');
+        } else {
+            $this->error('未选择要操作的数据');
+        }
+    }
 }

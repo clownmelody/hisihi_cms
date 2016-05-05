@@ -64,7 +64,7 @@ class OrganizationController extends AdminController
             }
             $org['type'] = M('OrganizationTag')->where('type=7 and status=1 and id='.$org['type'])->getField('value');
         }
-        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status=1')->select();
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status>0')->select();
         $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
         $this->assign('type', $type);
         $this->assign('major', $major);
@@ -145,8 +145,8 @@ class OrganizationController extends AdminController
                 $all_marks[] = $mark;
             }
         }
-        $org_major = M('OrganizationTagRelation')->where('tag_type=8 and status=1 and organization_id='.$id)->select();
-        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status=1')->select();
+        $org_major = M('OrganizationTagRelation')->where('tag_type=8 and status>0 and organization_id='.$id)->select();
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status>0')->select();
         $major_str = '';
         foreach($major as $all_major){
             $is_exist = false;
@@ -3702,7 +3702,7 @@ class OrganizationController extends AdminController
             }
             $org['type'] = M('OrganizationTag')->where('type=7 and status=1 and id='.$org['type'])->getField('value');
         }
-        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status=1')->select();
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status>0')->select();
         $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
         $this->assign('type', $type);
         $this->assign('major', $major);
@@ -3741,7 +3741,7 @@ class OrganizationController extends AdminController
             }
             $org['type'] = M('OrganizationTag')->where('type=7 and status=1 and id='.$org['type'])->getField('value');
         }
-        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status=1')->select();
+        $major = M('OrganizationTag')->field('id, value')->where('type=8 and status>0')->select();
         $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
         $this->assign('type', $type);
         $this->assign('major', $major);
