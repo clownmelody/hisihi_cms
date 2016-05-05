@@ -635,6 +635,18 @@ ul li {
     margin: 0 auto;
   }
 }
+@media screen and (max-width: 320px) {
+  .header #search-bar .search-box {
+    margin-right: 95px;
+  }
+  .header #search-bar .search-box .search-box-bg #search-txt {
+    margin-left: 30px;
+  }
+  .header #search-bar .search-btns {
+    width: 95px;
+    height: 100%;
+  }
+}
 @font-face {
   font-family: 'icomoon';
   src: url('fonts/icomoon.eot?a9rbl0');

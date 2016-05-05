@@ -30,10 +30,8 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         //标签分类切换
         $(document).on(eventName,'#tabs-bar ul li', $.proxy(this,'switchTabs'));
 
-        //显示搜寻框
-        $(document).on(eventName,'.nav-bar-left', function(){
-
-        });
+        //导航到上一级
+        $(document).on(eventName,'.nav-bar-left', $.proxy(this,'back'));
 
         //显示搜寻框
         $(document).on(eventName,'.nav-bar-right', function(){
@@ -605,7 +603,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         var h=$('body').height(),
             flag=$('#slider4').attr('data-init');
         $('#detail-main').height(h-135).css('opacity','1');
-        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:3000, fullsize:true});
+        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
         if(!flag) {
             t4.on('before', function (m, n) {
                 $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
@@ -709,6 +707,23 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         this.controlModelBox(0,1);
     };
 
+     /*导航返回*/
+    t.back=function(){
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined" && typeof AppFunction.backToPrePage!= "undefined") {
+                    AppFunction.backToPrePage();
+                }
+            } else {
+                //如果方法存在
+                if (typeof backToPrePage != "undefined") {
+                    backToPrePage();
+                }
+            }
+        }
+    };
+
     //确定邮箱
     t.bindEmail=function(e){
         var $target=$(e.currentTarget),that=this;
@@ -722,7 +737,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
             this.showTips('邮箱格式有误，请重新输入');
             return;
         }
-
+        that.controlModelBox(0,0);
         var para = {
             url: this.baseUrl + 'hiworks/sendDownLoadURLToEMail',
             type: 'get',
@@ -731,12 +746,13 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
                 if(data.success) {
                     email = that.substrLongStr(email, 20);
                     that.showTips('', '<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
-                    that.controlModelBox(0,0);
                 }else{
                     that.showTips('邮件发送失败');
+                    that.controlModelBox(1,0);
                 }
             },eCallback: function (data) {
                 that.showTips('邮件发送失败');
+                that.controlModelBox(1,0);
             }
         };
         this.getDataAsync(para);
@@ -752,6 +768,8 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         if (this.deviceType.android) {
             if (typeof AppFunction.share != "undefined") {
                 var info= window.getShareInfo();
+                alert(info);
+                alert('android');
                 AppFunction.share(info);//调用app的方法，得到用户的基体信息
             }
 
@@ -854,15 +872,12 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
     */
     window.loginSuccessCallback=function(){
-        //var obj=window.topContentObj;
-        //obj.controlModelBox(0,1);
-        //
-        ////得到用户基本信息
-        //obj.getUserInfo(function(){
-        //    obj.loadVoteInfo(); //点赞信息
-        //    obj.getFavoriteInfo(); //收藏信息
-        //    window.topContentObj.updateCommentInfo();  //更新评论的点赞信息
-        //});
+        var obj=window.hiworks;
+
+        //得到用户基本信息
+        obj.getUserInfo(function(){
+
+        });
     };
 
     //返回分享信息，供app调用

@@ -664,7 +664,22 @@ ul{
 }
 
 @media screen and (max-width:320px){
-
+  .header {
+    #search-bar{
+      @width:95px;
+      .search-box{
+        margin-right: @width;
+        .search-box-bg{
+          #search-txt {
+            margin-left: 30px;
+          }
+        }
+      }
+      .search-btns{
+        .size(@width,100%);
+      }
+    }
+  }
 }
 
 
