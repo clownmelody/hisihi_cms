@@ -7,8 +7,9 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         fx:'sharecommon/fx_v1.1',
-        lazyloading:'hiworks/imglazyload.min',
+        //lazyloading:'hiworks/imglazyload.min',
         prefixfree:'sharecommon/prefixfree.min',
+        fastclick:'sharecommon/fastclick',
         iscroll:'sharecommon/iscroll',
         touchslider:'hiworks/touchSlider-lib',
         base:'sharecommon/base',
@@ -23,10 +24,13 @@ requirejs.config({
             steps:['$'],
             output:'fx'
         },
-        lazyloading:{
-            steps:['$'],
-            output:'lazyloading'
+        fastclick:{
+            output:'fastclick'
         },
+        //lazyloading:{
+        //    steps:['$'],
+        //    output:'lazyloading'
+        //},
         prefixfree:{
             output:'prefixfree'
         },

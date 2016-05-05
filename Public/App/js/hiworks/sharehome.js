@@ -2,16 +2,17 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base'],function(fx,Base) {
+define(['fx','base','fastclick'],function(fx,Base) {
+    FastClick.attach(document.body);
     var HiWorks = function (url,baseId) {
         this.baseUrl = url;
         this.baseId=baseId;
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
-        if(this.deviceType.mobile){
-            eventName='touchend';
-        }
+        //if(this.deviceType.mobile){
+        //    eventName='touchend';
+        //}
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
         });
@@ -111,7 +112,7 @@ define(['fx','base'],function(fx,Base) {
         }
         for(var i=0;i<len;i++){
             str+='<li >'+
-                '<a href="#">'+
+                '<a href="javascript:showFullImg('+i+')">'+
                 '<img src="'+data[i]+'" alt="" class="'+ className1 +'">'+
                 '</a>'+
                 '</li>';
@@ -253,7 +254,7 @@ define(['fx','base'],function(fx,Base) {
     /*控制底部logo的位置样式*/
     t.controlCoverFootStyle=function () {
         var $target = $('#downloadCon'),
-            $a = $target.find('a'),
+            $a = $target.find('span'),
             aw = $a.width(),
             ah = aw * 0.40,
             bw = $target.width(),
@@ -265,6 +266,25 @@ define(['fx','base'],function(fx,Base) {
             fontSize = '14px';
         }
         $a.css({'top': (h - ah) / 2, 'height': ah + 'px', 'line-height': ah + 'px', 'font-size': fontSize});
+    };
+
+
+    /*
+     *显示全图
+     *@para:
+     *index - {index} 图片数组下标
+     */
+    t.showFullImg=function(index){
+        //alert(index);
+    };
+
+    /*
+     *显示全图
+     *@para:
+     *index - {index} 图片数组下标
+     */
+    window.showFullImg=function(index){
+        window.hiworks.showFullImg(index);
     };
 
     return HiWorks;

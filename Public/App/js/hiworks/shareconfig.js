@@ -7,6 +7,7 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         fx:'sharecommon/fx_v1.1',
+        fastclick:'sharecommon/fastclick',
         prefixfree:'sharecommon/prefixfree.min',
         touchslider:'hiworks/touchSlider-lib',
         base:'sharecommon/base',
@@ -19,6 +20,9 @@ requirejs.config({
         fx:{
             steps:['$'],
             output:'fx'
+        },
+        fastclick:{
+            output:'fastclick'
         },
         prefixfree:{
             output:'prefixfree'

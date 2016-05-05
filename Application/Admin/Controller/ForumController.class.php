@@ -287,6 +287,7 @@ class ForumController extends AdminController
             } else {
                 $v['top'] = '不置顶';
             }
+            $v['content'] = substr(strip_tags($v['content']), 0,120);
         }
         //读取板块基本信息
         if ($forum_id) {
@@ -298,18 +299,23 @@ class ForumController extends AdminController
 
         //显示页面
         $builder = new AdminListBuilder();
-        $builder->title('帖子管理' . $forumTitle)
+        $builder->title('帖子管理'.$forumTitle)
             ->setStatusUrl(U('Forum/setPostStatus'))->buttonEnable()->buttonDisable()->buttonDelete()->buttonNew(U('Forum/addTopPost'))
-            ->ajaxButton(U('Forum/pushTopPost'), null, '推送')->buttonNew(U('Forum/post?showtop=1'),'显示置顶帖')
+            ->ajaxButton(U('Forum/pushTopPost'),null,'推送')->buttonNew(U('Forum/post?showtop=1'),'显示置顶帖')
             ->buttonNew(U('Forum/post?showelite=1'),'显示精华帖')
             ->ajaxButton(U('Forum/unsetPostElite'),null,'取消精华帖')
-            ->keyId()->keyLink('title', '标题', 'Forum/reply?post_id=###')
-            ->keyCreateTime()->keyUpdateTime()->keyTime('last_reply_time', '最后回复时间')->key('top', '是否置顶')
+            /*->keyId()->keyLink('title','标题','Forum/reply?post_id=###')*/
+            ->keyId()->keyLink('content','内容','Forum/reply?post_id=###')
+            ->keyCreateTime()
+            /*->keyUpdateTime()->keyTime('last_reply_time','最后回复时间')*/
+            ->key('top','是否置顶')
             ->keyStatus()->keyDoActionEdit('editPost?id=###')->keyDoActionHide()
             ->setEliteUrl(U('Forum/setPostElite'))->keyDoActionElite()
-            ->setSearchPostUrl()->search('标题', 'title')->search('内容', 'content')
+            ->setSearchPostUrl()
+            /*->search('标题','title')*/
+            ->search('内容','content')
             ->data($list)
-            ->pagination($totalCount, $r)
+            ->pagination($totalCount,$r)
             ->display();
     }
 
