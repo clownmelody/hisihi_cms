@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html  style="overflow-x: hidden;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="Resource-type" content="Document">
+    <!--禁止缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--禁止数字识别为手机号-->
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link type="text/css" href="__CSS__/hiworks/hiwork_share.css" rel="stylesheet">
+    <title>嘿云作业</title>
+</head>
+<body data-id="{$hiwork_id}">
+<!--加载等待-->
+<div id="loading-data">
+    <img class="loding-img" src="__IMG__/hiworks/1.png"/>
+</div>
+<!--操作结果-->
+<div class="result-tips"><p></p></div>
+
+<!--详情信息-->
+<div id="work-detail-panel">
+    <div id="detail-main">
+        <div class="touchSlider">
+            <ul id="slider4" >
+                <li >
+                    <a href="javascript:void(0)">
+                        <img src="__IMG__/hiworks/assets/2.png" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <img src="__IMG__/hiworks/assets/9.png" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <img src="__IMG__/hiworks/assets/1.png" alt="">
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+        <div id="currentPage">
+            <ul>
+                <li class="active"></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+    <div class="detail-bottom-btns">
+        <div class="color-block down btn"><span class="icon-download"></span><span class="label">下载源文件</span></div>
+    </div>
+</div>
+<!--模态窗口-->
+<div class="model-box">
+    <div class="model-box-item email-box">
+        <div class="email-box-item">
+            绑定邮箱
+        </div>
+        <div class="email-box-item">
+            <input type="text" placeholder="邮箱地址" id="email">
+        </div>
+        <div class="email-box-item">
+            <div class="btns-main">
+                <div id="cancle-bind">
+                    <div class="btn">取消</div>
+                </div>
+                <div id="do-bind">确定</div>
+            </div>
+        </div>
+    </div>
+    <div class="model-box-item login-tips-box">
+        <div class="login-header">
+            请先登录再进行操作
+        </div>
+        <div class="btns-main">
+            <div id="cancle-login">
+                <div class="btn">取消</div>
+            </div>
+            <div class="btn" id="do-login">去登录</div>
+        </div>
+    </div>
+</div>
+
+<!--下载条-->
+<div id="downloadCon">
+    <img src="__IMG__/v2content/d.png" class="allDownImg" />
+    <a href="javascript:void(0)" class="btnElement">立即下载</a>
+</div>
+
+</body>
+<script type="application/javascript">
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/',
+        img_url:'__IMG__',
+        js: "__JS__",
+    };
+//    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+    window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+</script>
+<script type="text/javascript" src="__JS__/hiworks/touchSlider-lib.js"></script>
+<script type="text/javascript" data-main="__JS__/hiworks/shareconfig"  src="__JS__/sharecommon/require.js" ></script>
+</html>

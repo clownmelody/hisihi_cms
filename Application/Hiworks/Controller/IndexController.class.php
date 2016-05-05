@@ -276,6 +276,48 @@ class IndexController extends HiworksController
     }
 
     /**
+     * 根据id获取作业详情
+     * @param int $hiwork_id
+     */
+    public function getHiworkDetailById($hiwork_id=0){
+        $Document = M('Document');
+        $doc_info = $Document->field('id, category_id, title, cover_id')->where('id='.$hiwork_id)->find();
+        $detail = D('Document')->detail($doc_info['id']);
+        $cover_id = $doc_info['cover_id'];
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$cover_id);
+        if($result){
+            $path = $result[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://pic.hisihi.com/".$objKey."@50p";
+                $data['showAdv'] = true;
+                $data['pic'] = $picUrl;
+                $doc_info['pic_url'] = $picUrl;
+            } else {
+                srand(microtime(true) * 1000);
+                $index =  rand(1, 120);
+                $doc_info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
+            }
+        } else {
+            srand(microtime(true) * 1000);
+            $index =  rand(1, 120);
+            $doc_info['pic_url'] = "http://hiworks.oss-cn-qingdao.aliyuncs.com/".$index.".jpg";
+        }
+        unset($doc_info['cover_id']);
+        $muliti_cover_pic = $this->getMultiCoverPicURLByHiworkId($doc_info['id']);
+        $doc_info['multi_cover_info'] = array('count'=>count($muliti_cover_pic), 'data'=>$muliti_cover_pic);
+        $doc_info['download_url'] = C('HOST_NAME_PREFIX').'/hiworks_list.php/file/downloadZip/key/'.$this->caesar_encode($doc_info['id'], 'hisihi_hiworks_downlaod');
+        $doc_info['size'] = $this->conversion($detail['size']);
+        $doc_info['download'] = $detail['download'];
+        $this->apiSuccess('获取云作业详情成功', null, array('data'=>$doc_info));
+
+    }
+
+    /**
      * 根据关键词搜索云作业
      * @param null $keyword
      * @param int $page

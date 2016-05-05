@@ -7,13 +7,10 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         fx:'sharecommon/fx_v1.1',
-        lazyloading:'hiworks/imglazyload.min',
         prefixfree:'sharecommon/prefixfree.min',
-        iscroll:'sharecommon/iscroll',
         touchslider:'hiworks/touchSlider-lib',
         base:'sharecommon/base',
-        myscroll:'hiworks/myscroll',
-        home:'hiworks/home',
+        home:'hiworks/sharehome',
     },
     shim: {
         $:{
@@ -23,23 +20,14 @@ requirejs.config({
             steps:['$'],
             output:'fx'
         },
-        lazyloading:{
-            steps:['$'],
-            output:'lazyloading'
-        },
         prefixfree:{
             output:'prefixfree'
-        },
-        iscroll:{
-            output:'iscroll'
-        },
+        }
     }
 });
 
 
 require(['home','prefixfree'],function(works){
-    var userAgent = window.location.href,
-        reg = /category\/[1-9][0-9]*/g,
-        id = userAgent.match(reg)[0].toString().replace(/category\//g,'');
+    var id=$('body').data('id');
     window.hiworks = new works(window.hisihiUrlObj.server_url,id);
 });

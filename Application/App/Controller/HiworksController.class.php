@@ -91,6 +91,16 @@ class HiworksController extends AppController
     }
 
 
+    /**
+     * 云作业2.8版本分享页面
+     * @param int $hiword_id
+     */
+    public function hiworks_share($hiword_id=0){
+        $this->assign('hiwork_id', $hiword_id);
+        $this->display('hiworks_share');
+    }
+
+
     /* 文档分类检测 */
     private function cate($id = 1)
     {
