@@ -148,7 +148,7 @@
                         <label class="item-label">所属国家</label>
                         <div class="controls">
                             <notempty name="_country">
-                                <select class="text input-large" name="country_id" style="height: 30px;width: 400px;">
+                                <select class="text input-large" name="country_id" style="height: 30px;width: 100px;">
                                     <volist name="_country" id="vo">
                                         <option value="{$vo.id}" >{$vo.name}</option>
                                     </volist>
@@ -161,10 +161,10 @@
                     <div class="form-item cf">
                         <label class="item-label">本科专业</label>
                         <div class="controls">
-                            <notempty name="_filtrate">
+                            <notempty name="_undergraduate_majors">
                                 <ul class="dowebok" id="undergraduate_majors_ul">
-                                    <volist name="_filtrate" id="undergraduate_majors_vo">
-                                        <li><input type="checkbox" id="{$undergraduate_majors_vo.id}"  data-labelauty="{$undergraduate_majors_vo.value}"></li>
+                                    <volist name="_undergraduate_majors" id="undergraduate_majors_vo">
+                                        <li><input type="checkbox" id="{$undergraduate_majors_vo.id}"  data-labelauty="{$undergraduate_majors_vo.name}"></li>
                                     </volist>
                                 </ul>
                                 <else/>
@@ -176,10 +176,10 @@
                     <div class="form-item cf">
                         <label class="item-label">研究生专业</label>
                         <div class="controls">
-                            <notempty name="_filtrate">
+                            <notempty name="_graduate_majors">
                                 <ul class="dowebok" id="graduate_majors_ul">
-                                    <volist name="_filtrate" id="vo">
-                                        <li><input type="checkbox" id="{$graduate_majors.id}"  data-labelauty="{$graduate_majors.value}"></li>
+                                    <volist name="_graduate_majors" id="graduate_majors_vo">
+                                        <li><input type="checkbox" id="{$graduate_majors_vo.id}"  data-labelauty="{$graduate_majors_vo.name}"></li>
                                     </volist>
                                 </ul>
                                 <else/>
@@ -220,31 +220,31 @@
             $(':input').labelauty();
         });
         function setAdvantage(){
-            var advantage = "";
+            var graduate_majors = "";
             $.each($("#graduate_majors_ul li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
                 var input = li.find("input");
                 var classattr = span.attr("class");
                 if(classattr == "labelauty-checked-image"){
-                    advantage += (input.attr("id") + "#");
+                    graduate_majors += (input.attr("id") + "#");
                 }
             });
-            advantage = advantage.substring(0,advantage.length - 1);
-            $("#graduate_majors").val(advantage);
+            graduate_majors = graduate_majors.substring(0,graduate_majors.length - 1);
+            $("#graduate_majors").val(graduate_majors);
 
-            var filtrate = "";
+            var undergraduate_majors = "";
             $.each($("#undergraduate_majors_ul li"),function(i,n){
                 var li = $(this);
                 var span = li.find("span:visible");
                 var input = li.find("input");
                 var classattr = span.attr("class");
                 if(classattr == "labelauty-checked-image"){
-                    filtrate += (input.attr("id") + "#");
+                    undergraduate_majors += (input.attr("id") + "#");
                 }
             });
-            filtrate = filtrate.substring(0,filtrate.length - 1);
-            $("#undergraduate_majors_ul").val(filtrate);
+            undergraduate_majors = undergraduate_majors.substring(0,undergraduate_majors.length - 1);
+            $("#undergraduate_majors").val(undergraduate_majors);
         }
     </script>
 

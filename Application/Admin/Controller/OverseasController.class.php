@@ -56,9 +56,6 @@ class OverseasController extends AdminController
         }
     }
 
-    /**
-     * @param $id
-     */
     public function country_edit($id){
         if(empty($id)){
             $this->error('参数不能为空！');
@@ -72,6 +69,75 @@ class OverseasController extends AdminController
         $this->assign('country', $data);
         $this->meta_title = '编辑留学国家';
         $this->display();
+    }
+
+    public function majors(){
+        $model = M('AbroadUniversityMajors');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","专业列表");
+        $this->display();
+    }
+
+    public function majors_update(){
+        if (IS_POST) { //提交表单
+            $model = M('AbroadUniversityMajors');
+            $mid = $_POST['mid'];
+            $data['name'] = $_POST["name"];
+            $data['type'] = $_POST["type"];
+            if(empty($cid)){
+                $data["create_time"] = time();
+                try {
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/overseas/majors');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/overseas/majors');
+            }
+        } else {
+            $this->display('majors_add');
+        }
+    }
+
+    public function majors_edit($id){
+        if(empty($id)){
+            $this->error('参数不能为空！');
+        }
+        /*获取一条记录的详细数据*/
+        $Model = M('AbroadUniversityMajors');
+        $data = $Model->where('id='.$id)->find();
+        if(!$data){
+            $this->error($Model->getError());
+        }
+        $this->assign('majors', $data);
+        $this->meta_title = '编辑专业';
+        $this->display();
+    }
+
+    public function majors_set_status($id, $status=-1){
+        if(!empty($id)){
+            $model = M('AbroadUniversityMajors');
+            $data['status'] = $status;
+            if(is_array($id)){
+                foreach ($id as $i){
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/overseas/majors');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
     }
 
     public function cancle_hot($id, $is_hot=0){
@@ -140,6 +206,24 @@ class OverseasController extends AdminController
         $this->display();
     }
 
+    public function university_set_status($id, $status=-1){
+        if(!empty($id)){
+            $model = M('AbroadUniversity');
+            $data['status'] = $status;
+            if(is_array($id)){
+                foreach ($id as $i){
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/overseas/university');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
     public function university_update(){
         if (IS_POST) { //提交表单
             $model = M('AbroadUniversity');
@@ -184,10 +268,44 @@ class OverseasController extends AdminController
     }
 
     public function university_add(){
+        $majorModel = M('AbroadUniversityMajors');
         $countryModel = M('AbroadCountry');
         $country_list = $countryModel->field('id, name')->where('status=1')->select();
+        $undergraduate_majors = $majorModel->field('id, name')->where('status=1 and type=1')->select();
+        $graduate_majors = $majorModel->field('id, name')->where('status=1 and type=2')->select();
         $this->assign('_country', $country_list);
+        $this->assign('_undergraduate_majors', $undergraduate_majors);
+        $this->assign('_graduate_majors', $graduate_majors);
         $this->display('university_add');
+    }
+
+    public function university_set_hot($id){
+        if(!empty($id)){
+            $model = M('AbroadUniversity');
+            $data['is_hot'] = 1;
+            $model->where('id='.$id)->save($data);
+            $this->success('处理成功','index.php?s=/admin/overseas/university');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    public function cancle_university_hot($id, $is_hot=0){
+        if(!empty($id)){
+            $model = M('AbroadUniversity');
+            $data['is_hot'] = $is_hot;
+            if(is_array($id)){
+                foreach ($id as $i){
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/overseas/university');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
     }
 
 }
