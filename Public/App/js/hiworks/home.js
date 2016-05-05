@@ -164,7 +164,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     /*填入分类信息*/
     t.fillInClassInfo=function(result){
         var str='';
-        if(result && result.category.length>0){
+        if(result && result.category && result.category.length>0){
             var category=result.category,
                 len=category.length,
                 item;
@@ -574,10 +574,12 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         $('#detail-title').text(title);
         var covers=this.currentWorksObj.multi_cover_info,
             flag=true;
-        if(covers.count==0){
+        if(!covers || covers.count==0){
             flag=false;
-            covers.count=1;
-            covers.data=[window.hisihiUrlObj.img_url+'/hiworks/hisihi.png'];
+            covers= {
+                count: 1,
+                data: [window.hisihiUrlObj.img_url + '/hiworks/hisihi.png']
+            };
         }
 
         $('#work-detail-panel').show();
@@ -598,7 +600,7 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
         var h=$('body').height(),
             flag=$('#slider4').attr('data-init');
         $('#detail-main').height(h-135).css('opacity','1');
-        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:1000000, fullsize:true});
+        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:3000, fullsize:true});
         if(!flag) {
             t4.on('before', function (m, n) {
                 $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
