@@ -627,6 +627,14 @@ ul li {
     transform: rotate(360deg);
   }
 }
+/*响应式样式*/
+@media screen and (min-width: 750px) {
+  body {
+    width: 560px;
+    height: auto;
+    margin: 0 auto;
+  }
+}
 @font-face {
   font-family: 'icomoon';
   src: url('fonts/icomoon.eot?a9rbl0');

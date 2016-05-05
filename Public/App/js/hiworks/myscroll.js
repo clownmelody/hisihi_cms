@@ -84,23 +84,37 @@ define(['$','iscroll'],function() {
                     maxY = this.maxScrollY - y,
 
                     downHasClass = that.$downIcon.hasClass("flip"),
-                    upHasClass = that.$upIcon.hasClass("flip");
+                    upHasClass = that.$upIcon.hasClass("flip"),
+                    downLoadingClass=that.$downIcon.hasClass("loading"),
+                    upLoadingClass=that.$upIcon.hasClass("loading");
 
                 if (y >= 40) {
+                    if(downLoadingClass){
+                        return;
+                    }
                     !downHasClass && that.$downIcon.addClass("flip");
                     that.$down.find('.pullDownLabel').text('释放刷新');
                     return;
                 } else if (y < 40 && y > 0) {
+                    if(downLoadingClass){
+                        return;
+                    }
                     downHasClass && that.$downIcon.removeClass("flip");
                     that.$down.find('.pullDownLabel').text('下拉刷新');
                     return "";
                 }
 
                 if (maxY >= 60) {
+                    if(upLoadingClass){
+                        return;
+                    }
                     !upHasClass && that.$upIcon.addClass("flip");
                     that.$up.find('.pullUpLabel').text('释放加载');
                     return;
                 } else if (maxY < 60 && maxY >= 0) {
+                    if(upLoadingClass){
+                        return;
+                    }
                     upHasClass && that.$upIcon.removeClass("flip");
                     that.$up.find('.pullUpLabel').text('上拉加载更多');
                     return;

@@ -846,22 +846,22 @@ define(['fx','base','myscroll'],function(fx,Base,MyScroll) {
     * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
     */
     window.loginSuccessCallback=function(){
-        var obj=window.topContentObj;
-        obj.controlModelBox(0,1);
-
-        //得到用户基本信息
-        obj.getUserInfo(function(){
-            obj.loadVoteInfo(); //点赞信息
-            obj.getFavoriteInfo(); //收藏信息
-            window.topContentObj.updateCommentInfo();  //更新评论的点赞信息
-        });
+        //var obj=window.topContentObj;
+        //obj.controlModelBox(0,1);
+        //
+        ////得到用户基本信息
+        //obj.getUserInfo(function(){
+        //    obj.loadVoteInfo(); //点赞信息
+        //    obj.getFavoriteInfo(); //收藏信息
+        //    window.topContentObj.updateCommentInfo();  //更新评论的点赞信息
+        //});
     };
 
     //返回分享信息，供app调用
     window.getShareInfo=function(){
         var obj={
             tile: window.hiworks.currentWorksObj.title.trim(),
-            url: window.hiworks.hisihiUrlObj.link_url+'1121',
+            url: window.hiworks.hisihiUrlObj.link_url+'api.php?s=/Hiworks/hiworks_share/hiword_id/'+window.hiworks.currentWorksObj.id,
             thumb: window.hiworks.currentWorksObj.pic_url.trim(),
             description:'我在嘿设汇发现了⼀一个很棒的作业源⽂文件，居然可以直接下载'
         };
