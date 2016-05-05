@@ -773,9 +773,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         if (this.deviceType.android) {
             if (typeof AppFunction.share != "undefined") {
                 var info= window.getShareInfo();
-                alert(info);
-                alert('android');
-                AppFunction.share('info');//调用app的方法，得到用户的基体信息
+                AppFunction.share(info);//调用app的方法，得到用户的基体信息
             }
 
         }
