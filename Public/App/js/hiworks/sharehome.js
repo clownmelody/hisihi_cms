@@ -82,7 +82,7 @@ define(['fx','base'],function(fx,Base) {
         var h=$('body').height(),
             flag=$('#slider4').attr('data-init');
         $('#detail-main').height(h-135).css('opacity','1');
-        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:3000, fullsize:true});
+        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
         if(!flag) {
             t4.on('before', function (m, n) {
                 $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
