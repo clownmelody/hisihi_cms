@@ -1750,7 +1750,11 @@ class OrganizationController extends AppController
             $org_id = $org['id'];
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
-            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            if(floatval($version) > 2.7){
+                $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
+            }else{
+                $org['enrollCount'] = $this->getEnrollCount($org_id);
+            }
             if(floatval($version) > 2.5){
                 $org['type_tag'] = $this->getOrganizationType($org['type']);
             }else{
@@ -3371,7 +3375,8 @@ class OrganizationController extends AppController
                 $select_where['well_chosen'] = 1;
             }
         }
-        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
+        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
+            ->order("id desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
@@ -3379,7 +3384,7 @@ class OrganizationController extends AppController
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
-            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
             if($follow_other&&$be_follow){
@@ -3392,12 +3397,12 @@ class OrganizationController extends AppController
                 $org['relationship'] = 0;
             }
         }
-        //机构列表按报名数排序
+/*        //机构列表按报名数排序
         $sort = array(
             'direction'=>'SORT_DESC',
             'field'=>'enrollCount'
         );
-        $org_list = $this->sort_list($sort, $org_list);
+        $org_list = $this->sort_list($sort, $org_list);*/
 
         //机构列表按排序字段排序
         $sort2 = array(
@@ -3459,7 +3464,7 @@ class OrganizationController extends AppController
             $select_where['city'] = array('like','%'.$city.'%');
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("sort asc")
+            ->order("id desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
@@ -3467,7 +3472,7 @@ class OrganizationController extends AppController
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
-            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
             if($follow_other&&$be_follow){
@@ -3480,12 +3485,12 @@ class OrganizationController extends AppController
                 $org['relationship'] = 0;
             }
         }
-        //机构列表按报名数排序
+        /*//机构列表按报名数排序
         $sort = array(
             'direction'=>'SORT_DESC',
             'field'=>'enrollCount'
         );
-        $org_list = $this->sort_list($sort, $org_list);
+        $org_list = $this->sort_list($sort, $org_list);*/
 
         //机构列表按排序字段排序
         $sort2 = array(
@@ -3532,7 +3537,7 @@ class OrganizationController extends AppController
             $select_where['city'] = array('like','%'.$city.'%');
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("sort asc")
+            ->order("id desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
@@ -3540,7 +3545,7 @@ class OrganizationController extends AppController
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
-            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
             if($follow_other&&$be_follow){
@@ -3554,19 +3559,20 @@ class OrganizationController extends AppController
             }
             $org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
         }
-        //机构列表按报名数排序
+/*        //机构列表按报名数排序
         $sort = array(
             'direction'=>'SORT_DESC',
             'field'=>'enrollCount'
         );
         $org_list = $this->sort_list($sort, $org_list);
-
+*/
         //机构列表按排序字段排序
         $sort2 = array(
             'direction'=>'SORT_ASC',
             'field'=>'sort'
         );
         $org_list = $this->sort_list($sort2, $org_list);
+
         //去掉sort字段
         foreach($org_list as &$org){
             unset($org['sort']);
@@ -3593,5 +3599,22 @@ class OrganizationController extends AppController
             $courses_list = M('OrganizationTeachingCourse')->field('id, course_name')->where($map)->select();
         }
         return $courses_list;
+    }
+
+    public function getTeachingCourseEnrollCount($organization_id=null){
+        $map['organization_id'] = $organization_id;
+        $map['status'] = 1;
+        $courses = M('OrganizationTeachingCourse')->field('id')->where($map)->select();
+        $enroll_count = 0;
+        if($courses){
+            $courses_id = array();
+            foreach($courses as $item){
+                $courses_id[] = $item['id'];
+            }
+            $where['course_id'] = array('in', $courses_id);
+            $where['status'] = 1;
+            $enroll_count = M("OrganizationTeachingCourseEnroll")->where($where)->count();
+        }
+        return $enroll_count;
     }
 }
