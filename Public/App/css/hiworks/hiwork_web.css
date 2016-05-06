@@ -271,6 +271,12 @@ ul li {
   font-size: 12px;
   overflow: hidden;
 }
+#main-content .wrapper .lists-ul .no-works {
+  margin-top: 30px;
+  color: #808080;
+  font-size: 14px;
+  text-align: center;
+}
 #main-content .wrapper .pullDown,
 #main-content .wrapper .pullUp {
   background-color: #fff;

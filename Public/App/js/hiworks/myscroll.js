@@ -125,8 +125,10 @@ define(['$','iscroll'],function() {
             return myScroll;
 
         },
-        refresh:function(){
-            this.controlDownTipsStyle(true);
+        refresh:function(flag){
+            if(flag) {
+                this.controlDownTipsStyle(true);
+            }
             this.myScroll.refresh();
         },
 

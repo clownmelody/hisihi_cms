@@ -21,9 +21,9 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
-        //if(this.deviceType.mobile){
-        //    eventName='touchend';
-        //}
+        if(this.deviceType.mobile){
+            eventName='touchend';
+        }
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
         });
@@ -353,7 +353,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     /*填充显示云作业列表信息*/
     t.getWorksListInfoStr=function(result,id,keyword){
         var str='',w=$(document).width()*0.27;
-        if(result && result.data.length>0){
+        if(result && result.totalCount>0){
             var category=result.data,
                 len=category.length,
                 item;
@@ -391,6 +391,9 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
                     str+='<div style="clear:both;"></div></ul>';
                 }
             }
+        }
+        else{
+            str='<p class="no-works">暂无相关作业</p>';
         }
         return str;
     };
@@ -472,11 +475,18 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     /*关键字搜索*/
     t.doSearchByKeyWord=function(){
         var that=this;
+        that.sScrollObj.controlDownTipsStyle(false);
         this.execSearch(1,true,function(result){
             var pcount=Math.ceil(result.totalCount/that.perPageCount);
             $('#list-wrapper-search').attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
-            that.sScrollObj.refresh();
-            that.sScrollObj.resetDownStyle();
+            var flag=false;
+            if(result && result.totalCount>that.perPageCount){
+                flag=true;
+            }
+            that.sScrollObj.refresh(flag);
+            if(flag) {
+                that.sScrollObj.resetDownStyle();
+            }
         });
     };
 
