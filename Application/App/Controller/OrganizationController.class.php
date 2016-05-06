@@ -3753,4 +3753,123 @@ GROUP BY
 
         return $enroll_count;
     }
+
+    /**收藏机构
+     * @param int $uid
+     * @param int $organization_id
+     */
+    public function doFavoriteOrganization($uid=0, $organization_id=0){
+        if(empty($organization_id)){
+            $this->apiError(-1, '传入机构id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization';
+        $favorite['row'] = $organization_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经收藏，不能再收藏了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消收藏机构
+     * @param int $uid
+     * @param int $organization_id
+     */
+    public function undoFavoriteOrganization($uid=0,$organization_id=0){
+        if(empty($organization_id)){
+            $this->apiError(-1, '传入机构id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'organization';
+        $favorite['row'] = $organization_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有收藏，不能取消收藏!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**收藏大学
+     * @param int $uid
+     * @param int $university_id
+     */
+    public function doFavoriteUniversity($uid=0, $university_id=0){
+        if(empty($university_id)){
+            $this->apiError(-1, '传入大学id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'university';
+        $favorite['row'] = $university_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经收藏，不能再收藏了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消收藏机构
+     * @param int $uid
+     * @param int $university_id
+     */
+    public function undoFavoriteUniversity($uid=0,$university_id=0){
+        if(empty($university_id)){
+            $this->apiError(-1, '传入机构id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+
+        $favorite['appname'] = 'Organization';
+        $favorite['table'] = 'university';
+        $favorite['row'] = $university_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有收藏，不能取消收藏!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
 }
