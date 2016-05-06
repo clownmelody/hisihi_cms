@@ -439,4 +439,97 @@ class OverseasController extends AdminController
         $this->display();
     }
 
+    public function photo(){
+        $model = M('AbroadUniversity');
+        $photoModel = M('AbroadUniversityPhotos');
+        $count = $photoModel->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $photoModel->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+        foreach($list as &$photo){
+            $university_id = $photo['university_id'];
+            $university_info = $model->field('name')->where('id='.$university_id)->find();
+            $photo['university'] = $university_info['name'];
+        }
+        $university_id = I('university_id');
+        $university_name = I('university_name');
+        if($university_id){
+            $this->assign('university_id', $university_id);
+            $this->assign('university_name', $university_name);
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "大学相册列表");
+        $this->display();
+    }
+
+    public function photo_add(){
+        if(I('university_id')){
+            $this->assign('university_id', I('university_id'));
+            $this->assign('university_name', I('university_name'));
+        }
+
+        $this->display();
+    }
+
+    public function photo_edit($id){
+        if(I('university_id')){
+            $this->assign('university_id', I('university_id'));
+            $this->assign('university_name', I('university_name'));
+        }
+        $photo = M('AbroadUniversityPhotos')->where('id='.$id)->find();
+        $this->assign('info', $photo);
+        $this->display();
+    }
+
+    public function photo_update(){
+        if (IS_POST) { //提交表单
+            $model = M('AbroadUniversityPhotos');
+            $uid = $_POST['pid'];
+            $university_name = $_POST["university_name"];
+            $data['descript'] = $_POST["descript"];
+            $data['university_id'] = $_POST["university_id"];
+            $pic_id = $_POST["pic_url"];
+            if(is_numeric($pic_id)){
+                A('Organization')->uploadLogoPicToOSS($pic_id);
+                $data['pic_url'] = A('Organization')->fetchCdnImage($pic_id);
+            }else{
+                $data['pic_url'] = $pic_id;
+            }
+            if(empty($uid)){
+                $data["create_time"] = time();
+                try {
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/overseas/photo&university_id='.$data['university_id'].'&university_name='.$university_name);
+            } else {
+                $model->where('id='.$uid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/overseas/photo&university_id='.$data['university_id'].'&university_name='.$university_name);
+            }
+        } else {
+            $this->display('photo_add');
+        }
+    }
+
+    public function photo_set_status($id, $status=-1)
+    {
+        if (!empty($id)) {
+            $model = M('AbroadUniversityPhotos');
+            $data['status'] = $status;
+            if (is_array($id)) {
+                foreach ($id as $i) {
+                    $model->where('id=' . $i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id=' . $id)->save($data);
+            }
+            $this->success('处理成功', 'index.php?s=/admin/overseas/photo');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
 }
