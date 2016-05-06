@@ -3582,6 +3582,11 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构列表成功', null, $data);
     }
 
+    /**获取大学里机构的课程
+     * @param null $organization_id
+     * @param null $university_id
+     * @return null
+     */
     public function getUniversityCourses($organization_id=null, $university_id=null){
         $courses = M('OrganizationToUniversity')
             ->field('teaching_course_id')
@@ -3601,6 +3606,10 @@ class OrganizationController extends AppController
         return $courses_list;
     }
 
+    /**获取机构下课程的报名数
+     * @param null $organization_id
+     * @return int
+     */
     public function getTeachingCourseEnrollCount($organization_id=null){
         $map['organization_id'] = $organization_id;
         $map['status'] = 1;
@@ -3615,6 +3624,133 @@ class OrganizationController extends AppController
             $where['status'] = 1;
             $enroll_count = M("OrganizationTeachingCourseEnroll")->where($where)->count();
         }
+        return $enroll_count;
+    }
+
+    public function searchOrgAndUniversity($name='', $type=null, $page=1, $count=10){
+        $uid = is_login();
+        $org_model = M('Organization');
+        $u_model = M('AbroadUniversity');
+        $map['name'] = array('like', '%'.$name.'%');
+        $map['status'] = 1;
+        $org_map['application_status'] = 2;
+        if(empty($type)){
+            $org_list = $org_model->field('id, name, slogan, city, type, view_count, logo, light_authentication')
+                ->where($map)->where($org_map)->limit(3)->order('id desc')->select();
+            $org_count = $org_model->where($map)->where($org_map)->count();
+            foreach($org_list as &$org){
+                $org_id = $org['id'];
+                $org['type_tag'] = $this->getOrganizationType($org['type']);
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+                $org['followCount'] = $this->getFollowCount($org_id);
+                $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
+                $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+                $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+                if($follow_other&&$be_follow){
+                    $org['relationship'] = 3;
+                } else if($follow_other&&(!$be_follow)){
+                    $org['relationship'] = 2;
+                } else if((!$follow_other)&&$be_follow){
+                    $org['relationship'] = 1;
+                } else {
+                    $org['relationship'] = 0;
+                }
+            }
+
+            $university_list = $u_model->field('id, name, logo_url')
+                ->where($map)->limit(3)->order('id desc')->select();
+            $university_count = $u_model->where($map)->count();
+            foreach($university_list as &$university){
+                $u_id = $university['id'];
+                $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
+                $university['enroll_total_count'] = $this->getEnrollCountInUniversity($u_id);
+            }
+            $data['org_list'] = $org_list;
+            $data['org_count'] = $org_count;
+            $data['university_list'] = $university_list;
+            $data['university_count'] = $university_count;
+            $this->apiSuccess('获取搜索列表成功', null, $data);
+        }elseif($type == 'organization'){
+            $org_list = $org_model->field('id, name, slogan, city, type, view_count, logo, light_authentication')
+                ->where($map)->where($org_map)->page($page, $count)->order('id desc')->select();
+            $org_count = $org_model->where($map)->where($org_map)->count();
+            foreach($org_list as &$org){
+                $org_id = $org['id'];
+                $org['type_tag'] = $this->getOrganizationType($org['type']);
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+                $org['followCount'] = $this->getFollowCount($org_id);
+                $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
+                $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+                $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+                if($follow_other&&$be_follow){
+                    $org['relationship'] = 3;
+                } else if($follow_other&&(!$be_follow)){
+                    $org['relationship'] = 2;
+                } else if((!$follow_other)&&$be_follow){
+                    $org['relationship'] = 1;
+                } else {
+                    $org['relationship'] = 0;
+                }
+            }
+            $data['totalCount'] = $org_count;
+            $data['list'] = $org_list;
+            $this->apiSuccess('获取机构列表成功', null, $data);
+        }elseif($type == 'university'){
+            $university_list = $u_model->field('id, name, logo_url')
+                ->where($map)->page($page, $count)->order('id desc')->select();
+            $university_count = $u_model->where($map)->count();
+            foreach($university_list as &$university){
+                $u_id = $university['id'];
+                $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
+                $university['enroll_total_count'] = $this->getEnrollCountInUniversity($u_id);
+            }
+            $data['totalCount'] = $university_count;
+            $data['list'] = $university_list;
+            $this->apiSuccess('获取大学列表成功', null, $data);
+        }
+    }
+
+    /**获取大学下的机构数量
+     * @param null $u_id
+     * @return mixed
+     */
+    public function getOrgCountInUniversity($u_id=null){
+        $Model = new \Think\Model();
+        $org_count = $Model->query('select COUNT(*) as count from (
+SELECT
+	organization_id
+FROM
+	hisihi_organization_to_university
+WHERE
+	`status` = 1
+AND university_id = 1
+AND teaching_course_id = 0
+GROUP BY
+	organization_id
+) a');
+        return $org_count[0]['count'];
+    }
+
+    /**获取大学下的课程报名数
+     * @param null $u_id
+     * @return int
+     */
+    public function getEnrollCountInUniversity($u_id=null){
+        $map['status'] = 1;
+        $map['university_id'] = $u_id;
+        $map['teaching_course_id'] = array('gt', 0);
+        $course = M('OrganizationToUniversity')->where($map)->field('teaching_course_id')->select();
+        $enroll_count = 0;
+        if($course){
+            $course_id = array();
+            foreach($course as $item){
+                $course_id[] = $item['teaching_course_id'];
+            }
+            $enroll_map['course_id'] = array('in', $course_id);
+            $enroll_map['status'] = 1;
+            $enroll_count = M('OrganizationTeachingCourseEnroll')->where($enroll_map)->count();
+        }
+
         return $enroll_count;
     }
 }
