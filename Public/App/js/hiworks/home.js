@@ -33,7 +33,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         $(document).on(eventName,'#tabs-bar ul li', $.proxy(this,'switchTabs'));
 
         //导航到上一级
-        $(document).on(eventName,'.nav-bar-left', $.proxy(this,'back'));
+        $(document).on(eventName,'#back-to-page', $.proxy(this,'back'));
 
         //显示搜寻框
         $(document).on(eventName,'.nav-bar-right', function(){
