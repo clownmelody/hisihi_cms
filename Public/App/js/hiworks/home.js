@@ -787,7 +787,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
 
     /*复制链接*/
     t.copyLink=function(){
-        var link=this.currentWorksObj.download_url.trim();
+        var link=window.getClipboradInfo();  //获得要粘贴的信息
         if (this.deviceType.android) {
             if (typeof AppFunction != "undefined" && typeof AppFunction.setClipboardInfo != "undefined") {
                 AppFunction.setClipboardInfo(link);//调用app的方法，调用系统粘贴板
@@ -906,7 +906,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         var workObj=window.hiworks.currentWorksObj;
         var obj={
             tile: workObj.title.trim(),
-            url: 'hisihi.com/api.php?s=/Hiworks/hiworks_share/hiword_id/'+workObj.id,
+            url: 'dev.hisihi.com/api.php?s=/Hiworks/hiworks_share/hiword_id/'+workObj.id,
             thumb: workObj.pic_url.trim(),
             description:'我在嘿设汇发现了⼀一个很棒的作业源⽂文件，居然可以直接下载'
         };
