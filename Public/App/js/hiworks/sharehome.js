@@ -2,7 +2,7 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','fastclick'],function(fx,Base) {
+define(['fx','base','scale','fastclick'],function(fx,Base) {
     FastClick.attach(document.body);
     var HiWorks = function (url,baseId) {
         this.baseUrl = url;
@@ -47,12 +47,14 @@ define(['fx','base','fastclick'],function(fx,Base) {
     /*******************作业详细信息查看**********************/
 
     t.viewWorksDetailInfo=function(){
+        this.controlLoadingBox(true);
         var that=this;
         var para = {
             url: window.hisihiUrlObj.link_url + 'hiworks_list.php/index/getHiworkDetailById',
             type: 'get',
             paraData: {hiwork_id:this.baseId},
             sCallback: function (result) {
+                that.controlLoadingBox(false);
                 if(!result.success){
                     return;
                 }
@@ -71,6 +73,7 @@ define(['fx','base','fastclick'],function(fx,Base) {
                 that.fillInTouchSliderItem(covers,flag);
             },eCallback: function (data) {
                 that.showTips(data.txt);
+                that.controlLoadingBox(false);
             }
         };
         this.getDataAsync(para);
@@ -124,6 +127,12 @@ define(['fx','base','fastclick'],function(fx,Base) {
         }
         $('#slider4').html(str);
         $('#currentPage ul').html(str1);
+
+        //实例化缩放
+        ImagesZoom.init({
+            "elem": "#slider4"
+        });
+
         this.initTouchSlider();
     };
 
