@@ -2,7 +2,7 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
+define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     FastClick.attach(document.body);
     var HiWorks = function (url,baseId) {
         this.baseUrl = url;
@@ -22,8 +22,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         var eventName='click',that=this;
         this.deviceType = this.operationType();
         //if(this.deviceType.mobile){
-        //    //eventName='touchend';
-        //    eventName='click';
+        //    eventName='touchend';
         //}
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
@@ -70,6 +69,12 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
 
         //下载、复制、分享
         $(document).on(eventName,'.detail-bottom-btns .item',$.proxy(this,'doOperationForWork'));
+
+
+        /*防止点击滑动封面项时，出现偏向一边的bug*/
+        $(document).on(eventName,'#slider4 li',function(){
+            event.stopPropagation();
+        });
 
         //登录
         $(document).on(eventName,'#cancle-login',$.proxy(this,'closeLoginBox'));
@@ -260,17 +265,23 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         if($target.hasClass('active')){
             return;
         }
+        this.controlLoadingBox(false);
+
+        //tabs样式修改
         $target.addClass('active').siblings().removeClass('active');
+
+        //对应容器的显示和隐藏
         var $wrapper=$('#all-scroll-wrapper .wrapper'),that=this;
         $wrapper.eq(index).show().siblings().hide();
+
+        //修改标题
         var title = $('#tabs-bar .active').attr('data-name');
         title=this.substrLongStr(title,18);
         $('#category-title').text(title);
 
         //情况1
         if($target.attr('data-loaded')!='true'){
-            this.controlLoadingBox(false);
-            $('#loading-data').addClass('active');
+            this.controlLoadingBox(true);
             var id=$target.attr('data-id');
             this.loadCategoryInfo(id,0,true,function(result){
                 that.scrollObjArr[index].refresh();
@@ -617,6 +628,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
             });
             $('#slider4').attr('data-init','true');
         }
+
     };
 
     /*
@@ -647,6 +659,13 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         }
         $('#slider4').html(str);
         $('#currentPage ul').html(str1);
+
+        //实例化缩放
+        ImagesZoom.init({
+            "elem": "#slider4"
+        });
+
+        //初始滑动
         this.initTouchSlider();
     };
 
@@ -865,24 +884,6 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
                     callback && callback();
                 }
             });
-    };
-
-    /*
-     *显示全图
-     *@para:
-     *index - {index} 图片数组下标
-     */
-    t.showFullImg=function(index){
-        //alert(index);
-    };
-
-    /*
-    *显示全图
-    *@para:
-    *index - {index} 图片数组下标
-    */
-    window.showFullImg=function(index){
-        window.hiworks.showFullImg(index);
     };
 
     /*

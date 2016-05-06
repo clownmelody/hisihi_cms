@@ -12,6 +12,7 @@ requirejs.config({
         fastclick:'sharecommon/fastclick',
         iscroll:'sharecommon/iscroll',
         touchslider:'hiworks/touchSlider-lib',
+        scale:'hiworks/scale',
         base:'sharecommon/base',
         myscroll:'hiworks/myscroll',
         home:'hiworks/home',
@@ -26,6 +27,9 @@ requirejs.config({
         },
         fastclick:{
             output:'fastclick'
+        },
+        scale:{
+            output:'scale'
         },
         //lazyloading:{
         //    steps:['$'],
@@ -42,6 +46,10 @@ requirejs.config({
 
 
 require(['home','prefixfree'],function(works){
+    //alert('fuck1');
+    //ImagesZoom.init({
+    //    "elem": "#slider4"
+    //});
     var userAgent = window.location.href,
         reg = /category\/[1-9][0-9]*/g,
         id = userAgent.match(reg)[0].toString().replace(/category\//g,'');
