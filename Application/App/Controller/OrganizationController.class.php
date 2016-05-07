@@ -3005,7 +3005,7 @@ class OrganizationController extends AppController
      * @param null $organization_id
      * @return mixed
      */
-    private function findOrganizationById($organization_id=null){
+    public function findOrganizationById($organization_id=null){
         $organization['id'] = $organization_id;
         $follow_other = M('Follow')->where(array('who_follow'=>$this->getUid(),'follow_who'=>$organization_id, 'type'=>2))->find();
         $be_follow = M('Follow')->where(array('who_follow'=>$organization_id,'follow_who'=>$this->getUid(), 'type'=>2))->find();
@@ -3754,6 +3754,21 @@ GROUP BY
         return $enroll_count;
     }
 
+    /**根据id获取大学
+     * @param null $u_id
+     * @return mixed
+     */
+    public function findUniversityById($u_id=null){
+        $u_model = M('AbroadUniversity');
+        $map['status'] = 1;
+        $map['university_id'] = $u_id;
+        $university = $u_model->field('id, name, logo_url')
+            ->where($map)->find();
+        $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
+        $university['enroll_total_count'] = $this->getEnrollCountInUniversity($u_id);
+        return $university;
+    }
+
     /**收藏机构
      * @param int $uid
      * @param int $organization_id
@@ -3766,7 +3781,7 @@ GROUP BY
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $favorite['appname'] = 'Organization';
+        $favorite['appname'] = 'OrganizationInfo';
         $favorite['table'] = 'organization';
         $favorite['row'] = $organization_id;
         $favorite['uid'] = $uid;
@@ -3796,7 +3811,7 @@ GROUP BY
             $uid = $this->getUid();
         }
 
-        $favorite['appname'] = 'Organization';
+        $favorite['appname'] = 'OrganizationInfo';
         $favorite['table'] = 'organization';
         $favorite['row'] = $organization_id;
         $favorite['uid'] = $uid;
@@ -3825,7 +3840,7 @@ GROUP BY
             $this->requireLogin();
             $uid = $this->getUid();
         }
-        $favorite['appname'] = 'Organization';
+        $favorite['appname'] = 'University';
         $favorite['table'] = 'university';
         $favorite['row'] = $university_id;
         $favorite['uid'] = $uid;
@@ -3855,7 +3870,7 @@ GROUP BY
             $uid = $this->getUid();
         }
 
-        $favorite['appname'] = 'Organization';
+        $favorite['appname'] = 'University';
         $favorite['table'] = 'university';
         $favorite['row'] = $university_id;
         $favorite['uid'] = $uid;
