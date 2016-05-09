@@ -3669,6 +3669,7 @@ class OrganizationController extends AppController
             $data['org_count'] = $org_count;
             $data['university_list'] = $university_list;
             $data['university_count'] = $university_count;
+            $data['type'] = $type;
             $this->apiSuccess('获取搜索列表成功', null, $data);
         }elseif($type == 'organization'){
             $org_list = $org_model->field('id, name, slogan, city, type, view_count, logo, light_authentication')
@@ -3694,6 +3695,7 @@ class OrganizationController extends AppController
             }
             $data['totalCount'] = $org_count;
             $data['list'] = $org_list;
+            $data['type'] = $type;
             $this->apiSuccess('获取机构列表成功', null, $data);
         }elseif($type == 'university'){
             $university_list = $u_model->field('id, name, logo_url')
@@ -3706,6 +3708,7 @@ class OrganizationController extends AppController
             }
             $data['totalCount'] = $university_count;
             $data['list'] = $university_list;
+            $data['type'] = $type;
             $this->apiSuccess('获取大学列表成功', null, $data);
         }
     }
