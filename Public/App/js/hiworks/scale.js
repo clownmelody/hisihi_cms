@@ -45,7 +45,6 @@
 			}, false);
 
 			for(var len=imgList.length,i=0; i<len; i++){
-				//imgList[i].addEventListener("touchend", function(){
 				imgList[i].addEventListener("click", function(){
 					imgSrc = this.getAttribute("src");
 					zoomMask.style.cssText = "display:block";
