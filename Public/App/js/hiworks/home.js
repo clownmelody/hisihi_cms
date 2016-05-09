@@ -224,6 +224,9 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     * scrollObj -{obj} 滚动对象
     */
     t.setScrollInfoAfterLoaded=function(result,$target,scrollObj){
+        if(!result){
+            return;
+        }
         var pcount=Math.ceil(result.totalCount/this.perPageCount);
         $target.attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
         var flag=false;
@@ -303,7 +306,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             });
         }
 
-        if($target.attr('data-init')=='false') {
+        if($wrapper.eq(index).attr('data-init')!='true') {
             this.initScrollLogical($wrapper.eq(index));
         }
 
@@ -334,7 +337,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             type: 'get',
             paraData: paraData,
             sCallback: function (resutl) {
-                that.controlLoadingBox();
+                that.controlLoadingBox(false);
                 var str= that.getWorksListInfoStr(resutl,id),
                     $targetUl=$('#'+that.listPrexName+id).find('.lists-ul');
                 if(reload) {
@@ -345,18 +348,9 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
                 callback && callback(resutl);
             },
             eCallback: function (data) {
-                that.controlLoadingBox();
-                var txt=data.txt;
-                if(data.code=404){
-                    txt='分类信息加载失败';
-                }
+                that.controlLoadingBox(false);
+                var txt='数据加载失败';
                 that.showTips.call(that,txt);
-                $('.no-comment-info').hide();
-
-                $loadingMore.removeClass('active');
-                var $loadingError=$loadingMore.find('.loadError');  //加载失败对象
-                $loadingMoreMain.hide();
-                $loadingError.show();
                 callback && callback();
             },
         };
@@ -580,7 +574,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
                 that.controlLoadingBox();
                 var txt=data.txt;
                 if(data.code=404){
-                    txt='分类信息加载失败';
+                    txt='数据加载失败';
                 }
                 that.showTips.call(that,txt);
                 $('.no-comment-info').hide();
