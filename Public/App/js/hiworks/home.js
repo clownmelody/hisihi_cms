@@ -825,7 +825,8 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
         else if(this.deviceType.ios){
             //如果方法存在
             if (typeof setClipboardInfo != "undefined") {
-                setClipboardInfo('getClipboradInfo()');//调用app的方法，调用系统粘贴板
+                //setClipboardInfo('getClipboradInfo()');//调用app的方法，调用系统粘贴板
+                setClipboardInfo();//调用app的方法，调用系统粘贴板
             }
         }
         this.showTips('链接已经复制到粘贴板');
