@@ -3587,10 +3587,10 @@ class OrganizationController extends AppController
      * @param null $university_id
      * @return null
      */
-    public function getUniversityCourses($organization_id=null, $university_id=null){
+    public function getUniversityCourses($organization_id=null, $university_id=null, $count=1){
         $courses = M('OrganizationToUniversity')
             ->field('teaching_course_id')
-            ->where('status=1 and teaching_course_id>0 and university_id='.$university_id.' and organization_id='.$organization_id)
+            ->where('status=1 and teaching_course_id>0 and university_id='.$university_id.' and organization_id='.$organization_id)->order('id desc')->limit($count)
             ->select();
         $courses_list = null;
         if($courses){
