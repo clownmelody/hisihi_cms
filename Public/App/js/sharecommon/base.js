@@ -30,7 +30,7 @@ define(['$'],function() {
                 url: paras.url,
                 type: paras.type,
                 data: paras.paraData,
-                //timeout: 20000,
+                //timeout: 2000,
                 timeout: 50000,
                 contentType: 'application/json',
                 complete: function (xmlRequest, status) {
@@ -213,6 +213,34 @@ define(['$'],function() {
                     window.removeEventListener('touchend', stopTouchendPropagation, true);
                     flag = false;
                 }, 50);
+            }
+        },
+
+
+        /*
+         * 向本地localStorage中写入信息
+         * para:
+         * dictionary - {object} 键值对信息 {key：val}
+         *
+         * */
+        writeInfoToStorage: function (dictionary) {
+            var storage = window.localStorage;
+            storage.setItem(dictionary.key, dictionary.val);
+        },
+
+        /*
+         * 读取本地localStorage中的信息
+         * para:
+         * keyName - {string} 键值 名称
+         *
+         * */
+        getInfoFromStorage: function (key) {
+            var storage = window.localStorage,
+                info = storage.getItem(key); //myToken
+            if (info) {
+                return info;
+            } else {
+                return false;
             }
         },
 

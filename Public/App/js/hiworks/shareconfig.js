@@ -10,6 +10,7 @@ requirejs.config({
         fastclick:'sharecommon/fastclick',
         prefixfree:'sharecommon/prefixfree.min',
         touchslider:'hiworks/touchSlider-lib',
+        scale:'hiworks/scale',
         base:'sharecommon/base',
         home:'hiworks/sharehome',
     },
@@ -20,6 +21,9 @@ requirejs.config({
         fx:{
             steps:['$'],
             output:'fx'
+        },
+        scale:{
+            output:'scale'
         },
         fastclick:{
             output:'fastclick'

@@ -36,13 +36,7 @@ textarea {
 }
 input:focus,
 textarea:focus {
-  outline: 0;
-  box-shadow: 0 0 5px #ccc;
-  border-color: #fff;
-  background: #fff;
-}
-img {
-  max-width: 100%;
+  outline: none;
 }
 .btn:active {
   transform: scale(0.8);
@@ -133,6 +127,7 @@ ul li {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  max-width: 100%;
 }
 #work-detail-panel #detail-main .touchSlider ul li a img.nocover {
   max-width: 70%;
@@ -300,6 +295,46 @@ ul li {
   line-height: 50px;
   color: #000;
 }
+.imgzoom_pack {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  z-index: 88888;
+}
+.imgzoom_pack .imgzoom_x {
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  text-align: center;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  z-index: 888888;
+  cursor: pointer;
+}
+.imgzoom_pack .imgzoom_x span {
+  display: inline-block;
+  color: red;
+  font-size: 35px;
+}
+.imgzoom_pack .imgzoom_img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+.imgzoom_pack .imgzoom_img img {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+}
 .result-tips {
   position: fixed;
   width: 200px;
@@ -364,8 +399,8 @@ ul li {
 }
 @font-face {
   font-family: 'icomoon';
-  src: url('fonts/icomoon.eot?a9rbl0');
-  src: url('fonts/icomoon.eot?a9rbl0#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?a9rbl0') format('truetype'), url('fonts/icomoon.woff?a9rbl0') format('woff'), url('fonts/icomoon.svg?a9rbl0#icomoon') format('svg');
+  src: url('fonts/icomoon.eot?beoy5k');
+  src: url('fonts/icomoon.eot?beoy5k#iefix') format('embedded-opentype'), url('fonts/icomoon.ttf?beoy5k') format('truetype'), url('fonts/icomoon.woff?beoy5k') format('woff'), url('fonts/icomoon.svg?beoy5k#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -395,9 +430,9 @@ ul li {
 .icon-download:before {
   content: "\e069";
 }
+.icon-cross:before {
+  content: "\e117";
+}
 .icon-open:before {
   content: "\e128";
-}
-.icon-spinner8:before {
-  content: "\e900";
 }
