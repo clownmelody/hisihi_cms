@@ -696,14 +696,20 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     /*下载、分享、复制*/
     t.doOperationForWork=function(e){
         var $target=$(e.currentTarget),
-            index=$target.index();
+            index=$target.index(),that=this;
         if(this.userInfo.session_id==''){
             this.controlModelBox(1,1);
             return;
         }
         //下载
         if(index==0){
-            this.controlModelBox(1,0);
+            this.controlModelBox(1,0,function(){
+                //如果本地存储有邮箱信息，直接加载
+                var email=that.getInfoFromStorage('myemail');
+                if(email){
+                    $('#email').val(email);
+                }
+            });
         }
         //复制链接
         else if(index==1){
@@ -768,6 +774,9 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             this.showTips('邮箱格式有误，请重新输入');
             return;
         }
+        //将邮箱信息写入到本地储存
+        that.writeInfoToStorage({key:'myemail',val:email});
+
         that.controlModelBox(0,0);
         $('#email').val('');
         var para = {
@@ -876,7 +885,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
      * title - {string} 提示标题
      * callback - {string} 回调方法
      */
-    t.controlModelBox=function(opacity,index,title,callback) {
+    t.controlModelBox=function(opacity,index,callback) {
         var $target=$('.model-box'),
             $targetBox=$target.find('.model-box-item').eq(index),
             that=this;
