@@ -1750,7 +1750,11 @@ class OrganizationController extends AppController
             $org_id = $org['id'];
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
-            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            if(floatval($version) > 2.7){
+                $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
+            }else{
+                $org['enrollCount'] = $this->getEnrollCount($org_id);
+            }
             if(floatval($version) > 2.5){
                 $org['type_tag'] = $this->getOrganizationType($org['type']);
             }else{
@@ -3001,7 +3005,7 @@ class OrganizationController extends AppController
      * @param null $organization_id
      * @return mixed
      */
-    private function findOrganizationById($organization_id=null){
+    public function findOrganizationById($organization_id=null){
         $organization['id'] = $organization_id;
         $follow_other = M('Follow')->where(array('who_follow'=>$this->getUid(),'follow_who'=>$organization_id, 'type'=>2))->find();
         $be_follow = M('Follow')->where(array('who_follow'=>$organization_id,'follow_who'=>$this->getUid(), 'type'=>2))->find();
@@ -3174,6 +3178,9 @@ class OrganizationController extends AppController
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
@@ -3240,6 +3247,9 @@ class OrganizationController extends AppController
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
@@ -3371,15 +3381,19 @@ class OrganizationController extends AppController
                 $select_where['well_chosen'] = 1;
             }
         }
-        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
+        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
+            ->order("id desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
-            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
             if($follow_other&&$be_follow){
@@ -3392,12 +3406,12 @@ class OrganizationController extends AppController
                 $org['relationship'] = 0;
             }
         }
-        //机构列表按报名数排序
+/*        //机构列表按报名数排序
         $sort = array(
             'direction'=>'SORT_DESC',
             'field'=>'enrollCount'
         );
-        $org_list = $this->sort_list($sort, $org_list);
+        $org_list = $this->sort_list($sort, $org_list);*/
 
         //机构列表按排序字段排序
         $sort2 = array(
@@ -3454,21 +3468,23 @@ class OrganizationController extends AppController
         $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
         $select_where['status'] = 1;
         $select_where['application_status'] = 2;
-        $select_where['light_authentication'] = 1;
         $select_where['type'] = $type_id;
         if(!empty($city)){
             $select_where['city'] = array('like','%'.$city.'%');
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("sort asc")
+            ->order("id desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
-            $org['enrollCount'] = $this->getEnrollCount($org_id);
+            $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
             if($follow_other&&$be_follow){
@@ -3481,12 +3497,12 @@ class OrganizationController extends AppController
                 $org['relationship'] = 0;
             }
         }
-        //机构列表按报名数排序
+        /*//机构列表按报名数排序
         $sort = array(
             'direction'=>'SORT_DESC',
             'field'=>'enrollCount'
         );
-        $org_list = $this->sort_list($sort, $org_list);
+        $org_list = $this->sort_list($sort, $org_list);*/
 
         //机构列表按排序字段排序
         $sort2 = array(
@@ -3502,4 +3518,397 @@ class OrganizationController extends AppController
         $data['list'] = $org_list;
         $this->apiSuccess('获取机构列表成功', null, $data);
     }
+
+    /**根据大学获取留学机构列表
+     * @param null $university_id
+     * @param string $type
+     * @param null $city
+     * @param int $page
+     * @param int $count
+     */
+    public function getOrganizationByUniversity($university_id=null, $type='留学', $city=null, $page=1, $count=10){
+        $uid = is_login();
+        $model = M('Organization');
+        if(!empty($university_id)){
+            $org_id = M('OrganizationToUniversity')->field('organization_id')
+                ->where('status=1 and university_id='.$university_id)->group('organization_id')->select();
+            $org_in_major = array();
+            foreach($org_id as $item){
+                $org_in_major[] = $item['organization_id'];
+            }
+            $select_where['id'] = array('in', $org_in_major);
+        }
+        if($type != '软件' && $type != '留学' && $type != '手绘'){
+            $type = '手绘';
+        }
+        $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+        $select_where['status'] = 1;
+        $select_where['application_status'] = 2;
+        $select_where['type'] = $type_id;
+        if(!empty($city)){
+            $select_where['city'] = array('like','%'.$city.'%');
+        }
+        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
+            ->order("id desc")
+            ->where($select_where)->page($page, $count)->select();
+        $totalCount = $model->where($select_where)->count();
+        foreach($org_list as &$org){
+            $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
+            $org['type_tag'] = $this->getOrganizationType($org['type']);
+            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            $org['followCount'] = $this->getFollowCount($org_id);
+            $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
+            $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+            $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+            if($follow_other&&$be_follow){
+                $org['relationship'] = 3;
+            } else if($follow_other&&(!$be_follow)){
+                $org['relationship'] = 2;
+            } else if((!$follow_other)&&$be_follow){
+                $org['relationship'] = 1;
+            } else {
+                $org['relationship'] = 0;
+            }
+            $org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
+        }
+/*        //机构列表按报名数排序
+        $sort = array(
+            'direction'=>'SORT_DESC',
+            'field'=>'enrollCount'
+        );
+        $org_list = $this->sort_list($sort, $org_list);
+*/
+        //机构列表按排序字段排序
+        $sort2 = array(
+            'direction'=>'SORT_ASC',
+            'field'=>'sort'
+        );
+        $org_list = $this->sort_list($sort2, $org_list);
+
+        //去掉sort字段
+        foreach($org_list as &$org){
+            unset($org['sort']);
+        }
+        $data['totalCount'] = $totalCount;
+        $data['list'] = $org_list;
+        $this->apiSuccess('获取机构列表成功', null, $data);
+    }
+
+    /**获取大学里机构的课程
+     * @param null $organization_id
+     * @param null $university_id
+     * @return null
+     */
+    public function getUniversityCourses($organization_id=null, $university_id=null, $count=1){
+        $courses = M('OrganizationToUniversity')
+            ->field('teaching_course_id')
+            ->where('status=1 and teaching_course_id>0 and university_id='.$university_id.' and organization_id='.$organization_id)->order('id desc')->limit($count)
+            ->select();
+        $courses_list = null;
+        if($courses){
+            $courses_id = array();
+            foreach($courses as $item){
+                $courses_id[] = $item['teaching_course_id'];
+            }
+            $map['id'] = array('in', $courses_id);
+            $map['status'] = 1;
+            $map['organization_id'] = $organization_id;
+            $courses_list = M('OrganizationTeachingCourse')->field('id, course_name')->where($map)->select();
+        }
+        return $courses_list;
+    }
+
+    /**获取机构下课程的报名数
+     * @param null $organization_id
+     * @return int
+     */
+    public function getTeachingCourseEnrollCount($organization_id=null){
+        $map['organization_id'] = $organization_id;
+        $map['status'] = 1;
+        $courses = M('OrganizationTeachingCourse')->field('id')->where($map)->select();
+        $enroll_count = 0;
+        if($courses){
+            $courses_id = array();
+            foreach($courses as $item){
+                $courses_id[] = $item['id'];
+            }
+            $where['course_id'] = array('in', $courses_id);
+            $where['status'] = 1;
+            $enroll_count = M("OrganizationTeachingCourseEnroll")->where($where)->count();
+        }
+        return $enroll_count;
+    }
+
+    public function searchOrgAndUniversity($name='', $type=null, $page=1, $count=10){
+        $uid = is_login();
+        $org_model = M('Organization');
+        $u_model = M('AbroadUniversity');
+        $map['name'] = array('like', '%'.$name.'%');
+        $map['status'] = 1;
+        $org_map['application_status'] = 2;
+        if(empty($type)){
+            $org_list = $org_model->field('id, name, slogan, city, type, view_count, logo, light_authentication')
+                ->where($map)->where($org_map)->limit(3)->order('id desc')->select();
+            $org_count = $org_model->where($map)->where($org_map)->count();
+            foreach($org_list as &$org){
+                $org_id = $org['id'];
+                if(empty($org['logo'])){
+                    $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+                }
+                $org['type_tag'] = $this->getOrganizationType($org['type']);
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+                $org['followCount'] = $this->getFollowCount($org_id);
+                $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
+                $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+                $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+                if($follow_other&&$be_follow){
+                    $org['relationship'] = 3;
+                } else if($follow_other&&(!$be_follow)){
+                    $org['relationship'] = 2;
+                } else if((!$follow_other)&&$be_follow){
+                    $org['relationship'] = 1;
+                } else {
+                    $org['relationship'] = 0;
+                }
+            }
+
+            $university_list = $u_model->field('id, name, logo_url')
+                ->where($map)->limit(3)->order('id desc')->select();
+            $university_count = $u_model->where($map)->count();
+            foreach($university_list as &$university){
+                $u_id = $university['id'];
+                $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
+                $university['enroll_total_count'] = $this->getEnrollCountInUniversity($u_id);
+            }
+            $data['org_list'] = $org_list;
+            $data['org_count'] = $org_count;
+            $data['university_list'] = $university_list;
+            $data['university_count'] = $university_count;
+            $data['type'] = $type;
+            $this->apiSuccess('获取搜索列表成功', null, $data);
+        }elseif($type == 'organization'){
+            $org_list = $org_model->field('id, name, slogan, city, type, view_count, logo, light_authentication')
+                ->where($map)->where($org_map)->page($page, $count)->order('id desc')->select();
+            $org_count = $org_model->where($map)->where($org_map)->count();
+            foreach($org_list as &$org){
+                $org_id = $org['id'];
+                if(empty($org['logo'])){
+                    $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+                }
+                $org['type_tag'] = $this->getOrganizationType($org['type']);
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+                $org['followCount'] = $this->getFollowCount($org_id);
+                $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
+                $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
+                $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
+                if($follow_other&&$be_follow){
+                    $org['relationship'] = 3;
+                } else if($follow_other&&(!$be_follow)){
+                    $org['relationship'] = 2;
+                } else if((!$follow_other)&&$be_follow){
+                    $org['relationship'] = 1;
+                } else {
+                    $org['relationship'] = 0;
+                }
+            }
+            $data['org_count'] = $org_count;
+            $data['org_list'] = $org_list;
+            $data['type'] = $type;
+            $this->apiSuccess('获取机构列表成功', null, $data);
+        }elseif($type == 'university'){
+            $university_list = $u_model->field('id, name, logo_url')
+                ->where($map)->page($page, $count)->order('id desc')->select();
+            $university_count = $u_model->where($map)->count();
+            foreach($university_list as &$university){
+                $u_id = $university['id'];
+                $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
+                $university['enroll_total_count'] = $this->getEnrollCountInUniversity($u_id);
+            }
+            $data['university_count'] = $university_count;
+            $data['university_list'] = $university_list;
+            $data['type'] = $type;
+            $this->apiSuccess('获取大学列表成功', null, $data);
+        }
+    }
+
+    /**获取大学下的机构数量
+     * @param null $u_id
+     * @return mixed
+     */
+    public function getOrgCountInUniversity($u_id=null){
+        $Model = new \Think\Model();
+        $org_count = $Model->query('select COUNT(*) as count from (
+SELECT
+	organization_id
+FROM
+	hisihi_organization_to_university
+WHERE
+	`status` = 1
+AND university_id = 1
+AND teaching_course_id = 0
+GROUP BY
+	organization_id
+) a');
+        return $org_count[0]['count'];
+    }
+
+    /**获取大学下的课程报名数
+     * @param null $u_id
+     * @return int
+     */
+    public function getEnrollCountInUniversity($u_id=null){
+        $map['status'] = 1;
+        $map['university_id'] = $u_id;
+        $map['teaching_course_id'] = array('gt', 0);
+        $course = M('OrganizationToUniversity')->where($map)->field('teaching_course_id')->select();
+        $enroll_count = 0;
+        if($course){
+            $course_id = array();
+            foreach($course as $item){
+                $course_id[] = $item['teaching_course_id'];
+            }
+            $enroll_map['course_id'] = array('in', $course_id);
+            $enroll_map['status'] = 1;
+            $enroll_count = M('OrganizationTeachingCourseEnroll')->where($enroll_map)->count();
+        }
+
+        return $enroll_count;
+    }
+
+    /**根据id获取大学
+     * @param null $u_id
+     * @return mixed
+     */
+    public function findUniversityById($u_id=null){
+        $u_model = M('AbroadUniversity');
+        $map['status'] = 1;
+        $map['university_id'] = $u_id;
+        $university = $u_model->field('id, name, logo_url')
+            ->where($map)->find();
+        $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
+        $university['enroll_total_count'] = $this->getEnrollCountInUniversity($u_id);
+        return $university;
+    }
+
+    /**收藏机构
+     * @param int $uid
+     * @param int $organization_id
+     */
+    public function doFavoriteOrganization($uid=0, $organization_id=0){
+        if(empty($organization_id)){
+            $this->apiError(-1, '传入机构id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'OrganizationInfo';
+        $favorite['table'] = 'organization';
+        $favorite['row'] = $organization_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经收藏，不能再收藏了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消收藏机构
+     * @param int $uid
+     * @param int $organization_id
+     */
+    public function undoFavoriteOrganization($uid=0,$organization_id=0){
+        if(empty($organization_id)){
+            $this->apiError(-1, '传入机构id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+
+        $favorite['appname'] = 'OrganizationInfo';
+        $favorite['table'] = 'organization';
+        $favorite['row'] = $organization_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有收藏，不能取消收藏!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**收藏大学
+     * @param int $uid
+     * @param int $university_id
+     */
+    public function doFavoriteUniversity($uid=0, $university_id=0){
+        if(empty($university_id)){
+            $this->apiError(-1, '传入大学id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $favorite['appname'] = 'University';
+        $favorite['table'] = 'university';
+        $favorite['row'] = $university_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经收藏，不能再收藏了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**取消收藏机构
+     * @param int $uid
+     * @param int $university_id
+     */
+    public function undoFavoriteUniversity($uid=0,$university_id=0){
+        if(empty($university_id)){
+            $this->apiError(-1, '传入机构id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+
+        $favorite['appname'] = 'University';
+        $favorite['table'] = 'university';
+        $favorite['row'] = $university_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有收藏，不能取消收藏!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
 }

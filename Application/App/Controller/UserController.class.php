@@ -1356,6 +1356,15 @@ class UserController extends AppController
                 case 'Organization':
                     $favorite['type'] = 'org_courses';
                     $favorite['info'] = A('Organization')->findCoursesById($favorite['row']);
+                    break;
+                case 'OrganizationInfo' :
+                    $favorite['type'] = 'organization';
+                    $favorite['info'] = A('Organization')->findOrganizationById($favorite['row']);
+                    break;
+                case 'University' :
+                    $favorite['type'] = 'university';
+                    $favorite['info'] = A('Organization')->findUniversityById($favorite['row']);
+                    break;
             }
             unset($favorite['appname']);
             unset($favorite['table']);
