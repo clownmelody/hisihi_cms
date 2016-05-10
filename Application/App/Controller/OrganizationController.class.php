@@ -3178,6 +3178,9 @@ class OrganizationController extends AppController
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
@@ -3244,6 +3247,9 @@ class OrganizationController extends AppController
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
@@ -3381,6 +3387,9 @@ class OrganizationController extends AppController
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
@@ -3469,6 +3478,9 @@ class OrganizationController extends AppController
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
@@ -3542,6 +3554,9 @@ class OrganizationController extends AppController
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if(empty($org['logo'])){
+                $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
             $org['followCount'] = $this->getFollowCount($org_id);
@@ -3640,6 +3655,9 @@ class OrganizationController extends AppController
             $org_count = $org_model->where($map)->where($org_map)->count();
             foreach($org_list as &$org){
                 $org_id = $org['id'];
+                if(empty($org['logo'])){
+                    $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+                }
                 $org['type_tag'] = $this->getOrganizationType($org['type']);
                 $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
                 $org['followCount'] = $this->getFollowCount($org_id);
@@ -3677,6 +3695,9 @@ class OrganizationController extends AppController
             $org_count = $org_model->where($map)->where($org_map)->count();
             foreach($org_list as &$org){
                 $org_id = $org['id'];
+                if(empty($org['logo'])){
+                    $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+                }
                 $org['type_tag'] = $this->getOrganizationType($org['type']);
                 $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
                 $org['followCount'] = $this->getFollowCount($org_id);
