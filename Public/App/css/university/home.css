@@ -1,0 +1,140 @@
+body {
+  margin: 0;
+  background: #F2F2F2;
+  max-width: 100%;
+  overflow: auto;
+}
+* {
+  -webkit-user-select: none;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+a,
+a:hover,
+a:link,
+a:hover,
+a:active,
+a:visited {
+  text-decoration: none;
+  word-break: break-all;
+}
+a:focus {
+  outline: none;
+  -moz-outline: none;
+}
+input,
+textarea {
+  -webkit-appearance: none;
+}
+img {
+  max-width: 100%;
+}
+.btn:active {
+  transform: scale(0.8);
+}
+.font-icon {
+  display: inline-block;
+}
+.center-content {
+  width: 90%;
+  margin: 0 auto;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  list-style: none;
+}
+body .main-item {
+  margin: 15px auto;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  padding-bottom: 8px;
+  /*基本信息*/
+  /*指数*/
+}
+body .main-item .center-content {
+  width: 90%;
+  margin: 0 auto;
+}
+body .main-item .head-txt {
+  font-size: 18px;
+  color: #444444;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+}
+body .main-item .border-bottom {
+  border-bottom: 1px solid #e6e6e6;
+}
+body .main-item.introduce .center-content {
+  height: 100%;
+}
+body .main-item.introduce .introduce-txt {
+  margin-top: 15px;
+}
+body .main-item.introduce .introduce-txt p {
+  line-height: 25px;
+  box-sizing: border-box;
+}
+body .main-item.nums ul {
+  border-bottom: 1px solid #cccccc;
+  padding: 15px 0;
+}
+body .main-item.nums ul li {
+  float: left;
+  width: 24%;
+  height: auto;
+  box-sizing: border-box;
+  border-left: 1px solid #CCCCCC;
+  text-align: center;
+}
+body .main-item.nums ul li:first-child {
+  border: none;
+}
+body .main-item.nums ul li:last-of-type {
+  width: 28%;
+}
+body .main-item.nums ul li .nums-name {
+  font-size: 12px;
+  color: #BEBEBE;
+  height: 27px;
+  line-height: 27px;
+}
+body .main-item.nums ul li .nums-val {
+  color: #212121;
+  font-size: 16px;
+  height: 25px;
+}
+body .main-item.nums ul:last-child {
+  border: none;
+}
+body .main-item.majors .majors-item {
+  border-bottom: 1px solid #e6e6e6;
+}
+body .main-item.majors .majors-item ul {
+  padding-bottom: 20px;
+  margin-top: 5px;
+}
+body .main-item.majors .majors-item ul li {
+  display: inline-block;
+  background-color: #FF5A00;
+  color: white;
+  border-radius: 2px;
+  background-clip: padding-box;
+  height: 32px;
+  line-height: 32px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  margin-right: 5px;
+  padding: 0 15px;
+  letter-spacing: 1px;
+}
+body .main-item.majors .majors-item .content-txt p {
+  color: #808080;
+  line-height: 25px;
+  margin-top: 0;
+}
