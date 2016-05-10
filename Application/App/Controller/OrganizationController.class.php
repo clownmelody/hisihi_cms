@@ -3693,8 +3693,8 @@ class OrganizationController extends AppController
                     $org['relationship'] = 0;
                 }
             }
-            $data['totalCount'] = $org_count;
-            $data['list'] = $org_list;
+            $data['org_count'] = $org_count;
+            $data['org_list'] = $org_list;
             $data['type'] = $type;
             $this->apiSuccess('获取机构列表成功', null, $data);
         }elseif($type == 'university'){
@@ -3706,8 +3706,8 @@ class OrganizationController extends AppController
                 $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
                 $university['enroll_total_count'] = $this->getEnrollCountInUniversity($u_id);
             }
-            $data['totalCount'] = $university_count;
-            $data['list'] = $university_list;
+            $data['university_count'] = $university_count;
+            $data['university_list'] = $university_list;
             $data['type'] = $type;
             $this->apiSuccess('获取大学列表成功', null, $data);
         }
