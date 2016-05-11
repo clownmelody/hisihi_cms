@@ -37,6 +37,7 @@ define(['base'],function(Base){
                     }
                     that.controlLoadingBox(false);
                     that.showTips.call(that,txt);
+                    $('.nodata').show();
                     callback && callback();
                 },
             };
