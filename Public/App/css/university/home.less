@@ -45,6 +45,9 @@ input,textarea {
 img{
   max-width: 100%;
 }
+
+
+
 .btn{
   &:active{
     transform: scale(.8);
@@ -65,6 +68,35 @@ ul{
   }
 }
 body{
+
+  #loading-data {
+    position: fixed;
+    @wh: 50px;
+    .size(@wh*2, @wh*2);
+    margin-left: -@wh;
+    margin-top: -@wh;
+    top: 50%;
+    left: 50%;
+    z-index: 555;
+    text-align: center;
+    display: none;
+    .loding-img {
+      .size(40, 40px);
+      display: inline-block;
+    }
+    &.active {
+      display: block;
+      .loding-img {
+        animation: turning 1s linear infinite;
+      }
+      @keyframes turning {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+
   .main-item{
     margin:15px auto; 
     background-color: #FFFFFF;

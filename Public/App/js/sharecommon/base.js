@@ -68,6 +68,51 @@ define(['$'],function() {
             });
         },
 
+        /*请求数据 python*/
+        getDataAsyncPy: function (paras) {
+            if (!paras.type) {
+                paras.type = 'post';
+            }
+            if (!paras.url) {
+                return;
+            }
+            var that = this;
+            that.controlLoadingTips(1);
+            var loginXhr = $.ajax({
+                url: paras.url,
+                type: paras.type,
+                data: paras.paraData,
+                //timeout: 20000,
+                timeout: 50000,
+                contentType: 'application/json',
+                complete: function (xmlRequest, status) {
+                    if (status == 'success') {
+                        var rTxt = xmlRequest.responseText,
+                            result = {};
+                        if (rTxt) {
+                            result = JSON.parse(xmlRequest.responseText)
+                        } else {
+                            result.status = false;
+                        }
+                        that.controlLoadingTips(0);
+                        paras.sCallback(result);
+
+                    }
+                    //超时
+                    else if (status == 'timeout') {
+                        loginXhr.abort();
+                        that.controlLoadingTips(-1);
+                        paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
+                    }
+                    else {
+                        that.controlLoadingTips(-1);
+                        paras.eCallback && paras.eCallback({code:'404',txt:'no found'});
+                        loginXhr.abort();
+                    }
+                }
+            });
+        },
+
         /*
          *加载等待,
          *para:

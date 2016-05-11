@@ -17,9 +17,9 @@ requirejs.config({
 });
 
 
-require(['home'],function(works){
+require(['home'],function(university){
     var userAgent = window.location.href,
-        reg = /category\/[1-9][0-9]*/g,
-        id = userAgent.match(reg)[0].toString().replace(/category\//g,'');
-    window.hiworks = new works(window.hisihiUrlObj.server_url,id);
+        reg = /university_id\/[1-9][0-9]*/g,
+        id = userAgent.match(reg)[0].toString().replace(/university_id\//g,'');
+    window.university = new university(id);
 });

@@ -48,6 +48,34 @@ ul {
 ul li {
   list-style: none;
 }
+body #loading-data {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  margin-left: -50px;
+  margin-top: -50px;
+  top: 50%;
+  left: 50%;
+  z-index: 555;
+  text-align: center;
+  display: none;
+}
+body #loading-data .loding-img {
+  width: 40;
+  height: 40px;
+  display: inline-block;
+}
+body #loading-data.active {
+  display: block;
+}
+body #loading-data.active .loding-img {
+  animation: turning 1s linear infinite;
+}
+@keyframes turning {
+  to {
+    transform: rotate(360deg);
+  }
+}
 body .main-item {
   margin: 15px auto;
   background-color: #FFFFFF;
