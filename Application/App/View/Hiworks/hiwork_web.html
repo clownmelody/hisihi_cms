@@ -4,14 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="Resource-type" content="Document">
     <!--禁止缩放-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <!--禁止数字识别为手机号-->
     <meta name="format-detection" content="telephone=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta http-equiv="Expires" content="0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-control" content="no-cache">
-    <meta http-equiv="Cache" content="no-cache">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <link type="text/css" href="__CSS__/hiworks/hiwork_web.css" rel="stylesheet">
     <title>嘿云作业</title>
 </head>
@@ -21,7 +17,7 @@
         <img class="loding-img" src="__IMG__/hiworks/1.png"/>
     </div>
     <!--操作结果-->
-    <div class="result-tips"><p></p></div>
+    <div class="result-tips"></div>
     <!--主要列表-->
     <div id="main-content">
         <div class="header">
@@ -32,7 +28,7 @@
                             全部
                         </div>
                     </div>
-                    <div class="nav-bar-left btn">
+                    <div class="nav-bar-left btn" id="back-to-page">
                         <span class="icon-keyboard_arrow_left font-icon"></span>
                     </div>
                     <div class="nav-bar-right btn">
@@ -90,10 +86,6 @@
             </div>
             <div id="currentPage">
                 <ul>
-                    <li class="active"></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
                 </ul>
             </div>
         </div>
@@ -120,7 +112,6 @@
             </div>
         </div>
 
-        <div></div>
     </div>
     <!--模态窗口-->
     <div class="model-box">
@@ -152,6 +143,10 @@
             </div>
         </div>
     </div>
+    <section class="imgzoom_pack">
+        <div class="imgzoom_x btn"><span class="icon-cross"></span></div>
+        <div class="imgzoom_img"><img class="img-target" src="" /></div>
+    </section>
 </body>
 <script type="application/javascript">
     window.hisihiUrlObj={
@@ -172,4 +167,5 @@
 </script>
 <script type="text/javascript" src="__JS__/hiworks/touchSlider-lib.js"></script>
 <script type="text/javascript" data-main="__JS__/hiworks/config"  src="__JS__/sharecommon/require.js" ></script>
+<script type="text/javascript" src="__JS__/hiworks/libs-v1.js"></script>
 </html>

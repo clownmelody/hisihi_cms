@@ -12,6 +12,7 @@ requirejs.config({
         fastclick:'sharecommon/fastclick',
         iscroll:'sharecommon/iscroll',
         touchslider:'hiworks/touchSlider-lib',
+        scale:'hiworks/scale',
         base:'sharecommon/base',
         myscroll:'hiworks/myscroll',
         home:'hiworks/home',
@@ -26,6 +27,9 @@ requirejs.config({
         },
         fastclick:{
             output:'fastclick'
+        },
+        scale:{
+            output:'scale'
         },
         //lazyloading:{
         //    steps:['$'],

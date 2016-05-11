@@ -2,7 +2,7 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
+define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     FastClick.attach(document.body);
     var HiWorks = function (url,baseId) {
         this.baseUrl = url;
@@ -22,8 +22,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         var eventName='click',that=this;
         this.deviceType = this.operationType();
         //if(this.deviceType.mobile){
-        //    //eventName='touchend';
-        //    eventName='click';
+        //    eventName='touchend';
         //}
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
@@ -33,7 +32,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         $(document).on(eventName,'#tabs-bar ul li', $.proxy(this,'switchTabs'));
 
         //导航到上一级
-        $(document).on(eventName,'.nav-bar-left', $.proxy(this,'back'));
+        $(document).on(eventName,'#back-to-page', $.proxy(this,'back'));
 
         //显示搜寻框
         $(document).on(eventName,'.nav-bar-right', function(){
@@ -70,6 +69,12 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
 
         //下载、复制、分享
         $(document).on(eventName,'.detail-bottom-btns .item',$.proxy(this,'doOperationForWork'));
+
+
+        /*防止点击滑动封面项时，出现偏向一边的bug*/
+        $(document).on(eventName,'#slider4 li',function(){
+            event.stopPropagation();
+        });
 
         //登录
         $(document).on(eventName,'#cancle-login',$.proxy(this,'closeLoginBox'));
@@ -205,16 +210,33 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         this.initScrollLogical($wrappers.eq(0));
         //加载第一类
         this.loadCategoryInfo($li.eq(0).attr('data-id'),0,true, function (result) {
-            that.scrollObjArr[0].refresh();
-            var pcount=Math.ceil(result.totalCount/that.perPageCount);
-            $li.eq(0).attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
-
-            //$('.lists-ul img').imglazyload({
-            //    container:$wrappers.eq(0)
-            //    //backgroundImg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAE4CAIAAABAHXg9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzQ0QjQxNTJFQjU0MTFFNUJEMzZGNkVENzY4QjMyOTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzQ0QjQxNTNFQjU0MTFFNUJEMzZGNkVENzY4QjMyOTEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3NDRCNDE1MEVCNTQxMUU1QkQzNkY2RUQ3NjhCMzI5MSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3NDRCNDE1MUVCNTQxMUU1QkQzNkY2RUQ3NjhCMzI5MSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmWADtgAAAiQSURBVHja7Nzfj1xl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"//,
-            //});
+            that.setScrollInfoAfterLoaded(result,$li.eq(0),that.scrollObjArr[0]);
         });
 
+    };
+
+    /*
+    * 完成源作业 加载后，处理 记录数和 页码，
+    * 滚动容器内容属性
+    * @para
+    * result - {obj} 源作业 内容信息对象
+    * $target - {jquery obj} 处理 记录数和 页码 的jqueryc对象
+    * scrollObj -{obj} 滚动对象
+    */
+    t.setScrollInfoAfterLoaded=function(result,$target,scrollObj){
+        if(!result){
+            return;
+        }
+        var pcount=Math.ceil(result.totalCount/this.perPageCount);
+        $target.attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
+        var flag=false;
+        if(result && result.totalCount>this.perPageCount){
+            flag=true;
+        }
+        scrollObj.refresh(flag);
+        if(flag) {
+            scrollObj.resetDownStyle();
+        }
     };
 
     /*容器内容*/
@@ -260,26 +282,31 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         if($target.hasClass('active')){
             return;
         }
+        this.controlLoadingBox(false);
+
+        //tabs样式修改
         $target.addClass('active').siblings().removeClass('active');
+
+        //对应容器的显示和隐藏
         var $wrapper=$('#all-scroll-wrapper .wrapper'),that=this;
         $wrapper.eq(index).show().siblings().hide();
+
+        //修改标题
         var title = $('#tabs-bar .active').attr('data-name');
         title=this.substrLongStr(title,18);
         $('#category-title').text(title);
 
         //情况1
         if($target.attr('data-loaded')!='true'){
-            this.controlLoadingBox(false);
-            $('#loading-data').addClass('active');
-            var id=$target.attr('data-id');
+            this.controlLoadingBox(true);
+            var id=$target.attr('data-id'),
+                that=this;
             this.loadCategoryInfo(id,0,true,function(result){
-                that.scrollObjArr[index].refresh();
-                var pcount=Math.ceil(result.totalCount/that.perPageCount);
-                $target.attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
+                that.setScrollInfoAfterLoaded(result,$target,that.scrollObjArr[index]);
             });
         }
 
-        if($target.attr('data-init')=='false') {
+        if($wrapper.eq(index).attr('data-init')!='true') {
             this.initScrollLogical($wrapper.eq(index));
         }
 
@@ -310,7 +337,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
             type: 'get',
             paraData: paraData,
             sCallback: function (resutl) {
-                that.controlLoadingBox();
+                that.controlLoadingBox(false);
                 var str= that.getWorksListInfoStr(resutl,id),
                     $targetUl=$('#'+that.listPrexName+id).find('.lists-ul');
                 if(reload) {
@@ -321,18 +348,9 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
                 callback && callback(resutl);
             },
             eCallback: function (data) {
-                that.controlLoadingBox();
-                var txt=data.txt;
-                if(data.code=404){
-                    txt='分类信息加载失败';
-                }
+                that.controlLoadingBox(false);
+                var txt='数据加载失败';
                 that.showTips.call(that,txt);
-                $('.no-comment-info').hide();
-
-                $loadingMore.removeClass('active');
-                var $loadingError=$loadingMore.find('.loadError');  //加载失败对象
-                $loadingMoreMain.hide();
-                $loadingError.show();
                 callback && callback();
             },
         };
@@ -342,7 +360,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
     /*填充显示云作业列表信息*/
     t.getWorksListInfoStr=function(result,id,keyword){
         var str='',w=$(document).width()*0.27;
-        if(result && result.data.length>0){
+        if(result && result.totalCount>0){
             var category=result.data,
                 len=category.length,
                 item;
@@ -380,6 +398,9 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
                     str+='<div style="clear:both;"></div></ul>';
                 }
             }
+        }
+        else{
+            str='<p class="no-works">暂无相关作业</p>';
         }
         return str;
     };
@@ -461,11 +482,10 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
     /*关键字搜索*/
     t.doSearchByKeyWord=function(){
         var that=this;
+        that.sScrollObj.controlDownTipsStyle(false);
         this.execSearch(1,true,function(result){
-            var pcount=Math.ceil(result.totalCount/that.perPageCount);
-            $('#list-wrapper-search').attr({'data-loaded':'true','data-pindex':1,'data-pcount':pcount});
-            that.sScrollObj.refresh();
-            that.sScrollObj.resetDownStyle();
+            that.setScrollInfoAfterLoaded(result,$('#list-wrapper-search'),that.sScrollObj);
+
         });
     };
 
@@ -554,7 +574,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
                 that.controlLoadingBox();
                 var txt=data.txt;
                 if(data.code=404){
-                    txt='分类信息加载失败';
+                    txt='数据加载失败';
                 }
                 that.showTips.call(that,txt);
                 $('.no-comment-info').hide();
@@ -617,6 +637,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
             });
             $('#slider4').attr('data-init','true');
         }
+
     };
 
     /*
@@ -647,6 +668,13 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         }
         $('#slider4').html(str);
         $('#currentPage ul').html(str1);
+
+        //实例化缩放
+        ImagesZoom.init({
+            "elem": "#slider4"
+        });
+
+        //初始滑动
         this.initTouchSlider();
     };
 
@@ -668,14 +696,20 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
     /*下载、分享、复制*/
     t.doOperationForWork=function(e){
         var $target=$(e.currentTarget),
-            index=$target.index();
+            index=$target.index(),that=this;
         if(this.userInfo.session_id==''){
             this.controlModelBox(1,1);
             return;
         }
         //下载
         if(index==0){
-            this.controlModelBox(1,0);
+            this.controlModelBox(1,0,function(){
+                //如果本地存储有邮箱信息，直接加载
+                var email=that.getInfoFromStorage('myemail');
+                if(email){
+                    $('#email').val(email);
+                }
+            });
         }
         //复制链接
         else if(index==1){
@@ -716,13 +750,11 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
             if (this.deviceType.android) {
                 //如果方法存在
                 if (typeof AppFunction != "undefined" && typeof AppFunction.backToPrePage!= "undefined") {
-                    alert();
                     AppFunction.backToPrePage();
                 }
             } else {
                 //如果方法存在
                 if (typeof backToPrePage != "undefined") {
-                    alert();
                     backToPrePage();
                 }
             }
@@ -742,7 +774,11 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
             this.showTips('邮箱格式有误，请重新输入');
             return;
         }
+        //将邮箱信息写入到本地储存
+        that.writeInfoToStorage({key:'myemail',val:email});
+
         that.controlModelBox(0,0);
+        $('#email').val('');
         var para = {
             url: this.baseUrl + 'hiworks/sendDownLoadURLToEMail',
             type: 'get',
@@ -751,12 +787,13 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
                 if(data.success) {
                     email = that.substrLongStr(email, 20);
                     that.showTips('', '<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
+                    $('#email').val('');
                 }else{
-                    that.showTips('邮件发送失败');
+                    //that.showTips('邮件发送失败');
                     that.controlModelBox(1,0);
                 }
             },eCallback: function (data) {
-                that.showTips('邮件发送失败');
+                //that.showTips('邮件发送失败');
                 that.controlModelBox(1,0);
             }
         };
@@ -773,8 +810,6 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
         if (this.deviceType.android) {
             if (typeof AppFunction.share != "undefined") {
                 var info= window.getShareInfo();
-                alert(info);
-                alert('android');
                 AppFunction.share(info);//调用app的方法，得到用户的基体信息
             }
 
@@ -789,7 +824,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
 
     /*复制链接*/
     t.copyLink=function(){
-        var link=this.currentWorksObj.download_url.trim();
+        var link=window.getClipboradInfo();  //获得要粘贴的信息
         if (this.deviceType.android) {
             if (typeof AppFunction != "undefined" && typeof AppFunction.setClipboardInfo != "undefined") {
                 AppFunction.setClipboardInfo(link);//调用app的方法，调用系统粘贴板
@@ -829,15 +864,15 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
      *strFormat - {bool} 自定义的简单格式
      */
     t.showTips=function(tip,strFormat){
-        var $tip=$('body').find('.result-tips'),
-            $p=$tip.find('p').text(tip);
+        var $tip=$('body').find('.result-tips');
         if(strFormat){
             $tip.html(strFormat);
+        }else{
+            $tip.html('<p>'+tip+'</p>');
         }
         $tip.show();
         window.setTimeout(function(){
-            $tip.hide();
-            $p.text('');
+            $tip.hide().html('');
         },1500);
     };
 
@@ -850,7 +885,7 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
      * title - {string} 提示标题
      * callback - {string} 回调方法
      */
-    t.controlModelBox=function(opacity,index,title,callback) {
+    t.controlModelBox=function(opacity,index,callback) {
         var $target=$('.model-box'),
             $targetBox=$target.find('.model-box-item').eq(index),
             that=this;
@@ -867,24 +902,6 @@ define(['fx','base','myscroll','fastclick'],function(fx,Base,MyScroll) {
                     callback && callback();
                 }
             });
-    };
-
-    /*
-     *显示全图
-     *@para:
-     *index - {index} 图片数组下标
-     */
-    t.showFullImg=function(index){
-        //alert(index);
-    };
-
-    /*
-    *显示全图
-    *@para:
-    *index - {index} 图片数组下标
-    */
-    window.showFullImg=function(index){
-        window.hiworks.showFullImg(index);
     };
 
     /*

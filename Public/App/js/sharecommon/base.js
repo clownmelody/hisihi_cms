@@ -335,7 +335,6 @@ define(['$'],function() {
                 $p.text('');
             },1500);
         },
-
     };
     return Base;
 });

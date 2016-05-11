@@ -3911,4 +3911,12 @@ GROUP BY
         }
     }
 
+    /**
+     * @param int $course_id
+     */
+    public function showteachingcoursemainpage($course_id=0){
+        $this->assign('course_id', $course_id);
+        $this->display('teaching_course_main_page');
+    }
+
 }
