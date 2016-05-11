@@ -532,4 +532,48 @@ class OverseasController extends AdminController
             $this->error('未选择要处理的数据');
         }
     }
+
+    public function enroll(){
+        $model = M('AbroadUniversity');
+        $majorModel = M('OrganizationUniversityEnroll');
+        $count = $majorModel->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $majorModel->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+        foreach($list as &$major){
+            $university_id = $major['university_id'];
+            $university_info = $model->field('name')->where('id='.$university_id)->find();
+            $major['university'] = $university_info['name'];
+        }
+        $university_id = I('university_id');
+        $university_name = I('university_name');
+        if($university_id){
+            $this->assign('university_id', $university_id);
+            $this->assign('university_name', $university_name);
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "大学报名列表");
+        $this->display();
+    }
+
+    public function enroll_set_status($id, $status=-1)
+    {
+        if (!empty($id)) {
+            $model = M('OrganizationUniversityEnroll');
+            $data['status'] = $status;
+            if (is_array($id)) {
+                foreach ($id as $i) {
+                    $model->where('id=' . $i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id=' . $id)->save($data);
+            }
+            $this->success('处理成功', 'index.php?s=/admin/overseas/enroll');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
 }
