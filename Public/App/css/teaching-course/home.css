@@ -1,0 +1,324 @@
+* {
+  -webkit-user-select: none;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+a,
+a:hover,
+a:link,
+a:hover,
+a:active,
+a:visited {
+  text-decoration: none;
+  word-break: break-all;
+}
+a:focus {
+  outline: none;
+  -moz-outline: none;
+}
+input,
+textarea {
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+input:focus,
+textarea:focus {
+  outline: 0;
+  box-shadow: 0 0 5px #ccc;
+  border-color: #fff;
+  background: #fff;
+}
+.btn:active {
+  transform: scale(0.8);
+}
+.font-icon {
+  display: inline-block;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  list-style: none;
+}
+.result-tips {
+  position: fixed;
+  width: 200px;
+  height: auto;
+  min-height: 50px;
+  background: rgba(51, 51, 51, 0.85);
+  margin-left: -100px;
+  margin-top: -35px;
+  top: 40%;
+  left: 50%;
+  z-index: 1001;
+  border-radius: 3px;
+  background-clip: padding-box;
+  color: #fff;
+  text-align: center;
+  display: none;
+}
+.result-tips p {
+  color: white;
+  font-size: 15px;
+  text-align: center;
+}
+#loading-data {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  margin-left: -50px;
+  margin-top: -50px;
+  top: 50%;
+  left: 50%;
+  z-index: 555;
+  text-align: center;
+  display: none;
+}
+#loading-data .loding-img {
+  width: 40;
+  height: 40px;
+  display: inline-block;
+}
+#loading-data.active {
+  display: block;
+}
+#loading-data.active .loding-img {
+  animation: turning 1s linear infinite;
+}
+@keyframes turning {
+  to {
+    transform: rotate(360deg);
+  }
+}
+body {
+  margin: 0;
+  background: #F2F2F2;
+  max-width: 100%;
+  overflow: auto;
+}
+.font-icon {
+  display: inline-block;
+}
+.center-content {
+  width: 90%;
+  margin: 0 auto;
+}
+body {
+  overflow-x: hidden;
+}
+body .nodata {
+  position: fixed;
+  width: 108px;
+  height: 60px;
+  top: 50%;
+  left: 50%;
+  margin-top: -30px;
+  margin-left: -54px;
+  display: none;
+}
+body .nodata p {
+  font-size: 16px;
+  color: #757070;
+}
+body .main-item {
+  margin: 15px auto;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  padding-bottom: 15px;
+  /*基本信息*/
+}
+body .main-item .center-content {
+  width: 90%;
+  margin: 0 auto;
+}
+body .main-item .head-txt {
+  font-size: 18px;
+  color: #212121;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+}
+body .main-item .border-bottom {
+  border-bottom: 1px solid #e6e6e6;
+}
+body .main-item.basic-info .center-content {
+  height: 100%;
+}
+body .main-item.basic-info .center-content #price {
+  color: #ff6531;
+  font-size: 20px;
+}
+body .main-item.basic-info .center-content .otherinfo {
+  margin-top: 13px;
+}
+body .main-item.basic-info .center-content .otherinfo li {
+  display: inline-block;
+  color: #bdbdbd;
+}
+body .main-item.basic-info .center-content .otherinfo li i {
+  display: block;
+  width: 13px;
+  height: 13px;
+  float: left;
+}
+body .main-item.basic-info .center-content .otherinfo li span {
+  display: block;
+  float: left;
+}
+body .main-item.org-basic-info {
+  position: relative;
+}
+body .main-item.org-basic-info .left {
+  position: absolute;
+  width: 90px;
+  height: 75px;
+}
+body .main-item.org-basic-info .left img {
+  border-radius: 50%;
+  background-clip: padding-box;
+  width: 75px;
+  height: 75px;
+  margin: 15px 15px 15px 0;
+}
+body .main-item.org-basic-info .right {
+  margin-left: 90px;
+  padding-top: 20px;
+}
+body .main-item.org-basic-info .right .org-name {
+  color: #212121;
+}
+body .main-item.org-basic-info .right .org-name .name {
+  font-size: 22px;
+}
+body .main-item.org-basic-info .right .nums-info {
+  margin-top: 10px;
+}
+body .main-item.org-basic-info .right .nums-info li {
+  display: inline-block;
+  color: #bdbdbd;
+  margin-right: 3px;
+}
+body .main-item.lessons-detail .head-txt {
+  border-bottom: 1px solid #e6e6e6;
+}
+body .main-item.lessons-detail ul {
+  padding-bottom: 20px;
+  margin-top: 5px;
+}
+body .main-item.lessons-detail ul li {
+  display: inline-block;
+  background-color: #FF5A00;
+  color: white;
+  border-radius: 2px;
+  background-clip: padding-box;
+  height: 32px;
+  line-height: 32px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  margin-right: 5px;
+  padding: 0 15px;
+  letter-spacing: 1px;
+}
+body .main-item.lessons-detail .content-txt {
+  margin-top: 15px;
+}
+body .main-item.lessons-detail .content-txt p {
+  color: #212121;
+  line-height: 25px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+body .main-item.lessons-singin .head-txt {
+  border-bottom: 1px solid #e6e6e6;
+}
+body .main-item.lessons-singin ul {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 15px auto;
+}
+body .main-item.lessons-singin ul li {
+  display: inline-block;
+  margin-right: 12px;
+}
+body .main-item.lessons-singin ul li img {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background-clip: padding-box;
+  box-shadow: 0 0 2px #000;
+}
+body .main-item.lessons-more .head-txt {
+  border-bottom: 1px solid #e6e6e6;
+}
+body .main-item.lessons-more ul {
+  margin-top: 15px;
+}
+body .main-item.lessons-more ul li {
+  position: relative;
+  border-bottom: 1px solid #e6e6e6;
+}
+body .main-item.lessons-more ul li.seperation {
+  height: 15px;
+  background-color: #F2F2F2;
+  border: none;
+  margin: 0;
+}
+body .main-item.lessons-more ul li > div {
+  margin: 20px auto 20px auto;
+  width: 90%;
+  box-sizing: border-box;
+}
+body .main-item.lessons-more ul li > div .left {
+  width: 110px;
+  height: auto;
+  position: absolute;
+}
+body .main-item.lessons-more ul li > div .left img {
+  width: 110px;
+  height: 80px;
+}
+body .main-item.lessons-more ul li > div .right {
+  margin-left: 130px;
+}
+body .main-item.lessons-more ul li > div .right .lesson-name {
+  color: #333333;
+  font-size: 16px;
+}
+body .main-item.lessons-more ul li > div .right .lesson-view-info {
+  color: #bdbdbd;
+  font-size: 14px;
+  margin: 10px 0;
+}
+body .main-item.lessons-more ul li > div .right .lesson-view-info span {
+  padding-right: 5px;
+  display: inline-block;
+  border-right: 1px solid #bdbdbd;
+}
+body .main-item.lessons-more ul li > div .right .lesson-view-info span:last-child {
+  border: none;
+}
+body .main-item.lessons-more ul li > div .right .teacher-info {
+  color: #bdbdbd;
+  font-size: 14px;
+}
+body .main-item.lessons-more ul li > div .right .teacher-info .left-item {
+  display: inline-block;
+  width: 60%;
+  text-align: left;
+}
+body .main-item.lessons-more ul li > div .right .teacher-info .right-item {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+}
+body .main-item.lessons-more ul li > div .singin-limit-nums {
+  position: absolute;
+  width: 50px;
+  height: 30px;
+  top: 0;
+  right: 0;
+}
