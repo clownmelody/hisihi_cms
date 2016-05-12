@@ -109,7 +109,7 @@ class InformationFlowController extends AdminController {
         $count = $model->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->order('sort asc ,create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$content){
             $config_type = $content['config_type'];
             $model = M('InformationFlowConfig');
@@ -336,4 +336,20 @@ class InformationFlowController extends AdminController {
     }
 
 
+    /**
+     * 内容状态修改
+     * @param $id
+     * @param int $status
+     */
+    public function setContentSort($id, $sort=1000){
+        if(!empty($id)){
+            $model = M('InformationFlowContent');
+            $data['sort'] = $sort;
+            $id = intval($id);
+            $model->where('id='.$id)->save($data);
+            $this->success('设置成功','index.php?s=/admin/informationFlow/content');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
 }

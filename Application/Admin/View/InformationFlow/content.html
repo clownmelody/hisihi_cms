@@ -17,19 +17,17 @@
 		</div>
 	</div>
 
-	<!--<div id="category" style="display:none;position: fixed;top: 30%;left: 40%;width: 400px;background: white;border: 1px solid grey;">
-		<p style="height: 30px;border-bottom: 1px solid lightgray;">请选择头条类别
+	<div id="category" style="display:none;position: fixed;top: 30%;left: 40%;width: 250px;background: white;border: 1px solid grey;">
+		<p style="height: 30px;border-bottom: 1px solid lightgray;">请输入排序值(从小到大排序)
 			<span id="category_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
 		</p>
 		<div style="height: 30px;">
-			<volist name="_config_type" id="data">
-				&nbsp;&nbsp;<input class="categories" type="checkbox" value="{$data['id']}" name="categories[]">{$data.title}&nbsp;&nbsp;
-			</volist>
+			<input style="width: 240px;" type="text" id="sort" name="sort" value=""/>
 		</div>
 		<div style="height: 35px;">
-			<button id="add2frontpage" class="btn" style="float: right;">提交</button>
+			<button id="addSort" onclick="setSortValue();"  url="{:U("informationflow/setContentSort")}" class="btn ajax-get confirm" style="float: right;">提交</button>
 		</div>
-	</div>-->
+	</div>
 
 	<!-- 数据表格 -->
 	<div class="data-table table-striped">
@@ -42,6 +40,7 @@
 				<th class="">内容ID</th>
 				<th class="">内容标题</th>
 				<th class="">配置类型</th>
+				<th class="">排序</th>
 				<th class="">创建时间</th>
 				<th class="">状态</th>
 				<th class="">操作</th>
@@ -57,6 +56,7 @@
 						<td>{$vo.content_id}</td>
 						<td>{$vo.content_name}</td>
 						<td>{$vo.config_type}</td>
+						<td>{$vo.sort}</td>
 						<td><span>{$vo.create_time|time_format}</span></td>
 						<td><if condition="($vo.status eq 1) "> 正常
 							<else /> 删除
@@ -66,6 +66,7 @@
 							<a href="{:U('informationFlow/setContentStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>
 							<a href="{:U('informationFlow/setContentStatus?status=-1&id='.$vo['id'])}" class="ajax-get confirm">删除</a>
 							<a href="{:U('informationFlow/setConfigType?id='.$vo['id'])}" >设置类型</a>
+							<a id="{$vo['id']}" class="setSort"  href="javascript:void(0)">设置排序</a>
 						</td>
 					</tr>
 				</volist>
@@ -124,8 +125,11 @@ $(function(){
 		}
 	});
 
-	$('#addfrontpage').click(function(){
-		$('#category').show();
+	$('.setSort').click(function(){
+		var id = $(this).attr('id');
+		var url = "{:U("informationFlow/setContentSort")}";
+		$('#addSort').attr('url',url + '&id=' + id);
+		$('#category').toggle();
 	})
 
 	$('#category_close').click(function(){
@@ -156,6 +160,12 @@ $(function(){
 
 	});
 
+
 })
+
+function setSortValue(){
+	var url = $('#addSort').attr('url');
+	$('#addSort').attr('url', url + '&sort=' + $('#sort').val());
+}
 </script>
 </block>
