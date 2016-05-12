@@ -109,7 +109,7 @@ class InformationFlowController extends AdminController {
         $count = $model->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->order('sort asc ,create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$content){
             $config_type = $content['config_type'];
             $model = M('InformationFlowConfig');
@@ -238,8 +238,43 @@ class InformationFlowController extends AdminController {
     public function setConfigType($id){
         $model = M('InformationFlowConfig');
         $config_type = $model->where('status>-1')->order('id')->select();
-        $this->assign('_config_type', $config_type);
-        $this->assign('cid', $id);
+        $article = M('InformationFlowContent')->where('id='.$id)->find();
+
+        $map['content_id'] = $article['content_id'];
+        $map['content_type'] = $article['content_type'];
+        $map['status'] = 1;
+        $type = M('InformationFlowContent')->field('config_type')->where($map)->select();
+        $type_array = array();
+        if(!empty($type)){
+            foreach($config_type as &$all_type){
+                $flag = false;
+                foreach($type as &$item){
+                    if($all_type['id'] == $item['config_type']){
+                        $markobj = array(
+                            'id'=>$all_type['id'],
+                            'title'=>$all_type['title'],
+                            'ischecked'=>1
+                        );
+                        $type_array[] = $markobj;
+                        $flag = true;
+                    }
+                }
+                if(!$flag){
+                    $markobj = array(
+                        'id'=>$all_type['id'],
+                        'title'=>$all_type['title'],
+                        'ischecked'=>0
+                    );
+                    $type_array[] = $markobj;
+                }
+            }
+        }
+
+
+        $this->assign('_config_type', $type_array);
+        $this->assign('cid', $article['content_id']);
+        $this->assign('cname', $article['content_name']);
+        $this->assign('ctype', $article['content_type']);
         $this->display();
     }
 
@@ -247,8 +282,52 @@ class InformationFlowController extends AdminController {
     public function setConfigUpdate($cid, $config_type){
         if(!empty($cid)){
             $model = M('InformationFlowContent');
-            $data['config_type'] = $config_type;
+            $categories =  explode("#",$config_type);;
             $cid = intval($cid);
+            $config_type = M('InformationFlowConfig')->where('status>-1')->order('id')->select();
+            try {
+                $data_list = array();
+                foreach($config_type as &$item){
+                    $flag = false;
+                    foreach($categories as $category){
+                        if($item['id'] == $category){
+                            $flag = true;
+                        }
+                    }
+                    if(!$flag){
+                        $map['config_type'] = $item['id'];
+                        $map['content_id'] = $cid;
+                        $map['content_type'] = I('ctype');
+                        $content_detail = $model->where($map)->find();
+                        if($content_detail) {
+                            if ($content_detail['status'] != -1) {
+                                $model->where($map)->save(array('status' => -1));
+                            }
+                        }
+                    }
+                }
+                    foreach($categories as $category){
+                        $map['config_type'] = $category;
+                        $map['content_id'] = $cid;
+                        $map['content_type'] = I('ctype');
+                        $content_detail = $model->where($map)->find();
+                        if($content_detail){
+                            if($content_detail['status']==-1){
+                                $model->where($map)->save(array('status'=>1));
+                            }
+                        } else {
+                            $data['content_id'] = $cid;
+                            $data['config_type'] = $category;
+                            $data['content_name'] = I('cname');
+                            $data['content_type'] = I('ctype');
+                            $data['create_time'] = time();
+                            $data_list[] = $data;
+                        }
+                    }
+                $model->addAll($data_list);
+            } catch (Exception $e){
+                $this->error('添加失败，请检查后重试');
+            }
             $model->where('id='.$cid)->save($data);
             $this->success('处理成功','index.php?s=/admin/informationFlow/content');
         } else {
@@ -257,4 +336,20 @@ class InformationFlowController extends AdminController {
     }
 
 
+    /**
+     * 内容状态修改
+     * @param $id
+     * @param int $status
+     */
+    public function setContentSort($id, $sort=1000){
+        if(!empty($id)){
+            $model = M('InformationFlowContent');
+            $data['sort'] = $sort;
+            $id = intval($id);
+            $model->where('id='.$id)->save($data);
+            $this->success('设置成功','index.php?s=/admin/informationFlow/content');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
 }

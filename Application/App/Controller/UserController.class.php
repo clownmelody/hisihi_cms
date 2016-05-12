@@ -330,7 +330,7 @@ class UserController extends AppController
         }
         //返回成功信息
         $uid = $this->getUid();
-        //increaseScore($uid, 5);
+        increaseScore($uid, 5);
         $extra['checkInfo'] = $check_info;
         $extraData['scoreAdd'] = "5";
         $extraData['scoreTotal'] = getScoreCount($uid);
