@@ -38,11 +38,13 @@ body {
 }
 .nodata{
   position: fixed;
-  .size(108px,60px);
+  @w:90px;
+  @h:30px;
+  .size(2*@w,2*@h);
   top: 50%;
   left: 50%;
-  margin-top: -30px;
-  margin-left: -54px;
+  margin-top: -@h;
+  margin-left: -@w;
   display: none;
   p{
     font-size: 16px;
@@ -53,7 +55,7 @@ body {
   margin:15px auto;
   background-color: #FFFFFF;
   box-sizing: border-box;
-  padding-bottom: 15px;
+  //padding-bottom: 15px;
   .center-content {
     width: 90%;
     margin: 0 auto;
@@ -86,6 +88,7 @@ body {
           margin-right: 13px;
           @w:20px;
           line-height:@w;
+          height: 32px;
           i{
             display: block;
             @w:20px;
@@ -216,8 +219,9 @@ body {
         img{
           @w:50px;
           .size(@w,@w);
+          //box-shadow: 0 0 1px #000;
           .border-radius(@w);
-          box-shadow: 0 0 1px #000;
+          border: 1px solid @g-color;
         }
       }
     }
@@ -248,17 +252,20 @@ body {
           border: none;
           margin: 0;
         }
+        &:last-child{
+          height: 0;
+        }
         >div {
           margin: 20px auto 20px auto;
           width: @width-p;
           box-sizing: border-box;
-          @w: 120px;
+          @w: 110px;
 
           .left {
             .size(@w, auto);
             position: absolute;
             img {
-              .size(@w, @w*0.62);
+              .size(@w, @w*0.68);
             }
           }
           .right {
@@ -272,9 +279,12 @@ body {
               font-size: 14px;
               margin: 8px 0 1px 0;
               span {
-                padding-right: 5px;
+                padding-right: 3px;
+                margin-right: 5px;
                 display: inline-block;
                 border-right: 1px solid @g-color;
+                height: 18px;
+                font-size: 14px;
                 &:last-child {
                   border: none;
                 }

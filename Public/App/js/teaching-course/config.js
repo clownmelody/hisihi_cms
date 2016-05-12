@@ -7,7 +7,7 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         base:'sharecommon/base',
-        home:'university/home',
+        home:'teaching-course/home',
     },
     shim: {
         $:{
@@ -17,9 +17,10 @@ requirejs.config({
 });
 
 
-require(['home'],function(university){
+require(['home'],function(course){
     var userAgent = window.location.href,
-        reg = /university_id\/[1-9][0-9]*/g,
-        id = userAgent.match(reg)[0].toString().replace(/university_id\//g,'');
-    window.university = new university(id);
+        reg = /course_id\/[1-9][0-9]*/g,
+        id = userAgent.match(reg)[0].toString().replace(/course_id\//g,'');
+    var oid=41;
+    window.course = new course(id,oid);
 });
