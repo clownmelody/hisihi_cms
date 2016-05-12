@@ -1,0 +1,288 @@
+@color:#212121;
+@g-color:#bdbdbd;
+@width-p:90%;
+.border-bottom(@c:#e6e6e6){
+  border-bottom:1px solid @c;
+}
+body{
+  margin: 0;
+  background: #F2F2F2;
+  max-width: 100%;
+  // .abs-all-zero();
+  overflow: auto;
+}
+
+
+.font-icon{
+  display: inline-block;
+}
+.center-content {
+  width: @width-p;
+  margin: 0 auto;
+}
+.bg-sprite{
+  background: url("../../images/teaching-course/sprite.png");
+}
+body {
+  overflow-x: hidden;
+}
+.nodata{
+  position: fixed;
+  .size(108px,60px);
+  top: 50%;
+  left: 50%;
+  margin-top: -30px;
+  margin-left: -54px;
+  display: none;
+  p{
+    font-size: 16px;
+    color: #757070;
+  }
+}
+.main-item{
+  margin:15px auto;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  padding-bottom: 15px;
+  .center-content {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .head-txt{
+    font-size: 18px;
+    color: @color;
+    @h:50px;
+    .size(100%,@h);
+    line-height: @h;
+  }
+  .border-bottom{
+    .border-bottom();
+  }
+
+  /*基本信息*/
+  &.basic-info{
+    .center-content{
+      height: 100%;
+      #price{
+        color: #ff6531;
+        font-size: 20px;
+      }
+      .otherinfo{
+        margin-top: 13px;
+        li{
+          display: inline-block;
+          color: @g-color;
+          margin-right: 13px;
+          i{
+            display: block;
+            .size(24px,24px);
+            float: left;
+            margin-right: 5px;
+            .bg-sprite;
+            &.cer{
+              background-position:-147px 0;
+            }
+            &.nums{
+              background-position:-195px 0;
+            }
+            &.comment{
+              background-position:-219px 0;
+              .size(20px,20px);
+            }
+          }
+          span{
+            display: block;
+            float: left;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  &.org-basic-info{
+    position: relative;
+    @h:75px;
+    @p:15px;
+    .left{
+      position: absolute;
+      .size(@h+@p,@h);
+      img{
+        .border-radius(50%);
+        .size(@h,@h);
+        margin:@p @p @p 0;
+      }
+
+    }
+    .right{
+      margin-left:@h+@p;
+      padding-top: @p+5px;
+      .org-name{
+        color:RGB(33, 33, 33);
+        .name{
+          font-size: 22px;
+        }
+
+      }
+      .nums-info{
+        margin-top: 10px;
+        li{
+          display: inline-block;
+          color: @g-color;
+          margin-right: 3px;
+        }
+      }
+    }
+  }
+
+  &.lessons-detail{
+    .head-txt{
+      .border-bottom();
+    }
+    ul{
+
+      padding-bottom: 20px;
+      margin-top: 5px;
+      li{
+        display: inline-block;
+        background-color: #FF5A00;
+        color: white;
+        .border-radius(2px);
+        height: 32px;
+        line-height: 32px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        margin-right: 5px;
+        padding:0 15px;
+        letter-spacing: 1px;
+      }
+    }
+    .content-txt{
+      margin-top: 15px;
+      p{
+        color: @color;
+        line-height: 25px;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &.lessons-singin{
+    .head-txt{
+      .border-bottom();
+    }
+    ul{
+      white-space:nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      margin: 15px auto;
+      li{
+        display:inline-block;
+        margin-right: 12px;
+        img{
+          .size(50px,50px);
+          .border-radius(100%);
+          box-shadow: 0 0 2px #000;
+        }
+      }
+    }
+  }
+
+  &.lessons-more{
+    margin-bottom: 0;
+    padding-bottom:0 ;
+    .head-txt{
+      .border-bottom();
+    }
+    ul{
+      margin-top: 15px;
+      li{
+        position: relative;
+        .border-bottom();
+        &.seperation {
+          height: 15px;
+          background-color: #F2F2F2;
+          border: none;
+          margin: 0;
+        }
+        >div {
+          margin: 20px auto 20px auto;
+          width: @width-p;
+          box-sizing: border-box;
+          @w: 110px;
+
+          .left {
+            .size(@w, auto);
+            position: absolute;
+            img {
+              .size(@w, 80px);
+            }
+          }
+          .right {
+            margin-left: @w+20px;
+            .lesson-name {
+              color: #333333;
+              font-size: 16px;
+            }
+            .lesson-view-info {
+              color: @g-color;
+              font-size: 14px;
+              margin: 10px 0;
+              span {
+                padding-right: 5px;
+                display: inline-block;
+                border-right: 1px solid @g-color;
+                &:last-child {
+                  border: none;
+                }
+              }
+            }
+            .teacher-info {
+              color: @g-color;
+              font-size: 14px;
+              .left-item {
+                display: inline-block;
+                width: 60%;
+                text-align: left;
+              }
+              .right-item {
+                display: inline-block;
+                width: 30%;
+                text-align: right;
+              }
+            }
+          }
+          .singin-limit-nums {
+            position: absolute;
+            .size(50px, 30px);
+            top: 0;
+            right: 0;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+
+
+@media screen and (max-width:320px) {
+  .main-item{
+  /*基本信息*/
+    &.basic-info {
+      .center-content {
+        .otherinfo {
+          margin-top: 8px;
+          li {
+            margin-right: 2px;
+            i{
+              margin-right: 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
