@@ -13,8 +13,23 @@
 		<div class="fl">
             <button class="btn ajax-post" target-form="ids" url="{:U("informationflow/setContentStatus",array("status"=>1))}">启 用</button>
 			<button class="btn ajax-post confirm" target-form="ids" url="{:U("informationflow/setContentStatus",array("status"=>-1))}">删 除</button>
+			<!--<button id="addfrontpage" class="btn" >添加分类</button>-->
 		</div>
 	</div>
+
+	<!--<div id="category" style="display:none;position: fixed;top: 30%;left: 40%;width: 400px;background: white;border: 1px solid grey;">
+		<p style="height: 30px;border-bottom: 1px solid lightgray;">请选择头条类别
+			<span id="category_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
+		</p>
+		<div style="height: 30px;">
+			<volist name="_config_type" id="data">
+				&nbsp;&nbsp;<input class="categories" type="checkbox" value="{$data['id']}" name="categories[]">{$data.title}&nbsp;&nbsp;
+			</volist>
+		</div>
+		<div style="height: 35px;">
+			<button id="add2frontpage" class="btn" style="float: right;">提交</button>
+		</div>
+	</div>-->
 
 	<!-- 数据表格 -->
 	<div class="data-table table-striped">
@@ -107,6 +122,38 @@ $(function(){
 		if(url != undefined && url != ''){
 			window.location.href = url;
 		}
+	});
+
+	$('#addfrontpage').click(function(){
+		$('#category').show();
+	})
+
+	$('#category_close').click(function(){
+		$('#category').hide();
+	})
+
+	$('#add2frontpage').click(function(){
+		var ids = $('.ids:checked');
+		var param1 = '';
+		if(ids.length > 0){
+			var str = new Array();
+			ids.each(function(){
+				str.push($(this).val());
+			});
+			param1 = str.join(',');
+		}
+		var categories = $('.categories:checked');
+		var param2 = '';
+		if(categories.length > 0){
+			var str = new Array();
+			categories.each(function(){
+				str.push($(this).val());
+			});
+			param2 = str.join(',');
+		}
+
+		window.location.href = '{:U("Article/addToFrontPage")}' + '&ids=' + param1 + '&categories=' + param2;
+
 	});
 
 })
