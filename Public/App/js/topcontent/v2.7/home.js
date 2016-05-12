@@ -2,10 +2,11 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base'],function(fx,Base) {
+define(['fx','base','fastclick'],function(fx,Base) {
+    FastClick.attach(document.body);
     var Topcontent = function (id, url) {
         this.baseUrl = url;
-        this.$wrapper = $('body');
+        this.$wrapper = $(document);
         //访问来源
         var userAgent = window.location.href;
         this.articleId = id;
@@ -18,9 +19,9 @@ define(['fx','base'],function(fx,Base) {
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
-        if(this.deviceType.mobile){
-            eventName='touchend';
-        }
+        //if(this.deviceType.mobile ){
+        //    eventName='touchend';
+        //}
         //加载投票信息
         this.getUserInfo(function(){
             that.getFavoriteInfo();
@@ -44,9 +45,7 @@ define(['fx','base'],function(fx,Base) {
         this.$wrapper.on(eventName,'.loadCommentAgain', $.proxy(this, 'loadCommentAgain'));
 
         /*显示评论框*/
-        this.$wrapper.on(eventName, '#comment-input', function(){
-            that.showCommentBox();
-        });
+        this.$wrapper.on(eventName, '.comment-left-box', $.proxy(this, 'showCommentBox'));
 
         /*关闭评论框*/
         this.$wrapper.on(eventName, '#left-box', $.proxy(this, 'closeCommentBox'));
@@ -59,7 +58,7 @@ define(['fx','base'],function(fx,Base) {
         this.$wrapper.on(eventName, '#do-login', $.proxy(this, 'doLogin'));
 
         /*滚动加载更多评论*/
-        $(document).on('touchend','body',function(e){
+        $(document).on('scroll','body',function(e){
             that.scrollContainer(e);
         });
 
