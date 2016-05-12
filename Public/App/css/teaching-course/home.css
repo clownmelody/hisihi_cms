@@ -106,10 +106,13 @@ body {
   width: 90%;
   margin: 0 auto;
 }
+.bg-sprite {
+  background: url("../../images/teaching-course/sprite.png");
+}
 body {
   overflow-x: hidden;
 }
-body .nodata {
+.nodata {
   position: fixed;
   width: 108px;
   height: 60px;
@@ -119,96 +122,111 @@ body .nodata {
   margin-left: -54px;
   display: none;
 }
-body .nodata p {
+.nodata p {
   font-size: 16px;
   color: #757070;
 }
-body .main-item {
+.main-item {
   margin: 15px auto;
   background-color: #FFFFFF;
   box-sizing: border-box;
   padding-bottom: 15px;
   /*基本信息*/
 }
-body .main-item .center-content {
+.main-item .center-content {
   width: 90%;
   margin: 0 auto;
 }
-body .main-item .head-txt {
+.main-item .head-txt {
   font-size: 18px;
   color: #212121;
   width: 100%;
   height: 50px;
   line-height: 50px;
 }
-body .main-item .border-bottom {
+.main-item .border-bottom {
   border-bottom: 1px solid #e6e6e6;
 }
-body .main-item.basic-info .center-content {
+.main-item.basic-info .center-content {
   height: 100%;
 }
-body .main-item.basic-info .center-content #price {
+.main-item.basic-info .center-content #price {
   color: #ff6531;
   font-size: 20px;
 }
-body .main-item.basic-info .center-content .otherinfo {
+.main-item.basic-info .center-content .otherinfo {
   margin-top: 13px;
 }
-body .main-item.basic-info .center-content .otherinfo li {
+.main-item.basic-info .center-content .otherinfo li {
   display: inline-block;
   color: #bdbdbd;
+  margin-right: 13px;
 }
-body .main-item.basic-info .center-content .otherinfo li i {
+.main-item.basic-info .center-content .otherinfo li i {
   display: block;
-  width: 13px;
-  height: 13px;
+  width: 24px;
+  height: 24px;
   float: left;
+  margin-right: 5px;
+  background: url("../../images/teaching-course/sprite.png");
 }
-body .main-item.basic-info .center-content .otherinfo li span {
+.main-item.basic-info .center-content .otherinfo li i.cer {
+  background-position: -147px 0;
+}
+.main-item.basic-info .center-content .otherinfo li i.nums {
+  background-position: -195px 0;
+}
+.main-item.basic-info .center-content .otherinfo li i.comment {
+  background-position: -219px 0;
+  width: 20px;
+  height: 20px;
+}
+.main-item.basic-info .center-content .otherinfo li span {
   display: block;
   float: left;
+  font-size: 16px;
 }
-body .main-item.org-basic-info {
+.main-item.org-basic-info {
   position: relative;
 }
-body .main-item.org-basic-info .left {
+.main-item.org-basic-info .left {
   position: absolute;
   width: 90px;
   height: 75px;
 }
-body .main-item.org-basic-info .left img {
+.main-item.org-basic-info .left img {
   border-radius: 50%;
   background-clip: padding-box;
   width: 75px;
   height: 75px;
   margin: 15px 15px 15px 0;
 }
-body .main-item.org-basic-info .right {
+.main-item.org-basic-info .right {
   margin-left: 90px;
   padding-top: 20px;
 }
-body .main-item.org-basic-info .right .org-name {
+.main-item.org-basic-info .right .org-name {
   color: #212121;
 }
-body .main-item.org-basic-info .right .org-name .name {
+.main-item.org-basic-info .right .org-name .name {
   font-size: 22px;
 }
-body .main-item.org-basic-info .right .nums-info {
+.main-item.org-basic-info .right .nums-info {
   margin-top: 10px;
 }
-body .main-item.org-basic-info .right .nums-info li {
+.main-item.org-basic-info .right .nums-info li {
   display: inline-block;
   color: #bdbdbd;
   margin-right: 3px;
 }
-body .main-item.lessons-detail .head-txt {
+.main-item.lessons-detail .head-txt {
   border-bottom: 1px solid #e6e6e6;
 }
-body .main-item.lessons-detail ul {
+.main-item.lessons-detail ul {
   padding-bottom: 20px;
   margin-top: 5px;
 }
-body .main-item.lessons-detail ul li {
+.main-item.lessons-detail ul li {
   display: inline-block;
   background-color: #FF5A00;
   color: white;
@@ -222,103 +240,121 @@ body .main-item.lessons-detail ul li {
   padding: 0 15px;
   letter-spacing: 1px;
 }
-body .main-item.lessons-detail .content-txt {
+.main-item.lessons-detail .content-txt {
   margin-top: 15px;
 }
-body .main-item.lessons-detail .content-txt p {
+.main-item.lessons-detail .content-txt p {
   color: #212121;
   line-height: 25px;
   margin-top: 0;
   margin-bottom: 0;
 }
-body .main-item.lessons-singin .head-txt {
+.main-item.lessons-singin .head-txt {
   border-bottom: 1px solid #e6e6e6;
 }
-body .main-item.lessons-singin ul {
+.main-item.lessons-singin ul {
   white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
   margin: 15px auto;
 }
-body .main-item.lessons-singin ul li {
+.main-item.lessons-singin ul li {
   display: inline-block;
   margin-right: 12px;
 }
-body .main-item.lessons-singin ul li img {
+.main-item.lessons-singin ul li img {
   width: 50px;
   height: 50px;
   border-radius: 100%;
   background-clip: padding-box;
   box-shadow: 0 0 2px #000;
 }
-body .main-item.lessons-more .head-txt {
+.main-item.lessons-more {
+  margin-bottom: 0;
+  padding-bottom: 0 ;
+}
+.main-item.lessons-more .head-txt {
   border-bottom: 1px solid #e6e6e6;
 }
-body .main-item.lessons-more ul {
+.main-item.lessons-more ul {
   margin-top: 15px;
 }
-body .main-item.lessons-more ul li {
+.main-item.lessons-more ul li {
   position: relative;
   border-bottom: 1px solid #e6e6e6;
 }
-body .main-item.lessons-more ul li.seperation {
+.main-item.lessons-more ul li.seperation {
   height: 15px;
   background-color: #F2F2F2;
   border: none;
   margin: 0;
 }
-body .main-item.lessons-more ul li > div {
+.main-item.lessons-more ul li > div {
   margin: 20px auto 20px auto;
   width: 90%;
   box-sizing: border-box;
 }
-body .main-item.lessons-more ul li > div .left {
+.main-item.lessons-more ul li > div .left {
   width: 110px;
   height: auto;
   position: absolute;
 }
-body .main-item.lessons-more ul li > div .left img {
+.main-item.lessons-more ul li > div .left img {
   width: 110px;
   height: 80px;
 }
-body .main-item.lessons-more ul li > div .right {
+.main-item.lessons-more ul li > div .right {
   margin-left: 130px;
 }
-body .main-item.lessons-more ul li > div .right .lesson-name {
+.main-item.lessons-more ul li > div .right .lesson-name {
   color: #333333;
   font-size: 16px;
 }
-body .main-item.lessons-more ul li > div .right .lesson-view-info {
+.main-item.lessons-more ul li > div .right .lesson-view-info {
   color: #bdbdbd;
   font-size: 14px;
   margin: 10px 0;
 }
-body .main-item.lessons-more ul li > div .right .lesson-view-info span {
+.main-item.lessons-more ul li > div .right .lesson-view-info span {
   padding-right: 5px;
   display: inline-block;
   border-right: 1px solid #bdbdbd;
 }
-body .main-item.lessons-more ul li > div .right .lesson-view-info span:last-child {
+.main-item.lessons-more ul li > div .right .lesson-view-info span:last-child {
   border: none;
 }
-body .main-item.lessons-more ul li > div .right .teacher-info {
+.main-item.lessons-more ul li > div .right .teacher-info {
   color: #bdbdbd;
   font-size: 14px;
 }
-body .main-item.lessons-more ul li > div .right .teacher-info .left-item {
+.main-item.lessons-more ul li > div .right .teacher-info .left-item {
   display: inline-block;
   width: 60%;
   text-align: left;
 }
-body .main-item.lessons-more ul li > div .right .teacher-info .right-item {
+.main-item.lessons-more ul li > div .right .teacher-info .right-item {
   display: inline-block;
   width: 30%;
   text-align: right;
 }
-body .main-item.lessons-more ul li > div .singin-limit-nums {
+.main-item.lessons-more ul li > div .singin-limit-nums {
   position: absolute;
   width: 50px;
   height: 30px;
   top: 0;
   right: 0;
+}
+@media screen and (max-width: 320px) {
+  .main-item {
+    /*基本信息*/
+  }
+  .main-item.basic-info .center-content .otherinfo {
+    margin-top: 8px;
+  }
+  .main-item.basic-info .center-content .otherinfo li {
+    margin-right: 2px;
+  }
+  .main-item.basic-info .center-content .otherinfo li i {
+    margin-right: 2px;
+  }
 }
