@@ -8,6 +8,7 @@ requirejs.config({
         $:'../sharecommon/zepto.min',
         fx:'../sharecommon/fx_v1.1',
         prefixfree:'../sharecommon/prefixfree.min',
+        fastclick:'../sharecommon/fastclick',
         iscroll:'../sharecommon/iscroll',
         base:'../sharecommon/base',
         home:'v2.7/home',
@@ -22,6 +23,9 @@ requirejs.config({
         },
         prefixfree:{
             output:'prefixfree'
+        },
+        fastclick:{
+            output:'fastclick'
         },
         iscroll:{
             steps:['$'],
