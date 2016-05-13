@@ -1,0 +1,486 @@
+* {
+  -webkit-user-select: none;
+  /*禁用手机浏览器的用户选择功能 */
+  -moz-user-select: none;
+  font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+a,
+a:hover,
+a:link,
+a:hover,
+a:active,
+a:visited {
+  text-decoration: none;
+  word-break: break-all;
+}
+a:focus {
+  outline: none;
+  -moz-outline: none;
+}
+input,
+textarea {
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+input:focus,
+textarea:focus {
+  outline: 0;
+  box-shadow: 0 0 5px #ccc;
+  border-color: #fff;
+  background: #fff;
+}
+.btn:active {
+  transform: scale(0.8);
+}
+.font-icon {
+  display: inline-block;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  list-style: none;
+}
+.result-tips {
+  position: fixed;
+  width: 200px;
+  height: auto;
+  min-height: 50px;
+  background: rgba(51, 51, 51, 0.85);
+  margin-left: -100px;
+  margin-top: -35px;
+  top: 40%;
+  left: 50%;
+  z-index: 1001;
+  border-radius: 3px;
+  background-clip: padding-box;
+  color: #fff;
+  text-align: center;
+  display: none;
+}
+.result-tips p {
+  color: white;
+  font-size: 15px;
+  text-align: center;
+}
+#loading-data {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  margin-left: -50px;
+  margin-top: -50px;
+  top: 50%;
+  left: 50%;
+  z-index: 555;
+  text-align: center;
+  display: none;
+}
+#loading-data .loding-img {
+  width: 40;
+  height: 40px;
+  display: inline-block;
+}
+#loading-data.active {
+  display: block;
+}
+#loading-data.active .loding-img {
+  animation: turning 1s linear infinite;
+}
+@keyframes turning {
+  to {
+    transform: rotate(360deg);
+  }
+}
+body {
+  margin: 0;
+  background: #F2F2F2;
+  max-width: 100%;
+  overflow: auto;
+}
+.font-icon {
+  display: inline-block;
+}
+.center-content {
+  width: 90%;
+  margin: 0 auto;
+}
+.bg-sprite {
+  background: url("../../images/teaching-course/sprite.png");
+}
+.bg-sprite-middle {
+  background: url("../../images/teaching-course/sprite.png");
+  background-size: 191px 26px;
+}
+.bg-sprite-small {
+  background: url("../../images/teaching-course/sprite.png");
+  background-size: 180px 24px;
+}
+body {
+  overflow-x: hidden;
+}
+.nodata {
+  position: fixed;
+  width: 180px;
+  height: 60px;
+  top: 50%;
+  left: 50%;
+  margin-top: -30px;
+  margin-left: -90px;
+  display: none;
+}
+.nodata p {
+  font-size: 16px;
+  color: #757070;
+}
+.main-item {
+  margin: 15px auto;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  /*基本信息*/
+}
+.main-item .center-content {
+  width: 90%;
+  margin: 0 auto;
+}
+.main-item .head-txt {
+  font-size: 18px;
+  color: #212121;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+}
+.main-item .border-bottom {
+  border-bottom: 1px solid #e6e6e6;
+}
+.main-item .price {
+  color: #ff6531;
+  font-size: 20px;
+}
+.main-item.basic-info .center-content {
+  height: 100%;
+}
+.main-item.basic-info .center-content .otherinfo {
+  margin-top: 13px;
+}
+.main-item.basic-info .center-content .otherinfo li {
+  display: inline-block;
+  color: #807e7e;
+  margin-right: 13px;
+  line-height: 20px;
+  height: 32px;
+}
+.main-item.basic-info .center-content .otherinfo li i {
+  display: block;
+  width: 20px;
+  height: 20px;
+  float: left;
+  margin-right: 5px;
+  background: url("../../images/teaching-course/sprite.png");
+  background-size: 191px 26px;
+}
+.main-item.basic-info .center-content .otherinfo li i.cer {
+  background-position: -119px 0;
+}
+.main-item.basic-info .center-content .otherinfo li i.nums {
+  background-position: -154px 0;
+}
+.main-item.basic-info .center-content .otherinfo li i.comment {
+  background-position: -175px 0;
+  width: 16px;
+  height: 17px;
+}
+.main-item.basic-info .center-content .otherinfo li span {
+  display: block;
+  float: left;
+  font-size: 14px;
+}
+.main-item.org-basic-info {
+  position: relative;
+}
+.main-item.org-basic-info .left {
+  position: absolute;
+  width: 90px;
+  height: 75px;
+}
+.main-item.org-basic-info .left img {
+  border-radius: 50%;
+  background-clip: padding-box;
+  width: 75px;
+  height: 75px;
+  margin: 15px 15px 15px 0;
+}
+.main-item.org-basic-info .right {
+  margin-left: 90px;
+  padding-top: 20px;
+  padding-bottom: 8px;
+}
+.main-item.org-basic-info .right .org-name {
+  color: #212121;
+}
+.main-item.org-basic-info .right .org-name .name {
+  font-size: 20px;
+  float: left;
+  margin-right: 10px;
+}
+.main-item.org-basic-info .right .org-name i {
+  display: block;
+  float: left;
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  background-clip: padding-box;
+  background: url("../../images/teaching-course/sprite.png");
+  background-size: 180px 24px;
+  margin-top: 2px;
+  margin-right: 7px;
+}
+.main-item.org-basic-info .right .org-name i:nth-child(3) {
+  background-position: -24px 0;
+  margin-right: 0;
+}
+.main-item.org-basic-info .right .nums-info {
+  margin-top: 10px;
+}
+.main-item.org-basic-info .right .nums-info li {
+  display: inline-block;
+  color: #807e7e;
+  margin-right: 3px;
+}
+.main-item.lessons-detail .head-txt {
+  border-bottom: 1px solid #e6e6e6;
+}
+.main-item.lessons-detail ul {
+  padding-bottom: 20px;
+  margin-top: 5px;
+}
+.main-item.lessons-detail ul li {
+  display: inline-block;
+  background-color: #FF5A00;
+  color: white;
+  border-radius: 2px;
+  background-clip: padding-box;
+  height: 32px;
+  line-height: 32px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  margin-right: 5px;
+  padding: 0 15px;
+  letter-spacing: 1px;
+}
+.main-item.lessons-detail .content-txt {
+  margin-top: 15px;
+}
+.main-item.lessons-detail .content-txt p {
+  color: #212121;
+  line-height: 25px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.main-item.lessons-singin .head-txt {
+  border-bottom: 1px solid #e6e6e6;
+}
+.main-item.lessons-singin ul {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 15px auto;
+}
+.main-item.lessons-singin ul li {
+  display: inline-block;
+  margin-right: 12px;
+  margin-bottom: 10px;
+}
+.main-item.lessons-singin ul li img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background-clip: padding-box;
+  border: 1px solid #807e7e;
+}
+.main-item.lessons-more {
+  margin-bottom: 0;
+  padding-bottom: 0 ;
+}
+.main-item.lessons-more .head-txt {
+  border-bottom: 1px solid #e6e6e6;
+}
+.main-item.lessons-more .head-txt i {
+  background: url("../../images/teaching-course/sprite.png");
+  background-size: 180px 24px;
+  background-position: -131px 0;
+  display: inline-block;
+  float: right;
+  width: 15px;
+  height: 19px;
+  margin-top: 15px;
+}
+.main-item.lessons-more ul {
+  margin-top: 15px;
+}
+.main-item.lessons-more ul li {
+  position: relative;
+  border-bottom: 1px solid #e6e6e6;
+}
+.main-item.lessons-more ul li.seperation {
+  height: 15px;
+  background-color: #F2F2F2;
+  border: none;
+  margin: 0;
+}
+.main-item.lessons-more ul li:last-child {
+  height: 0;
+}
+.main-item.lessons-more ul li > div {
+  margin: 20px auto 20px auto;
+  width: 90%;
+  box-sizing: border-box;
+}
+.main-item.lessons-more ul li > div .left {
+  width: 110px;
+  height: auto;
+  position: absolute;
+}
+.main-item.lessons-more ul li > div .left img {
+  width: 110px;
+  height: 74.8px;
+}
+.main-item.lessons-more ul li > div .right {
+  margin-left: 125px;
+}
+.main-item.lessons-more ul li > div .right .lesson-name {
+  color: #333333;
+  font-size: 16px;
+}
+.main-item.lessons-more ul li > div .right .lesson-view-info {
+  color: #807e7e;
+  font-size: 14px;
+  margin: 8px 0 1px 0;
+}
+.main-item.lessons-more ul li > div .right .lesson-view-info span {
+  padding-right: 3px;
+  margin-right: 5px;
+  display: inline-block;
+  border-right: 1px solid #807e7e;
+  height: 18px;
+  font-size: 14px;
+}
+.main-item.lessons-more ul li > div .right .lesson-view-info span:last-child {
+  border: none;
+}
+.main-item.lessons-more ul li > div .right .teacher-info {
+  color: #807e7e;
+  font-size: 14px;
+}
+.main-item.lessons-more ul li > div .right .teacher-info .left-item {
+  display: inline-block;
+  width: 60%;
+  text-align: left;
+}
+.main-item.lessons-more ul li > div .right .teacher-info .right-item {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+}
+.main-item.lessons-more ul li > div .singin-limit-nums {
+  position: absolute;
+  width: 62px;
+  height: 24px;
+  top: 0;
+  right: 0;
+  text-align: center;
+  color: white;
+  line-height: 24px;
+  background: url("../../images/teaching-course/sprite.png");
+  background-size: 180px 24px;
+  background-position: -49px 0;
+  font-size: 12px;
+}
+@media screen and (max-width: 320px) {
+  .main-item {
+    /*基本信息*/
+  }
+  .main-item.basic-info .center-content .otherinfo {
+    margin-top: 8px;
+  }
+  .main-item.basic-info .center-content .otherinfo li {
+    margin-right: 4px;
+  }
+  .main-item.basic-info .center-content .otherinfo li i {
+    margin-right: 3px;
+    margin-top: 2px;
+    background: url("../../images/teaching-course/sprite.png");
+    background-size: 180px 24px;
+    width: 18px;
+    height: 18px;
+  }
+  .main-item.basic-info .center-content .otherinfo li i.cer {
+    background-position: -112px 0;
+    width: 18px;
+  }
+  .main-item.basic-info .center-content .otherinfo li i.nums {
+    background-position: -146px 0;
+    width: 18px;
+    height: 18px;
+  }
+  .main-item.basic-info .center-content .otherinfo li i.comment {
+    background: url("../../images/teaching-course/sprite.png");
+    background-position: -219px 0;
+    width: 20px;
+    height: 20px;
+  }
+  .main-item.org-basic-info {
+    position: relative;
+  }
+  .main-item.org-basic-info .left {
+    position: absolute;
+    width: 68px;
+    height: 60px;
+  }
+  .main-item.org-basic-info .left img {
+    border-radius: 50%;
+    background-clip: padding-box;
+    width: 60px;
+    height: 60px;
+    margin: 13px 8px 8px 0;
+  }
+  .main-item.org-basic-info .right {
+    margin-left: 68px;
+    padding-top: 13px;
+  }
+  .main-item.org-basic-info .right .org-name {
+    color: #212121;
+  }
+  .main-item.org-basic-info .right .org-name .name {
+    font-size: 18px;
+    float: left;
+    margin-right: 10px;
+  }
+  .main-item.org-basic-info .right .nums-info {
+    margin-top: 0px;
+  }
+  .main-item.org-basic-info .right .nums-info li {
+    display: inline-block;
+    color: #807e7e;
+    margin-right: 3px;
+    margin-top: 5px;
+  }
+  .main-item.org-basic-info .right .nums-info li span {
+    font-size: 14px;
+  }
+  .main-item.lessons-more ul li > div .left img {
+    width: 98px;
+    height: 68.6px;
+  }
+  .main-item.lessons-more ul li > div .right {
+    margin-left: 108px;
+  }
+  .main-item.lessons-more ul li > div .right .lesson-view-info {
+    margin: 3px auto 0px auto;
+    font-size: 12px;
+  }
+  .main-item.lessons-more ul li > div .singin-limit-nums {
+    right: -10px;
+  }
+}

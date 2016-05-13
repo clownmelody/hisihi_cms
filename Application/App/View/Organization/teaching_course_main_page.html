@@ -12,13 +12,21 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <link type="text/css" href="__CSS__/university/home.css" rel="stylesheet">
-    <title>大学主页</title>
+    <link type="text/css" href="__CSS__/teaching-course/home.css" rel="stylesheet">
+    <title>课程主页</title>
 </head>
-<body>
-    <div class="nodata">
-        <p>数据加载失败</p>
+<body data-oid="{$oid}">
+    <div id="current-info">
+        <div class="nodata">
+            <p>课程详细信息加载失败</p>
+        </div>
     </div>
+    <div id="more-info">
+        <div class="nodata">
+            <p>更多课程信息加载失败</p>
+        </div>
+    </div>
+
 </body>
 <script type="application/javascript">
     window.hisihiUrlObj={
@@ -27,7 +35,7 @@
         js: "__JS__",
         api_url:'http://dev.api.hisihi.com/'
     };
-//    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
+    //    window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
     window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
@@ -38,5 +46,5 @@
         aLink[i].setAttribute("disabled", "disabled");
     }
 </script>
-<script type="text/javascript" data-main="__JS__/university/config"  src="__JS__/sharecommon/require.js" ></script>
+<script type="text/javascript" data-main="__JS__/teaching-course/config"  src="__JS__/sharecommon/require.js" ></script>
 </html>

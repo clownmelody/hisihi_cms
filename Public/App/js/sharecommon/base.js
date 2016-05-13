@@ -9,6 +9,8 @@ define(['$'],function() {
     var Base = function (flag) {
         this._initTimeFormat();
         this._initStringExtentFn();
+        this._addTip();
+        this._addLoadingImg();
         if(!flag) {
             this._stopTouchendPropagationAfterScroll();
         }
@@ -289,6 +291,50 @@ define(['$'],function() {
             }
         },
 
+        /*添加等待提示框*/
+        _addLoadingImg:function(){
+           var str = '<div id="loading-data"><img class="loding-img" src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
+            $('body').append(str);
+        },
+
+        /*
+         *控制加载等待框
+         *@para
+         * flag - {bool} 默认隐藏
+         */
+        controlLoadingBox:function(flag){
+            var $target=$('#loading-data');
+            if(flag) {
+                $target.addClass('active');
+            }else{
+                $target.removeClass('active');
+            }
+        },
+
+        /*添加操作结果提示框*/
+        _addTip:function(){
+           var str = '<div class="result-tips"><p></p></div>';
+            $('body').append(str);
+        },
+
+        /*
+         *显示操作结果
+         *para:
+         *tip - {string} 内容结果
+         *strFormat - {bool} 自定义的简单格式
+         */
+        showTips:function(tip,strFormat){
+            var $tip=$('body').find('.result-tips'),
+                $p=$tip.find('p').text(tip);
+            if(strFormat){
+                $tip.html(strFormat);
+            }
+            $tip.show();
+            window.setTimeout(function(){
+                $tip.hide();
+                $p.text('');
+            },1500);
+        },
     };
     return Base;
 });

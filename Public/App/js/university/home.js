@@ -35,9 +35,9 @@ define(['base'],function(Base){
                     if(data.code=404){
                         txt='信息加载失败';
                     }
+                    that.controlLoadingBox(false);
                     that.showTips.call(that,txt);
-                    $('.no-comment-info').hide();
-                    this.controlLoadingBox(false);
+                    $('.nodata').show();
                     callback && callback();
                 },
             };
@@ -45,10 +45,14 @@ define(['base'],function(Base){
     };
 
     t.fillInUniversityInfo=function(result){
-        var str=this.getBasicIntroduceInfo(result)+
-            this.fillInNumsInfo(result)+
-            this.fillInMajorInfo(result)+
-            this.fillInEnvironment(result);
+        var strBasic=this.getBasicIntroduceInfo(result),
+            strNums=this.getNumsInfoStr(result),
+            strMajor=this.getMajorInfoStr(result),
+            strEn=this.getInEnvironmentStr(result);
+        var str=strBasic+
+            strNums+
+            strMajor+
+            strEn;
         $('body').html(str);
     };
 
@@ -67,7 +71,7 @@ define(['base'],function(Base){
     };
 
     //指数信息
-    t.fillInNumsInfo=function(data){
+    t.getNumsInfoStr=function(data){
         return '<div class="main-item nums">'+
                     '<ul>'+
                         '<li>'+
@@ -84,7 +88,7 @@ define(['base'],function(Base){
                         '</li>'+
                         '<li>'+
                             '<div class="nums-name">学费</div>'+
-                            '<div  class="nums-val">'+data.tuition_fees+'</div>'+
+                            '<div  class="nums-val">￥ '+data.tuition_fees+'</div>'+
                         '</li>'+
                         '<div style="clear:both;"></div>'+
                     '</ul>'+
@@ -111,7 +115,7 @@ define(['base'],function(Base){
     };
 
     //专业信息
-    t.fillInMajorInfo=function(data){
+    t.getMajorInfoStr=function(data){
         var str='',
             unMajors=data.undergraduate_major,
             len=unMajors.length,
@@ -121,10 +125,10 @@ define(['base'],function(Base){
             str='<div class="main-item majors">';
         }
         if(len>0){
-            str+=this.getMajorInfoStr('本科专业',unMajors);
+            str+=this.getMajorItemInfoStr('本科专业',unMajors);
         }
         if(len1>0){
-            str+=this.getMajorInfoStr('硕士专业',gMajors);
+            str+=this.getMajorItemInfoStr('硕士专业',gMajors);
         }
         if(len>0 || len1>0){
             str+='</div>';
@@ -132,7 +136,7 @@ define(['base'],function(Base){
         return str
     };
 
-    t.getMajorInfoStr=function(title,arr){
+    t.getMajorItemInfoStr=function(title,arr){
         var len=arr.length,
             str='<div class="majors-item">'+
                     '<div class="head-txt">'+
@@ -140,7 +144,9 @@ define(['base'],function(Base){
                 '</div>'+
                 '<ul class="center-content">';
             for(var i=0;i<len;i++){
-                str+='<li>'+arr[i]+'</li>';
+                var name=arr[i];
+                name=this.substrLongStr(name,8);
+                str+='<li>'+name+'</li>';
             }
         str+='<div style="clear:both;"></div>'+
                 '</ul>'+
@@ -149,8 +155,8 @@ define(['base'],function(Base){
     };
 
     //环境和要求
-    t.fillInEnvironment=function(result){
-        return '<div class="majors-item">'+
+    t.getInEnvironmentStr=function(result){
+        return '<div class="main-item environment"><div class="majors-item">'+
                     '<div class="head-txt">'+
                         '<div class="center-content">申请要求</div>'+
                     '</div>'+
@@ -161,8 +167,8 @@ define(['base'],function(Base){
                     '<div class="center-content">'+
                     '</div>'+
                     '</div>'+
-                    '</div>'+
-                    '<div class="majors-item">'+
+                '</div>'+
+                '<div class="majors-item">'+
                     '<div class="head-txt">'+
                     '<div class="center-content">学校环境</div>'+
                     '</div>'+
@@ -174,24 +180,8 @@ define(['base'],function(Base){
                     '</div>'+
                     '</div>'+
                     '</div>'+
-                '</div>';
+                '</div></div>';
     };
 
-
-    /*******************通用功能*********************/
-
-    /*
-     *控制加载等待框
-     *@para
-     * flag - {bool} 默认隐藏
-     */
-    t.controlLoadingBox=function(flag){
-        var $target=$('#loading-data');
-        if(flag) {
-            $target.addClass('active');
-        }else{
-            $target.removeClass('active');
-        }
-    };
     return University;
 });
