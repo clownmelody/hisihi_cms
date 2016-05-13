@@ -14,6 +14,10 @@ define(['base'],function(Base){
         }
         this.getBasicInfo();
         this.geMoreCourseInfo();
+
+        window.setTimeout(function(){
+            window.location.href='hisihi://techcourse/detailinfo?id=1';
+        },3000);
     };
 
     Course.prototype=new Base();
@@ -142,11 +146,14 @@ define(['base'],function(Base){
                             '<li><span id="view-watch">4542</span><span>关注</span></li>'+
                         '</ul>'+
                     '</div>'+
-                '</div>';
+                '</div>'+
+            '</div>';
     };
 
     //简介 和 安排信息
     t.getIntroduceStr=function(data){
+        data.introduction='这项赛事是与美国SC、德国ISC大学生超算大赛并驾齐驱的全球三大超算赛事之一，由浪潮集团有限公司和国际超级计算机大会组委会(ISC)、国际高性能计算咨询委员会（HPC AC）共同举办，旨在推动亚洲国家及地区间超算青年人才交流和培养。此次比赛分为两天。比赛第一天，浙大表现亮眼，获得三个项目的第一，并以每秒12.03万亿次浮点运算速度创造了新的世界纪录。但到了晚上，浙大团队发现自己失去运行权限，无法测试和运行原本计划的项目。而前几天一直能正常响应的24小时技术支持电话被关机。第二天中午，主办方才承认测试平台存在问题，并决定对所有参赛队延长4小时的比赛时间。最后，直到下午四点主办方才配好权限，并给浙大单独延时两小时，要求他们在两小时内提交结果。这个项目规定的运行时间为28小时，而各个大学在运行和调试该项目时基本上都花费了10小时以上的时间，2个小时时间根本不可能运行完整个项目，所以这个价值25分的项目，浙大最终没有得分。最终，东道主';
+        data.plan='这项赛事是与美国SC、德国ISC大学生超算大赛并驾齐驱的全球三大超算赛事之一，由浪潮集团有限公司和国际超级计算机大会组委会(ISC)、国际高性能计算咨询委员会（HPC AC）共同举办，旨在推动亚洲国家及地区间超算青年人才交流和培养。此次比赛分为两天。比赛第一天，浙大表现亮眼，获得三个项目的第一，并以每秒12.03万亿次浮点运算速度创造了新的世界纪录。但到了晚上，浙大团队发现自己失去运行权限，无法测试和运行原本计划的项目。而前几天一直能正常响应的24小时技术支持电话被关机。第二天中午，主办方才承认测试平台存在问题，并决定对所有参赛队延长4小时的比赛时间。最后，直到下午四点主办方才配好权限，并给浙大单独延时两小时，要求他们在两小时内提交结果。这个项目规定的运行时间为28小时，而各个大学在运行和调试该项目时基本上都花费了10小时以上的时间，2个小时时间根本不可能运行完整个项目，所以这个价值25分的项目，浙大最终没有得分。最终，东道主';
         return '<div class="main-item lessons-detail">'+
                     '<div class="lessons-item">'+
                         '<div class="head-txt">'+
@@ -220,32 +227,32 @@ define(['base'],function(Base){
                 var name=item.course_name;
                 name=this.substrLongStr(name,12);
                 str += '<li>' +
-                    '<a>' +
-                    //'<div>' +
-                    '<div class="left">' +
-                    '<img src="'+item.cover_pic+'">' +
-                    '</div>' +
-                    '<div class="right">' +
-                    '<div class="lesson-name">'+name+'</div>' +
-                    '<div class="lesson-view-info">' +
-                    '<span>'+item.lesson_period+'次</span>' +
-                    '<span>'+item.student_num+'人班</span>' +
-                    '<span>'+item.start_course_time+'开课</span>' +
-                    '</div>' +
-                    '<div class="teacher-info">' +
-                    '<div class="left-item">' +
-                    '<span>老师：</span>' +
-                    '<span>'+item.lecture_name+'</span>' +
-                    '</div>' +
-                    '<div class="right-item price">￥'+item.price+'</div>' +
-                    '<div style="clear: both;"></div>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="singin-limit-nums">' +
-                    '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
-                    '</div>' +
-                    //'</div>' +
-                    '</a>'+
+                        '<a href="hisihi://techcourse/detailinfo?id=1">' +
+                            '<div>'+
+                                '<div class="left">' +
+                                    '<img src="'+item.cover_pic+'">' +
+                                '</div>' +
+                                '<div class="right">' +
+                                    '<div class="lesson-name">'+name+'</div>' +
+                                    '<div class="lesson-view-info">' +
+                                        '<span>'+item.lesson_period+'次</span>' +
+                                        '<span>'+item.student_num+'人班</span>' +
+                                        '<span>'+item.start_course_time+'开课</span>' +
+                                    '</div>' +
+                                    '<div class="teacher-info">' +
+                                        '<div class="left-item">' +
+                                            '<span>老师：</span>' +
+                                            '<span>'+item.lecture_name+'</span>' +
+                                        '</div>' +
+                                        '<div class="right-item price">￥'+item.price+'</div>' +
+                                        '<div style="clear: both;"></div>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="singin-limit-nums">' +
+                                        '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
+                                '</div>' +
+                            '</div>'+
+                        '</a>'+
                     '</li>' +
                     '<li class="seperation"></li>';
             }

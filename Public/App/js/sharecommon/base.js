@@ -293,6 +293,9 @@ define(['$'],function() {
 
         /*添加等待提示框*/
         _addLoadingImg:function(){
+            if($('#loading-data').length>0){
+                return;
+            }
            var str = '<div id="loading-data"><img class="loding-img" src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
             $('body').append(str);
         },
@@ -313,7 +316,10 @@ define(['$'],function() {
 
         /*添加操作结果提示框*/
         _addTip:function(){
-           var str = '<div class="result-tips"><p></p></div>';
+            if($('#result-tips').length>0){
+                return;
+            }
+           var str = '<div id="result-tips" class="result-tips"><p></p></div>';
             $('body').append(str);
         },
 
