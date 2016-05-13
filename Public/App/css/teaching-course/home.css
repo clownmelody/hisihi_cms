@@ -108,14 +108,22 @@ body {
 }
 .bg-sprite {
   background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
 }
 .bg-sprite-middle {
   background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
   background-size: 191px 26px;
 }
 .bg-sprite-small {
   background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
   background-size: 180px 24px;
+}
+.bg-sprite-half {
+  background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
+  background-size: 120px 16px;
 }
 body {
   overflow-x: hidden;
@@ -135,7 +143,7 @@ body {
   color: #757070;
 }
 .main-item {
-  margin: 15px auto;
+  margin: 0 auto 15px auto;
   background-color: #FFFFFF;
   box-sizing: border-box;
   /*基本信息*/
@@ -178,6 +186,7 @@ body {
   float: left;
   margin-right: 5px;
   background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
   background-size: 191px 26px;
 }
 .main-item.basic-info .center-content .otherinfo li i.cer {
@@ -232,6 +241,7 @@ body {
   border-radius: 2px;
   background-clip: padding-box;
   background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
   background-size: 180px 24px;
   margin-top: 2px;
   margin-right: 7px;
@@ -308,6 +318,7 @@ body {
 }
 .main-item.lessons-more .head-txt i {
   background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
   background-size: 180px 24px;
   background-position: -131px 0;
   display: inline-block;
@@ -332,33 +343,34 @@ body {
 .main-item.lessons-more ul li:last-child {
   height: 0;
 }
-.main-item.lessons-more ul li > div {
+.main-item.lessons-more ul li > * {
   margin: 20px auto 20px auto;
   width: 90%;
   box-sizing: border-box;
+  display: block;
 }
-.main-item.lessons-more ul li > div .left {
+.main-item.lessons-more ul li > * .left {
   width: 110px;
   height: auto;
   position: absolute;
 }
-.main-item.lessons-more ul li > div .left img {
+.main-item.lessons-more ul li > * .left img {
   width: 110px;
   height: 74.8px;
 }
-.main-item.lessons-more ul li > div .right {
+.main-item.lessons-more ul li > * .right {
   margin-left: 125px;
 }
-.main-item.lessons-more ul li > div .right .lesson-name {
+.main-item.lessons-more ul li > * .right .lesson-name {
   color: #333333;
   font-size: 16px;
 }
-.main-item.lessons-more ul li > div .right .lesson-view-info {
+.main-item.lessons-more ul li > * .right .lesson-view-info {
   color: #807e7e;
   font-size: 14px;
   margin: 8px 0 1px 0;
 }
-.main-item.lessons-more ul li > div .right .lesson-view-info span {
+.main-item.lessons-more ul li > * .right .lesson-view-info span {
   padding-right: 3px;
   margin-right: 5px;
   display: inline-block;
@@ -366,36 +378,38 @@ body {
   height: 18px;
   font-size: 14px;
 }
-.main-item.lessons-more ul li > div .right .lesson-view-info span:last-child {
+.main-item.lessons-more ul li > * .right .lesson-view-info span:last-child {
   border: none;
 }
-.main-item.lessons-more ul li > div .right .teacher-info {
+.main-item.lessons-more ul li > * .right .teacher-info {
   color: #807e7e;
   font-size: 14px;
 }
-.main-item.lessons-more ul li > div .right .teacher-info .left-item {
+.main-item.lessons-more ul li > * .right .teacher-info .left-item {
   display: inline-block;
   width: 60%;
   text-align: left;
 }
-.main-item.lessons-more ul li > div .right .teacher-info .right-item {
+.main-item.lessons-more ul li > * .right .teacher-info .right-item {
   display: inline-block;
-  width: 30%;
+  width: 35%;
   text-align: right;
 }
-.main-item.lessons-more ul li > div .singin-limit-nums {
+.main-item.lessons-more ul li > * .singin-limit-nums {
   position: absolute;
-  width: 62px;
-  height: 24px;
+  width: 42px;
+  height: 16px;
   top: 0;
   right: 0;
   text-align: center;
   color: white;
-  line-height: 24px;
+  line-height: 16px;
   background: url("../../images/teaching-course/sprite.png");
-  background-size: 180px 24px;
-  background-position: -49px 0;
-  font-size: 12px;
+  background-size: 239px 32px;
+  background-size: 120px 16px;
+  background-position: -32px 0;
+  font-size: 10px;
+  padding-left: 2px;
 }
 @media screen and (max-width: 320px) {
   .main-item {
@@ -411,6 +425,7 @@ body {
     margin-right: 3px;
     margin-top: 2px;
     background: url("../../images/teaching-course/sprite.png");
+    background-size: 239px 32px;
     background-size: 180px 24px;
     width: 18px;
     height: 18px;
@@ -426,6 +441,7 @@ body {
   }
   .main-item.basic-info .center-content .otherinfo li i.comment {
     background: url("../../images/teaching-course/sprite.png");
+    background-size: 239px 32px;
     background-position: -219px 0;
     width: 20px;
     height: 20px;

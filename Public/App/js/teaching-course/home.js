@@ -220,7 +220,8 @@ define(['base'],function(Base){
                 var name=item.course_name;
                 name=this.substrLongStr(name,12);
                 str += '<li>' +
-                    '<div>' +
+                    '<a>' +
+                    //'<div>' +
                     '<div class="left">' +
                     '<img src="'+item.cover_pic+'">' +
                     '</div>' +
@@ -243,7 +244,8 @@ define(['base'],function(Base){
                     '<div class="singin-limit-nums">' +
                     '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
                     '</div>' +
-                    '</div>' +
+                    //'</div>' +
+                    '</a>'+
                     '</li>' +
                     '<li class="seperation"></li>';
             }
