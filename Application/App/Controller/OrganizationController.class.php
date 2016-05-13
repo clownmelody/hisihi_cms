@@ -3915,7 +3915,10 @@ GROUP BY
      * @param int $course_id
      */
     public function showteachingcoursemainpage($course_id=0){
+        $model = M('OrganizationTeachingCourse');
+        $info = $model->field('organization_id')->where('id='.$course_id)->find();
         $this->assign('course_id', $course_id);
+        $this->assign('organization_id', $info['organization_id']);
         $this->display('teaching_course_main_page');
     }
 
