@@ -9,6 +9,8 @@ define(['$'],function() {
     var Base = function (flag) {
         this._initTimeFormat();
         this._initStringExtentFn();
+        this._addTip();
+        this._addLoadingImg();
         if(!flag) {
             this._stopTouchendPropagationAfterScroll();
         }
@@ -52,6 +54,51 @@ define(['$'],function() {
                             that.controlLoadingTips(-1);
                             paras.eCallback && paras.eCallback({code:code,txt:txt});
                         }
+                    }
+                    //超时
+                    else if (status == 'timeout') {
+                        loginXhr.abort();
+                        that.controlLoadingTips(-1);
+                        paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
+                    }
+                    else {
+                        that.controlLoadingTips(-1);
+                        paras.eCallback && paras.eCallback({code:'404',txt:'no found'});
+                        loginXhr.abort();
+                    }
+                }
+            });
+        },
+
+        /*请求数据 python*/
+        getDataAsyncPy: function (paras) {
+            if (!paras.type) {
+                paras.type = 'post';
+            }
+            if (!paras.url) {
+                return;
+            }
+            var that = this;
+            that.controlLoadingTips(1);
+            var loginXhr = $.ajax({
+                url: paras.url,
+                type: paras.type,
+                data: paras.paraData,
+                //timeout: 20000,
+                timeout: 50000,
+                contentType: 'application/json',
+                complete: function (xmlRequest, status) {
+                    if (status == 'success') {
+                        var rTxt = xmlRequest.responseText,
+                            result = {};
+                        if (rTxt) {
+                            result = JSON.parse(xmlRequest.responseText)
+                        } else {
+                            result.status = false;
+                        }
+                        that.controlLoadingTips(0);
+                        paras.sCallback(result);
+
                     }
                     //超时
                     else if (status == 'timeout') {
@@ -124,22 +171,22 @@ define(['$'],function() {
              *
              */
             Date.prototype.format = function (format) {
-            var o = {
-                "M+": this.getMonth() + 1, //month
-                "d+": this.getDate(), //day
-                "h+": this.getHours(), //hour
-                "m+": this.getMinutes(), //minute
-                "s+": this.getSeconds(), //second
-                "q+": Math.floor((this.getMonth() + 3) / 3), //quarter
-                "S": this.getMilliseconds() //millisecond
-            }
-            if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
-                (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-            for (var k in o) if (new RegExp("(" + k + ")").test(format))
-                format = format.replace(RegExp.$1,
-                    RegExp.$1.length == 1 ? o[k] :
-                        ("00" + o[k]).substr(("" + o[k]).length));
-            return format;
+                var o = {
+                    "M+": this.getMonth() + 1, //month
+                    "d+": this.getDate(), //day
+                    "h+": this.getHours(), //hour
+                    "m+": this.getMinutes(), //minute
+                    "s+": this.getSeconds(), //second
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //quarter
+                    "S": this.getMilliseconds() //millisecond
+                }
+                if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+                    (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o) if (new RegExp("(" + k + ")").test(format))
+                    format = format.replace(RegExp.$1,
+                        RegExp.$1.length == 1 ? o[k] :
+                            ("00" + o[k]).substr(("" + o[k]).length));
+                return format;
             };
         },
 
@@ -244,6 +291,56 @@ define(['$'],function() {
             }
         },
 
+        /*添加等待提示框*/
+        _addLoadingImg:function(){
+            if($('#loading-data').length>0){
+                return;
+            }
+            var str = '<div id="loading-data" style="display: none;"><img class="loding-img" src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
+            $('body').append(str);
+        },
+
+        /*
+         *控制加载等待框
+         *@para
+         * flag - {bool} 默认隐藏
+         */
+        controlLoadingBox:function(flag){
+            var $target=$('#loading-data');
+            if(flag) {
+                $target.addClass('active');
+            }else{
+                $target.removeClass('active');
+            }
+        },
+
+        /*添加操作结果提示框*/
+        _addTip:function(){
+            if($('#result-tips').length>0){
+                return;
+            }
+            var str = '<div id="result-tips" class="result-tips" style="display: none;"><p></p></div>';
+            $('body').append(str);
+        },
+
+        /*
+         *显示操作结果
+         *para:
+         *tip - {string} 内容结果
+         *strFormat - {bool} 自定义的简单格式
+         */
+        showTips:function(tip,strFormat){
+            var $tip=$('body').find('.result-tips'),
+                $p=$tip.find('p').text(tip);
+            if(strFormat){
+                $tip.html(strFormat);
+            }
+            $tip.show();
+            window.setTimeout(function(){
+                $tip.hide();
+                $p.text('');
+            },1500);
+        },
     };
     return Base;
 });
