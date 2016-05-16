@@ -88,28 +88,28 @@ define(['$'],function() {
                 timeout: 50000,
                 contentType: 'application/json',
                 complete: function (xmlRequest, status) {
+                    var rTxt = xmlRequest.responseText,
+                    result = {};
+                    if (rTxt) {
+                        result = JSON.parse(xmlRequest.responseText)
+                    } else {
+                        result.code = 0;
+                    }
                     if (status == 'success') {
-                        var rTxt = xmlRequest.responseText,
-                            result = {};
-                        if (rTxt) {
-                            result = JSON.parse(xmlRequest.responseText)
-                        } else {
-                            result.status = false;
-                        }
-                        that.controlLoadingTips(0);
                         paras.sCallback(result);
 
                     }
                     //超时
                     else if (status == 'timeout') {
                         loginXhr.abort();
-                        that.controlLoadingTips(-1);
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
-                        that.controlLoadingTips(-1);
-                        paras.eCallback && paras.eCallback({code:'404',txt:'no found'});
-                        loginXhr.abort();
+                        var tempResult={code: '404', txt: 'no found'};
+                        if(result.code){
+                            tempResult=result;
+                        }
+                        paras.eCallback && paras.eCallback(tempResult);
                     }
                 }
             });
@@ -296,7 +296,7 @@ define(['$'],function() {
             if($('#loading-data').length>0){
                 return;
             }
-           var str = '<div id="loading-data"><img class="loding-img" style="display: none;" src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
+           var str = '<div id="loading-data" style="display: none;"><img class="loding-img"  src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
             $('body').append(str);
         },
 
@@ -306,7 +306,8 @@ define(['$'],function() {
          * flag - {bool} 默认隐藏
          */
         controlLoadingBox:function(flag){
-            var $target=$('#loading-data');
+            var $target=$('#loading-data'),
+                $img=$target.find('img');
             if(flag) {
                 $target.addClass('active').show();
             }else{

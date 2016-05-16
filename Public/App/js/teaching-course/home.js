@@ -4,7 +4,7 @@
 
 define(['base'],function(Base){
     var Course=function(id,oid){
-        this.uid = id;
+        this.cid = id;
         this.oid=oid;
         var eventName='click',that=this;
         this.deviceType = this.operationType();
@@ -14,10 +14,12 @@ define(['base'],function(Base){
         }
         this.getBasicInfo(function(result){
             if(result){
-                that.getOrgBasicInfo(result);
+                that.getOrgBasicInfo(result,function(){
+                    that.geMoreCourseInfo();
+                });
             }
         });
-        this.geMoreCourseInfo();
+
     };
 
     Course.prototype=new Base();
@@ -29,7 +31,7 @@ define(['base'],function(Base){
         this.controlLoadingBox(true);
         var that = this,
             para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.uid+'/detail',
+                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/detail',
                 type: 'get',
                 paraData: null,
                 sCallback: function (resutl) {
@@ -55,7 +57,7 @@ define(['base'],function(Base){
     t.getOrgBasicInfo=function(result,callback){
         var that = this,
             para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/'+this.uid+'/base',
+                url: window.hisihiUrlObj.api_url + 'v1/org/'+this.oid+'/base',
                 type: 'get',
                 paraData: null,
                 sCallback: function (orgResutl) {
@@ -79,10 +81,10 @@ define(['base'],function(Base){
 
     //获得更多课程的详细信息
     t.geMoreCourseInfo=function(callback){
-        this.controlLoadingBox(true);
+        //this.controlLoadingBox(true);
         var paraData={
-            oid: this.oid,
-            except_id: this.baseId,
+            //oid: this.oid,
+            except_id: this.cid | 0,
             page: 1,
             per_page: 100000
         };
@@ -97,13 +99,18 @@ define(['base'],function(Base){
                     callback && callback(data);
                 },
                 eCallback: function (data) {
-                    var txt=data.txt;
-                    if(data.code=404){
+                    var txt=data.txt,
+                        $nodata=$('#more-info .nodata'),
+                        $p=$nodata.find('p');
+                    if(data.code==404){
                         txt='信息加载失败';
                     }
+                    if(data.code==1001){
+                        txt='暂无推荐课程';
+                    }
+                    $p.text(txt);
+                    $nodata.show();
                     that.controlLoadingBox(false);
-                    that.showTips.call(that,txt);
-                    $('#more-info .nodata').show();
                     callback && callback();
                 },
             };
@@ -165,8 +172,9 @@ define(['base'],function(Base){
                         '<div class="right">'+
                             '<div class="org-name">'+
                             '<div class="name">'+name+'</div>'+
-                            '<i class="cer"></i>'+
-                            '<i class="cer"></i>'+
+                            this.getCerImg(data.auth)+
+                            //'<i class="cer"></i>'+
+                            //'<i class="cer"></i>'+
                             '<div style="clear: both;"></div>'+
                         '</div>'+
                         '<ul class="nums-info">'+
@@ -192,10 +200,21 @@ define(['base'],function(Base){
         return num;
     };
 
+    /*得到认证的图片*/
+    t.getCerImg=function(data){
+        var str='',len=data.length;
+        for(var i=0;i<len;i++){
+            if(!data[i].status) {
+                str += '<img src="' + data.pic_url + '">';
+            }
+        }
+        return str;
+    };
+
     //简介 和 安排信息
     t.getIntroduceStr=function(data){
-        data.introduction='这项赛事是与美国SC、德国ISC大学生超算大赛并驾齐驱的全球三大超算赛事之一，由浪潮集团有限公司和国际超级计算机大会组委会(ISC)、国际高性能计算咨询委员会（HPC AC）共同举办，旨在推动亚洲国家及地区间超算青年人才交流和培养。此次比赛分为两天。比赛第一天，浙大表现亮眼，获得三个项目的第一，并以每秒12.03万亿次浮点运算速度创造了新的世界纪录。但到了晚上，浙大团队发现自己失去运行权限，无法测试和运行原本计划的项目。而前几天一直能正常响应的24小时技术支持电话被关机。第二天中午，主办方才承认测试平台存在问题，并决定对所有参赛队延长4小时的比赛时间。最后，直到下午四点主办方才配好权限，并给浙大单独延时两小时，要求他们在两小时内提交结果。这个项目规定的运行时间为28小时，而各个大学在运行和调试该项目时基本上都花费了10小时以上的时间，2个小时时间根本不可能运行完整个项目，所以这个价值25分的项目，浙大最终没有得分。最终，东道主';
-        data.plan='这项赛事是与美国SC、德国ISC大学生超算大赛并驾齐驱的全球三大超算赛事之一，由浪潮集团有限公司和国际超级计算机大会组委会(ISC)、国际高性能计算咨询委员会（HPC AC）共同举办，旨在推动亚洲国家及地区间超算青年人才交流和培养。此次比赛分为两天。比赛第一天，浙大表现亮眼，获得三个项目的第一，并以每秒12.03万亿次浮点运算速度创造了新的世界纪录。但到了晚上，浙大团队发现自己失去运行权限，无法测试和运行原本计划的项目。而前几天一直能正常响应的24小时技术支持电话被关机。第二天中午，主办方才承认测试平台存在问题，并决定对所有参赛队延长4小时的比赛时间。最后，直到下午四点主办方才配好权限，并给浙大单独延时两小时，要求他们在两小时内提交结果。这个项目规定的运行时间为28小时，而各个大学在运行和调试该项目时基本上都花费了10小时以上的时间，2个小时时间根本不可能运行完整个项目，所以这个价值25分的项目，浙大最终没有得分。最终，东道主';
+        //data.introduction='这项赛事是与美国SC、德国ISC大学生超算大赛并驾齐驱的全球三大超算赛事之一，由浪潮集团有限公司和国际超级计算机大会组委会(ISC)、国际高性能计算咨询委员会（HPC AC）共同举办，旨在推动亚洲国家及地区间超算青年人才交流和培养。此次比赛分为两天。比赛第一天，浙大表现亮眼，获得三个项目的第一，并以每秒12.03万亿次浮点运算速度创造了新的世界纪录。但到了晚上，浙大团队发现自己失去运行权限，无法测试和运行原本计划的项目。而前几天一直能正常响应的24小时技术支持电话被关机。第二天中午，主办方才承认测试平台存在问题，并决定对所有参赛队延长4小时的比赛时间。最后，直到下午四点主办方才配好权限，并给浙大单独延时两小时，要求他们在两小时内提交结果。这个项目规定的运行时间为28小时，而各个大学在运行和调试该项目时基本上都花费了10小时以上的时间，2个小时时间根本不可能运行完整个项目，所以这个价值25分的项目，浙大最终没有得分。最终，东道主';
+        //data.plan='这项赛事是与美国SC、德国ISC大学生超算大赛并驾齐驱的全球三大超算赛事之一，由浪潮集团有限公司和国际超级计算机大会组委会(ISC)、国际高性能计算咨询委员会（HPC AC）共同举办，旨在推动亚洲国家及地区间超算青年人才交流和培养。此次比赛分为两天。比赛第一天，浙大表现亮眼，获得三个项目的第一，并以每秒12.03万亿次浮点运算速度创造了新的世界纪录。但到了晚上，浙大团队发现自己失去运行权限，无法测试和运行原本计划的项目。而前几天一直能正常响应的24小时技术支持电话被关机。第二天中午，主办方才承认测试平台存在问题，并决定对所有参赛队延长4小时的比赛时间。最后，直到下午四点主办方才配好权限，并给浙大单独延时两小时，要求他们在两小时内提交结果。这个项目规定的运行时间为28小时，而各个大学在运行和调试该项目时基本上都花费了10小时以上的时间，2个小时时间根本不可能运行完整个项目，所以这个价值25分的项目，浙大最终没有得分。最终，东道主';
         return '<div class="main-item lessons-detail">'+
                     '<div class="lessons-item">'+
                         '<div class="head-txt">'+
@@ -240,7 +259,7 @@ define(['base'],function(Base){
                 if(!avatar){
                     avatar='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
                 }
-                str += '<li><img src="'+avatar+'"></li>';
+                str += '<li><a href="hisihi://user/detailinfo?id='+enrollArr[i].uid+'"><img src="'+avatar+'"></a></li>';
             }
             str += '</ul></div>';
         }
@@ -266,10 +285,12 @@ define(['base'],function(Base){
                         '<ul>',item;
             for(var i=0;i<len;i++) {
                 item=courses[i];
-                var name=item.course_name;
+                var name=item.course_name,
+                    tName=item.lecture_name;
                 name=this.substrLongStr(name,12);
+                tName=this.substrLongStr(tName,5);
                 str += '<li>' +
-                        '<a href="hisihi://techcourse/detailinfo?id=1">' +
+                        '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
                             '<div>'+
                                 '<div class="left">' +
                                     '<img src="'+item.cover_pic+'">' +
@@ -284,7 +305,7 @@ define(['base'],function(Base){
                                     '<div class="teacher-info">' +
                                         '<div class="left-item">' +
                                             '<span>老师：</span>' +
-                                            '<span>'+item.lecture_name+'</span>' +
+                                            '<span>'+tName+'</span>' +
                                         '</div>' +
                                         '<div class="right-item price">￥'+item.price+'</div>' +
                                         '<div style="clear: both;"></div>' +

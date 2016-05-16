@@ -43,7 +43,7 @@ body {
 }
 .nodata{
   position: absolute;
-  @w:90px;
+  @w:65px;
   @h:30px;
   .size(2*@w,2*@h);
   top: 50%;
@@ -54,10 +54,15 @@ body {
   p{
     font-size: 16px;
     color: #757070;
+    text-align: center;
   }
 }
 #current-info{
   min-height: 400px;
+  position: relative;
+}
+#more-info{
+  min-height: 200px;
   position: relative;
 }
 .main-item{
@@ -152,7 +157,7 @@ body {
           float: left;
           margin-right: 10px;
         }
-        i{
+        img{
           display: block;
           float: left;
           @w:24px;
@@ -436,7 +441,9 @@ body {
                 margin-left: @w+10px;
                 .lesson-view-info {
                   margin: 3px auto 0px auto;
-                  font-size: 12px;
+                  span {
+                    font-size: 12px;
+                  }
                 }
               }
               .singin-limit-nums {

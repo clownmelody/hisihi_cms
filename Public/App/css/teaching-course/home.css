@@ -60,7 +60,7 @@ ul li {
   text-align: center;
   display: none;
 }
-.result-tips p {
+.result-tips .result-tips p {
   color: white;
   font-size: 15px;
   text-align: center;
@@ -77,16 +77,16 @@ ul li {
   text-align: center;
   display: none;
 }
-#loading-data .loding-img {
-  width: 40;
-  height: 40px;
-  display: inline-block;
-}
 #loading-data.active {
   display: block;
 }
 #loading-data.active .loding-img {
   animation: turning 1s linear infinite;
+}
+#loading-data .loding-img {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
 }
 @keyframes turning {
   to {
@@ -130,20 +130,25 @@ body {
 }
 .nodata {
   position: absolute;
-  width: 180px;
+  width: 130px;
   height: 60px;
   top: 50%;
   left: 50%;
   margin-top: -30px;
-  margin-left: -90px;
+  margin-left: -65px;
   display: none;
 }
 .nodata p {
   font-size: 16px;
   color: #757070;
+  text-align: center;
 }
 #current-info {
   min-height: 400px;
+  position: relative;
+}
+#more-info {
+  min-height: 200px;
   position: relative;
 }
 .main-item {
@@ -238,7 +243,7 @@ body {
   float: left;
   margin-right: 10px;
 }
-.main-item.org-basic-info .right .org-name i {
+.main-item.org-basic-info .right .org-name img {
   display: block;
   float: left;
   width: 24px;
@@ -251,7 +256,7 @@ body {
   margin-top: 2px;
   margin-right: 7px;
 }
-.main-item.org-basic-info .right .org-name i:nth-child(3) {
+.main-item.org-basic-info .right .org-name img:nth-child(3) {
   background-position: -24px 0;
   margin-right: 0;
 }
@@ -506,6 +511,8 @@ body {
   }
   .main-item.lessons-more ul li a > div .right .lesson-view-info {
     margin: 3px auto 0px auto;
+  }
+  .main-item.lessons-more ul li a > div .right .lesson-view-info span {
     font-size: 12px;
   }
   .main-item.lessons-more ul li a > div .singin-limit-nums {
