@@ -308,9 +308,9 @@ define(['$'],function() {
         controlLoadingBox:function(flag){
             var $target=$('#loading-data');
             if(flag) {
-                $target.addClass('active');
+                $target.addClass('active').show();
             }else{
-                $target.removeClass('active');
+                $target.removeClass('active').hide();
             }
         },
 
