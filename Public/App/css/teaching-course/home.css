@@ -129,7 +129,7 @@ body {
   overflow-x: hidden;
 }
 .nodata {
-  position: fixed;
+  position: absolute;
   width: 180px;
   height: 60px;
   top: 50%;
@@ -141,6 +141,10 @@ body {
 .nodata p {
   font-size: 16px;
   color: #757070;
+}
+#current-info {
+  min-height: 400px;
+  position: relative;
 }
 .main-item {
   margin: 0 auto 15px auto;
@@ -257,7 +261,10 @@ body {
 .main-item.org-basic-info .right .nums-info li {
   display: inline-block;
   color: #807e7e;
-  margin-right: 3px;
+  margin-right: 10px;
+}
+.main-item.org-basic-info .right .nums-info li span:first-child {
+  margin-right: 2px;
 }
 .main-item.lessons-detail .head-txt {
   border-bottom: 1px solid #e6e6e6;
@@ -484,7 +491,7 @@ body {
   .main-item.org-basic-info .right .nums-info li {
     display: inline-block;
     color: #807e7e;
-    margin-right: 3px;
+    margin-right: 6px;
     margin-top: 5px;
   }
   .main-item.org-basic-info .right .nums-info li span {

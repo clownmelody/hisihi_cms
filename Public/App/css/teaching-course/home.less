@@ -42,7 +42,7 @@ body {
   overflow-x: hidden;
 }
 .nodata{
-  position: fixed;
+  position: absolute;
   @w:90px;
   @h:30px;
   .size(2*@w,2*@h);
@@ -55,6 +55,10 @@ body {
     font-size: 16px;
     color: #757070;
   }
+}
+#current-info{
+  min-height: 400px;
+  position: relative;
 }
 .main-item{
   margin: 0 auto 15px auto;
@@ -168,7 +172,12 @@ body {
         li{
           display: inline-block;
           color: @g-color;
-          margin-right: 3px;
+          margin-right: 10px;
+          span{
+            &:first-child{
+              margin-right: 2px;
+            }
+          }
         }
       }
     }
@@ -402,7 +411,7 @@ body {
           li{
             display: inline-block;
             color: @g-color;
-            margin-right: 3px;
+            margin-right: 6px;
             margin-top: 5px;
             span{
               font-size: 14px;

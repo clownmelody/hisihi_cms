@@ -12,12 +12,12 @@ define(['base'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
-        this.getBasicInfo();
+        this.getBasicInfo(function(result){
+            if(result){
+                that.getOrgBasicInfo(result);
+            }
+        });
         this.geMoreCourseInfo();
-
-        window.setTimeout(function(){
-            window.location.href='hisihi://techcourse/detailinfo?id=1';
-        },3000);
     };
 
     Course.prototype=new Base();
@@ -33,9 +33,35 @@ define(['base'],function(Base){
                 type: 'get',
                 paraData: null,
                 sCallback: function (resutl) {
+                    //that.controlLoadingBox(false);
+                    //that.fillInCourseInfo(resutl);
+                    callback && callback(resutl);
+                },
+                eCallback: function (data) {
+                    var txt=data.txt;
+                    if(data.code=404){
+                        txt='信息加载失败';
+                    }
                     that.controlLoadingBox(false);
-                    that.fillInCourseInfo(resutl);
-                    callback && callback(data);
+                    that.showTips.call(that,txt);
+                    $('#current-info .nodata').show();
+                    callback && callback();
+                },
+            };
+        this.getDataAsyncPy(para);
+    };
+
+    //获得当前机构的基本信息
+    t.getOrgBasicInfo=function(result,callback){
+        var that = this,
+            para = {
+                url: window.hisihiUrlObj.api_url + 'v1/org/'+this.uid+'/base',
+                type: 'get',
+                paraData: null,
+                sCallback: function (orgResutl) {
+                    that.controlLoadingBox(false);
+                    that.fillInCourseInfo(result,orgResutl);
+                    callback && callback(orgResutl);
                 },
                 eCallback: function (data) {
                     var txt=data.txt;
@@ -85,9 +111,9 @@ define(['base'],function(Base){
     };
 
     //当前课程的详细信息显示
-    t.fillInCourseInfo=function(result){
+    t.fillInCourseInfo=function(result,orgResult){
         var strBasic=this.getBasicIntroduceInfo(result),
-            strOrg=this.getOrgInfoStr(result),
+            strOrg=this.getOrgInfoStr(orgResult),
             strIntroduce=this.getIntroduceStr(result),
             strSingIn=this.getSingInStr(result);
         var str=strBasic+
@@ -126,12 +152,15 @@ define(['base'],function(Base){
 
     //机构信息
     t.getOrgInfoStr=function(data){
-        var name=data.organization_name;
+        var name=data.name,logo=data.logo;
         name=this.substrLongStr(name,10);
+        if(!logo){
+            logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png'
+        }
         return '<div class="main-item org-basic-info">'+
                     '<div class="center-content">'+
                         '<div class="left">'+
-                            '<img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e">'+
+                            '<img src="'+logo+'">'+
                         '</div>'+
                         '<div class="right">'+
                             '<div class="org-name">'+
@@ -141,13 +170,26 @@ define(['base'],function(Base){
                             '<div style="clear: both;"></div>'+
                         '</div>'+
                         '<ul class="nums-info">'+
-                            '<li><span id="view-nums">4.5万</span><span>查看</span></li>'+
-                            '<li><span id="singin-nums－org">44343</span><span>报名</span></li>'+
-                            '<li><span id="view-watch">4542</span><span>关注</span></li>'+
+                            '<li><span id="view-nums">'+this.transformNums(data.enroll_count) + '</span><span>人查看</span></li>'+
+                            '<li><span id="singin-nums－org">'+this.transformNums(data.follow_count) + '</span><span>人报名</span></li>'+
+                            '<li><span id="view-watch">'+this.transformNums(data.view_count) + '</span><span>人关注</span></li>'+
                         '</ul>'+
                     '</div>'+
                 '</div>'+
             '</div>';
+    };
+
+    t.transformNums=function(num){
+        num =Number(num);
+        if(num){
+            if(num>10000){
+                num=num/10000 +'万'
+                return num;
+            }
+        }else{
+            num=0;
+        }
+        return num;
     };
 
     //简介 和 安排信息
