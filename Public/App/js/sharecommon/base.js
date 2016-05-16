@@ -296,7 +296,7 @@ define(['$'],function() {
             if($('#loading-data').length>0){
                 return;
             }
-           var str = '<div id="loading-data"><img class="loding-img" src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
+           var str = '<div id="loading-data"><img class="loding-img" style="display: none;" src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
             $('body').append(str);
         },
 
@@ -308,9 +308,9 @@ define(['$'],function() {
         controlLoadingBox:function(flag){
             var $target=$('#loading-data');
             if(flag) {
-                $target.addClass('active');
+                $target.addClass('active').show();
             }else{
-                $target.removeClass('active');
+                $target.removeClass('active').hide();
             }
         },
 
@@ -319,7 +319,7 @@ define(['$'],function() {
             if($('#result-tips').length>0){
                 return;
             }
-           var str = '<div id="result-tips" class="result-tips"><p></p></div>';
+           var str = '<div id="result-tips" class="result-tips" style="display: none;"><p></p></div>';
             $('body').append(str);
         },
 
