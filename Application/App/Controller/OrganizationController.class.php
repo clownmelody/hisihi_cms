@@ -2106,8 +2106,10 @@ class OrganizationController extends AppController
         $totalCount = $Model->query('select count(*) as count from (select distinct uid from hisihi_organization_relation where `status`=1 and `group`=6 and `organization_id`='.$organization_id.')m');
         $totalCount = $totalCount[0]['count'];
         if((float)$version>=2.8){
-            $teacher_ids = M('OrganizationRelation')->distinct('uid')->field('uid')
+            $teacher_ids = M('OrganizationRelation')->distinct('uid')
+                ->field('uid')
                 ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))
+                ->order('create_time desc')
                 ->select();
         } else {
             $teacher_ids = M('OrganizationRelation')->distinct('uid')->field('uid')
@@ -2118,6 +2120,12 @@ class OrganizationController extends AppController
         foreach($teacher_ids as &$teacher){
             $teacher = $this->findTeacherById($teacher['uid'], $version);
             $teacher['info']['institution'] = $org_name;
+            if((float)$version>=2.8){
+                $lecture_info = M('OrganizationRelation')->field('teacher_good_at_subjects, teacher_introduce, teacher_group_id')->where(array('organization_id'=>$organization_id,'uid'=>$teacher['uid']))->limit(1)->find();
+                $teacher['info']['teacher_good_at_subjects'] = $lecture_info['teacher_good_at_subjects'];
+                $teacher['info']['teacher_introduce'] = $lecture_info['teacher_introduce'];
+                $teacher['info']['teacher_group'] = M('OrganizationLectureGroup')->where('id='.$lecture_info['teacher_group_id'])->getField('title');
+            }
         }
         unset($teacher);
         if($type=="view") {
