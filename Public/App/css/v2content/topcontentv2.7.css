@@ -447,6 +447,9 @@ ul li {
   width: 100%;
   height: 100%;
 }
+#loading-data {
+  display: none;
+}
 @media screen and (max-width: 320px) {
   .model-box .comment-box {
     top: 50%;
