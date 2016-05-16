@@ -234,12 +234,16 @@ body {
         display:inline-block;
         margin-right: 12px;
         margin-bottom: 10px;
-        img{
-          @w:50px;
-          .size(@w,@w);
-          //box-shadow: 0 0 1px #000;
+        a {
+          @w: 50px;
+          display: block;
           .border-radius(@w);
-          border: 1px solid @g-color;
+          img {
+            .size(@w, @w);
+            //box-shadow: 0 0 1px #000;
+            .border-radius(@w);
+            border: 1px solid @g-color;
+          }
         }
       }
     }

@@ -165,6 +165,7 @@ define(['base'],function(Base){
             logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png'
         }
         return '<div class="main-item org-basic-info">'+
+                    '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
                     '<div class="center-content">'+
                         '<div class="left">'+
                             '<img src="'+logo+'">'+
@@ -183,6 +184,7 @@ define(['base'],function(Base){
                             '<li><span id="view-watch">'+this.transformNums(data.view_count) + '</span><span>人关注</span></li>'+
                         '</ul>'+
                     '</div>'+
+                    '</a>'+
                 '</div>'+
             '</div>';
     };
@@ -259,7 +261,7 @@ define(['base'],function(Base){
                 if(!avatar){
                     avatar='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
                 }
-                str += '<li><a href="hisihi://user/detailinfo?id='+enrollArr[i].uid+'"><img src="'+avatar+'"></a></li>';
+                str += '<li><a href="hisihi://user/detailinfo?uid='+enrollArr[i].uid+'"><img src="'+avatar+'"></a></li>';
             }
             str += '</ul></div>';
         }

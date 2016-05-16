@@ -315,7 +315,12 @@ body {
   margin-right: 12px;
   margin-bottom: 10px;
 }
-.main-item.lessons-singin ul li img {
+.main-item.lessons-singin ul li a {
+  display: block;
+  border-radius: 50px;
+  background-clip: padding-box;
+}
+.main-item.lessons-singin ul li a img {
   width: 50px;
   height: 50px;
   border-radius: 50px;
