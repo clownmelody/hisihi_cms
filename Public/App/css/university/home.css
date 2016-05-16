@@ -165,7 +165,7 @@ body .main-item.nums ul li .nums-name {
 }
 body .main-item.nums ul li .nums-val {
   color: #212121;
-  font-size: 16px;
+  font-size: 14px;
   height: 25px;
 }
 body .main-item.nums ul:last-child {

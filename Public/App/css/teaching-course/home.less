@@ -22,22 +22,27 @@ body{
 }
 .bg-sprite {
   background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
 }
 .bg-sprite-middle {
   .bg-sprite;
   background-size: 191px 26px;
 }
 
-
 .bg-sprite-small{
   .bg-sprite;
   background-size: 180px 24px;
+}
+
+.bg-sprite-half{
+  .bg-sprite;
+  background-size: 120px 16px;
 }
 body {
   overflow-x: hidden;
 }
 .nodata{
-  position: fixed;
+  position: absolute;
   @w:90px;
   @h:30px;
   .size(2*@w,2*@h);
@@ -51,11 +56,15 @@ body {
     color: #757070;
   }
 }
+#current-info{
+  min-height: 400px;
+  position: relative;
+}
 .main-item{
-  margin:15px auto;
+  margin: 0 auto 15px auto;
   background-color: #FFFFFF;
   box-sizing: border-box;
-  //padding-bottom: 15px;
+  padding:10px 0;
   .center-content {
     width: 90%;
     margin: 0 auto;
@@ -79,7 +88,6 @@ body {
   &.basic-info{
     .center-content{
       height: 100%;
-
       .otherinfo{
         margin-top: 13px;
         li{
@@ -136,7 +144,7 @@ body {
     .right{
       margin-left:@h+@p;
       padding-top: @p+5px;
-      padding-bottom: 8px;
+      padding-bottom: 25px;
       .org-name{
         color:RGB(33, 33, 33);
         .name{
@@ -164,7 +172,12 @@ body {
         li{
           display: inline-block;
           color: @g-color;
-          margin-right: 3px;
+          margin-right: 10px;
+          span{
+            &:first-child{
+              margin-right: 2px;
+            }
+          }
         }
       }
     }
@@ -197,8 +210,8 @@ body {
       p{
         color: @color;
         line-height: 25px;
-        margin-top: 0;
-        margin-bottom: 0;
+        margin: 0;
+        padding-bottom: 15px;
       }
     }
   }
@@ -252,71 +265,77 @@ body {
           border: none;
           margin: 0;
         }
+
         &:last-child{
           height: 0;
         }
-        >div {
-          margin: 20px auto 20px auto;
-          width: @width-p;
-          box-sizing: border-box;
-          @w: 110px;
-
-          .left {
-            .size(@w, auto);
-            position: absolute;
-            img {
-              .size(@w, @w*0.68);
+        >a {
+          display: block;
+          height: 100%;
+          >div {
+            @w: 110px;
+            margin: 20px auto 20px auto;
+            width: @width-p;
+            box-sizing: border-box;
+            display: block;
+            .left {
+              .size(@w, auto);
+              position: absolute;
+              img {
+                .size(@w, @w*0.68);
+              }
             }
-          }
-          .right {
-            margin-left: @w+15px;
-            .lesson-name {
-              color: #333333;
-              font-size: 16px;
-            }
-            .lesson-view-info {
-              color: @g-color;
-              font-size: 14px;
-              margin: 8px 0 1px 0;
-              span {
-                padding-right: 3px;
-                margin-right: 5px;
-                display: inline-block;
-                border-right: 1px solid @g-color;
-                height: 18px;
+            .right {
+              margin-left: @w+15px;
+              .lesson-name {
+                color: #333333;
+                font-size: 16px;
+              }
+              .lesson-view-info {
+                color: @g-color;
                 font-size: 14px;
-                &:last-child {
-                  border: none;
+                margin: 8px 0 1px 0;
+                span {
+                  padding-right: 3px;
+                  margin-right: 5px;
+                  display: inline-block;
+                  border-right: 1px solid @g-color;
+                  height: 18px;
+                  font-size: 14px;
+                  &:last-child {
+                    border: none;
+                  }
+                }
+              }
+              .teacher-info {
+                color: @g-color;
+                font-size: 14px;
+                .left-item {
+                  display: inline-block;
+                  width: 60%;
+                  text-align: left;
+                }
+                .right-item {
+                  display: inline-block;
+                  width: 35%;
+                  text-align: right;
                 }
               }
             }
-            .teacher-info {
-              color: @g-color;
-              font-size: 14px;
-              .left-item {
-                display: inline-block;
-                width: 60%;
-                text-align: left;
-              }
-              .right-item {
-                display: inline-block;
-                width: 30%;
-                text-align: right;
-              }
+            .singin-limit-nums {
+              position: absolute;
+              @h: 16px;
+              .size(42px, @h);
+              top: 0;
+              right: 0;
+              text-align: center;
+              color: white;
+              line-height: @h;
+              .bg-sprite-half;
+              background-position: -32px 0;
+              font-size: 10px;
+              padding-left: 2px;
             }
-          }
-          .singin-limit-nums {
-            position: absolute;
-            @h:24px;
-            .size(62px, @h);
-            top: 0;
-            right: 0;
-            text-align: center;
-            color: white;
-            line-height: @h;
-            .bg-sprite-small;
-            background-position: -49px 0;
-            font-size: 12px;
           }
         }
       }
@@ -392,7 +411,7 @@ body {
           li{
             display: inline-block;
             color: @g-color;
-            margin-right: 3px;
+            margin-right: 6px;
             margin-top: 5px;
             span{
               font-size: 14px;
@@ -405,22 +424,24 @@ body {
 
       ul {
         li {
-          > div {
-            @w: 98px;
-            .left {
-              img {
-                .size(@w, @w*0.7);
+          a {
+            >div {
+              @w: 80px;
+              .left {
+                img {
+                  .size(@w, @w*0.7);
+                }
               }
-            }
-            .right {
-              margin-left: @w+10px;
-              .lesson-view-info {
-                margin: 3px auto 0px auto;
-                font-size: 12px;
+              .right {
+                margin-left: @w+10px;
+                .lesson-view-info {
+                  margin: 3px auto 0px auto;
+                  font-size: 12px;
+                }
               }
-            }
-            .singin-limit-nums {
-              right: -10px;
+              .singin-limit-nums {
+                right: -10px;
+              }
             }
           }
         }
