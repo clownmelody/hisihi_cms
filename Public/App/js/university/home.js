@@ -95,7 +95,7 @@ define(['base'],function(Base){
                     '<ul>'+
                         '<li>'+
                             '<div class="nums-name">托福、雅思</div>'+
-                            '<div class="nums-val">'+data.toefl+' '+data.ielts+'</div>'+
+                            '<div class="nums-val">'+data.toefl+'&nbsp;&nbsp;'+data.ielts+'</div>'+
                         '</li>'+
                         '<li>'+
                             '<div class="nums-name">本科生比率</div>'+
