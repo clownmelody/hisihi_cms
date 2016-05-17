@@ -13,13 +13,13 @@
 		<div class="fl">
             <button class="btn ajax-post" target-form="ids" url="{:U("informationflow/setContentStatus",array("status"=>1))}">启 用</button>
 			<button class="btn ajax-post confirm" target-form="ids" url="{:U("informationflow/setContentStatus",array("status"=>-1))}">删 除</button>
-			<!--<button id="addfrontpage" class="btn" >添加分类</button>-->
+			<button id="showConfigType" class="btn" >按头条分类显示</button>
 		</div>
 	</div>
 
 	<div id="category" style="display:none;position: fixed;top: 30%;left: 40%;width: 250px;background: white;border: 1px solid grey;">
 		<p style="height: 30px;border-bottom: 1px solid lightgray;">
-			<span style="height: 30px;float: left;text-align: center;">请输入排序值(从小到大排序)</span>
+			<span style="height: 30px;float: left;text-align: center;">请输入排序值(从大到小排序)</span>
 			<span id="category_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
 		</p>
 		<div style="height: 30px;">
@@ -27,6 +27,20 @@
 		</div>
 		<div style="height: 35px;margin-top: 30px;">
 			<button id="addSort" onclick="setSortValue();"  url="{:U("informationflow/setContentSort")}" class="btn ajax-get confirm" style="float: right;">提交</button>
+		</div>
+	</div>
+
+	<div id="config_type" style="display:none;position: fixed;top: 30%;left: 40%;width: 400px;background: white;border: 1px solid grey;">
+		<p style="height: 30px;border-bottom: 1px solid lightgray;">选择头条类别
+			<span id="config_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
+		</p>
+		<div style="height: 30px;">
+			<volist name="config_type" id="data">
+				&nbsp;&nbsp;<input class="config_type" type="radio" value="{$data['id']}" name="config_type">{$data.title}&nbsp;&nbsp;
+			</volist>
+		</div>
+		<div style="height: 35px;">
+			<button id="showByConfigType" class="btn" style="float: right;">提交</button>
 		</div>
 	</div>
 
@@ -157,9 +171,32 @@ $(function(){
 			param2 = str.join(',');
 		}
 
-		window.location.href = '{:U("Article/addToFrontPage")}' + '&ids=' + param1 + '&categories=' + param2;
+		window.location.href = '{:U("informationFlow/content")}' + '&config_type=' + param2;
 
 	});
+
+
+	$('#showConfigType').click(function(){
+		$('#config_type').toggle();
+	});
+
+	$('#config_close').click(function(){
+		$('#config_type').hide();
+	})
+
+	$('#showByConfigType').click(function(){
+		var categories = $('.config_type:checked');
+		var param2 = '';
+		if(categories.length > 0){
+			var str = new Array();
+			categories.each(function(){
+				str.push($(this).val());
+			});
+			param2 = str.join(',');
+		}
+
+		window.location.href = '{:U("informationFlow/content")}' + '&config_type=' + param2;
+	})
 
 
 })
