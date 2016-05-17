@@ -460,6 +460,8 @@ class PublicController extends AppController {
                         $html = $this->fetch('topcontentv2_7');
                         S('topcontent-v2-7-'.$id, null);
                         S('topcontent-v2-7-'.$id, $html, 3600);
+                    } else {
+                        $this->display('topcontentv2_7');
                     }
                     //$this->responseHtml($html);
                 }
@@ -468,6 +470,8 @@ class PublicController extends AppController {
                     $html = $this->fetch('v2content');
                     S('topcontent-v2-'.$id, null);
                     S('topcontent-v2-'.$id, $html, 3600);
+                } else {
+                    $this->display('v2content');
                 }
                 //$this->responseHtml($html);
                 //$this->display('v2content');
@@ -476,8 +480,10 @@ class PublicController extends AppController {
                     $html = $this->fetch('topcontent');
                     S('topcontent-v1-'.$id, null);
                     S('topcontent-v1-'.$id, $html, 3600);
+                } else {
+                    $this->display('topcontent');
                 }
-                $this->responseHtml($html);
+                //$this->responseHtml($html);
                 //$this->display();
             }
         } else {
