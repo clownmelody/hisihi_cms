@@ -2760,7 +2760,7 @@ class OrganizationController extends AdminController
         }
         /*获取一条记录的详细数据*/
         $Model = M('OrganizationTag');
-        $data = $Model->where('status=1 and id='.$id)->find();
+        $data = $Model->where('status>-1 and id='.$id)->find();
         if(!$data){
             $this->error($Model->getError());
         }
