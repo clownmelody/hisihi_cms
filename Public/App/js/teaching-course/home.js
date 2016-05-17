@@ -134,6 +134,7 @@ define(['base'],function(Base){
     t.fillInMoreCourseInfo=function(result){
         var str=this.getMoreStr(result);
         $('#more-info').html(str);
+        this.drawArrowColorBlock();
     };
 
 
@@ -174,8 +175,6 @@ define(['base'],function(Base){
                             '<div class="org-name">'+
                             '<div class="name">'+name+'</div>'+
                             this.getCerImg(data.auth)+
-                            //'<i class="cer"></i>'+
-                            //'<i class="cer"></i>'+
                             '<div style="clear: both;"></div>'+
                         '</div>'+
                         '<ul class="nums-info">'+
@@ -206,8 +205,8 @@ define(['base'],function(Base){
     t.getCerImg=function(data){
         var str='',len=data.length;
         for(var i=0;i<len;i++){
-            if(!data[i].status) {
-                str += '<img src="' + data.pic_url + '">';
+            if(data[i].default_display) {
+                str += '<img src="' + data[i].tag_pic_url + '">';
             }
         }
         return str;
@@ -215,14 +214,13 @@ define(['base'],function(Base){
 
     //简介 和 安排信息
     t.getIntroduceStr=function(data){
-        //data.introduction='这项赛事是与美国SC、德国ISC大学生超算大赛并驾齐驱的全球三大超算赛事之一，由浪潮集团有限公司和国际超级计算机大会组委会(ISC)、国际高性能计算咨询委员会（HPC AC）共同举办，旨在推动亚洲国家及地区间超算青年人才交流和培养。此次比赛分为两天。比赛第一天，浙大表现亮眼，获得三个项目的第一，并以每秒12.03万亿次浮点运算速度创造了新的世界纪录。但到了晚上，浙大团队发现自己失去运行权限，无法测试和运行原本计划的项目。而前几天一直能正常响应的24小时技术支持电话被关机。第二天中午，主办方才承认测试平台存在问题，并决定对所有参赛队延长4小时的比赛时间。最后，直到下午四点主办方才配好权限，并给浙大单独延时两小时，要求他们在两小时内提交结果。这个项目规定的运行时间为28小时，而各个大学在运行和调试该项目时基本上都花费了10小时以上的时间，2个小时时间根本不可能运行完整个项目，所以这个价值25分的项目，浙大最终没有得分。最终，东道主';
-        //data.plan='这项赛事是与美国SC、德国ISC大学生超算大赛并驾齐驱的全球三大超算赛事之一，由浪潮集团有限公司和国际超级计算机大会组委会(ISC)、国际高性能计算咨询委员会（HPC AC）共同举办，旨在推动亚洲国家及地区间超算青年人才交流和培养。此次比赛分为两天。比赛第一天，浙大表现亮眼，获得三个项目的第一，并以每秒12.03万亿次浮点运算速度创造了新的世界纪录。但到了晚上，浙大团队发现自己失去运行权限，无法测试和运行原本计划的项目。而前几天一直能正常响应的24小时技术支持电话被关机。第二天中午，主办方才承认测试平台存在问题，并决定对所有参赛队延长4小时的比赛时间。最后，直到下午四点主办方才配好权限，并给浙大单独延时两小时，要求他们在两小时内提交结果。这个项目规定的运行时间为28小时，而各个大学在运行和调试该项目时基本上都花费了10小时以上的时间，2个小时时间根本不可能运行完整个项目，所以这个价值25分的项目，浙大最终没有得分。最终，东道主';
         return '<div class="main-item lessons-detail">'+
                     '<div class="lessons-item">'+
                         '<div class="head-txt">'+
                             '<div class="center-content">课程简介</div>'+
                         '</div>'+
                         '<div class="content-txt center-content">'+
+
                             '<p>'+
                                 data.introduction+
                             '</p>'+
@@ -235,6 +233,9 @@ define(['base'],function(Base){
                         '<div class="center-content">课程安排</div>'+
                     '</div>'+
                     '<div class="content-txt center-content">'+
+                        '<p>'+
+                        data.start_course_time+'——'+data.end_course_time+
+                        '</p>'+
                         '<p>'+
                             data.plan+
                         '</p>'+
@@ -293,7 +294,7 @@ define(['base'],function(Base){
                 tName=this.substrLongStr(tName,5);
                 str += '<li>' +
                         '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
-                            '<div>'+
+                            '<div class="main-content">'+
                                 '<div class="left">' +
                                     '<img src="'+item.cover_pic+'">' +
                                 '</div>' +
@@ -314,6 +315,8 @@ define(['base'],function(Base){
                                     '</div>' +
                                 '</div>' +
                                 '<div class="singin-limit-nums">' +
+                                        //'<span>'+item.already_registered+'/'+item.student_num+'</span>' +
+                                        '<div><canvas></canvas></div>'+
                                         '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
                                 '</div>' +
                             '</div>'+
@@ -324,6 +327,24 @@ define(['base'],function(Base){
             str+='</ul></div>';
         }
         return str;
+    };
+
+    //绘制箭头
+    t.drawArrowColorBlock=function () {
+        var $canvas = $('.singin-limit-nums canvas'),
+            lines = ["#FF5A00", "#039BE5"];
+        $canvas.each(function(){
+               var canvas = $(this)[0];
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = lines[0];
+            ctx.beginPath();
+            ctx.moveTo(28, 0);
+            ctx.lineTo(170, 0);
+            ctx.lineTo(170, 65);
+            ctx.lineTo(0, 65);
+            ctx.closePath();
+            ctx.fill();
+        });
     };
 
     return Course;

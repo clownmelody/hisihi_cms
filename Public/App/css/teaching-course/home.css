@@ -250,15 +250,8 @@ body {
   height: 24px;
   border-radius: 2px;
   background-clip: padding-box;
-  background: url("../../images/teaching-course/sprite.png");
-  background-size: 239px 32px;
-  background-size: 180px 24px;
   margin-top: 2px;
   margin-right: 7px;
-}
-.main-item.org-basic-info .right .org-name img:nth-child(3) {
-  background-position: -24px 0;
-  margin-right: 0;
 }
 .main-item.org-basic-info .right .nums-info {
   margin-top: 10px;
@@ -319,6 +312,9 @@ body {
   display: block;
   border-radius: 50px;
   background-clip: padding-box;
+  width: 52px;
+  height: 52px;
+  text-align: center;
 }
 .main-item.lessons-singin ul li a img {
   width: 50px;
@@ -361,38 +357,39 @@ body {
 .main-item.lessons-more ul li:last-child {
   height: 0;
 }
-.main-item.lessons-more ul li > a {
+.main-item.lessons-more ul li a {
   display: block;
   height: 100%;
 }
-.main-item.lessons-more ul li > a > div {
-  margin: 20px auto 20px auto;
+.main-item.lessons-more ul li .main-content {
+  margin: 0 auto;
+  padding: 20px 0;
   width: 90%;
   box-sizing: border-box;
   display: block;
 }
-.main-item.lessons-more ul li > a > div .left {
+.main-item.lessons-more ul li .main-content .left {
   width: 110px;
   height: auto;
   position: absolute;
 }
-.main-item.lessons-more ul li > a > div .left img {
+.main-item.lessons-more ul li .main-content .left img {
   width: 110px;
   height: 74.8px;
 }
-.main-item.lessons-more ul li > a > div .right {
+.main-item.lessons-more ul li .main-content .right {
   margin-left: 125px;
 }
-.main-item.lessons-more ul li > a > div .right .lesson-name {
+.main-item.lessons-more ul li .main-content .right .lesson-name {
   color: #333333;
   font-size: 16px;
 }
-.main-item.lessons-more ul li > a > div .right .lesson-view-info {
+.main-item.lessons-more ul li .main-content .right .lesson-view-info {
   color: #807e7e;
   font-size: 14px;
   margin: 8px 0 1px 0;
 }
-.main-item.lessons-more ul li > a > div .right .lesson-view-info span {
+.main-item.lessons-more ul li .main-content .right .lesson-view-info span {
   padding-right: 3px;
   margin-right: 5px;
   display: inline-block;
@@ -400,38 +397,48 @@ body {
   height: 18px;
   font-size: 14px;
 }
-.main-item.lessons-more ul li > a > div .right .lesson-view-info span:last-child {
+.main-item.lessons-more ul li .main-content .right .lesson-view-info span:last-child {
   border: none;
 }
-.main-item.lessons-more ul li > a > div .right .teacher-info {
+.main-item.lessons-more ul li .main-content .right .teacher-info {
   color: #807e7e;
   font-size: 14px;
 }
-.main-item.lessons-more ul li > a > div .right .teacher-info .left-item {
+.main-item.lessons-more ul li .main-content .right .teacher-info .left-item {
   display: inline-block;
-  width: 60%;
+  width: 50%;
   text-align: left;
 }
-.main-item.lessons-more ul li > a > div .right .teacher-info .right-item {
+.main-item.lessons-more ul li .main-content .right .teacher-info .right-item {
   display: inline-block;
-  width: 35%;
+  width: 48%;
   text-align: right;
 }
-.main-item.lessons-more ul li > a > div .singin-limit-nums {
+.main-item.lessons-more ul li .main-content .singin-limit-nums {
   position: absolute;
   width: 42px;
   height: 16px;
-  top: 0;
+  top: 20px;
   right: 0;
   text-align: center;
   color: white;
   line-height: 16px;
-  background: url("../../images/teaching-course/sprite.png");
-  background-size: 239px 32px;
-  background-size: 120px 16px;
-  background-position: -32px 0;
   font-size: 10px;
   padding-left: 2px;
+}
+.main-item.lessons-more ul li .main-content .singin-limit-nums canvas {
+  height: 35px;
+  width: 85px;
+}
+.main-item.lessons-more ul li .main-content .singin-limit-nums span {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  padding-left: 15px;
+  line-height: 16px;
+  height: 16px;
 }
 @media screen and (max-width: 320px) {
   .main-item {
@@ -473,7 +480,7 @@ body {
   }
   .main-item.org-basic-info .left {
     position: absolute;
-    width: 68px;
+    width: 75px;
     height: 60px;
   }
   .main-item.org-basic-info .left img {
@@ -481,46 +488,39 @@ body {
     background-clip: padding-box;
     width: 60px;
     height: 60px;
-    margin: 13px 8px 8px 0;
+    margin: 20px 15px 15px 0;
   }
   .main-item.org-basic-info .right {
-    margin-left: 68px;
-    padding-top: 13px;
-  }
-  .main-item.org-basic-info .right .org-name {
-    color: #212121;
+    margin-left: 75px;
   }
   .main-item.org-basic-info .right .org-name .name {
     font-size: 18px;
-    float: left;
-    margin-right: 10px;
+  }
+  .main-item.org-basic-info .right .org-name img {
+    width: 20px;
+    height: 20px;
   }
   .main-item.org-basic-info .right .nums-info {
     margin-top: 0px;
   }
   .main-item.org-basic-info .right .nums-info li {
-    display: inline-block;
-    color: #807e7e;
     margin-right: 6px;
     margin-top: 5px;
   }
   .main-item.org-basic-info .right .nums-info li span {
     font-size: 14px;
   }
-  .main-item.lessons-more ul li a > div .left img {
+  .main-item.lessons-more ul li .main-content .left img {
     width: 80px;
     height: 56px;
   }
-  .main-item.lessons-more ul li a > div .right {
+  .main-item.lessons-more ul li .main-content .right {
     margin-left: 90px;
   }
-  .main-item.lessons-more ul li a > div .right .lesson-view-info {
+  .main-item.lessons-more ul li .main-content .right .lesson-view-info {
     margin: 3px auto 0px auto;
   }
-  .main-item.lessons-more ul li a > div .right .lesson-view-info span {
+  .main-item.lessons-more ul li .main-content .right .lesson-view-info span {
     font-size: 12px;
-  }
-  .main-item.lessons-more ul li a > div .singin-limit-nums {
-    right: -10px;
   }
 }
