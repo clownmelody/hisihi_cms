@@ -109,11 +109,20 @@ class InformationFlowController extends AdminController {
         $map['status'] = array('gt', -1);
         if(I('config_type')){
             $map['config_type'] = I('config_type');
+            $this->assign('type', I('config_type'));
+        }
+        if(I('content_type')){
+            $map['content_type'] = I('content_type');
+            $this->assign('content_type', I('content_type'));
+        }
+        $sort = 'sort desc ,create_time desc';
+        if(I('sort')){
+            $sort = 'create_time desc';
         }
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->where($map)->order('sort asc ,create_time desc')->group('content_id')
+        $list = $model->where($map)->order($sort)->group('content_id')
             ->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$content){
             $config_type = $content['config_type'];
@@ -354,6 +363,12 @@ class InformationFlowController extends AdminController {
             $data['sort'] = $sort;
             $id = intval($content_id);
             $model->where('content_id='.$id)->save($data);
+            if(I('config_type')){
+                if(I('content_type')){
+                    $this->success('设置成功','index.php?s=/admin/informationFlow/content&config_type='.I('config_type').'&content_type='.I('content_type'));
+                }
+                $this->success('设置成功','index.php?s=/admin/informationFlow/content&config_type='.I('config_type'));
+            }
             $this->success('设置成功','index.php?s=/admin/informationFlow/content');
         } else {
             $this->error('未选择要处理的数据');
