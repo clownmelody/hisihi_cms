@@ -14,6 +14,10 @@
             <button class="btn ajax-post" target-form="ids" url="{:U("informationflow/setContentStatus",array("status"=>1))}">启 用</button>
 			<button class="btn ajax-post confirm" target-form="ids" url="{:U("informationflow/setContentStatus",array("status"=>-1))}">删 除</button>
 			<button id="showConfigType" class="btn" >按头条分类显示</button>
+			<button id="showadvs" class="btn" >广告列表</button>
+			<button id="sortbytime" class="btn" >按时间排序</button>
+			<input type="hidden" id="type" name="type" value="{$type | default=0}"/>
+			<input type="hidden" id="content_type" name="content_type" value="{$content_type | default=0}"/>
 		</div>
 	</div>
 
@@ -198,11 +202,31 @@ $(function(){
 		window.location.href = '{:U("informationFlow/content")}' + '&config_type=' + param2;
 	})
 
+	$('#showadvs').click(function(){
+		window.location.href = '{:U("informationFlow/content")}' + '&config_type=1&content_type=3';
+	})
+
+	$('#sortbytime').click(function(){
+		var url = '{:U("informationFlow/content")}';
+		if($('#type').val() > 0){
+			url += '&config_type=' + $('#type').val();
+		}
+		if($('#content_type').val() > 0){
+			url += '&content_type=' + $('#content_type').val();
+		}
+		window.location.href = url + '&sort=time';
+	})
 
 })
 
 function setSortValue(){
 	var url = $('#addSort').attr('url');
+	if($('#type').val() > 0){
+		url += '&config_type=' + $('#type').val();
+	}
+	if($('#content_type').val() > 0){
+		url += '&content_type=' + $('#content_type').val();
+	}
 	$('#addSort').attr('url', url + '&sort=' + $('#sort').val());
 }
 </script>
