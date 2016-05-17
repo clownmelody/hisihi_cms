@@ -106,16 +106,33 @@ class InformationFlowController extends AdminController {
      */
     public function content(){
         $model = M('InformationFlowContent');
-        $count = $model->count();
+        $map['status'] = array('gt', -1);
+        if(I('config_type')){
+            $map['config_type'] = I('config_type');
+            $this->assign('type', I('config_type'));
+        }
+        if(I('content_type')){
+            $map['content_type'] = I('content_type');
+            $this->assign('content_type', I('content_type'));
+        }
+        $sort = 'sort desc ,create_time desc';
+        if(I('sort')){
+            $sort = 'create_time desc';
+        }
+        $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('sort asc ,create_time desc')->group('content_id')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($map)->order($sort)->group('content_id')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$content){
             $config_type = $content['config_type'];
             $model = M('InformationFlowConfig');
             $config_detail = $model->field('title')->where('id='.$config_type)->find();
             $content['config_type'] = $config_detail['title'];
         }
+        $config_type = M('InformationFlowConfig')->where('`status`>-1')->select();
+
+        $this->assign('config_type', $config_type);
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("_total", $count);
@@ -284,10 +301,10 @@ class InformationFlowController extends AdminController {
             $model = M('InformationFlowContent');
             $categories =  explode("#",$config_type);;
             $cid = intval($cid);
-            $config_type = M('InformationFlowConfig')->where('status>-1')->order('id')->select();
+            $config_types = M('InformationFlowConfig')->where('status>-1')->order('id')->select();
             try {
                 $data_list = array();
-                foreach($config_type as &$item){
+                foreach($config_types as &$item){
                     $flag = false;
                     foreach($categories as $category){
                         if($item['id'] == $category){
@@ -328,7 +345,6 @@ class InformationFlowController extends AdminController {
             } catch (Exception $e){
                 $this->error('添加失败，请检查后重试');
             }
-            $model->where('id='.$cid)->save($data);
             $this->success('处理成功','index.php?s=/admin/informationFlow/content');
         } else {
             $this->error('未选择要处理的数据');
@@ -347,6 +363,12 @@ class InformationFlowController extends AdminController {
             $data['sort'] = $sort;
             $id = intval($content_id);
             $model->where('content_id='.$id)->save($data);
+            if(I('config_type')){
+                if(I('content_type')){
+                    $this->success('设置成功','index.php?s=/admin/informationFlow/content&config_type='.I('config_type').'&content_type='.I('content_type'));
+                }
+                $this->success('设置成功','index.php?s=/admin/informationFlow/content&config_type='.I('config_type'));
+            }
             $this->success('设置成功','index.php?s=/admin/informationFlow/content');
         } else {
             $this->error('未选择要处理的数据');

@@ -34,7 +34,7 @@
                             <input type="text" class="text input-large" name="value" value="{$info.value}">
                         </div>
                     </div>
-                    <div id="extra_pic" <if condition="$info.type neq 7">style="display: none"</if> class="form-item cf">
+                    <div id="extra_pic" <if condition="($info.type neq 7) and ($info.type neq 8)">style="display: none"</if> class="form-item cf">
                         <label class="item-label">标签图片</label>
                         <div class="controls">
                             <input type="file" id="upload_company_picture">
