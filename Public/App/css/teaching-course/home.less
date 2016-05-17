@@ -308,7 +308,8 @@ body {
                 margin-right: 5px;
                 display: inline-block;
                 border-right: 1px solid @g-color;
-                height: 18px;
+                height: 13px;
+                line-height: 13px;
                 font-size: 14px;
                 &:last-child {
                   border: none;
@@ -317,7 +318,7 @@ body {
             }
             .teacher-info {
               color: @g-color;
-              font-size: 14px;
+              //font-size: 14px;
               .left-item {
                 display: inline-block;
                 width: 50%;
@@ -388,9 +389,9 @@ body {
                 .size(18px,18px);
               }
               &.comment{
-                .bg-sprite;
-                background-position:-219px 0;
-                .size(20px,20px);
+                .bg-sprite-middle;
+                background-position:-175px 0;
+                .size(16px,17px);
               }
             }
           }
@@ -438,18 +439,31 @@ body {
       ul {
         li {
             .main-content {
-              @w: 80px;
+              @w: 85px;
               .left {
                 img {
-                  .size(@w, @w*0.7);
+                  .size(@w, @w*0.75);
                 }
               }
               .right {
                 margin-left: @w+10px;
+                .lesson-name {
+                  font-size: 12px;
+                }
                 .lesson-view-info {
                   margin: 3px auto 0px auto;
                   span {
                     font-size: 12px;
+                  }
+                }
+                .teacher-info {
+                  .left-item {
+                    span {
+                      font-size: 12px;
+                    }
+                    .price{
+                      font-size: 14px !important;
+                    }
                   }
                 }
               }

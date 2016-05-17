@@ -394,7 +394,8 @@ body {
   margin-right: 5px;
   display: inline-block;
   border-right: 1px solid #807e7e;
-  height: 18px;
+  height: 13px;
+  line-height: 13px;
   font-size: 14px;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-view-info span:last-child {
@@ -402,7 +403,6 @@ body {
 }
 .main-item.lessons-more ul li .main-content .right .teacher-info {
   color: #807e7e;
-  font-size: 14px;
 }
 .main-item.lessons-more ul li .main-content .right .teacher-info .left-item {
   display: inline-block;
@@ -471,9 +471,10 @@ body {
   .main-item.basic-info .center-content .otherinfo li i.comment {
     background: url("../../images/teaching-course/sprite.png");
     background-size: 239px 32px;
-    background-position: -219px 0;
-    width: 20px;
-    height: 20px;
+    background-size: 191px 26px;
+    background-position: -175px 0;
+    width: 16px;
+    height: 17px;
   }
   .main-item.org-basic-info {
     position: relative;
@@ -511,16 +512,25 @@ body {
     font-size: 14px;
   }
   .main-item.lessons-more ul li .main-content .left img {
-    width: 80px;
-    height: 56px;
+    width: 85px;
+    height: 63.75px;
   }
   .main-item.lessons-more ul li .main-content .right {
-    margin-left: 90px;
+    margin-left: 95px;
+  }
+  .main-item.lessons-more ul li .main-content .right .lesson-name {
+    font-size: 12px;
   }
   .main-item.lessons-more ul li .main-content .right .lesson-view-info {
     margin: 3px auto 0px auto;
   }
   .main-item.lessons-more ul li .main-content .right .lesson-view-info span {
     font-size: 12px;
+  }
+  .main-item.lessons-more ul li .main-content .right .teacher-info .left-item span {
+    font-size: 12px;
+  }
+  .main-item.lessons-more ul li .main-content .right .teacher-info .left-item .price {
+    font-size: 14px !important;
   }
 }
