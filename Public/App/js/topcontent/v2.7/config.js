@@ -10,7 +10,7 @@ requirejs.config({
         prefixfree:'../sharecommon/prefixfree.min',
         fastclick:'../sharecommon/fastclick',
         iscroll:'../sharecommon/iscroll',
-        base:'../sharecommon/base',
+        base:'../sharecommon/base-1.0',
         home:'v2.7/home',
     },
     shim: {
