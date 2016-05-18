@@ -467,6 +467,8 @@ class PublicController extends AppController {
                     }*/
                     //$this->responseHtml($html);
                     $this->display('topcontentv2_7');
+                }else{
+                    $this->display('v2content');
                 }
                 // 如果未缓存
                /* if(!S('topcontent-v2-'.$id)){
@@ -478,7 +480,6 @@ class PublicController extends AppController {
                     $this->display('v2content');
                 }*/
                 //$this->responseHtml($html);
-                $this->display('v2content');
             } else {
                 /*if(!S('topcontent-v1-'.$id)){
                     $html = $this->fetch('topcontent');
