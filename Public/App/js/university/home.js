@@ -75,11 +75,11 @@ define(['base'],function(Base){
         return '<div class="main-item nums">'+
                     '<ul>'+
                         '<li>'+
-                            '<div class="nums-name">SIA推荐指数</div>'+
+                            '<div class="nums-name">推荐指数</div>'+
                             '<div class="nums-val">'+data.sia_recommend_level+'</div>'+
                         '</li>'+
                         '<li>'+
-                            '<div class="nums-name">SIA学生录取率</div>'+
+                            '<div class="nums-name">学生录取率</div>'+
                             '<div  class="nums-val">'+data.sia_student_enrollment_rate+'</div>'+
                         '</li>'+
                         '<li>'+
