@@ -72,6 +72,11 @@ define(['base'],function(Base){
 
     //指数信息
     t.getNumsInfoStr=function(data){
+        var feed=data.tuition_fees,
+            scholarship=data.scholarship;
+        feed=this.transformNums(feed);
+        scholarship=this.transformNums(scholarship);
+
         return '<div class="main-item nums">'+
                     '<ul>'+
                         '<li>'+
@@ -88,7 +93,7 @@ define(['base'],function(Base){
                         '</li>'+
                         '<li>'+
                             '<div class="nums-name">学费</div>'+
-                            '<div  class="nums-val">￥ '+data.tuition_fees+'</div>'+
+                            '<div  class="nums-val">'+feed+'</div>'+
                         '</li>'+
                         '<div style="clear:both;"></div>'+
                     '</ul>'+
@@ -103,7 +108,7 @@ define(['base'],function(Base){
                         '</li>'+
                         '<li>'+
                             '<div class="nums-name">奖学金</div>'+
-                            '<div  class="nums-val">'+data.scholarship+'</div>'+
+                            '<div  class="nums-val">'+scholarship+'</div>'+
                         '</li>'+
                         '<li>'+
                             '<div class="nums-name">申请截止日期</div>'+
@@ -112,6 +117,19 @@ define(['base'],function(Base){
                         '<div style="clear:both;"></div>'+
                     '</ul>'+
                 '</div>';
+    };
+
+    t.transformNums=function(num){
+        num =Number(num);
+        if(num){
+            if(num>100000){
+                num=num/10000 +'万'
+                return num;
+            }
+        }else{
+            num=0;
+        }
+        return num;
     };
 
     //专业信息
