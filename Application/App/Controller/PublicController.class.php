@@ -422,17 +422,20 @@ class PublicController extends AppController {
                     $cacheHtml = S('topcontent-v2-7-'.$id);
                     if($cacheHtml){
                         $this->responseHtml($cacheHtml);
+                        return;
                     }
-                } else {
+                }else {
                     $cacheHtml = S('topcontent-v2-'.$id);
                     if($cacheHtml){
                         $this->responseHtml($cacheHtml);
+                        return;
                     }
                 }
             } else {
                 $cacheHtml = S('topcontent-v1-'.$id);
                 if($cacheHtml){
                     $this->responseHtml($cacheHtml);
+                    return;
                 }
             }
         }
