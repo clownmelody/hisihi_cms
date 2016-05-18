@@ -22,7 +22,6 @@ define(['$'],function() {
                 return;
             }
             var that = this;
-            that.controlLoadingTips(1);
             var loginXhr = $.ajax({
                 url: paras.url,
                 type: paras.type,
@@ -41,23 +40,19 @@ define(['$'],function() {
                         }
 
                         if (result.success) {
-                            that.controlLoadingTips(0);
                             paras.sCallback(JSON.parse(xmlRequest.responseText));
                         } else {
                             var txt = result.message,
                                 code=result.error_code;
-                            that.controlLoadingTips(-1);
                             paras.eCallback && paras.eCallback({code:code,txt:txt});
                         }
                     }
                     //超时
                     else if (status == 'timeout') {
                         loginXhr.abort();
-                        that.controlLoadingTips(-1);
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
-                        that.controlLoadingTips(-1);
                         paras.eCallback && paras.eCallback({code:'404',txt:'no found'});
                         loginXhr.abort();
                     }
@@ -74,7 +69,6 @@ define(['$'],function() {
                 return;
             }
             var that = this;
-            that.controlLoadingTips(1);
             var loginXhr = $.ajax({
                 url: paras.url,
                 type: paras.type,
@@ -91,18 +85,15 @@ define(['$'],function() {
                         } else {
                             result.status = false;
                         }
-                        that.controlLoadingTips(0);
                         paras.sCallback(result);
 
                     }
                     //超时
                     else if (status == 'timeout') {
                         loginXhr.abort();
-                        that.controlLoadingTips(-1);
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
-                        that.controlLoadingTips(-1);
                         paras.eCallback && paras.eCallback({code:'404',txt:'no found'});
                         loginXhr.abort();
                     }
@@ -110,29 +101,6 @@ define(['$'],function() {
             });
         },
 
-        /*
-         *加载等待,
-         *para:
-         * status - {num} 状态控制 码
-         * 0.显示加载等待;  1 隐藏等待; -1隐藏转圈图片，显示加载失败，重新刷新的按钮;
-         */
-        controlLoadingTips: function (status) {
-            var $target = $('#loadingTip'),
-                $img = $target.find('.loadingImg'),
-                $a = $target.find('.loadError');
-            if (status == 1) {
-                $target.show();
-                $img.addClass('active');
-            } else if (status == -1) {
-                $target.show();
-                $img.removeClass('active');
-                $a.show();
-            }
-            else {
-                $target.hide();
-                $img.removeClass('active');
-            }
-        },
 
         /*
          *字符串截取
