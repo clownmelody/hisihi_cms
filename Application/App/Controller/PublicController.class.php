@@ -422,20 +422,24 @@ class PublicController extends AppController {
                     $cacheHtml = S('topcontent-v2-7-'.$id);
                     if($cacheHtml){
                         $this->responseHtml($cacheHtml);
+                        return;
                     }
-                } else {
+                }else {
                     $cacheHtml = S('topcontent-v2-'.$id);
                     if($cacheHtml){
                         $this->responseHtml($cacheHtml);
+                        return;
                     }
                 }
             } else {
                 $cacheHtml = S('topcontent-v1-'.$id);
                 if($cacheHtml){
                     $this->responseHtml($cacheHtml);
+                    return;
                 }
             }
         }
+
 
         /* 获取当前分类列表 */
         $Document = D('Blog/Document');
@@ -460,31 +464,37 @@ class PublicController extends AppController {
                         $html = $this->fetch('topcontentv2_7');
                         S('topcontent-v2-7-'.$id, null);
                         S('topcontent-v2-7-'.$id, $html, 3600);
+                        $this->responseHtml($html);
                     } else {
                         $this->display('topcontentv2_7');
                     }
                     //$this->responseHtml($html);
-                }
-                // 如果未缓存
-                if(!S('topcontent-v2-'.$id)){
-                    $html = $this->fetch('v2content');
-                    S('topcontent-v2-'.$id, null);
-                    S('topcontent-v2-'.$id, $html, 3600);
-                } else {
-                    $this->display('v2content');
+                    //$this->display('topcontentv2_7');
+                }else{
+                    // 如果未缓存
+                    if(!S('topcontent-v2-'.$id)){
+                         $html = $this->fetch('v2content');
+                         S('topcontent-v2-'.$id, null);
+                         S('topcontent-v2-'.$id, $html, 3600);
+                         $this->responseHtml($html);
+                     } else {
+                         $this->display('v2content');
+                     }
+                    //$this->display('v2content');
                 }
                 //$this->responseHtml($html);
-                //$this->display('v2content');
             } else {
                 if(!S('topcontent-v1-'.$id)){
                     $html = $this->fetch('topcontent');
                     S('topcontent-v1-'.$id, null);
                     S('topcontent-v1-'.$id, $html, 3600);
+                    $this->responseHtml($html);
                 } else {
                     $this->display('topcontent');
                 }
                 //$this->responseHtml($html);
                 //$this->display();
+                //$this->display('topcontent');
             }
         } else {
             $info['img'] = $this->fetchImage($info['cover_id']);
