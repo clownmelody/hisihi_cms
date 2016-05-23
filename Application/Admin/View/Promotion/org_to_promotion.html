@@ -3,13 +3,12 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>活动列表</h2>
+        <h2>课程与活动关系列表</h2>
     </div>
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <button class="btn document_add" url="{:U('promotion_add')}">新 增</button>
-                <button class="btn ajax-post" target-form="ids" url="{:U("promotion/set_status",array("status"=>1))}">取消删除</button>
+                <button class="btn ajax-post" target-form="ids" url="{:U("promotion/set_org_promotion_status",array("status"=>1))}">取消删除</button>
             </div>
         </div>
     </div>
@@ -20,9 +19,9 @@
             <tr>
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
+                <th class="">课程名称</th>
+                <th class="">机构名称</th>
                 <th class="">活动名称</th>
-                <th class="">类型</th>
-                <th class="">图标地址</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -34,18 +33,16 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.title}</td>
-                        <td>{$vo.type}</td>
-                        <td>{$vo.logo_url}</td>
+                        <td>{$vo.course_name}</td>
+                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.promotion_name}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                         </if>
                         </td>
                         <td>
-                            <a href="{:U('Promotion/edit?id='.$vo['id'])}">编辑</a>
-                            <a href="{:U('Promotion/set_status?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
-                            <a href="{:U('Promotion/add_coupon?id='.$vo['id'])}" >添加优惠券</a>
+                            <a href="{:U('Promotion/set_org_promotion_status?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
                 </volist>

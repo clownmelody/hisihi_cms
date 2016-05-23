@@ -3217,6 +3217,39 @@ class OrganizationController extends AdminController
         }
     }
 
+
+    /**
+     * 机构参与活动
+     * @param $organization_id
+     */
+    public function add_promotion($organization_id, $id){
+        $promotion = M('Promotion')->where('status=1')->order('id')->select();
+        $this->assign('_promotion', $promotion);
+        $this->assign('organization_id', $organization_id);
+        $this->assign('tid', $id);
+        $this->display();
+    }
+
+    /**
+     * 绑定活动和机构的关系
+     */
+    public function update_add_promotion(){
+        if (IS_POST) {
+            $post_data['organization_id'] = $_POST["organization_id"];
+            $post_data['promotion_id'] = $_POST["promotion_id"];
+            $post_data['teaching_course_id'] = $_POST['teaching_course_id'];
+            $post_data['status'] = 1;
+            if(M('TeachingCourseOrganizationPromotionRelation')->where($post_data)->find()){
+                $this->success('已经参与该活动', 'index.php?s=/admin/promotion/org_to_promotion');
+            }
+            $post_data['create_time'] = time();
+            M('TeachingCourseOrganizationPromotionRelation')->add($post_data);
+            $this->success('参与活动成功', 'index.php?s=/admin/promotion/org_to_promotion');
+        } else {
+            $this->display('add_promotion');
+        }
+    }
+
     /**
      * @param $url
      * @param $post_data

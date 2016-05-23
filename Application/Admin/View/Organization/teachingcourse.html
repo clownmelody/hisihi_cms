@@ -61,6 +61,7 @@
                         </td>
                         <td>
                             <a href="{:U('Organization/teachingcourse_sethot?id='.$vo['id'])}" class="ajax-get confirm">设为热门</a>
+                            <a href="{:U('Organization/add_promotion?organization_id='.$vo['organization_id'].'&id='.$vo['id'])}" >添加活动</a>
                             <a href="{:U('Organization/teachingcourse_delete?id='.$vo['id'].'&organization_id='.$organization_id)}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
