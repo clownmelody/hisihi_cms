@@ -292,7 +292,7 @@ class InformationFlowController extends AdminController {
         $this->assign('cid', $article['content_id']);
         $this->assign('cname', $article['content_name']);
         $this->assign('ctype', $article['content_type']);
-        $this->display();
+        $this->display('setConfigType');
     }
 
 
