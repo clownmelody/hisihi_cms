@@ -3,7 +3,7 @@
  * version-2.7
  */
 define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
-    //FastClick.attach(document.body);
+    FastClick.attach(document.body);
     var HiWorks = function (url,baseId) {
         this.baseUrl = url;
         this.$wrapper = $('body');
@@ -21,9 +21,9 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
 
         var eventName='click',that=this;
         this.deviceType = this.operationType();
-        if(this.deviceType.mobile){
-            eventName='touchend';
-        }
+        //if(this.deviceType.mobile){
+        //    eventName='touchend';
+        //}
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
         });
