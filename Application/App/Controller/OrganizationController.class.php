@@ -1772,6 +1772,18 @@ class OrganizationController extends AppController
             } else {
                 $org['relationship'] = 0;
             }
+            if((float)$version>=2.9){
+                $course_promotion_model = new Model();
+                $org_promotion_list = $course_promotion_model->query('
+                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                where status=1 and organization_id='.$org_id);
+                $promotion_list = array();
+                foreach($org_promotion_list as $promotion){
+                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                    $promotion_list[] = $obj;
+                }
+                $org['promotion_list'] = $promotion_list;
+            }
         }
         //机构列表按报名数排序
         $sort = array(
@@ -3309,10 +3321,12 @@ class OrganizationController extends AppController
      * 2.8机构列表软件热门视频
      * @param null $city
      * @param string $type
+     * @param null $version
      * @param int $page
      * @param int $count
      */
-    public function getLocationSoftwareHotTeachingCourse($city=null, $type='软件', $page=1, $count=2){
+    public function getLocationSoftwareHotTeachingCourse($city=null, $type='软件',
+                                                         $version=null, $page=1, $count=2){
         $model = M('Organization');
         $select_where = "application_status=2 and status=1";
         if(!empty($city)){
@@ -3348,6 +3362,31 @@ class OrganizationController extends AppController
                 $course['organization_name'] = $org_info['name'];
             } else {
                 $course['organization_name'] = null;
+            }
+            if((float)$version>=2.9) {
+                $course_promotion_model = new Model();
+                $org_promotion_list = $course_promotion_model->query('
+                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                where status=1 and teaching_course_id=' . $course['id']);
+                $coupon_list = array();
+                foreach ($org_promotion_list as $promotion) {
+                    $coupon_info = M()->table('hisihi_promotion_coupon_relation pcr, hisihi_coupon coupon')
+                        ->where('pcr.coupon_id = coupon.id and pcr.promotion_id='.$promotion['promotion_id'])->order('coupon.money desc' )->find();
+                    unset($coupon_info['create_time']);
+                    unset($coupon_info['status']);
+                    unset($coupon_info['create_time']);
+                    $sel_where['coupon_id'] = $coupon_info['coupon_id'];
+                    $sel_where['uid'] = is_login();
+                    $sel_where['status'] = 2;
+                    if(M('UserCoupon')->where($sel_where)->count()){
+                        $coupon_info['is_used'] = true;
+                    } else {
+                        $coupon_info['is_used'] = false;
+                    }
+                    $obj['coupon_info'] = $coupon_info;
+                    $coupon_list[] = $obj;
+                }
+                $course['coupon_list'] = $coupon_list;
             }
         }
         if(empty($list)){
@@ -3465,14 +3504,17 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构专业列表成功', null, $data);
     }
 
-    /**根据专业获取机构列表
+    /**
+     * 根据专业获取机构列表
      * @param null $major_id
      * @param string $type
      * @param null $city
+     * @param null $version
      * @param int $page
      * @param int $count
      */
-    public function getOrganizationByMajor($major_id=null, $type='手绘', $city=null, $page=1, $count=10){
+    public function getOrganizationByMajor($major_id=null, $type='手绘', $city=null,
+                                           $version=null, $page=1, $count=10){
         $uid = is_login();
         $model = M('Organization');
         if(!empty($major_id)){
@@ -3518,6 +3560,18 @@ class OrganizationController extends AppController
             } else {
                 $org['relationship'] = 0;
             }
+            if((float)$version>=2.9){
+                $course_promotion_model = new Model();
+                $org_promotion_list = $course_promotion_model->query('
+                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                where status=1 and organization_id='.$org_id);
+                $promotion_list = array();
+                foreach($org_promotion_list as $promotion){
+                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                    $promotion_list[] = $obj;
+                }
+                $org['promotion_list'] = $promotion_list;
+            }
         }
         /*//机构列表按报名数排序
         $sort = array(
@@ -3541,14 +3595,17 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构列表成功', null, $data);
     }
 
-    /**根据大学获取留学机构列表
+    /**
+     * 根据大学获取留学机构列表
      * @param null $university_id
      * @param string $type
      * @param null $city
+     * @param null $version
      * @param int $page
      * @param int $count
      */
-    public function getOrganizationByUniversity($university_id=null, $type='留学', $city=null, $page=1, $count=10){
+    public function getOrganizationByUniversity($university_id=null, $type='留学', $city=null,
+                                                $version=null, $page=1, $count=10){
         $uid = is_login();
         $model = M('Organization');
         if(!empty($university_id)){
@@ -3595,6 +3652,18 @@ class OrganizationController extends AppController
                 $org['relationship'] = 0;
             }
             $org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
+            if((float)$version>=2.9){
+                $course_promotion_model = new Model();
+                $org_promotion_list = $course_promotion_model->query('
+                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                where status=1 and organization_id='.$org_id);
+                $promotion_list = array();
+                foreach($org_promotion_list as $promotion){
+                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                    $promotion_list[] = $obj;
+                }
+                $org['promotion_list'] = $promotion_list;
+            }
         }
 /*        //机构列表按报名数排序
         $sort = array(
@@ -3960,7 +4029,7 @@ GROUP BY
             $obj = M('Promotion')->field('id, title, little_logo_url')->where('id='.$promotion['promotion_id'])->find();
             $coupon_list = M('PromotionCouponRelation')->field('coupon_id')
                 ->where('status=1 and promotion_id='.$obj['id'])->select();
-            $coupon_info_list = [];
+            $coupon_info_list = array();
             foreach($coupon_list as $coupon){
                 $coupon_info = M('Coupon')->field('id, name, type, start_time, end_time , money')
                     ->where('id='.$coupon['coupon_id'])->find();
