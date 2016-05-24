@@ -3363,10 +3363,12 @@ class OrganizationController extends AppController
      * 获取诚信机构列表
      * @param bool|false $well_chosen
      * @param string $type
+     * @param null $city
+     * @param null $version
      * @param int $page
      * @param int $count
      */
-    public function getIntegrityOrganization($well_chosen=false, $type='软件', $city=null, $page=1, $count=10){
+    public function getIntegrityOrganization($well_chosen=false, $type='软件', $city=null, $version=null, $page=1, $count=10){
         $uid = is_login();
         $model = M('Organization');
         if($type != '软件' && $type != '留学' && $type != '手绘'){
@@ -3412,6 +3414,18 @@ class OrganizationController extends AppController
                 $org['relationship'] = 1;
             } else {
                 $org['relationship'] = 0;
+            }
+            if((float)$version>=2.9){
+                $course_promotion_model = new Model();
+                $org_promotion_list = $course_promotion_model->query('
+                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                where status=1 and organization_id='.$org_id);
+                $promotion_list = array();
+                foreach($org_promotion_list as $promotion){
+                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                    $promotion_list[] = $obj;
+                }
+                $org['promotion_list'] = $promotion_list;
             }
         }
 /*        //机构列表按报名数排序
@@ -3928,6 +3942,36 @@ GROUP BY
         $this->assign('course_id', $course_id);
         $this->assign('organization_id', $info['organization_id']);
         $this->display('teaching_course_main_page');
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    public function getPromotionCouponList($organization_id=0){
+        if($organization_id==0){
+            $this->apiError(-1, '机构id不能为空');
+        }
+        $course_promotion_model = new Model();
+        $org_promotion_list = $course_promotion_model->query('
+                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                where status=1 and organization_id='.$organization_id);
+        $promotion_list = array();
+        foreach($org_promotion_list as $promotion){
+            $obj = M('Promotion')->field('id, title, little_logo_url')->where('id='.$promotion['promotion_id'])->find();
+            $coupon_list = M('PromotionCouponRelation')->field('coupon_id')
+                ->where('status=1 and promotion_id='.$obj['id'])->select();
+            $coupon_info_list = [];
+            foreach($coupon_list as $coupon){
+                $coupon_info = M('Coupon')->field('id, name, type, start_time, end_time , money')
+                    ->where('id='.$coupon['coupon_id'])->find();
+                $coupon_info_list[] = $coupon_info;
+            }
+            $obj['coupon_list'] = $coupon_info_list;
+            $promotion_list[] = $obj;
+        }
+        $data['totalCount'] = count($promotion_list);
+        $data['list'] = $promotion_list;
+        $this->apiSuccess('获取机构活动列表成功', null, $data);
     }
 
 }
