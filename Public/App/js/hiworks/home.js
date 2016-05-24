@@ -602,9 +602,12 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             flag=true;
         if(!covers || covers.count==0){
             flag=false;
+            var tempUrl=this.currentWorksObj.pic_url;
+            tempUrl = tempUrl || window.hisihiUrlObj.img_url + '/hiworks/hisihi.png';
+            tempUrl=tempUrl.replace(/@.*/g,'');
             covers= {
                 count: 1,
-                data: [window.hisihiUrlObj.img_url + '/hiworks/hisihi.png']
+                data: [tempUrl]
             };
         }
 

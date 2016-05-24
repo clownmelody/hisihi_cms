@@ -68,7 +68,10 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                 if(!covers || covers.count==0){
                     flag=false;
                     covers.count=1;
-                    covers.data=[window.hisihiUrlObj.img_url+'/hiworks/hisihi.png'];
+                    var tempUrl=data.pic_url;
+                    tempUrl = tempUrl || window.hisihiUrlObj.img_url + '/hiworks/hisihi.png';
+                    tempUrl=tempUrl.replace(/@.*/g,'');
+                    covers.data=[tempUrl];
                 }
                 that.fillInTouchSliderItem(covers,flag);
             },eCallback: function (data) {
