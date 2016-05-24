@@ -640,11 +640,11 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             this.t4.destroy();
         }
         this.t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
+        this.t4.on('before', function (m, n) {
+            $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
+        });
         if(!flag) {
-            this.t4.on('before', function (m, n) {
-                $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
-            });
-            $('#currentPage ul li').on('touchend', function (e) {
+            $('#currentPage ul li').on('click', function (e) {
                 var index = $(this).index();
                 that.t4.slide(index);
             });
