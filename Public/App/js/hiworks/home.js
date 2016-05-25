@@ -190,6 +190,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
                 }
                 title=this.substrLongStr(title,8);
                 str+='<li data-loaded="false" data-init="false" class="'+className+'" data-id="'+item.id+'" data-name="'+item.title+'">'+title+'</li>';
+                this.scrollObjArr.push({});
             }
             $('#tabs-bar ul').append(str);
 
@@ -207,7 +208,8 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             that=this;
 
         //初始化第一次容器
-        this.initScrollLogical($wrappers.eq(0));
+        this.initScrollLogical($wrappers.eq(0),0);
+
         //加载第一类
         this.loadCategoryInfo($li.eq(0).attr('data-id'),0,true, function (result) {
             that.setScrollInfoAfterLoaded(result,$li.eq(0),that.scrollObjArr[0]);
@@ -258,8 +260,13 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
         return str;
     };
 
-    /*初始化滑动实例*/
-    t.initScrollLogical=function($target){
+    /*
+    * 初始化滑动实例
+    * @para
+    * $target - {jquery obj} 对象
+    * index -{int} 实例对应的tabs的下标
+    */
+    t.initScrollLogical=function($target,index){
         var s = new MyScroll($target, {
             //下拉刷新
             pullDownAction:$.proxy(this,'reloadWorksListInfo'),
@@ -267,7 +274,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             pullUpAction: $.proxy(this,'loadMoreWorksListInfo'),
         });
         $target.attr('data-init','true');
-        this.scrollObjArr.push(s);
+        this.scrollObjArr[index]=s;
     };
 
     /*
@@ -307,7 +314,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
         }
 
         if($wrapper.eq(index).attr('data-init')!='true') {
-            this.initScrollLogical($wrapper.eq(index));
+            this.initScrollLogical($wrapper.eq(index),index);
         }
 
         //情况2
@@ -602,9 +609,12 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             flag=true;
         if(!covers || covers.count==0){
             flag=false;
+            var tempUrl=this.currentWorksObj.pic_url;
+            tempUrl = tempUrl || window.hisihiUrlObj.img_url + '/hiworks/hisihi.png';
+            tempUrl=tempUrl.replace(/@.*/g,'');
             covers= {
                 count: 1,
-                data: [window.hisihiUrlObj.img_url + '/hiworks/hisihi.png']
+                data: [tempUrl]
             };
         }
 
@@ -624,16 +634,19 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     /*滑动图片*/
     t.initTouchSlider=function(){
         var h=$('body').height(),
-            flag=$('#slider4').attr('data-init');
+            flag=$('#slider4').attr('data-init'),that=this;
         $('#detail-main').height(h-135).css('opacity','1');
-        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
+        if(this.t4){
+            this.t4.destroy();
+        }
+        this.t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
+        this.t4.on('before', function (m, n) {
+            $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
+        });
         if(!flag) {
-            t4.on('before', function (m, n) {
-                $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
-            });
-            $('#currentPage ul li').on('touchend', function (e) {
+            $('#currentPage ul li').on('click', function (e) {
                 var index = $(this).index();
-                t4.slide(index);
+                that.t4.slide(index);
             });
             $('#slider4').attr('data-init','true');
         }
@@ -656,7 +669,8 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
         }
         for(var i=0;i<len;i++){
             str+='<li >'+
-                    '<a href="javascript:showFullImg('+i+')">'+
+                    //'<a href="javascript:showFullImg('+i+')">'+
+                    '<a href="javascript:void(0)">'+
                         '<img src="'+data[i]+'" alt="" class="'+ className1 +'">'+
                     '</a>'+
                   '</li>';
