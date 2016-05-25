@@ -3590,7 +3590,7 @@ class OrganizationController extends AppController
             } else {
                 $org['relationship'] = 0;
             }
-            $org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
+            //$org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
         }
 /*        //机构列表按报名数排序
         $sort = array(
