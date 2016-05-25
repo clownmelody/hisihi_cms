@@ -576,4 +576,42 @@ class OverseasController extends AdminController
             $this->error('未选择要处理的数据');
         }
     }
+
+    public function plan(){
+        $model = M('Organization');
+        $planModel = M('OverseasPlan');
+        $count = $planModel->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $planModel->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+        foreach($list as &$plan){
+            $organization_id = $plan['organization_id'];
+            $org_info = $model->field('name')->where('id='.$organization_id)->find();
+            $plan['organization'] = $org_info['name'];
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "留学计划列表");
+        $this->display();
+    }
+
+    public function plan_set_status($id, $status=-1)
+    {
+        if (!empty($id)) {
+            $model = M('OverseasPlan');
+            $data['status'] = $status;
+            if (is_array($id)) {
+                foreach ($id as $i) {
+                    $model->where('id=' . $i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id=' . $id)->save($data);
+            }
+            $this->success('处理成功', 'index.php?s=/admin/overseas/plan');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
 }
