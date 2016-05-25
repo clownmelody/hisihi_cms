@@ -670,7 +670,7 @@
                 });
 
                 this.container.style.cssText=pageData.container;
-                this.container.removeChild(this.comment);
+                //this.container.removeChild(this.comment);
                 this.length=0;
 
                 return this.pause();
