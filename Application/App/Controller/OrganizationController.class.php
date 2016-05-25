@@ -3377,6 +3377,12 @@ class OrganizationController extends AppController
                     unset($coupon_info['create_time']);
                     $sel_where['coupon_id'] = $coupon_info['coupon_id'];
                     $sel_where['uid'] = is_login();
+                    $sel_where['status'] = 1;
+                    if(M('UserCoupon')->where($sel_where)->count()){
+                        $coupon_info['is_obtain'] = true;
+                    } else {
+                        $coupon_info['is_obtain'] = false;
+                    }
                     $sel_where['status'] = 2;
                     if(M('UserCoupon')->where($sel_where)->count()){
                         $coupon_info['is_used'] = true;
