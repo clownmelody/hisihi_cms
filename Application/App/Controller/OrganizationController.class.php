@@ -3661,7 +3661,7 @@ class OrganizationController extends AppController
             } else {
                 $org['relationship'] = 0;
             }
-            $org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
+            //$org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
             if((float)$version>=2.9){
                 $course_promotion_model = new Model();
                 $org_promotion_list = $course_promotion_model->query('
