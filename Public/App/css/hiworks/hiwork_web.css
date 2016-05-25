@@ -143,6 +143,9 @@ ul li {
 .header .nav-tabs-bar #tabs-bar ul li:first-child {
   margin-left: 14px;
 }
+.header .nav-tabs-bar #tabs-bar ul li:last-child {
+  margin-right: 14px;
+}
 .header .nav-tabs-bar #tabs-bar ul li.active {
   color: #ff5a00;
   border-bottom: 2px solid #ff5a00;
