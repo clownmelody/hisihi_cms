@@ -3382,6 +3382,7 @@ class OrganizationController extends AppController
                 foreach ($org_promotion_list as $promotion) {
                     $coupon_info = M()->table('hisihi_promotion_coupon_relation pcr, hisihi_coupon coupon')
                         ->where('pcr.coupon_id = coupon.id and pcr.promotion_id='.$promotion['promotion_id'])->order('coupon.money desc' )->find();
+                    unset($coupon_info['id']);
                     unset($coupon_info['create_time']);
                     unset($coupon_info['status']);
                     unset($coupon_info['create_time']);
