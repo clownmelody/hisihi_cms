@@ -3244,6 +3244,13 @@ class OrganizationController extends AdminController
             }
             $post_data['create_time'] = time();
             M('TeachingCourseOrganizationPromotionRelation')->add($post_data);
+
+            // 设置优惠券的使用条件
+            $pcr = M('PromotionCouponRelation')->field('coupon_id')->where('promotion_id='.$post_data['promotion_id'])->find();
+            $course = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$post_data['teaching_course_id'])->find();
+            $service_condition = "仅可购买课程@".$course['course_name'];
+            M('Coupon')->where('id='.$pcr['coupon_id'])->save(array('service_condition'=>$service_condition));
+
             $this->success('参与活动成功', 'index.php?s=/admin/promotion/org_to_promotion');
         } else {
             $this->display('add_promotion');

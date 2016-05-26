@@ -37,6 +37,18 @@ class CouponController extends AdminController
             $data['money'] = $_POST["money"];
             $data['start_time'] = strtotime($_POST["start_time"]);
             $data['end_time'] = strtotime($_POST["end_time"]);
+            $data['service_condition'] = $_POST["service_condition"];
+            $data['using_method'] = $_POST['using_method'];
+            $data['instructions_for_use'] = $_POST['instructions_for_use'];
+            if(empty($data['service_condition'])){
+                $data['service_condition'] = "";
+            }
+            if(empty($data['using_method'])){
+                $data['using_method'] = "结算时手机出示此优惠券，请商家扫描二维码或输入号码，待验证成功后，即成功使用";
+            }
+            if(empty($data['instructions_for_use'])){
+                $data['instructions_for_use'] = "本券限现场使用，每次限用一张；本券不可兑换现金";
+            }
             if(empty($cid)){
                 $data["create_time"] = time();
                 try {
