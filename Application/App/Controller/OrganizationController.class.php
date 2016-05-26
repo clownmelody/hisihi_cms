@@ -378,18 +378,28 @@ class OrganizationController extends AppController
      * app获取机构基本信息
      * @param $organization_id
      */
-    public function appGetBaseInfo($organization_id, $uid=0, $type=null){
+    public function appGetBaseInfo($organization_id, $uid=0, $type=null, $version=0){
         if($uid==0){
             $uid = $this->getUid();
         }
         $model=M("Organization");
         $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img')->find();
+            ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img, type')->find();
         if($result){
             $logo = $result['logo'];
             //$logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
+            if(floatval($version) >= 2.8){
+                if(intval($result['type']) == 31){//判断留学机构，返回留学计划
+                    $plan = M('OverseasPlan')->where('status=1 and organization_id='.$organization_id)->field('id, url')->limit(1)->order('create_time desc')->select();
+                    if($plan){
+                        $result['plan'] = $plan;
+                    }else{
+                        $result['plan'] = null;
+                    }
+                }
             }
             $result['phone_num'] = $this->get400PhoneNum();
             $result['logo'] = $logo;
@@ -3585,7 +3595,7 @@ class OrganizationController extends AppController
             } else {
                 $org['relationship'] = 0;
             }
-            $org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
+            //$org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
         }
 /*        //机构列表按报名数排序
         $sort = array(
