@@ -144,22 +144,22 @@ class PromotionController extends AdminController
         $this->display();
     }
 
-    public function promotion_to_coupon(){
-        $model = M('PromotionCouponRelation');
+    public function teaching_course_to_coupon(){
+        $model = M('TeachingCourseCouponRelation');
         $count = $model->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
         $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$info){
-            $pro = M('Promotion')->field('title')->where('id='.$info['promotion_id'])->find();
-            $info['promotion_name'] = $pro['title'];
+            $pro = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$info['teaching_course_id'])->find();
+            $info['teaching_course_name'] = $pro['course_name'];
             $org = M('Coupon')->field('name')->where('id='.$info['coupon_id'])->find();
             $info['coupon_name'] = $org['name'];
         }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
-        $this->assign("meta_title","活动优惠券列表");
+        $this->assign("meta_title","课程优惠券列表");
         $this->display();
     }
 
@@ -181,9 +181,9 @@ class PromotionController extends AdminController
         }
     }
 
-    public function set_promotion_coupon_status($id, $status=-1){
+    public function set_teaching_course_coupon_status($id, $status=-1){
         if(!empty($id)){
-            $model = M('PromotionCouponRelation');
+            $model = M('TeachingCourseCouponRelation');
             $data['status'] = $status;
             if(is_array($id)){
                 foreach ($id as $i){
@@ -193,7 +193,7 @@ class PromotionController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('处理成功','index.php?s=/admin/promotion/promotion_to_coupon');
+            $this->success('处理成功','index.php?s=/admin/promotion/teaching_course_to_coupon');
         } else {
             $this->error('未选择要处理的数据');
         }

@@ -3374,18 +3374,17 @@ class OrganizationController extends AppController
                 $course['organization_name'] = null;
             }
             if((float)$version>=2.9) {
-                $course_promotion_model = new Model();
-                $org_promotion_list = $course_promotion_model->query('
-                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
-                where status=1 and teaching_course_id=' . $course['id']);
-                $coupon_list = array();
-                foreach ($org_promotion_list as $promotion) {
-                    $coupon_info = M()->table('hisihi_promotion_coupon_relation pcr, hisihi_coupon coupon')
-                        ->where('pcr.coupon_id = coupon.id and pcr.promotion_id='.$promotion['promotion_id'])->order('coupon.money desc' )->find();
-                    unset($coupon_info['id']);
+                $tccr = M('TeachingCourseCouponRelation')
+                    ->where('status=1 and teaching_course_id='.$course['id'])
+                    ->order('create_time desc')->limit(0, 1)->find();
+                if($tccr){
+                    $coupon_info = M('Coupon')->where('id='.$tccr['coupon_id'])->find();
                     unset($coupon_info['create_time']);
                     unset($coupon_info['status']);
                     unset($coupon_info['create_time']);
+                    unset($coupon_info['service_condition']);
+                    unset($coupon_info['using_method']);
+                    unset($coupon_info['instructions_for_use']);
                     $sel_where['coupon_id'] = $coupon_info['coupon_id'];
                     $sel_where['uid'] = is_login();
                     $sel_where['status'] = 1;
@@ -3402,8 +3401,10 @@ class OrganizationController extends AppController
                     }
                     $obj['coupon_info'] = $coupon_info;
                     $coupon_list[] = $obj;
+                    $course['coupon_list'] = $coupon_list;
+                } else {
+                    $course['coupon_list'] = null;
                 }
-                $course['coupon_list'] = $coupon_list;
             }
         }
         if(empty($list)){
@@ -4037,26 +4038,21 @@ GROUP BY
         if($organization_id==0){
             $this->apiError(-1, '机构id不能为空');
         }
-        $course_promotion_model = new Model();
-        $org_promotion_list = $course_promotion_model->query('
-                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
-                where status=1 and organization_id='.$organization_id);
-        $promotion_list = array();
-        foreach($org_promotion_list as $promotion){
-            $obj = M('Promotion')->field('id, title, little_logo_url')->where('id='.$promotion['promotion_id'])->find();
-            $coupon_list = M('PromotionCouponRelation')->field('coupon_id')
-                ->where('status=1 and promotion_id='.$obj['id'])->select();
-            $coupon_info_list = array();
-            foreach($coupon_list as $coupon){
-                $coupon_info = M('Coupon')->field('id, name, type, start_time, end_time , money')
-                    ->where('id='.$coupon['coupon_id'])->find();
-                $coupon_info_list[] = $coupon_info;
-            }
-            $obj['coupon_list'] = $coupon_info_list;
-            $promotion_list[] = $obj;
+        $promotion_list = M()->query('select distinct(promotion_id) from hisihi_teaching_course_organization_promotion_relation where status=1 and organization_id='.$organization_id);
+        $_promotion_list = array();
+        foreach($promotion_list as $pro){
+            $obj = M('Promotion')->field('id, title, little_logo_url')
+                ->where('id='.$pro['promotion_id'])
+                ->find();
+            $coupon_list = M()->query('select t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
+hisihi_teaching_course_organization_promotion_relation t1,
+hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
+ and t2.coupon_id=t3.id and t1.promotion_id=1 order by t3.money desc');
+            $obj['coupon_list'] = $coupon_list;
+            $_promotion_list[] = $obj;
         }
-        $data['totalCount'] = count($promotion_list);
-        $data['list'] = $promotion_list;
+        $data['totalCount'] = count($_promotion_list);
+        $data['list'] = $_promotion_list;
         $this->apiSuccess('获取机构活动列表成功', null, $data);
     }
 

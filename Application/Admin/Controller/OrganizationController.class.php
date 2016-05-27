@@ -3258,6 +3258,45 @@ class OrganizationController extends AdminController
     }
 
     /**
+     * 机构添加优惠券
+     * @param $organization_id
+     */
+    public function add_coupon($organization_id, $id){
+        $promotion = M('Coupon')->where('status=1')->order('id')->select();
+        $this->assign('_coupon', $promotion);
+        $this->assign('organization_id', $organization_id);
+        $this->assign('tid', $id);
+        $this->display();
+    }
+
+    /**
+     * 绑定优惠券和课程的关系
+     */
+    public function update_add_coupon(){
+        if (IS_POST) {
+            //$post_data['organization_id'] = $_POST["organization_id"];
+            $post_data['coupon_id'] = $_POST["coupon_id"];
+            $post_data['teaching_course_id'] = $_POST['teaching_course_id'];
+            $post_data['status'] = 1;
+            if(M('TeachingCourseCouponRelation')->where($post_data)->find()){
+                $this->success('已经添加该优惠券', 'index.php?s=/admin/promotion/teaching_course_to_coupon');
+            }
+            $post_data['create_time'] = time();
+            M('TeachingCourseCouponRelation')->add($post_data);
+
+            // 设置优惠券的使用条件
+            /*$pcr = M('PromotionCouponRelation')->field('coupon_id')->where('promotion_id='.$post_data['promotion_id'])->find();
+            $course = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$post_data['teaching_course_id'])->find();
+            $service_condition = "仅可购买课程@".$course['course_name'];
+            M('Coupon')->where('id='.$pcr['coupon_id'])->save(array('service_condition'=>$service_condition));*/
+
+            $this->success('添加优惠券成功', 'index.php?s=/admin/promotion/teaching_course_to_coupon');
+        } else {
+            $this->display('add_coupon');
+        }
+    }
+
+    /**
      * @param $url
      * @param $post_data
      * @return bool
