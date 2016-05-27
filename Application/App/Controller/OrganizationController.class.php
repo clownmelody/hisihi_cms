@@ -3385,11 +3385,14 @@ class OrganizationController extends AppController
                     unset($coupon_info['service_condition']);
                     unset($coupon_info['using_method']);
                     unset($coupon_info['instructions_for_use']);
-                    $sel_where['coupon_id'] = $coupon_info['coupon_id'];
+                    $sel_where['coupon_id'] = $coupon_info['id'];
                     $sel_where['uid'] = is_login();
-                    $sel_where['status'] = 1;
-                    if(M('UserCoupon')->where($sel_where)->count()){
+                    $sel_where['status'] = array('gt', 0);
+                    $sel_where['teaching_course_id'] = $course['id'];
+                    $obtain = M('UserCoupon')->where($sel_where)->find();
+                    if($obtain){
                         $coupon_info['is_obtain'] = true;
+                        $coupon_info['obtain_id'] = $obtain['id'];
                     } else {
                         $coupon_info['is_obtain'] = false;
                     }
@@ -3398,6 +3401,11 @@ class OrganizationController extends AppController
                         $coupon_info['is_used'] = true;
                     } else {
                         $coupon_info['is_used'] = false;
+                    }
+                    if(time() > $coupon_info['end_time']){
+                        $coupon_info['is_out_of_date'] = true;
+                    }else{
+                        $coupon_info['is_out_of_date'] = false;
                     }
                     $obj['coupon_info'] = $coupon_info;
                     $coupon_list[] = $obj;
