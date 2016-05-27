@@ -3285,11 +3285,25 @@ class OrganizationController extends AdminController
             M('TeachingCourseCouponRelation')->add($post_data);
 
             // 设置优惠券的使用条件
-            /*$pcr = M('PromotionCouponRelation')->field('coupon_id')->where('promotion_id='.$post_data['promotion_id'])->find();
+            $pcr = M('Coupon')->field('service_condition, using_method, instructions_for_use')
+                ->where('id='.$post_data['coupon_id'])->find();
             $course = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$post_data['teaching_course_id'])->find();
-            $service_condition = "仅可购买课程@".$course['course_name'];
-            M('Coupon')->where('id='.$pcr['coupon_id'])->save(array('service_condition'=>$service_condition));*/
-
+            if(empty($pcr['service_condition'])){
+                $data['service_condition'] = "仅可购买课程@".$course['course_name'];
+            } else {
+                $data['service_condition'] = $pcr['service_condition'];
+            }
+            if(empty($pcr['using_method'])){
+                $data['using_method'] = "结算时手机出示此优惠券，请商家扫描二维码或输入号码，待验证成功后，即成功使用";
+            } else {
+                $data['using_method'] = $pcr['using_method'];
+            }
+            if(empty($pcr['instructions_for_use'])){
+                $data['instructions_for_use'] = "本券限现场使用，每次限用一张；本券不可兑换现金";
+            } else {
+                $data['instructions_for_use'] = $pcr['instructions_for_use'];
+            }
+            M('TeachingCourseCouponRelation')->where('coupon_id='.$post_data['coupon_id'])->save($data);
             $this->success('添加优惠券成功', 'index.php?s=/admin/promotion/teaching_course_to_coupon');
         } else {
             $this->display('add_coupon');
