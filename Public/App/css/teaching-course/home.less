@@ -362,6 +362,108 @@ body {
     }
   }
 
+  &.coupon-basic-info{
+    @left:100px;
+    @right:70px;
+    @tooth-w:7px;
+    height: 120px;
+    border-top:1px solid #CCCCCC;
+    border-bottom:1px solid #CCCCCC;
+    color: white;
+    .bg-sprite-c{
+      background: url("../../images/teaching-course/sprite2.png");
+    }
+    .bg-sprite-c-middle{
+      .bg-sprite-c;
+      background-size: 299px 148px;
+    }
+    >div{
+      height: 100%;
+      float: left;
+      background-color: white;
+    }
+    .coupon-left{
+      width: @left;
+      margin-left: -100%;
+      position: relative;
+      i{
+        @w:74px;
+        @h:24px;
+        display: block;
+        .size(@w,@h);
+        .middle-absolute(@w/2,@h/2);
+        .bg-sprite-c-middle;
+        background-position: -225px -35px;
+      }
+    }
+    .coupon-right{
+      width: @right;
+      margin-left: -@right;
+      >*{
+        float: left;
+      }
+      .sawtooth-right-main{
+        .size(63px,100%);
+        background-color:#F9A825;
+      }
+      i{
+        display: block;
+        .size(@tooth-w,100%);
+        .bg-sprite-c;
+        background-position: -355px -148px;
+        float: right;
+      }
+    }
+    .coupon-middle{
+      width: 100%;
+      .coupon-middle-all{
+        height: 100%;
+        margin: 0 @right 0 @left;
+        @mw:8px;
+        >div{
+            height: 100%;
+            float: left;
+        }
+        .coupon-box {
+          width: 100%;
+          .coupon-all-box{
+            background-color:#F9A825;
+            height: 100%;
+            margin: 0 @mw 0 @tooth-w;
+            .coupon-main-top{
+              height: 60%;
+              padding: 3px 0;
+              span{
+                &:first-child{
+                  font-size: 24px;
+                }
+                &:last-child{
+                  font-size: 44px;
+                }
+              }
+            }
+            .coupon-main-bottom{
+              font-size: 12px;
+              padding-left: 5px;
+            }
+          }
+        }
+        .sawtooth-left{
+          .size(@tooth-w,100%);
+          .bg-sprite-c;
+          background-position: 0 -148px;
+          margin-left: -100%;
+        }
+        .sawtooth-right{
+          .size(@mw,100%);
+          .bg-sprite-c;
+          background-position: -177px -148px;
+          margin-left: -@mw;
+        }
+      }
+    }
+  }
+
 }
 
 
