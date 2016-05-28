@@ -1730,6 +1730,11 @@ class OrganizationController extends AppController
             $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
             $select_where = $select_where . " and type=".$type_id;
         }
+        if((float)$version<=2.7){
+            $type = "软件";
+            $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+            $select_where = $select_where . " and type=".$type_id;
+        }
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
         }
