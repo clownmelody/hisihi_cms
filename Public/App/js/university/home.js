@@ -74,8 +74,8 @@ define(['base'],function(Base){
     t.getNumsInfoStr=function(data){
         var feed=data.tuition_fees,
             scholarship=data.scholarship;
-        feed=this.transformNums(feed);
-        scholarship=this.transformNums(scholarship);
+        //feed=this.transformNums(feed);
+        //scholarship=this.transformNums(scholarship);
 
         return '<div class="main-item nums">'+
                     '<ul>'+
