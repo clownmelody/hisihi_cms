@@ -192,6 +192,7 @@ define(['base'],function(Base){
 
     /*优惠券*/
     t.getCoupon=function(){
+        var str='<p>立即领取</p>';
         return '<div class="main-item coupon-basic-info">'+
                     '<div class="coupon-middle">'+
                         '<div class="coupon-middle-all">'+
@@ -210,6 +211,7 @@ define(['base'],function(Base){
                                 '<i></i>'+
                             '</div>'+
                             '<div class="sawtooth-right">'+
+
                                 '<i></i>'+
                             '</div>'+
                         '</div>'+
@@ -218,7 +220,9 @@ define(['base'],function(Base){
                         '<i></i>'+
                     '</div>'+
                     '<div class="coupon-right">'+
-                        '<div class="sawtooth-right-main"></div>'+
+                        '<div class="sawtooth-right-main">'+
+                            str+
+                        '</div>'+
                         '<i></i>'+
                     '</div>'+
                 '</div>';
