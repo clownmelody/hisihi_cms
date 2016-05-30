@@ -523,20 +523,188 @@ body {
   line-height: 16px;
   height: 16px;
 }
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003365}}
+.main-item.coupon-basic-info {
+  height: 120px;
+  border-top: 1px solid #CCCCCC;
+  border-bottom: 1px solid #CCCCCC;
+  color: white;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003375}}
+.main-item.coupon-basic-info .bg-sprite-c {
+  background: url("../../images/teaching-course/sprite3.png");
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003378}}
+.main-item.coupon-basic-info .bg-sprite-c-middle {
+  background: url("../../images/teaching-course/sprite3.png");
+  background-size: 275px 73px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003382}}
+.main-item.coupon-basic-info .center-content {
+  height: 100%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003384}}
+.main-item.coupon-basic-info .center-content > div {
+  height: 100%;
+  float: left;
+  background-color: white;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003390}}
+.main-item.coupon-basic-info .coupon-left {
+  width: 65px;
+  margin-left: -100%;
+  position: relative;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003394}}
+.main-item.coupon-basic-info .coupon-left i {
+  display: block;
+  width: 74px;
+  height: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -12px;
+  margin-left: -37px;
+  background: url("../../images/teaching-course/sprite3.png");
+  background-size: 275px 73px;
+  background-position: 0 -49px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003403}}
+.main-item.coupon-basic-info .coupon-left img {
+  max-width: 100%;
+  display: block;
+  margin: 38px auto;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003409}}
+.main-item.coupon-basic-info .coupon-right {
+  width: 70px;
+  margin-left: -70px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003412}}
+.main-item.coupon-basic-info .coupon-right > * {
+  float: left;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003415}}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main {
+  width: 63px;
+  height: 100%;
+  background-color: #f9a825;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003418}}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main.used {
+  background-color: #cccccc;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003421}}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main p {
+  text-align: center;
+  font-size: 16px;
+  margin: 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003425}}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main p:first-child {
+  margin-top: 27px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003428}}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main p:last-child {
+  margin-top: 3px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003433}}
+.main-item.coupon-basic-info .coupon-right i {
+  display: block;
+  width: 7px;
+  height: 100%;
+  background: url("../../images/teaching-course/sprite3.png");
+  background-position: -180px 0;
+  float: right;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003439}}
+.main-item.coupon-basic-info .coupon-right i.used {
+  background-position: -367px 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003444}}
+.main-item.coupon-basic-info .coupon-middle {
+  width: 100%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003446}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all {
+  height: 100%;
+  margin: 0 70px 0 73px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003450}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all > div {
+  height: 100%;
+  float: left;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003454}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box {
+  width: 100%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003456}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box {
+  background-color: #f9a825;
+  height: 100%;
+  margin: 0 8px 0 7px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003458}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box.used {
+  background-color: #cccccc;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003463}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top {
+  height: 60%;
+  padding: 3px 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003467}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top span:first-child {
+  font-size: 24px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003470}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top span:last-child {
+  font-size: 34px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003475}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-bottom {
+  font-size: 12px;
+  padding-left: 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003481}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-left {
+  width: 7px;
+  height: 100%;
+  background: url("../../images/teaching-course/sprite3.png");
+  background-position: 0 0;
+  margin-left: -100%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003486}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-left.used {
+  background-position: -188px 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003490}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-right {
+  width: 8px;
+  height: 100%;
+  background: url("../../images/teaching-course/sprite3.png");
+  background-position: -90px 0;
+  margin-left: -8px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003495}}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-right.used {
+  background-position: -277px 0;
+}
 @media screen and (max-width: 320px) {
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003370}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003508}}
   .main-item {
     /*基本信息*/
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003374}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003512}}
   .main-item.basic-info .center-content .otherinfo {
     margin-top: 8px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003376}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003514}}
   .main-item.basic-info .center-content .otherinfo li {
     margin-right: 4px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003378}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003516}}
   .main-item.basic-info .center-content .otherinfo li i {
     margin-right: 3px;
     margin-top: 2px;
@@ -546,18 +714,18 @@ body {
     width: 18px;
     height: 18px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003383}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003521}}
   .main-item.basic-info .center-content .otherinfo li i.cer {
     background-position: -112px 0;
     width: 18px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003387}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003525}}
   .main-item.basic-info .center-content .otherinfo li i.nums {
     background-position: -146px 0;
     width: 18px;
     height: 18px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003391}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003529}}
   .main-item.basic-info .center-content .otherinfo li i.comment {
     background: url("../../images/teaching-course/sprite.png");
     background-size: 239px 32px;
@@ -566,17 +734,17 @@ body {
     width: 16px;
     height: 17px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003401}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003539}}
   .main-item.org-basic-info {
     position: relative;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003405}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003543}}
   .main-item.org-basic-info .left {
     position: absolute;
     width: 75px;
     height: 60px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003408}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003546}}
   .main-item.org-basic-info .left img {
     border-radius: 50%;
     background-clip: padding-box;
@@ -584,58 +752,58 @@ body {
     height: 60px;
     margin: 20px 15px 15px 0;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003415}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003553}}
   .main-item.org-basic-info .right {
     margin-left: 75px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003418}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003556}}
   .main-item.org-basic-info .right .org-name .name {
     font-size: 18px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003421}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003559}}
   .main-item.org-basic-info .right .org-name img {
     width: 20px;
     height: 20px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003425}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003563}}
   .main-item.org-basic-info .right .nums-info {
     margin-top: 0px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003427}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003565}}
   .main-item.org-basic-info .right .nums-info li {
     margin-right: 6px;
     margin-top: 5px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003430}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003568}}
   .main-item.org-basic-info .right .nums-info li span {
     font-size: 14px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003444}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003582}}
   .main-item.lessons-more ul li .main-content .left img {
     width: 85px;
     height: 63.75px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003448}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003586}}
   .main-item.lessons-more ul li .main-content .right {
     margin-left: 95px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003450}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003588}}
   .main-item.lessons-more ul li .main-content .right .lesson-name {
     font-size: 12px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003453}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003591}}
   .main-item.lessons-more ul li .main-content .right .lesson-view-info {
     margin: 3px auto 0px auto;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003455}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003593}}
   .main-item.lessons-more ul li .main-content .right .lesson-view-info span {
     font-size: 12px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003461}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003599}}
   .main-item.lessons-more ul li .main-content .right .teacher-info .left-item span {
     font-size: 12px;
   }
-  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003464}}
+  @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003602}}
   .main-item.lessons-more ul li .main-content .right .teacher-info .left-item .price {
     font-size: 14px !important;
   }

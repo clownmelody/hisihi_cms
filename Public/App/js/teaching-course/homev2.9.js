@@ -12,19 +12,64 @@ define(['base'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
-        this.getBasicInfo(function(result){
-            if(result){
-                that.getOrgBasicInfo(result,function(){
-                    that.geMoreCourseInfo();
-                });
-            }
-        });
+        this.getUserInfo(function(){
+            that.getBasicInfo(function(result){
+                if(result){
+                    that.getOrgBasicInfo(result,function(){
+                        that.geMoreCourseInfo();
+                    });
+                }
+            });
+        })
 
     };
 
     Course.prototype=new Base();
     Course.constructor=Course;
     var t=Course.prototype;
+
+    /*
+     *获得用户的信息 区分安卓和ios
+     *从不同的平台的方法 获得用户的基本信息，进行发表评论时使用
+     */
+    t.getUserInfo=function (callback) {
+        var userStr = '', that = this;
+        if (this.deviceType.mobile) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    userStr = AppFunction.getUser(); //调用app的方法，得到用户的基体信息
+                    //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
+                }
+            }
+            else if (this.deviceType.ios) {
+                //如果方法存在
+                if (typeof getUser_iOS != "undefined") {
+                    userStr = getUser_iOS();//调用app的方法，得到用户的基体信息
+                }
+            }
+            if (userStr != '') {
+                this.userInfo = JSON.parse(userStr);
+                callback && callback.call(that);
+            } else {
+                var para = {
+                    url: window.hisihiUrlObj.api_url+'/v1/token/',
+                    type: 'get',
+                    paraData: {account: '13554154325', secret: '12345678', type: 200},
+                    sCallback: function (data) {
+                        that.userInfo = data;
+                        callback && callback.call(that);
+                    }
+                };
+                //this.getDataAsyncPy(para);
+                callback && callback.call(that);
+            }
+        }
+        else {
+            callback && callback.call(that);
+        }
+
+    };
 
     //获得当前课程的详细信息
     t.getBasicInfo=function(callback){
@@ -121,10 +166,12 @@ define(['base'],function(Base){
     t.fillInCourseInfo=function(result,orgResult){
         var strBasic=this.getBasicIntroduceInfo(result),
             strOrg=this.getOrgInfoStr(orgResult),
+            strCoupon=this.getCoupon(),
             strIntroduce=this.getIntroduceStr(result),
             strSingIn=this.getSingInStr(result);
         var str=strBasic+
             strOrg+
+            strCoupon+
             strIntroduce+
             strSingIn;
         $('#current-info').html(str);
@@ -188,6 +235,46 @@ define(['base'],function(Base){
             '</div>';
     };
 
+    /*优惠券*/
+    t.getCoupon=function(){
+        var flag=false,className='';
+        if(!flag){
+            className='used'
+        }
+        var str='<p>立即</p><p>领取</p>';
+        var str='<p>立即</p><p>领取</p>';
+        return '<div class="main-item coupon-basic-info">'+
+                   '<div class="center-content">'+
+                    '<div class="coupon-middle">'+
+                        '<div class="coupon-middle-all">'+
+                            '<div class="coupon-box">'+
+                                '<div class="coupon-all-box '+className+'">'+
+                                    '<div class="coupon-main-top">'+
+                                        '<span>￥</span>'+
+                                        '<span>200</span>'+
+                                    '</div>'+
+                                    '<div class="coupon-main-bottom">'+
+                                        '<span>有效期：2016.05.01-2016.06.06</span>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="sawtooth-left '+className+'"></div>'+
+                            '<div class="sawtooth-right '+className+'"></div>'+
+                        '</div>'+
+                    '</div>'+
+                    '<div class="coupon-left">'+
+                        //'<i></i>'+
+                        '<img src="'+window.hisihiUrlObj.img_url+'/teaching-course/ic.png">'+
+                    '</div>'+
+                    '<div class="coupon-right">'+
+                        '<div class="sawtooth-right-main '+className+'">' +
+                            str+
+                        '</div>'+
+                        '<i class="'+className+'"></i>'+
+                    '</div>'+
+                '</div>'+
+            '</div>';
+    };
 
     t.transformNums=function(num){
         num =Number(num);

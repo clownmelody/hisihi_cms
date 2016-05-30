@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html  style="overflow-x: hidden;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="Resource-type" content="Document">
+    <!--禁止缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--禁止数字识别为手机号-->
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link type="text/css" href="__CSS__/teaching-course/homev2.9.css" rel="stylesheet">
+    <title>课程主页</title>
+</head>
+<body data-oid="{$organization_id}">
+    <div id="current-info">
+        <div class="nodata">
+            <p>课程详情加载失败</p>
+        </div>
+    </div>
+    <div id="more-info">
+        <div class="nodata">
+            <p>推荐课程加载失败</p>
+        </div>
+    </div>
+
+</body>
+<script type="application/javascript">
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/',
+        img_url:'__IMG__',
+        js: "__JS__",
+        api_url:'__API_URL__'
+    };
+    window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+    var aLink=document.getElementsByTagName("a");
+    for(var i=0; i<aLink.length; i++){
+        aLink[i].href = "javascript:void(0);";
+        aLink[i].setAttribute("disabled", "disabled");
+    }
+</script>
+<script type="text/javascript" data-main="__JS__/teaching-course/configv2.9"  src="__JS__/sharecommon/require.js" ></script>
+</html>

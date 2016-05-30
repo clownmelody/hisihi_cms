@@ -362,6 +362,144 @@ body {
     }
   }
 
+  &.coupon-basic-info{
+    @left:65px;
+    @right:70px;
+    @tooth-w:7px;
+    @color1:#F9A825;
+    @color2:#ccc;
+    height: 120px;
+    border-top:1px solid #CCCCCC;
+    border-bottom:1px solid #CCCCCC;
+    color: white;
+    .bg-sprite-c{
+      background: url("../../images/teaching-course/sprite3.png");
+    }
+    .bg-sprite-c-middle{
+      .bg-sprite-c;
+      background-size: 275px 73px;
+    }
+    .center-content {
+      height: 100%;
+      >div {
+        height: 100%;
+        float: left;
+        background-color: white;
+      }
+    }
+    .coupon-left{
+      width: @left;
+      margin-left: -100%;
+      position: relative;
+      i{
+        @w:74px;
+        @h:24px;
+        display: block;
+        .size(@w,@h);
+        .middle-absolute(@w/2,@h/2);
+        .bg-sprite-c-middle;
+        background-position: 0 -49px;
+      }
+      img{
+        max-width: 100%;
+        display: block;
+        margin: 38px auto;
+      }
+    }
+    .coupon-right{
+      width: @right;
+      margin-left: -@right;
+      >*{
+        float: left;
+      }
+      .sawtooth-right-main{
+        .size(63px,100%);
+        background-color:@color1;
+        &.used{
+          background-color: @color2;
+        }
+        p{
+          text-align: center;
+          font-size: 16px;
+          margin: 0;
+          &:first-child{
+            margin-top: 27px;
+          }
+          &:last-child{
+            margin-top: 3px;
+          }
+        }
+      }
+      i{
+        display: block;
+        .size(@tooth-w,100%);
+        .bg-sprite-c;
+        background-position: -180px 0;
+        float: right;
+        &.used{
+          background-position: -367px 0;
+        }
+      }
+    }
+    .coupon-middle{
+      width: 100%;
+      .coupon-middle-all{
+        height: 100%;
+        margin: 0 @right 0 @left+8;
+        @mw:8px;
+        >div{
+          height: 100%;
+          float: left;
+        }
+        .coupon-box {
+          width: 100%;
+          .coupon-all-box{
+            background-color: @color1;
+            &.used{
+              background-color: @color2;
+            }
+            height: 100%;
+            margin: 0 @mw 0 @tooth-w;
+            .coupon-main-top{
+              height: 60%;
+              padding: 3px 0;
+              span{
+                &:first-child{
+                  font-size: 24px;
+                }
+                &:last-child{
+                  font-size: 34px;
+                }
+              }
+            }
+            .coupon-main-bottom{
+              font-size: 12px;
+              padding-left: 5px;
+            }
+          }
+        }
+        .sawtooth-left{
+          .size(@tooth-w,100%);
+          .bg-sprite-c;
+          background-position: 0 0;
+          margin-left: -100%;
+          &.used{
+            background-position: -188px 0;
+          }
+        }
+        .sawtooth-right{
+          .size(@mw,100%);
+          .bg-sprite-c;
+          background-position: -90px 0;
+          margin-left: -@mw;
+          &.used{
+            background-position: -277px 0;
+          }
+        }
+      }
+    }
+  }
+
 }
 
 
