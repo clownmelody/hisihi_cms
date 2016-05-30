@@ -30,7 +30,7 @@ return array(
         '__IMG__'    => __ROOT__ . '/Public/' . MODULE_NAME . '/images',
         '__CSS__'    => __ROOT__ . '/Public/' . MODULE_NAME . '/css',
         '__JS__'     => __ROOT__ . '/Public/' . MODULE_NAME . '/js',
-        '__API_URL__' => 'http://api.hisihi.com/',
+        '__API_URL__' => 'http://dev.api.hisihi.com/',
     ),
 
     'bmob_send_sms_url'   => 'https://api.bmob.cn/1/requestSmsCode',
