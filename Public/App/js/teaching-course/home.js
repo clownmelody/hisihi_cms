@@ -190,6 +190,40 @@ define(['base'],function(Base){
             '</div>';
     };
 
+    /*优惠券*/
+    t.getCoupon=function(){
+        return '<div class="main-item coupon-basic-info">'+
+            '<div class="coupon-middle">'+
+            '<div class="coupon-middle-all">'+
+            '<div class="coupon-box">'+
+            '<div class="coupon-all-box">'+
+            '<div class="coupon-main-top">'+
+            '<span>￥</span>'+
+            '<span>200</span>'+
+            '</div>'+
+            '<div class="coupon-main-bottom">'+
+            '<span>有效期：2016.05.01-2016.06.06</span>'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '<div class="sawtooth-left">'+
+            '<i></i>'+
+            '</div>'+
+            '<div class="sawtooth-right">'+
+            '<i></i>'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '<div class="coupon-left">'+
+            '<i></i>'+
+            '</div>'+
+            '<div class="coupon-right">'+
+            '<div class="sawtooth-right-main"></div>'+
+            '<i></i>'+
+            '</div>'+
+            '</div>';
+    };
+
     t.transformNums=function(num){
         num =Number(num);
         if(num){
