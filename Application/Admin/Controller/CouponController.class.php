@@ -99,4 +99,35 @@ class CouponController extends AdminController
         }
     }
 
+    public function set_obtain_gift_status($id, $status=-1){
+        if(!empty($id)){
+            $model = M('UserGiftPackage');
+            $data['status'] = $status;
+            if(is_array($id)){
+                foreach ($id as $i){
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/coupon/obtain_gift_list');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    public function obtain_gift_list(){
+        $model = M('UserGiftPackage');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","领取礼包列表");
+        $this->display();
+    }
+
 }
