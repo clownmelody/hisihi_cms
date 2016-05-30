@@ -121,10 +121,12 @@ define(['base'],function(Base){
     t.fillInCourseInfo=function(result,orgResult){
         var strBasic=this.getBasicIntroduceInfo(result),
             strOrg=this.getOrgInfoStr(orgResult),
+            strCoupon=this.getCoupon(),
             strIntroduce=this.getIntroduceStr(result),
             strSingIn=this.getSingInStr(result);
         var str=strBasic+
             strOrg+
+            strCoupon+
             strIntroduce+
             strSingIn;
         $('#current-info').html(str);
@@ -142,20 +144,20 @@ define(['base'],function(Base){
     //课程简介
     t.getBasicIntroduceInfo=function(result){
         return '<div class="main-item basic-info">'+
-                    '<div class="center-content">'+
-                        '<div class="head-txt" id="current-title">'+
-                            result.course_name+
-                        '</div>'+
-                        '<div id="price" class="price">￥'+
-                            result.price+
-                        '</div>'+
-                        '<ul class="otherinfo">'+
-                            '<li><i class="cer"></i><span>认证机构</span></li>'+
-                            '<li><i class="nums"></i><span><span id="singin-nums">1</span>人报名</span></li>'+
-                            '<li><i class="comment"></i><span><span id="commenta-nums">254</span>条评论</span></li>'+
-                        '</ul>'+
-                    '</div>'+
-                '</div>';
+            '<div class="center-content">'+
+            '<div class="head-txt" id="current-title">'+
+            result.course_name+
+            '</div>'+
+            '<div id="price" class="price">￥'+
+            result.price+
+            '</div>'+
+            '<ul class="otherinfo">'+
+            '<li><i class="cer"></i><span>认证机构</span></li>'+
+            '<li><i class="nums"></i><span><span id="singin-nums">1</span>人报名</span></li>'+
+            '<li><i class="comment"></i><span><span id="commenta-nums">254</span>条评论</span></li>'+
+            '</ul>'+
+            '</div>'+
+            '</div>';
     };
 
     //机构信息
@@ -166,25 +168,25 @@ define(['base'],function(Base){
             logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png'
         }
         return '<div class="main-item org-basic-info">'+
-                    '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
-                    '<div class="center-content">'+
-                        '<div class="left">'+
-                            '<img src="'+logo+'">'+
-                        '</div>'+
-                        '<div class="right">'+
-                            '<div class="org-name">'+
-                            '<div class="name">'+name+'</div>'+
-                            this.getCerImg(data.auth)+
-                            '<div style="clear: both;"></div>'+
-                        '</div>'+
-                        '<ul class="nums-info">'+
-                            '<li><span id="view-nums">'+this.transformNums(data.enroll_count) + '</span><span>人查看</span></li>'+
-                            '<li><span id="singin-nums－org">'+this.transformNums(data.follow_count) + '</span><span>人报名</span></li>'+
-                            '<li><span id="view-watch">'+this.transformNums(data.view_count) + '</span><span>人关注</span></li>'+
-                        '</ul>'+
-                    '</div>'+
-                    '</a>'+
-                '</div>'+
+            '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
+            '<div class="center-content">'+
+            '<div class="left">'+
+            '<img src="'+logo+'">'+
+            '</div>'+
+            '<div class="right">'+
+            '<div class="org-name">'+
+            '<div class="name">'+name+'</div>'+
+            this.getCerImg(data.auth)+
+            '<div style="clear: both;"></div>'+
+            '</div>'+
+            '<ul class="nums-info">'+
+            '<li><span id="view-nums">'+this.transformNums(data.enroll_count) + '</span><span>人查看</span></li>'+
+            '<li><span id="singin-nums－org">'+this.transformNums(data.follow_count) + '</span><span>人报名</span></li>'+
+            '<li><span id="view-watch">'+this.transformNums(data.view_count) + '</span><span>人关注</span></li>'+
+            '</ul>'+
+            '</div>'+
+            '</a>'+
+            '</div>'+
             '</div>';
     };
 
@@ -215,32 +217,32 @@ define(['base'],function(Base){
     //简介 和 安排信息
     t.getIntroduceStr=function(data){
         return '<div class="main-item lessons-detail">'+
-                    '<div class="lessons-item">'+
-                        '<div class="head-txt">'+
-                            '<div class="center-content">课程简介</div>'+
-                        '</div>'+
-                        '<div class="content-txt center-content">'+
+            '<div class="lessons-item">'+
+            '<div class="head-txt">'+
+            '<div class="center-content">课程简介</div>'+
+            '</div>'+
+            '<div class="content-txt center-content">'+
 
-                            '<p>'+
-                                data.introduction+
-                            '</p>'+
-                        '</div>'+
-                    '</div>'+
-                '</div>'+
+            '<p>'+
+            data.introduction+
+            '</p>'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
 
-                '<div class="main-item lessons-detail">'+
-                    '<div class="head-txt">'+
-                        '<div class="center-content">课程安排</div>'+
-                    '</div>'+
-                    '<div class="content-txt center-content">'+
-                        '<p>'+
-                        data.start_course_time+'——'+data.end_course_time+
-                        '</p>'+
-                        '<p>'+
-                            data.plan+
-                        '</p>'+
-                    '</div>'+
-                '</div>';
+            '<div class="main-item lessons-detail">'+
+            '<div class="head-txt">'+
+            '<div class="center-content">课程安排</div>'+
+            '</div>'+
+            '<div class="content-txt center-content">'+
+            '<p>'+
+            data.start_course_time+'——'+data.end_course_time+
+            '</p>'+
+            '<p>'+
+            data.plan+
+            '</p>'+
+            '</div>'+
+            '</div>';
     };
 
     //报名信息
@@ -253,10 +255,10 @@ define(['base'],function(Base){
                 return str;
             }
             str = '<div class="main-item lessons-singin">' +
-                    '<div class="head-txt">' +
-                        '<div class="center-content"><span class="singin-nums">'+len+'</span>人报名</div>' +
-                    '</div>' +
-                    '<ul class="center-content">';
+                '<div class="head-txt">' +
+                '<div class="center-content"><span class="singin-nums">'+len+'</span>人报名</div>' +
+                '</div>' +
+                '<ul class="center-content">';
             for (var i = 0; i < len; i++) {
                 var avatar = enrollArr[i].avatar;
                 if(!avatar){
@@ -279,13 +281,13 @@ define(['base'],function(Base){
                 return str;
             }
             var str = '<div class="main-item lessons-more">' +
-                        '<div class="head-txt">' +
-                            '<div class="center-content">' +
-                                '<span>机构其他套餐</span>' +
-                                '<i></i>' +
-                            '</div>' +
-                        '</div>' +
-                        '<ul>',item;
+                '<div class="head-txt">' +
+                '<div class="center-content">' +
+                '<span>机构其他套餐</span>' +
+                '<i></i>' +
+                '</div>' +
+                '</div>' +
+                '<ul>',item;
             for(var i=0;i<len;i++) {
                 item=courses[i];
                 var name=item.course_name,
@@ -293,34 +295,34 @@ define(['base'],function(Base){
                 name=this.substrLongStr(name,12);
                 tName=this.substrLongStr(tName,5);
                 str += '<li>' +
-                        '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
-                            '<div class="main-content">'+
-                                '<div class="left">' +
-                                    '<img src="'+item.cover_pic+'">' +
-                                '</div>' +
-                                '<div class="right">' +
-                                    '<div class="lesson-name">'+name+'</div>' +
-                                    '<div class="lesson-view-info">' +
-                                        '<span>'+item.lesson_period+'次</span>' +
-                                        '<span>'+item.student_num+'人班</span>' +
-                                        '<span>'+item.start_course_time+'开课</span>' +
-                                    '</div>' +
-                                    '<div class="teacher-info">' +
-                                        '<div class="left-item">' +
-                                            '<span>老师：</span>' +
-                                            '<span>'+tName+'</span>' +
-                                        '</div>' +
-                                        '<div class="right-item price">￥'+item.price+'</div>' +
-                                        '<div style="clear: both;"></div>' +
-                                    '</div>' +
-                                '</div>' +
-                                '<div class="singin-limit-nums">' +
-                                        //'<span>'+item.already_registered+'/'+item.student_num+'</span>' +
-                                        '<div><canvas></canvas></div>'+
-                                        '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
-                                '</div>' +
-                            '</div>'+
-                        '</a>'+
+                    '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                    '<div class="main-content">'+
+                    '<div class="left">' +
+                    '<img src="'+item.cover_pic+'">' +
+                    '</div>' +
+                    '<div class="right">' +
+                    '<div class="lesson-name">'+name+'</div>' +
+                    '<div class="lesson-view-info">' +
+                    '<span>'+item.lesson_period+'次</span>' +
+                    '<span>'+item.student_num+'人班</span>' +
+                    '<span>'+item.start_course_time+'开课</span>' +
+                    '</div>' +
+                    '<div class="teacher-info">' +
+                    '<div class="left-item">' +
+                    '<span>老师：</span>' +
+                    '<span>'+tName+'</span>' +
+                    '</div>' +
+                    '<div class="right-item price">￥'+item.price+'</div>' +
+                    '<div style="clear: both;"></div>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="singin-limit-nums">' +
+                        //'<span>'+item.already_registered+'/'+item.student_num+'</span>' +
+                    '<div><canvas></canvas></div>'+
+                    '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
+                    '</div>' +
+                    '</div>'+
+                    '</a>'+
                     '</li>' +
                     '<li class="seperation"></li>';
             }
@@ -334,7 +336,7 @@ define(['base'],function(Base){
         var $canvas = $('.singin-limit-nums canvas'),
             lines = ["#FF5A00", "#039BE5"];
         $canvas.each(function(){
-               var canvas = $(this)[0];
+            var canvas = $(this)[0];
             var ctx = canvas.getContext('2d');
             ctx.fillStyle = lines[0];
             ctx.beginPath();
