@@ -1730,6 +1730,11 @@ class OrganizationController extends AppController
             $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
             $select_where = $select_where . " and type=".$type_id;
         }
+        if((float)$version<=2.7){
+            $type = "软件";
+            $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+            $select_where = $select_where . " and type=".$type_id;
+        }
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
         }
@@ -1824,13 +1829,19 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function searchOrganization($name=null, $page=1, $count=10){
+    public function searchOrganization($name=null, $page=1, $count=10, $version){
         if(empty($name)){
             $this->apiError(-1, '传入参数不能为空');
         }
         $model = M('Organization');
+        $select_where = "application_status=2 and status=1 and name like '%".$name."%'";
+        if((float)$version<=2.7){
+            $type = "软件";
+            $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+            $select_where = $select_where . " and type=".$type_id;
+        }
         $org_list = $model->field('id, name, slogan, city, view_count, logo, light_authentication')
-                ->where("application_status=2 and status=1 and name like '%".$name."%'")->page($page, $count)->select();
+                ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where("application_status=2 and status=1 and name like '%".$name."%'")->count();
         $uid = is_login();
         foreach($org_list as &$org){
@@ -3186,7 +3197,8 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function filterOrgByProvinceAndType($uid=0, $province=null, $type=0, $page=1, $count=10){
+    public function filterOrgByProvinceAndType($uid=0, $province=null, $type=0,
+                                               $page=1, $count=10, $version=0){
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $tmparray = explode('com.xuniu.hisihi/16041801', $user_agent);
         if(count($tmparray)>1){
@@ -3202,6 +3214,11 @@ class OrganizationController extends AppController
             $select_where = "status=1 and type=".$type." and city like '%".$province."%' and application_status=2";
         } else {
             $select_where = "status=1 and city like '%".$province."%' and application_status=2";
+        }
+        if((float)$version<=2.7){
+            $type = "软件";
+            $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+            $select_where = $select_where . " and type=".$type_id;
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
@@ -3256,7 +3273,7 @@ class OrganizationController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function getRecommendOrganization($uid=0, $type=0, $page=1, $count=10){
+    public function getRecommendOrganization($uid=0, $type=0, $page=1, $count=10, $version=0){
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $tmparray = explode('com.xuniu.hisihi/16041801', $user_agent);
         if(count($tmparray)>1){
@@ -3271,6 +3288,11 @@ class OrganizationController extends AppController
             $select_where = "status=1 and application_status=2 and is_recommend=1 and type=".$type;
         } else {
             $select_where = "status=1 and application_status=2 and is_recommend=1";
+        }
+        if((float)$version<=2.7){
+            $type = "软件";
+            $type_id = M('OrganizationTag')->where('type=7 and value=\''.$type.'\'')->getField('id');
+            $select_where = $select_where . " and type=".$type_id;
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
@@ -4037,6 +4059,18 @@ GROUP BY
         $this->assign('course_id', $course_id);
         $this->assign('organization_id', $info['organization_id']);
         $this->display('teaching_course_main_page');
+    }
+
+
+    /**
+     * @param int $course_id
+     */
+    public function showteachingcoursemainpage_v2_9($course_id=0){
+        $model = M('OrganizationTeachingCourse');
+        $info = $model->field('organization_id')->where('id='.$course_id)->find();
+        $this->assign('course_id', $course_id);
+        $this->assign('organization_id', $info['organization_id']);
+        $this->display('teaching_course_main_page_v2.9');
     }
 
     /**

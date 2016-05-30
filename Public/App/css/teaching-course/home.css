@@ -523,6 +523,109 @@ body {
   line-height: 16px;
   height: 16px;
 }
+.main-item.coupon-basic-info {
+  height: 120px;
+  border-top: 1px solid #CCCCCC;
+  border-bottom: 1px solid #CCCCCC;
+  color: white;
+}
+.main-item.coupon-basic-info .bg-sprite-c {
+  background: url("../../images/teaching-course/sprite2.png");
+}
+.main-item.coupon-basic-info .bg-sprite-c-middle {
+  background: url("../../images/teaching-course/sprite2.png");
+  background-size: 299px 148px;
+}
+.main-item.coupon-basic-info > div {
+  height: 100%;
+  float: left;
+  background-color: white;
+}
+.main-item.coupon-basic-info .coupon-left {
+  width: 100px;
+  margin-left: -100%;
+  position: relative;
+}
+.main-item.coupon-basic-info .coupon-left i {
+  display: block;
+  width: 74px;
+  height: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -37px;
+  margin-top: -12px;
+  background: url("../../images/teaching-course/sprite2.png");
+  background-size: 299px 148px;
+  background-position: -225px -35px;
+}
+.main-item.coupon-basic-info .coupon-right {
+  width: 70px;
+  margin-left: -70px;
+}
+.main-item.coupon-basic-info .coupon-right > * {
+  float: left;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main {
+  width: 63px;
+  height: 100%;
+  background-color: #F9A825;
+}
+.main-item.coupon-basic-info .coupon-right i {
+  display: block;
+  width: 7px;
+  height: 100%;
+  background: url("../../images/teaching-course/sprite2.png");
+  background-position: -355px -148px;
+  float: right;
+}
+.main-item.coupon-basic-info .coupon-middle {
+  width: 100%;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all {
+  height: 100%;
+  margin: 0 70px 0 100px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all > div {
+  height: 100%;
+  float: left;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box {
+  width: 100%;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box {
+  background-color: #F9A825;
+  height: 100%;
+  margin: 0 8px 0 7px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top {
+  height: 60%;
+  padding: 3px 0;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top span:first-child {
+  font-size: 24px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top span:last-child {
+  font-size: 44px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-bottom {
+  font-size: 12px;
+  padding-left: 5px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-left {
+  width: 7px;
+  height: 100%;
+  background: url("../../images/teaching-course/sprite2.png");
+  background-position: 0 -148px;
+  margin-left: -100%;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-right {
+  width: 8px;
+  height: 100%;
+  background: url("../../images/teaching-course/sprite2.png");
+  background-position: -177px -148px;
+  margin-left: -8px;
+}
 @media screen and (max-width: 320px) {
   @media -sass-debug-info{filename{font-family:file\:\/\/F\:\/wamp\/www\/hisihi-cms\/Public\/App\/css\/teaching-course\/home\.less}line{font-family:\00003370}}
   .main-item {
