@@ -3303,7 +3303,9 @@ class OrganizationController extends AdminController
             } else {
                 $data['instructions_for_use'] = $pcr['instructions_for_use'];
             }
-            M('TeachingCourseCouponRelation')->where('coupon_id='.$post_data['coupon_id'])->save($data);
+            $_where_condition['coupon_id'] = $post_data['coupon_id'];
+            $_where_condition['teaching_course_id'] = $post_data['teaching_course_id'];
+            M('TeachingCourseCouponRelation')->where($_where_condition)->save($data);
             $this->success('添加优惠券成功', 'index.php?s=/admin/promotion/teaching_course_to_coupon');
         } else {
             $this->display('add_coupon');
