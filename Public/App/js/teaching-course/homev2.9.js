@@ -13,9 +13,9 @@ define(['base'],function(Base){
             eventName='touchend';
         }
         this.getUserInfo(function(){
-            that.getBasicInfo(function(result){
+            that.getBasicInfo.call(that,function(result){
                 if(result){
-                    that.getOrgBasicInfo(result,function(){
+                    that.getOrgBasicInfo.call(that,result,function(){
                         that.geMoreCourseInfo();
                     });
                 }
@@ -55,7 +55,7 @@ define(['base'],function(Base){
                 var para = {
                     url: window.hisihiUrlObj.api_url+'/v1/token/',
                     type: 'get',
-                    paraData: {account: '13554154325', secret: '12345678', type: 200},
+                    paraData: {account: '18140662282', secret: '123456', type: 300},
                     sCallback: function (data) {
                         that.userInfo = data;
                         callback && callback.call(that);
@@ -76,9 +76,11 @@ define(['base'],function(Base){
         this.controlLoadingBox(true);
         var that = this,
             para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/detail',
+                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/promotions',
                 type: 'get',
                 paraData: null,
+                needToken:true,
+                token:'basic ZXlKcFlYUWlPakUwTmpRMk1EWXdNamtzSW1WNGNDSTZNVFEyTnpFNU9EQXlPU3dpWVd4bklqb2lTRk15TlRZaWZRLmV5SjFhV1FpT2pNc0luTmpiM0JsSWpvaVQzSm5RV1J0YVc0aUxDSjBlWEJsSWpvek1EQjkubkJoWjh6TFM3TFVvcjlKUFRMNlRpZGNBcHFkNF93NEVLVUR6UnVnX3VfODo=',
                 sCallback: function (resutl) {
                     //that.controlLoadingBox(false);
                     //that.fillInCourseInfo(resutl);
@@ -237,11 +239,15 @@ define(['base'],function(Base){
 
     /*优惠券*/
     t.getCoupon=function(){
-        var flag=false,className='';
-        if(!flag){
+        var flag=false,flag1=false,className='';
+        //未领取
+        if(flag){
+
+        }
+        //已经领取
+        if(!flag1){
             className='used'
         }
-        var str='<p>立即</p><p>领取</p>';
         var str='<p>立即</p><p>领取</p>';
         return '<div class="main-item coupon-basic-info">'+
                    '<div class="center-content">'+

@@ -69,13 +69,19 @@ define(['$'],function() {
                 return;
             }
             var that = this;
-            var loginXhr = $.ajax({
+            var xhr = $.ajax({
                 url: paras.url,
                 type: paras.type,
                 data: paras.paraData,
                 //timeout: 20000,
                 timeout: 50000,
                 contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    //将token加入到请求的头信息中
+                    if (options.needToken) {
+                        xhr.setRequestHeader('Authorization', options.token);  //设置头消息
+                    }
+                },
                 complete: function (xmlRequest, status) {
                     if (status == 'success') {
                         var rTxt = xmlRequest.responseText,
@@ -90,12 +96,12 @@ define(['$'],function() {
                     }
                     //超时
                     else if (status == 'timeout') {
-                        loginXhr.abort();
+                        xhr.abort();
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
                         paras.eCallback && paras.eCallback({code:'404',txt:'no found'});
-                        loginXhr.abort();
+                        xhr.abort();
                     }
                 }
             });
