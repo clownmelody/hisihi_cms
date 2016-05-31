@@ -12,16 +12,17 @@ define(['base'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
-        this.getUserInfo(function(){
-            that.getBasicInfo.call(that,function(result){
-                if(result){
-                    that.getOrgBasicInfo.call(that,result,function(){
-                        that.geMoreCourseInfo();
-                    });
-                }
+        this.getUserInfo();
+        this.getBasicInfo.call(that,function(result){;
+            that.getOrgBasicInfo.call(that,result,function(resultOrg){
+                that.getPromotionsInfo.call(that,result,resultOrg);
             });
-        })
+        });
 
+        //领取优惠券
+        $(document).on(eventName,'.sawtooth-right-main', $.proxy(this,'operateCoupon'));
+
+        this.geMoreCourseInfo();
     };
 
     Course.prototype=new Base();
@@ -53,16 +54,17 @@ define(['base'],function(Base){
                 callback && callback.call(that);
             } else {
                 var para = {
-                    url: window.hisihiUrlObj.api_url+'/v1/token/',
-                    type: 'get',
-                    paraData: {account: '18140662282', secret: '123456', type: 300},
+                    async:false,
+                    url: 'http://dev.api.hisihi.com/v1/token',
+                    type: 'post',
+                    paraData: JSON.stringify({account:'18601995231', secret: '123456', type: 200}),
                     sCallback: function (data) {
-                        that.userInfo = data;
+                        that.token =that.getBase64encode(data.token);
                         callback && callback.call(that);
                     }
                 };
-                //this.getDataAsyncPy(para);
-                callback && callback.call(that);
+                this.getDataAsyncPy(para);
+                //callback && callback.call(that);
             }
         }
         else {
@@ -71,19 +73,19 @@ define(['base'],function(Base){
 
     };
 
+
+
     //获得当前课程的详细信息
     t.getBasicInfo=function(callback){
         this.controlLoadingBox(true);
         var that = this,
             para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/promotions',
+                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/detail',
                 type: 'get',
+                async:false,
                 paraData: null,
                 needToken:true,
-                token:'basic ZXlKcFlYUWlPakUwTmpRMk1EWXdNamtzSW1WNGNDSTZNVFEyTnpFNU9EQXlPU3dpWVd4bklqb2lTRk15TlRZaWZRLmV5SjFhV1FpT2pNc0luTmpiM0JsSWpvaVQzSm5RV1J0YVc0aUxDSjBlWEJsSWpvek1EQjkubkJoWjh6TFM3TFVvcjlKUFRMNlRpZGNBcHFkNF93NEVLVUR6UnVnX3VfODo=',
                 sCallback: function (resutl) {
-                    //that.controlLoadingBox(false);
-                    //that.fillInCourseInfo(resutl);
                     callback && callback(resutl);
                 },
                 eCallback: function (data) {
@@ -107,10 +109,39 @@ define(['base'],function(Base){
                 url: window.hisihiUrlObj.api_url + 'v1/org/'+this.oid+'/base',
                 type: 'get',
                 paraData: null,
+                async:false,
                 sCallback: function (orgResutl) {
-                    that.controlLoadingBox(false);
-                    that.fillInCourseInfo(result,orgResutl);
                     callback && callback(orgResutl);
+                },
+                eCallback: function (data) {
+                    var txt=data.txt;
+                    if(data.code=404){
+                        txt='信息加载失败';
+                    }
+                    that.controlLoadingBox(false);
+                    that.showTips.call(that,txt);
+                    $('#current-info .nodata').show();
+                    callback && callback();
+                },
+            };
+        this.getDataAsyncPy(para);
+    };
+
+    //获得当前课程的优惠券详细信息
+    t.getPromotionsInfo=function(result1,resultOrg,callback){
+        this.controlLoadingBox(true);
+        var that = this,
+            para = {
+                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/promotions',
+                type: 'get',
+                paraData: null,
+                //async:false,
+                needToken:true,
+                token:this.token,
+                sCallback: function (resutlPro) {
+                    that.controlLoadingBox(false);
+                    that.fillInCourseInfo(result1,resultOrg,resutlPro);
+                    callback && callback(resutlPro);
                 },
                 eCallback: function (data) {
                     var txt=data.txt;
@@ -165,10 +196,10 @@ define(['base'],function(Base){
     };
 
     //当前课程的详细信息显示
-    t.fillInCourseInfo=function(result,orgResult){
+    t.fillInCourseInfo=function(result,orgResult,proResult){
         var strBasic=this.getBasicIntroduceInfo(result),
             strOrg=this.getOrgInfoStr(orgResult),
-            strCoupon=this.getCoupon(),
+            strCoupon=this.getCoupon(proResult),
             strIntroduce=this.getIntroduceStr(result),
             strSingIn=this.getSingInStr(result);
         var str=strBasic+
@@ -238,18 +269,22 @@ define(['base'],function(Base){
     };
 
     /*优惠券*/
-    t.getCoupon=function(){
-        var flag=false,flag1=false,className='';
-        //未领取
-        if(flag){
-
+    t.getCoupon=function(result){
+        var str='';
+        if(!result ||!result.data || result.data.length==0){
+            return str;
         }
-        //已经领取
-        if(!flag1){
-            className='used'
+        var data=result.data[0],
+            couponInfo=data.coupon_info,
+            promotionInfo=data.promotion_info,
+            strAndType=this.getCouponState(couponInfo);
+        if(strAndType.type===false){
+            return'';
         }
-        var str='<p>立即</p><p>领取</p>';
-        return '<div class="main-item coupon-basic-info">'+
+        var startTime=this.getTimeFromTimestamp(couponInfo.start_time,'yyyy.MM.dd'),
+            endTime=this.getTimeFromTimestamp(couponInfo.end_time,'yyyy.MM.dd'),
+            className=strAndType.type;
+        return '<div class="main-item coupon-basic-info" data-id="'+couponInfo.id+'">'+
                    '<div class="center-content">'+
                     '<div class="coupon-middle">'+
                         '<div class="coupon-middle-all">'+
@@ -257,10 +292,11 @@ define(['base'],function(Base){
                                 '<div class="coupon-all-box '+className+'">'+
                                     '<div class="coupon-main-top">'+
                                         '<span>￥</span>'+
-                                        '<span>200</span>'+
+                                        '<span>'+couponInfo.money+'</span>'+
                                     '</div>'+
                                     '<div class="coupon-main-bottom">'+
-                                        '<span>有效期：2016.05.01-2016.06.06</span>'+
+                                        '<span>有效期：'+'</span>'+
+                                        '<span>'+startTime+'-'+endTime+'</span>'+
                                     '</div>'+
                                 '</div>'+
                             '</div>'+
@@ -269,17 +305,128 @@ define(['base'],function(Base){
                         '</div>'+
                     '</div>'+
                     '<div class="coupon-left">'+
-                        //'<i></i>'+
-                        '<img src="'+window.hisihiUrlObj.img_url+'/teaching-course/ic.png">'+
+                        '<img src="'+promotionInfo.little_logo_url+'">'+
                     '</div>'+
                     '<div class="coupon-right">'+
                         '<div class="sawtooth-right-main '+className+'">' +
-                            str+
+                            strAndType.str+
                         '</div>'+
                         '<i class="'+className+'"></i>'+
                     '</div>'+
                 '</div>'+
             '</div>';
+    };
+
+    /*通过优惠券的状态，得到相应的样式*/
+    t.getCouponState=function(data){
+        var temp={
+            type:false,
+            str:''
+        };
+        if(!data){
+            return temp;
+        }
+        //data.is_obtain=true;
+        //data.is_used=true;
+        //data.is_out_of_date=false;
+        var is_obtain=data.is_obtain,
+            is_used=data.is_used,
+            out_date=data.is_out_of_date;
+        //未领取
+        if(!is_obtain){
+            temp.type='un-take-in';
+            temp.str='<p>立即</p><p>领取</p>';
+        }else{
+            if(out_date){
+                temp.type=false;
+            }else{
+                var str='<div class="postmark placehodler"></div>';
+                if(is_used){
+                    temp.type='used';
+                    str=str.replace('placehodler','used');
+                }else {
+                    temp.type = 'unused';
+                    str = str.replace('placehodler','unused');
+                    str+='<div class="to-used-btn">去使用</div>';
+                }
+                temp.str=str;
+            }
+        }
+        return temp;
+    };
+
+    /*优惠券操作*/
+    t.operateCoupon=function(e){
+        if(!this.token){
+            this.controlLoginTipModal(true);
+            return;
+        }
+        var $target=$(e.currentTarget);
+
+        //未领取
+        if($target.hasClass('un-take-in')){
+            var id=$target.parents('.coupon-basic-info').attr('data-id');
+            this.execTakeInCoupon(id);
+            return;
+        }
+
+        //已经使用
+        if($target.hasClass('used')){
+            return;
+        }
+        //未使用
+        if($target.hasClass('unused')){
+            return;
+        }
+    };
+
+    /*控制模态窗口的显示和隐藏*/
+    t.controlLoginTipModal=function(flag){
+        var $target=$('.model-box');
+        if(flag){
+            $target.show();
+        }
+        else{
+            $target.hide();
+        }
+    };
+
+    /*
+    * 领取优惠券
+    * @para：
+    * id - {string} 优惠券id
+    * callback - {fn} 回调方法
+    * */
+    t.execTakeInCoupon=function(id,callback){
+        var $btn=$('.sawtooth-right-main'),
+            that = this,
+            para = {
+                url: window.hisihiUrlObj.api_url + 'v1/user/coupons',
+                type: 'post',
+                paraData: JSON.stringify({teaching_course_id:this.cid ,coupon_id: id}),
+                needToken:true,
+                token:this.token,
+                sCallback: function (orgResutl) {
+                    //that.controlLoadingBox(false);
+                    //that.fillInCourseInfo(result,orgResutl);
+
+                    //that.getPromotionsInfo.call(that,null,null);
+
+                    callback && callback(orgResutl);
+                },
+                eCallback: function (data) {
+                    var txt=data.txt;
+                    if(data.code=404){
+                        txt='信息加载失败';
+                    }
+                    that.controlLoadingBox(false);
+                    that.showTips.call(that,txt);
+                    $('#current-info .nodata').show();
+                    callback && callback();
+                },
+            };
+        this.getDataAsyncPy(para);
+
     };
 
     t.transformNums=function(num){
@@ -338,8 +485,8 @@ define(['base'],function(Base){
     };
 
     //报名信息
-    t.getSingInStr=function(data){
-        var enrollArr=data.enroll_info.data,
+    t.getSingInStr=function(result){
+        var enrollArr=result.data,
             str='';
         if(enrollArr) {
             var len = enrollArr.length;
@@ -440,6 +587,7 @@ define(['base'],function(Base){
             ctx.fill();
         });
     };
+
 
     return Course;
 });

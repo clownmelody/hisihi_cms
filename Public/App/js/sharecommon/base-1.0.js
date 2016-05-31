@@ -78,8 +78,8 @@ define(['$'],function() {
                 contentType: 'application/json',
                 beforeSend: function (xhr) {
                     //将token加入到请求的头信息中
-                    if (options.needToken) {
-                        xhr.setRequestHeader('Authorization', options.token);  //设置头消息
+                    if (paras.needToken) {
+                        xhr.setRequestHeader('Authorization', paras.token);  //设置头消息
                     }
                 },
                 complete: function (xmlRequest, status) {

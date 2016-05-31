@@ -363,9 +363,9 @@ body {
   }
 
   &.coupon-basic-info{
-    @left:65px;
+    @left:63px;
     @right:70px;
-    @tooth-w:7px;
+    @tooth-w:5px;
     @color1:#F9A825;
     @color2:#ccc;
     height: 120px;
@@ -413,7 +413,7 @@ body {
         float: left;
       }
       .sawtooth-right-main{
-        .size(63px,100%);
+        .size(@left+2,100%);
         background-color:@color1;
         &.used{
           background-color: @color2;
@@ -429,12 +429,32 @@ body {
             margin-top: 3px;
           }
         }
+        .postmark{
+          margin: 0 auto;
+          .size(56px,44px);
+          .bg-sprite-c;
+          background-size:344px 91px;
+          background-position: -289px 0;
+          &.used{
+            background-position: -233px 0;
+          }
+        }
+        .to-used-btn{
+          background-color: #FA4535;
+          .border-radius(15px);
+          color: white;
+          .size(60px,25px);
+          line-height: 25px;
+          text-align: center;
+          margin: 17px auto;
+          font-size: 12px;
+        }
       }
       i{
         display: block;
         .size(@tooth-w,100%);
         .bg-sprite-c;
-        background-position: -180px 0;
+        background-position: -182px 0;
         float: right;
         &.used{
           background-position: -367px 0;
@@ -462,7 +482,7 @@ body {
             margin: 0 @mw 0 @tooth-w;
             .coupon-main-top{
               height: 60%;
-              padding: 3px 0;
+              padding-top: 7px;
               span{
                 &:first-child{
                   font-size: 24px;
@@ -497,6 +517,60 @@ body {
           }
         }
       }
+    }
+  }
+
+}
+
+/*模态窗口*/
+.model-box{
+  background-color:rgba(0,0,0,.7);
+  position: fixed;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  z-index: 1000;
+  .btns-main{
+    @hh:43px;
+    height: @hh;
+    >div{
+      width: 50%;
+      box-sizing: border-box;
+      float: left;
+      color: #007AFF;
+      text-align: center;
+      line-height:@hh;
+      &:nth-child(1){
+        border-right:1px solid #ccc;
+        div{
+          display: block;
+          .size(100%,100%);
+        }
+      }
+    }
+  }
+  .login-tips-box{
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    @h:47px;
+    @w:140px;
+    margin-top: -@h;
+    margin-left: -@w;
+    .size(2*@w,2*@h);
+    background-color: white;
+    .border-radius(9px);
+    *{
+      font-size: 16px;
+    }
+    .login-header{
+      height: 50px;
+      border-bottom:1px solid #ccc;
+      text-align: center;
+      line-height: 50px;
+      color: #000;
     }
   }
 
@@ -602,6 +676,27 @@ body {
                   .price{
                     font-size: 14px !important;
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    &.coupon-basic-info {
+      .coupon-middle {
+        .coupon-middle-all {
+          margin-left: 67px;
+          .coupon-box {
+            .coupon-all-box {
+              .coupon-main-top {
+                height: 45px;
+              }
+              .coupon-main-bottom{
+                span{
+                  display: block;
+                  font-size: 11px;
+                  margin-top: 5px;
                 }
               }
             }
