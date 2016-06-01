@@ -89,7 +89,7 @@ define(['base'],function(Base){
     //获得当前课程的优惠券详细信息
     t.getPromotionsInfo=function(result1,resultOrg,callback){
         this.controlLoadingBox(true);
-        var token=this.token;
+        var token=this.userInfo.token;
         if(!token){
             this.getBasicToken({account:'jg2rw2xVjyrgbrZp', secret: 'VbkzpPlZ6H4OvqJW',type:100},false,function(result){
                 token=result;
@@ -317,7 +317,7 @@ define(['base'],function(Base){
 
     /*优惠券操作*/
     t.operateCoupon=function(e){
-        if(!this.token){
+        if(!this.userInfo.token){
             this.controlLoginTipModal(true);
             return;
         }
@@ -325,7 +325,6 @@ define(['base'],function(Base){
             id=$target.parents('.coupon-basic-info').attr('data-id');
         //未领取
         if($target.hasClass('un-take-in')){
-
             this.execTakeInCoupon(id);
             return;
         }
@@ -366,10 +365,14 @@ define(['base'],function(Base){
                 type: 'post',
                 paraData: JSON.stringify({teaching_course_id:this.cid ,coupon_id: id}),
                 needToken:true,
-                token:this.token,
-                sCallback: function (orgResutl) {
-                    $btn.removeClass('un-take-in').addClass('unused');
-                    callback && callback(orgResutl);
+                token:this.userInfo.token,
+                sCallback: function (result) {
+                    if(result.has_obtained){
+                        that.showTips.call(that,'您已经领过该优惠券');
+                    }else {
+                        $btn.removeClass('un-take-in').addClass('unused');
+                    }
+                    callback && callback(result);
                 },
                 eCallback: function (data) {
                     var txt=data.txt;
@@ -553,6 +556,22 @@ define(['base'],function(Base){
     //登录
     t.doLogin=function(){
         this.controlLoginTipModal(false);
+    };
+
+    /*
+     *登录功能的回调方法
+     *要做三件事：
+     * 1，更新点赞 和点踩的信息
+     * 2，收藏更新
+     * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
+     */
+    window.loginSuccessCallback=function(){
+        var obj=window.course;
+
+        //得到用户基本信息
+        obj.getUserInfo(function(){
+
+        });
     };
 
     return Course;

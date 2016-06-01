@@ -41,5 +41,22 @@ define(['base'],function(Base){
         this.controlLoginTipModal(false);
     };
 
+
+    /*
+     *登录功能的回调方法
+     *要做三件事：
+     * 1，更新点赞 和点踩的信息
+     * 2，收藏更新
+     * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
+     */
+    window.loginSuccessCallback=function(){
+        var obj=window.course;
+
+        //得到用户基本信息
+        obj.getUserInfo(function(){
+
+        });
+    };
+
     return Promotion;
 });

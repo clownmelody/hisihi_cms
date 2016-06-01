@@ -10,7 +10,10 @@ define(['$'],function() {
         var userAgent = window.location.href;
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         this.deviceType = this.operationType();
-
+        this.userInfo={
+            token:''
+        };
+        this.timeOutFlag=false; //防止出现在重复快速点击时，计时器混乱添加的回调方法
         this._initTimeFormat();
         this._initStringExtentFn();
         this._addTip();
@@ -60,8 +63,8 @@ define(['$'],function() {
                         callback && callback.call(that);
                     }else{
                         that.getBasicToken({account:'18601995231', secret: '123456', type: 200},false,function(token){
-                            that.token=token;
-                            callback && callback.call(that,that.token);
+                            that.userInfo.token=token;
+                            callback && callback.call(that,that.userInfo);
                         });
                     }
                 }
@@ -408,14 +411,18 @@ define(['$'],function() {
         },
 
         /*
-         *显示操作结果
-         *para:
-         *tip - {string} 内容结果
-         *strFormat - {bool} 自定义的简单格式
+         * 显示操作结果，防止出现在重复快速点击时，计时器混乱添加了  timeOutFlag  进行处理
+         * @para:
+         * tip - {string} 内容结果
+         * strFormat - {bool} 自定义的简单格式
          */
         showTips:function(tip,strFormat){
+            if(this.timeOutFlag){
+                return;
+            }
+            this.timeOutFlag=true;
             var $tip=$('body').find('.result-tips'),
-                $p=$tip.find('p').text(tip);
+                $p=$tip.find('p').text(tip),that=this;
             if(strFormat){
                 $tip.html(strFormat);
             }
@@ -423,6 +430,7 @@ define(['$'],function() {
             window.setTimeout(function(){
                 $tip.hide();
                 $p.text('');
+                that.timeOutFlag=false;
             },1500);
         },
 

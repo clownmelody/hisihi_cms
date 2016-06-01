@@ -93,6 +93,15 @@ ul li {
     transform: rotate(360deg);
   }
 }
+.nodata {
+  display: none;
+  text-align: center;
+}
+.nodata p {
+  font-size: 16px;
+  color: #757070;
+  text-align: center;
+}
 body {
   margin: 0;
   background: #F2F2F2;
