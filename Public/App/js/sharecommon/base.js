@@ -1,5 +1,5 @@
 /**
- * Created by jimmy on 2016/4/18.
+ * Created by jimmy on 2016/5/10.
  */
 
 
@@ -7,6 +7,10 @@ define(['$'],function() {
 
     /**基础类**/
     var Base = function (flag) {
+        var userAgent = window.location.href;
+        this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
+        this.deviceType = this.operationType();
+
         this._initTimeFormat();
         this._initStringExtentFn();
         this._addTip();
@@ -18,10 +22,63 @@ define(['$'],function() {
 
     Base.prototype = {
 
+        /*
+         *获得用户的信息 区分安卓和ios
+         *从不同的平台的方法 获得用户的基本信息，进行发表评论时使用
+         */
+        getUserInfo:function (apiType,callback) {
+            var userStr = '', that = this;
+            if (this.deviceType.mobile) {
+                if (this.deviceType.android) {
+                    //如果方法存在
+                    if (typeof AppFunction != "undefined") {
+                        userStr = AppFunction.getUser(); //调用app的方法，得到用户的基体信息
+                    }
+                }
+                else if (this.deviceType.ios) {
+                    //如果方法存在
+                    if (typeof getUser_iOS != "undefined") {
+                        userStr = getUser_iOS();//调用app的方法，得到用户的基体信息
+                    }
+                }
+                if (userStr != '') {
+                    this.userInfo = JSON.parse(userStr);
+                    callback && callback.call(that);
+                } else {
+                    if(apiType==0) {
+                        var para = {
+                            url: this.baseUrl + 'user/login',
+                            type: 'get',
+                            async: false,
+                            paraData: {username: '13554154325', password: '12345678', type: 1, client: 4},
+                            sCallback: function (data) {
+                                that.userInfo = data;
+                                callback && callback.call(that);
+                            }
+                        };
+                        this.getDataAsync(para);
+                        callback && callback.call(that);
+                    }else{
+                        that.getBasicToken({account:'18601995231', secret: '123456', type: 200},false,function(token){
+                            that.token=token;
+                            callback && callback.call(that,that.token);
+                        });
+                    }
+                }
+            }
+            else {
+                callback && callback.call(that);
+            }
+
+        },
+
         /*请求数据*/
         getDataAsync: function (paras) {
             if (!paras.type) {
                 paras.type = 'post';
+            }
+            if (paras.async==undefined) {
+                paras.async = true;
             }
             if (!paras.url) {
                 return;
@@ -30,6 +87,7 @@ define(['$'],function() {
             that.controlLoadingTips(1);
             var loginXhr = $.ajax({
                 url: paras.url,
+                async:paras.async,
                 type: paras.type,
                 data: paras.paraData,
                 //timeout: 2000,
@@ -75,18 +133,25 @@ define(['$'],function() {
             if (!paras.type) {
                 paras.type = 'post';
             }
-            if (!paras.url) {
-                return;
+            if (paras.async==undefined) {
+                paras.async = true;
             }
             var that = this;
             that.controlLoadingTips(1);
             var loginXhr = $.ajax({
+                async:paras.async,
                 url: paras.url,
                 type: paras.type,
                 data: paras.paraData,
                 //timeout: 20000,
                 timeout: 50000,
                 contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    //将token加入到请求的头信息中
+                    if (paras.needToken) {
+                        xhr.setRequestHeader('Authorization', paras.token);  //设置头消息
+                    }
+                },
                 complete: function (xmlRequest, status) {
                     var rTxt = xmlRequest.responseText,
                     result = {};
@@ -113,6 +178,24 @@ define(['$'],function() {
                     }
                 }
             });
+        },
+
+        /*获得令牌*/
+        getBasicToken:function(userinfo,async,callback){
+            var that=this,
+                para = {
+                    async:async,
+                    url: 'http://dev.api.hisihi.com/v1/token',
+                    type: 'post',
+                    paraData: JSON.stringify({account:userinfo.account, secret: userinfo.secret, type: userinfo.type}),
+                    sCallback: function (data) {
+                        var token =that.getBase64encode(data.token);
+                        callback && callback.call(that,token);
+                    },eCallback:function(result){
+                        that.showTips(result.txt);
+                    }
+                };
+            this.getDataAsyncPy(para);
         },
 
         /*
@@ -342,6 +425,57 @@ define(['$'],function() {
                 $p.text('');
             },1500);
         },
+
+        /***************64编码的方法****************/
+        getBase64encode:function(str) {
+            str+= ':'
+            var out, i, len, base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+            var c1, c2, c3;
+            len = str.length;
+            i = 0;
+            out = "";
+            while (i < len) {
+                c1 = str.charCodeAt(i++) & 0xff;
+                if (i == len) {
+                    out += base64EncodeChars.charAt(c1 >> 2);
+                    out += base64EncodeChars.charAt((c1 & 0x3) << 4);
+                    out += "==";
+                    break;
+                }
+                c2 = str.charCodeAt(i++);
+                if (i == len) {
+                    out += base64EncodeChars.charAt(c1 >> 2);
+                    out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+                    out += base64EncodeChars.charAt((c2 & 0xF) << 2);
+                    out += "=";
+                    break;
+                }
+                c3 = str.charCodeAt(i++);
+                out += base64EncodeChars.charAt(c1 >> 2);
+                out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+                out += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+                out += base64EncodeChars.charAt(c3 & 0x3F);
+            }
+            return 'basic '+ out;
+        },
+
+        /*调用app登录*/
+        doLogin:function(){
+            if (this.isFromApp) {
+                if (this.deviceType.android) {
+                    //如果方法存在
+                    if (typeof AppFunction != "undefined") {
+                        AppFunction.login(); //显示app的登录方法，得到用户的基体信息
+                    }
+                } else {
+                    //如果方法存在
+                    if (typeof showLoginView != "undefined") {
+                        showLoginView();//调用app的方法，得到用户的基体信息
+                    }
+                }
+            }
+        },
+
     };
     return Base;
 });

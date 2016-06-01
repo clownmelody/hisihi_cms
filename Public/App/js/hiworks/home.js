@@ -92,48 +92,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
 
     var t=HiWorks.prototype;
 
-    /*
-     *获得用户的信息 区分安卓和ios
-     *从不同的平台的方法 获得用户的基本信息，进行发表评论时使用
-     */
-    t.getUserInfo=function (callback) {
-        var userStr = '', that = this;
-        if (this.deviceType.mobile) {
-            if (this.deviceType.android) {
-                //如果方法存在
-                if (typeof AppFunction != "undefined") {
-                    userStr = AppFunction.getUser(); //调用app的方法，得到用户的基体信息
-                    //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
-                }
-            }
-            else if (this.deviceType.ios) {
-                //如果方法存在
-                if (typeof getUser_iOS != "undefined") {
-                    userStr = getUser_iOS();//调用app的方法，得到用户的基体信息
-                }
-            }
-            if (userStr != '') {
-                this.userInfo = JSON.parse(userStr);
-                callback && callback.call(that);
-            } else {
-                var para = {
-                    url: this.baseUrl + 'user/login',
-                    type: 'get',
-                    paraData: {username: '13554154325', password: '12345678', type: 1, client: 4},
-                    sCallback: function (data) {
-                        that.userInfo = data;
-                        callback && callback.call(that);
-                    }
-                };
-                //this.getDataAsync(para);
-                callback && callback.call(that);
-            }
-        }
-        else {
-            callback && callback.call(that);
-        }
 
-    };
 
     /*加载二级分类*/
     t.loadClassInfo=function(index,pCount,callback){

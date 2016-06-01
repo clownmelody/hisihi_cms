@@ -362,6 +362,255 @@ body {
     }
   }
 
+  &.coupon-basic-info{
+    @left:63px;
+    @right:70px;
+    @tooth-w:5px;
+    @color1:#F9A825;
+    @color2:#ccc;
+    height: 120px;
+    border-top:1px solid #CCCCCC;
+    border-bottom:1px solid #CCCCCC;
+    *{
+      color: white;
+    }
+    .bg-sprite-c{
+      background: url("../../images/teaching-course/sprite3.png");
+    }
+    .bg-sprite-c-middle{
+      .bg-sprite-c;
+      background-size: 275px 73px;
+    }
+    .center-content {
+      height: 100%;
+      >div {
+        height: 100%;
+        float: left;
+        background-color: white;
+      }
+    }
+    .coupon-left{
+      width: @left;
+      margin-left: -100%;
+      position: relative;
+      i{
+        @w:74px;
+        @h:24px;
+        display: block;
+        .size(@w,@h);
+        .middle-absolute(@w/2,@h/2);
+        .bg-sprite-c-middle;
+        background-position: 0 -49px;
+      }
+      img{
+        max-width: 100%;
+        display: block;
+        margin: 38px auto;
+      }
+    }
+    .coupon-right{
+      width: @right;
+      margin-left: -@right;
+      >*{
+        float: left;
+      }
+      .sawtooth-right-main{
+        .size(@left+2,100%);
+        background-color:@color1;
+
+
+
+
+
+        /*戳*/
+        .postmark{
+
+          margin: 0 auto;
+          .size(56px,44px);
+          .bg-sprite-c;
+          background-size:344px 91px;
+          background-position: -289px 0;
+        }
+
+        /*去使用*/
+        .to-used-btn{
+          display: none;
+          background-color: #FA4535;
+          .border-radius(15px);
+          color: white;
+          .size(60px,25px);
+          line-height: 25px;
+          text-align: center;
+          margin: 17px auto;
+          font-size: 12px;
+        }
+
+        /*去领取*/
+        .do-take-in {
+          display: none;
+          p {
+            text-align: center;
+            font-size: 16px;
+            margin: 0;
+            &:first-child {
+              margin-top: 27px;
+            }
+            &:last-child {
+              margin-top: 3px;
+            }
+          }
+        }
+
+        /*未领取*/
+        &.un-take-in {
+          .do-take-in{
+            display: block;
+          }
+          .postmark{
+            display: none;
+          }
+        }
+
+        /*已经使用*/
+        &.used{
+          background-color: @color2;
+          .postmark{
+            background-position: -233px 0;
+          }
+        }
+
+        &.unused{
+          .to-used-btn{
+            display: block;
+          }
+        }
+
+
+      }
+      i{
+        display: block;
+        .size(@tooth-w,100%);
+        .bg-sprite-c;
+        background-position: -182px 0;
+        float: right;
+        &.used{
+          background-position: -367px 0;
+        }
+      }
+    }
+    .coupon-middle{
+      width: 100%;
+      .coupon-middle-all{
+        height: 100%;
+        margin: 0 @right 0 @left+8;
+        @mw:8px;
+        >div{
+          height: 100%;
+          float: left;
+        }
+        .coupon-box {
+          width: 100%;
+          .coupon-all-box{
+            background-color: @color1;
+            &.used{
+              background-color: @color2;
+            }
+            height: 100%;
+            margin: 0 @mw 0 @tooth-w;
+            .coupon-main-top{
+              height: 60%;
+              padding-top: 7px;
+              span{
+                &:first-child{
+                  font-size: 24px;
+                }
+                &:last-child{
+                  font-size: 34px;
+                }
+              }
+            }
+            .coupon-main-bottom{
+              font-size: 12px;
+              padding-left: 5px;
+            }
+          }
+        }
+        .sawtooth-left{
+          .size(@tooth-w,100%);
+          .bg-sprite-c;
+          background-position: 0 0;
+          margin-left: -100%;
+          &.used{
+            background-position: -188px 0;
+          }
+        }
+        .sawtooth-right{
+          .size(@mw,100%);
+          .bg-sprite-c;
+          background-position: -90px 0;
+          margin-left: -@mw;
+          &.used{
+            background-position: -277px 0;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+/*模态窗口*/
+.model-box{
+  background-color:rgba(0,0,0,.7);
+  position: fixed;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  z-index: 1000;
+  .btns-main{
+    @hh:43px;
+    height: @hh;
+    >div{
+      width: 50%;
+      box-sizing: border-box;
+      float: left;
+      color: #007AFF;
+      text-align: center;
+      line-height:@hh;
+      &:nth-child(1){
+        border-right:1px solid #ccc;
+        div{
+          display: block;
+          .size(100%,100%);
+        }
+      }
+    }
+  }
+  .login-tips-box{
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    @h:47px;
+    @w:140px;
+    margin-top: -@h;
+    margin-left: -@w;
+    .size(2*@w,2*@h);
+    background-color: white;
+    .border-radius(9px);
+    *{
+      font-size: 16px;
+    }
+    .login-header{
+      height: 50px;
+      border-bottom:1px solid #ccc;
+      text-align: center;
+      line-height: 50px;
+      color: #000;
+    }
+  }
+
 }
 
 
@@ -464,6 +713,27 @@ body {
                   .price{
                     font-size: 14px !important;
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    &.coupon-basic-info {
+      .coupon-middle {
+        .coupon-middle-all {
+          margin-left: 67px;
+          .coupon-box {
+            .coupon-all-box {
+              .coupon-main-top {
+                height: 45px;
+              }
+              .coupon-main-bottom{
+                span{
+                  display: block;
+                  font-size: 11px;
+                  margin-top: 5px;
                 }
               }
             }
