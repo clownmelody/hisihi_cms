@@ -444,6 +444,8 @@ body {
   height: 120px;
   border-top: 1px solid #CCCCCC;
   border-bottom: 1px solid #CCCCCC;
+}
+.main-item.coupon-basic-info * {
   color: white;
 }
 .main-item.coupon-basic-info .bg-sprite-c {
@@ -495,20 +497,11 @@ body {
   width: 65px;
   height: 100%;
   background-color: #f9a825;
-}
-.main-item.coupon-basic-info .coupon-right .sawtooth-right-main.used {
-  background-color: #cccccc;
-}
-.main-item.coupon-basic-info .coupon-right .sawtooth-right-main p {
-  text-align: center;
-  font-size: 16px;
-  margin: 0;
-}
-.main-item.coupon-basic-info .coupon-right .sawtooth-right-main p:first-child {
-  margin-top: 27px;
-}
-.main-item.coupon-basic-info .coupon-right .sawtooth-right-main p:last-child {
-  margin-top: 3px;
+  /*戳*/
+  /*去使用*/
+  /*去领取*/
+  /*未领取*/
+  /*已经使用*/
 }
 .main-item.coupon-basic-info .coupon-right .sawtooth-right-main .postmark {
   margin: 0 auto;
@@ -518,10 +511,8 @@ body {
   background-size: 344px 91px;
   background-position: -289px 0;
 }
-.main-item.coupon-basic-info .coupon-right .sawtooth-right-main .postmark.used {
-  background-position: -233px 0;
-}
 .main-item.coupon-basic-info .coupon-right .sawtooth-right-main .to-used-btn {
+  display: none;
   background-color: #FA4535;
   border-radius: 15px;
   background-clip: padding-box;
@@ -532,6 +523,35 @@ body {
   text-align: center;
   margin: 17px auto;
   font-size: 12px;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main .do-take-in {
+  display: none;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main .do-take-in p {
+  text-align: center;
+  font-size: 16px;
+  margin: 0;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main .do-take-in p:first-child {
+  margin-top: 27px;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main .do-take-in p:last-child {
+  margin-top: 3px;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main.un-take-in .do-take-in {
+  display: block;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main.un-take-in .postmark {
+  display: none;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main.used {
+  background-color: #cccccc;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main.used .postmark {
+  background-position: -233px 0;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-right-main.unused .to-used-btn {
+  display: block;
 }
 .main-item.coupon-basic-info .coupon-right i {
   display: block;

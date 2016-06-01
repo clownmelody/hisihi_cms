@@ -371,7 +371,9 @@ body {
     height: 120px;
     border-top:1px solid #CCCCCC;
     border-bottom:1px solid #CCCCCC;
-    color: white;
+    *{
+      color: white;
+    }
     .bg-sprite-c{
       background: url("../../images/teaching-course/sprite3.png");
     }
@@ -415,31 +417,24 @@ body {
       .sawtooth-right-main{
         .size(@left+2,100%);
         background-color:@color1;
-        &.used{
-          background-color: @color2;
-        }
-        p{
-          text-align: center;
-          font-size: 16px;
-          margin: 0;
-          &:first-child{
-            margin-top: 27px;
-          }
-          &:last-child{
-            margin-top: 3px;
-          }
-        }
+
+
+
+
+
+        /*戳*/
         .postmark{
+
           margin: 0 auto;
           .size(56px,44px);
           .bg-sprite-c;
           background-size:344px 91px;
           background-position: -289px 0;
-          &.used{
-            background-position: -233px 0;
-          }
         }
+
+        /*去使用*/
         .to-used-btn{
+          display: none;
           background-color: #FA4535;
           .border-radius(15px);
           color: white;
@@ -449,6 +444,48 @@ body {
           margin: 17px auto;
           font-size: 12px;
         }
+
+        /*去领取*/
+        .do-take-in {
+          display: none;
+          p {
+            text-align: center;
+            font-size: 16px;
+            margin: 0;
+            &:first-child {
+              margin-top: 27px;
+            }
+            &:last-child {
+              margin-top: 3px;
+            }
+          }
+        }
+
+        /*未领取*/
+        &.un-take-in {
+          .do-take-in{
+            display: block;
+          }
+          .postmark{
+            display: none;
+          }
+        }
+
+        /*已经使用*/
+        &.used{
+          background-color: @color2;
+          .postmark{
+            background-position: -233px 0;
+          }
+        }
+
+        &.unused{
+          .to-used-btn{
+            display: block;
+          }
+        }
+
+
       }
       i{
         display: block;

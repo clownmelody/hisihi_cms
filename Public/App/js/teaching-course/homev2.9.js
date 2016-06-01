@@ -12,7 +12,7 @@ define(['base'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
-        this.getUserInfo();
+        this.getUserInfo(1);
         this.getBasicInfo.call(that,function(result){;
             that.getOrgBasicInfo.call(that,result,function(resultOrg){
                 that.getPromotionsInfo.call(that,result,resultOrg);
@@ -22,57 +22,16 @@ define(['base'],function(Base){
         //领取优惠券
         $(document).on(eventName,'.sawtooth-right-main', $.proxy(this,'operateCoupon'));
 
+        /*模态窗口操作*/
+        $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
+        $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
+
         this.geMoreCourseInfo();
     };
 
     Course.prototype=new Base();
     Course.constructor=Course;
     var t=Course.prototype;
-
-    /*
-     *获得用户的信息 区分安卓和ios
-     *从不同的平台的方法 获得用户的基本信息，进行发表评论时使用
-     */
-    t.getUserInfo=function (callback) {
-        var userStr = '', that = this;
-        if (this.deviceType.mobile) {
-            if (this.deviceType.android) {
-                //如果方法存在
-                if (typeof AppFunction != "undefined") {
-                    userStr = AppFunction.getUser(); //调用app的方法，得到用户的基体信息
-                    //AppFunction.showShareView(true);  //调用安卓的方法，控制分享按钮可用
-                }
-            }
-            else if (this.deviceType.ios) {
-                //如果方法存在
-                if (typeof getUser_iOS != "undefined") {
-                    userStr = getUser_iOS();//调用app的方法，得到用户的基体信息
-                }
-            }
-            if (userStr != '') {
-                this.userInfo = JSON.parse(userStr);
-                callback && callback.call(that);
-            } else {
-                var para = {
-                    async:false,
-                    url: 'http://dev.api.hisihi.com/v1/token',
-                    type: 'post',
-                    paraData: JSON.stringify({account:'18601995231', secret: '123456', type: 200}),
-                    sCallback: function (data) {
-                        that.token =that.getBase64encode(data.token);
-                        callback && callback.call(that);
-                    }
-                };
-                this.getDataAsyncPy(para);
-                //callback && callback.call(that);
-            }
-        }
-        else {
-            callback && callback.call(that);
-        }
-
-    };
-
 
 
     //获得当前课程的详细信息
@@ -130,6 +89,12 @@ define(['base'],function(Base){
     //获得当前课程的优惠券详细信息
     t.getPromotionsInfo=function(result1,resultOrg,callback){
         this.controlLoadingBox(true);
+        var token=this.token;
+        if(!token){
+            this.getBasicToken({account:'jg2rw2xVjyrgbrZp', secret: 'VbkzpPlZ6H4OvqJW',type:100},false,function(result){
+                token=result;
+            });
+        }
         var that = this,
             para = {
                 url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/promotions',
@@ -137,7 +102,7 @@ define(['base'],function(Base){
                 paraData: null,
                 //async:false,
                 needToken:true,
-                token:this.token,
+                token:token,
                 sCallback: function (resutlPro) {
                     that.controlLoadingBox(false);
                     that.fillInCourseInfo(result1,resultOrg,resutlPro);
@@ -156,6 +121,7 @@ define(['base'],function(Base){
             };
         this.getDataAsyncPy(para);
     };
+
 
     //获得更多课程的详细信息
     t.geMoreCourseInfo=function(callback){
@@ -321,7 +287,7 @@ define(['base'],function(Base){
     t.getCouponState=function(data){
         var temp={
             type:false,
-            str:''
+            str:'<div class="do-take-in"><p>立即</p><p>领取</p></div><div class="postmark"></div><div class="to-used-btn">去使用</div>'
         };
         if(!data){
             return temp;
@@ -335,21 +301,15 @@ define(['base'],function(Base){
         //未领取
         if(!is_obtain){
             temp.type='un-take-in';
-            temp.str='<p>立即</p><p>领取</p>';
         }else{
             if(out_date){
                 temp.type=false;
             }else{
-                var str='<div class="postmark placehodler"></div>';
                 if(is_used){
                     temp.type='used';
-                    str=str.replace('placehodler','used');
                 }else {
                     temp.type = 'unused';
-                    str = str.replace('placehodler','unused');
-                    str+='<div class="to-used-btn">去使用</div>';
                 }
-                temp.str=str;
             }
         }
         return temp;
@@ -361,11 +321,11 @@ define(['base'],function(Base){
             this.controlLoginTipModal(true);
             return;
         }
-        var $target=$(e.currentTarget);
-
+        var $target=$(e.currentTarget),
+            id=$target.parents('.coupon-basic-info').attr('data-id');
         //未领取
         if($target.hasClass('un-take-in')){
-            var id=$target.parents('.coupon-basic-info').attr('data-id');
+
             this.execTakeInCoupon(id);
             return;
         }
@@ -376,6 +336,7 @@ define(['base'],function(Base){
         }
         //未使用
         if($target.hasClass('unused')){
+            window.location.href='hisihi://organization/detailinfo?id='+id;
             return;
         }
     };
@@ -383,7 +344,7 @@ define(['base'],function(Base){
     /*控制模态窗口的显示和隐藏*/
     t.controlLoginTipModal=function(flag){
         var $target=$('.model-box');
-        if(flag){
+        if(flag==true){
             $target.show();
         }
         else{
@@ -407,11 +368,7 @@ define(['base'],function(Base){
                 needToken:true,
                 token:this.token,
                 sCallback: function (orgResutl) {
-                    //that.controlLoadingBox(false);
-                    //that.fillInCourseInfo(result,orgResutl);
-
-                    //that.getPromotionsInfo.call(that,null,null);
-
+                    $btn.removeClass('un-take-in').addClass('unused');
                     callback && callback(orgResutl);
                 },
                 eCallback: function (data) {
@@ -588,6 +545,15 @@ define(['base'],function(Base){
         });
     };
 
+    //隐藏登录提示框
+    t.hideLoginTipBox=function(){
+        this.controlLoginTipModal(false);
+    };
+
+    //登录
+    t.doLogin=function(){
+        this.controlLoginTipModal(false);
+    };
 
     return Course;
 });
