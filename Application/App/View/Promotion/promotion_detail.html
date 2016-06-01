@@ -12,10 +12,33 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <link type="text/css" href="__CSS__/teaching-course/homev2.9.css" rel="stylesheet">
+    <link type="text/css" href="__CSS__/promotion/home.css" rel="stylesheet">
     <title>活动详情</title>
 </head>
 <body>
-<div class="banner"></div>
+<div class="promotion-box">
+    <div class="img-box">
+        <img src="#">
+    </div>
+    <div class="content-box">
+        <p></p>
+    </div>
+</div>
+<div class="course-box">
+    <div class="header"></div>
+    <ul class="list"></ul>
+</div>
 </body>
+<script type="application/javascript">
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/',
+        img_url:'__IMG__',
+        js: "__JS__",
+        api_url:'__API_URL__'
+    };
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+</script>
+<script type="text/javascript" data-main="__JS__/promotion/config"  src="__JS__/sharecommon/require.js" ></script>
 </html>
