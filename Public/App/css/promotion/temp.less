@@ -55,20 +55,23 @@ body{
         .middle {
           height: 100%;
           margin: 0 @w-r 0 @w-l;
-          .title-info{
+          p {
+            margin: 10px 0;
+          }
+          .title-info {
             text-overflow: ellipsis;
-            white-space:nowrap;
-            overflow:hidden;
-            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 17px;
             height: 30px;
             line-height: 35px;
           }
-          .money-info{
+          .money-info {
             color: #FA4535;
-            font-size: 14px;
+            font-size: 20px;
           }
           .time-info {
-            color:#8E8E8E;
+            color: #8E8E8E;
           }
         }
       }
@@ -79,15 +82,105 @@ body{
           .size(80%);
           margin: 0 auto;
           text-align: center;
-          background: url('http://pic.hisihi.com/2016-06-02/1464833264193150.png') 0 0 no-repeat;
+          //background: url('http://pic.hisihi.com/2016-06-02/1464833264193150.png') 0 0 no-repeat;
           img {
-
+            //border:0;
+            .size(100px,75px);
           }
         }
       }
       .right{
         width: @w-r;
         margin-left: -@w-r;
+        .coupon-money, .coupon-state{
+          .size(100%,35px);
+          background-color: #F9A825;
+          color: white;
+          text-align: center;
+          line-height: 35px;
+        }
+        .coupon-money{
+          font-size: 20px;
+        }
+        .coupon-state{
+          font-size: 16px;
+          p{
+            text-align: center;
+            margin: 0;
+            &:last-child{
+              display: none;
+            }
+          }
+        }
+        .seperation{
+          background: url(../../images/promotion/sprite.png);
+          height: 6px;
+          background-position: -20px 0;
+        }
+        &.un-take-in{
+          .coupon-money, .coupon-state{
+            background-color: #cccccc;
+          }
+          .coupon-state{
+            p{
+              &:last-child{
+                display: block;
+              }
+            }
+          }
+          .seperation{
+            background-position: -96px 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+@media screen and(max-width: 320px) {
+  .course-box {
+    .list {
+      li {
+        @w-l: 110px;
+        @w-r: 80px;
+        .size(auto, 90px);
+        margin: 0 @padding-r 0 @padding-l;
+        .main-content {
+          .middle {
+            height: 100%;
+            margin: 0 @w-r 0 @w-l;
+            p {
+              margin: 5px 0;
+            }
+            .title-info {
+              font-size: 17px;
+              height: 26px;
+              line-height: 26px;
+            }
+            .money-info {
+              color: #FA4535;
+              font-size: 20px;
+            }
+            .time-info {
+              color: #8E8E8E;
+            }
+          }
+        }
+        .left {
+          width: @w-l;
+          margin-left: -100%;
+          .img-box {
+            .size(80%);
+            margin: 0 auto;
+            text-align: center;
+            //background: url('http://pic.hisihi.com/2016-06-02/1464833264193150.png') 0 0 no-repeat;
+            img {
+              //border:0;
+              .size(100px, 75px);
+            }
+          }
+        }
       }
     }
   }

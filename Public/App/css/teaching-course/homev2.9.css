@@ -631,7 +631,7 @@ body {
 }
 /*模态窗口*/
 .model-box {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
@@ -661,7 +661,7 @@ body {
 }
 .model-box .login-tips-box {
   position: absolute;
-  top: 45%;
+  top: 35%;
   left: 50%;
   margin-top: -47px;
   margin-left: -140px;

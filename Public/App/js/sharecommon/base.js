@@ -46,6 +46,7 @@ define(['$'],function() {
                 }
                 if (userStr != '') {
                     this.userInfo = JSON.parse(userStr);
+                    this.userInfo.token=this.getBase64encode(this.userInfo.token);
                     callback && callback.call(that);
                 } else {
                     if(apiType==0) {
@@ -62,10 +63,11 @@ define(['$'],function() {
                         this.getDataAsync(para);
                         callback && callback.call(that);
                     }else{
-                        that.getBasicToken({account:'18601995231', secret: '123456', type: 200},false,function(token){
-                            that.userInfo.token=token;
-                            callback && callback.call(that,that.userInfo);
-                        });
+                        //that.getBasicToken({account:'18601995231', secret: '123456', type: 200},false,function(token){
+                        //    that.userInfo.token=token;
+                        //    callback && callback.call(that,that.userInfo);
+                        //});
+                        callback && callback.call(that,that.userInfo);
                     }
                 }
             }
@@ -173,6 +175,7 @@ define(['$'],function() {
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
+                        alert(rTxt);
                         var tempResult={code: '404', txt: 'no found'};
                         if(result.code){
                             tempResult=result;

@@ -7,6 +7,7 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         prefixfree:'sharecommon/prefixfree.min',
+        fastclick:'sharecommon/fastclick',
         base:'sharecommon/base',
         home:'teaching-course/homev2.9',
     },
@@ -16,6 +17,9 @@ requirejs.config({
         },
         prefixfree:{
             output:'prefixfree'
+        },
+        fastclick:{
+            output:'fastclick'
         },
     }
 });
