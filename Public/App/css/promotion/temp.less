@@ -56,7 +56,7 @@ body{
           height: 100%;
           margin: 0 @w-r 0 @w-l;
           p {
-            margin: 10px 0;
+            margin: 5px 0;
           }
           .title-info {
             text-overflow: ellipsis;
@@ -69,6 +69,7 @@ body{
           .money-info {
             color: #FA4535;
             font-size: 20px;
+            font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
           }
           .time-info {
             color: #8E8E8E;
@@ -79,13 +80,14 @@ body{
         width:@w-l;
         margin-left: -100%;
         .img-box{
-          .size(80%);
+          .size(100%);
           margin: 0 auto;
           text-align: center;
           //background: url('http://pic.hisihi.com/2016-06-02/1464833264193150.png') 0 0 no-repeat;
           img {
             //border:0;
-            .size(100px,75px);
+            .size(100%,75px);
+            margin:20px 20px 0 0;
           }
         }
       }
@@ -100,10 +102,15 @@ body{
           line-height: 35px;
         }
         .coupon-money{
-          font-size: 20px;
+          span{
+            font-size: 20px;
+            &:first-child{
+              font-size: 12px;
+            }
+          }
         }
         .coupon-state{
-          font-size: 16px;
+          font-size: 14px;
           p{
             text-align: center;
             margin: 0;
@@ -150,26 +157,14 @@ body{
           .middle {
             height: 100%;
             margin: 0 @w-r 0 @w-l;
-            p {
-              margin: 5px 0;
-            }
             .title-info {
-              font-size: 17px;
               height: 26px;
               line-height: 26px;
-            }
-            .money-info {
-              color: #FA4535;
-              font-size: 20px;
-            }
-            .time-info {
-              color: #8E8E8E;
             }
           }
         }
         .left {
           width: @w-l;
-          margin-left: -100%;
           .img-box {
             .size(80%);
             margin: 0 auto;
