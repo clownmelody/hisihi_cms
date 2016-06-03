@@ -332,8 +332,8 @@ class ForumController extends AppController
      * created by leilei @2016.4.6
      */
     public function _before_forumFilter(){
-        if (I('get.no_cache') || I('post.no_cache')){
-            // 如果no_cache参数不传或者传入true，则不去读缓存
+        if (intval(I('get.no_read_cache')) || intval(I('post.no_read_cache'))){
+            // 如果no_cache参数不传或者传入1，则不去读缓存
             return;
         }
         $cache = new \ForumFilterCache();
@@ -363,8 +363,9 @@ class ForumController extends AppController
      */
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply',
                                 $show_adv=false, $post_type=1, $version=null, $circle_type=null,
-                                $reply_type=null,$position=null, $grade=null, $no_cache=false)
+                                $reply_type=null,$position=null, $grade=null, $no_read_cache=false)
     {
+        $no_read_cache = intval($no_read_cache);
         $field_type = intval($field_type);
         $page = intval($page);
         $count = intval($count);
@@ -373,7 +374,7 @@ class ForumController extends AppController
         $reply_type = intval($reply_type);
 
         if ($order == 'ctime') {
-            $order = 'create_time desc';
+            $order = 'create_time d esc';
         } else if ($order == 'reply') {
             $order = 'last_reply_time desc';
         } else if($order == 'hot'){//2.2以上版本"最热"
@@ -499,7 +500,7 @@ class ForumController extends AppController
           // setPublicResCache将删除某些属性，这里复制一份
           $list_copy = $list;
           $totalCount_copy = $totalCount;
-          if($circle_type != 3 && !$no_cache){
+          if($circle_type != 3 && !$no_read_cache){
               // 不缓存朋友圈数据, 如果no_cache=true，也不缓存数据
               $cache = new \ForumFilterCache();
               $cache->setPublicResCache($list, $totalCount);
