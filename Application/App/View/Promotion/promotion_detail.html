@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html  style="overflow-x: hidden;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="Resource-type" content="Document">
+    <!--禁止缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--禁止数字识别为手机号-->
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link type="text/css" href="__CSS__/promotion/home.css" rel="stylesheet">
+    <title>活动详情</title>
+</head>
+<body>
+<div class="promotion-box">
+    <div class="img-box">
+        <img src="__IMG__/hiworks/hisihi.png">
+    </div>
+    <div class="content-box">
+        <p>让浏览器缓存CSS、JS、图片、静态文件等是很重要的事情，这样可以减轻服务器的压力，省的浏览器经常要去服务端下载这些静态文件。下面看看配置方法吧。
+            1.开启apache扩展模块mod_expires.so，在apache的配置文件中加入下面一行代码。
+            LoadModule expires_module modules/mod_expires.so
+            2.配置缓存,在apache配置文件中加入下面一段代码</p>
+    </div>
+</div>
+<div class="course-box">
+    <div class="header">参与课程</div>
+    <ul class="list">
+        <li>
+            <div class="main-content">
+                <div class="middle">
+                    <p class="title-info">文件中加入下面一段提高</p>
+                    <p class="money-info">￥200</p>
+                    <p class="time-info">2016-04-05开课</p>
+                </div>
+            </div>
+            <div class="left">
+                <div class="img-box">
+                    <img src="http://pic.hisihi.com/2016-06-02/1464863132523846.png">
+                </div>
+            </div>
+            <div class="right">
+                <div class="coupon-money un-take-in"><span>￥</span><span>200</span></div>
+                <div class="seperation"></div>
+                <div class="coupon-state un-take-in">
+                    <p>点击领取</p>
+                    <p>已经领取</p>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="main-content">
+                <div class="middle">
+                    <p class="title-info">文件中加入下面一段提高</p>
+                    <p class="money-info">￥200</p>
+                    <p class="time-info">2016-04-05开课</p>
+                </div>
+            </div>
+            <div class="left">
+                <div class="img-box">
+                    <img src="http://pic.hisihi.com/2016-06-02/1464863132523846.png">
+                </div>
+            </div>
+            <div class="right un-take-in">
+                <div class="coupon-money"><span>￥</span><span>200</span></div>
+                <div class="seperation"></div>
+                <div class="coupon-state un-take-in">
+                    <p>点击领取</p>
+                    <p>已经领取</p>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="nodata"><p>暂无参与课程<p></div>
+</div>
+</body>
+<script type="application/javascript">
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/',
+        img_url:'__IMG__',
+        js: "__JS__",
+        api_url:'__API_URL__'
+    };
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+</script>
+<script type="text/javascript" data-main="__JS__/promotion/config"  src="__JS__/sharecommon/require.js" ></script>
+</html>

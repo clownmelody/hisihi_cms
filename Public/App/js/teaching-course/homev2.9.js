@@ -2,13 +2,14 @@
  * Created by jimmy on 2016/5/10.
  */
 
-define(['base'],function(Base){
+define(['base','fastclick'],function(Base){
+    FastClick.attach(document.body);
     var Course=function(id,oid){
         this.cid = id;
         this.oid=oid;
         var eventName='click',that=this;
         this.deviceType = this.operationType();
-        this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
+        this.isLocal=window.location.href.indexOf('localhost')>=0;
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
@@ -89,7 +90,7 @@ define(['base'],function(Base){
     //获得当前课程的优惠券详细信息
     t.getPromotionsInfo=function(result1,resultOrg,callback){
         this.controlLoadingBox(true);
-        var token=this.token;
+        var token=this.userInfo.token;
         if(!token){
             this.getBasicToken({account:'jg2rw2xVjyrgbrZp', secret: 'VbkzpPlZ6H4OvqJW',type:100},false,function(result){
                 token=result;
@@ -250,7 +251,7 @@ define(['base'],function(Base){
         var startTime=this.getTimeFromTimestamp(couponInfo.start_time,'yyyy.MM.dd'),
             endTime=this.getTimeFromTimestamp(couponInfo.end_time,'yyyy.MM.dd'),
             className=strAndType.type;
-        return '<div class="main-item coupon-basic-info" data-id="'+couponInfo.id+'">'+
+        return '<div class="main-item coupon-basic-info" data-id="'+couponInfo.id+'" data-oid="'+couponInfo.obtain_id+'">'+
                    '<div class="center-content">'+
                     '<div class="coupon-middle">'+
                         '<div class="coupon-middle-all">'+
@@ -317,15 +318,15 @@ define(['base'],function(Base){
 
     /*优惠券操作*/
     t.operateCoupon=function(e){
-        if(!this.token){
+        if(!this.userInfo.token){
             this.controlLoginTipModal(true);
             return;
         }
         var $target=$(e.currentTarget),
-            id=$target.parents('.coupon-basic-info').attr('data-id');
+            $parent=$target.parents('.coupon-basic-info'),
+            id=$parent.attr('data-id');
         //未领取
         if($target.hasClass('un-take-in')){
-
             this.execTakeInCoupon(id);
             return;
         }
@@ -336,7 +337,12 @@ define(['base'],function(Base){
         }
         //未使用
         if($target.hasClass('unused')){
-            window.location.href='hisihi://organization/detailinfo?id='+id;
+            var oid=$parent.attr('data-oid');
+            if(oid=='undefined'){
+                that.showTips('您尚未领取该优惠券');
+                return;
+            }
+            window.location.href='hisihi://coupon/detailinfo?id='+oid;
             return;
         }
     };
@@ -366,10 +372,14 @@ define(['base'],function(Base){
                 type: 'post',
                 paraData: JSON.stringify({teaching_course_id:this.cid ,coupon_id: id}),
                 needToken:true,
-                token:this.token,
-                sCallback: function (orgResutl) {
+                token:this.userInfo.token,
+                sCallback: function (result) {
+                    if(result.has_obtained){
+                        $btn.parents('.coupon-basic-info').attr('data-oid',result.obtain_id);
+                        that.showTips.call(that,'您已经领过该优惠券');
+                    }
                     $btn.removeClass('un-take-in').addClass('unused');
-                    callback && callback(orgResutl);
+                    callback && callback(result);
                 },
                 eCallback: function (data) {
                     var txt=data.txt;
@@ -552,7 +562,36 @@ define(['base'],function(Base){
 
     //登录
     t.doLogin=function(){
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof showLoginView != "undefined") {
+                    showLoginView();//调用app的方法，得到用户的基体信息
+                }
+            }
+        }
         this.controlLoginTipModal(false);
+    };
+
+    /*
+     *登录功能的回调方法
+     *要做三件事：
+     * 1，更新点赞 和点踩的信息
+     * 2，收藏更新
+     * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
+     */
+    window.loginSuccessCallback=function(){
+        var obj=window.course;
+
+        //得到用户基本信息
+        obj.getUserInfo(function(){
+
+        });
     };
 
     return Course;

@@ -48,15 +48,9 @@
         js: "__JS__",
         api_url:'__API_URL__'
     };
-    window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
     };
-    var aLink=document.getElementsByTagName("a");
-    for(var i=0; i<aLink.length; i++){
-        aLink[i].href = "javascript:void(0);";
-        aLink[i].setAttribute("disabled", "disabled");
-    }
 </script>
 <script type="text/javascript" data-main="__JS__/teaching-course/configv2.9"  src="__JS__/sharecommon/require.js" ></script>
 </html>

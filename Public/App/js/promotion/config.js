@@ -7,9 +7,8 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         prefixfree:'sharecommon/prefixfree.min',
-        fastclick:'sharecommon/fastclick',
         base:'sharecommon/base',
-        home:'teaching-course/homev2.9',
+        home:'promotion/home',
     },
     shim: {
         $:{
@@ -18,17 +17,13 @@ requirejs.config({
         prefixfree:{
             output:'prefixfree'
         },
-        fastclick:{
-            output:'fastclick'
-        },
     }
 });
 
 
-require(['home','prefixfree'],function(course){
+require(['home','prefixfree'],function(promotion){
     var userAgent = window.location.href,
-        reg = /course_id\/[1-9][0-9]*/g,
+        reg = /promotion_id\/[1-9][0-9]*/g,
         id = userAgent.match(reg)[0].toString().replace(/course_id\//g,'');
-    var oid=$('body').attr('data-oid');
-    window.course = new course(id,oid);
+    window.promotion = new promotion(id);
 });
