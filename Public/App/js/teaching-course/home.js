@@ -142,20 +142,19 @@ define(['base'],function(Base){
     //课程简介
     t.getBasicIntroduceInfo=function(result){
         return '<div class="main-item basic-info">'+
-            '<div class="center-content">'+
-            '<div class="head-txt" id="current-title">'+
-            result.course_name+
-            '</div>'+
-            '<div id="price" class="price">￥'+
-            result.price+
-            '</div>'+
-            '<ul class="otherinfo">'+
-            '<li><i class="cer"></i><span>认证机构</span></li>'+
-            '<li><i class="nums"></i><span><span id="singin-nums">1</span>人报名</span></li>'+
-            '<li><i class="comment"></i><span><span id="commenta-nums">254</span>条评论</span></li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>';
+                    '<div class="center-content">'+
+                        '<div class="head-txt" id="current-title">'+
+                            result.course_name+
+                        '</div>'+
+                        '<div id="price" class="price">￥'+
+                            result.price+
+                        '</div>'+
+                        '<ul class="otherinfo">'+
+                            '<li><i class="cer"></i><span>认证机构</span></li>'+
+                            '<li><i class="nums"></i><span><span id="singin-nums">'+result.already_registered+'</span>人报名</span></li>'+
+                        '</ul>'+
+                    '</div>'+
+                '</div>';
     };
 
     //机构信息
@@ -166,25 +165,25 @@ define(['base'],function(Base){
             logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png'
         }
         return '<div class="main-item org-basic-info">'+
-            '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
-            '<div class="center-content">'+
-            '<div class="left">'+
-            '<img src="'+logo+'">'+
-            '</div>'+
-            '<div class="right">'+
-            '<div class="org-name">'+
-            '<div class="name">'+name+'</div>'+
-            this.getCerImg(data.auth)+
-            '<div style="clear: both;"></div>'+
-            '</div>'+
-            '<ul class="nums-info">'+
-            '<li><span id="view-nums">'+this.transformNums(data.enroll_count) + '</span><span>人查看</span></li>'+
-            '<li><span id="singin-nums－org">'+this.transformNums(data.follow_count) + '</span><span>人报名</span></li>'+
-            '<li><span id="view-watch">'+this.transformNums(data.view_count) + '</span><span>人关注</span></li>'+
-            '</ul>'+
-            '</div>'+
-            '</a>'+
-            '</div>'+
+                    '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
+                    '<div class="center-content">'+
+                        '<div class="left">'+
+                            '<img src="'+logo+'">'+
+                        '</div>'+
+                        '<div class="right">'+
+                            '<div class="org-name">'+
+                            '<div class="name">'+name+'</div>'+
+                            this.getCerImg(data.auth)+
+                            '<div style="clear: both;"></div>'+
+                        '</div>'+
+                        '<ul class="nums-info">'+
+                            '<li><span id="view-nums">'+this.transformNums(data.follow_count) + '</span><span>人查看</span></li>'+
+                            '<li><span id="singin-nums－org">'+this.transformNums(data.enroll_count) + '</span><span>人报名</span></li>'+
+                            '<li><span id="view-watch">'+this.transformNums(data.view_count) + '</span><span>人关注</span></li>'+
+                        '</ul>'+
+                    '</div>'+
+                    '</a>'+
+                '</div>'+
             '</div>';
     };
 
