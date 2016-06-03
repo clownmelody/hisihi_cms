@@ -178,9 +178,9 @@ define(['base'],function(Base){
             '<div style="clear: both;"></div>'+
             '</div>'+
             '<ul class="nums-info">'+
-            '<li><span id="view-nums">'+this.transformNums(data.follow_count) + '</span><span>人查看</span></li>'+
+            '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>人查看</span></li>'+
             '<li><span id="singin-nums－org">'+this.transformNums(data.enroll_count) + '</span><span>人报名</span></li>'+
-            '<li><span id="view-watch">'+this.transformNums(data.view_count) + '</span><span>人关注</span></li>'+
+            '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>人关注</span></li>'+
             '</ul>'+
             '</div>'+
             '</a>'+

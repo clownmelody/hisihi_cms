@@ -198,8 +198,7 @@ define(['base','fastclick'],function(Base){
             '</div>'+
             '<ul class="otherinfo">'+
             '<li><i class="cer"></i><span>认证机构</span></li>'+
-            '<li><i class="nums"></i><span><span id="singin-nums">1</span>人报名</span></li>'+
-            '<li><i class="comment"></i><span><span id="commenta-nums">254</span>条评论</span></li>'+
+            '<li><i class="nums"></i><span><span id="singin-nums">'+result.already_registered+'</span>人报名</span></li>'+
             '</ul>'+
             '</div>'+
             '</div>';
@@ -225,9 +224,9 @@ define(['base','fastclick'],function(Base){
             '<div style="clear: both;"></div>'+
             '</div>'+
             '<ul class="nums-info">'+
-            '<li><span id="view-nums">'+this.transformNums(data.enroll_count) + '</span><span>人查看</span></li>'+
-            '<li><span id="singin-nums－org">'+this.transformNums(data.follow_count) + '</span><span>人报名</span></li>'+
-            '<li><span id="view-watch">'+this.transformNums(data.view_count) + '</span><span>人关注</span></li>'+
+            '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>人查看</span></li>'+
+            '<li><span id="singin-nums－org">'+this.transformNums(data.enroll_count) + '</span><span>人报名</span></li>'+
+            '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>人关注</span></li>'+
             '</ul>'+
             '</div>'+
             '</a>'+
