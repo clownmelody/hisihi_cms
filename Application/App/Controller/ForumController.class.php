@@ -332,6 +332,10 @@ class ForumController extends AppController
      * created by leilei @2016.4.6
      */
     public function _before_forumFilter(){
+        if (I('get.no_cache') || I('post.no_cache')){
+            // 如果no_cache参数不传或者传入true，则不去读缓存
+            return;
+        }
         $cache = new \ForumFilterCache();
         $res_array = $cache->getPublicResCache();
         if(!$res_array){
@@ -359,13 +363,13 @@ class ForumController extends AppController
      */
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply',
                                 $show_adv=false, $post_type=1, $version=null, $circle_type=null,
-                                $reply_type=null,$position=null, $grade=null)
+                                $reply_type=null,$position=null, $grade=null, $no_cache=false)
     {
         $field_type = intval($field_type);
         $page = intval($page);
         $count = intval($count);
         $order = op_t($order);
-        $circle_type = intval($circle_type);
+        $circle_type = intval(  $circle_type);
         $reply_type = intval($reply_type);
 
         if ($order == 'ctime') {
@@ -491,13 +495,17 @@ class ForumController extends AppController
 //        $cache = new \RedisCache();
 //        $cache->setResCache($this, '获取提问列表成功', array( 'total_count' => $totalCount, 'forumList' => $list), 120);
 //        $cache->close();
-          if($circle_type != 3){
-              // 不缓存朋友圈数据
+
+          // setPublicResCache将删除某些属性，这里复制一份
+          $list_copy = $list;
+          $totalCount_copy = $totalCount;
+          if($circle_type != 3 && !$no_cache){
+              // 不缓存朋友圈数据, 如果no_cache=true，也不缓存数据
               $cache = new \ForumFilterCache();
               $cache->setPublicResCache($list, $totalCount);
               $cache->close();
           }
-          $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
+          $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount_copy, 'forumList' => $list_copy));
 
 //        $data['total_count'] = $totalCount;
 //        $data['forumList'] = $list;

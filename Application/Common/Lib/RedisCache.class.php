@@ -74,7 +74,7 @@ class RedisCache
      *
      */
     public function getPartResCache($suffix, $except_key=array()){
-        $key = $this->bornKey($except_key);
+        $key = $this->bornKey($except_key,I('get.'), I('post.'),$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
         $key = $key.'$'.$suffix;
         $has = $this->cache->exists($key);
 
@@ -102,7 +102,7 @@ class RedisCache
      * @return bool
      */
     public function setPartResCache($suffix, $value, $ttl=60, $except_key=array()){
-        $key = $this->bornKey($except_key);
+        $key = $this->bornKey($except_key,I('get.'), I('post.'),$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
         $key = $key.'$'.$suffix;
 
         $value_type = gettype($value);
@@ -117,9 +117,14 @@ class RedisCache
     }
 
     // 排序规则， 生成一个controller的基础key，参数按照升序排列
-    private function bornKey($except_key){
-        $get_attrs = I('get.');
-        $post_attrs = I('post.');
+    private function bornKey($except_key, $get_attrs, $post_attrs, $host, $controller_name, $action_name){
+//        $get_attrs = I('get.');
+//        $post_attrs = I('post.');
+
+        if($host){
+            // 去除主机名称中的www字符串
+            $host = strpos($host, 'www')?(str_replace('www.','',$host)):($host);
+        }
 
         $get_attr_keys = array_keys($get_attrs);
         $post_attr_keys = array_keys($post_attrs);
@@ -137,7 +142,7 @@ class RedisCache
         }
 
         $key_part2 = implode('+', $get_post_attrs_sorted);
-        $key_part1 = $_SERVER['HTTP_HOST'].'+'.CONTROLLER_NAME.'+'.ACTION_NAME;
+        $key_part1 = $host.'+'.$controller_name.'+'.$action_name;
 
         $key = $key_part1.'$'.$key_part2;
 

@@ -37,11 +37,12 @@ class ForumFilterCache extends \RedisCache
         if($total_count==null){
             return null;
         }
+        // 帖子的点赞信息和个人用户相关，无法作为缓存公用，这里需要再次查询
         $this->fillWithIfSupported($post_list);
         return array('list'=>$post_list, 'total_count'=>intval($total_count));
     }
 
-    // 向缓存结果添加同用户相关的信息后，才能作为结果返回客户端
+    // 向缓存结果添加同用户相关的点赞信息，才能作为结果返回客户端
     private function fillWithIfSupported($cached){
         $forum_list = $cached;
         foreach($forum_list as $f){
