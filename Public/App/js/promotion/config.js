@@ -8,6 +8,7 @@ requirejs.config({
         $:'sharecommon/zepto.min',
         prefixfree:'sharecommon/prefixfree.min',
         base:'sharecommon/base',
+        fastclick:'sharecommon/fastclick',
         home:'promotion/home',
     },
     shim: {
@@ -17,6 +18,9 @@ requirejs.config({
         prefixfree:{
             output:'prefixfree'
         },
+        fastclick:{
+            output:'fastclick'
+        },
     }
 });
 
@@ -24,6 +28,6 @@ requirejs.config({
 require(['home','prefixfree'],function(promotion){
     var userAgent = window.location.href,
         reg = /promotion_id\/[1-9][0-9]*/g,
-        id = userAgent.match(reg)[0].toString().replace(/course_id\//g,'');
+        id = userAgent.match(reg)[0].toString().replace(/promotion_id\//g,'');
     window.promotion = new promotion(id);
 });

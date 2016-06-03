@@ -63,11 +63,11 @@ define(['$'],function() {
                         this.getDataAsync(para);
                         callback && callback.call(that);
                     }else{
-                        //that.getBasicToken({account:'18601995231', secret: '123456', type: 200},false,function(token){
-                        //    that.userInfo.token=token;
-                        //    callback && callback.call(that,that.userInfo);
-                        //});
-                        callback && callback.call(that,that.userInfo);
+                        that.getBasicToken({account:'18601995231', secret: '123456', type: 200},false,function(token){
+                            that.userInfo.token=token;
+                            callback && callback.call(that,that.userInfo);
+                        });
+                        //callback && callback.call(that,that.userInfo);
                     }
                 }
             }
