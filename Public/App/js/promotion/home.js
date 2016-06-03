@@ -20,12 +20,17 @@ define(['base','fastclick'],function(Base){
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
-        this.loadPromotionBasicInfo();
+        this.init();
     };
 
     Promotion.prototype=new Base();
     Promotion.constructor=Promotion;
     var t=Promotion.prototype;
+
+    t.init=function(){
+        this.loadPromotionBasicInfo();
+        this.loadPromotionCource();
+    };
 
     //获得当前活动的基本信息
     t.loadPromotionBasicInfo=function(callback){
@@ -55,7 +60,7 @@ define(['base','fastclick'],function(Base){
         this.getDataAsyncPy(para);
     };
 
-    /*显示基本信息*/
+    /*显示活动基本信息*/
     t.fillInPromotionBasicInfo=function(result){
         var $pBox=$('.promotion-box'),
             imgUrl=result.logo_url,
@@ -68,6 +73,117 @@ define(['base','fastclick'],function(Base){
         $pBox.find('.content-box p').text(desc);
         $('title').text(result.title);
     }
+
+    /*获得参与活动的课程列表*/
+    t.loadPromotionCource=function(callback){
+        var that = this,
+            para = {
+                url: window.hisihiUrlObj.api_url + 'v1/org/promotion/'+this.pid+'/teaching_course',
+                type: 'get',
+                async:false,
+                paraData: null,
+                needToken:true,
+                token:this.userInfo.token,
+                sCallback: function (resutl) {
+                    that.fillInCourceList(resutl);
+                    callback && callback(resutl);
+                },
+                eCallback: function (data) {
+                    var txt=data.txt;
+                    if(data.code=404){
+                        txt='信息加载失败';
+                    }
+                    that.controlLoadingBox(false);
+                    that.showTips.call(that,txt);
+                    $('#current-info .nodata').show();
+                    callback && callback();
+                },
+            };
+        this.getDataAsyncPy(para);
+    };
+
+    /*显示课程列表*/
+    t.fillInCourceList=function(result){
+        if(!result){
+            this.showTips('参与活动课程加载失败');
+            return;
+        }
+        if(result.total_count==0){
+            $('.nodata').show();
+            return;
+        }
+        var str='',
+            data=result.data,
+            len=data.length,
+            item;
+        for(var i=0;i<len;i++){
+            item=data[i];
+            var coupon=item.coupon_info;
+            var oid='0';
+            if(coupon.is_obtain){
+                oid=coupon.obtain_id;
+            }
+            str+='<li data-oid="'+oid+'" data-cid="'+coupon.id+'" data-cource-id="">'+
+                    '<div class="item-main">'+
+                        '<div class="main-content">'+
+                            '<div class="middle">'+
+                                '<p class="title-info">'+item.lecture_name+'</p>'+
+                                '<p class="money-info">￥'+item.price+'</p>'+
+                                '<p class="time-info">'+this.getTimeFromTimestamp(item.start_course_time)+'开课</p>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="left">'+
+                            '<div class="img-box">'+
+                                '<img src="'+item.cover_pic+'">'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="right coupon un-take-in">'+
+                            '<div class="coupon-money">' +
+                                '<span>￥</span><span>200</span>'+
+                            '</div>'+
+                            '<div class="seperation"></div>'+
+                            '<div class="coupon-state">'+
+                                '<p>点击领取</p>'+
+                                '<p>已经领取</p>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+
+                '</li>';
+        }
+        $('.list').html(str);
+    };
+
+    /*通过优惠券的状态，得到相应的样式*/
+    t.getCouponStatus=function(data){
+        var temp={
+            type:false,
+            str:''
+        };
+        if(!data){
+            return temp;
+        }
+        //data.is_obtain=true;
+        //data.is_used=true;
+        //data.is_out_of_date=false;
+        var is_obtain=data.is_obtain,
+            is_used=data.is_used,
+            out_date=data.is_out_of_date;
+        //未领取
+        if(!is_obtain){
+            temp.type='un-take-in';
+        }else{
+            if(out_date){
+                temp.type=false;
+            }else{
+                if(is_used){
+                    temp.type='used';
+                }else {
+                    temp.type = 'unused';
+                }
+            }
+        }
+        return temp;
+    };
 
     /*优惠券操作*/
     t.operateCoupon=function(e){
