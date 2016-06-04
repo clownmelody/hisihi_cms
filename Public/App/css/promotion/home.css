@@ -326,8 +326,8 @@ body {
     width: 100px;
   }
   .course-box .list li .item-main .left .img-box img {
-    width: 100px;
-    height: 75px;
+    width: 90px;
+    height: 65px;
   }
 }
 @media screen and (min-width: 750px) {

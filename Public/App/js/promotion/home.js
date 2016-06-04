@@ -76,6 +76,16 @@ define(['base','fastclick'],function(Base){
 
     /*获得参与活动的课程列表*/
     t.loadPromotionCource=function(callback){
+        var token=this.userInfo.token;
+        if(!token) {
+            this.getBasicToken({
+                account: 'jg2rw2xVjyrgbrZp',
+                secret: 'VbkzpPlZ6H4OvqJW',
+                type: 100
+            }, false, function (result) {
+                token = result;
+            });
+        }
         var that = this,
             para = {
                 url: window.hisihiUrlObj.api_url + 'v1/org/promotion/'+this.pid+'/teaching_course',
@@ -86,6 +96,7 @@ define(['base','fastclick'],function(Base){
                 token:this.userInfo.token,
                 sCallback: function (resutl) {
                     that.fillInCourceList(resutl);
+                    that.controlLoadingBox(false);
                     callback && callback(resutl);
                 },
                 eCallback: function (data) {
