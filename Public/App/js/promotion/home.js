@@ -25,6 +25,7 @@ define(['base','fastclick'],function(Base){
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
         this.init();
+        alert(this.isFromApp);
     };
 
     Promotion.prototype=new Base();
@@ -160,7 +161,7 @@ define(['base','fastclick'],function(Base){
                 marginRight='80px';
             }
             str+='<li data-obtain-id="'+obtainId+'" data-coupon-id="'+couponId+'" data-course-id="'+courseId+'">'+
-                    '<a href="hisihi://techcourse/detailinfo?id='+courseId+'">' +
+                    //'<a href="hisihi://techcourse/detailinfo?id='+courseId+'">' +
                         '<div class="item-main">'+
                             '<div class="main-content">'+
                                 '<div class="middle" style="margin-right:'+marginRight+'">'+
@@ -176,7 +177,7 @@ define(['base','fastclick'],function(Base){
                             '</div>'+
                             rightStr+
                         '</div>'+
-                    '</a>'+
+                    //'</a>'+
                 '</li>';
         }
         $('.list').html(str);
@@ -184,18 +185,21 @@ define(['base','fastclick'],function(Base){
 
     /*得到优惠券右边的信息*/
     t.getRightStrAndMarginInfo=function(coupon){
-        return '<div class="right coupon un-take-in">'+
-                    '<div class="right-main">'+
-                        '<div class="coupon-money">' +
-                            '<span>￥</span><span>'+coupon.money+'</span>'+
-                        '</div>'+
-                        '<div class="seperation"></div>'+
-                        '<div class="coupon-state">'+
-                            '<p>点击领取</p>'+
-                            '<p>已经领取</p>'+
-                        '</div>'+
-                    '</div>'+
+        var couponStatue=this.getCouponStatus(coupon),
+            str='';
+        if(couponStatue.type) {
+           str ='<div class="right coupon '+couponStatue.type+'">' +
+                '<div class="coupon-money">' +
+                '<span>￥</span><span>' + coupon.money + '</span>' +
+                '</div>' +
+                '<div class="seperation"></div>' +
+                '<div class="coupon-state">' +
+                '<p>点击领取</p>' +
+                '<p>已经领取</p>' +
+                '</div>' +
                 '</div>';
+        }
+        return str;
     };
 
     /*通过优惠券的状态，得到相应的样式*/
@@ -232,6 +236,7 @@ define(['base','fastclick'],function(Base){
 
     /*优惠券操作*/
     t.operateCoupon=function(e){
+        //event.stopPropagation();
         if(!this.userInfo.token){
             this.controlLoginTipModal(true);
             return;
@@ -332,6 +337,20 @@ define(['base','fastclick'],function(Base){
 
     //登录
     t.doLogin=function(){
+        alert(this.isFromApp);
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof showLoginView != "undefined") {
+                    showLoginView();//调用app的方法，得到用户的基体信息
+                }
+            }
+        }
         this.controlLoginTipModal(false);
     };
 
