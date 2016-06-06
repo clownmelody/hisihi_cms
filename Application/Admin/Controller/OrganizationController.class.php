@@ -3281,6 +3281,12 @@ class OrganizationController extends AdminController
             if(M('TeachingCourseCouponRelation')->where($post_data)->find()){
                 $this->success('已经添加该优惠券', 'index.php?s=/admin/promotion/teaching_course_to_coupon');
             }
+
+            // 移除该课程之前添加的优惠券
+            $where_data['teaching_course_id'] = $_POST['teaching_course_id'];
+            $save_data['status'] = -1;
+            M('TeachingCourseCouponRelation')->where($where_data)->save($save_data);
+
             $post_data['create_time'] = time();
             M('TeachingCourseCouponRelation')->add($post_data);
 
