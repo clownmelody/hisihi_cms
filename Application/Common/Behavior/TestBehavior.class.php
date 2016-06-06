@@ -20,6 +20,7 @@ class TestBehavior extends Behavior
     public function run(&$content)
     {
         echo 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        
 
         $a = C('TEST_PARAM');
     }
