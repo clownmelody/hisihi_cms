@@ -3385,6 +3385,7 @@ class OrganizationController extends AppController
         }
         $where['organization_id'] = array('in', $org_id_list);
         $where['is_hot'] = 1;
+        $where['status'] = array('gt', 0);
         $totalCount = M('OrganizationTeachingCourse')->where($where)->count();
         $list = M('OrganizationTeachingCourse')->field('id, organization_id, course_name, cover_pic, start_course_time, lesson_period, student_num, lecture_name, price, already_registered')
             ->where($where)->order('create_time desc')->page($page, $count)->select();
