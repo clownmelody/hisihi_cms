@@ -3400,7 +3400,7 @@ class OrganizationController extends AppController
                     ->where('status=1 and teaching_course_id='.$course['id'])
                     ->order('create_time desc')->limit(0, 1)->find();
                 if($tccr){
-                    $coupon_info = M('Coupon')->where('id='.$tccr['coupon_id'])->find();
+                    $coupon_info = M('Coupon')->where('status=1 and id='.$tccr['coupon_id'])->find();
                     unset($coupon_info['create_time']);
                     unset($coupon_info['status']);
                     unset($coupon_info['create_time']);
@@ -3430,6 +3430,7 @@ class OrganizationController extends AppController
                         $coupon_info['is_out_of_date'] = false;
                     }
                     $obj['coupon_info'] = $coupon_info;
+                    $coupon_list = array();
                     $coupon_list[] = $obj;
                     $course['coupon_list'] = $coupon_list;
                 } else {
