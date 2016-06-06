@@ -74,10 +74,42 @@ class RedisCache
      *
      */
     public function getPartResCache($suffix, $except_key=array()){
-        $key = $this->bornKey($except_key,I('get.'), I('post.'),$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
+        $get_attrs = I('get.');
+        $post_attrs = I('post.');
+        $version = '';
+        $version_pos = '';
+        if (array_key_exists('version', $get_attrs)){
+            $version = $get_attrs['version'];
+            $version_pos = 'in_get';
+        }
+        if (array_key_exists('version', $post_attrs)){
+            $version = $post_attrs['version'];
+            $version_pos = 'in_post';
+        }
+        if (!$version){
+            // version没有传递，则不需要版本处理，直接取缓存
+            $key = $this->bornKey($except_key,$get_attrs, $post_attrs,$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
+            return $this->get_cache_by_key($key, $suffix);
+        }
+        else{
+            // 找到需要转换的version版本号
+            $temp_version = $this->version_collection(ACTION_NAME, $version);
+            if($temp_version)
+                if($version_pos === 'in_post'){
+                    $post_attrs['version'] = $temp_version;
+                }
+                else{
+                    $get_attrs['version'] = $temp_version;
+                }
+
+            $key = $this->bornKey($except_key,$get_attrs, $post_attrs,$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
+            $this->get_cache_by_key($key, $suffix);
+        }
+    }
+
+    private function get_cache_by_key($key, $suffix){
         $key = $key.'$'.$suffix;
         $has = $this->cache->exists($key);
-
         if($has){
             $value = $this->cache->get($key);
             $json = json_decode($value);
@@ -158,5 +190,29 @@ class RedisCache
             }
         }
         return $keys_array;
+    }
+
+    private function version_collection($action_name, $version){
+        // 某些action的缓存，多版本会共用一个缓存
+        // 每个action可能对应多个版本号集合
+        // 每个版本号集合的第一位代表该集合的转换值
+        $version_same_kind = array('forumfilter'=> array(array('2.7', '2.7', '2.8', '2.9')));
+
+//        $actions = ['forumfilter'];
+        if (!array_key_exists($action_name, $version_same_kind)){
+            return null;
+        }
+        else{
+            $versions_array = $version_same_kind[$action_name];
+            foreach($versions_array as $versions ){
+                foreach($versions as $temp_version){
+                    if($temp_version === $version){
+                        // 返回版本号转换值
+                        return $versions[0];
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

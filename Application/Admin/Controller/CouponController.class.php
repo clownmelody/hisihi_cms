@@ -84,14 +84,17 @@ class CouponController extends AdminController
     public function set_status($id, $status=-1){
         if(!empty($id)){
             $model = M('Coupon');
+            $tccr_model = M('TeachingCourseCouponRelation');
             $data['status'] = $status;
             if(is_array($id)){
                 foreach ($id as $i){
                     $model->where('id='.$i)->save($data);
+                    $tccr_model->where('coupon_id='.$i)->save(array('status'=>-1));
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
+                $tccr_model->where('coupon_id='.$id)->save(array('status'=>-1));
             }
             $this->success('处理成功','index.php?s=/admin/coupon/index');
         } else {

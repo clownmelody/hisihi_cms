@@ -20,36 +20,34 @@ class TestController extends AppController
 //        tag('cache');
     }
 
-    public function do_test()
+    public function do_test($get, $post)
     {
 
-        $value2 = 'World';
-        $cache = new \RedisCache();
-        $value_cache = $cache->getPartResCache('part1');
-        if(!$value_cache){
-            $value1 = 'Hello';
-            $cache->setPartResCache('part1', $value1);
-            $arr['value1'] = $value1;
-        }
-        else{
-            $arr['value1'] = $value_cache;
-        }
-        $arr['value2'] = $value2;
-        $this->apiSuccess('succccccc', null, $arr);
+//        $value2 = 'World';
+//        $cache = new \RedisCache();
+//        $value_cache = $cache->getPartResCache('part1');
+//        if(!$value_cache){
+//            $value1 = 'Hello';
+//            $cache->setPartResCache('part1', $value1);
+//            $arr['value1'] = $value1;
+//        }
+//        else{
+//            $arr['value1'] = $value_cache;
+//        }
+//        $arr['value2'] = $value2;
+//        $this->apiSuccess('succccccc', null, $arr);
+        echo('ssssssssssssssssssssssssssssssss');
     }
 
-//    public function _before_do_test(){
-//
-//        $cache = new \RedisCache();
-//        $cache->getResCache($this);
-//        return;
-//    }
+    public function _before_do_test(){
+
+    }
 
     public function hi(){
         echo 'hihihi';
     }
 
     public function _after_do_test(){
-        echo 'after<br/>';
+//        echo 'after<br/>';
     }
 }
