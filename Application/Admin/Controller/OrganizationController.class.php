@@ -3604,14 +3604,20 @@ class OrganizationController extends AdminController
     public function teachingcourse_delete($id, $status=-1){
         if(!empty($id)){
             $model = M('OrganizationTeachingCourse');
+            $tcopr_model = M('TeachingCourseOrganizationPromotionRelation');
+            $tccr_model = M('TeachingCourseCouponRelation');
             $data['status'] = $status;
             if(is_array($id)){
                 foreach ($id as $i) {
                     $model->where('id='.$i)->save($data);
+                    $tcopr_model->where('teaching_course_id='.$id)->save(array('status'=>-1));
+                    $tccr_model->where('teaching_course_id='.$id)->save(array('status'=>-1));
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
+                $tcopr_model->where('teaching_course_id='.$id)->save(array('status'=>-1));
+                $tccr_model->where('teaching_course_id='.$id)->save(array('status'=>-1));
             }
             if($status!=1){
                 $this->success('删除成功','index.php?s=/admin/organization/teachingcourse');
