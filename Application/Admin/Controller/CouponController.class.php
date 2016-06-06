@@ -130,4 +130,23 @@ class CouponController extends AdminController
         $this->display();
     }
 
+    public function obtain_coupon_list(){
+        $model = M('UserCoupon');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach ($list as &$item) {
+            $item['user_name'] = M('Member')->where('uid='.$item['uid'])->getField('nickname');
+            $item['course_name'] = M('OrganizationTeachingCourse')
+                ->where('id='.$item['teaching_course_id'])->getField('course_name');
+            $item['coupon_name'] = M('Coupon')->where('id='.$item['coupon_id'])->getField('name');
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","领取优惠券列表");
+        $this->display();
+    }
+
 }
