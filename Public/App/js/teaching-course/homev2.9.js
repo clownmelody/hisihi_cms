@@ -13,7 +13,7 @@ define(['base','fastclick'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
-        this.getUserInfo(1);
+        this.getUserInfo(null,1);
         this.getBasicInfo.call(that,function(result){;
             that.getOrgBasicInfo.call(that,result,function(resultOrg){
                 that.getPromotionsInfo.call(that,result,resultOrg);
@@ -588,9 +588,7 @@ define(['base','fastclick'],function(Base){
         var obj=window.course;
 
         //得到用户基本信息
-        obj.getUserInfo(function(){
-
-        });
+        obj.getUserInfo(null,1);
     };
 
     return Course;

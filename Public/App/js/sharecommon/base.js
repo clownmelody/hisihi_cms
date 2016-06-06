@@ -32,7 +32,7 @@ define(['$'],function() {
          * @para
          * tokenType-{int} token类型，0 不使用token ，使用session_id的形式，1 基础令牌,  否则为具体用户令牌
          */
-        getUserInfo:function (tokenType,callback) {
+        getUserInfo:function (callback,tokenType) {
             var userStr = '', that = this;
             if (this.deviceType.mobile) {
                 if (this.deviceType.android) {
@@ -189,12 +189,10 @@ define(['$'],function() {
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
-                        alert(rTxt);
-                        var tempResult={code: '404', txt: 'no found'};
-                        if(result.code){
-                            tempResult=result;
+                        if(!result){
+                            result={code: '404', txt: 'no found'};
                         }
-                        paras.eCallback && paras.eCallback(tempResult);
+                        paras.eCallback && paras.eCallback(result);
                     }
                 }
             });

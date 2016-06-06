@@ -11,10 +11,14 @@ define(['base','fastclick'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
-        this.getUserInfo(1);
+        this.getUserInfo(null,1);  // 0 不使用token ，使用session_id的形式，1 基础令牌,  否则为具体用户令牌
 
         //领取优惠券
         $(document).on(eventName,'.list .coupon', $.proxy(this,'operateCoupon'));
+
+        //显示课程详情
+        $(document).on(eventName,'.list .middle', $.proxy(this,'goToCoursePage'));
+        $(document).on(eventName,'.list .left', $.proxy(this,'goToCoursePage'));
 
         /*模态窗口操作*/
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
@@ -28,14 +32,19 @@ define(['base','fastclick'],function(Base){
     var t=Promotion.prototype;
 
     t.init=function(){
-        this.loadPromotionBasicInfo();
-        this.loadPromotionCource();
+        this.controlLoadingBox(true);
+        var that=this;
+        window.setTimeout(function(){
+            that.loadPromotionBasicInfo();
+            that.loadPromotionCource();
+        },100);
     };
 
     //获得当前活动的基本信息
     t.loadPromotionBasicInfo=function(callback){
         this.controlLoadingBox(true);
         var that = this,
+            $box=$('.promotion-box'),
             para = {
                 url: window.hisihiUrlObj.api_url + 'v1/org/promotion/'+this.pid,
                 type: 'get',
@@ -43,10 +52,12 @@ define(['base','fastclick'],function(Base){
                 paraData: null,
                 needToken:true,
                 sCallback: function (resutl) {
+                    $box.css('opacity','1');
                     that.fillInPromotionBasicInfo(resutl);
                     callback && callback(resutl);
                 },
                 eCallback: function (data) {
+                    $box.css('opacity','1');
                     var txt=data.txt;
                     if(data.code=404){
                         txt='信息加载失败';
@@ -76,7 +87,8 @@ define(['base','fastclick'],function(Base){
 
     /*获得参与活动的课程列表*/
     t.loadPromotionCource=function(callback){
-        var token=this.userInfo.token;
+        var token=this.userInfo.token,
+            $box= $('.course-box');
         if(!token) {
             this.getBasicToken({
                 account: 'jg2rw2xVjyrgbrZp',
@@ -95,11 +107,13 @@ define(['base','fastclick'],function(Base){
                 needToken:true,
                 token:this.userInfo.token,
                 sCallback: function (resutl) {
+                    $box.css('opacity','1');
                     that.fillInCourceList(resutl);
                     that.controlLoadingBox(false);
                     callback && callback(resutl);
                 },
                 eCallback: function (data) {
+                    $box.css('opacity','1');
                     var txt=data.txt;
                     if(data.code=404){
                         txt='信息加载失败';
@@ -130,38 +144,58 @@ define(['base','fastclick'],function(Base){
         for(var i=0;i<len;i++){
             item=data[i];
             var coupon=item.coupon_info;
-            var oid='0';
-            if(coupon.is_obtain){
-                oid=coupon.obtain_id;
+            var obtainId=0,
+                couponId= 0,
+                courseId=item.course_id,
+                rightStr='',
+                marginRight=0;
+
+            //有优惠券
+            if(coupon) {
+                if (coupon.is_obtain) {
+                    obtainId = coupon.obtain_id;
+                }
+                couponId = coupon.id;
+                rightStr=this.getRightStrAndMarginInfo(coupon);
+                marginRight='80px';
             }
-            str+='<li data-oid="'+oid+'" data-cid="'+coupon.id+'" data-cource-id="">'+
-                    '<div class="item-main">'+
-                        '<div class="main-content">'+
-                            '<div class="middle">'+
-                                '<p class="title-info">'+item.lecture_name+'</p>'+
-                                '<p class="money-info">￥'+item.price+'</p>'+
-                                '<p class="time-info">'+this.getTimeFromTimestamp(item.start_course_time)+'开课</p>'+
+            str+='<li data-obtain-id="'+obtainId+'" data-coupon-id="'+couponId+'" data-course-id="'+courseId+'">'+
+                    '<a href="hisihi://techcourse/detailinfo?id='+courseId+'">' +
+                        '<div class="item-main">'+
+                            '<div class="main-content">'+
+                                '<div class="middle" style="margin-right:'+marginRight+'">'+
+                                    '<p class="title-info">'+item.lecture_name+'</p>'+
+                                    '<p class="money-info">￥'+item.price+'</p>'+
+                                    '<p class="time-info">'+this.getTimeFromTimestamp(item.start_course_time)+'开课</p>'+
+                                '</div>'+
                             '</div>'+
+                            '<div class="left">'+
+                                '<div class="img-box">'+
+                                    '<img src="'+item.cover_pic+'">'+
+                                '</div>'+
+                            '</div>'+
+                            rightStr+
                         '</div>'+
-                        '<div class="left">'+
-                            '<div class="img-box">'+
-                                '<img src="'+item.cover_pic+'">'+
-                            '</div>'+
-                        '</div>'+
-                        '<div class="right coupon un-take-in">'+
-                            '<div class="coupon-money">' +
-                                '<span>￥</span><span>200</span>'+
-                            '</div>'+
-                            '<div class="seperation"></div>'+
-                            '<div class="coupon-state">'+
-                                '<p>点击领取</p>'+
-                                '<p>已经领取</p>'+
-                            '</div>'+
-                        '</div>'+
-                    '</div>'+
+                    '</a>'+
                 '</li>';
         }
         $('.list').html(str);
+    };
+
+    /*得到优惠券右边的信息*/
+    t.getRightStrAndMarginInfo=function(coupon){
+        return '<div class="right coupon un-take-in">'+
+                    '<div class="right-main">'+
+                        '<div class="coupon-money">' +
+                            '<span>￥</span><span>'+coupon.money+'</span>'+
+                        '</div>'+
+                        '<div class="seperation"></div>'+
+                        '<div class="coupon-state">'+
+                            '<p>点击领取</p>'+
+                            '<p>已经领取</p>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>';
     };
 
     /*通过优惠券的状态，得到相应的样式*/
@@ -204,11 +238,11 @@ define(['base','fastclick'],function(Base){
         }
         var $target=$(e.currentTarget),
             $parent=$target.parents('li'),
-            id=$parent.attr('data-cid'),  //券id
-            courceId=$parent.attr('data-cource-id');  //课程id
+            couponId=$parent.attr('data-coupon-id'),  //券id
+            courceId=$parent.attr('data-course-id');  //课程id
         //未领取
         if($target.hasClass('un-take-in')){
-            this.execTakeInCoupon(id,courceId);
+            this.execTakeInCoupon(couponId,courceId);
             return;
         }
 
@@ -218,12 +252,12 @@ define(['base','fastclick'],function(Base){
         }
         //未使用
         if($target.hasClass('unused')){
-            var oid=$parent.attr('data-oid');  //领取的id
-            if(!oid){
+            var obtainId=$parent.attr('data-obtain-id');  //领取的id
+            if(!obtainId){
                 this.showTips('您尚未领取该优惠券');
                 return;
             }
-            window.location.href='hisihi://coupon/detailinfo?id='+oid;
+            window.location.href='hisihi://coupon/detailinfo?id='+obtainId;
             return;
         }
     };
@@ -254,7 +288,12 @@ define(['base','fastclick'],function(Base){
                 },
                 eCallback: function (data) {
                     var txt=data.txt;
-                    if(data.code=404){
+                    //token  权限不足
+                    if(data.code==1004){
+                        that.controlLoginTipModal(true);
+                        return;
+                    }
+                    if(data.code==404){
                         txt='信息加载失败';
                     }
                     that.controlLoadingBox(false);
@@ -266,6 +305,14 @@ define(['base','fastclick'],function(Base){
         this.getDataAsyncPy(para);
 
     };
+
+    /*显示详细课程信息*/
+    t.goToCoursePage=function(e){
+        var $target=$(e.currentTarget).closest('li'),
+            id=$target.data('course-id');
+        window.location.href='hisihi://techcourse/detailinfo?id='+id;
+    };
+
 
     /*控制模态窗口的显示和隐藏*/
     t.controlLoginTipModal=function(flag){
@@ -298,11 +345,8 @@ define(['base','fastclick'],function(Base){
      */
     window.loginSuccessCallback=function(){
         var obj=window.course;
-
         //得到用户基本信息
-        obj.getUserInfo(function(){
-
-        });
+        obj.getUserInfo(null,1);
     };
 
     return Promotion;
