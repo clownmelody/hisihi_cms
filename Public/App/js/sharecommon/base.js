@@ -9,6 +9,7 @@ define(['$'],function() {
     var Base = function (flag) {
         var userAgent = window.location.href;
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
+        this.isLocal=userAgent.indexOf("localhost") >= 0;
         this.deviceType = this.operationType();
         this.userInfo={
             token:''
@@ -28,8 +29,10 @@ define(['$'],function() {
         /*
          *获得用户的信息 区分安卓和ios
          *从不同的平台的方法 获得用户的基本信息，进行发表评论时使用
+         * @para
+         * tokenType-{int} token类型，0 不使用token ，使用session_id的形式，1 基础令牌,  否则为具体用户令牌
          */
-        getUserInfo:function (apiType,callback) {
+        getUserInfo:function (callback,tokenType) {
             var userStr = '', that = this;
             if (this.deviceType.mobile) {
                 if (this.deviceType.android) {
@@ -49,7 +52,7 @@ define(['$'],function() {
                     this.userInfo.token=this.getBase64encode(this.userInfo.token);
                     callback && callback.call(that);
                 } else {
-                    if(apiType==0) {
+                    if(tokenType==0) {
                         var para = {
                             url: this.baseUrl + 'user/login',
                             type: 'get',
@@ -62,13 +65,24 @@ define(['$'],function() {
                         };
                         this.getDataAsync(para);
                         callback && callback.call(that);
-                    }else{
-                        //that.getBasicToken({account:'18601995231', secret: '123456', type: 200},false,function(token){
-                        //    that.userInfo.token=token;
-                        //    callback && callback.call(that,that.userInfo);
-                        //});
-                        callback && callback.call(that,that.userInfo);
+                        return
                     }
+                    var userInfo={
+                        account:'18601995231',
+                        secret: '123456',
+                        type: 200
+                    };
+                    if(tokenType==1){
+                        userInfo={
+                            account: 'jg2rw2xVjyrgbrZp',
+                            secret: 'VbkzpPlZ6H4OvqJW',
+                            type: 100
+                        };
+                    }
+                    that.getBasicToken({account:userInfo.account, secret: userInfo.secret, type: userInfo.type},false,function(token){
+                        that.userInfo.token=token;
+                        callback && callback.call(that,that.userInfo);
+                    });
                 }
             }
             else {
@@ -175,12 +189,10 @@ define(['$'],function() {
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
-                        alert(rTxt);
-                        var tempResult={code: '404', txt: 'no found'};
-                        if(result.code){
-                            tempResult=result;
+                        if(!result){
+                            result={code: '404', txt: 'no found'};
                         }
-                        paras.eCallback && paras.eCallback(tempResult);
+                        paras.eCallback && paras.eCallback(result);
                     }
                 }
             });
@@ -242,6 +254,9 @@ define(['$'],function() {
         },
 
         getTimeFromTimestamp: function (dateInfo, dateFormat) {
+            if(!dateFormat){
+                dateFormat='yyyy-MM-dd';
+            }
             return new Date(parseFloat(dateInfo) * 1000).format(dateFormat);
         },
 

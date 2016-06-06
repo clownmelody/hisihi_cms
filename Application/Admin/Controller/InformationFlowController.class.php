@@ -122,8 +122,7 @@ class InformationFlowController extends AdminController {
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->where($map)->order($sort)->group('content_id')
-            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($map)->order($sort)->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$content){
             $config_type = $content['config_type'];
             $model = M('InformationFlowConfig');

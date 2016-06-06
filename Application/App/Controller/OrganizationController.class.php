@@ -3385,6 +3385,7 @@ class OrganizationController extends AppController
         }
         $where['organization_id'] = array('in', $org_id_list);
         $where['is_hot'] = 1;
+        $where['status'] = array('gt', 0);
         $totalCount = M('OrganizationTeachingCourse')->where($where)->count();
         $list = M('OrganizationTeachingCourse')->field('id, organization_id, course_name, cover_pic, start_course_time, lesson_period, student_num, lecture_name, price, already_registered')
             ->where($where)->order('create_time desc')->page($page, $count)->select();
@@ -3400,7 +3401,7 @@ class OrganizationController extends AppController
                     ->where('status=1 and teaching_course_id='.$course['id'])
                     ->order('create_time desc')->limit(0, 1)->find();
                 if($tccr){
-                    $coupon_info = M('Coupon')->where('id='.$tccr['coupon_id'])->find();
+                    $coupon_info = M('Coupon')->where('status=1 and id='.$tccr['coupon_id'])->find();
                     unset($coupon_info['create_time']);
                     unset($coupon_info['status']);
                     unset($coupon_info['create_time']);
@@ -3430,6 +3431,7 @@ class OrganizationController extends AppController
                         $coupon_info['is_out_of_date'] = false;
                     }
                     $obj['coupon_info'] = $coupon_info;
+                    $coupon_list = array();
                     $coupon_list[] = $obj;
                     $course['coupon_list'] = $coupon_list;
                 } else {
@@ -4089,7 +4091,7 @@ GROUP BY
             $coupon_list = M()->query('select t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
 hisihi_teaching_course_organization_promotion_relation t1,
 hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
- and t2.coupon_id=t3.id and t1.promotion_id=1 order by t3.money desc');
+ and t2.coupon_id=t3.id and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
             $obj['coupon_list'] = $coupon_list;
             $_promotion_list[] = $obj;
         }
