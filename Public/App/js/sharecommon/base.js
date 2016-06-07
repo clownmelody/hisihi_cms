@@ -84,7 +84,7 @@ define(['$'],function() {
                     }
                     that.getBasicToken({account:userInfo.account, secret: userInfo.secret, type: userInfo.type},false,function(token){
                         that.userInfo.token=token;
-                        that.userInfo.name=that.staticUserNameStr;
+                        that.userInfo.name=userInfo.account;
                         callback && callback.call(that,that.userInfo);
                     });
                 }

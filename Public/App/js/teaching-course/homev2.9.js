@@ -8,8 +8,6 @@ define(['base','fastclick'],function(Base){
         this.cid = id;
         this.oid=oid;
         var eventName='click',that=this;
-        this.deviceType = this.operationType();
-        this.isLocal=window.location.href.indexOf('localhost')>=0;
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
@@ -331,11 +329,11 @@ define(['base','fastclick'],function(Base){
         }
 
         //已经使用
-        if($target.hasClass('used')){
-            return;
-        }
+        //if($target.hasClass('used')){
+        //    return;
+        //}
         //未使用
-        if($target.hasClass('unused')){
+        if($target.hasClass('unused') || $target.hasClass('used')){
             var oid=$parent.attr('data-oid');
             if(oid=='undefined'){
                 that.showTips('您尚未领取该优惠券');
@@ -374,9 +372,9 @@ define(['base','fastclick'],function(Base){
                 token:this.userInfo.token,
                 sCallback: function (result) {
                     if(result.has_obtained){
-                        $btn.parents('.coupon-basic-info').attr('data-oid',result.obtain_id);
                         that.showTips.call(that,'您已经领过该优惠券');
                     }
+                    $btn.parents('.coupon-basic-info').attr('data-oid',result.obtain_id);
                     $btn.removeClass('un-take-in').addClass('unused');
                     callback && callback(result);
                 },
