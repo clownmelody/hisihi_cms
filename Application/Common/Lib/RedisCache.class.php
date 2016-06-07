@@ -103,7 +103,7 @@ class RedisCache
                 }
 
             $key = $this->bornKey($except_key,$get_attrs, $post_attrs,$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
-            $this->get_cache_by_key($key, $suffix);
+            return $this->get_cache_by_key($key, $suffix);
         }
     }
 
