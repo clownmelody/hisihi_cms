@@ -25,7 +25,6 @@ define(['base','fastclick'],function(Base){
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
         this.init();
-        alert(this.isFromApp);
     };
 
     Promotion.prototype=new Base();
@@ -161,11 +160,10 @@ define(['base','fastclick'],function(Base){
                 marginRight='80px';
             }
             str+='<li data-obtain-id="'+obtainId+'" data-coupon-id="'+couponId+'" data-course-id="'+courseId+'">'+
-                    //'<a href="hisihi://techcourse/detailinfo?id='+courseId+'">' +
                         '<div class="item-main">'+
                             '<div class="main-content">'+
                                 '<div class="middle" style="margin-right:'+marginRight+'">'+
-                                    '<p class="title-info">'+item.lecture_name+'</p>'+
+                                    '<p class="title-info">'+item.course_name+'</p>'+
                                     '<p class="money-info">￥'+item.price+'</p>'+
                                     '<p class="time-info">'+this.getTimeFromTimestamp(item.start_course_time)+'开课</p>'+
                                 '</div>'+
@@ -177,7 +175,6 @@ define(['base','fastclick'],function(Base){
                             '</div>'+
                             rightStr+
                         '</div>'+
-                    //'</a>'+
                 '</li>';
         }
         $('.list').html(str);
@@ -188,14 +185,15 @@ define(['base','fastclick'],function(Base){
         var couponStatue=this.getCouponStatus(coupon),
             str='';
         if(couponStatue.type) {
-           str ='<div class="right coupon '+couponStatue.type+'">' +
+           str ='<div class="right btn coupon '+couponStatue.type+'">' +
                 '<div class="coupon-money">' +
                 '<span>￥</span><span>' + coupon.money + '</span>' +
                 '</div>' +
                 '<div class="seperation"></div>' +
                 '<div class="coupon-state">' +
                 '<p>点击领取</p>' +
-                '<p>已经领取</p>' +
+                '<p>已领取</p>' +
+                '<p>已使用</p>' +
                 '</div>' +
                 '</div>';
         }
@@ -236,8 +234,7 @@ define(['base','fastclick'],function(Base){
 
     /*优惠券操作*/
     t.operateCoupon=function(e){
-        //event.stopPropagation();
-        if(!this.userInfo.token){
+        if(!this.userInfo.token || this.userInfo.name==this.staticUserNameStr){
             this.controlLoginTipModal(true);
             return;
         }
@@ -247,16 +244,13 @@ define(['base','fastclick'],function(Base){
             courceId=$parent.attr('data-course-id');  //课程id
         //未领取
         if($target.hasClass('un-take-in')){
-            this.execTakeInCoupon(couponId,courceId);
+            this.execTakeInCoupon($target,couponId,courceId);
             return;
         }
 
         //已经使用
-        if($target.hasClass('used')){
-            return;
-        }
         //未使用
-        if($target.hasClass('unused')){
+        if($target.hasClass('unused') || $target.hasClass('used')){
             var obtainId=$parent.attr('data-obtain-id');  //领取的id
             if(!obtainId){
                 this.showTips('您尚未领取该优惠券');
@@ -274,8 +268,8 @@ define(['base','fastclick'],function(Base){
      * courceId - {string} 课程id
      * callback - {fn} 回调方法
      * */
-    t.execTakeInCoupon=function(id,courceId,callback){
-        var $btn=$('.coupon'),
+    t.execTakeInCoupon=function($btn,id,courceId,callback){
+        var $li = $btn.closest('li'),
             that = this,
             para = {
                 url: window.hisihiUrlObj.api_url + 'v1/user/coupons',
@@ -285,10 +279,10 @@ define(['base','fastclick'],function(Base){
                 token:this.userInfo.token,
                 sCallback: function (result) {
                     if(result.has_obtained){
-                        $btn.parents('li').attr('data-oid',result.obtain_id);
                         that.showTips.call(that,'您已经领过该优惠券');
                     }
                     $btn.removeClass('un-take-in').addClass('unused');
+                    $li.attr('data-obtain-id',result.obtain_id);
                     callback && callback(result);
                 },
                 eCallback: function (data) {
@@ -296,6 +290,11 @@ define(['base','fastclick'],function(Base){
                     //token  权限不足
                     if(data.code==1004){
                         that.controlLoginTipModal(true);
+                        return;
+                    }
+                    //token  过期
+                    if(data.code==1003){
+                        that.loginAgainForOutDateToken();
                         return;
                     }
                     if(data.code==404){
@@ -337,7 +336,6 @@ define(['base','fastclick'],function(Base){
 
     //登录
     t.doLogin=function(){
-        alert(this.isFromApp);
         if (this.isFromApp) {
             if (this.deviceType.android) {
                 //如果方法存在
@@ -354,6 +352,23 @@ define(['base','fastclick'],function(Base){
         this.controlLoginTipModal(false);
     };
 
+    /*token 过期时，重新调用app的方法，获得新的token*/
+    t.loginAgainForOutDateToken=function(){
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction != "undefined") {
+                    AppFunction.login(); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof userAuthInvaild != "undefined") {
+                    userAuthInvaild();//调用app的方法，得到用户的基体信息
+                }
+            }
+        }
+    };
+
 
     /*
      *登录功能的回调方法
@@ -363,7 +378,7 @@ define(['base','fastclick'],function(Base){
      * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
      */
     window.loginSuccessCallback=function(){
-        var obj=window.course;
+        var obj=window.promotion;
         //得到用户基本信息
         obj.getUserInfo(null,1);
     };

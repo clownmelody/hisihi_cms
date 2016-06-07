@@ -13,7 +13,7 @@ define(['base','fastclick'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
-        this.getUserInfo(null,1);
+        this.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
         this.getBasicInfo.call(that,function(result){;
             that.getOrgBasicInfo.call(that,result,function(resultOrg){
                 that.getPromotionsInfo.call(that,result,resultOrg);
@@ -317,7 +317,7 @@ define(['base','fastclick'],function(Base){
 
     /*优惠券操作*/
     t.operateCoupon=function(e){
-        if(!this.userInfo.token){
+        if(!this.userInfo.token || this.userInfo.name==this.staticUserNameStr){
             this.controlLoginTipModal(true);
             return;
         }

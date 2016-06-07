@@ -11,8 +11,10 @@ define(['$'],function() {
         this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
         this.isLocal=userAgent.indexOf("localhost") >= 0;
         this.deviceType = this.operationType();
+        this.staticUserNameStr='jg2rw2xVjyrgbrZp';
         this.userInfo={
-            token:''
+            token:'',
+            name:this.staticUserNameStr
         };
         this.timeOutFlag=false; //防止出现在重复快速点击时，计时器混乱添加的回调方法
         this._initTimeFormat();
@@ -47,6 +49,7 @@ define(['$'],function() {
                         userStr = getUser_iOS();//调用app的方法，得到用户的基体信息
                     }
                 }
+                //已经登录
                 if (userStr != '') {
                     this.userInfo = JSON.parse(userStr);
                     this.userInfo.token=this.getBase64encode(this.userInfo.token);
@@ -65,7 +68,7 @@ define(['$'],function() {
                         };
                         this.getDataAsync(para);
                         callback && callback.call(that);
-                        return
+                        return;
                     }
                     var userInfo={
                         account:'18601995231',
@@ -74,13 +77,14 @@ define(['$'],function() {
                     };
                     if(tokenType==1){
                         userInfo={
-                            account: 'jg2rw2xVjyrgbrZp',
+                            account: that.staticUserNameStr,
                             secret: 'VbkzpPlZ6H4OvqJW',
                             type: 100
                         };
                     }
                     that.getBasicToken({account:userInfo.account, secret: userInfo.secret, type: userInfo.type},false,function(token){
                         that.userInfo.token=token;
+                        that.userInfo.name=that.staticUserNameStr;
                         callback && callback.call(that,that.userInfo);
                     });
                 }

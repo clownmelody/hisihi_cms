@@ -127,9 +127,10 @@ body{
               p {
                 text-align: center;
                 margin: 0;
-                &:last-child {
+
+                //&:last-child {
                   display: none;
-                }
+                //}
               }
             }
             .seperation {
@@ -137,15 +138,43 @@ body{
               height: 6px;
               background-position: -20px 0;
             }
+            &.un-take-in{
+              .coupon-state {
+                p {
+                  &:first-child {
+                    display: block;
+                  }
+                }
+              }
+            }
             &.unused {
               .coupon-money, .coupon-state {
                 background-color: #cccccc;
               }
               .coupon-state {
                 p {
-                  &:first-child {
-                    display: none;
+                  //&:first-child {
+                  //  display: none;
+                  //}
+                  &:nth-child(2){
+                    display: block;
                   }
+                  //&:last-child {
+                  //  display: none;
+                  //}
+                }
+              }
+              .seperation {
+                background-position: -96px 0;
+              }
+            }
+
+            &.used{
+              .coupon-money, .coupon-state {
+                background-color: #cccccc;
+              }
+              .coupon-state {
+                p {
                   &:last-child {
                     display: block;
                   }

@@ -230,8 +230,6 @@ body {
 .course-box .list li .item-main .right .coupon-state p {
   text-align: center;
   margin: 0;
-}
-.course-box .list li .item-main .right .coupon-state p:last-child {
   display: none;
 }
 .course-box .list li .item-main .right .seperation {
@@ -239,17 +237,27 @@ body {
   height: 6px;
   background-position: -20px 0;
 }
+.course-box .list li .item-main .right.un-take-in .coupon-state p:first-child {
+  display: block;
+}
 .course-box .list li .item-main .right.unused .coupon-money,
 .course-box .list li .item-main .right.unused .coupon-state {
   background-color: #cccccc;
 }
-.course-box .list li .item-main .right.unused .coupon-state p:first-child {
-  display: none;
-}
-.course-box .list li .item-main .right.unused .coupon-state p:last-child {
+.course-box .list li .item-main .right.unused .coupon-state p:nth-child(2) {
   display: block;
 }
 .course-box .list li .item-main .right.unused .seperation {
+  background-position: -96px 0;
+}
+.course-box .list li .item-main .right.used .coupon-money,
+.course-box .list li .item-main .right.used .coupon-state {
+  background-color: #cccccc;
+}
+.course-box .list li .item-main .right.used .coupon-state p:last-child {
+  display: block;
+}
+.course-box .list li .item-main .right.used .seperation {
   background-position: -96px 0;
 }
 /*ģ̬����*/
