@@ -1795,6 +1795,7 @@ class OrganizationController extends AppController
                 $promotion_list = array();
                 foreach($org_promotion_list as $promotion){
                     $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'];
                     $promotion_list[] = $obj;
                 }
                 $org['promotion_list'] = $promotion_list;
@@ -3512,6 +3513,7 @@ class OrganizationController extends AppController
                 $promotion_list = array();
                 foreach($org_promotion_list as $promotion){
                     $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'];
                     $promotion_list[] = $obj;
                 }
                 $org['promotion_list'] = $promotion_list;
