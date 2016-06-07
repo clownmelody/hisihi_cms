@@ -48,10 +48,10 @@ body{
       @w-r:80px;
       .size(auto,110px);
       border-bottom: 1px solid #ccc;
-      a{
-        display: block;
-        .size(100%,100%);
-      }
+      //a{
+      //  display: block;
+      //  .size(100%,100%);
+      //}
       .item-main{
         height: 100%;
         margin: 5px @padding-r 5px @padding-l;
@@ -106,11 +106,6 @@ body{
           position: relative;
           width: @w-r;
           margin-left: -@w-r;
-          .right-main{
-
-            position: absolute;
-            height: 100%;
-            width: 100%;
             .coupon-money, .coupon-state {
               .size(100%, 35px);
               background-color: #F9A825;
@@ -132,9 +127,10 @@ body{
               p {
                 text-align: center;
                 margin: 0;
-                &:last-child {
+
+                //&:last-child {
                   display: none;
-                }
+                //}
               }
             }
             .seperation {
@@ -142,15 +138,43 @@ body{
               height: 6px;
               background-position: -20px 0;
             }
+            &.un-take-in{
+              .coupon-state {
+                p {
+                  &:first-child {
+                    display: block;
+                  }
+                }
+              }
+            }
             &.unused {
               .coupon-money, .coupon-state {
                 background-color: #cccccc;
               }
               .coupon-state {
                 p {
-                  &:first-child {
-                    display: none;
+                  //&:first-child {
+                  //  display: none;
+                  //}
+                  &:nth-child(2){
+                    display: block;
                   }
+                  //&:last-child {
+                  //  display: none;
+                  //}
+                }
+              }
+              .seperation {
+                background-position: -96px 0;
+              }
+            }
+
+            &.used{
+              .coupon-money, .coupon-state {
+                background-color: #cccccc;
+              }
+              .coupon-state {
+                p {
                   &:last-child {
                     display: block;
                   }
@@ -160,7 +184,7 @@ body{
                 background-position: -96px 0;
               }
             }
-          }
+
         }
       }
     }
@@ -229,7 +253,7 @@ body{
         .item-main {
           @w-l: 100px;
           @w-r: 80px;
-          .size(auto, 90px);
+          //.size(auto, 90px);
           margin: 0 @padding-r 0 @padding-l;
           .main-content {
             .middle {
