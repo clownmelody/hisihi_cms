@@ -103,7 +103,7 @@ class RedisCache
                 }
 
             $key = $this->bornKey($except_key,$get_attrs, $post_attrs,$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
-            $this->get_cache_by_key($key, $suffix);
+            return $this->get_cache_by_key($key, $suffix);
         }
     }
 
@@ -126,15 +126,7 @@ class RedisCache
         }
     }
 
-    /** 缓存数据，其key有当前访问uri及其参数决定。提供一个$suffix作为补充key
-     * @param $suffix
-     * @param $value
-     * @param int $ttl
-     * @param array 部分key将被剔除
-     * @return bool
-     */
-    public function setPartResCache($suffix, $value, $ttl=60, $except_key=array()){
-        $key = $this->bornKey($except_key,I('get.'), I('post.'),$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
+    private function set_cache_by_key($key, $value, $ttl, $suffix){
         $key = $key.'$'.$suffix;
 
         $value_type = gettype($value);
@@ -146,6 +138,48 @@ class RedisCache
         }
         $success = $this->cache->setex($key, $ttl, $value);
         return $success;
+    }
+
+    /** 缓存数据，其key有当前访问uri及其参数决定。提供一个$suffix作为补充key
+     * @param $suffix
+     * @param $value
+     * @param int $ttl
+     * @param array 部分key将被剔除
+     * @return bool
+     */
+    public function setPartResCache($suffix, $value, $ttl=60, $except_key=array()){
+        $get_attrs = I('get.');
+        $post_attrs = I('post.');
+        $version = '';
+        $version_pos = '';
+        if (array_key_exists('version', $get_attrs)){
+            $version = $get_attrs['version'];
+            $version_pos = 'in_get';
+        }
+        if (array_key_exists('version', $post_attrs)){
+            $version = $post_attrs['version'];
+            $version_pos = 'in_post';
+        }
+
+        if (!$version){
+            // version没有传递，则不需要版本处理，直接取缓存
+            $key = $this->bornKey($except_key,$get_attrs, $post_attrs,$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
+            return $this->set_cache_by_key($key, $value, $ttl, $suffix);
+        }
+        else{
+            // 找到需要转换的version版本号
+            $temp_version = $this->version_collection(ACTION_NAME, $version);
+            if($temp_version)
+                if($version_pos === 'in_post'){
+                    $post_attrs['version'] = $temp_version;
+                }
+                else{
+                    $get_attrs['version'] = $temp_version;
+                }
+
+            $key = $this->bornKey($except_key,$get_attrs, $post_attrs,$_SERVER['HTTP_HOST'],CONTROLLER_NAME, ACTION_NAME);
+            return $this->set_cache_by_key($key, $value, $ttl, $suffix);
+        }
     }
 
     // 排序规则， 生成一个controller的基础key，参数按照升序排列
