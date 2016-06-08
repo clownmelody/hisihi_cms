@@ -73,6 +73,7 @@ body {
   .center-content {
     width: 90%;
     margin: 0 auto;
+    position: relative;
   }
   .head-txt{
     font-size: 18px;
@@ -137,16 +138,18 @@ body {
 
   &.org-basic-info{
     position: relative;
-    height: 122px;
     @h:75px;
     @p:15px;
     .left{
       position: absolute;
-      .size(@h+@p,@h);
+      .size(@h+@p,100%);
       img{
+        position: absolute;
+        top:50%;
+        left: 0;
+        margin-top: -@h/2;
         .border-radius(50%);
         .size(@h,@h);
-        margin:@p @p @p 0;
       }
 
     }
@@ -158,17 +161,18 @@ body {
         color:RGB(33, 33, 33);
         .name{
           font-size: 20px;
-          float: left;
           margin-right: 10px;
-        }
-        img{
-          display: block;
           float: left;
-          @w:24px;
-          .size(@w,@w);
-          .border-radius(2px);
-          margin-top: 2px;
-          margin-right: 7px;
+        }
+        .img-box {
+          float: left;
+          img {
+            @w: 24px;
+            .size(@w, @w);
+            .border-radius(2px);
+            margin-top: 2px;
+            margin-right: 7px;
+          }
         }
       }
       .nums-info{
@@ -657,11 +661,10 @@ body {
       @p: 15px;
       .left {
         position: absolute;
-        .size(@h+@p, @h);
+        .size(@h+@p, 100%);
         img {
-          .border-radius(50%);
           .size(@h, @h);
-          margin: @p+5px @p @p 0;
+          margin-top: -@h/2;
         }
 
       }
@@ -671,8 +674,11 @@ body {
           .name {
             font-size: 18px;
           }
-          img{
-            .size(20px,20px);
+          .img-box {
+            img {
+              .size(20px, 20px);
+              margin-right: 3px;
+            }
           }
         }
         .nums-info{

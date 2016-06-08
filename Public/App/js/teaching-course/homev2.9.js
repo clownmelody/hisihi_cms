@@ -408,12 +408,13 @@ define(['base','fastclick'],function(Base){
 
     /*得到认证的图片*/
     t.getCerImg=function(data){
-        var str='',len=data.length;
+        var str='<div class="img-box">',len=data.length;
         for(var i=0;i<len;i++){
             if(data[i].default_display) {
                 str += '<img src="' + data[i].tag_pic_url + '">';
             }
         }
+        str +='</div>'
         return str;
     };
 

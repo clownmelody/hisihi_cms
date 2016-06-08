@@ -491,20 +491,13 @@ body {
     width: 16px;
     height: 17px;
   }
-  .main-item.org-basic-info {
-    position: relative;
-  }
   .main-item.org-basic-info .left {
-    position: absolute;
     width: 75px;
     height: 100%;
   }
   .main-item.org-basic-info .left img {
-    border-radius: 50%;
-    background-clip: padding-box;
     width: 60px;
     height: 60px;
-    position: absolute;
     margin-top: -30px;
   }
   .main-item.org-basic-info .right {
