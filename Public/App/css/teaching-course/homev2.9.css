@@ -36,6 +36,11 @@ textarea:focus {
 .font-icon {
   display: inline-block;
 }
+.txt-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
 ul {
   margin: 0;
   padding: 0;
@@ -400,11 +405,18 @@ body {
 .main-item.lessons-more ul li .main-content .right .lesson-name {
   color: #333333;
   font-size: 16px;
+  margin-right: 22px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-view-info {
   color: #807e7e;
-  font-size: 14px;
+  font-size: 13px;
   margin: 8px 0 1px 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-view-info span {
   padding-right: 3px;
@@ -420,6 +432,7 @@ body {
 }
 .main-item.lessons-more ul li .main-content .right .teacher-info {
   color: #807e7e;
+  font-size: 13px;
 }
 .main-item.lessons-more ul li .main-content .right .teacher-info .left-item {
   display: inline-block;

@@ -293,7 +293,6 @@ define(['base'],function(Base){
                 item=courses[i];
                 var name=item.course_name,
                     tName=item.lecture_name;
-                name=this.substrLongStr(name,12);
                 tName=this.substrLongStr(tName,5);
                 str += '<li>' +
                     '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
