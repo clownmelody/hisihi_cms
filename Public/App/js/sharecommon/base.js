@@ -207,7 +207,7 @@ define(['$'],function() {
             var that=this,
                 para = {
                     async:async,
-                    url: 'http://dev.api.hisihi.com/v1/token',
+                    url: window.hisihiUrlObj.api_url+'/v1/token',
                     type: 'post',
                     paraData: JSON.stringify({account:userinfo.account, secret: userinfo.secret, type: userinfo.type}),
                     sCallback: function (data) {
