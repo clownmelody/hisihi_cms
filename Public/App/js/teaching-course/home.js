@@ -177,11 +177,12 @@ define(['base'],function(Base){
                                 this.getCerImg(data.auth)+
                                 '<div style="clear: both;"></div>'+
                             '</div>'+
-                        '<ul class="nums-info">'+
-                            '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>人查看</span></li>'+
-                            '<li><span id="singin-nums－org">'+this.transformNums(data.enroll_count) + '</span><span>人报名</span></li>'+
-                            '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>人关注</span></li>'+
-                        '</ul>'+
+                            '<ul class="nums-info">'+
+                                '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>人查看</span></li>'+
+                                '<li><span id="singin-nums－org">'+this.transformNums(data.enroll_count) + '</span><span>人报名</span></li>'+
+                                '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>人关注</span></li>'+
+                            '</ul>'+
+                        '</div>'+
                     '</div>'+
                 '</a>'+
             '</div>';
@@ -203,12 +204,14 @@ define(['base'],function(Base){
 
     /*得到认证的图片*/
     t.getCerImg=function(data){
-        var str='',len=data.length;
+        var str='<div class="img-box">',
+            len=data.length;
         for(var i=0;i<len;i++){
             if(data[i].default_display) {
                 str += '<img src="' + data[i].tag_pic_url + '">';
             }
         }
+        str+='</div>';
         return str;
     };
 

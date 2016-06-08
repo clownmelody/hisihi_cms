@@ -252,9 +252,11 @@ body {
   float: left;
   margin-right: 10px;
 }
-.main-item.org-basic-info .right .org-name img {
-  display: block;
+.main-item.org-basic-info .right .org-name .img-box {
   float: left;
+}
+.main-item.org-basic-info .right .org-name .img-box img {
+  display: block;
   width: 24px;
   height: 24px;
   border-radius: 2px;
