@@ -315,7 +315,6 @@ define(['base','fastclick'],function(Base){
 
     /*优惠券操作*/
     t.operateCoupon=function(e){
-        alert(this.userInfo.name==this.staticUserNameStr);
         if(!this.userInfo.token || this.userInfo.name==this.staticUserNameStr){
             //this.controlLoginTipModal(true);
             this.doLogin();
