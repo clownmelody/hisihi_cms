@@ -587,10 +587,8 @@ define(['base','fastclick'],function(Base){
      */
     window.loginSuccessCallback=function(){
         var obj=window.course;
-
         //得到用户基本信息
         obj.getUserInfo(null,1);
-        alert(obj.userInfo.name==obj.staticUserNameStr);
     };
 
     return Course;
