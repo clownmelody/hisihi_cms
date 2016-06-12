@@ -315,7 +315,6 @@ define(['base','fastclick'],function(Base){
 
     /*优惠券操作*/
     t.operateCoupon=function(e){
-        alert(this.userInfo.name==this.staticUserNameStr);
         if(!this.userInfo.token || this.userInfo.name==this.staticUserNameStr){
             //this.controlLoginTipModal(true);
             this.doLogin();
@@ -587,10 +586,8 @@ define(['base','fastclick'],function(Base){
      */
     window.loginSuccessCallback=function(){
         var obj=window.course;
-
         //得到用户基本信息
         obj.getUserInfo(null,1);
-        alert(obj.userInfo.name==obj.staticUserNameStr);
     };
 
     return Course;

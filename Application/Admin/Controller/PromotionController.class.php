@@ -85,14 +85,21 @@ class PromotionController extends AdminController
     public function set_status($id, $status=-1){
         if(!empty($id)){
             $model = M('Promotion');
+            $tcopr_model = M('TeachingCourseOrganizationPromotionRelation');
             $data['status'] = $status;
             if(is_array($id)){
                 foreach ($id as $i){
                     $model->where('id='.$i)->save($data);
+                    if($status==-1){
+                        $tcopr_model->where('promotion_id='.$i)->save(array('status'=>-1));
+                    }
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
+                if($status==-1){
+                    $tcopr_model->where('promotion_id='.$id)->save(array('status'=>-1));
+                }
             }
             $this->success('处理成功','index.php?s=/admin/promotion/index');
         } else {
