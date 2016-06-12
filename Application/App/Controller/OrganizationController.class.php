@@ -3482,7 +3482,7 @@ class OrganizationController extends AppController
             }
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("id desc")
+            ->order("sort asc, id desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
@@ -3589,7 +3589,7 @@ class OrganizationController extends AppController
             $select_where['city'] = array('like','%'.$city.'%');
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("id desc")
+            ->order("sort asc, id desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
@@ -3680,7 +3680,7 @@ class OrganizationController extends AppController
             $select_where['city'] = array('like','%'.$city.'%');
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("id desc")
+            ->order("sort asc, id desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
@@ -3834,7 +3834,7 @@ class OrganizationController extends AppController
             $this->apiSuccess('获取搜索列表成功', null, $data);
         }elseif($type == 'organization'){
             $org_list = $org_model->field('id, name, slogan, city, type, view_count, logo, light_authentication')
-                ->where($map)->where($org_map)->page($page, $count)->order('id desc')->select();
+                ->where($map)->where($org_map)->page($page, $count)->order('sort asc, id desc')->select();
             $org_count = $org_model->where($map)->where($org_map)->count();
             foreach($org_list as &$org){
                 $org_id = $org['id'];
