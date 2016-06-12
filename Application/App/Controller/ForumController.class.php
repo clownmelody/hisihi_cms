@@ -145,12 +145,6 @@ class ForumController extends AppController
         }
 
         foreach ($list as &$v) {
-            /*$forumInfo = $forum_key_value[$v['forum_id']];
-            $mapx = array('id' => $v['forum_id'], 'status' => 1);
-            $forumType = M('ForumType')->where($mapx)->select();
-            $v['post_id'] = $v['id'];
-            $v['forumTitle'] = $forumInfo['title'] . '/' . $forumType[0]['title'];*/
-            /* ------ */
             $v['post_id'] = $v['id'];
             $forum = D('Forum')->find($v['forum_id']);
             $mapx = array('id' => $forum['type_id'], 'status' => 1);
@@ -182,42 +176,8 @@ class ForumController extends AppController
 
             //解析并成立图片数据
             $v['img'] = $this->match_img($v['content']);
-            /*
-            $tmpImgArr = array();
-            preg_match_all("/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.png]))[\'|\"].*?[\/]?>/",  $v['content'], $tmpImgArr); //匹配所有的图片
-            $imgArr = $tmpImgArr[1];
-            if(!empty($imgArr)){
-                $dm = "http://$_SERVER[HTTP_HOST]" . __ROOT__; //前缀图片多余截取
-                $dmip = "http://$_SERVER[SERVER_ADDR]" . __ROOT__; //前缀图片多余截取
-                foreach($imgArr as &$v1){
-                    if(strstr($v1,$dm))
-                        $v1 = mb_substr($v1, strlen($dm), strlen($v1) - strlen($dm));
-                    else if(strstr($v1,$dmip)){
-                        $v1 = mb_substr($v1, strlen($dmip), strlen($v1) - strlen($dmip));
-                    }
-                    $pic_small = getThumbImage($v1, 280, 160);
-                    $v1['src'] = $v1;
-                    $v1['thumb'] = $pic_small['src'];
-                    $v1['size'] = $pic_small['width'];
-                    //dump($pic_small);
-                }
-                //$v['img']['thumb'] = $imgArr;
-                $v['img']['src'] = $imgArr;
-            }
-            */
 
             $v['sound'] = $this->fetchSound($v['id'],0);
-            /*
-            $sound = D('ForumSound')->where(array('fid' => $v['id'],'ftype' => 0))->find();
-            if($sound) {
-                $root = C('DOWNLOAD_UPLOAD.rootPath');
-                $sound = $root.$sound['savepath'].$sound['savename'];
-                if(!is_file($sound)){
-                    $sound = null;
-                }
-            }
-            $v['sound'] = $sound;
-            */
 
             $v['content'] = op_t($v['content']);
 
@@ -374,7 +334,7 @@ class ForumController extends AppController
         $reply_type = intval($reply_type);
 
         if ($order == 'ctime') {
-            $order = 'create_time d esc';
+            $order = 'create_time desc';
         } else if ($order == 'reply') {
             $order = 'last_reply_time desc';
         } else if($order == 'hot'){//2.2以上版本"最热"
@@ -512,6 +472,64 @@ class ForumController extends AppController
 //        $data['forumList'] = $list;
 //
 //        $this->apiSuccess("获取提问列表成功", null, $data);
+    }
+
+
+    /**
+     * 话题下帖子列表
+     * @param int $topicId
+     * @param null $position
+     * @param int $page
+     * @param int $count
+     */
+    public function forumFilterByTopic($topicId = 0, $position=null, $page = 1, $count = 10)
+    {
+        $topicId = intval($topicId);
+        $page = intval($page);
+        $count = intval($count);
+        $order = 'hisihi_forum_topic_to_post_relation.create_time desc';
+
+        //读取帖子列表
+        $map = array( 'topic_id' => $topicId,
+            'hisihi_forum_topic_to_post_relation.status' => 1,
+            'hisihi_forum_post.status' => 1);
+        $map['post_type'] = 1;  // 个人提问
+
+        if(!empty($position)){//发帖位置
+            $posts = $this->getForumsByPosition($position);
+            $post_ids = array();
+            foreach($posts as &$post_id){
+                $post_ids[] = $post_id['post_id'];
+            }
+            if(!empty($map['id'])){//取帖子id交集
+                $intersect_ids = array_intersect($map['id'][1], $post_ids);
+                $map['id'] = array('in', $intersect_ids);
+            }else{
+                $map['id'] = array('in', $post_ids);
+            }
+        }
+        if(!empty($grade)){//发帖人的年级
+            $uids = $this->getForumsByGrade($grade);
+            $post_uids = array();
+            foreach($uids as &$post_uid){
+                $post_uids[] = $post_uid['uid'];
+            }
+            $map['uid'] = array('in', $post_uids);
+        }
+        $map['is_top'] = 0;
+        $forumPost = M('ForumPost');
+        $totalCount = $forumPost->join('hisihi_forum_topic_to_post_relation ON hisihi_forum_topic_to_post_relation.post_id = hisihi_forum_post.id')
+            ->where($map)->count();
+        $list = $forumPost->join('hisihi_forum_topic_to_post_relation ON hisihi_forum_topic_to_post_relation.post_id = hisihi_forum_post.id')
+            ->where($map)->order($order)->page($page, $count)->select();
+        if($list){
+            $list = $this->list_sort_by($list, 'last_reply_time');
+            $list = $this->formatList($list, '2.9', null);
+        } else {
+            $totalCount = 0;
+            $list = array();
+        }
+        $this->apiSuccess("获取话题下提问列表成功", null, array( 'total_count' => $totalCount, 'forumList' => $list));
     }
 
     /**
@@ -1268,9 +1286,12 @@ class ForumController extends AppController
      * @param null $sound
      * @param null $atUids
      * @param int $at_type   1 为正常论坛包括@用户提问   2 为@公司提问
+     * @param int $topicId
+     * @param string $version
      * @throws \Common\Exception\ApiException
      */
-    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null, $sound = null, $atUids = null, $at_type=1)
+    public function doPost($post_id = null, $forum_id = 0, $title='标题', $content = ' ', $pos = null, $pictures = null,
+                           $sound = null, $atUids = null, $at_type=1, $topicId=0, $version=null)
     {
         $this->requireLogin();
         $post_id = intval($post_id);
@@ -1487,6 +1508,11 @@ class ForumController extends AppController
             Hook::exec('Addons\\JPush\\JPushAddon', 'push_question_asked', $param);
         }
 
+        // 绑定帖子与话题
+        if((float)$version>=2.9){
+            $this->bindPostToTopicId($post_id, $topicId);
+        }
+
         //显示成功消息
         $message = $isEdit ? '编辑成功。' : '提问成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after);
         $extra['post_id'] = $post_id;
@@ -1501,6 +1527,22 @@ class ForumController extends AppController
             }
         }
         $this->apiSuccess($message,null, $extra);
+    }
+
+    /**
+     * 绑定帖子与话题
+     * @param int $postId
+     * @param int $topicId
+     */
+    public function bindPostToTopicId($postId=0, $topicId=0){
+        if($postId==0 || $topicId==0){
+            $this->apiError(-1, '帖子id和话题id不能为空!');
+        }
+        $data['topic_id'] = $topicId;
+        $data['post_id'] = $postId;
+        $data['create_time'] = time();
+        $model = M('ForumTopicToPostRelation');
+        $model->add($data);
     }
 
     /**
@@ -3098,6 +3140,13 @@ class ForumController extends AppController
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param int $topic_id
+     */
+    public function forumPostListByTopicId($topic_id=0){
+
     }
 
     /**
