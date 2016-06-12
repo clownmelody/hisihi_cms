@@ -1013,6 +1013,59 @@ class ForumController extends AdminController
     }
 
     /**
+     * 论坛话题列表
+     */
+    public function topic(){
+        $model = M('ForumTopic');
+        $count = $model->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title", "话题管理");
+        $this->display('topic');
+    }
+
+    /**
+     * 新增置顶
+     */
+    public function topicAdd(){
+        $this->display('topic_add');
+    }
+
+    /**
+     * 话题数据更新
+     */
+    public function topic_update(){
+        if (IS_POST) { //提交表单
+            $model = M('ForumTopic');
+            $cid = $_POST["tid"];
+            $data['title'] = $_POST['title'];
+            $data["description"] = $_POST["description"];
+            $data["img_url"] = $_POST["img_url"];
+            if(is_numeric($data["img_url"])){
+                $this->uploadLogoPicToOSS($data["img_url"]);
+                $data["img_url"] = $this->fetchCdnImage($data["img_url"]);
+            }
+            $data["is_hot"] = $_POST["is_hot"];
+            $data['status']=1;
+            if(empty($cid)){
+                $data["create_time"] = time();
+                $model->data($data)->add();
+                $this->success('添加成功', 'index.php?s=/admin/forum/topic');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/forum/topic');
+            }
+        } else {
+            $this->display('topic_add');
+        }
+    }
+
+    /**
      * 上传图片到OSS
      * @param $picID
      */
@@ -1029,6 +1082,26 @@ class ForumController extends AdminController
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
             }
         }
+    }
+
+    public function fetchCdnImage($pic_id){
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://pic.hisihi.com/".$objKey;
+            } else {
+                $picUrl = null;
+            }
+        }
+        return $picUrl;
     }
 
 }
