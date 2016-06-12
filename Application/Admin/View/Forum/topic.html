@@ -12,7 +12,8 @@
         <div class="fl">
             <div class="btn-group">
                 <button class="btn document_add" url="{:U('topicAdd')}">新 增</button>
-                <button class="btn ajax-post confirm" target-form="ids" url="{:U("forum/topic_delete",array("status"=>-1))}">删 除</button>
+                <button class="btn ajax-post" target-form="ids" url="{:U("forum/set_forum_topic_status",array("status"=>1))}">取消删除</button>
+                <button class="btn ajax-post" target-form="ids" url="{:U("forum/set_forum_topic_hot",array("is_hot"=>-1))}">取消热门</button>
             </div>
         </div>
     </div>
@@ -48,7 +49,8 @@
                         </td>
                         <td>
                             <a href="{:U('forum/topic_edit?id='.$vo['id'])}" >编辑</a>
-                            <a href="{:U('forum/topic_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('forum/set_forum_topic_status?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('forum/set_forum_topic_hot?id='.$vo['id'])}" class="ajax-get confirm">设为热门</a>
                         </td>
                     </tr>
                 </volist>

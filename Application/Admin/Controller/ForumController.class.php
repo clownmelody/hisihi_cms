@@ -1065,6 +1065,48 @@ class ForumController extends AdminController
         }
     }
 
+    public function topic_edit($id){
+        $topic_info = M('ForumTopic')->where('id='.$id)->find();
+        $this->assign('info', $topic_info);
+        $this->display();
+    }
+
+    public function set_forum_topic_status($id, $status=-1){
+        if(!empty($id)){
+            $model = M('ForumTopic');
+            $data['status'] = $status;
+            if(is_array($id)){
+                foreach ($id as $i){
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/forum/topic');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    public function set_forum_topic_hot($id, $is_hot=1){
+        if(!empty($id)){
+            $model = M('ForumTopic');
+            $data['is_hot'] = $is_hot;
+            if(is_array($id)){
+                foreach ($id as $i){
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/forum/topic');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
     /**
      * 上传图片到OSS
      * @param $picID
