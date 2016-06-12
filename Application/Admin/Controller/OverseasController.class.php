@@ -234,6 +234,10 @@ class OverseasController extends AdminController
         $map['status'] = 1;
         $type_id = M('OrganizationTag')->where($map)->getField('id');
         $model = M('Organization');
+        $is_hot = I('is_hot');
+        if($is_hot){
+            $where_map['is_hot'] = 1;
+        }
         $where_map['status'] = 1;
         $where_map['type'] = $type_id;
         $count = $model->where($where_map)->count();
@@ -258,6 +262,8 @@ class OverseasController extends AdminController
         }
         $major = M('OrganizationTag')->field('id, value')->where('type=8 and status>0')->select();
         $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
+
+        $this->assign('is_hot', I('is_hot'));
         $this->assign('type', $type);
         $this->assign('major', $major);
         $this->assign('_list', $list);
@@ -610,6 +616,27 @@ class OverseasController extends AdminController
                 $model->where('id=' . $id)->save($data);
             }
             $this->success('处理成功', 'index.php?s=/admin/overseas/plan');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    public function setOrgSort($id, $sort=100){
+        if(!empty($id)){
+            $model = M('Organization');
+            $data['sort'] = $sort;
+            $id = intval($id);
+            $model->where('id='.$id)->save($data);
+            if(I('type')){
+                $this->success('设置成功','index.php?s=/admin/organization/searchtype&type='.I('type'));
+            }
+            if(I('major')){
+                $this->success('设置成功','index.php?s=/admin/organization/searchmajor&major='.I('major'));
+            }
+            if(I('is_hot')){
+                $this->success('设置成功','index.php?s=/admin/overseas/org_list&is_hot=1');
+            }
+            $this->success('设置成功','index.php?s=/admin/overseas/org_list');
         } else {
             $this->error('未选择要处理的数据');
         }

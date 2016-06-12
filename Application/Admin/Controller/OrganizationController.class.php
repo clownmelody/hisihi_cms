@@ -3811,6 +3811,8 @@ class OrganizationController extends AdminController
         }
         $major = M('OrganizationTag')->field('id, value')->where('type=8 and status>0')->select();
         $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
+
+        $this->assign('search_major', I('major'));
         $this->assign('type', $type);
         $this->assign('major', $major);
         $this->assign('_list', $list);
@@ -3826,6 +3828,11 @@ class OrganizationController extends AdminController
         if(!empty($type_id)){
             $map['type'] = $type_id;
         }
+        $integrity = I('integrity');
+        if(!empty($integrity)){
+            $map['light_authentication'] = 1;
+        }
+
         //用于公司名称搜索
         $name = $_GET["title"];
         if($name){
@@ -3850,6 +3857,9 @@ class OrganizationController extends AdminController
         }
         $major = M('OrganizationTag')->field('id, value')->where('type=8 and status>0')->select();
         $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
+
+        $this->assign('integrity', I('integrity'));
+        $this->assign('search_type', I('type'));
         $this->assign('type', $type);
         $this->assign('major', $major);
         $this->assign('_list', $list);
@@ -3857,5 +3867,27 @@ class OrganizationController extends AdminController
         $this->assign("_total", $count);
         $this->assign("meta_title","机构列表");
         $this->display('index');
+    }
+
+
+    public function setSort($id, $sort=100){
+        if(!empty($id)){
+            $model = M('Organization');
+            $data['sort'] = $sort;
+            $id = intval($id);
+            $model->where('id='.$id)->save($data);
+            if(I('type')){
+                if(I('integrity')){
+                    $this->success('设置成功','index.php?s=/admin/organization/searchtype&integrity=1&type='.I('type'));
+                }
+                $this->success('设置成功','index.php?s=/admin/organization/searchtype&type='.I('type'));
+            }
+            if(I('major')){
+                $this->success('设置成功','index.php?s=/admin/organization/searchmajor&major='.I('major'));
+            }
+            $this->success('设置成功','index.php?s=/admin/organization/index');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
     }
 }

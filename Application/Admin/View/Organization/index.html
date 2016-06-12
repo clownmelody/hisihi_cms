@@ -5,6 +5,9 @@
         <h2>
             机构列表(共：{$_total|default=0} 家)
         </h2>
+        <input type="hidden" id="search_type" value="{$search_type}"/>
+        <input type="hidden" id="search_major" value="{$search_major}"/>
+        <input type="hidden" id="integrity" value="{$integrity}"/>
     </div>
 
     <!-- 按钮工具栏 -->
@@ -18,6 +21,7 @@
                 <button id="addmajor" class="btn" >添加专业</button>
                 <button id="searchmajor" class="btn" >按专业查询</button>
                 <button id="searchtype" class="btn" >按类型查询</button>
+                <a class="btn" href="{:U('organization/searchtype?integrity=1&type='.$search_type)}" >诚信机构列表</a>
 
                 <div class="btn-group-click adv-sch-pannel fl">
                     <button class="btn">批量生成帐号</button>
@@ -82,6 +86,20 @@
             <button id="search4type" class="btn" style="float: right;">查询</button>
         </div>
     </div>
+    <!-- 设置排序-->
+    <div id="sort_box" style="display:none;position: fixed;top: 30%;left: 40%;width: 250px;background: white;border: 1px solid grey;">
+        <p style="height: 30px;border-bottom: 1px solid lightgray;">
+            <span style="height: 30px;float: left;text-align: center;">请输入排序值(从小到大排序)</span>
+            <span id="sort_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
+        </p>
+        <div style="height: 30px;">
+            <input style="width: 240px;" type="text" id="sort" name="sort" value=""/>
+        </div>
+        <div style="height: 35px;margin-top: 30px;">
+            <button id="addSort" onclick="setSortValue();"  url="{:U("organization/setSort")}" class="btn ajax-get confirm" style="float: right;">提交</button>
+        </div>
+    </div>
+
     <!-- 数据列表 -->
     <div class="data-table table-striped">
         <table class="table_nowrap">
@@ -147,6 +165,7 @@
                             <a href="{:U('organization/lecture_group?organization_id='.$vo['id'])}" >分组</a>
                             <a href="{:U('organization/create_im_group?organization_id='.$vo['id'])}" >建群</a>
                             <a href="{:U('organization/certificate?organization_id='.$vo['id'])}" >认证报告</a>
+                            <a id="{$vo['id']}" class="setSort"  href="javascript:void(0)">设置排序</a>
                             <a href="{:U('organization/edit?id='.$vo['id'])}" >编辑</a>
                             <a href="{:U('organization/delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
@@ -185,7 +204,34 @@
             $('#createAccount').attr('href',url);
         }
 
+        function setSortValue(){
+            var url = $('#addSort').attr('url');
+            if($('#search_type').val() > 0){
+                url += '&type=' + $('#search_type').val();
+            }
+            if($('#search_major').val() > 0){
+                url += '&major=' + $('#search_major').val();
+            }
+            if($('#integrity').val() > 0){
+                url += '&integrity=' + $('#integrity').val();
+            }
+            $('#addSort').attr('url', url + '&sort=' + $('#sort').val());
+        }
+
         $(function(){
+
+            $('.setSort').click(function(){
+                var id = $(this).attr('id');
+                var url = "{:U("organization/setSort")}";
+                $('#addSort').attr('url',url + '&id=' + id);
+                $('#sort_box').toggle();
+            })
+
+            $('#sort_close').click(function(){
+                $('#sort_box').hide();
+            })
+
+
             //搜索功能
             $("#search").click(function(){
                 var url = $(this).attr('url');
