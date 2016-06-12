@@ -3671,17 +3671,28 @@ class OrganizationController extends AdminController
      * 显示诚信机构列表
      */
     public function integrity_org(){
+        $map['light_authentication'] = 1;
+        $map['status'] = 1;
+        $type = I('type');
+        if(!empty($type)){
+            $map['type'] = $type;
+        }
+        $well_chosen = I('well_chosen');
+        if(!empty($well_chosen)){
+            $map['well_chosen'] = $well_chosen;
+        }
+
         $model = M('Organization');
-        $count = $model->where('light_authentication=1 and status=1')->count();
+        $count = $model->where($map)->count();
         $Page = new Page($count, 5);
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];
         if($name){
             $map['name'] = array('like','%'.$name.'%');
-            $list = $model->where($map)->where("light_authentication=1 and status=1")->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($map)->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->where('light_authentication=1 and status=1')->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where($map)->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$org){
             $has_admin = M('OrganizationAdmin')->where('status=1 and id='.$org['uid'])->count();
@@ -3693,6 +3704,10 @@ class OrganizationController extends AdminController
             $org['type'] = M('OrganizationTag')->where('type=7 and id='.$org['type'])->getField('value');
         }
 
+        $type = M('OrganizationTag')->field('id, value')->where('type=7 and status=1')->select();
+        $this->assign('type', $type);
+        $this->assign('search_type', I('type'));
+        $this->assign('well_chosen', I('well_chosen'));
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("_total", $count);
@@ -3703,7 +3718,7 @@ class OrganizationController extends AdminController
     /**
      * 诚信机构设置为精选
      */
-    public function set_well_chosen(){
+    public function set_well_chosen($type=null){
         $ids = I('post.id');
         if(empty($ids)){
             $this->error('请选择要操作的数据');
@@ -3716,13 +3731,13 @@ class OrganizationController extends AdminController
         } catch (Exception $e){
             $this->error('添加失败，请检查后重试');
         }
-        $this->success("设置成功", 'index.php?s=/admin/organization/integrity_org');
+        $this->success("设置成功", 'index.php?s=/admin/organization/integrity_org&type='.$type);
     }
 
     /**
      *取消诚信机构为精选
      */
-    public function undo_well_chosen(){
+    public function undo_well_chosen($type=null){
         $ids = I('post.id');
         if(empty($ids)){
             $this->error('请选择要操作的数据');
@@ -3735,7 +3750,7 @@ class OrganizationController extends AdminController
         } catch (Exception $e){
             $this->error('添加失败，请检查后重试');
         }
-        $this->success("取消成功", 'index.php?s=/admin/organization/integrity_org');
+        $this->success("取消成功", 'index.php?s=/admin/organization/integrity_org&type='.$type);
     }
 
     /**
@@ -3876,6 +3891,15 @@ class OrganizationController extends AdminController
             $data['sort'] = $sort;
             $id = intval($id);
             $model->where('id='.$id)->save($data);
+            if(I('integrity_org')){
+                if(I('type')){
+                    if(I('well_chosen')){
+                        $this->success('设置成功','index.php?s=/admin/organization/integrity_org&well_chosen=1&type='.I('type'));
+                    }
+                    $this->success('设置成功','index.php?s=/admin/organization/integrity_org&type='.I('type'));
+                }
+                $this->success('设置成功','index.php?s=/admin/organization/integrity_org');
+            }
             if(I('type')){
                 if(I('integrity')){
                     $this->success('设置成功','index.php?s=/admin/organization/searchtype&integrity=1&type='.I('type'));
@@ -3885,6 +3909,7 @@ class OrganizationController extends AdminController
             if(I('major')){
                 $this->success('设置成功','index.php?s=/admin/organization/searchmajor&major='.I('major'));
             }
+
             $this->success('设置成功','index.php?s=/admin/organization/index');
         } else {
             $this->error('未选择要处理的数据');

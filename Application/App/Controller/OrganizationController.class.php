@@ -3531,7 +3531,7 @@ class OrganizationController extends AppController
             'direction'=>'SORT_ASC',
             'field'=>'sort'
         );
-        $org_list = $this->sort_list($sort2, $org_list);
+        //$org_list = $this->sort_list($sort2, $org_list);
         //去掉sort字段
         foreach($org_list as &$org){
             unset($org['sort']);
@@ -3637,7 +3637,7 @@ class OrganizationController extends AppController
             'direction'=>'SORT_ASC',
             'field'=>'sort'
         );
-        $org_list = $this->sort_list($sort2, $org_list);
+        //$org_list = $this->sort_list($sort2, $org_list);
         //去掉sort字段
         foreach($org_list as &$org){
             unset($org['sort']);
@@ -3729,7 +3729,7 @@ class OrganizationController extends AppController
             'direction'=>'SORT_ASC',
             'field'=>'sort'
         );
-        $org_list = $this->sort_list($sort2, $org_list);
+        //$org_list = $this->sort_list($sort2, $org_list);
 
         //去掉sort字段
         foreach($org_list as &$org){
