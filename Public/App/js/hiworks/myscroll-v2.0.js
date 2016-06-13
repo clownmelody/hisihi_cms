@@ -93,14 +93,17 @@ define(['$','iscroll'],function() {
                         return;
                     }
                     !downHasClass && that.$downIcon.addClass("flip");
-                    that.$down.show().find('.t-label').text('释放刷新');
+                    that.$down.removeClass('shide').addClass('sshow')
+                        .find('.t-label')
+                        .text('释放刷新');
                     return;
                 } else if (y < 40 && y > 0) {
                     if(downLoadingClass){
                         return;
                     }
                     downHasClass && that.$downIcon.removeClass("flip");
-                    that.$down.hide().find('.t-label').text('下拉刷新');
+                    that.$down.removeClass('sshow').addClass('shide')
+                        .find('.t-label').text('下拉刷新');
                     return "";
                 }
 
@@ -109,14 +112,16 @@ define(['$','iscroll'],function() {
                         return;
                     }
                     !upHasClass && that.$upIcon.addClass("flip");
-                    that.$up.show().find('.t-label').text('释放加载');
+                    that.$up.removeClass('shide').addClass('sshow')
+                        .find('.t-label').text('释放加载');
                     return;
                 } else if (maxY < 60 && maxY >= 0) {
                     if(upLoadingClass){
                         return;
                     }
                     upHasClass && that.$upIcon.removeClass("flip");
-                    that.find('.t-label').text('上拉加载更多');
+                    that.$up.removeClass('sshow').addClass('shide')
+                        .find('.t-label').text('上拉加载更多');
                     return;
                 }
             });

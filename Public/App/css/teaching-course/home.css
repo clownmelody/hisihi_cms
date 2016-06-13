@@ -154,8 +154,17 @@ ul li {
     -webkit-transform: rotate(360deg) translateZ(0);
   }
 }
+.sshow {
+  display: block;
+  animation: sshow 1s linear;
+}
+.shide {
+  display: none;
+  animation: sshow 1s linear;
+}
 @-webkit-keyframes sshow {
   from {
+    display: block;
     opacity: 0;
   }
   to {
@@ -169,6 +178,7 @@ ul li {
   }
   to {
     opacity: 0;
+    display: none;
     transform: scale(0);
   }
 }

@@ -175,8 +175,19 @@ ul li {
   }
 }
 
+.sshow{
+  display: block;
+  animation: sshow 3s linear;
+}
+.shide{
+  display: none;
+  animation: sshow 1s linear;
+}
+
 @-webkit-keyframes sshow {
   from{
+    display: block;
+    transform: scale(0)
     opacity: 0;
   }
   to {
@@ -191,6 +202,7 @@ ul li {
   }
   to {
     opacity: 0;
+    display: none;
     transform: scale(0);
   }
 }
