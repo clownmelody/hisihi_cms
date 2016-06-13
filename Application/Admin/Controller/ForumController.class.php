@@ -1016,17 +1016,41 @@ class ForumController extends AdminController
      * 论坛话题列表
      */
     public function topic(){
+        $is_hot = I('is_hot');
+        if($is_hot){
+            $map['is_hot'] = 1;
+        }
         $model = M('ForumTopic');
-        $count = $model->count();
+        $count = $model->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time desc')
+        $list = $model->where($map)->order('sort asc, create_time desc')
             ->limit($Page->firstRow.','.$Page->listRows)->select();
+
+        $this->assign('is_hot', I('is_hot'));
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("_total", $count);
         $this->assign("meta_title", "话题管理");
         $this->display('topic');
+    }
+
+    /**
+     *
+     */
+    public function setTopicSort($id, $sort=999){
+        if(!empty($id)){
+            $model = M('ForumTopic');
+            $data['sort'] = $sort;
+            $id = intval($id);
+            $model->where('id='.$id)->save($data);
+            if(I('is_hot')){
+                $this->success('设置成功','index.php?s=/admin/forum/topic&is_hot=1');
+            }
+            $this->success('设置成功','index.php?s=/admin/forum/topic');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
     }
 
     /**
