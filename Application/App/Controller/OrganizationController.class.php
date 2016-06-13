@@ -1795,7 +1795,7 @@ class OrganizationController extends AppController
                 $promotion_list = array();
                 foreach($org_promotion_list as $promotion){
                     $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
-                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'];
+                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                     $promotion_list[] = $obj;
                 }
                 $org['promotion_list'] = $promotion_list;
@@ -3513,7 +3513,7 @@ class OrganizationController extends AppController
                 $promotion_list = array();
                 foreach($org_promotion_list as $promotion){
                     $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
-                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'];
+                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                     $promotion_list[] = $obj;
                 }
                 $org['promotion_list'] = $promotion_list;
@@ -4095,7 +4095,7 @@ hisihi_teaching_course_organization_promotion_relation t1,
 hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
  and t2.coupon_id=t3.id and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
             $obj['coupon_list'] = $coupon_list;
-            $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'];
+            $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
             $_promotion_list[] = $obj;
         }
         $data['totalCount'] = count($_promotion_list);

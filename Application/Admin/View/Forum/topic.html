@@ -5,6 +5,7 @@
         <h2>
             社区话题管理
         </h2>
+        <input type="hidden" id="is_hot" value="{$is_hot}"/>
     </div>
 
     <!-- 按钮工具栏 -->
@@ -14,7 +15,22 @@
                 <button class="btn document_add" url="{:U('topicAdd')}">新 增</button>
                 <button class="btn ajax-post" target-form="ids" url="{:U("forum/set_forum_topic_status",array("status"=>1))}">取消删除</button>
                 <button class="btn ajax-post" target-form="ids" url="{:U("forum/set_forum_topic_hot",array("is_hot"=>-1))}">取消热门</button>
+                <a class="btn" href="{:U('forum/topic?is_hot=1')}" >热门话题列表</a>
             </div>
+        </div>
+    </div>
+
+    <!-- 设置排序-->
+    <div id="sort_box" style="display:none;position: fixed;top: 30%;left: 40%;width: 250px;background: white;border: 1px solid grey;">
+        <p style="height: 30px;border-bottom: 1px solid lightgray;">
+            <span style="height: 30px;float: left;text-align: center;">请输入排序值(从小到大排序)</span>
+            <span id="sort_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
+        </p>
+        <div style="height: 30px;">
+            <input style="width: 240px;" type="text" id="sort" name="sort" value=""/>
+        </div>
+        <div style="height: 35px;margin-top: 30px;">
+            <button id="addSort" onclick="setSortValue();"  url="{:U("organization/setSort")}" class="btn ajax-get confirm" style="float: right;">提交</button>
         </div>
     </div>
 
@@ -27,6 +43,7 @@
                 <th class="">ID</th>
                 <th class="">话题名称</th>
                 <th class="">是否热门</th>
+                <th class="">排序</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -42,12 +59,14 @@
                         <td><if condition="($vo.is_hot eq 1) "> 热门
                             <else /> 非热门
                         </if>
+                        <td>{$vo.sort}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                         </if>
                         </td>
                         <td>
+                            <a id="{$vo['id']}" class="setSort"  href="javascript:void(0)">设置排序</a>
                             <a href="{:U('forum/topic_edit?id='.$vo['id'])}" >编辑</a>
                             <a href="{:U('forum/set_forum_topic_status?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                             <a href="{:U('forum/set_forum_topic_hot?id='.$vo['id'])}" class="ajax-get confirm">设为热门</a>
@@ -69,6 +88,26 @@
     <script type="text/javascript">
         //导航高亮
         highlight_subnav('{:U('forum/topic')}');
+
+        function setSortValue(){
+            var url = $('#addSort').attr('url');
+            if($('#is_hot').val() > 0){
+                url += '&is_hot=' + $('#search_type').val();
+            }
+            $('#addSort').attr('url', url + '&sort=' + $('#sort').val());
+        }
+
+        $('.setSort').click(function(){
+            var id = $(this).attr('id');
+            var url = "{:U("forum/setTopicSort")}";
+            $('#addSort').attr('url',url + '&id=' + id);
+            $('#sort_box').toggle();
+        });
+
+        $('#sort_close').click(function(){
+            $('#sort_box').hide();
+        });
+
         //只有一个模型时，点击新增
         $('.document_add').click(function(){
             var url = $(this).attr('url');
