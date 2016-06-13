@@ -174,6 +174,20 @@ class ForumController extends AppController
                 $v['community'] = $circle_type;
             }
 
+            if((float)$version>2.8){ // 2.9及以后
+                if(empty($v['topic_id'])){
+                    $fttpr = M('ForumTopicToPostRelation')->field('topic_id')->where('post_id='.$v['post_id'])->find();
+                    $topic_id = 0;
+                    if($fttpr){
+                        $topic_id = $fttpr['topic_id'];
+                    }
+                } else {
+                    $topic_id = $v['topic_id'];
+                }
+                $record = M('ForumTopic')->field('title, description, img_url, is_hot')->where('id='.$topic_id)->find();
+                $v['topic_info'] = $record;
+            }
+
             //解析并成立图片数据
             $v['img'] = $this->match_img($v['content']);
 
@@ -211,6 +225,7 @@ class ForumController extends AppController
             unset($v['update_time']);
             unset($v['title']);
             unset($v['is_elite']);
+            unset($v['topic_id']);
         }
         unset($v);
 
@@ -453,25 +468,17 @@ class ForumController extends AppController
             $totalCount = 0;
             $list = array();
         }
-//        $cache = new \RedisCache();
-//        $cache->setResCache($this, '获取提问列表成功', array( 'total_count' => $totalCount, 'forumList' => $list), 120);
-//        $cache->close();
 
-          // setPublicResCache将删除某些属性，这里复制一份
-          $list_copy = $list;
-          $totalCount_copy = $totalCount;
-          if($circle_type != 3 && !$no_read_cache){
-              // 不缓存朋友圈数据, 如果no_cache=true，也不缓存数据
-              $cache = new \ForumFilterCache();
-              $cache->setPublicResCache($list, $totalCount);
-              $cache->close();
-          }
-          $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount_copy, 'forumList' => $list_copy));
-
-//        $data['total_count'] = $totalCount;
-//        $data['forumList'] = $list;
-//
-//        $this->apiSuccess("获取提问列表成功", null, $data);
+        // setPublicResCache将删除某些属性，这里复制一份
+        $list_copy = $list;
+        $totalCount_copy = $totalCount;
+        if($circle_type != 3 && !$no_read_cache){
+            // 不缓存朋友圈数据, 如果no_cache=true，也不缓存数据
+            $cache = new \ForumFilterCache();
+            $cache->setPublicResCache($list, $totalCount);
+            $cache->close();
+        }
+        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount_copy, 'forumList' => $list_copy));
     }
 
 
@@ -521,7 +528,9 @@ class ForumController extends AppController
         $totalCount = $forumPost->join('hisihi_forum_topic_to_post_relation ON hisihi_forum_topic_to_post_relation.post_id = hisihi_forum_post.id')
             ->where($map)->count();
         $list = $forumPost->join('hisihi_forum_topic_to_post_relation ON hisihi_forum_topic_to_post_relation.post_id = hisihi_forum_post.id')
-            ->where($map)->order($order)->page($page, $count)->select();
+            ->where($map)
+            ->field('hisihi_forum_post.*, hisihi_forum_topic_to_post_relation.topic_id, hisihi_forum_topic_to_post_relation.post_id')
+            ->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
             $list = $this->formatList($list, '2.9', null);
