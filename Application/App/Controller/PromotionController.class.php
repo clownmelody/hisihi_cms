@@ -11,7 +11,8 @@ class PromotionController extends AppController
         C('SHOW_PAGE_TRACE', false);
     }
 
-    public function promotion_detail($promotion_id=0){
+    public function promotion_detail($organization_id=0, $promotion_id=0){
+        $this->assign("organization_id", $organization_id);
         $this->assign("promotion_id", $promotion_id);
         $this->display('promotion_detail');
     }

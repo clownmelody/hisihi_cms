@@ -175,14 +175,10 @@ class ForumController extends AppController
             }
 
             if((float)$version>2.8){ // 2.9及以后
-                if(empty($v['topic_id'])){
-                    $fttpr = M('ForumTopicToPostRelation')->field('topic_id')->where('post_id='.$v['post_id'])->find();
-                    $topic_id = 0;
-                    if($fttpr){
-                        $topic_id = $fttpr['topic_id'];
-                    }
-                } else {
-                    $topic_id = $v['topic_id'];
+                $fttpr = M('ForumTopicToPostRelation')->field('topic_id')->where('post_id='.$v['post_id'])->find();
+                $topic_id = 0;
+                if($fttpr){
+                    $topic_id = $fttpr['topic_id'];
                 }
                 $record = M('ForumTopic')->field('title, description, img_url, is_hot')->where('id='.$topic_id)->find();
                 $v['topic_info'] = $record;
@@ -1027,6 +1023,15 @@ class ForumController extends AppController
             if(!$post['post_detail_adv']){
                 $post['post_detail_adv'] = null;
             }
+        }
+        if((float)$version>2.8){ // 2.9及以后
+            $fttpr = M('ForumTopicToPostRelation')->field('topic_id')->where('post_id='.$post['post_id'])->find();
+            $topic_id = 0;
+            if($fttpr){
+                $topic_id = $fttpr['topic_id'];
+            }
+            $record = M('ForumTopic')->field('title, description, img_url, is_hot')->where('id='.$topic_id)->find();
+            $post['topic_info'] = $record;
         }
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
