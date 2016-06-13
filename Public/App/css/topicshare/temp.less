@@ -1,0 +1,126 @@
+body{
+  padding: 0;
+  margin: 0;
+  background-color: #F2F2F2;
+  padding-bottom:50px;
+}
+@padding-l:10px;
+@padding-r:13px;
+.wrapper{
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+.banner-box{
+  //opacity: 0;
+  background-color: white;
+  position: relative;
+  .img-box{
+    width: 100%;
+    text-align: center;
+    img{
+      max-width: 100%;
+    }
+  }
+  .desc-box{
+    top:0;
+    left: 0;
+    position: absolute;
+    .size(100%,100%);
+    .vertical {
+      display: table-cell;
+      vertical-align: middle;
+      padding-top: 4%;
+      padding-bottom: 4%;
+      >*{
+        color: white;
+      }
+      .topic-basic-info{
+        p{
+          text-align: center;
+          margin: 12px auto;
+          &.topic-name{
+            font-size: 18px;
+            #topic-real-name{
+              display: inline-block;
+              vertical-align: top;
+            }
+          }
+        }
+      }
+      .banner-desc {
+          p {
+            margin: 0 @padding-r 0 @padding-l;
+            color: white;
+            line-height: 25px;
+            font-size: 13px;
+          }
+        }
+    }
+  }
+}
+
+.content-box{
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  min-height: 30px;
+}
+
+#downloadCon{
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  img{
+    max-width: 100%;
+  }
+  a {
+    .size(80px,32px);
+    position: absolute;
+    top:50%;
+    margin-top: -16px;
+    right: 12px;
+    display:block;
+    text-decoration: none;
+    background-color: #FF5A00;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    line-height: 32px;
+  }
+}
+
+
+@media screen and(max-width: 320px) {
+  .banner-box {
+    .desc-box {
+      .vertical {
+        .topic-basic-info {
+          p {
+            margin: 4px auto;
+          }
+        }
+        .banner-desc {
+          p {
+            line-height: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and(min-width: 750px){
+  .wrapper{
+    width: 700px;
+    margin: 0 auto;
+  }
+  #downloadCon{
+    .size(700px,110px);
+    left: 50%;
+    margin-left: -350px;
+  }
+}
