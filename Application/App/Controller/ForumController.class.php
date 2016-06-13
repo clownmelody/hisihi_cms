@@ -1545,6 +1545,11 @@ class ForumController extends AppController
         $model->add($data);
     }
 
+    public function topicPostListView($topicId=0){
+        $this->assign("topicId", $topicId);
+        $this->display("topicshare");
+    }
+
     /**
      * 检查用户发帖行为是否还能加积分
      * @param int $uid
