@@ -438,6 +438,7 @@ class DocumentController extends AppController {
         //查询数据库中的基本信息
         $map = array('id'=>$uid);
         $user = D('User/UcenterMember')->where($map)->find();
+        $info = M('Member')->field('nickname')->where(array('uid'=>$uid))->find();
         //查询头像
         $addon = new AvatarAddon;
         $avatar = $addon->getAvatarUrl($uid);
@@ -445,7 +446,7 @@ class DocumentController extends AppController {
         return array(
             'uid'=>$user['id'],
             'avatar_url'=>$avatar,
-            'username'=>$user['username']);
+            'username'=>$info['nickname']);
     }
 
     /**
