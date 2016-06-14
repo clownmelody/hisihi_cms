@@ -3478,6 +3478,9 @@ class OrganizationController extends AppController
         if(!empty($city)){
             $select_where['city'] = array('like','%'.$city.'%');
         }
+        if($well_chosen === 'true'){//兼容安卓2.9bug
+            $well_chosen = 0;
+        }
         if($well_chosen){
             if($type == '留学'){
                 $select_where['is_hot'] = 1;
