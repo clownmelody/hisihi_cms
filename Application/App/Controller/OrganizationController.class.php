@@ -1447,7 +1447,7 @@ class OrganizationController extends AppController
      * @param int $data_version
      */
     public function getCityList($data_version=0){
-        $current_data_version = 1;
+        $current_data_version = 2;
         $data_version = (int)$data_version;
         if($data_version!=0||$current_data_version<=$data_version){
             $this->apiSuccess('城市数据未变更，不需要更新', null);
@@ -1672,6 +1672,10 @@ class OrganizationController extends AppController
                 {
                     "city":"\u6D77\u53E3",
                     "code":"101310101"
+                },
+                {
+                    "city":"\u6d4e\u5b81",
+                    "code":"101310102"
                 }
             ]', true);
             $extra['require_refresh'] = true;
