@@ -9,7 +9,7 @@ requirejs.config({
         //lazyloading:'hiworks/imglazyload.min',
         prefixfree:'sharecommon/prefixfree.min',
         iscroll:'sharecommon/iscroll',
-        myscroll:'hiworks/myscroll-v2.0',
+        myscroll:'sharecommon/myscroll-v2.0',
         home:'forum/topic-share',
     },
     shim: {

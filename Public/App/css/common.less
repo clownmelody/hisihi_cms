@@ -128,6 +128,9 @@ ul li {
 
 
 /*IScroll的样式*/
+.scroller{
+  position: relative;
+}
 .pull-down, .pull-up {
   background-color: #fff;
   height: 40px;
@@ -137,34 +140,54 @@ ul li {
   font-weight: bold;
   font-size: 14px;
   color: #888;
-  text-aling: center;
+  text-align: center;
   position: absolute;
   width: 100%;
-  display: none;
-  .loading {
-    background-position: 0 100%;
-    -webkit-transform: rotate(0deg) translateZ(0);
-    -webkit-transition-duration: 0ms;
-    -webkit-animation-name: loading;
-    -webkit-animation-duration: 2s;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
+  .pull-tips-main {
+    .size(120px,100%);
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 9px;
+    opacity: 0;
+    .loading {
+      background-position: 0 100%;
+      -webkit-transform: rotate(0deg) translateZ(0);
+      -webkit-transition-duration: 0ms;
+      -webkit-animation-name: sloading;
+      -webkit-animation-duration: 2s;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+    }
+    .t-label{
+      float: left;
+      line-height: 25px;
+      margin-left: 10px;
+    }
+    .icon {
+      display: block;
+      float: left;
+      width: 25px;
+      height: 25px;
+      background: url('http://pic.hisihi.com/2016-06-13/1465811180777234.png') 0 0 no-repeat;
+      background-size: 25px 25px;
+    }
   }
 }
 .pull-down {
-  top: -40px;
+  top: -50px;
+  &.loading{
+    position: relative;
+    top:0;
+  }
 }
 .pull-up {
   bottom: -40px;
+  &.loading{
+    //position: relative;
+    bottom:0;
+  }
 }
-.icon {
-  display: block;
-  float: left;
-  width: 40px;
-  height: 40px;
-  background: url('http://pic.hisihi.com/2016-06-13/1465811180777234.png') 0 0 no-repeat;
-  background-size: 40px 40px;
-}
+
 
 @-webkit-keyframes sloading {
   from {
@@ -176,18 +199,18 @@ ul li {
 }
 
 .sshow{
-  display: block;
-  animation: sshow 3s linear;
+  animation: sshow 200ms ease-in-out;
+  animation-fill-mode:forwards;
 }
 .shide{
-  display: none;
-  animation: sshow 1s linear;
+  animation: shide 400ms ease-out;
+  animation-fill-mode:forwards;
 }
 
 @-webkit-keyframes sshow {
   from{
     display: block;
-    transform: scale(0)
+    transform: scale(0);
     opacity: 0;
   }
   to {
@@ -199,6 +222,7 @@ ul li {
 @-webkit-keyframes shide {
   from {
     opacity: 1;
+    transform: scale(1);
   }
   to {
     opacity: 0;

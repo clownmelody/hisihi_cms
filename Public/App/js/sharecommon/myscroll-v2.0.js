@@ -22,7 +22,7 @@ define(['$','iscroll'],function() {
         resetDownStyle:function(){
             this.myScroll.refresh();
             this.$downIcon.removeClass('loading');
-            this.$down.find('.t-label').text('上拉加载更多');
+            this.$down.removeClass('loading');
             this.controlDownTipsStyle(true);
         },
 
@@ -45,18 +45,17 @@ define(['$','iscroll'],function() {
         resetUpStyle:function(){
             this.myScroll.refresh();
             this.$upIcon.removeClass('loading');
-            this.$up.find('.t-label').text('下拉刷新');
+            this.$up.removeClass('loading');
+            //$('.wrapper').css('bottom','60px');
         },
 
         _init: function () {
             this.$down = this.$target.find('.pull-down');
             this.$up = this.$target.find('.pull-up');
+            this.$dmain=this.$down.find('.pull-tips-main');
+            this.$umain=this.$up.find('.pull-tips-main');
             this.$downIcon = this.$down.find('.icon');
             this.$upIcon = this.$up.find('.icon');
-            this.pullDownEl = this.$down[0];
-            this.pullDownOffset = this.pullDownEl.offsetHeight;
-            this.pullUpEl = this.$up[0];
-            this.pullUpOffset = this.pullUpEl.offsetHeight;
             var that = this;
 
             var myScroll = new IScroll(this.$target[0], {probeType: 3, mouseWheel: true, vScrollbar: false});
@@ -64,8 +63,12 @@ define(['$','iscroll'],function() {
                 if (this.y > 40) {
                     if (!that.$downIcon.hasClass('loading') && !that.$upIcon.hasClass('loading')) {
                         that.$downIcon.addClass('loading');
+                        that.$down.addClass('loading');
                         that.$down.find('.t-label').text('加载中...');
                         that._pullDownAction();
+                        window.setTimeout(function(){
+                            that.resetDownStyle();
+                        },4000);
                     }
                 }
             });
@@ -74,8 +77,13 @@ define(['$','iscroll'],function() {
                 if (this.maxScrollY - this.y > 40) {
                     if (!that.$upIcon.hasClass('loading') && !that.$downIcon.hasClass('loading') && that.$up.css('display')!='none' ) {
                         that.$upIcon.addClass('loading');
+                        that.$up.addClass('loading');
                         that.$up.find('.t-label').text('加载中...');
                         that._pullUpAction();
+                        //$('.wrapper').css('bottom',0);
+                        window.setTimeout(function(){
+                            that.resetUpStyle();
+                        },4000);
                     }
                 }
             });
@@ -93,7 +101,8 @@ define(['$','iscroll'],function() {
                         return;
                     }
                     !downHasClass && that.$downIcon.addClass("flip");
-                    that.$down.removeClass('shide').addClass('sshow')
+                    that.$dmain
+                        .removeClass('shide').addClass('sshow')
                         .find('.t-label')
                         .text('释放刷新');
                     return;
@@ -102,8 +111,8 @@ define(['$','iscroll'],function() {
                         return;
                     }
                     downHasClass && that.$downIcon.removeClass("flip");
-                    that.$down.removeClass('sshow').addClass('shide')
-                        .find('.t-label').text('下拉刷新');
+                    that.$dmain.removeClass('sshow').addClass('shide');
+                        //.find('.t-label').text('下拉刷新');
                     return "";
                 }
 
@@ -112,16 +121,16 @@ define(['$','iscroll'],function() {
                         return;
                     }
                     !upHasClass && that.$upIcon.addClass("flip");
-                    that.$up.removeClass('shide').addClass('sshow')
-                        .find('.t-label').text('释放加载');
+                    that.$umain.removeClass('shide').addClass('sshow')
+                        .find('.t-label').text('释放加载更多');
                     return;
                 } else if (maxY < 60 && maxY >= 0) {
                     if(upLoadingClass){
                         return;
                     }
                     upHasClass && that.$upIcon.removeClass("flip");
-                    that.$up.removeClass('sshow').addClass('shide')
-                        .find('.t-label').text('上拉加载更多');
+                    that.$umain.removeClass('sshow').addClass('shide');
+                        //.find('.t-label').text('上拉加载更多');
                     return;
                 }
             });
