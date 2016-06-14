@@ -99,8 +99,9 @@ define(['base','fastclick'],function(Base){
             });
         }
         var that = this,
+            oid=$('body').data('oid'),
             para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/promotion/'+this.pid+'/teaching_course',
+                url: window.hisihiUrlObj.api_url + 'v1/org/'+oid+'/promotion/'+this.pid+'/teaching_course',
                 type: 'get',
                 async:false,
                 paraData: null,
