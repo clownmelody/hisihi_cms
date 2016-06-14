@@ -101,7 +101,8 @@ define(['base','fastclick'],function(Base){
         var that = this,
             oid=$('body').data('oid'),
             para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/'+oid+'/promotion/'+this.pid+'/teaching_course',
+                //url: window.hisihiUrlObj.api_url + 'v1/org/'+oid+'/promotion/'+this.pid+'/teaching_course',
+                url: window.hisihiUrlObj.api_url + 'v1/org/promotion/'+this.pid+'/teaching_course',
                 type: 'get',
                 async:false,
                 paraData: null,
@@ -166,7 +167,7 @@ define(['base','fastclick'],function(Base){
                                 '<div class="middle" style="margin-right:'+marginRight+'">'+
                                     '<p class="title-info">'+item.course_name+'</p>'+
                                     '<p class="money-info">￥'+item.price+'</p>'+
-                                    '<p class="time-info">'+this.getTimeFromTimestamp(item.start_course_time)+'开课</p>'+
+                                    '<p class="time-info">'+item.start_course_time+'开课</p>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="left">'+
