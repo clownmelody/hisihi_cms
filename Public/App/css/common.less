@@ -125,3 +125,84 @@ ul li {
     text-align: center;
   }
 }
+
+
+/*IScroll的样式*/
+.pull-down, .pull-up {
+  background-color: #fff;
+  height: 40px;
+  line-height: 40px;
+  padding: 5px 10px;
+  //border-bottom: 1px solid #ccc;
+  font-weight: bold;
+  font-size: 14px;
+  color: #888;
+  text-aling: center;
+  position: absolute;
+  width: 100%;
+  display: none;
+  .loading {
+    background-position: 0 100%;
+    -webkit-transform: rotate(0deg) translateZ(0);
+    -webkit-transition-duration: 0ms;
+    -webkit-animation-name: loading;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+  }
+}
+.pull-down {
+  top: -40px;
+}
+.pull-up {
+  bottom: -40px;
+}
+.icon {
+  display: block;
+  float: left;
+  width: 40px;
+  height: 40px;
+  background: url('http://pic.hisihi.com/2016-06-13/1465811180777234.png') 0 0 no-repeat;
+  background-size: 40px 40px;
+}
+
+@-webkit-keyframes sloading {
+  from {
+    -webkit-transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translateZ(0);
+  }
+}
+
+.sshow{
+  display: block;
+  animation: sshow 3s linear;
+}
+.shide{
+  display: none;
+  animation: sshow 1s linear;
+}
+
+@-webkit-keyframes sshow {
+  from{
+    display: block;
+    transform: scale(0)
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@-webkit-keyframes shide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    display: none;
+    transform: scale(0);
+  }
+}
