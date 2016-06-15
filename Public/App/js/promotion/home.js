@@ -101,7 +101,8 @@ define(['base','fastclick'],function(Base){
         var that = this,
             oid=$('body').data('oid'),
             para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/'+oid+'/promotion/'+this.pid+'/teaching_course',
+                //url: window.hisihiUrlObj.api_url + 'v1/org/'+oid+'/promotion/'+this.pid+'/teaching_course',
+                url: window.hisihiUrlObj.api_url + 'v1/org/promotion/'+this.pid+'/teaching_course',
                 type: 'get',
                 async:false,
                 paraData: null,
@@ -149,8 +150,7 @@ define(['base','fastclick'],function(Base){
                 couponId= 0,
                 courseId=item.course_id,
                 rightStr='',
-                marginRight= 0,
-                sTime=item.start_course_time;
+                marginRight=0;
 
             //有优惠券
             if(coupon) {
@@ -161,17 +161,13 @@ define(['base','fastclick'],function(Base){
                 rightStr=this.getRightStrAndMarginInfo(coupon);
                 marginRight='80px';
             }
-            var tStr='<p class="time-info">'+sTime+'开课</p>';
-            if(sTime=='' || !sTime){
-                tStr='';
-            }
             str+='<li data-obtain-id="'+obtainId+'" data-coupon-id="'+couponId+'" data-course-id="'+courseId+'">'+
                         '<div class="item-main">'+
                             '<div class="main-content">'+
                                 '<div class="middle" style="margin-right:'+marginRight+'">'+
                                     '<p class="title-info">'+item.course_name+'</p>'+
                                     '<p class="money-info">￥'+item.price+'</p>'+
-                                    tStr+
+                                    '<p class="time-info">'+item.start_course_time+'开课</p>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="left">'+
