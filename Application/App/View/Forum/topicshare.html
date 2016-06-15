@@ -15,7 +15,7 @@
     <link href="__CSS__/topicshare/home.css" rel="stylesheet" type="text/css">
     <title>嘿设汇话题</title>
 </head>
-<body>
+<body data-id="{$topicId}">
     <div class="wrapper">
         <div class="scroller">
             <div class="pull-down">
@@ -27,90 +27,53 @@
             <div class="content-main">
                 <header class="banner-box">
             <div class="img-box">
-                <img src="http://pic.hisihi.com/2016-04-05/5703669815157.png">
+                <img src="">
             </div>
             <div class="desc-box">
                 <div class="vertical">
                     <div class="topic-basic-info">
                         <p class="topic-name">
                             <span>#</span>
-                            <span id="topic-real-name">今天你吃西班牙馅饼了么</span>
+                            <span class="topic-real-name"></span>
                             <span>#</span>
                         </p>
                         <p class="topic-post-num">
-                        <span>帖子数</span>
-                        <span>200</span>
-                    </p>
+                            <span>帖子数</span>
+                            <span></span>
+                        </p>
                     </div>
-                    <div class="banner-desc">
-                        <p>中原网讯（记者 黄永东）记者昨日从农业路高架与中州大道互通立交施工方了解到，互通立交8条匝道已完成主体结构施工</p>
-                    </div>
+                    <p class="banner-desc"></p>
                 </div>
             </div>
         </header>
                 <div class="content-box">
                     <div class="nodata"><p>暂无帖子</p></div>
                     <ul>
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
-                        <!--<li>123133</li>-->
+                        <li>
+                            <div class="user-info">
+                                <div class="left">
+                                    <div class="left-img">
+                                        <img src="http://pic.hisihi.com/2016-04-12/1460473505611696.png@8-0-199-199a">
+                                    </div>
+                                    <div class="right-txt">
+                                        <p class="name">Madge Garaza</p>
+                                        <p class="type">
+                                            <span>2小时前</span>
+                                            <span>PhotoShop/UI设计</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="right">嘿设汇</div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <p class="post-word">
+                                <span class="topic-name">#今天你加班了么#</span>
+                                移动时代设计的趋势移动时代设计的趋势移动时代设计的趋势移动时代设计的趋势移动时代设计的趋势移动时代设计的趋势
+                            </p>
+                            <ul class="post-img-box">
+                                <li></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -129,9 +92,11 @@
     </div>
 </body>
 <script>
-    window.hisihiUrlObj={
+    window.urlObj={
         js:'__JS__',
-        img:'__IMG__'
+        img:'__IMG__',
+        api:'__API_URL__/v1/',
+        localApi:'http://{$Think.server.HTTP_HOST}/'
     };
 </script>
 <script type="application/javascript" src="__JS__/sharecommon/require.js" data-main="__JS__/forum/topic-config"></script>

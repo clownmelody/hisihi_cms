@@ -3,7 +3,7 @@
  */
 
 requirejs.config({
-    baseUrl: window.hisihiUrlObj.js,
+    baseUrl: window.urlObj.js,
     paths: {
         $:'sharecommon/zepto.min',
         //lazyloading:'hiworks/imglazyload.min',
@@ -11,6 +11,7 @@ requirejs.config({
         iscroll:'sharecommon/iscroll',
         myscroll:'sharecommon/myscroll-v2.0',
         home:'forum/topic-share',
+        base:'sharecommon/base'
     },
     shim: {
         $:{
@@ -34,5 +35,5 @@ require(['home','prefixfree'],function(topic){
     //var userAgent = window.location.href,
     //    reg = /category\/[1-9][0-9]*/g,
     //    id = userAgent.match(reg)[0].toString().replace(/category\//g,'');
-    window.topic = new topic(window.hisihiUrlObj.server_url);
+    window.topic = new topic();
 });

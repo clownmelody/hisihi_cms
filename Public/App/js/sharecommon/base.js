@@ -8,8 +8,8 @@ define(['$'],function() {
     /**基础类**/
     var Base = function (flag) {
         var userAgent = window.location.href;
-        this.isFromApp = userAgent.indexOf("hisihi-app") >= 0;
-        this.isLocal=userAgent.indexOf("localhost") >= 0;
+        this.isFromApp = userAgent.indexOf('hisihi-app') >= 0;
+        this.isLocal=userAgent.indexOf('localhost') >= 0 || userAgent.indexOf('192.168.')>=0;
         this.deviceType = this.operationType();
         this.staticUserNameStr='jg2rw2xVjyrgbrZp';
         this.userInfo={
