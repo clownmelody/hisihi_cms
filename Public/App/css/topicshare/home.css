@@ -221,7 +221,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .blue {
   color: #039BE5;
@@ -229,7 +229,7 @@ body {
 .banner-box {
   background-color: white;
   position: relative;
-  min-height: 120px;
+  min-height: 150px;
 }
 .banner-box .img-box {
   width: 100%;
@@ -246,7 +246,7 @@ body {
   height: 100%;
 }
 .banner-box .desc-box .vertical {
-  padding-top: 15%;
+  padding-top: 3%;
   padding-bottom: 4%;
 }
 .banner-box .desc-box .vertical > * {
@@ -254,10 +254,10 @@ body {
 }
 .banner-box .desc-box .vertical .topic-basic-info p {
   text-align: center;
-  margin: 12px auto;
+  margin: 7px auto;
 }
 .banner-box .desc-box .vertical .topic-basic-info p.topic-name {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 }
 .banner-box .desc-box .vertical .topic-basic-info p.topic-name #topic-real-name {
@@ -269,7 +269,6 @@ body {
   color: white;
   line-height: 25px;
   font-size: 13px;
-  text-align: center;
 }
 .content-box {
   margin-top: 20px;
@@ -278,8 +277,13 @@ body {
 .content-box > ul {
   padding: 0 13px 0 10px;
 }
-.content-box > ul li {
-  margin-top: 10px;
+.content-box > ul > li {
+  margin: 10px auto;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+}
+.content-box > ul > li:last-child {
+  border-bottom: none;
 }
 .content-box .user-info .left {
   float: left;
@@ -322,6 +326,26 @@ body {
 }
 .content-box .post-word > span {
   color: #039BE5;
+}
+.content-box .post-img-box li {
+  display: inline-block;
+  float: left;
+  overflow: hidden;
+}
+.content-box .post-img-box li > img {
+  max-width: 100%;
+}
+.content-box .post-img-box li.img-size1 {
+  max-width: 60%;
+}
+.content-box .post-img-box li.img-size2 {
+  max-width: 40%;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.content-box .post-img-box li.img-size3 {
+  width: 30%;
+  margin: 2.5% 0 0 2.5%;
 }
 #downloadCon {
   position: fixed;
