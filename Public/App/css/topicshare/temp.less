@@ -14,10 +14,14 @@ body{
   right: 0;
   overflow: hidden;
 }
+.blue{
+  color: #039BE5;
+}
 .banner-box{
   //opacity: 0;
   background-color: white;
   position: relative;
+  min-height: 120px;
   .img-box{
     width: 100%;
     text-align: center;
@@ -31,9 +35,7 @@ body{
     position: absolute;
     .size(100%,100%);
     .vertical {
-      display: table-cell;
-      vertical-align: middle;
-      padding-top: 4%;
+      padding-top: 15%;
       padding-bottom: 4%;
       >*{
         color: white;
@@ -44,6 +46,7 @@ body{
           margin: 12px auto;
           &.topic-name{
             font-size: 18px;
+            font-weight: bold;
             #topic-real-name{
               display: inline-block;
               vertical-align: top;
@@ -52,13 +55,13 @@ body{
         }
       }
       .banner-desc {
-          p {
-            margin: 0 @padding-r 0 @padding-l;
-            color: white;
-            line-height: 25px;
-            font-size: 13px;
-          }
-        }
+        margin: 0 @padding-r 0 @padding-l;
+        color: white;
+        line-height: 25px;
+        font-size: 13px;
+        text-align: center;
+      }
+
     }
   }
 }
@@ -66,9 +69,55 @@ body{
 .content-box{
   margin-top: 20px;
   border-top: 1px solid #ccc;
-  //ul {
-  //  min-height: 660px;
-  //}
+  >ul{
+    padding: 0 @padding-r 0 @padding-l;
+    li{
+      margin-top: 10px;
+    }
+  }
+  .user-info{
+    .left{
+      float: left;
+      position: relative;
+      @w:60px;
+      .left-img{
+        position: absolute;
+        top: 4px;
+        img {
+          .size(@w, @w);
+          .border-radius(@w/2);
+        }
+      }
+      .right-txt{
+         margin-left: @w+10px;
+        p{
+          margin: 10px auto;
+          &.name {
+            color:#FF5A00;
+            font-size: 16px;
+          }
+          &.type{
+            color:#808080;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+    .right{
+      float: right;
+      .blue;
+      margin-top: 13px;
+      font-size: 13px;
+    }
+  }
+  .post-word{
+    margin: 5px auto;
+    line-height: 22px;
+    color: #212121;
+    >span{
+      .blue;
+    }
+  }
 }
 
 #downloadCon{
@@ -111,6 +160,27 @@ body{
           }
         }
       }
+    }
+  }
+  .content-box {
+    .user-info {
+      .left {
+        @w: 50px;
+        .left-img {
+          img {
+            .size(@w, @w);
+            .border-radius(@w/2);
+          }
+        }
+        .right-txt {
+          margin-left: @w+10px;
+          p {
+            margin: 7px auto;
+
+          }
+        }
+      }
+
     }
   }
 }

@@ -223,9 +223,13 @@ body {
   right: 0;
   overflow: hidden;
 }
+.blue {
+  color: #039BE5;
+}
 .banner-box {
   background-color: white;
   position: relative;
+  min-height: 120px;
 }
 .banner-box .img-box {
   width: 100%;
@@ -242,9 +246,7 @@ body {
   height: 100%;
 }
 .banner-box .desc-box .vertical {
-  display: table-cell;
-  vertical-align: middle;
-  padding-top: 4%;
+  padding-top: 15%;
   padding-bottom: 4%;
 }
 .banner-box .desc-box .vertical > * {
@@ -256,20 +258,70 @@ body {
 }
 .banner-box .desc-box .vertical .topic-basic-info p.topic-name {
   font-size: 18px;
+  font-weight: bold;
 }
 .banner-box .desc-box .vertical .topic-basic-info p.topic-name #topic-real-name {
   display: inline-block;
   vertical-align: top;
 }
-.banner-box .desc-box .vertical .banner-desc p {
+.banner-box .desc-box .vertical .banner-desc {
   margin: 0 13px 0 10px;
   color: white;
   line-height: 25px;
   font-size: 13px;
+  text-align: center;
 }
 .content-box {
   margin-top: 20px;
   border-top: 1px solid #ccc;
+}
+.content-box > ul {
+  padding: 0 13px 0 10px;
+}
+.content-box > ul li {
+  margin-top: 10px;
+}
+.content-box .user-info .left {
+  float: left;
+  position: relative;
+}
+.content-box .user-info .left .left-img {
+  position: absolute;
+  top: 4px;
+}
+.content-box .user-info .left .left-img img {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background-clip: padding-box;
+}
+.content-box .user-info .left .right-txt {
+  margin-left: 70px;
+}
+.content-box .user-info .left .right-txt p {
+  margin: 10px auto;
+}
+.content-box .user-info .left .right-txt p.name {
+  color: #FF5A00;
+  font-size: 16px;
+}
+.content-box .user-info .left .right-txt p.type {
+  color: #808080;
+  font-size: 13px;
+}
+.content-box .user-info .right {
+  float: right;
+  color: #039BE5;
+  margin-top: 13px;
+  font-size: 13px;
+}
+.content-box .post-word {
+  margin: 5px auto;
+  line-height: 22px;
+  color: #212121;
+}
+.content-box .post-word > span {
+  color: #039BE5;
 }
 #downloadCon {
   position: fixed;
@@ -301,6 +353,18 @@ body {
   }
   .banner-box .desc-box .vertical .banner-desc p {
     line-height: 18px;
+  }
+  .content-box .user-info .left .left-img img {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background-clip: padding-box;
+  }
+  .content-box .user-info .left .right-txt {
+    margin-left: 60px;
+  }
+  .content-box .user-info .left .right-txt p {
+    margin: 7px auto;
   }
 }
 @media screen and (min-width: 750px) {
