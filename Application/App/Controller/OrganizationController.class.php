@@ -2580,8 +2580,11 @@ class OrganizationController extends AppController
         if($courseInfo){
             $courseInfo['ViewCount'] = $courseInfo['view_count'];//兼容iOS老版本
             $courseInfo['organization'] = $this->findOrganizationById($courseInfo['organization_id']);
-            $courseInfo['lecturer'] = $this->findTeacherById($courseInfo['lecturer']);
-            $courseInfo['lecturer']['info']['institution'] = $courseInfo['organization']['name'];
+            $lecturer_info = $this->findTeacherById($courseInfo['lecturer']);
+            if($lecturer_info){
+                $courseInfo['lecturer'] = $lecturer_info;
+                $courseInfo['lecturer']['info']['institution'] = $courseInfo['organization']['name'];
+            }
             $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
             $courseInfo['duration'] = $videoDuration;
             $video_list = $videoModel->field('id,name, duration')->where('status=1 and course_id='.$course_id)->select();
@@ -3489,7 +3492,7 @@ class OrganizationController extends AppController
             }
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("sort asc, id desc")
+            ->order("sort asc, create_time desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
@@ -3596,7 +3599,7 @@ class OrganizationController extends AppController
             $select_where['city'] = array('like','%'.$city.'%');
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("sort asc, id desc")
+            ->order("sort asc, create_time desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
@@ -3687,7 +3690,7 @@ class OrganizationController extends AppController
             $select_where['city'] = array('like','%'.$city.'%');
         }
         $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
-            ->order("sort asc, id desc")
+            ->order("sort asc, create_time desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
         foreach($org_list as &$org){
