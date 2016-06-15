@@ -107,7 +107,10 @@ define(['base','lazyloading'],function(Base){
                 if(result.success){
                     var str = that.getPostInfo(result.forumList);
                     $('.content-box ul').append(str);
-                    $('.content-box img').picLazyLoad($('.wrapper'));
+                    $('.content-box img').picLazyLoad($('.wrapper'),{
+                        settings:10,
+                        placeholder:'http://pic.hisihi.com/2016-06-15/1465987988057181.png'
+                    });
                 }else{
                     that.showTip('帖子信息加载失败');
                 }
