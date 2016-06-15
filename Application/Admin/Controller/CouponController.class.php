@@ -59,6 +59,10 @@ class CouponController extends AdminController
                 $this->success('添加成功', 'index.php?s=/admin/coupon/index');
             } else {
                 $model->where('id='.$cid)->save($data);
+                $updateData['service_condition'] = $data['service_condition'];
+                $updateData['using_method'] = $data['using_method'];
+                $updateData['instructions_for_use'] = $data['instructions_for_use'];
+                M('TeachingCourseCouponRelation')->where('status=1 and coupon_id='.$cid)->save($updateData);
                 $this->success('更新成功', 'index.php?s=/admin/coupon/index');
             }
         } else {
