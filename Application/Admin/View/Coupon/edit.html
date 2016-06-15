@@ -50,14 +50,14 @@
                 <div class="form-item cf">
                     <label class="item-label">开始时间</label>
                     <div class="controls">
-                        <input type="text" name="start_time" class="text input-large time" value="{$coupon.start_time}" placeholder="请选择时间" />
+                        <input type="text" name="start_time" class="text input-large time" value="{$coupon.start_time|time_format}" placeholder="请选择时间" />
                     </div>
                 </div>
 
                 <div class="form-item cf">
                     <label class="item-label">结束时间</label>
                     <div class="controls">
-                        <input type="text" name="end_time" class="text input-large time" value="{$coupon.end_time}" placeholder="请选择时间" />
+                        <input type="text" name="end_time" class="text input-large time" value="{$coupon.end_time|time_format}" placeholder="请选择时间" />
                     </div>
                 </div>
 
