@@ -106,6 +106,9 @@ define(['$'],function() {
             if (!paras.url) {
                 return;
             }
+            if (!paras.url) {
+                return;
+            }
             var that = this;
             that.controlLoadingTips(1);
             var loginXhr = $.ajax({
@@ -114,7 +117,7 @@ define(['$'],function() {
                 type: paras.type,
                 data: paras.paraData,
                 //timeout: 2000,
-                timeout: 10000,
+                timeout: 100000,
                 contentType: 'application/json',
                 complete: function (xmlRequest, status) {
                     if (status == 'success') {

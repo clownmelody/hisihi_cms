@@ -95,6 +95,10 @@ define(['base','lazyloading'],function(Base){
     /*加载10条帖子*/
     t.loadTenPostsInfo=function(){
         this.controlLoadingBox(true);
+        //var url=window.urlObj.localApi+'api.php?s=/forum/forumFilterByTopic/topicId/'+this.tid+'/page/1/count/10';
+        //$.get(url,null,function(result){
+        //    alert();
+        //});
         var that =this,
             para={
             url:window.urlObj.localApi+'api.php?s=/forum/forumFilterByTopic/topicId/'+this.tid+'/page/1/count/10',
@@ -554,6 +558,9 @@ define(['base','lazyloading'],function(Base){
 
     /*得到帖子的图片信息*/
     t.getPostImgStr=function(imgList){
+        if(!imgList){
+            return '';
+        }
         var len=imgList.length,str='',cName='';
         if(len==0){
             return '';
@@ -568,11 +575,26 @@ define(['base','lazyloading'],function(Base){
             cName='img-size3';
         }
         for(var i=0;i<len;i++){
-            str+='<li class="'+cName+'">'+
-                    '<img  data-original="'+imgList[0]+'">'+
+            var url=imgList[i].thumb;
+            if(!url){
+                url='http://pic.hisihi.com/2016-06-02/1464833264193150.png';
+            }
+            var style='';
+            if(cName=='img-size3'){
+                var h=this.getImgWidthByNums();
+                style='width:'+h+';height:'+h;
+            }
+            str+='<li class="'+cName+'" style="'+style+'">'+
+                    '<img  data-original="' + url + '">'+
                  '</li>';
         }
         return str;
+    };
+
+    t.getImgWidthByNums=function(){
+        var width=$('body').width()-23,
+            lw=width*0.3;
+        return lw+'px';
     };
 
     /*根据图片的数量，得到图片的宽度*/
