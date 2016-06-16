@@ -1524,7 +1524,9 @@ class ForumController extends AppController
 
         // 绑定帖子与话题
         if((float)$version>=2.9){
-            $this->bindPostToTopicId($post_id, $topicId);
+            if($topicId!=0){
+                $this->bindPostToTopicId($post_id, $topicId);
+            }
         }
 
         //显示成功消息

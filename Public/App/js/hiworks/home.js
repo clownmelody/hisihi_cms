@@ -170,7 +170,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
         this.initScrollLogical($wrappers.eq(0),0);
 
         //加载第一类
-        this.loadCategoryInfo($li.eq(0).attr('data-id'),0,true, function (result) {
+        this.loadCategoryInfo($li.eq(0).attr('data-id'),1,true, function (result) {
             that.setScrollInfoAfterLoaded(result,$li.eq(0),that.scrollObjArr[0]);
         });
 
@@ -267,7 +267,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             this.controlLoadingBox(true);
             var id=$target.attr('data-id'),
                 that=this;
-            this.loadCategoryInfo(id,0,true,function(result){
+            this.loadCategoryInfo(id,1,true,function(result){
                 that.setScrollInfoAfterLoaded(result,$target,that.scrollObjArr[index]);
             });
         }
@@ -376,11 +376,11 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
         var $li=$('#tabs-bar .active'),
             index=$li.index(),
             id=$li.attr('data-id'),
-            pindex=$li.attr('data-pindex'),
-            pcount=$li.attr('data-pcount'),
+            pindex=Number($li.attr('data-pindex')),
+            pcount=Number($li.attr('data-pcount')),
             that=this;
         if(pindex<pcount){
-            this.loadCategoryInfo(id,pindex,false,function(data){
+            this.loadCategoryInfo(id,pindex+1,false,function(data){
                 pindex++;
                 $li.attr({'data-pindex':pindex});
                 var scrollObj=that.scrollObjArr[index];
@@ -398,7 +398,7 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
             index=$li.index(),
             id=$li.attr('data-id'),
             that=this;
-        this.loadCategoryInfo(id,0,true,function(result){
+        this.loadCategoryInfo(id,1,true,function(result){
             var scrollObj=that.scrollObjArr[index];
             $li.attr({'data-loaded':'true','data-pindex':1});
             scrollObj.refresh();
@@ -482,8 +482,8 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     /*加载更新查询结果*/
     t.loadMoreWorksListInfoByKetWord=function(){
         var $target=$('#list-wrapper-search'),
-            pindex=$target.attr('data-pindex'),
-            pcount=$target.attr('data-pcount'),
+            pindex=Number($target.attr('data-pindex')),
+            pcount=Number($target.attr('data-pcount')),
             that=this,
             scrollObj=that.sScrollObj;
 
