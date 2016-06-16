@@ -7,7 +7,7 @@ define(['base','lazyloading'],function(Base){
         Base.call(this,true);  //属性继承
         this.tid=$('body').data('id');
         if(this.isLocal){
-            window.urlObj.localApi+='/hisihi-cms';
+            window.urlObj.localApi+='hisihi-cms';
         }
         this.initStyle();
         this.loadData();
@@ -67,11 +67,11 @@ define(['base','lazyloading'],function(Base){
                     that.fillInTopicInfo(result.data);
 
                 }else{
-                    that.showTip('话题基本信息加载失败');
+                    that.showTips('话题基本信息加载失败');
                 }
             },
             eCallback:function(){
-                that.showTip('话题基本信息加载失败');
+                that.showTips('话题基本信息加载失败');
             }
         }
         this.getDataAsyncPy(para);
@@ -97,12 +97,13 @@ define(['base','lazyloading'],function(Base){
         this.controlLoadingBox(true);
         var that =this,
             para={
-            url:window.urlObj.localApi+"/api.php?s=/forum/forumFilterByTopic",
-            paraData:{
-                topicId:this.tid,
-                page:1,
-                count:10
-            },
+            url:window.urlObj.localApi+'/api.php?s=/forum/forumFilterByTopic/topicId/'+this.tid,
+            //paraData:{
+            //    //topicId:this.tid,
+            //    page:1,
+            //    count:10
+            //},
+            type:'get',
             sCallback:function(result){
                 that.controlLoadingBox(false);
                 if(result.success){
@@ -113,12 +114,12 @@ define(['base','lazyloading'],function(Base){
                         placeholder:'http://pic.hisihi.com/2016-06-15/1465987988057181.png'
                     });
                 }else{
-                    that.showTip('帖子信息加载失败');
+                    that.showTips('帖子信息加载失败');
                 }
             },
             eCallback:function(){
                 that.controlLoadingBox(false);
-                that.showTip('帖子信息加载失败');
+                that.showTips('帖子信息加载失败');
             }
         };
         this.getDataAsync(para);
@@ -421,6 +422,65 @@ define(['base','lazyloading'],function(Base){
                 "pos":null,
                 "shareUrl":"app.php/forum/detail/type/view/post_id/5210"
             },
+            {
+                "content":"文仅代表作者个人观点，与凤凰网无关。其原创性以及文中陈述文字和内容未经本站证实，对本文以及其中全部或者部分内容、文字的真实性、完整性、及时性本站不作任何保证或承诺，请读者仅作参考，并请自行核实相关内容。",
+                "create_time":"1466032332",
+                "last_reply_time":"1439455644",
+                "view_count":"5",
+                "reply_count":"1",
+                "type":"",
+                "is_inner":"1",
+                "cover_id":"0",
+                "community":null,
+                "post_id":"5213",
+                "forumTitle":"设计吐槽/吐槽专区",
+                "userInfo":{
+                    "uid":"102",
+                    "avatar256":"http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/default/default_256_256.jpg",
+                    "avatar128":"http://hisihi-avator.oss-cn-qingdao.aliyuncs.com/default/default_128_128.jpg",
+                    "group":"5",
+                    "nickname":"15934133729",
+                    "extinfo":[
+                        {
+                            "id":"36",
+                            "field_name":"college",
+                            "field_title":"所在大学",
+                            "field_content":null
+                        },
+                        {
+                            "id":"37",
+                            "field_name":"major",
+                            "field_title":"所学专业",
+                            "field_content":null
+                        },
+                        {
+                            "id":"44",
+                            "field_name":"expected_position",
+                            "field_title":"期望职位",
+                            "field_content":null
+                        },
+                        {
+                            "id":"46",
+                            "field_name":"my_strengths",
+                            "field_title":"我的优势",
+                            "field_content":null
+                        }
+                    ]
+                },
+                "first_teacher":"Leslie",
+                "topic_info":{
+                    "title":"端午加班了吗",
+                    "description":"中国网财经6月14日讯 据农业部网站消息，农业部办公厅日前发布关于组织开展深化农垦改革专项试点工作的通知，通知决定在全国各垦区组织开展深化农垦改革专项试点工作，通过试点先行，探索改革路径，积累改革经验，全面推进农垦各项改革。",
+                    "img_url":"http://pic.hisihi.com/2016-05-13/5735761750b1d.png",
+                    "is_hot":"1"
+                },
+                "img":['http://pic.hisihi.com/2016-05-19/1463654395617301.png','http://pic.hisihi.com/2016-05-19/1463654393079826.jpg','http://pic.hisihi.com/2016-05-19/1463654391995651.png','http://pic.hisihi.com/2016-05-19/1463654390470330.png','http://pic.hisihi.com/2016-05-19/1463654388561165.png'],
+                "sound":null,
+                "supportCount":"2",
+                "isSupportd":"0",
+                "pos":null,
+                "shareUrl":"app.php/forum/detail/type/view/post_id/5210"
+            },
         ];
         return data;
     },
@@ -444,8 +504,7 @@ define(['base','lazyloading'],function(Base){
             type=item.orgStr;
             if(type==6){
                 orgStr=this.getOrgStr(item.userInfo.extinfo);
-
-            } orgStr='只只只只只';
+            }
             pic=item.userInfo.avatar128;
             if(!pic){
                 pic='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
