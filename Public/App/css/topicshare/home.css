@@ -221,7 +221,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .blue {
   color: #039BE5;
@@ -229,7 +229,7 @@ body {
 .banner-box {
   background-color: white;
   position: relative;
-  min-height: 120px;
+  min-height: 150px;
 }
 .banner-box .img-box {
   width: 100%;
@@ -246,7 +246,7 @@ body {
   height: 100%;
 }
 .banner-box .desc-box .vertical {
-  padding-top: 15%;
+  padding-top: 3%;
   padding-bottom: 4%;
 }
 .banner-box .desc-box .vertical > * {
@@ -254,10 +254,10 @@ body {
 }
 .banner-box .desc-box .vertical .topic-basic-info p {
   text-align: center;
-  margin: 12px auto;
+  margin: 7px auto;
 }
 .banner-box .desc-box .vertical .topic-basic-info p.topic-name {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 }
 .banner-box .desc-box .vertical .topic-basic-info p.topic-name #topic-real-name {
@@ -265,21 +265,25 @@ body {
   vertical-align: top;
 }
 .banner-box .desc-box .vertical .banner-desc {
-  margin: 0 13px 0 10px;
+  margin: 0 20px;
   color: white;
   line-height: 25px;
   font-size: 13px;
-  text-align: center;
 }
 .content-box {
   margin-top: 20px;
   border-top: 1px solid #ccc;
 }
-.content-box > ul {
+.content-box > ul > li {
+  margin: 10px auto;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+}
+.content-box > ul > li .li-main {
   padding: 0 13px 0 10px;
 }
-.content-box > ul li {
-  margin-top: 10px;
+.content-box > ul > li:last-child {
+  border-bottom: none;
 }
 .content-box .user-info .left {
   float: left;
@@ -300,6 +304,10 @@ body {
 }
 .content-box .user-info .left .right-txt p {
   margin: 10px auto;
+  max-width: 210px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .content-box .user-info .left .right-txt p.name {
   color: #FF5A00;
@@ -309,11 +317,18 @@ body {
   color: #808080;
   font-size: 13px;
 }
+.content-box .user-info .left .right-txt p.type span {
+  margin-right: 5px;
+}
 .content-box .user-info .right {
   float: right;
   color: #039BE5;
   margin-top: 13px;
   font-size: 13px;
+  max-width: 65px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .content-box .post-word {
   margin: 5px auto;
@@ -322,6 +337,26 @@ body {
 }
 .content-box .post-word > span {
   color: #039BE5;
+}
+.content-box .post-img-box li {
+  display: inline-block;
+  float: left;
+  overflow: hidden;
+}
+.content-box .post-img-box li > img {
+  max-width: 100%;
+}
+.content-box .post-img-box li.img-size1 {
+  max-width: 60%;
+}
+.content-box .post-img-box li.img-size2 {
+  max-width: 40%;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.content-box .post-img-box li.img-size3 {
+  width: 30%;
+  margin: 2.5% 0 0 2.5%;
 }
 #downloadCon {
   position: fixed;
@@ -355,16 +390,21 @@ body {
     line-height: 18px;
   }
   .content-box .user-info .left .left-img img {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
+    width: 45px;
+    height: 45px;
+    border-radius: 22.5px;
     background-clip: padding-box;
   }
   .content-box .user-info .left .right-txt {
-    margin-left: 60px;
+    margin-left: 50px;
+    max-width: 185px;
   }
   .content-box .user-info .left .right-txt p {
     margin: 7px auto;
+  }
+  .content-box .user-info .right {
+    font-size: 12px;
+    max-width: 62px;
   }
 }
 @media screen and (min-width: 750px) {

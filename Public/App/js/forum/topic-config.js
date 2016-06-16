@@ -6,6 +6,8 @@ requirejs.config({
     baseUrl: window.urlObj.js,
     paths: {
         $:'sharecommon/zepto.min',
+        fx:'sharecommon/fx_v1.1',
+        lazyloading:'sharecommon/lazyloading',
         //lazyloading:'hiworks/imglazyload.min',
         prefixfree:'sharecommon/prefixfree.min',
         iscroll:'sharecommon/iscroll',
@@ -17,10 +19,14 @@ requirejs.config({
         $:{
             output:'$'
         },
-        //lazyloading:{
-        //    steps:['$'],
-        //    output:'lazyloading'
-        //},
+        fx:{
+            steps:['$'],
+            output:'fx'
+        },
+        lazyloading:{
+            steps:['$','fx'],
+            output:'lazyloading'
+        },
         prefixfree:{
             output:'prefixfree'
         },
@@ -31,7 +37,7 @@ requirejs.config({
 });
 
 
-require(['home','prefixfree'],function(topic){
+require(['fx','home','prefixfree'],function(fx,topic){
     //var userAgent = window.location.href,
     //    reg = /category\/[1-9][0-9]*/g,
     //    id = userAgent.match(reg)[0].toString().replace(/category\//g,'');
