@@ -2580,10 +2580,14 @@ class OrganizationController extends AppController
         if($courseInfo){
             $courseInfo['ViewCount'] = $courseInfo['view_count'];//兼容iOS老版本
             $courseInfo['organization'] = $this->findOrganizationById($courseInfo['organization_id']);
-            $lecturer_info = $this->findTeacherById($courseInfo['lecturer']);
-            if($lecturer_info){
-                $courseInfo['lecturer'] = $lecturer_info;
-                $courseInfo['lecturer']['info']['institution'] = $courseInfo['organization']['name'];
+            if((int)$courseInfo['lecturer']!=0){
+                $lecturer_info = $this->findTeacherById($courseInfo['lecturer']);
+                if(!empty($lecturer_info)){
+                    $courseInfo['lecturer'] = $lecturer_info;
+                    $courseInfo['lecturer']['info']['institution'] = $courseInfo['organization']['name'];
+                }
+            }else{
+                $courseInfo['lecturer'] = null;
             }
             $videoDuration = $videoModel->field('name, url')->where('status=1 and course_id='.$course_id)->sum('duration');
             $courseInfo['duration'] = $videoDuration;
