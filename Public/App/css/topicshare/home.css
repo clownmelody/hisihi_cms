@@ -265,7 +265,7 @@ body {
   vertical-align: top;
 }
 .banner-box .desc-box .vertical .banner-desc {
-  margin: 0 13px 0 10px;
+  margin: 0 20px;
   color: white;
   line-height: 25px;
   font-size: 13px;
@@ -274,13 +274,13 @@ body {
   margin-top: 20px;
   border-top: 1px solid #ccc;
 }
-.content-box > ul {
-  padding: 0 13px 0 10px;
-}
 .content-box > ul > li {
   margin: 10px auto;
   padding-bottom: 15px;
   border-bottom: 1px solid #ccc;
+}
+.content-box > ul > li .li-main {
+  padding: 0 13px 0 10px;
 }
 .content-box > ul > li:last-child {
   border-bottom: none;
@@ -304,6 +304,10 @@ body {
 }
 .content-box .user-info .left .right-txt p {
   margin: 10px auto;
+  max-width: 210px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .content-box .user-info .left .right-txt p.name {
   color: #FF5A00;
@@ -313,11 +317,18 @@ body {
   color: #808080;
   font-size: 13px;
 }
+.content-box .user-info .left .right-txt p.type span {
+  margin-right: 5px;
+}
 .content-box .user-info .right {
   float: right;
   color: #039BE5;
   margin-top: 13px;
   font-size: 13px;
+  max-width: 65px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .content-box .post-word {
   margin: 5px auto;
@@ -379,16 +390,21 @@ body {
     line-height: 18px;
   }
   .content-box .user-info .left .left-img img {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
+    width: 45px;
+    height: 45px;
+    border-radius: 22.5px;
     background-clip: padding-box;
   }
   .content-box .user-info .left .right-txt {
-    margin-left: 60px;
+    margin-left: 50px;
+    max-width: 185px;
   }
   .content-box .user-info .left .right-txt p {
     margin: 7px auto;
+  }
+  .content-box .user-info .right {
+    font-size: 12px;
+    max-width: 62px;
   }
 }
 @media screen and (min-width: 750px) {

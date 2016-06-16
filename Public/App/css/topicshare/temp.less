@@ -55,7 +55,7 @@ body{
         }
       }
       .banner-desc {
-        margin: 0 @padding-r 0 @padding-l;
+        margin: 0 20px;
         color: white;
         line-height: 25px;
         font-size: 13px;
@@ -69,8 +69,10 @@ body{
   margin-top: 20px;
   border-top: 1px solid #ccc;
   >ul{
-    padding: 0 @padding-r 0 @padding-l;
     >li{
+      .li-main{
+        padding: 0 @padding-r 0 @padding-l;
+      }
       margin: 10px auto;
       padding-bottom: 15px;
       border-bottom: 1px solid #ccc;
@@ -95,7 +97,9 @@ body{
       .right-txt{
          margin-left: @w+10px;
         p{
-          margin: 10px auto;
+          margin:10px auto;
+          max-width: 210px;
+          .txt-ellipsis;
           &.name {
             color:#FF5A00;
             font-size: 16px;
@@ -103,6 +107,9 @@ body{
           &.type{
             color:#808080;
             font-size: 13px;
+            span{
+              margin-right: 5px;
+            }
           }
         }
       }
@@ -112,6 +119,8 @@ body{
       .blue;
       margin-top: 13px;
       font-size: 13px;
+      max-width:65px;
+      .txt-ellipsis;
     }
   }
   .post-word{
@@ -192,7 +201,7 @@ body{
   .content-box {
     .user-info {
       .left {
-        @w: 50px;
+        @w: 45px;
         .left-img {
           img {
             .size(@w, @w);
@@ -200,12 +209,16 @@ body{
           }
         }
         .right-txt {
-          margin-left: @w+10px;
+          margin-left: @w+5px;
+          max-width: 185px;
           p {
             margin: 7px auto;
-
           }
         }
+      }
+      .right{
+        font-size: 12px;
+        max-width: 62px;
       }
 
     }

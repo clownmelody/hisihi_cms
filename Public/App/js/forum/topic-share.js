@@ -86,6 +86,7 @@ define(['base','lazyloading'],function(Base){
         if(!imgUrl){
             imgUrl='http://pic.hisihi.com/2016-06-15/1465962987445587.png';
         }
+        $('#post-nums').text(data.post_count);
         $('.topic-real-name').text(title);
         $('.banner-desc').text(desc);
         $('.img-box img').attr('src',imgUrl);
@@ -127,7 +128,7 @@ define(['base','lazyloading'],function(Base){
         var data=[
             {
                 "content":"放个假好方法,我就是要用CSS实现九宫格图_CSS_网页制作_脚本之家.CSS布局奇淫技巧之-宽度自适应 - 无双 - 博客园",
-                "create_time":"1439450761",
+                "create_time":"1466043712",
                 "last_reply_time":"1439455644",
                 "view_count":"5",
                 "reply_count":"1",
@@ -186,7 +187,7 @@ define(['base','lazyloading'],function(Base){
             },
             {
                 "content":"改革试点名单的集团旗下迄今为止尚未有实质性改革进展的公司，这类企业往往存在较强的改革预期；五是存在入选第二批央企改革试点名单可能的企业。 中信证券认为，目前",
-                "create_time":"1439450761",
+                "create_time":"1465963932",
                 "last_reply_time":"1439455644",
                 "view_count":"5",
                 "reply_count":"1",
@@ -245,7 +246,7 @@ define(['base','lazyloading'],function(Base){
             },
             {
                 "content":"浙江、安徽、广西、甘肃等明确要求优化国有资本重点投资方向和领域，引导其更多投向战略性新兴产业等关键领域。并购、重组、上市是国有企业资产证券化的主要途径，多省将大力推动地方国企改制上市。",
-                "create_time":"1439450761",
+                "create_time":"1465618332",
                 "last_reply_time":"1439455644",
                 "view_count":"5",
                 "reply_count":"1",
@@ -304,7 +305,7 @@ define(['base','lazyloading'],function(Base){
             },
             {
                 "content":"推进儿童医疗卫生服务改革 记者注意到，此次深改组会议不仅仅聚焦儿科医务人员培养问题，还提出要完善儿童医疗卫生服务体系、推进儿童医疗卫生服务领域改革",
-                "create_time":"1439450761",
+                "create_time":"1465531932",
                 "last_reply_time":"1439455644",
                 "view_count":"5",
                 "reply_count":"1",
@@ -363,7 +364,7 @@ define(['base','lazyloading'],function(Base){
             },
             {
                 "content":"文仅代表作者个人观点，与凤凰网无关。其原创性以及文中陈述文字和内容未经本站证实，对本文以及其中全部或者部分内容、文字的真实性、完整性、及时性本站不作任何保证或承诺，请读者仅作参考，并请自行核实相关内容。",
-                "create_time":"1439450761",
+                "create_time":"1466032332",
                 "last_reply_time":"1439455644",
                 "view_count":"5",
                 "reply_count":"1",
@@ -440,16 +441,16 @@ define(['base','lazyloading'],function(Base){
         for(var i=0;i<len;i++){
             item=data[i];
             name=item.userInfo.nickname;
-            name=this.substrLongStr(name,8);
             type=item.orgStr;
             if(type==6){
                 orgStr=this.getOrgStr(item.userInfo.extinfo);
-            }
+
+            } orgStr='只只只只只';
             pic=item.userInfo.avatar128;
             if(!pic){
                 pic='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
-            str+='<li>'+
+            str+='<li><div class="li-main">'+
                     '<div class="user-info">'+
                         '<div class="left">'+
                             '<div class="left-img">'+
@@ -473,7 +474,7 @@ define(['base','lazyloading'],function(Base){
                         t.getPostImgStr(item.img)+
                         '<div style="clear: both"></div>'+
                     '</ul>'+
-                '</li>';
+                '</div></li>';
         }
         return str;
     };
@@ -531,48 +532,6 @@ define(['base','lazyloading'],function(Base){
         }
     };
 
-    /*
-     *根据客户端的时间信息得到发表评论的时间格式
-     *多少分钟前，多少小时前，然后是昨天，然后再是月日
-     */
-    t.getDiffTime=function (serviceData) {
-        if (serviceData.AddTime) {
-            var minute = 1000 * 60;
-            var hour = minute * 60;
-            var day = hour * 24;
-            //var recordTimeInt = Date.parse(serviceData.replace(/-/gi, "/"));
-            var recordTime = new Date(serviceData.AddTime);
-            var diff = new Date() - recordTime;
-            var result = '';
-            if (diff < 0) {
-                return result;
-            }
-            var weekR = diff / (7 * day);
-            var dayC = diff / day;
-            var hourC = diff / hour;
-            var minC = diff / minute;
-            if (weekR >= 1) {
-                result = recordTime.getFullYear() + '.' + (recordTime.getMonth() + 1) + '.' + recordTime.getDate();
-                return result;
-            }
-            else if (dayC >= 1) {
-                result = parseInt(dayC) + '天前';
-                return result;
-            }
-            else if (hourC >= 1) {
-                result = parseInt(hourC) + '小时前';
-                return result;
-            }
-            else if (minC >= 1) {
-                result = parseInt(minC) + '分钟前';
-                return result;
-            } else {
-                result = '刚刚';
-                return result;
-            }
-        }
-        return '';
-    };
 
     return Topic;
 });

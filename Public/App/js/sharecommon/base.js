@@ -320,10 +320,14 @@ define(['$'],function() {
          */
        getDiffTime:function (recordTime) {
            if (recordTime) {
-               var minute = 1000 * 60;
-               var hour = minute * 60;
-               var day = hour * 24;
-               var diff = new Date() - recordTime;
+               var ss = new Date(parseFloat(recordTime) * 1000).format('yyyy-MM-dd');
+               console.log(ss);
+               recordTime=new Date(parseFloat(recordTime)*1000);
+               var minute = 1000 * 60,
+                   hour = minute * 60,
+                   day = hour * 24,
+                   now=new Date(),
+                   diff = now -recordTime;
                var result = '';
                if (diff < 0) {
                    return result;
@@ -333,12 +337,19 @@ define(['$'],function() {
                var hourC = diff / hour;
                var minC = diff / minute;
                if (weekR >= 1) {
-                   result = recordTime.getFullYear() + '.' + (recordTime.getMonth() + 1) + '.' + recordTime.getDate();
+                   //result = recordTime.getFullYear() + '.' + (recordTime.getMonth() + 1) + '.' + recordTime.getDate();
+                   result=recordTime.format('MM-dd hh:mm');
                    return result;
                }
-               else if (dayC >= 1) {
-                   result = parseInt(dayC) + '天前';
+               else if (dayC == 1 ||(hourC <24 && recordTime.getDate()!=now.getDate())) {
+                   result = '昨天'+ recordTime.getHours() + ':'+recordTime.getMinutes();
                    return result;
+               }
+               else if (dayC > 1) {
+                   result=recordTime.format('MM-dd hh:mm');
+                   return result;
+                   //result = parseInt(dayC) + '天前';
+                   //return result;
                }
                else if (hourC >= 1) {
                    result = parseInt(hourC) + '小时前';
