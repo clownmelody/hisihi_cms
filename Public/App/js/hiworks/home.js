@@ -376,11 +376,11 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
         var $li=$('#tabs-bar .active'),
             index=$li.index(),
             id=$li.attr('data-id'),
-            pindex=$li.attr('data-pindex'),
-            pcount=$li.attr('data-pcount'),
+            pindex=Number($li.attr('data-pindex')),
+            pcount=Number($li.attr('data-pcount')),
             that=this;
         if(pindex<pcount){
-            this.loadCategoryInfo(id,Number(pindex)+1,false,function(data){
+            this.loadCategoryInfo(id,pindex+1,false,function(data){
                 pindex++;
                 $li.attr({'data-pindex':pindex});
                 var scrollObj=that.scrollObjArr[index];
@@ -482,8 +482,8 @@ define(['fx','base','myscroll','scale','fastclick'],function(fx,Base,MyScroll) {
     /*加载更新查询结果*/
     t.loadMoreWorksListInfoByKetWord=function(){
         var $target=$('#list-wrapper-search'),
-            pindex=$target.attr('data-pindex'),
-            pcount=$target.attr('data-pcount'),
+            pindex=Number($target.attr('data-pindex')),
+            pcount=Number($target.attr('data-pcount')),
             that=this,
             scrollObj=that.sScrollObj;
 
