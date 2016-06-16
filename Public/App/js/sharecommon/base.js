@@ -114,7 +114,7 @@ define(['$'],function() {
                 type: paras.type,
                 data: paras.paraData,
                 //timeout: 2000,
-                timeout: 1000,
+                timeout: 10000,
                 contentType: 'application/json',
                 complete: function (xmlRequest, status) {
                     if (status == 'success') {
