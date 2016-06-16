@@ -7,7 +7,7 @@ define(['base','lazyloading'],function(Base){
         Base.call(this,true);  //属性继承
         this.tid=$('body').data('id');
         if(this.isLocal){
-            window.urlObj.localApi+='hisihi-cms';
+            window.urlObj.localApi+='hisihi-cms/';
         }
         this.initStyle();
         this.loadData();
@@ -97,7 +97,7 @@ define(['base','lazyloading'],function(Base){
         this.controlLoadingBox(true);
         var that =this,
             para={
-            url:window.urlObj.localApi+'/api.php?s=/forum/forumFilterByTopic/topicId/'+this.tid+'/page/1/count/10',
+            url:window.urlObj.localApi+'api.php?s=/forum/forumFilterByTopic/topicId/'+this.tid+'/page/1/count/10',
             //paraData:{
             //    topicId:this.tid,
             //    page:1,
