@@ -561,29 +561,33 @@ define(['base','lazyloading'],function(Base){
         if(!imgList){
             return '';
         }
-        var len=imgList.length,str='',cName='';
+        var len=imgList.length;
         if(len==0){
             return '';
         }
+        var str='',
+            cName='',
+            h='',
+            style='';
         if(len==1){
             cName='img-size1';
         }
         else if(len==2 || len==4){
             cName='img-size2';
+            h=this.getImgWidthByNums(2);
+            style='width:'+h+';height:'+h;
         }
         else{
             cName='img-size3';
+            h=this.getImgWidthByNums(3);
+            style='width:'+h+';height:'+h;
         }
         for(var i=0;i<len;i++){
             var url=imgList[i].thumb;
             if(!url){
                 url='http://pic.hisihi.com/2016-06-02/1464833264193150.png';
             }
-            var style='';
-            if(cName=='img-size3'){
-                var h=this.getImgWidthByNums();
-                style='width:'+h+';height:'+h;
-            }
+
             str+='<li class="'+cName+'" style="'+style+'">'+
                     '<img  data-original="' + url + '">'+
                  '</li>';
@@ -591,10 +595,14 @@ define(['base','lazyloading'],function(Base){
         return str;
     };
 
-    t.getImgWidthByNums=function(){
-        var width=$('body').width()-23,
-            lw=width*0.3;
-        return lw+'px';
+    t.getImgWidthByNums=function(num){
+        var radio = 0.3;
+        if(num==2) {
+            radio=0.4;
+        }
+        var width = $('body').width() - 23,
+            lw = width * radio;
+        return lw + 'px';
     };
 
     /*根据图片的数量，得到图片的宽度*/

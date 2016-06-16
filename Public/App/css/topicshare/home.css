@@ -361,6 +361,10 @@ body {
 .content-box .post-img-box li.img-size2 {
   max-width: 40%;
 }
+.content-box .post-img-box li.img-size2 img {
+  width: 100%;
+  height: 100%;
+}
 .content-box .post-img-box li.img-size3 {
   width: 30%;
 }
