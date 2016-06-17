@@ -88,6 +88,7 @@ define(['base','lazyloading'],function(Base){
         }
         $('#post-nums').text(data.post_count);
         $('.topic-real-name').text(title);
+        $('title').text(title);
         $('.banner-desc').text(desc);
         $('.img-box img').attr('src',imgUrl);
     }
