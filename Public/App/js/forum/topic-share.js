@@ -537,11 +537,17 @@ define(['base','lazyloading'],function(Base){
 
     /*如果是老师，则取出其对应的 机构或者学校信息*/
     t.getOrgStr=function(arr){
-        var str='';
+        var str='',
+            title='',
+            con='';
         $.each(arr,function(){
-            str=this.institution;
-            if(str){
-                return true
+            title=this.field_title;
+            if(title && title=='任职公司') {
+                con = this.field_content;
+                if (con) {
+                    str = con
+                }
+                return true;
             }
         });
         return str;
