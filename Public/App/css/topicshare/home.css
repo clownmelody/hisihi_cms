@@ -323,9 +323,9 @@ body {
 .content-box .user-info .right {
   float: right;
   color: #039BE5;
-  margin-top: 13px;
-  font-size: 13px;
-  max-width: 65px;
+  margin-top: 9px;
+  font-size: 14px;
+  max-width: 70px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -429,6 +429,7 @@ body {
   .content-box .user-info .right {
     font-size: 12px;
     max-width: 62px;
+    margin-top: 4px;
   }
 }
 @media screen and (min-width: 750px) {
