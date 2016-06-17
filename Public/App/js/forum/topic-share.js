@@ -81,7 +81,7 @@ define(['base','lazyloading'],function(Base){
         var title=data.title,
             desc=data.description,
             imgUrl=data.img_url;
-        title=this.substrLongStr(title,20);
+        title=this.substrLongStr(title,18);
         desc=this.substrLongStr(desc,70);
         if(!imgUrl){
             imgUrl='http://pic.hisihi.com/2016-06-15/1465962987445587.png';
