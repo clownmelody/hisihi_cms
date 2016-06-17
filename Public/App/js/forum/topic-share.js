@@ -6,9 +6,9 @@ define(['base','lazyloading'],function(Base){
     var Topic=function(){
         Base.call(this,true);  //属性继承
         this.tid=$('body').data('id');
-        if(this.isLocal){
+        //if(this.isLocal){
             window.urlObj.localApi+='hisihi-cms/';
-        }
+        //}
         this.initStyle();
         this.loadData();
     };
