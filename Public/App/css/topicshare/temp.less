@@ -143,10 +143,7 @@ body{
       margin-top: 2%;
       margin-bottom: 0;
 
-      &:nth-child(3n-1) {
-        margin-left:2.5%;
-        margin-right:2.5%;
-      }
+
       >img{
         max-width:100%;
       }
@@ -155,16 +152,21 @@ body{
       }
       &.img-size2{
         max-width: 40%;
-        //margin-left: @s;
-        //margin-top: @s;
+        margin-right: @s;
+        margin-top: @s;
         img{
           .size(100%,100%);
         }
       }
       &.img-size3{
         width: 30%;
+        &:nth-child(3n-1) {
+          margin-left:2.5%;
+          margin-right:2.5%;
+        }
         img{
           .size(100%,100%);
+
         }
       }
     }
@@ -225,7 +227,7 @@ body{
           margin-left: @w+5px;
           max-width: 185px;
           p {
-            margin: 7px auto;
+            margin: 5px auto;
           }
         }
       }

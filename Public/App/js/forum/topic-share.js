@@ -82,7 +82,7 @@ define(['base','lazyloading'],function(Base){
             desc=data.description,
             imgUrl=data.img_url;
         title=this.substrLongStr(title,20);
-        desc=this.substrLongStr(desc,80);
+        desc=this.substrLongStr(desc,70);
         if(!imgUrl){
             imgUrl='http://pic.hisihi.com/2016-06-15/1465962987445587.png';
         }
@@ -95,18 +95,9 @@ define(['base','lazyloading'],function(Base){
     /*加载10条帖子*/
     t.loadTenPostsInfo=function(){
         this.controlLoadingBox(true);
-        //var url=window.urlObj.localApi+'api.php?s=/forum/forumFilterByTopic/topicId/'+this.tid+'/page/1/count/10';
-        //$.get(url,null,function(result){
-        //    alert();
-        //});
         var that =this,
             para={
             url:window.urlObj.localApi+'api.php?s=/forum/forumFilterByTopic/topicId/'+this.tid+'/page/1/count/10',
-            //paraData:{
-            //    topicId:this.tid,
-            //    page:1,
-            //    count:10
-            //},
             type:'get',
             sCallback:function(result){
                 that.controlLoadingBox(false);
