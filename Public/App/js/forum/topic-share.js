@@ -498,7 +498,7 @@ define(['base','lazyloading'],function(Base){
         for(var i=0;i<len;i++){
             item=data[i];
             name=item.userInfo.nickname;
-            type=item.orgStr;
+            type=item.userInfo.group;
             if(type==6){
                 orgStr=this.getOrgStr(item.userInfo.extinfo);
             }

@@ -417,6 +417,14 @@ body {
   }
   .content-box .user-info .left .right-txt p {
     margin: 5px auto;
+    font-size: 12px;
+  }
+  .content-box .user-info .left .right-txt p.name {
+    color: #FF5A00;
+    font-size: 14px;
+  }
+  .content-box .user-info .left .right-txt p.type {
+    font-size: 12px;
   }
   .content-box .user-info .right {
     font-size: 12px;
