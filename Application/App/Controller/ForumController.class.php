@@ -2638,14 +2638,15 @@ class ForumController extends AppController
 
     /**
      * 获取社区Banner
+     * @param int $show_pos
      * @param int $page
      * @param int $count
      */
-    public function getBannerList($page=1, $count=3){
+    public function getBannerList($show_pos=2, $page=1, $count=3){
         $model = M('InformationFlowBanner');
-        $totalCount = $model->where('status=1 and show_pos=2')->count();
-        $banner_list = $model->field('id, pic_url, url, jump_type')->where('status=1 and show_pos=2')
-            ->page($page, $count)->select();
+        $totalCount = $model->where('status=1 and show_pos='.$show_pos)->count();
+        $banner_list = $model->field('id, pic_url, url, jump_type')->where('status=1 and show_pos='.$show_pos)
+            ->select();
         foreach($banner_list as &$banner){
             switch($banner['jump_type']){
                 case 1: // 网址

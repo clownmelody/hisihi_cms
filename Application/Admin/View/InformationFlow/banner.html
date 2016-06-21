@@ -42,8 +42,14 @@
 						<td>{$vo.id}</td>
 						<td>{$vo.pic_url}</td>
 						<td>{$vo.url}</td>
-						<td><if condition="($vo.show_pos eq 1) "> 资讯流
-							<else /> 机构列表
+						<td><if condition="($vo.show_pos eq 0) "> 机构列表
+							<elseif condition="($vo.show_pos eq 1) "/> 资讯流
+							<elseif condition="($vo.show_pos eq 2) "/> 社区
+							<elseif condition="($vo.show_pos eq 3) "/> 留学主页
+							<elseif condition="($vo.show_pos eq 4) "/> 老师圈
+							<elseif condition="($vo.show_pos eq 5) "/> 精华圈
+							<elseif condition="($vo.show_pos eq 6) "/> 软件主页
+							<elseif condition="($vo.show_pos eq 7) "/> 手绘主页
 						</if>
 						</td>
 						<td><span>{$vo.create_time|time_format}</span></td>
