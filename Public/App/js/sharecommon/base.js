@@ -182,11 +182,14 @@ define(['$'],function() {
                     var rTxt = xmlRequest.responseText,
                     result = {};
                     if (rTxt) {
-                        result = JSON.parse(xmlRequest.responseText)
+                        result = JSON.parse(xmlRequest.responseText);
+
                     } else {
                         result.code = 0;
+
                     }
                     if (status == 'success') {
+
                         paras.sCallback(result);
 
                     }
