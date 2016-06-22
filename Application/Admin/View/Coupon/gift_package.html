@@ -3,12 +3,13 @@
 <block name="body">
     <!-- 标题栏 -->
     <div class="main-title">
-        <h2>课程与优惠券关系列表</h2>
+        <h2>机构活动礼包列表</h2>
     </div>
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <button class="btn ajax-post" target-form="ids" url="{:U("promotion/set_teaching_course_coupon_status",array("status"=>1))}">取消删除</button>
+                <button class="btn document_add" url="{:U('gift_package_add')}">新 增</button>
+                <button class="btn ajax-post" target-form="ids" url="{:U("coupon/set_gift_package_status",array("status"=>1))}">取消删除</button>
             </div>
         </div>
     </div>
@@ -19,9 +20,8 @@
             <tr>
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
-                <th class="">课程名称</th>
-                <th class="">优惠券名称</th>
-                <th class="">礼包</th>
+                <th class="">礼包引导语</th>
+                <th class="">礼包细则</th>
                 <th class="">创建时间</th>
                 <th class="">状态</th>
                 <th class="">操作</th>
@@ -33,16 +33,16 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
-                        <td>{$vo.teaching_course_name}</td>
-                        <td>{$vo.coupon_name}</td>
-                        <td>{$vo.gift_package}</td>
+                        <td>{$vo.introduce}</td>
+                        <td>{$vo.detail}</td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td><if condition="($vo.status eq 1) "> 正常
                             <else /> 已删除
                         </if>
                         </td>
                         <td>
-                            <a href="{:U('Promotion/set_teaching_course_coupon_status?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('Coupon/gift_package_edit?id='.$vo['id'])}">编辑</a>
+                            <a href="{:U('Coupon/set_gift_package_status?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
                 </volist>
@@ -102,6 +102,6 @@
 
         })
         //导航高亮
-        highlight_subnav("{:U('Promotion/teaching_course_to_coupon')}");
+        highlight_subnav("{:U('Coupon/gift_package')}");
     </script>
 </block>

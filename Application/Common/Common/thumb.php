@@ -121,10 +121,12 @@ function getThumbImage($filename, $width = 100, $height = 'auto', $type = 0, $re
             return $info;
         } else if($isThumbAvatarExist && !$replace){
             $thumb_file_url = "http://".C('OSS_AVATAR').C('OSS_ENDPOINT').$thumb_file_key;
-            $imageinfo = getimagesize($thumb_file_url);
+            $oss_img_src = "http://".C('OSS_AVATAR').C('IMG_OSS_ENDPOINT').$thumb_file_key.'@info';
+            $origin_img_info = getOssImgSizeInfo($oss_img_src);
+            $img_info = json_decode($origin_img_info);
             $info['src'] = $thumb_file_url;
-            $info['width'] = intval($imageinfo[0]);
-            $info['height'] = intval($imageinfo[1]);
+            $info['width'] = $img_info->width;
+            $info['height'] = $img_info->height;
             return $info;
         }
     }
