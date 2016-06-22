@@ -2642,7 +2642,8 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function getBannerList($show_pos=2, $page=1, $count=3){
+    public function getBannerList($show_pos=1, $page=1, $count=3){
+        $show_pos = (int)$show_pos * 10;
         $model = M('InformationFlowBanner');
         $totalCount = $model->where('status=1 and show_pos='.$show_pos)->count();
         $banner_list = $model->field('id, pic_url, url, jump_type')->where('status=1 and show_pos='.$show_pos)
