@@ -162,6 +162,12 @@ class PromotionController extends AdminController
             $info['teaching_course_name'] = $pro['course_name'];
             $org = M('Coupon')->field('name')->where('id='.$info['coupon_id'])->find();
             $info['coupon_name'] = $org['name'];
+            $gift = M('OrganizationGiftPackage')->field('introduce')->where('id='.$info['gift_package_id'])->find();
+            if($gift){
+                $info['gift_package'] = $gift['introduce'];
+            }else{
+                $info['gift_package'] = '无';
+            }
         }
         $this->assign('_list', $list);
         $this->assign('_page', $show);
