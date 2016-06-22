@@ -563,6 +563,19 @@ define(['$'],function() {
             }
         },
 
+        /*控制底部logo的位置样式*/
+        setFootStyle:function($wrapper) {
+            var $target = $('#downloadCon'),
+                $a = $target.find('a'),
+                aw = $a.width(),
+                ah = aw * 0.40,
+                bw = $(document).width(),
+                h = bw * 120 / 750;
+            $target.css({'height': h + 'px', 'opacity': 1});
+            $wrapper.css({'bottom': h + 5+'px'});
+            return h;
+        },
+
     };
     return Base;
 });
