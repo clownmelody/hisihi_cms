@@ -6,11 +6,20 @@
         <h2>海外大学列表</h2>
     </div>
     <div class="cf">
+
         <div class="fl">
             <div class="btn-group">
                 <button class="btn document_add" url="{:U('university_add')}">新 增</button>
                 <button class="btn ajax-post" target-form="ids" url="{:U("overseas/cancle_university_hot",array("is_hot"=>0))}">取消推荐</button>
                 <button class="btn ajax-post" target-form="ids" url="{:U("overseas/university_set_status",array("status"=>1))}">取消删除</button>
+            </div>
+        </div>
+
+        <!-- 高级搜索 -->
+        <div class="search-form fr cf">
+            <div class="sleft">
+                <input type="text" name="key_words" class="search-input" value="{:I('key_words')}" placeholder="请输入大学名称或所属国家">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('overseas/university')}"><i class="btn-search"></i></a>
             </div>
         </div>
     </div>
@@ -77,9 +86,6 @@
                 var query  = $('.search-form').find('input').serialize();
                 query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
                 query = query.replace(/^&/g,'');
-                if(status != ''){
-                    query += 'status=' + status + "&" + query;
-                }
                 if( url.indexOf('?')>0 ){
                     url += '&' + query;
                 }else{
