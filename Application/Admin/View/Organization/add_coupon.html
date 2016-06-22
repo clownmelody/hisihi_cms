@@ -28,6 +28,21 @@
                     </div>
                 </div>
 
+                <div class="form-item cf">
+                    <label class="item-label">添加礼包</label>
+                    <div class="controls">
+                        <notempty name="_gift">
+                            <select class="text input-large" name="gift_package_id" style="height: 30px;width: 400px;">
+                                <option value="0" >无</option>
+                                <volist name="_gift" id="vo">
+                                    <option value="{$vo.id}" >{$vo.introduce}</option>
+                                </volist>
+                            </select>
+                            <else/>
+                            <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                        </notempty>
+                    </div>
+                </div>
                 <!-- 按钮 -->
                 <div class="form-item cf">
                     <label class="item-label"></label>

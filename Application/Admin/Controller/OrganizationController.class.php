@@ -3263,6 +3263,8 @@ class OrganizationController extends AdminController
      */
     public function add_coupon($organization_id, $id){
         $promotion = M('Coupon')->where('status=1')->order('id')->select();
+        $gift = M('OrganizationGiftPackage')->where('status=1')->order('id')->select();
+        $this->assign('_gift', $gift);
         $this->assign('_coupon', $promotion);
         $this->assign('organization_id', $organization_id);
         $this->assign('tid', $id);
@@ -3275,6 +3277,7 @@ class OrganizationController extends AdminController
     public function update_add_coupon(){
         if (IS_POST) {
             //$post_data['organization_id'] = $_POST["organization_id"];
+            $post_data['gift_package_id'] = $_POST["gift_package_id"];
             $post_data['coupon_id'] = $_POST["coupon_id"];
             $post_data['teaching_course_id'] = $_POST['teaching_course_id'];
             $post_data['status'] = 1;
@@ -3317,6 +3320,7 @@ class OrganizationController extends AdminController
             $this->display('add_coupon');
         }
     }
+
 
     /**
      * @param $url
