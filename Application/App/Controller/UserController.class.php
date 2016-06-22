@@ -1687,10 +1687,14 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
             if(strpos($picinfo['src'], "Picture")) {
                 $src = substr($picinfo['src'], 16);
                 $picinfo['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
-                $origin_img_info = getimagesize($picinfo['src']);
+                //$origin_img_info = getimagesize($picinfo['src']);
+                $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $picinfo['src']);
+                $new_pic_url = $new_pic_url . '@info';
+                $origin_img_info = getOssImgSizeInfo($new_pic_url);
+                $img_info = json_decode($origin_img_info);
                 $src_size = Array();
-                $src_size[0] = $origin_img_info[0]; // width
-                $src_size[1] = $origin_img_info[1]; // height
+                $src_size[0] = $img_info->width; // width
+                $src_size[1] = $img_info->height; // height
                 $picinfo['src_size'] = $src_size;
             }
             $picinfo['size'] = $size;
@@ -1869,10 +1873,14 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
             if(strpos($picinfo['src'], "Picture")) {
                 $src = substr($picinfo['src'], 16);
                 $picinfo['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
-                $origin_img_info = getimagesize($picinfo['src']);
+                //$origin_img_info = getimagesize($picinfo['src']);
+                $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $picinfo['src']);
+                $new_pic_url = $new_pic_url . '@info';
+                $origin_img_info = getOssImgSizeInfo($new_pic_url);
+                $img_info = json_decode($origin_img_info);
                 $src_size = Array();
-                $src_size[0] = $origin_img_info[0]; // width
-                $src_size[1] = $origin_img_info[1]; // height
+                $src_size[0] = $img_info->width; // width
+                $src_size[1] = $img_info->height; // height
                 $picinfo['src_size'] = $src_size;
             }
             $picinfo['size'] = $size;

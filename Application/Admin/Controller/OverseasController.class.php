@@ -190,15 +190,30 @@ class OverseasController extends AdminController
     public function university(){
         $model = M('AbroadUniversity');
         $countryModel = M('AbroadCountry');
-        $count = $model->count();
-        $Page = new Page($count, 10);
-        $show = $Page->show();
-        $list = $model->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+        $key_words = $_GET["key_words"];
+        if($key_words){
+            $map = "university.name like '%".$key_words."%' or country.name like '%".$key_words."%'";
+            $map = $map . 'and university.country_id=country.id and university.status=1 and country.status=1';
+            $list = $model->table('hisihi0925.hisihi_abroad_university university, hisihi0925.hisihi_abroad_country country')
+                ->where($map)
+                ->field('distinct(university.id), university.logo_url, university.country_id, university.name, university.is_hot, university.status')
+                ->order('university.create_time desc' )
+                ->select();
+            $count = $model->table('hisihi_abroad_university university, hisihi_abroad_country country')
+                ->where($map)
+                ->count();
+            $Page = new Page($count, 10);
+        }else{
+            $count = $model->where('status=1')->count();
+            $Page = new Page($count, 10);
+            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
         foreach($list as &$university){
             $country_id = $university['country_id'];
             $country_info = $countryModel->field('name')->where('id='.$country_id)->find();
             $university['country'] = $country_info['name'];
         }
+        $show = $Page->show();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);

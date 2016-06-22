@@ -2642,7 +2642,8 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function getBannerList($show_pos=2, $page=1, $count=3){
+    public function getBannerList($show_pos=1, $page=1, $count=3){
+        $show_pos = (int)$show_pos * 10;
         $model = M('InformationFlowBanner');
         $totalCount = $model->where('status=1 and show_pos='.$show_pos)->count();
         $banner_list = $model->field('id, pic_url, url, jump_type')->where('status=1 and show_pos='.$show_pos)
@@ -3021,10 +3022,12 @@ class ForumController extends AppController
                 if(strpos($img['src'], "Picture")) {
                     $src = substr($img['src'], 16);
                     $img['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
-                    $origin_img_info = getimagesize($img['src']);
+                    $oss_img_src = "http://".C('OSS_FORUM_PIC').C('IMG_OSS_ENDPOINT').$src.'@info';
+                    $origin_img_info = getOssImgSizeInfo($oss_img_src);
+                    $img_info = json_decode($origin_img_info);
                     $src_size = array();
-                    $src_size[] = $origin_img_info[0]; // width
-                    $src_size[] = $origin_img_info[1]; // height
+                    $src_size[] = $img_info->width; // width
+                    $src_size[] = $img_info->height; // height
                     $img['src_size'] = $src_size;
                 }
                 $img['size'] = $size;
@@ -3106,13 +3109,16 @@ class ForumController extends AppController
                 $path = $pic_result[0]['path'];
                 $objKey = substr($path, 17);
                 $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                $oss_img_src = "http://advs-pic".C('IMG_OSS_ENDPOINT').$objKey.'@info';
+                $origin_img_info = getOssImgSizeInfo($oss_img_src);
+                $img_info = json_decode($origin_img_info);
                 $data['type'] = "advertisment";
                 $data['pic'] = $picUrl;
                 $data['content_url'] = $advLink;
                 $data['title'] = $advTitle;
-                $origin_img_info = getimagesize($picUrl);
-                $size[] = $origin_img_info[0]; // width
-                $size[] = $origin_img_info[1]; // height
+                //$origin_img_info = getimagesize($picUrl);
+                $size[] = $img_info->width; // width
+                $size[] = $img_info->height; // height
                 $data['size'] = $size;
                 return array($data);
             } else {
@@ -3147,13 +3153,16 @@ class ForumController extends AppController
                 $path = $pic_result[0]['path'];
                 $objKey = substr($path, 17);
                 $picUrl = "http://advs-pic.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                $oss_img_src = "http://advs-pic".C('IMG_OSS_ENDPOINT').$objKey.'@info';
+                $origin_img_info = getOssImgSizeInfo($oss_img_src);
+                $img_info = json_decode($origin_img_info);
                 $data['type'] = "advertisment";
                 $data['pic'] = $picUrl;
                 $data['content_url'] = $advLink;
                 $data['title'] = $advTitle;
-                $origin_img_info = getimagesize($picUrl);
-                $size[] = $origin_img_info[0]; // width
-                $size[] = $origin_img_info[1]; // height
+                //$origin_img_info = getimagesize($picUrl);
+                $size[] = $img_info->width; // width
+                $size[] = $img_info->height; // height
                 $data['size'] = $size;
                 return array($data);
             } else {

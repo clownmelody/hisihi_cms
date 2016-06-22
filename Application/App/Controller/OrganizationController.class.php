@@ -2489,19 +2489,27 @@ class OrganizationController extends AppController
         $list = $model->field($field)->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_url = $work['url'];
-            $origin_img_info = getimagesize($pic_url);
+            //$origin_img_info = getimagesize($pic_url);
+            $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_url);
+            $new_pic_url = $new_pic_url . '@info';
+            $origin_img_info = getOssImgSizeInfo($new_pic_url);
+            $img_info = json_decode($origin_img_info);
             $src_size = Array();
-            $src_size['width'] = $origin_img_info[0]; // width
-            $src_size['height'] = $origin_img_info[1]; // height
+            $src_size['width'] = $img_info->width; // width
+            $src_size['height'] = $img_info->height; // height
             $work['picture'] = array(
                 'url'=>$pic_url,
                 'size'=>$src_size
             );
             $pic_small = $pic_url . '@50p';
-            $origin_img_info = getimagesize($pic_small);
+            //$origin_img_info = getimagesize($pic_small);
+            $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_small);
+            $new_pic_url = $new_pic_url . '&info';
+            $origin_img_info = getOssImgSizeInfo($new_pic_url);
+            $img_info = json_decode($origin_img_info);
             $thumb_size = Array();
-            $thumb_size['width'] = $origin_img_info[0]; // width
-            $thumb_size['height'] = $origin_img_info[1]; // height
+            $thumb_size['width'] = $img_info->width; // width
+            $thumb_size['height'] = $img_info->height; // height
             $work['thumb'] = array(
                 'url'=>$pic_small,
                 'size'=>$thumb_size
@@ -2534,19 +2542,27 @@ class OrganizationController extends AppController
         $list = $model->field('id, url, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_url = $work['url'];
-            $origin_img_info = getimagesize($pic_url);
+            //$origin_img_info = getimagesize($pic_url);
+            $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_url);
+            $new_pic_url = $new_pic_url . '@info';
+            $origin_img_info = getOssImgSizeInfo($new_pic_url);
+            $img_info = json_decode($origin_img_info);
             $src_size = Array();
-            $src_size['width'] = $origin_img_info[0]; // width
-            $src_size['height'] = $origin_img_info[1]; // height
+            $src_size['width'] = $img_info->width; // width
+            $src_size['height'] = $img_info->height; // height
             $work['picture'] = array(
                 'url'=>$pic_url,
                 'size'=>$src_size
             );
             $pic_small = $pic_url . '@50p';
-            $origin_img_info = getimagesize($pic_small);
+            //$origin_img_info = getimagesize($pic_small);
+            $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_small);
+            $new_pic_url = $new_pic_url . '&info';
+            $origin_img_info = getOssImgSizeInfo($new_pic_url);
+            $img_info = json_decode($origin_img_info);
             $thumb_size = Array();
-            $thumb_size['width'] = $origin_img_info[0]; // width
-            $thumb_size['height'] = $origin_img_info[1]; // height
+            $thumb_size['width'] = $img_info->width; // width
+            $thumb_size['height'] = $img_info->height; // height
             $work['thumb'] = array(
                 'url'=>$pic_small,
                 'size'=>$thumb_size

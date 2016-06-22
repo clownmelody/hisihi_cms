@@ -96,19 +96,25 @@ class InspirationController extends AppController {
             'create_time'=>$inspirationInfo['create_time']
         );
         $pic_url = $this->fetchImage($pic_id);
-        $origin_img_info = getimagesize($pic_url);
+        $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_url);
+        $new_pic_url = $new_pic_url . '@info';
+        $origin_img_info = getOssImgSizeInfo($new_pic_url);
+        $img_info = json_decode($origin_img_info);
         $src_size = Array();
-        $src_size['width'] = $origin_img_info[0]; // width
-        $src_size['height'] = $origin_img_info[1]; // height
+        $src_size['width'] = $img_info->width; // width
+        $src_size['height'] = $img_info->height; // height
         $inspira['picture'] = array(
             'url'=>$pic_url,
             'size'=>$src_size
         );
         $pic_small = getThumbImageById($pic_id, 280, 160);
-        $thumb_img_info = getimagesize($pic_small);
+        $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_small);
+        $new_pic_url = $new_pic_url . '@info';
+        $origin_img_info = getOssImgSizeInfo($new_pic_url);
+        $img_info = json_decode($origin_img_info);
         $thumb_size = Array();
-        $thumb_size['width'] = $thumb_img_info[0]; // width
-        $thumb_size['height'] = $thumb_img_info[1]; // height
+        $thumb_size['width'] = $img_info->width; // width
+        $thumb_size['height'] = $img_info->height; // height
         $inspira['thumb'] = array(
             'url'=>$pic_small,
             'size'=>$thumb_size
@@ -228,10 +234,13 @@ class InspirationController extends AppController {
                 if(!preg_match("/^http:\/\//",$pic_url)){
                     continue;
                 }
-                $origin_img_info = getimagesize($pic_url);
+                $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_url);
+                $new_pic_url = $new_pic_url . '@info';
+                $origin_img_info = getOssImgSizeInfo($new_pic_url);
+                $img_info = json_decode($origin_img_info);
                 $src_size = Array();
-                $src_size['width'] = $origin_img_info[0]; // width
-                $src_size['height'] = $origin_img_info[1]; // height
+                $src_size['width'] = $img_info->width; // width
+                $src_size['height'] = $img_info->height; // height
                 $inspira['picture'] = array(
                     'url'=>$pic_url,
                     'size'=>$src_size
@@ -247,10 +256,14 @@ class InspirationController extends AppController {
                 if(!preg_match("/^http:\/\//",$pic_small)){
                     continue;
                 }
-                $thumb_img_info = getimagesize($pic_small);
+                //$thumb_img_info = getimagesize($pic_small);
+                $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_small);
+                $new_pic_url = $new_pic_url . '@info';
+                $origin_img_info = getOssImgSizeInfo($new_pic_url);
+                $img_info = json_decode($origin_img_info);
                 $thumb_size = Array();
-                $thumb_size['width'] = $thumb_img_info[0]; // width
-                $thumb_size['height'] = $thumb_img_info[1]; // height
+                $thumb_size['width'] = $img_info->width; // width
+                $thumb_size['height'] = $img_info->height; // height
                 $inspira['thumb'] = array(
                     'url'=>$pic_small,
                     'size'=>$thumb_size

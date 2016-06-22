@@ -171,6 +171,7 @@ return  array(
     'PYTHON_API_SERVICE_HOST_NAME' =>  'http://api.hisihi.com',
 
     'OSS_ENDPOINT'          => '.oss-cn-qingdao.aliyuncs.com/',
+    'IMG_OSS_ENDPOINT'      => '.img-cn-qingdao.aliyuncs.com/',
     'OSS_AVATAR'            => 'hisihi-avator',
     'OSS_FORUM_PIC'         => 'forum-pic',
     'OSS_FORUM_SOUND'       => 'forum-sound',
