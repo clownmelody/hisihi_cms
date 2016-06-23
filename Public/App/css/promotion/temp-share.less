@@ -1,0 +1,298 @@
+body{
+  padding: 0;
+  margin: 0;
+  background-color: #F2F2F2;
+}
+.wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+}
+@padding-l:10px;
+@padding-r:13px;
+.promotion-box{
+  opacity: 0;
+  background-color: white;
+  border-bottom:1px solid #E6E6E6;
+  margin-bottom:15px;
+  min-height:230px;
+  .img-box{
+    width: 100%;
+    text-align: center;
+    img{
+      max-width: 100%;
+    }
+  }
+  .content-box{
+    margin: 0 @padding-r 0 @padding-l;
+    p{
+      color: #808080;
+      font-size: 14px;
+      line-height: 24px;
+      margin-bottom: 30px;
+    }
+  }
+}
+.course-box{
+  opacity: 0;
+  border-top: 1px solid #CCC;
+  background-color: white;
+  min-height: 90px;
+  .header {
+    height: 40px;
+    font-size: 16px;
+    color: #212121;
+    border-bottom: 1px solid #CCC;
+    padding-left: @padding-l;
+    line-height: 40px;
+    font-weight: bold;
+  }
+  .list{
+    li{
+      @w-l:120px;
+      @w-r:80px;
+      .size(auto,110px);
+      border-bottom: 1px solid #ccc;
+      //a{
+      //  display: block;
+      //  .size(100%,100%);
+      //}
+      .item-main{
+        height: 100%;
+        margin: 5px @padding-r 5px @padding-l;
+        >div{
+          float: left;
+          height: 100%;
+        }
+        .main-content{
+          width: 100%;
+          height: 100%;
+          .middle {
+            height: 100%;
+            margin: 0 @w-r 0 @w-l+15;
+            p {
+              margin: 5px 0;
+            }
+            .title-info {
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              font-size: 17px;
+              height: 30px;
+              line-height: 35px;
+              color: #333333;
+            }
+            .money-info {
+              color: #FA4535;
+              font-size: 20px;
+              font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            }
+            .time-info {
+              color: #8E8E8E;
+            }
+          }
+        }
+        .left{
+          width:@w-l;
+          margin-left: -100%;
+          .img-box{
+            .size(100%);
+            margin: 0 auto;
+            text-align: center;
+            //background: url('http://pic.hisihi.com/2016-06-02/1464833264193150.png') 0 0 no-repeat;
+            img {
+              //border:0;
+              .size(100%,85px);
+              margin:11px 20px 0 0;
+            }
+          }
+        }
+        .right {
+          position: relative;
+          width: @w-r;
+          margin-left: -@w-r;
+            .coupon-money, .coupon-state {
+              .size(100%, 35px);
+              background-color: #F9A825;
+              color: white;
+              text-align: center;
+              line-height: 35px;
+            }
+            .coupon-money {
+              margin-top: 15px;
+              span {
+                font-size: 20px;
+                &:first-child {
+                  font-size: 12px;
+                }
+              }
+            }
+            .coupon-state {
+              font-size: 14px;
+              p {
+                text-align: center;
+                margin: 0;
+
+                //&:last-child {
+                  display: none;
+                //}
+              }
+            }
+            .seperation {
+              background: url(../../images/promotion/sprite.png);
+              height: 6px;
+              background-position: -20px 0;
+            }
+            &.un-take-in{
+              .coupon-state {
+                p {
+                  &:first-child {
+                    display: block;
+                  }
+                }
+              }
+            }
+            &.unused {
+              .coupon-money, .coupon-state {
+                background-color: #cccccc;
+              }
+              .coupon-state {
+                p {
+                  //&:first-child {
+                  //  display: none;
+                  //}
+                  &:nth-child(2){
+                    display: block;
+                  }
+                  //&:last-child {
+                  //  display: none;
+                  //}
+                }
+              }
+              .seperation {
+                background-position: -96px 0;
+              }
+            }
+
+            &.used{
+              .coupon-money, .coupon-state {
+                background-color: #cccccc;
+              }
+              .coupon-state {
+                p {
+                  &:last-child {
+                    display: block;
+                  }
+                }
+              }
+              .seperation {
+                background-position: -96px 0;
+              }
+            }
+
+        }
+      }
+    }
+  }
+}
+
+/*Ä£Ì¬´°¿Ú*/
+.model-box{
+  background-color:rgba(0,0,0,.6);
+  position: fixed;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  z-index: 10000;
+  img{
+    max-width: 80%;
+    position: absolute;
+    bottom: 10px;
+    left: 10%;
+  }
+}
+
+#downloadCon{
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  opacity: 0;
+  img{
+    max-width: 100%;
+  }
+  a {
+    .size(80px,32px);
+    position: absolute;
+    top:50%;
+    margin-top: -16px;
+    right: 12px;
+    display:block;
+    text-decoration: none;
+    background-color: #FF5A00;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    line-height: 32px;
+    z-index: 10001;
+  }
+}
+
+@media screen and(max-width: 320px) {
+  .course-box {
+    .list {
+      li {
+        .item-main {
+          @w-l: 100px;
+          @w-r: 80px;
+          //.size(auto, 90px);
+          margin: 0 @padding-r 0 @padding-l;
+          .main-content {
+            .middle {
+              height: 100%;
+              margin: 0 @w-r 0 @w-l;
+              .title-info {
+                margin-top: 12px;
+                height: 26px;
+                line-height: 26px;
+                font-size: 12px;
+              }
+              .money-info {
+                font-size: 16px;
+              }
+              .time-info {
+                font-size: 12px;
+              }
+            }
+          }
+          .left {
+            width: @w-l;
+            .img-box {
+              img {
+                margin: 20px 20px 0 0;
+                .size(90px, 65px);
+              }
+            }
+          }
+          .right {
+            .right-main {
+              transform: scale(0.9);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and(min-width: 750px){
+  .wrapper{
+    width: 700px;
+    margin: 0 auto;
+  }
+}
