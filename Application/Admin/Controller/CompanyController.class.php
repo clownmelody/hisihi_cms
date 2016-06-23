@@ -536,7 +536,7 @@ class CompanyController extends AdminController {
      */
     public function recruit(){
         $model = D('CompanyRecruit');
-        $count = $model->count();
+        $count = $model->where('status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
         //用于公司名称搜索
@@ -545,7 +545,7 @@ class CompanyController extends AdminController {
             $map['name'] = array('like','%'.$name.'%');
             $list = $model->where($map)->where("status=1")->order('type')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
-            $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$recruit){
             $company_id = $recruit['company_id'];
