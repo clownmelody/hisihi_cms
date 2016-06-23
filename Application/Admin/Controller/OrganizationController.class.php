@@ -3569,7 +3569,7 @@ class OrganizationController extends AdminController
      */
     public function teachingcourse($organization_id=0, $is_hot=0){
         $model = M('OrganizationTeachingCourse');
-        //$map['status']=array('egt',0);
+        $map['status']=array('egt',0);
         if($is_hot==1){
             $map['is_hot'] = $is_hot;
         }

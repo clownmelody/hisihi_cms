@@ -14,10 +14,10 @@ class PromotionController extends AdminController
 
     public function index(){
         $model = M('Promotion');
-        $count = $model->count();
+        $count = $model->where('status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -132,10 +132,10 @@ class PromotionController extends AdminController
 
     public function org_to_promotion(){
         $model = M('TeachingCourseOrganizationPromotionRelation');
-        $count = $model->count();
+        $count = $model->where('status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$info){
             $org = M('Organization')->field('name')->where('id='.$info['organization_id'])->find();
             $info['organization_name'] = $org['name'];
@@ -153,10 +153,10 @@ class PromotionController extends AdminController
 
     public function teaching_course_to_coupon(){
         $model = M('TeachingCourseCouponRelation');
-        $count = $model->count();
+        $count = $model->where('status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$info){
             $pro = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$info['teaching_course_id'])->find();
             $info['teaching_course_name'] = $pro['course_name'];

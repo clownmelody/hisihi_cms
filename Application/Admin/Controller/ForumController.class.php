@@ -261,7 +261,7 @@ class ForumController extends AdminController
                          $showtop=0, $showelite=null)
     {
         //读取帖子数据
-        #$map = array('status' => array('EGT', 0));
+        $map = array('status' => array('EGT', 0));
         if ($title != '') {
             $map['title'] = array('like', '%' . $title . '%');
         }
@@ -1023,6 +1023,7 @@ class ForumController extends AdminController
         if($is_hot){
             $map['is_hot'] = 1;
         }
+        $map['status'] = 1;
         $model = M('ForumTopic');
         $count = $model->where($map)->count();
         $Page = new Page($count, 10);

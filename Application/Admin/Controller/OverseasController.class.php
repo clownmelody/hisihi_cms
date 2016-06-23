@@ -14,10 +14,10 @@ class OverseasController extends AdminController
 
     public function index(){
         $model = M('AbroadCountry');
-        $count = $model->count();
+        $count = $model->where('status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -463,10 +463,10 @@ class OverseasController extends AdminController
     public function photo(){
         $model = M('AbroadUniversity');
         $photoModel = M('AbroadUniversityPhotos');
-        $count = $photoModel->count();
+        $count = $photoModel->where('status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $photoModel->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+        $list = $photoModel->where('status=1')->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
         foreach($list as &$photo){
             $university_id = $photo['university_id'];
             $university_info = $model->field('name')->where('id='.$university_id)->find();
@@ -601,10 +601,10 @@ class OverseasController extends AdminController
     public function plan(){
         $model = M('Organization');
         $planModel = M('OverseasPlan');
-        $count = $planModel->count();
+        $count = $planModel->where('status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $planModel->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+        $list = $planModel->where('status=1')->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
         foreach($list as &$plan){
             $organization_id = $plan['organization_id'];
             $org_info = $model->field('name')->where('id='.$organization_id)->find();

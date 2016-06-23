@@ -168,10 +168,10 @@ class InformationFlowController extends AdminController {
      */
     public function config(){
         $model = M('InformationFlowConfig');
-        $count = $model->count();
+        $count = $model->where('status=1')->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("_total", $count);
