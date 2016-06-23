@@ -511,11 +511,14 @@ class ForumController extends AdminController
 
     public function setPostStatus($ids, $status)
     {
-        $builder = new AdminListBuilder();
-        $builder->doSetStatus('ForumPost', $ids, $status);
         // 改变用户作品表中的数据状态
         $ids = is_array($ids) ? $ids : explode(',', $ids);
         M('UserWorks')->where(array('post_id' => array('in', $ids)))->save(array('status' => $status));
+        // 解除话题关联帖子的关系
+        M('ForumTopicToPostRelation')->where(array('post_id' => array('in', $ids)))->save(array('status' => $status));
+
+        $builder = new AdminListBuilder();
+        $builder->doSetStatus('ForumPost', $ids, $status);
     }
 
     //设置精华帖
