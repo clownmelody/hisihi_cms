@@ -421,15 +421,28 @@ define(['base','fastclick'],function(Base){
 
     //简介 和 安排信息
     t.getIntroduceStr=function(data){
+        var sTime='',
+            sTime1= this.judgeInfoNullInfo(data.start_course_time),
+            sTime2= this.judgeInfoNullInfo(data.end_course_time),
+            plan=data.plan,
+            intro=data.introduction;
+        if(sTime1 && sTime2){
+            sTime='<p>'+sTime1+'——'+sTime2+'</p>';
+        }
+        if(plan==''){
+            plan='<label class="no-result-data">暂无课程安排</label>';
+        }
+        if(intro==''){
+            intro='<label class="no-result-data">暂无课程简介</label>';
+        }
         return '<div class="main-item lessons-detail">'+
             '<div class="lessons-item">'+
             '<div class="head-txt">'+
             '<div class="center-content">课程简介</div>'+
             '</div>'+
             '<div class="content-txt center-content">'+
-
             '<p>'+
-            data.introduction+
+            intro+
             '</p>'+
             '</div>'+
             '</div>'+
@@ -440,14 +453,24 @@ define(['base','fastclick'],function(Base){
             '<div class="center-content">课程安排</div>'+
             '</div>'+
             '<div class="content-txt center-content">'+
+                sTime+
             '<p>'+
-            data.start_course_time+'——'+data.end_course_time+
-            '</p>'+
-            '<p>'+
-            data.plan+
+                plan+
             '</p>'+
             '</div>'+
             '</div>';
+    };
+
+    /*判断字段信息是否为空*/
+    t.judgeInfoNullInfo=function(info){
+        var str=info;
+        if(typeof info=='string'){
+            str=str.trim();
+        }
+        if(!info || info==''||info==0){
+            str='';
+        }
+        return str;
     };
 
     //报名信息
@@ -492,37 +515,46 @@ define(['base','fastclick'],function(Base){
                 '<i></i>' +
                 '</div>' +
                 '</div>' +
-                '<ul>',item;
+                '<ul>',
+                item,
+                courseName='',
+                teacher='',
+                sTeacher='',
+                money='';
             for(var i=0;i<len;i++) {
                 item=courses[i];
-                var name=item.course_name,
-                    tName=item.lecture_name;
-                //name=this.substrLongStr(name,12);
-                tName=this.substrLongStr(tName,5);
-                str += '<li>' +
+                courseName=item.course_name;
+                teacher=this.judgeInfoNullInfo(item.lecture_name);
+                if(teacher!=''){
+                    sTeacher='<span>老师：'+teacher+'</span>';
+                }
+                teacher=this.substrLongStr(teacher,5);
+                money=this.judgeInfoNullInfo(item.price);
+                if(money!=''){
+                    money='￥'+money;
+                }else{
+                    money='暂无报价';
+                }
+                str += '<li class="normal">' +
                     '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
                     '<div class="main-content">'+
                     '<div class="left">' +
                     '<img src="'+item.cover_pic+'">' +
                     '</div>' +
                     '<div class="right">' +
-                    '<div class="lesson-name">'+name+'</div>' +
+                    '<div class="lesson-name">'+courseName+'</div>' +
                     '<div class="lesson-view-info">' +
-                    '<span>'+item.lesson_period+'次</span>' +
-                    '<span>'+item.student_num+'人班</span>' +
-                    '<span>'+item.start_course_time+'开课</span>' +
+                        this.getMiddleItemStr(item)+
                     '</div>' +
                     '<div class="teacher-info">' +
                     '<div class="left-item">' +
-                    '<span>老师：</span>' +
-                    '<span>'+tName+'</span>' +
+                    sTeacher+
                     '</div>' +
-                    '<div class="right-item price">￥'+item.price+'</div>' +
+                    '<div class="right-item price">'+money+'</div>' +
                     '<div style="clear: both;"></div>' +
                     '</div>' +
                     '</div>' +
                     '<div class="singin-limit-nums">' +
-                        //'<span>'+item.already_registered+'/'+item.student_num+'</span>' +
                     '<div><canvas></canvas></div>'+
                     '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
                     '</div>' +
@@ -533,6 +565,27 @@ define(['base','fastclick'],function(Base){
             }
             str+='</ul></div>';
         }
+        return str;
+    };
+
+    t.getMiddleItemStr=function(item){
+        var period=this.judgeInfoNullInfo(item.lesson_period),
+            num=this.judgeInfoNullInfo(item.student_num),
+            stime=this.judgeInfoNullInfo(item.start_course_time),
+            arr=[],
+            str='';
+        if(period!=''){
+            arr.push(period+'次');
+        }
+        if(num!=''){
+            arr.push(num+'人班');
+        }
+        if(stime!=''){
+            arr.push(stime+'开课');
+        }
+        $.each(arr,function(){
+            str+='<span>'+this+'</span>';
+        });
         return str;
     };
 

@@ -217,15 +217,28 @@ define(['base'],function(Base){
 
     //简介 和 安排信息
     t.getIntroduceStr=function(data){
+        var sTime='',
+            sTime1= this.judgeInfoNullInfo(data.start_course_time),
+            sTime2= this.judgeInfoNullInfo(data.end_course_time),
+            plan=data.plan,
+            intro=data.introduction;
+        if(sTime1 && sTime2){
+            sTime='<p>'+sTime1+'——'+sTime2+'</p>';
+        }
+        if(plan==''){
+            plan='<label class="no-result-data">暂无课程安排</label>';
+        }
+        if(intro==''){
+            intro='<label class="no-result-data">暂无课程简介</label>';
+        }
         return '<div class="main-item lessons-detail">'+
             '<div class="lessons-item">'+
             '<div class="head-txt">'+
             '<div class="center-content">课程简介</div>'+
             '</div>'+
             '<div class="content-txt center-content">'+
-
             '<p>'+
-            data.introduction+
+            intro+
             '</p>'+
             '</div>'+
             '</div>'+
@@ -236,14 +249,24 @@ define(['base'],function(Base){
             '<div class="center-content">课程安排</div>'+
             '</div>'+
             '<div class="content-txt center-content">'+
+            sTime+
             '<p>'+
-            data.start_course_time+'——'+data.end_course_time+
-            '</p>'+
-            '<p>'+
-            data.plan+
+            plan+
             '</p>'+
             '</div>'+
             '</div>';
+    };
+
+    /*判断字段信息是否为空*/
+    t.judgeInfoNullInfo=function(info){
+        var str=info;
+        if(typeof info=='string'){
+            str=str.trim();
+        }
+        if(!info || info==''||info==0){
+            str='';
+        }
+        return str;
     };
 
     //报名信息
@@ -294,7 +317,7 @@ define(['base'],function(Base){
                 var name=item.course_name,
                     tName=item.lecture_name;
                 tName=this.substrLongStr(tName,5);
-                str += '<li>' +
+                str += '<li class="normal">' +
                     '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
                     '<div class="main-content">'+
                     '<div class="left">' +

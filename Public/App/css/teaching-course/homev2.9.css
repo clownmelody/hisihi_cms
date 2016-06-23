@@ -418,6 +418,10 @@ body {
   margin: 0;
   padding-bottom: 15px;
 }
+.main-item.lessons-detail .content-txt p .no-result-data {
+  font-size: 14px;
+  color: #757070;
+}
 .main-item.lessons-singin .head-txt {
   border-bottom: 1px solid #e6e6e6;
 }
@@ -471,6 +475,9 @@ body {
 .main-item.lessons-more ul li {
   position: relative;
   border-bottom: 1px solid #e6e6e6;
+}
+.main-item.lessons-more ul li.normal {
+  min-height: 114px;
 }
 .main-item.lessons-more ul li.seperation {
   height: 15px;
