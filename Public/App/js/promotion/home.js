@@ -142,7 +142,9 @@ define(['base','fastclick'],function(Base){
         var str='',
             data=result.data,
             len=data.length,
-            item;
+            item,
+            money='',
+            stime='';
         for(var i=0;i<len;i++){
             item=data[i];
             var coupon=item.coupon_info;
@@ -161,13 +163,23 @@ define(['base','fastclick'],function(Base){
                 rightStr=this.getRightStrAndMarginInfo(coupon);
                 marginRight='80px';
             }
+            money=this.judgeInfoNullInfo(item.price);
+            if(money!=''){
+                money='￥'+money;
+            }else{
+                money='<label class="noprice">暂无报价</label>';
+            }
+            stime=this.judgeInfoNullInfo(item.start_course_time);
+            if(stime!=''){
+                stime+='开课';
+            }
             str+='<li data-obtain-id="'+obtainId+'" data-coupon-id="'+couponId+'" data-course-id="'+courseId+'">'+
                         '<div class="item-main">'+
                             '<div class="main-content">'+
                                 '<div class="middle" style="margin-right:'+marginRight+'">'+
                                     '<p class="title-info">'+item.course_name+'</p>'+
-                                    '<p class="money-info">￥'+item.price+'</p>'+
-                                    '<p class="time-info">'+item.start_course_time+'开课</p>'+
+                                    '<p class="money-info">'+money+'</p>'+
+                                    '<p class="time-info">'+stime+'</p>'+
                                 '</div>'+
                             '</div>'+
                             '<div class="left">'+
@@ -180,6 +192,18 @@ define(['base','fastclick'],function(Base){
                 '</li>';
         }
         $('.list').html(str);
+    };
+
+    /*判断字段信息是否为空*/
+    t.judgeInfoNullInfo=function(info){
+        var str=info;
+        if(typeof info=='string'){
+            str=str.trim();
+        }
+        if(!info || info==''||info==0){
+            str='';
+        }
+        return str;
     };
 
     /*得到优惠券右边的信息*/

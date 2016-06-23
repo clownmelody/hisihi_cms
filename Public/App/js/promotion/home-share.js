@@ -145,7 +145,9 @@ define(['base','lazyloading','fastclick'],function(Base){
         var str='',
             data=result.data,
             len=data.length,
-            item;
+            item,
+            money='',
+            stime='';
         for(var i=0;i<len;i++){
             item=data[i];
             var coupon=item.coupon_info;
@@ -153,9 +155,8 @@ define(['base','lazyloading','fastclick'],function(Base){
                 couponId= 0,
                 courseId=item.course_id,
                 rightStr='',
-                marginRight= 0,
-                money=item.price,
-                stime =item.start_course_time;
+                marginRight=0;
+
             //有优惠券
             if(coupon) {
                 if (coupon.is_obtain) {
@@ -165,40 +166,47 @@ define(['base','lazyloading','fastclick'],function(Base){
                 rightStr=this.getRightStrAndMarginInfo(coupon);
                 marginRight='80px';
             }
-            if(!money || money=='' || money==0){
-                money='暂无报价';
-            }else{
+            money=this.judgeInfoNullInfo(item.price);
+            if(money!=''){
                 money='￥'+money;
-            }
-            if(!stime || stime==''){
-                stime='';
             }else{
+                money='<label class="noprice">暂无报价</label>';
+            }
+            stime=this.judgeInfoNullInfo(item.start_course_time);
+            if(stime!=''){
                 stime+='开课';
             }
             str+='<li data-obtain-id="'+obtainId+'" data-coupon-id="'+couponId+'" data-course-id="'+courseId+'">'+
-                        '<div class="item-main">'+
-                            '<div class="main-content">'+
-                                '<div class="middle" style="margin-right:'+marginRight+'">'+
-                                    '<p class="title-info">'+item.course_name+'</p>'+
-                                    '<p class="money-info">'+money+'</p>'+
-                                    '<p class="time-info">'+stime+'</p>'+
-                                '</div>'+
-                            '</div>'+
-                            '<div class="left">'+
-                                '<div class="img-box">'+
-                                    '<img data-original="'+item.cover_pic+'">'+
-                                '</div>'+
-                            '</div>'+
-                            rightStr+
-                        '</div>'+
+                '<div class="item-main">'+
+                '<div class="main-content">'+
+                '<div class="middle" style="margin-right:'+marginRight+'">'+
+                '<p class="title-info">'+item.course_name+'</p>'+
+                '<p class="money-info">'+money+'</p>'+
+                '<p class="time-info">'+stime+'</p>'+
+                '</div>'+
+                '</div>'+
+                '<div class="left">'+
+                '<div class="img-box">'+
+                '<img src="'+item.cover_pic+'">'+
+                '</div>'+
+                '</div>'+
+                rightStr+
+                '</div>'+
                 '</li>';
         }
         $('.list').html(str);
+    };
 
-        $('.list img').picLazyLoad($('.wrapper'),{
-            settings:10,
-            placeholder:'http://pic.hisihi.com/2016-06-15/1465987988057181.png'
-        });
+    /*判断字段信息是否为空*/
+    t.judgeInfoNullInfo=function(info){
+        var str=info;
+        if(typeof info=='string'){
+            str=str.trim();
+        }
+        if(!info || info==''||info==0){
+            str='';
+        }
+        return str;
     };
 
     /*得到优惠券右边的信息*/
