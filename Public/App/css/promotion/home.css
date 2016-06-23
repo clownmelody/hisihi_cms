@@ -290,6 +290,9 @@ body {
   font-size: 20px;
   font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
+.course-box .list li .item-main .main-content .middle .money-info .noprice {
+  font-size: 16px;
+}
 .course-box .list li .item-main .main-content .middle .time-info {
   color: #8E8E8E;
 }
