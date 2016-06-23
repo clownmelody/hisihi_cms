@@ -9,6 +9,7 @@ requirejs.config({
         prefixfree:'sharecommon/prefixfree.min',
         base:'sharecommon/base',
         fastclick:'sharecommon/fastclick',
+        lazyloading:'sharecommon/lazyloading',
         home:'promotion/home',
     },
     shim: {

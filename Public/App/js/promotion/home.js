@@ -3,7 +3,7 @@
  * 今天儿童节，儿童节快乐，武汉被大水淹了……
  */
 
-define(['base','fastclick'],function(Base){
+define(['base','lazyloading','fastclick'],function(Base){
     FastClick.attach(document.body);
     var Promotion =function(id){
         this.pid = id;
@@ -184,7 +184,7 @@ define(['base','fastclick'],function(Base){
                             '</div>'+
                             '<div class="left">'+
                                 '<div class="img-box">'+
-                                    '<img src="'+item.cover_pic+'">'+
+                                    '<img data-original="'+item.cover_pic+'">'+
                                 '</div>'+
                             '</div>'+
                             rightStr+
@@ -192,6 +192,8 @@ define(['base','fastclick'],function(Base){
                 '</li>';
         }
         $('.list').html(str);
+        $('.list').html(str);
+        $('.list img').picLazyLoad($(window));
     };
 
     /*判断字段信息是否为空*/

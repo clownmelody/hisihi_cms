@@ -4,7 +4,7 @@
  * 20140517 v1.0
  */
 
-define(['$','fx'],function(){
+define(['$'],function(){
     $.fn.picLazyLoad = function($wrapper,settings){
         var $this = $(this),
             _winScrollTop = 0,

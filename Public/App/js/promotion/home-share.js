@@ -187,7 +187,7 @@ define(['base','lazyloading','fastclick'],function(Base){
                 '</div>'+
                 '<div class="left">'+
                 '<div class="img-box">'+
-                '<img src="'+item.cover_pic+'">'+
+                '<img data-original="'+item.cover_pic+'">'+
                 '</div>'+
                 '</div>'+
                 rightStr+
@@ -195,6 +195,7 @@ define(['base','lazyloading','fastclick'],function(Base){
                 '</li>';
         }
         $('.list').html(str);
+        $('.list img').picLazyLoad($('.wrapper'));
     };
 
     /*判断字段信息是否为空*/
