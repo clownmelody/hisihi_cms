@@ -296,6 +296,9 @@ body {
   color: #ff6531;
   font-size: 20px;
 }
+.main-item .price .noprice {
+  font-size: 16px;
+}
 .main-item.basic-info .center-content {
   height: 100%;
 }
@@ -547,6 +550,9 @@ body {
   display: inline-block;
   width: 50%;
   text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .main-item.lessons-more ul li .main-content .right .teacher-info .right-item {
   display: inline-block;
@@ -880,6 +886,9 @@ body {
   }
   .main-item.org-basic-info .right .nums-info li span {
     font-size: 14px;
+  }
+  .main-item.lessons-more ul li.normal {
+    min-height: 103px;
   }
   .main-item.lessons-more ul li .main-content .left img {
     width: 85px;

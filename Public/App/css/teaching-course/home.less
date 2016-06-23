@@ -88,6 +88,9 @@ body {
   .price{
     color: #ff6531;
     font-size: 20px;
+    .noprice{
+      font-size: 16px;
+    }
   }
 
   /*基本信息*/
@@ -338,6 +341,7 @@ body {
                 display: inline-block;
                 width: 50%;
                 text-align: left;
+                .txt-ellipsis;
               }
               .right-item {
                 display: inline-block;
@@ -452,6 +456,9 @@ body {
 
       ul {
         li {
+          &.normal{
+            min-height: 103px;
+          }
           .main-content {
             @w: 85px;
             .left {

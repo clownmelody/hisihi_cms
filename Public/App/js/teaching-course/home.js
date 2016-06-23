@@ -324,12 +324,11 @@ define(['base'],function(Base){
                 if(teacher!=''){
                     sTeacher='<span>老师：'+teacher+'</span>';
                 }
-                teacher=this.substrLongStr(teacher,5);
                 money=this.judgeInfoNullInfo(item.price);
                 if(money!=''){
                     money='￥'+money;
                 }else{
-                    money='暂无报价';
+                    money='<label class="noprice">暂无报价</label>';
                 }
                 str += '<li class="normal">' +
                     '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
@@ -371,7 +370,7 @@ define(['base'],function(Base){
             arr=[],
             str='';
         if(period!=''){
-            arr.push(period+'次');
+            arr.push(period+'次课');
         }
         if(num!=''){
             arr.push(num+'人班');
