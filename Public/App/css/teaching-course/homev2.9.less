@@ -91,6 +91,9 @@ body {
   .price{
     color: #ff6531;
     font-size: 20px;
+    .noprice{
+      font-size: 16px;
+    }
   }
 
   /*基本信息*/
@@ -220,6 +223,10 @@ body {
         line-height: 25px;
         margin: 0;
         padding-bottom: 15px;
+        .no-result-data{
+          font-size: 14px;
+          color: #757070;
+        }
       }
     }
   }
@@ -273,6 +280,9 @@ body {
       li{
         position: relative;
         .border-bottom();
+        &.normal{
+          min-height: 114px;
+        }
         &.seperation {
           height: 15px;
           background-color: #F2F2F2;
@@ -334,6 +344,7 @@ body {
                 display: inline-block;
                 width: 50%;
                 text-align: left;
+                .txt-ellipsis;
               }
               .right-item {
                 display: inline-block;
@@ -700,6 +711,9 @@ body {
 
       ul {
         li {
+          &.normal{
+            min-height: 103px;
+          }
           .main-content {
             @w: 85px;
             .left {
@@ -720,6 +734,7 @@ body {
               }
               .teacher-info {
                 .left-item {
+
                   span {
                     font-size: 12px;
                   }
