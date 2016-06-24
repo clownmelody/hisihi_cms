@@ -515,13 +515,9 @@ define(['base','fastclick'],function(Base){
                 '<i></i>' +
                 '</div>' +
                 '</div>' +
-                '<ul>',
-                item,
-                courseName='',
-                teacher='',
-                sTeacher='',
-                money='';
+                '<ul>';
             for(var i=0;i<len;i++) {
+                var item, courseName='', teacher='', sTeacher='', money='';
                 item=courses[i];
                 courseName=item.course_name;
                 teacher=this.judgeInfoNullInfo(item.lecture_name);
@@ -574,7 +570,7 @@ define(['base','fastclick'],function(Base){
             arr=[],
             str='';
         if(period!=''){
-            arr.push(period+'次');
+            arr.push(period+'次课');
         }
         if(num!=''){
             arr.push(num+'人班');

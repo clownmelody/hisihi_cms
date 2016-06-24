@@ -522,7 +522,7 @@ body {
 }
 .main-item.lessons-more ul li .main-content .right .lesson-view-info {
   color: #807e7e;
-  font-size: 13px;
+  font-size: 12px;
   margin: 8px 0 1px 0;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-view-info span {
@@ -532,7 +532,6 @@ body {
   border-right: 1px solid #807e7e;
   height: 13px;
   line-height: 13px;
-  font-size: 14px;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-view-info span:last-child {
   border: none;
@@ -661,9 +660,6 @@ body {
   }
   .main-item.lessons-more ul li .main-content .right .lesson-view-info {
     margin: 3px auto 0px auto;
-  }
-  .main-item.lessons-more ul li .main-content .right .lesson-view-info span {
-    font-size: 12px;
   }
   .main-item.lessons-more ul li .main-content .right .teacher-info .left-item span {
     font-size: 12px;
