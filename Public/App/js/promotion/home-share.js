@@ -63,7 +63,7 @@ define(['base','lazyloading','fastclick'],function(Base){
                 eCallback: function (data) {
                     $box.css('opacity','1');
                     var txt=data.txt;
-                    if(data.code=404){
+                    if(data.code==404){
                         txt='信息加载失败';
                     }
                     that.controlLoadingBox(false);
@@ -81,13 +81,13 @@ define(['base','lazyloading','fastclick'],function(Base){
             imgUrl=result.logo_url,
             desc=result.description;
         if(!imgUrl){
-            imgUrl=window.urlObj.img+'/hiworks/hisihi.png'
+            imgUrl=window.urlObj.img+'/hiworks/hisihi.png';
         }
         $pBox.find('img').attr('src',imgUrl);
         desc=this.substrLongStr(desc,200);
         $pBox.find('.content-box p').text(desc);
         $('title').text(result.title);
-    }
+    };
 
     /*获得参与活动的课程列表*/
     t.loadPromotionCource=function(callback){
@@ -120,7 +120,7 @@ define(['base','lazyloading','fastclick'],function(Base){
                 eCallback: function (data) {
                     $box.css('opacity','1');
                     var txt=data.txt;
-                    if(data.code=404){
+                    if(data.code==404){
                         txt='信息加载失败';
                     }
                     that.controlLoadingBox(false);

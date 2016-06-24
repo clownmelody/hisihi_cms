@@ -98,6 +98,11 @@ body {
 
   /*基本信息*/
   &.basic-info{
+    #current-title{
+      min-height: 30px;
+      line-height: 30px;
+      height: auto;
+    }
     .center-content{
       height: 100%;
       .otherinfo{
@@ -321,7 +326,7 @@ body {
             }
             .lesson-view-info {
               color: @g-color;
-              font-size: 13px;
+              font-size: 12px;
               margin: 8px 0 1px 0;
               .txt-ellipsis;
               span {
@@ -331,7 +336,6 @@ body {
                 border-right: 1px solid @g-color;
                 height: 13px;
                 line-height: 13px;
-                font-size: 14px;
                 &:last-child {
                   border: none;
                 }
@@ -728,9 +732,6 @@ body {
               }
               .lesson-view-info {
                 margin: 3px auto 0px auto;
-                span {
-                  font-size: 12px;
-                }
               }
               .teacher-info {
                 .left-item {

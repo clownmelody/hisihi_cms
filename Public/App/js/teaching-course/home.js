@@ -311,13 +311,9 @@ define(['base'],function(Base){
                     '<i></i>' +
                     '</div>' +
                     '</div>' +
-                    '<ul>',
-                item,
-                courseName='',
-                teacher='',
-                sTeacher='',
-                money='';
+                    '<ul>';
             for(var i=0;i<len;i++) {
+                var item, courseName='', teacher='', sTeacher='', money='';
                 item=courses[i];
                 courseName=item.course_name;
                 teacher=this.judgeInfoNullInfo(item.lecture_name);
