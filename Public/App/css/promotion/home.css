@@ -436,8 +436,8 @@ body {
     line-height: 26px;
     font-size: 12px;
   }
-  .course-box .list li .item-main .main-content .middle .money-info {
-    font-size: 16px;
+  .course-box .list li .item-main .main-content .middle .money-info .noprice {
+    font-size: 14px;
   }
   .course-box .list li .item-main .main-content .middle .time-info {
     font-size: 12px;
