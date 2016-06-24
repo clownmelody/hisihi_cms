@@ -1102,14 +1102,17 @@ class ForumController extends AdminController
     public function set_forum_topic_status($id, $status=-1){
         if(!empty($id)){
             $model = M('ForumTopic');
+            $fttpr = M('ForumTopicToPostRelation');
             $data['status'] = $status;
             if(is_array($id)){
                 foreach ($id as $i){
                     $model->where('id='.$i)->save($data);
+                    $fttpr->where('topic_id='.$i)->save($data);
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
+                $fttpr->where('topic_id='.$id)->save($data);
             }
             $this->success('处理成功','index.php?s=/admin/forum/topic');
         } else {
