@@ -108,13 +108,15 @@ body{
         .right {
           position: relative;
           width: @w-r;
+          @post-h:33px;
           margin-left: -@w-r;
             .coupon-money, .coupon-state {
-              .size(100%, 35px);
+              .size(100%, @post-h);
               background-color: #F9A825;
               color: white;
               text-align: center;
-              line-height: 35px;
+              line-height: @post-h;
+              position: relative;
             }
             .coupon-money {
               margin-top: 15px;
@@ -141,6 +143,17 @@ body{
               height: 6px;
               background-position: -20px 0;
             }
+            .postmark{
+              position: absolute;
+              .size(42px,@post-h);
+              left: 50%;
+              top:0;
+              margin-left: -21px;
+              background: url("../../images/teaching-course/sprite3.png");
+              background-size:258px 68px;
+              background-position: -217px 0;
+              display: none;
+            }
             &.un-take-in{
               .coupon-state {
                 p {
@@ -152,23 +165,31 @@ body{
             }
             &.unused {
               .coupon-money, .coupon-state {
-                background-color: #cccccc;
+                background-color: #F9A825;
+              }
+              .postmark{
+                display: block;
               }
               .coupon-state {
                 p {
-                  //&:first-child {
-                  //  display: none;
-                  //}
                   &:nth-child(2){
                     display: block;
+                    span {
+                      background-color: #FA4535;
+                      .border-radius(15px);
+                      color: white;
+                      .size(75%, 23px);
+                      line-height: 23px;
+                      text-align: center;
+                      margin: 4px 10px;
+                      font-size: 12px;
+                      float: left;
+                    }
                   }
-                  //&:last-child {
-                  //  display: none;
-                  //}
                 }
               }
               .seperation {
-                background-position: -96px 0;
+                //background-position: -20px 0;
               }
             }
 
@@ -176,6 +197,7 @@ body{
               .coupon-money, .coupon-state {
                 background-color: #cccccc;
               }
+
               .coupon-state {
                 p {
                   &:last-child {
