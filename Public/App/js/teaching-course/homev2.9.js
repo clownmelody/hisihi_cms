@@ -326,7 +326,12 @@ define(['base','fastclick'],function(Base){
             id=$parent.attr('data-id');
         //未领取
         if($target.hasClass('un-take-in')){
-            this.execTakeInCoupon(id);
+            this.execTakeInCoupon(id,function(result) {
+                if (result !== false) {
+                    window.location.href = 'hisihi://coupon/detailinfo?id=' + result.obtain_id;
+                    return;
+                }
+            });
             return;
         }
 
@@ -364,6 +369,7 @@ define(['base','fastclick'],function(Base){
     * callback - {fn} 回调方法
     * */
     t.execTakeInCoupon=function(id,callback){
+        this.showTipsNoHide('领取中…');
         var $btn=$('.sawtooth-right-main'),
             that = this,
             para = {
@@ -378,9 +384,11 @@ define(['base','fastclick'],function(Base){
                     }
                     $btn.parents('.coupon-basic-info').attr('data-oid',result.obtain_id);
                     $btn.removeClass('un-take-in').addClass('unused');
+                    that.hideTips();
                     callback && callback(result);
                 },
                 eCallback: function (data) {
+                    that.hideTips();
                     var txt=data.txt;
                     if(data.code=404){
                         txt='信息加载失败';
@@ -388,7 +396,7 @@ define(['base','fastclick'],function(Base){
                     that.controlLoadingBox(false);
                     that.showTips.call(that,txt);
                     $('#current-info .nodata').show();
-                    callback && callback();
+                    callback && callback(false);
                 },
             };
         this.getDataAsyncPy(para);
