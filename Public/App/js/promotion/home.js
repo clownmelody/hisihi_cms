@@ -305,7 +305,7 @@ define(['base','lazyloading','fastclick'],function(Base){
      * callback - {fn} 回调方法
      * */
     t.execTakeInCoupon=function($btn,id,courceId,callback){
-        this.showTips('领取中…');
+        this.showTipsNoHide('领取中…');
         var $li = $btn.closest('li'),
             that = this,
             para = {
@@ -320,9 +320,11 @@ define(['base','lazyloading','fastclick'],function(Base){
                     }
                     $btn.removeClass('un-take-in').addClass('unused');
                     $li.attr('data-obtain-id',result.obtain_id);
+                    that.hideTips();
                     callback && callback(result);
                 },
                 eCallback: function (data) {
+                    that.hideTips();
                     var txt=data.txt;
                     //token  权限不足
                     if(data.code==1004){
