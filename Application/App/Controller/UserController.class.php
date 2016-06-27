@@ -2365,6 +2365,8 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
         $teacher_count = $model->table(array(
             'hisihi_auth_group_access'=>'auth_group_access',
             'hisihi_member'=>'member',))->where($where)->field('member.uid')->count();
+        $teacher_count = $teacher_count + C('TEACHER_COUNT_BASE')
+            + A('User')->getAutoIncreseCount();
         $group_count = $this->getGroupCount($uid);
         $extra['data'] = array(
             'fans_count'=>$fans_count,

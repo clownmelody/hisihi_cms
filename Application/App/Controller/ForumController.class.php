@@ -175,7 +175,7 @@ class ForumController extends AppController
             }
 
             if((float)$version>2.8){ // 2.9及以后
-                $fttpr = M('ForumTopicToPostRelation')->field('topic_id')->where('post_id='.$v['post_id'])->find();
+                $fttpr = M('ForumTopicToPostRelation')->field('topic_id')->where('status=1 and post_id='.$v['post_id'])->find();
                 $topic_id = 0;
                 if($fttpr){
                     $topic_id = $fttpr['topic_id'];
