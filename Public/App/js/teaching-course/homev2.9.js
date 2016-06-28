@@ -296,18 +296,19 @@ define(['base','fastclick'],function(Base){
         var is_obtain=data.is_obtain,
             is_used=data.is_used,
             out_date=data.is_out_of_date;
+
+        if(out_date) {
+            temp.type = false;
+            return temp;
+        }
         //未领取
         if(!is_obtain){
             temp.type='un-take-in';
         }else{
-            if(out_date){
-                temp.type=false;
-            }else{
-                if(is_used){
-                    temp.type='used';
-                }else {
-                    temp.type = 'unused';
-                }
+            if(is_used){
+                temp.type='used';
+            }else {
+                temp.type = 'unused';
             }
         }
         return temp;
@@ -325,7 +326,12 @@ define(['base','fastclick'],function(Base){
             id=$parent.attr('data-id');
         //未领取
         if($target.hasClass('un-take-in')){
-            this.execTakeInCoupon(id);
+            this.execTakeInCoupon(id,function(result) {
+                if (result !== false) {
+                    window.location.href = 'hisihi://coupon/detailinfo?id=' + result.obtain_id;
+                    return;
+                }
+            });
             return;
         }
 
@@ -363,6 +369,7 @@ define(['base','fastclick'],function(Base){
     * callback - {fn} 回调方法
     * */
     t.execTakeInCoupon=function(id,callback){
+        this.showTipsNoHide('领取中…');
         var $btn=$('.sawtooth-right-main'),
             that = this,
             para = {
@@ -377,9 +384,11 @@ define(['base','fastclick'],function(Base){
                     }
                     $btn.parents('.coupon-basic-info').attr('data-oid',result.obtain_id);
                     $btn.removeClass('un-take-in').addClass('unused');
+                    that.hideTips();
                     callback && callback(result);
                 },
                 eCallback: function (data) {
+                    that.hideTips();
                     var txt=data.txt;
                     if(data.code=404){
                         txt='信息加载失败';
@@ -387,7 +396,7 @@ define(['base','fastclick'],function(Base){
                     that.controlLoadingBox(false);
                     that.showTips.call(that,txt);
                     $('#current-info .nodata').show();
-                    callback && callback();
+                    callback && callback(false);
                 },
             };
         this.getDataAsyncPy(para);

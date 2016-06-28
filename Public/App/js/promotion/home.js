@@ -214,12 +214,13 @@ define(['base','lazyloading','fastclick'],function(Base){
         if(couponStatue.type) {
            str ='<div class="right btn coupon '+couponStatue.type+'">' +
                 '<div class="coupon-money">' +
-                '<span>￥</span><span>' + coupon.money + '</span>' +
+                    '<div class="money"><span>￥</span><span>' + coupon.money + '</span></div>' +
+                    '<div class="postmark"></div>'+
                 '</div>' +
                 '<div class="seperation"></div>' +
                 '<div class="coupon-state">' +
                 '<p>点击领取</p>' +
-                '<p>已领取</p>' +
+                '<p><span>去使用</span></p>' +
                 '<p>已使用</p>' +
                 '</div>' +
                 '</div>';
@@ -242,20 +243,23 @@ define(['base','lazyloading','fastclick'],function(Base){
         var is_obtain=data.is_obtain,
             is_used=data.is_used,
             out_date=data.is_out_of_date;
+
+        if(out_date) {
+            temp.type = false;
+            return temp;
+        }
+
         //未领取
         if(!is_obtain){
             temp.type='un-take-in';
         }else{
-            if(out_date){
-                temp.type=false;
-            }else{
-                if(is_used){
-                    temp.type='used';
-                }else {
-                    temp.type = 'unused';
-                }
+            if(is_used){
+                temp.type='used';
+            }else {
+                temp.type = 'unused';
             }
         }
+
         return temp;
     };
 
@@ -271,7 +275,12 @@ define(['base','lazyloading','fastclick'],function(Base){
             courceId=$parent.attr('data-course-id');  //课程id
         //未领取
         if($target.hasClass('un-take-in')){
-            this.execTakeInCoupon($target,couponId,courceId);
+            this.execTakeInCoupon($target,couponId,courceId,function(result){
+                if(result!==false){
+                    window.location.href='hisihi://coupon/detailinfo?id='+result.obtain_id;
+                    return;
+                }
+            });
             return;
         }
 
@@ -296,6 +305,7 @@ define(['base','lazyloading','fastclick'],function(Base){
      * callback - {fn} 回调方法
      * */
     t.execTakeInCoupon=function($btn,id,courceId,callback){
+        this.showTipsNoHide('领取中…');
         var $li = $btn.closest('li'),
             that = this,
             para = {
@@ -310,9 +320,11 @@ define(['base','lazyloading','fastclick'],function(Base){
                     }
                     $btn.removeClass('un-take-in').addClass('unused');
                     $li.attr('data-obtain-id',result.obtain_id);
+                    that.hideTips();
                     callback && callback(result);
                 },
                 eCallback: function (data) {
+                    that.hideTips();
                     var txt=data.txt;
                     //token  权限不足
                     if(data.code==1004){
@@ -330,7 +342,7 @@ define(['base','lazyloading','fastclick'],function(Base){
                     that.controlLoadingBox(false);
                     that.showTips.call(that,txt);
                     $('#current-info .nodata').show();
-                    callback && callback();
+                    callback && callback(false);
                 },
             };
         this.getDataAsyncPy(para);
