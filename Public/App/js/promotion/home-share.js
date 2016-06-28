@@ -245,18 +245,19 @@ define(['base','lazyloading','fastclick'],function(Base){
         var is_obtain=data.is_obtain,
             is_used=data.is_used,
             out_date=data.is_out_of_date;
+        if(out_date) {
+            temp.type = false;
+            return temp;
+        }
+
         //未领取
         if(!is_obtain){
             temp.type='un-take-in';
         }else{
-            if(out_date){
-                temp.type=false;
-            }else{
-                if(is_used){
-                    temp.type='used';
-                }else {
-                    temp.type = 'unused';
-                }
+            if(is_used){
+                temp.type='used';
+            }else {
+                temp.type = 'unused';
             }
         }
         return temp;
