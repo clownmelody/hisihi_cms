@@ -6,6 +6,7 @@
 		<h2>
 		资讯流Banner
 		</h2>
+		<input type="hidden" id='pos' name="pos" value="{$pos}">
 	</div>
 
 	<!-- 按钮工具栏 -->
@@ -16,6 +17,21 @@
 			</div>
             <button class="btn ajax-post" target-form="ids" url="{:U("informationFlow/setBannerStatus",array("status"=>1))}">启 用</button>
 			<button class="btn ajax-post confirm" target-form="ids" url="{:U("informationFlow/setBannerStatus",array("status"=>-1))}">删 除</button>
+			<a class="btn " href="{:U("informationFlow/showBannerByPos",array("pos"=>1))}">显示资讯流Banner</a>
+		</div>
+	</div>
+
+	<!-- 设置排序-->
+	<div id="sort_box" style="display:none;position: fixed;top: 30%;left: 40%;width: 250px;background: white;border: 1px solid grey;">
+		<p style="height: 30px;border-bottom: 1px solid lightgray;">
+			<span style="height: 30px;float: left;text-align: center;">请输入排序值(从小到大排序)</span>
+			<span id="sort_close" style="height: 30px;width: 30px;float: right;text-align: center;">X</span>
+		</p>
+		<div style="height: 30px;">
+			<input style="width: 240px;" type="text" id="sort" name="sort" value=""/>
+		</div>
+		<div style="height: 35px;margin-top: 30px;">
+			<button id="addSort" onclick="setSortValue();"  url="{:U("informationFlow/setBannerSort")}" class="btn ajax-get confirm" style="float: right;">提交</button>
 		</div>
 	</div>
 
@@ -29,6 +45,7 @@
 				<th class="">图片地址</th>
 				<th class="">跳转地址</th>
 				<th class="">显示位置</th>
+				<th class="">排序</th>
 				<th class="">创建时间</th>
 				<th class="">状态</th>
 				<th class="">操作</th>
@@ -44,20 +61,22 @@
 						<td>{$vo.url}</td>
 						<td><if condition="($vo.show_pos eq 0) "> 机构列表
 							<elseif condition="($vo.show_pos eq 1) "/> 资讯流
-							<elseif condition="($vo.show_pos eq 2) "/> 社区
-							<elseif condition="($vo.show_pos eq 3) "/> 留学主页
-							<elseif condition="($vo.show_pos eq 4) "/> 老师圈
-							<elseif condition="($vo.show_pos eq 5) "/> 精华圈
-							<elseif condition="($vo.show_pos eq 6) "/> 软件主页
-							<elseif condition="($vo.show_pos eq 7) "/> 手绘主页
+							<elseif condition="($vo.show_pos eq 10) "/> 学习圈
+							<elseif condition="($vo.show_pos eq -3) "/> 留学主页
+							<elseif condition="($vo.show_pos eq 20) "/> 老师圈
+							<elseif condition="($vo.show_pos eq 40) "/> 精华圈
+							<elseif condition="($vo.show_pos eq -1) "/> 软件主页
+							<elseif condition="($vo.show_pos eq -2) "/> 手绘主页
 						</if>
 						</td>
+						<td>{$vo.sort}</td>
 						<td><span>{$vo.create_time|time_format}</span></td>
 						<td><if condition="($vo.status eq 1) "> 正常
 							<else /> 删除
 						</if>
 						</td>
 						<td>
+							<a id="{$vo['id']}" class="setSort"  href="javascript:void(0)">设置排序</a>
 							<a href="{:U('informationFlow/editBanner?id='.$vo['id'])}" >编辑</a>
 							<a href="{:U('informationFlow/setBannerStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>
 							<a href="{:U('informationFlow/setBannerStatus?status=-1&id='.$vo['id'])}" class="ajax-get confirm">删除</a>
@@ -78,7 +97,28 @@
 </block>
 <block name="script">
 <script type="text/javascript">
+
+	function setSortValue(){
+		var url = $('#addSort').attr('url');
+		if($('#pos').val() >= 0){
+			url += '&pos=' + $('#pos').val();
+		}
+		$('#addSort').attr('url', url + '&sort=' + $('#sort').val());
+	}
+
 $(function(){
+
+	$('.setSort').click(function(){
+		var id = $(this).attr('id');
+		var url = "{:U("informationFlow/setBannerSort")}";
+		$('#addSort').attr('url',url + '&id=' + id);
+		$('#sort_box').toggle();
+	})
+
+	$('#sort_close').click(function(){
+		$('#sort_box').hide();
+	})
+
 	//搜索功能
 	$("#search").click(function(){
 		var url = $(this).attr('url');

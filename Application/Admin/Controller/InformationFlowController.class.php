@@ -373,4 +373,39 @@ class InformationFlowController extends AdminController {
             $this->error('未选择要处理的数据');
         }
     }
+
+    public function showBannerByPos(){
+        $pos = I('pos');
+        $map['status'] = 1;
+        $map['show_pos'] = $pos;
+        $model = M('InformationFlowBanner');
+        $count = $model->where($map)->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $list = $model->where($map)->order('sort asc , create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+
+        $this->assign('pos', $pos);
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title","资讯流Banner");
+        $this->display('banner');
+    }
+
+
+    public function setBannerSort($id, $sort=1000){
+        if(!empty($id)){
+            $model = M('InformationFlowBanner');
+            $data['sort'] = $sort;
+            $id = intval($id);
+            $model->where('id='.$id)->save($data);
+            if(I('pos')){
+                $this->success('设置成功','index.php?s=/admin/informationFlow/showBannerByPos&pos='.I('pos'));
+            }
+            $this->success('设置成功','index.php?s=/admin/informationFlow/banner');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
 }
