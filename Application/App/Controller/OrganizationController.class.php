@@ -4126,6 +4126,7 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
  and t2.coupon_id=t3.id and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
             $obj['coupon_list'] = $coupon_list;
             $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
+            $obj['share_detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail_share/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
             $_promotion_list[] = $obj;
         }
         $data['totalCount'] = count($_promotion_list);
