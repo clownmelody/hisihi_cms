@@ -3542,9 +3542,20 @@ class OrganizationController extends AppController
                 where status=1 and organization_id='.$org_id);
                 $promotion_list = array();
                 foreach($org_promotion_list as &$promotion){
-                    if(M('HisihiTeachingCourseCouponRelation')->where(array('teaching_course_id'=>$promotion['teaching_course_id'], 'status'=>1))->count()){
-                        unset($promotion);
-                    } else {
+                    $coupon_list = M('HisihiTeachingCourseCouponRelation')
+                        ->where(array('teaching_course_id'=>$promotion['teaching_course_id'], 'status'=>1))
+                        ->select();
+                    $valid_coupon_count = 0;
+                    foreach($coupon_list as $_coupon){
+                        $now = time();
+                        $is_valid = M('HisihiCoupon')
+                            ->where('end_time>='.$now.' and status=1 and id='.$_coupon['coupon_id'])
+                            ->count();
+                        if($is_valid){
+                            $valid_coupon_count++;
+                        }
+                    }
+                    if($valid_coupon_count>0){
                         $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
                         $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $promotion_list[] = $obj;
