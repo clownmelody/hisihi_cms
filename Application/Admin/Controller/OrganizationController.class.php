@@ -3242,6 +3242,13 @@ class OrganizationController extends AdminController
             if(M('TeachingCourseOrganizationPromotionRelation')->where($post_data)->find()){
                 $this->success('已经参与该活动', 'index.php?s=/admin/promotion/org_to_promotion');
             }
+            if(M('TeachingCourseOrganizationPromotionRelation')
+                ->where(array('teaching_course_id'=>$post_data['teaching_course_id'], 'status'=>1))->find()){
+                M('TeachingCourseOrganizationPromotionRelation')
+                    ->where(array('teaching_course_id'=>$post_data['teaching_course_id']))
+                    ->save(array('status'=>-1));
+            }
+
             $post_data['create_time'] = time();
             M('TeachingCourseOrganizationPromotionRelation')->add($post_data);
 

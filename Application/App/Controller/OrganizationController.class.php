@@ -1745,26 +1745,7 @@ class OrganizationController extends AppController
         $org_list = $model->field('id, name, slogan, city,type, view_count, logo, light_authentication,sort')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
-        /*if(!empty($city)&&!empty($type)){
-            $org_list = $model->field('id, name, slogan, city, view_count, logo')
-                ->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->page($page, $count)->select();
-            $totalCount = $model->where("application_status=2 and status=1 and city like '%".$city."%' and type=".$type)->count();
-        }
-        if(!empty($city)&&empty($type)){
-            $org_list = $model->field('id, name, slogan, city, view_count, logo')
-                ->where("application_status=2 and status=1 and city like '%".$city."%'")->page($page, $count)->select();
-            $totalCount = $model->where("application_status=2 and status=1 and city like '%".$city."%'")->count();
-        }
-        if(empty($city)&&!empty($type)){
-            $org_list = $model->field('id, name, slogan, city, view_count, logo')
-                ->where("application_status=2 and status=1 and type=".$type)->page($page, $count)->select();
-            $totalCount = $model->where("application_status=2 and status=1 and type=".$type)->count();
-        }
-        if(empty($city)&&empty($type)){
-            $org_list = $model->field('id, name, slogan, city, view_count, logo')
-                ->where("application_status=2 and status=1")->page($page, $count)->select();
-            $totalCount = $model->where("application_status=2 and status=1")->count();
-        }*/
+
         foreach($org_list as &$org){
             $org_id = $org['id'];
             $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
@@ -1794,15 +1775,40 @@ class OrganizationController extends AppController
             if((float)$version>=2.9){
                 $course_promotion_model = new Model();
                 $org_promotion_list = $course_promotion_model->query('
-                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                SELECT DISTINCT (promotion_id), teaching_course_id from hisihi_teaching_course_organization_promotion_relation
                 where status=1 and organization_id='.$org_id);
                 $promotion_list = array();
-                foreach($org_promotion_list as $promotion){
-                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
-                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
-                    $promotion_list[] = $obj;
+                foreach($org_promotion_list as &$promotion){
+                    $coupon_list = M('TeachingCourseCouponRelation')
+                        ->where(array('teaching_course_id'=>$promotion['teaching_course_id'], 'status'=>1))
+                        ->select();
+                    $valid_coupon_count = 0;
+                    foreach($coupon_list as $_coupon){
+                        $now = time();
+                        $is_valid = M('Coupon')
+                            ->where('end_time>='.$now.' and status=1 and id='.$_coupon['coupon_id'])
+                            ->count();
+                        if($is_valid){
+                            $valid_coupon_count++;
+                        }
+                    }
+                    if($valid_coupon_count>0){
+                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
+                        $promotion_list[] = $obj;
+                    }
                 }
-                $org['promotion_list'] = $promotion_list;
+                $pid_array = array();
+                $uni_promotion_list = array();
+                foreach($promotion_list as &$promotion){
+                    if((in_array($promotion['id'], $pid_array))){
+                        unset($promotion);
+                    } else {
+                        $pid_array[] = $promotion['id'];
+                        $uni_promotion_list[] = $promotion;
+                    }
+                }
+                $org['promotion_list'] = $uni_promotion_list;
             }
         }
         //机构列表按报名数排序
@@ -2057,10 +2063,7 @@ class OrganizationController extends AppController
             $this->requireLogin();
             $uid = $this->getUid();
         }
-//        $isExist = M('OrganizationEnroll')->where('status=2 and organization_id='.$organization_id)->select();
-//        if(!$isExist){
-//            $this->apiError(-2, '你不是该机构学员，不允许评论');
-//        }
+
         $commentModel = M('OrganizationComment');
         $commentStarModel = M('OrganizationCommentStar');
         $data['organization_id'] = $organization_id;
@@ -3538,15 +3541,40 @@ class OrganizationController extends AppController
             if((float)$version>=2.9){
                 $course_promotion_model = new Model();
                 $org_promotion_list = $course_promotion_model->query('
-                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                SELECT DISTINCT (promotion_id), teaching_course_id from hisihi_teaching_course_organization_promotion_relation
                 where status=1 and organization_id='.$org_id);
                 $promotion_list = array();
-                foreach($org_promotion_list as $promotion){
-                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
-                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
-                    $promotion_list[] = $obj;
+                foreach($org_promotion_list as &$promotion){
+                    $coupon_list = M('TeachingCourseCouponRelation')
+                        ->where(array('teaching_course_id'=>$promotion['teaching_course_id'], 'status'=>1))
+                        ->select();
+                    $valid_coupon_count = 0;
+                    foreach($coupon_list as $_coupon){
+                        $now = time();
+                        $is_valid = M('Coupon')
+                            ->where('end_time>='.$now.' and status=1 and id='.$_coupon['coupon_id'])
+                            ->count();
+                        if($is_valid){
+                            $valid_coupon_count++;
+                        }
+                    }
+                    if($valid_coupon_count>0){
+                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
+                        $promotion_list[] = $obj;
+                    }
                 }
-                $org['promotion_list'] = $promotion_list;
+                $pid_array = array();
+                $uni_promotion_list = array();
+                foreach($promotion_list as &$promotion){
+                    if((in_array($promotion['id'], $pid_array))){
+                        unset($promotion);
+                    } else {
+                        $pid_array[] = $promotion['id'];
+                        $uni_promotion_list[] = $promotion;
+                    }
+                }
+                $org['promotion_list'] = $uni_promotion_list;
             }
         }
 /*        //机构列表按报名数排序
@@ -3645,14 +3673,40 @@ class OrganizationController extends AppController
             if((float)$version>=2.9){
                 $course_promotion_model = new Model();
                 $org_promotion_list = $course_promotion_model->query('
-                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                SELECT DISTINCT (promotion_id), teaching_course_id from hisihi_teaching_course_organization_promotion_relation
                 where status=1 and organization_id='.$org_id);
                 $promotion_list = array();
-                foreach($org_promotion_list as $promotion){
-                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
-                    $promotion_list[] = $obj;
+                foreach($org_promotion_list as &$promotion){
+                    $coupon_list = M('TeachingCourseCouponRelation')
+                        ->where(array('teaching_course_id'=>$promotion['teaching_course_id'], 'status'=>1))
+                        ->select();
+                    $valid_coupon_count = 0;
+                    foreach($coupon_list as $_coupon){
+                        $now = time();
+                        $is_valid = M('Coupon')
+                            ->where('end_time>='.$now.' and status=1 and id='.$_coupon['coupon_id'])
+                            ->count();
+                        if($is_valid){
+                            $valid_coupon_count++;
+                        }
+                    }
+                    if($valid_coupon_count>0){
+                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
+                        $promotion_list[] = $obj;
+                    }
                 }
-                $org['promotion_list'] = $promotion_list;
+                $pid_array = array();
+                $uni_promotion_list = array();
+                foreach($promotion_list as &$promotion){
+                    if((in_array($promotion['id'], $pid_array))){
+                        unset($promotion);
+                    } else {
+                        $pid_array[] = $promotion['id'];
+                        $uni_promotion_list[] = $promotion;
+                    }
+                }
+                $org['promotion_list'] = $uni_promotion_list;
             }
         }
         /*//机构列表按报名数排序
@@ -3733,18 +3787,43 @@ class OrganizationController extends AppController
             } else {
                 $org['relationship'] = 0;
             }
-            //$org['courses_list'] = $this->getUniversityCourses($org_id, $university_id);
             if((float)$version>=2.9){
                 $course_promotion_model = new Model();
                 $org_promotion_list = $course_promotion_model->query('
-                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                SELECT DISTINCT (promotion_id), teaching_course_id from hisihi_teaching_course_organization_promotion_relation
                 where status=1 and organization_id='.$org_id);
                 $promotion_list = array();
-                foreach($org_promotion_list as $promotion){
-                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
-                    $promotion_list[] = $obj;
+                foreach($org_promotion_list as &$promotion){
+                    $coupon_list = M('TeachingCourseCouponRelation')
+                        ->where(array('teaching_course_id'=>$promotion['teaching_course_id'], 'status'=>1))
+                        ->select();
+                    $valid_coupon_count = 0;
+                    foreach($coupon_list as $_coupon){
+                        $now = time();
+                        $is_valid = M('Coupon')
+                            ->where('end_time>='.$now.' and status=1 and id='.$_coupon['coupon_id'])
+                            ->count();
+                        if($is_valid){
+                            $valid_coupon_count++;
+                        }
+                    }
+                    if($valid_coupon_count>0){
+                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
+                        $promotion_list[] = $obj;
+                    }
                 }
-                $org['promotion_list'] = $promotion_list;
+                $pid_array = array();
+                $uni_promotion_list = array();
+                foreach($promotion_list as &$promotion){
+                    if((in_array($promotion['id'], $pid_array))){
+                        unset($promotion);
+                    } else {
+                        $pid_array[] = $promotion['id'];
+                        $uni_promotion_list[] = $promotion;
+                    }
+                }
+                $org['promotion_list'] = $uni_promotion_list;
             }
         }
 /*        //机构列表按报名数排序
@@ -4107,6 +4186,14 @@ GROUP BY
         $this->display('teaching_course_main_page_v2.9');
     }
 
+    private function isCouponOutOfDate($end_time){
+        $now = time();
+        if ($now <= (int)$end_time){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @param int $organization_id
      */
@@ -4120,10 +4207,14 @@ GROUP BY
             $obj = M('Promotion')->field('id, title, little_logo_url')
                 ->where('id='.$pro['promotion_id'])
                 ->find();
+            $now = time();
             $coupon_list = M()->query('select t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
 hisihi_teaching_course_organization_promotion_relation t1,
 hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
- and t2.coupon_id=t3.id and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
+ and t2.coupon_id=t3.id and t2.status=1 and t1.status=1 and t3.status=1 and t3.end_time>='.$now.' and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
+            foreach($coupon_list as &$coupon){
+                $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+            }
             $obj['coupon_list'] = $coupon_list;
             $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
             $obj['share_detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail_share/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
