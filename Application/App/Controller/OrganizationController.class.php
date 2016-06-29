@@ -3538,13 +3538,17 @@ class OrganizationController extends AppController
             if((float)$version>=2.9){
                 $course_promotion_model = new Model();
                 $org_promotion_list = $course_promotion_model->query('
-                SELECT DISTINCT (promotion_id) from hisihi_teaching_course_organization_promotion_relation
+                SELECT DISTINCT (promotion_id), teaching_course_id from hisihi_teaching_course_organization_promotion_relation
                 where status=1 and organization_id='.$org_id);
                 $promotion_list = array();
-                foreach($org_promotion_list as $promotion){
-                    $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
-                    $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
-                    $promotion_list[] = $obj;
+                foreach($org_promotion_list as &$promotion){
+                    if(M('HisihiTeachingCourseCouponRelation')->where(array('teaching_course_id'=>$promotion['teaching_course_id'], 'status'=>1))->count()){
+                        unset($promotion);
+                    } else {
+                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
+                        $promotion_list[] = $obj;
+                    }
                 }
                 $org['promotion_list'] = $promotion_list;
             }
