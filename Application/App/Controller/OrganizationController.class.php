@@ -1799,14 +1799,16 @@ class OrganizationController extends AppController
                     }
                 }
                 $pid_array = array();
+                $uni_promotion_list = array();
                 foreach($promotion_list as &$promotion){
                     if((in_array($promotion['id'], $pid_array))){
                         unset($promotion);
                     } else {
                         $pid_array[] = $promotion['id'];
+                        $uni_promotion_list[] = $promotion;
                     }
                 }
-                $org['promotion_list'] = $promotion_list;
+                $org['promotion_list'] = $uni_promotion_list;
             }
             /*if((float)$version>=2.9){
                 $course_promotion_model = new Model();
