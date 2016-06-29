@@ -11,6 +11,7 @@ define(['base','fastclick'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
+        this.controlLoadingBox(true);
         this.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
         this.getBasicInfo.call(that,function(result){;
             that.getOrgBasicInfo.call(that,result,function(resultOrg){
@@ -35,7 +36,6 @@ define(['base','fastclick'],function(Base){
 
     //获得当前课程的详细信息
     t.getBasicInfo=function(callback){
-        this.controlLoadingBox(true);
         var that = this,
             para = {
                 url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/detail',
@@ -435,8 +435,9 @@ define(['base','fastclick'],function(Base){
             sTime2= this.judgeInfoNullInfo(data.end_course_time),
             plan=data.plan,
             intro=data.introduction;
-        if(sTime1 && sTime2){
-            sTime='<p>'+sTime1+'——'+sTime2+'</p>';
+        sTime='<p>'+sTime1+'——'+sTime2+'</p>';
+        if(!sTime1 && !sTime2){
+            sTime='';
         }
         if(plan==''){
             plan='<label class="no-result-data">暂无课程安排</label>';

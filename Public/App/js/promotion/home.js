@@ -11,6 +11,7 @@ define(['base','lazyloading','fastclick'],function(Base){
         if(this.deviceType.mobile && this.isLocal){
             eventName='touchend';
         }
+        this.controlLoadingBox(true);
         this.getUserInfo(null,1);  // 0 不使用token ，使用session_id的形式，1 基础令牌,  否则为具体用户令牌
 
         //领取优惠券
@@ -32,7 +33,6 @@ define(['base','lazyloading','fastclick'],function(Base){
     var t=Promotion.prototype;
 
     t.init=function(){
-        this.controlLoadingBox(true);
         var that=this;
         window.setTimeout(function(){
             that.loadPromotionBasicInfo();

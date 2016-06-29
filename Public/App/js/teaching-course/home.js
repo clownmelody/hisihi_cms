@@ -222,8 +222,9 @@ define(['base'],function(Base){
             sTime2= this.judgeInfoNullInfo(data.end_course_time),
             plan=data.plan,
             intro=data.introduction;
-        if(sTime1 && sTime2){
-            sTime='<p>'+sTime1+'——'+sTime2+'</p>';
+        sTime='<p>'+sTime1+'——'+sTime2+'</p>';
+        if(!sTime1 && !sTime2){
+            sTime='';
         }
         if(plan==''){
             plan='<label class="no-result-data">暂无课程安排</label>';
