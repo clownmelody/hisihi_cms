@@ -71,8 +71,8 @@ define(['$'],function() {
                         return;
                     }
                     var userInfo={
-                        account:'18601995231',
-                        secret: '123456',
+                        account:'18140662282',
+                        secret: '954957945',
                         type: 200
                     };
                     if(tokenType==1){
