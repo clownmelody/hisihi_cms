@@ -4131,7 +4131,7 @@ GROUP BY
             $coupon_list = M()->query('select t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
 hisihi_teaching_course_organization_promotion_relation t1,
 hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
- and t2.coupon_id=t3.id and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
+ and t2.coupon_id=t3.id and t2.status=1 and t1.status=1 and t3.status=1 and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
             foreach($coupon_list as &$coupon){
                 $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
             }
