@@ -4107,6 +4107,14 @@ GROUP BY
         $this->display('teaching_course_main_page_v2.9');
     }
 
+    private function isCouponOutOfDate($end_time){
+        $now = time();
+        if ($now <= (int)$end_time){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @param int $organization_id
      */
@@ -4124,6 +4132,9 @@ GROUP BY
 hisihi_teaching_course_organization_promotion_relation t1,
 hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
  and t2.coupon_id=t3.id and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
+            foreach($coupon_list as &$coupon){
+                $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+            }
             $obj['coupon_list'] = $coupon_list;
             $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
             $obj['share_detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail_share/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
