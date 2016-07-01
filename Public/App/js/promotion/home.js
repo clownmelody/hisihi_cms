@@ -417,9 +417,11 @@ define(['base','lazyloading','fastclick'],function(Base){
      * 3，评论列表对应的点赞更新,将目前已经加载下来的评论重新加载。
      */
     window.loginSuccessCallback=function(){
-        var obj=window.promotion;
-        //得到用户基本信息
-        obj.getUserInfo(null,1);
+        window.setTimeout(function(){
+            var obj=window.promotion;
+            //得到用户基本信息
+            obj.getUserInfo(null,1);
+        },500);
     };
 
     return Promotion;
