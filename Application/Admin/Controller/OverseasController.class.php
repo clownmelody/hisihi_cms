@@ -194,7 +194,7 @@ class OverseasController extends AdminController
         if($key_words){
             $map = "university.name like '%".$key_words."%' or country.name like '%".$key_words."%'";
             $map = $map . 'and university.country_id=country.id and university.status=1 and country.status=1';
-            $list = $model->table('hisihi0925.hisihi_abroad_university university, hisihi0925.hisihi_abroad_country country')
+            $list = $model->table('hisihi.hisihi_abroad_university university, hisihi.hisihi_abroad_country country')
                 ->where($map)
                 ->field('distinct(university.id), university.logo_url, university.country_id, university.name, university.is_hot, university.status')
                 ->order('university.create_time desc' )
