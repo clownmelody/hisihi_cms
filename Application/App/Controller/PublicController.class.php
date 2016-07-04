@@ -414,6 +414,26 @@ class PublicController extends AppController {
         $this->display('topcontentv2_7');
     }
 
+    public function topContentV2_9($id){
+        /* 获取当前分类列表 */
+        $Document = D('Blog/Document');
+        $Article = D('Blog/Article', 'Logic');
+
+        //获取当前分类下的文章
+        $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
+        if(empty($info)){
+            $this->apiError(-1, "id不存在");
+        }
+        $Document->where(array('id' => $id))->setInc('view');
+        $content = $Article->detail($id);
+        $content = array_merge($info, $content);
+        $this->assign('top_content_info', $content);
+        $this->assign('article_type', 'top_content');
+        $this->assign('articleId', $id);
+        $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
+        $this->display('topcontentv2_9');
+    }
+
     public function topContent($id, $type = '', $version='1.0'){
 
         if($type == 'view'){
