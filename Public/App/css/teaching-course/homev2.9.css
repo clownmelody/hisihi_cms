@@ -107,6 +107,33 @@ ul li {
   color: #757070;
   text-align: center;
 }
+#downloadCon {
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  opacity: 0;
+  max-height: 113px;
+}
+#downloadCon img {
+  max-width: 100%;
+}
+#downloadCon a {
+  width: 80px;
+  height: 32px;
+  position: absolute;
+  top: 50%;
+  margin-top: -16px;
+  right: 12px;
+  display: block;
+  text-decoration: none;
+  background-color: #FF5A00;
+  text-align: center;
+  color: white;
+  font-size: 15px;
+  border-radius: 2px;
+  line-height: 32px;
+  z-index: 10001;
+}
 /*IScroll的样式*/
 .scroller {
   position: relative;
@@ -207,6 +234,17 @@ ul li {
     opacity: 0;
     display: none;
     transform: scale(0);
+  }
+}
+@media screen and (min-width: 750px) {
+  .wrapper {
+    width: 700px;
+    margin: 0 auto;
+  }
+  #downloadCon {
+    width: 700px;
+    left: 50%;
+    margin-left: -350px;
   }
 }
 body {

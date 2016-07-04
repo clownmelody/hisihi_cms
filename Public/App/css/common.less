@@ -59,6 +59,13 @@ textarea:focus {
   overflow: hidden;
   white-space: nowrap;
 }
+.txt-ellipsis-p(@line-num:10){
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: @line-num;
+}
 ul {
   margin: 0;
   padding: 0;
@@ -124,6 +131,33 @@ ul li {
     font-size: 16px;
     color: #757070;
     text-align: center;
+  }
+}
+
+#downloadCon{
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  opacity: 0;
+  max-height: 113px;
+  img{
+    max-width: 100%;
+  }
+  a {
+    .size(80px,32px);
+    position: absolute;
+    top:50%;
+    margin-top: -16px;
+    right: 12px;
+    display:block;
+    text-decoration: none;
+    background-color: #FF5A00;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    line-height: 32px;
+    z-index: 10001;
   }
 }
 
@@ -230,4 +264,16 @@ ul li {
     display: none;
     transform: scale(0);
   }
+}
+
+@media screen and(min-width: 750px){
+    .wrapper{
+      width: 700px;
+      margin: 0 auto;
+    }
+    #downloadCon{
+      width: 700px;
+      left:50%;
+      margin-left: -350px;
+    }
 }

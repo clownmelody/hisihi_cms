@@ -8,10 +8,10 @@ define(['$','fastclick'],function() {
     /**基础类**/
     var Base = function () {
         var href= window.location.href,
-            reg = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/;
-        this.isFromApp = userAgent.indexOf('hisihi-app') >= 0;  //是否来源于app
-        this.isLocal=false; //是否是本地调试来源于app  ，由于fastClick浏览器调试时，事件不方便，添加只是方便浏览器调式，
-        if(reg.test(href) || userAgent.indexOf('localhost') >= 0){
+            reg = /(\d+)\.(\d+)\.(\d+)\.(\d+)/; // 匹配ip地址  http://91.16.0.1/hisihi-cms/api.php?s=/public/topContentV2_9/id/1263
+        this.isFromApp = href.indexOf('hisihi-app') >= 0;  //是否来源于app
+        this.isLocal=false; //是否是本地调试来源于app  ，由于fastClick浏览器调试时，事件不方便，添加只是方便浏览器调式，以及本地取测试数据
+        if(reg.test(href) || href.indexOf('localhost') >= 0){
             this.isLocal=true;
         }
         this.deviceType = this.operationType();
@@ -21,10 +21,12 @@ define(['$','fastclick'],function() {
             name:this.staticUserNameStr
         };
         this.timeOutFlag=false; //防止出现在重复快速点击时，计时器混乱添加的回调方法
+
         this._initTimeFormat();
         this._initStringExtentFn();
         this._addTip();
         this._addLoadingImg();
+
     };
 
     Base.prototype = {
@@ -33,7 +35,7 @@ define(['$','fastclick'],function() {
          *获得用户的信息 区分安卓和ios
          *从不同的平台的方法 获得用户的基本信息，进行发表评论时使用
          * @para
-         * tokenType-{int} token类型，0 不使用token ，使用session_id的形式，1 基础令牌,  否则为具体用户令牌
+         * tokenType-{int} token类型，0 不使用token ，使用session_id的形式; 1 基础令牌,  否则为具体用户令牌
          */
         getUserInfo:function (callback,tokenType) {
             var userStr = '', that = this;
@@ -65,10 +67,13 @@ define(['$','fastclick'],function() {
                             sCallback: function (data) {
                                 that.userInfo = data;
                                 callback && callback.call(that);
+                            },
+                            eCallback:function(){
+                                callback && callback.call(that);
                             }
                         };
                         this.getDataAsync(para);
-                        callback && callback.call(that);
+
                         return;
                     }
                     var userInfo={
@@ -531,17 +536,19 @@ define(['$','fastclick'],function() {
 
         /*控制底部logo的位置样式*/
         setFootStyle:function($wrapper) {
+            if(!$wrapper){
+                $wrapper=$('.wrapper');
+            }
             var $target = $('#downloadCon'),
-                $a = $target.find('a'),
-                aw = $a.width(),
-                ah = aw * 0.40,
                 bw = $(document).width(),
                 h = bw * 120 / 750;
+            if(bw>750){
+                h=113;
+            }
             $target.css({'height': h + 'px', 'opacity': 1});
-            $wrapper.css({'bottom': h + 5+'px'});
+            $wrapper.css({'margin-bottom': h +'px'});
             return h;
         },
-
     };
     return Base;
 });
