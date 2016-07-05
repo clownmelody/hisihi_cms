@@ -1082,8 +1082,36 @@ class OrganizationController extends AppController
     }
 
     /**
-     * 返回收藏列表数据
+     * 视频课程搜索
+     * @param null $key_words
+     * @param int $page
+     * @param int $count
+     */
+    public function courseSearch($key_words=null, $page=1, $count=10){
+        if(empty($key_words)){
+            $this->apiError(-1, "搜索关键词不能为空!");
+        }
+        $model = M('OrganizationCourse');
+        $order = 'view_count desc';
+        $map['auth'] = 1;
+        $map['status'] = 1;
+        $map['title'] = array('like','%'.$key_words.'%');
+        $totalCount = $model->where($map)->count();
+        $course_list = $model->field('id')
+            ->order($order)->where($map)->page($page, $count)->select();
+        $video_course = array();
+        foreach($course_list as &$course){
+            $course = $this->findCoursesById($course['id'], 2.9);
+            $video_course[] = $course;
+        }
+        $extra['total_count'] = $totalCount;
+        $extra['coursesList'] = $video_course;
+        $this->apiSuccess('搜索视频课程成功', null, $extra);
+    }
+
+    /**
      * @param null $courses_id
+     * @param int $version
      * @return mixed
      */
     public function findCoursesById($courses_id=null, $version=0){
