@@ -18,6 +18,7 @@ define(['$','fastclick'],function() {
         this.staticUserNameStr='jg2rw2xVjyrgbrZp';
         this.userInfo={
             token:'',
+            session_id:null,
             name:this.staticUserNameStr
         };
         this.timeOutFlag=false; //防止出现在重复快速点击时，计时器混乱添加的回调方法
@@ -58,7 +59,7 @@ define(['$','fastclick'],function() {
                     this.userInfo.token=this.getBase64encode(this.userInfo.token);
                     callback && callback.call(that);
                 } else {
-                    if(tokenType==0) {
+                    if(tokenType==0 || tokenType===undefined) {
                         var para = {
                             url: this.baseUrl + 'user/login',
                             type: 'get',
