@@ -529,6 +529,7 @@ class PublicController extends AppController {
             if((float)$version>=2.0){
                 if((float)$version>=2.9){
                     $info['content_url'] = 'app.php/public/topcontent/version/2.9/type/view/id/'.$info['id'];
+                    $info['comment_count'] = $this->getTopContentCommentCount($info['id']);
                 } else if((float)$version>=2.7){
                     $info['content_url'] = 'app.php/public/topcontent/version/2.7/type/view/id/'.$info['id'];
                 } else {
@@ -806,6 +807,20 @@ class PublicController extends AppController {
      */
     public function shareTopContentList(){
         $this->display('sharetopcontentlist');
+    }
+
+    /**
+     * 获取头条评论数
+     * @param $id
+     * @return mixed
+     */
+    public function getTopContentCommentCount($id){
+        $data['app'] = 'document';
+        $data['mod'] = 'top_content';
+        $data['row_id'] = $id;
+        $data['status'] = 1;
+        $count = M('LocalComment')->where($data)->count();
+        return $count;
     }
 
 }
