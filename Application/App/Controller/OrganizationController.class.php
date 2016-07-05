@@ -1092,7 +1092,7 @@ class OrganizationController extends AppController
             $this->apiError(-1, "搜索关键词不能为空!");
         }
         $model = M('OrganizationCourse');
-        $order = 'view_count desc';
+        $order = 'create_time desc';
         $map['auth'] = 1;
         $map['status'] = 1;
         $map['title'] = array('like','%'.$key_words.'%');
