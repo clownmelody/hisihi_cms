@@ -107,7 +107,7 @@ class AliyunOssController extends AddonsController{
     public function isResourceExistInOSS($bucketName, $objectKey){
         $result = true;
         try {
-             $this->oss_client->getObject(array(
+             $this->oss_client->getObjectMetadata(array(
                 'Bucket' => $bucketName,
                 'Key' => $objectKey,
             ));

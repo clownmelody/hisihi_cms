@@ -414,17 +414,43 @@ class PublicController extends AppController {
         $this->display('topcontentv2_7');
     }
 
+    public function topContentV2_9($id){
+        /* 获取当前分类列表 */
+        $Document = D('Blog/Document');
+        $Article = D('Blog/Article', 'Logic');
+
+        //获取当前分类下的文章
+        $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
+        if(empty($info)){
+            $this->apiError(-1, "id不存在");
+        }
+        $Document->where(array('id' => $id))->setInc('view');
+        $content = $Article->detail($id);
+        $content = array_merge($info, $content);
+        $this->assign('top_content_info', $content);
+        $this->assign('article_type', 'top_content');
+        $this->assign('articleId', $id);
+        $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
+        $this->display('topcontentv2_9');
+    }
+
     public function topContent($id, $type = '', $version='1.0'){
 
         if($type == 'view'){
             if((float)$version >=2.0){
-                if((float)$version >=2.7){
+                if((float)$version >=2.9){
+                    $cacheHtml = S('topcontent-v2-9-'.$id);
+                    if($cacheHtml){
+                        $this->responseHtml($cacheHtml);
+                        return;
+                    }
+                } else if((float)$version >=2.7){
                     $cacheHtml = S('topcontent-v2-7-'.$id);
                     if($cacheHtml){
                         $this->responseHtml($cacheHtml);
                         return;
                     }
-                }else {
+                } else {
                     $cacheHtml = S('topcontent-v2-'.$id);
                     if($cacheHtml){
                         $this->responseHtml($cacheHtml);
@@ -459,7 +485,16 @@ class PublicController extends AppController {
             $this->assign('articleId', $id);
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
-                if((float)$version >=2.7){
+                if((float)$version >=2.9){
+                    if(!S('topcontent-v2-9-'.$id)){
+                        $html = $this->fetch('topcontentv2_9');
+                        S('topcontent-v2-9-'.$id, null);
+                        S('topcontent-v2-9-'.$id, $html, 3600);
+                        $this->responseHtml($html);
+                    } else {
+                        $this->display('topcontentv2_9');
+                    }
+                } else if((float)$version >=2.7){
                     if(!S('topcontent-v2-7-'.$id)){
                         $html = $this->fetch('topcontentv2_7');
                         S('topcontent-v2-7-'.$id, null);
@@ -468,8 +503,6 @@ class PublicController extends AppController {
                     } else {
                         $this->display('topcontentv2_7');
                     }
-                    //$this->responseHtml($html);
-                    //$this->display('topcontentv2_7');
                 }else{
                     // 如果未缓存
                     if(!S('topcontent-v2-'.$id)){
@@ -480,9 +513,7 @@ class PublicController extends AppController {
                      } else {
                          $this->display('v2content');
                      }
-                    //$this->display('v2content');
                 }
-                //$this->responseHtml($html);
             } else {
                 if(!S('topcontent-v1-'.$id)){
                     $html = $this->fetch('topcontent');
@@ -492,20 +523,21 @@ class PublicController extends AppController {
                 } else {
                     $this->display('topcontent');
                 }
-                //$this->responseHtml($html);
-                //$this->display();
-                //$this->display('topcontent');
             }
         } else {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
-                if((float)$version>=2.7){
+                if((float)$version>=2.9){
+                    $info['content_url'] = 'app.php/public/topcontent/version/2.9/type/view/id/'.$info['id'];
+                } else if((float)$version>=2.7){
                     $info['content_url'] = 'app.php/public/topcontent/version/2.7/type/view/id/'.$info['id'];
                 } else {
                     $info['content_url'] = 'app.php/public/topcontent/version/2.0/type/view/id/'.$info['id'];
                 }
                 if((float)$version>=2.4){
-                    if((float)$version>=2.7){
+                    if((float)$version>=2.9){
+                        $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.9/type/view/id/'.$id;
+                    } else if((float)$version>=2.7){
                         $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$id;
                     } else {
                         $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$info['id'].'/version/'.$version;

@@ -1,0 +1,232 @@
+@import "../common.less";
+
+@activeColor:#ff5a00;
+
+body{
+  margin: 0;
+  background: #FFFFFF;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.loading-img{
+  background-image: url(../../images/topcontent/loading2.svg);
+}
+
+
+.icon-font-a{
+  &.animate{
+    animation: do-thumb-animate 1s ease-out;
+    animation-fill-mode:forwards;
+  }
+}
+
+@keyframes do-thumb-animate {
+  40%{
+    transform: scale(1.6);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+@keyframes do-thumb-animate {
+  40%{
+    transform: scale(1.6);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+
+.headlines-box {
+  img{
+    max-width: 100%;
+  }
+  margin-bottom:10px;
+  .headlines-body{
+    margin:0 10px;
+  }
+  .headlines-head{
+    margin:0 10px;
+  }
+}
+
+
+.comment-list-box {
+  @pl: 18px;
+  @pr: 14px;
+  .list-header {
+    height: 40px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #CCCCCC;
+    padding-left: @pl;
+    color: @activeColor;
+    font-size: 16px;
+    line-height: 40px;
+  }
+  .list-main {
+    li {
+      position: relative;
+      border-bottom: 1px solid #CCCCCC;
+      &:last-child {
+        border-bottom: none;
+      }
+      @w: 56px;
+      .list-main-left {
+        position: absolute;
+        padding: @pr @pr @pr @pl;
+        img {
+          .size(@w, @w);
+          //border-radius: 28px;
+          .border-radius(28px);
+        }
+      }
+      .list-main-right {
+        margin-left: 90px;
+        padding: @pr @pl @pr 0;
+        > div {
+          @mtop: 5px;
+          &:nth-child(1) {
+            color: #313131 !important;
+            font-size: 18px;
+            .txt-ellipsis;
+          }
+          &:nth-child(2) {
+            margin-top: @mtop;
+            color: #808080 !important;
+            font-size: 14px;
+          }
+          &:nth-child(3) {
+            margin-top: @mtop;
+            p {
+              color: #212121 !important;
+              font-size: 14px;
+              .txt-ellipsis-p(13);
+            }
+          }
+        }
+      }
+      .up-comment-box {
+        position: absolute;
+        top: @pl;
+        right: @pl;
+        .size(40px, 40px);
+        text-align: center;
+        line-height: 40px;
+        > span {
+          font-size: 22px;
+          color: #BDBDBD;
+          display: inline-block;
+          &.active {
+            color: @activeColor;
+          }
+          &.num {
+            font-size: 20px;
+            padding-left: 5px;
+            vertical-align: 2px;
+          }
+        }
+      }
+    }
+  }
+  .no-comment-info {
+    height: 70px;
+    text-align: center;
+    line-height: 70px;
+    font-size: 16px;
+    color: #757373;
+    display: none;
+  }
+  .loading-more-tips {
+    margin: 10px auto;
+    text-align: center;
+    display: none;
+    .loadingMoreResultTipsMain {
+      width: 8em;
+      height: 2em;
+      margin: 0 auto;
+      i{
+        display: inline-block;
+        .size(30px,30px);
+        float: left;
+      }
+      span {
+        float: left;
+        line-height: 2em;
+        margin-left: 0.8em;;
+        color: #757373;
+      }
+    }
+    .loadError{
+      display: none;
+      color: #757373;
+      text-decoration: none;
+    }
+    &.active .loading-img {
+      animation: aloading 0.8s steps(6, end) 0s infinite;
+    }
+    @keyframes aloading {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+  }
+}
+
+#downloadCon{
+  display: none;
+}
+
+
+@media screen and (max-width:320px) {
+  .model-box {
+    .comment-box{
+      top: 50%;
+      .size(100%, 145px);
+      .write-comment-box {
+        margin-top: 30px;
+        .write-main {
+          textarea {
+            .size(95%, 90px);
+            margin: 5px auto;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+@font-face {
+  font-family: 'icomoon';
+  src:    url('fonts/icomoon.eot?iwxqpj');
+  src:    url('fonts/icomoon.eot?iwxqpj#iefix') format('embedded-opentype'),
+  url('fonts/icomoon.ttf?iwxqpj') format('truetype'),
+  url('fonts/icomoon.woff?iwxqpj') format('woff'),
+  url('fonts/icomoon.svg?iwxqpj#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-thumb_up:before {
+  content: "\e8dc";
+}
+
+
+
+
