@@ -124,6 +124,7 @@ ul li {
   background-color: #fff;
   overflow-x: auto;
   overflow-y: hidden;
+  position: relative;
   border-bottom: 1px solid #ccc;
 }
 .header .nav-tabs-bar #tabs-bar ul {
@@ -138,7 +139,6 @@ ul li {
   text-align: center;
   margin-left: 8px;
   line-height: 40px;
-  border-bottom: 2px solid white;
 }
 .header .nav-tabs-bar #tabs-bar ul li:first-child {
   margin-left: 14px;
@@ -148,7 +148,15 @@ ul li {
 }
 .header .nav-tabs-bar #tabs-bar ul li.active {
   color: #ff5a00;
-  border-bottom: 2px solid #ff5a00;
+}
+.header .nav-tabs-bar #tabs-bar .line {
+  position: absolute;
+  left: 14px;
+  top: 40px;
+  display: inline-block;
+  height: 2px;
+  width: 98px;
+  background-color: #ff5a00;
 }
 .header #search-bar {
   display: none;
@@ -221,19 +229,12 @@ ul li {
   height: 100%;
 }
 #main-content .wrapper {
-  position: absolute;
-  top: 81px;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
+  height: 100%;
+  padding-top: 81px;
   background-color: #fff;
   z-index: 10;
   -webkit-transform: translate3d(0, 0, 0);
-  display: none;
-}
-#main-content .wrapper:first-child {
-  display: block;
+  float: left;
 }
 #main-content .wrapper .lists-ul {
   width: 90%;

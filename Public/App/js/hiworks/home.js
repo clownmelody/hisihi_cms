@@ -2,11 +2,11 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
+define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
     var HiWorks = function (url,baseId) {
+        this.controlLoadingBox(true);
         this.baseUrl = url;
         this.$wrapper = $('body');
-
         this.baseId=baseId;
         this.perPageCount=15;  //每次加载15张图
         this.scrollObjArr=[];
@@ -73,8 +73,9 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         $(document).on(eventName,'#cancle-login',$.proxy(this,'closeLoginBox'));
         $(document).on(eventName, '#do-login', $.proxy(this, 'doLogin'));
 
-        this.getUserInfo(function(){ that.loadClassInfo();});
-
+        window.setTimeout(function(){
+            that.getUserInfo(function(){ that.loadClassInfo();});
+        },200);
     };
     HiWorks.prototype =new Base(true);
     HiWorks.constructor=HiWorks;
@@ -135,23 +136,28 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                     className='active';
                     var temp=this.substrLongStr(title,16);
                     $('#category-title').text(temp);
+                    //title='全部';
                 }
-                title=this.substrLongStr(title,8);
+                title=this.substrLongStr(title,16);
                 str+='<li data-loaded="false" data-init="false" class="'+className+'" data-id="'+item.id+'" data-name="'+item.title+'">'+title+'</li>';
                 this.scrollObjArr.push({});
             }
             $('#tabs-bar ul').append(str);
-
+            var w=$('#tabs-bar ul li').eq(0).width()+'px';
+            if(len>1){
+                $('#tabs-bar').append('<span class="line" style="width:'+w+'"></span>');
+            }
         }
     };
 
     /*填入所有的容器，但只实例化第一个*/
     t.initMyScroll=function(){
-        var $li= $('#tabs-bar ul li'),str='';
-        for(var i=0;i<$li.length;i++){
-            str+=this.getScrollContent($li.eq(i).attr('data-id'));
+        var $li= $('#tabs-bar ul li'),len=$li.length,str='';
+        for(var i=0;i<len;i++){
+            var w=(1/len)*100+'%';
+            str+=this.getScrollContent($li.eq(i).attr('data-id'),w);
         }
-        $('#all-scroll-wrapper').append(str);
+        $('#all-scroll-wrapper').css('width',len*100+'%').append(str);
         var $wrappers=$('#all-scroll-wrapper .wrapper'),
             that=this;
 
@@ -190,8 +196,8 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
     };
 
     /*容器内容*/
-    t.getScrollContent=function(i){
-        var str='<div class="wrapper" id="'+this.listPrexName+i+'" data-pcount="0" data-pindex="1">'+
+    t.getScrollContent=function(i,w){
+        var str='<div class="wrapper" style="width:'+w+'" id="'+this.listPrexName+i+'" data-pcount="0" data-pindex="1">'+
                     '<div class="scroller">'+
                         '<div class="pullDown">'+
                             '<span class="pullDownIcon icon normal"></span>'+
@@ -225,6 +231,36 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         this.scrollObjArr[index]=s;
     };
 
+    //菜单滑动效果
+    t.sliderMenu=function($target){
+        //tabs样式修改
+        $target.addClass('active').siblings().removeClass('active');
+        var $siblings=$target.siblings(),
+            index=$target.index(),
+            l=-$target.index()*(1/($siblings.length+1)*100)+'%',
+            w=0;
+        $.each($siblings,function () {
+            if($(this).index()>index){
+                return false;
+            }
+            w+=$(this).width()+8;
+        });
+        w+='px';
+
+        console.log(l);
+        $('.line').css({
+            'width':$target.width()+'px',
+            '-webkit-transform' :'translate('+w+')',
+            '-webkit-transition':'300ms linear'
+        });
+        $('#all-scroll-wrapper').css({
+            '-webkit-transform' :'translate('+l+')',
+            '-webkit-transition':'500ms linear'
+        });
+    };
+
+
+
     /*
     *切换分类标签
     *三种情况：1，点的不是当前在显示的，但是数据没有加载过;2.点的不是当前在显示的，但是数据加载过；3.点的是当前在显示的
@@ -239,12 +275,12 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         }
         this.controlLoadingBox(false);
 
-        //tabs样式修改
-        $target.addClass('active').siblings().removeClass('active');
+        this.sliderMenu($target);
 
         //对应容器的显示和隐藏
-        var $wrapper=$('#all-scroll-wrapper .wrapper'),that=this;
-        $wrapper.eq(index).show().siblings().hide();
+        var that=this,
+            $wrapper=$('#all-scroll-wrapper .wrapper');
+            //$wrapper.eq(index).show().siblings().hide();
 
         //修改标题
         var title = $('#tabs-bar .active').attr('data-name');
