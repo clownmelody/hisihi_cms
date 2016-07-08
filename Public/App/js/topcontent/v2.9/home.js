@@ -15,7 +15,7 @@ define(['fx','base'],function(fx,Base) {
         this.commentListPageCount=10;  //每次加载10条评论
 
         if(this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         if(!this.isFromApp){ //访问来源
@@ -68,18 +68,18 @@ define(['fx','base'],function(fx,Base) {
             type: 'get',
             paraData: paraData,
             sCallback: function (data) {
-                that.fillInCommentInfo(data);
+                that.fillInCommentInfo(data,true);
 
                 /*标记分页信息*/
                 var totalPage=Math.ceil(data.totalCount/that.commentListPageCount),
                 $ul=$('#comment-list-ul');
-                $ul.attr({'data-page-count':totalPage,'data-index':index})
+                $ul.attr({'data-page-count':totalPage,'data-index':index});
                 $loadingMore.removeClass('active').hide();
                 callback && callback(data);
             },
             eCallback: function (data) {
                 var txt=data.txt;
-                if(data.code=404){
+                if(data.code==404){
                     txt='评论信息加载失败';
                 }
                 that.showTips.call(that,txt);
@@ -107,7 +107,7 @@ define(['fx','base'],function(fx,Base) {
      *       supportCount: "0"
      *    }
      *
-     * flag - {bool} 是列表添加（true）还是发表之后（false）添加
+     * flag - {bool} 是列表添加（true）,  发表之后（false）添加
      */
     t.fillInCommentInfo=function(result,flag){
             var count=result.totalCount;
@@ -143,8 +143,8 @@ define(['fx','base'],function(fx,Base) {
                         '<div class="list-main-right">'+
                         '<div>'+name+'</div>'+
                         '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
-                        '<div><p>哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊</p></div>'+
-                        //'<div><p>'+item.content +'</p></div>'+
+                        //'<div><p>哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊</p></div>'+
+                        '<div><p>'+item.content +'</p></div>'+
                         '</div>'+
                         '<div class="up-comment-box" data-id="'+item.id+'" id="up-comment-'+item.id +'">'+
                         '<span class="'+uClass+'"></span>'+
@@ -188,6 +188,7 @@ define(['fx','base'],function(fx,Base) {
             return;
         }
         //没有登录
+
         if (this.userInfo.session_id==='') {
             //提示登录框跳转方法
             this.doLogin();
@@ -233,6 +234,18 @@ define(['fx','base'],function(fx,Base) {
         return $('body .bottom-voteCon>div').hasClass('voting');
     };
 
+
+    /*滚动到评论列表*/
+    t.scrollToComment=function(){
+        var $target=$('body'),h=0;
+        if(!$target.hasClass('toComment')){
+            $target.addClass('toComment');
+            h=$('.headlines-body').height();
+        }else{
+            $target.removeClass('toComment');
+        }
+        window.scrollTo(0, h);
+    };
 
     /*
      *显示操作结果
@@ -390,6 +403,9 @@ define(['fx','base'],function(fx,Base) {
         }
     };
 
+
+
+    /***********************以下方法为app调用************************/
     /*
     *登录功能的回调方法
     *要做三件事：
@@ -410,6 +426,38 @@ define(['fx','base'],function(fx,Base) {
         return {title:'123',url:'123123',thumb:'',description:''};
     };
 
+    /*
+    * 发表成功后，传入评论信息，添加到列表中
+    */
+    window.sendCommentInfoToWebView=function(id,str){
+        var c = parseInt($('#comment-counts').text())+1,
+            obj=window.topContentObj,
+            userInfo=obj.userInfo;
+        var info={
+            content: str,
+            create_time: new Date()/1000,
+            id: id,
+            isSupported: 0,
+            support_count: "0",
+            uid: userInfo.uid,
+            user_info: {
+                uid: userInfo.uid,
+                avatar_url: userInfo.pic,
+                username: userInfo.name
+            }
+        };
+        obj.fillInCommentInfo({data:[info],totalCount:c},false);
+
+    };
+
+    /*
+     * 滑动到评论列表区
+     */
+    window.scrollToComment=function() {
+        //alert('go');
+        window.topContentObj.scrollToComment();
+
+    };
     return Topcontent;
 
 });
