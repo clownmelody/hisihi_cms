@@ -73,13 +73,13 @@ define(['fx','base'],function(fx,Base) {
                 /*标记分页信息*/
                 var totalPage=Math.ceil(data.totalCount/that.commentListPageCount),
                 $ul=$('#comment-list-ul');
-                $ul.attr({'data-page-count':totalPage,'data-index':index})
+                $ul.attr({'data-page-count':totalPage,'data-index':index});
                 $loadingMore.removeClass('active').hide();
                 callback && callback(data);
             },
             eCallback: function (data) {
                 var txt=data.txt;
-                if(data.code=404){
+                if(data.code==404){
                     txt='评论信息加载失败';
                 }
                 that.showTips.call(that,txt);
@@ -457,7 +457,7 @@ define(['fx','base'],function(fx,Base) {
         //alert('go');
         window.topContentObj.scrollToComment();
 
-    }
+    };
     return Topcontent;
 
 });
