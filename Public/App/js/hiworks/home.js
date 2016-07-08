@@ -4,6 +4,7 @@
  */
 define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
     var HiWorks = function (url,baseId) {
+        this.controlLoadingBox(true);
         this.baseUrl = url;
         this.$wrapper = $('body');
 
@@ -73,7 +74,11 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         $(document).on(eventName,'#cancle-login',$.proxy(this,'closeLoginBox'));
         $(document).on(eventName, '#do-login', $.proxy(this, 'doLogin'));
 
-        this.getUserInfo(function(){ that.loadClassInfo();});
+        window.setTimeout(function(){
+            that.getUserInfo(function(){
+                that.loadClassInfo();
+            });
+        },100);
 
     };
     HiWorks.prototype =new Base(true);
@@ -136,9 +141,12 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                     var temp=this.substrLongStr(title,16);
                     $('#category-title').text(temp);
                 }
-                title=this.substrLongStr(title,8);
+                title=this.substrLongStr(title,16);
                 str+='<li data-loaded="false" data-init="false" class="'+className+'" data-id="'+item.id+'" data-name="'+item.title+'">'+title+'</li>';
                 this.scrollObjArr.push({});
+            }
+            if(len>=2){
+                str+='<span class="line"></span>';
             }
             $('#tabs-bar ul').append(str);
 
@@ -232,7 +240,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
     t.switchTabs=function(e){
         var $target=$(e.currentTarget),
             index=$target.index();
-
+        this.scrollNavTabs($target);
         //情况3
         if($target.hasClass('active')){
             return;
@@ -266,6 +274,31 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         }
 
         //情况2
+    };
+
+    /*
+    *自动地滚动导航菜单
+    *当前菜单的右边距屏幕右边小于50px，或者菜单的左边距左侧屏幕小于50px,做相应的向左或者向右滑动
+    *
+    */
+    t.scrollNavTabs=function($target){
+        var $parent=$target.parents('#tabs-bar'),
+            left=$parent.scrollLeft(),
+            w=$target.width(),
+            offset=$target.offset(),
+            l=offset.left,
+            r=$(document).width() - l-w;
+        if(l<20){
+            //$parent.animate({scrollLeft: '0px'}, 800);
+            $parent.scrollLeft(left+l+20+'px');
+            //alert('l');
+            return;
+        }
+        if(r<30){
+            $parent.animate({scrollLeft: left+w+'px'}, 500, 'ease-out');
+            console.log(left);
+            console.log($parent.scrollLeft());
+        }
     };
 
     /*
@@ -636,10 +669,10 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
             str1+='<li class="'+className+'"></li>';
         }
         $('#slider4').html(str);
-        if(len>1) {
-            $('#currentPage ul').html(str1);
+        if(len<2) {
+            str1='';
         }
-
+        $('#currentPage ul').html(str1);
         //实例化缩放
         ImagesZoom.init({
             "elem": "#slider4"

@@ -136,7 +136,7 @@ ul li {
   height: 42px;
   display: inline-block;
   text-align: center;
-  margin-left: 8px;
+  margin-left: 20px;
   line-height: 40px;
   border-bottom: 2px solid white;
 }
@@ -149,6 +149,27 @@ ul li {
 .header .nav-tabs-bar #tabs-bar ul li.active {
   color: #ff5a00;
   border-bottom: 2px solid #ff5a00;
+}
+.header .nav-tabs-bar #tabs-bar ul .line {
+  width: 25%;
+  height: 2px;
+  background-color: #CC6B2C;
+  position: absolute;
+  left: 0;
+  top: 40px;
+  display: block;
+}
+.header .nav-tabs-bar #tabs-bar ul .line::before {
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: 50%;
+  margin-left: -6px;
+  border: 6px solid #CC6B2C;
+  border-color: transparent transparent #CC6B2C transparent;
+  bottom: 2px;
+  display: block;
+  content: "";
 }
 .header #search-bar {
   display: none;
