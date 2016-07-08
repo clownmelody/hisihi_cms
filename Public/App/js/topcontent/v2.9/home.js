@@ -136,6 +136,7 @@ define(['fx','base'],function(fx,Base) {
                     }
                     var name=item.user_info.username;
                     name=this.substrLongStr(name,12);
+                    alert(item.user_info.avatar_url);
                     str+='<li>'+
                         '<div class="list-main-left">'+
                         '<img src="'+item.user_info.avatar_url+'">'+
