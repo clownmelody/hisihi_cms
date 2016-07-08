@@ -430,7 +430,6 @@ define(['fx','base'],function(fx,Base) {
     * 发表成功后，传入评论信息，添加到列表中
     */
     window.sendCommentInfoToWebView=function(id,str){
-        alert(id);
         var c = parseInt($('#comment-counts').text())+1,
             obj=window.topContentObj,
             userInfo=obj.userInfo;
