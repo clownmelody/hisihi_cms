@@ -14,7 +14,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
 
         var eventName='click',that=this;
         if(this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         $(document).on(eventName,'.btn',function(){
@@ -101,7 +101,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
             sCallback: function (resutl) {
                 that.fillInClassInfo(resutl);
                 that.initMyScroll();
-                $('#main-content').css('opacity','1');
+                $('#main-content,#tabs-bar,.nav-bar-middle').css('opacity','1');
                 callback && callback(data);
             },
             eCallback: function (data) {
@@ -138,14 +138,10 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
                     className='active';
                     var temp=this.substrLongStr(title,16);
                     $('#category-title').text(temp);
-                    //title='全部';
                 }
                 title=this.substrLongStr(title,16);
                 str+='<li data-loaded="false" data-init="false" class="'+className+'" data-id="'+item.id+'" data-name="'+item.title+'">'+title+'</li>';
                 this.scrollObjArr.push({});
-            }
-            if(len>=2){
-                str+='<span class="line"></span>';
             }
             $('#tabs-bar ul').append(str);
             var w=$('#tabs-bar ul li').eq(0).width()+'px';
@@ -250,7 +246,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
             if($(this).index()>index){
                 return false;
             }
-            w+=$(this).width()+8;
+            w+=$(this).width()+20;
         });
         w+='px';
 

@@ -43,8 +43,11 @@ requirejs.config({
 
 
 require(['home','prefixfree'],function(works){
-    var userAgent = window.location.href,
-        reg = /category\/[1-9][0-9]*/g,
-        id = userAgent.match(reg)[0].toString().replace(/category\//g,'');
+    var url = window.location.href;
+    if(url.indexOf('%2F')>0){
+        url=url.replace(/\%2F/g,'\/');
+    }
+    var reg = /category\/[1-9][0-9]*/g,
+        id = url.match(reg)[0].toString().replace(/category\//g,'');
     window.hiworks = new works(window.hisihiUrlObj.link_url,id);
 });

@@ -103,6 +103,7 @@ ul li {
 .header .nav-tabs-bar .nav-bar .nav-bar-title .nav-bar-middle {
   line-height: 40px;
   font-size: 18px;
+  opacity: 0;
 }
 .header .nav-tabs-bar .nav-bar .nav-bar-left {
   width: 40px;
@@ -119,13 +120,15 @@ ul li {
   font-size: 21px;
 }
 .header .nav-tabs-bar #tabs-bar {
+  opacity: 0;
   width: 100%;
   height: 50px;
   background-color: #fff;
   overflow-x: auto;
   overflow-y: hidden;
   position: relative;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 10px solid #E0E0E0;
+  box-shadow: 0 1px 4px rgba(33, 33, 33, 0.3);
 }
 .header .nav-tabs-bar #tabs-bar ul {
   height: 100%;
@@ -149,15 +152,6 @@ ul li {
 .header .nav-tabs-bar #tabs-bar ul li.active {
   color: #ff5a00;
 }
-.header .nav-tabs-bar #tabs-bar .line {
-  position: absolute;
-  left: 14px;
-  top: 40px;
-  display: inline-block;
-  height: 2px;
-  width: 98px;
-  background-color: #ff5a00;
-}
 .header .nav-tabs-bar #tabs-bar ul .line {
   width: 25%;
   height: 2px;
@@ -167,17 +161,22 @@ ul li {
   top: 40px;
   display: block;
 }
-.header .nav-tabs-bar #tabs-bar ul .line::before {
-  width: 0;
-  height: 0;
+.header .nav-tabs-bar #tabs-bar .line {
   position: absolute;
-  left: 50%;
-  margin-left: -6px;
-  border: 6px solid #CC6B2C;
-  border-color: transparent transparent #CC6B2C transparent;
-  bottom: 2px;
-  display: block;
-  content: "";
+  left: 14px;
+  top: 40px;
+  display: inline-block;
+  height: 2px;
+  width: 98px;
+  background-color: #ff5a00;
+}
+.header .nav-tabs-bar #tabs-bar .cover-scrollbar {
+  height: 8px;
+  width: 100%;
+  position: absolute;
+  top: 42px;
+  left: 0;
+  z-index: 8888888;
 }
 .header #search-bar {
   display: none;
@@ -259,9 +258,9 @@ ul li {
 #main-content .wrapper .lists-ul {
   width: 90%;
   margin: 80px auto 140px auto;
-  padding-top: 15px;
+  padding-top: 25px;
   box-sizing: border-box;
-  padding-bottom: 80px;
+  padding-bottom: 90px;
 }
 #main-content .wrapper .lists-ul > ul {
   border-top: 1px solid #E6E6E6;
@@ -505,19 +504,43 @@ ul li {
 }
 #work-detail-panel #detail-main #currentPage ul li {
   float: left;
-  width: 12px;
-  height: 12px;
+  width: 6px;
+  height: 6px;
   list-style: none;
   background-color: #ccc;
   margin: 0 10px;
-  border-radius: 12px;
+  border-radius: 100%;
 }
 #work-detail-panel #detail-main #currentPage ul li.active {
   background-color: white;
 }
+#work-detail-panel #detail-main .filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+#work-detail-panel #detail-main .filter * {
+  width: 100%;
+  height: 100%;
+}
+#work-detail-panel #detail-main .filter img {
+  -webkit-filter: blur(50px);
+  -moz-filter: blur(10px);
+  /* Chrome, Opera */
+  -ms-filter: blur(10px);
+  filter: blur(50px);
+  z-index: 1;
+}
+#work-detail-panel #detail-main .filter .filterUp {
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.2);
+}
 #work-detail-panel .detail-bottom-btns {
   width: 100%;
-  height: 100px;
+  height: 95px;
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.7);
   position: absolute;
@@ -685,7 +708,7 @@ ul li {
   background: rgba(51, 51, 51, 0.85);
   margin-left: -100px;
   margin-top: -35px;
-  top: 40%;
+  top: 45%;
   left: 50%;
   z-index: 1001;
   border-radius: 3px;
