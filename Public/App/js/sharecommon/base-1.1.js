@@ -64,7 +64,7 @@ define(['$','fastclick'],function() {
                             url: this.baseUrl + 'user/login',
                             type: 'get',
                             async: false,
-                            paraData: {username: '13554154325', password: '12345678', type: 1, client: 4},
+                            paraData: {username: '13554154325', password: '12345678', type: 3, client: 4},
                             sCallback: function (data) {
                                 that.userInfo = data;
                                 callback && callback.call(that);
@@ -130,7 +130,7 @@ define(['$','fastclick'],function() {
                         var rTxt = xmlRequest.responseText,
                             result = {};
                         if (rTxt) {
-                            result = JSON.parse(xmlRequest.responseText)
+                            result = JSON.parse(rTxt);
                         } else {
                             result.status = false;
                         }
