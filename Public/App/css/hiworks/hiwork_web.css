@@ -124,6 +124,7 @@ ul li {
   background-color: #fff;
   overflow-x: auto;
   overflow-y: hidden;
+  position: relative;
   border-bottom: 1px solid #ccc;
 }
 .header .nav-tabs-bar #tabs-bar ul {
@@ -138,7 +139,6 @@ ul li {
   text-align: center;
   margin-left: 20px;
   line-height: 40px;
-  border-bottom: 2px solid white;
 }
 .header .nav-tabs-bar #tabs-bar ul li:first-child {
   margin-left: 14px;
@@ -148,7 +148,15 @@ ul li {
 }
 .header .nav-tabs-bar #tabs-bar ul li.active {
   color: #ff5a00;
-  border-bottom: 2px solid #ff5a00;
+}
+.header .nav-tabs-bar #tabs-bar .line {
+  position: absolute;
+  left: 14px;
+  top: 40px;
+  display: inline-block;
+  height: 2px;
+  width: 98px;
+  background-color: #ff5a00;
 }
 .header .nav-tabs-bar #tabs-bar ul .line {
   width: 25%;
@@ -242,24 +250,18 @@ ul li {
   height: 100%;
 }
 #main-content .wrapper {
-  position: absolute;
-  top: 81px;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
+  height: 100%;
   background-color: #fff;
   z-index: 10;
   -webkit-transform: translate3d(0, 0, 0);
-  display: none;
-}
-#main-content .wrapper:first-child {
-  display: block;
+  float: left;
 }
 #main-content .wrapper .lists-ul {
   width: 90%;
-  margin: 6px auto;
+  margin: 80px auto 140px auto;
   padding-top: 15px;
+  box-sizing: border-box;
+  padding-bottom: 80px;
 }
 #main-content .wrapper .lists-ul > ul {
   border-top: 1px solid #E6E6E6;
@@ -329,7 +331,46 @@ ul li {
   top: -40px;
 }
 #main-content .wrapper .pullUp {
-  bottom: -40px;
+  bottom: 10px;
+}
+#main-content .wrapper .loader {
+  display: inline-block;
+}
+#main-content .wrapper .loader span {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  margin: 0 2px;
+  -webkit-animation: loader 0.8s linear infinite alternate;
+  animation: loader 0.8s linear infinite alternate;
+}
+#main-content .wrapper .loader span:nth-child(1) {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+  background: rgba(245, 103, 115, 0.6);
+}
+#main-content .wrapper .loader span:nth-child(2) {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+  background: rgba(245, 103, 115, 0.8);
+}
+#main-content .wrapper .loader span:nth-child(3) {
+  -webkit-animation-delay: -0.26666s;
+  animation-delay: -0.26666s;
+  background: #f56773;
+}
+#main-content .wrapper .loader span:nth-child(4) {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+  background: rgba(245, 103, 115, 0.8);
+}
+@keyframes loader {
+  0% {
+    transform: scale(0, 0);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
 }
 #main-content .wrapper .icon {
   display: block;

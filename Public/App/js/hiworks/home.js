@@ -2,12 +2,11 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
+define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
     var HiWorks = function (url,baseId) {
         this.controlLoadingBox(true);
         this.baseUrl = url;
         this.$wrapper = $('body');
-
         this.baseId=baseId;
         this.perPageCount=15;  //每次加载15张图
         this.scrollObjArr=[];
@@ -79,7 +78,6 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                 that.loadClassInfo();
             });
         },100);
-
     };
     HiWorks.prototype =new Base(true);
     HiWorks.constructor=HiWorks;
@@ -140,6 +138,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                     className='active';
                     var temp=this.substrLongStr(title,16);
                     $('#category-title').text(temp);
+                    //title='全部';
                 }
                 title=this.substrLongStr(title,16);
                 str+='<li data-loaded="false" data-init="false" class="'+className+'" data-id="'+item.id+'" data-name="'+item.title+'">'+title+'</li>';
@@ -149,17 +148,21 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                 str+='<span class="line"></span>';
             }
             $('#tabs-bar ul').append(str);
-
+            var w=$('#tabs-bar ul li').eq(0).width()+'px';
+            if(len>1){
+                $('#tabs-bar').append('<span class="line" style="width:'+w+'"></span>');
+            }
         }
     };
 
     /*填入所有的容器，但只实例化第一个*/
     t.initMyScroll=function(){
-        var $li= $('#tabs-bar ul li'),str='';
-        for(var i=0;i<$li.length;i++){
-            str+=this.getScrollContent($li.eq(i).attr('data-id'));
+        var $li= $('#tabs-bar ul li'),len=$li.length,str='';
+        for(var i=0;i<len;i++){
+            var w=(1/len)*100+'%';
+            str+=this.getScrollContent($li.eq(i).attr('data-id'),w);
         }
-        $('#all-scroll-wrapper').append(str);
+        $('#all-scroll-wrapper').css('width',len*100+'%').append(str);
         var $wrappers=$('#all-scroll-wrapper .wrapper'),
             that=this;
 
@@ -198,17 +201,19 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
     };
 
     /*容器内容*/
-    t.getScrollContent=function(i){
-        var str='<div class="wrapper" id="'+this.listPrexName+i+'" data-pcount="0" data-pindex="1">'+
+    t.getScrollContent=function(i,w){
+        var str='<div class="wrapper" style="width:'+w+'" id="'+this.listPrexName+i+'" data-pcount="0" data-pindex="1">'+
                     '<div class="scroller">'+
                         '<div class="pullDown">'+
                             '<span class="pullDownIcon icon normal"></span>'+
+                            //'<div class="loader"><span></span><span></span><span></span><span></span></div>'+
                             '<span class="pullDownLabel">下拉刷新</span>'+
                         '</div>'+
                         '<div class="lists-ul">'+
                         '</div>'+
                         '<div class="pullUp">'+
                             '<span class="pullUpIcon icon normal"></span>'+
+                            //'<div class="loader"><span></span><span></span><span></span><span></span></div>'+
                             '<span class="pullUpLabel">上拉加载更多</span>'+
                         '</div>'+
                     '</div>'+
@@ -233,6 +238,36 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         this.scrollObjArr[index]=s;
     };
 
+    //菜单滑动效果
+    t.sliderMenu=function($target){
+        //tabs样式修改
+        $target.addClass('active').siblings().removeClass('active');
+        var $siblings=$target.siblings(),
+            index=$target.index(),
+            l=-$target.index()*(1/($siblings.length+1)*100)+'%',
+            w=0;
+        $.each($siblings,function () {
+            if($(this).index()>index){
+                return false;
+            }
+            w+=$(this).width()+8;
+        });
+        w+='px';
+
+        console.log(l);
+        $('.line').css({
+            'width':$target.width()+'px',
+            '-webkit-transform' :'translate('+w+')',
+            '-webkit-transition':'300ms linear'
+        });
+        $('#all-scroll-wrapper').css({
+            '-webkit-transform' :'translate('+l+') translateZ(0px)',
+            '-webkit-transition':'500ms ease-out'
+        });
+    };
+
+
+
     /*
     *切换分类标签
     *三种情况：1，点的不是当前在显示的，但是数据没有加载过;2.点的不是当前在显示的，但是数据加载过；3.点的是当前在显示的
@@ -247,12 +282,12 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         }
         this.controlLoadingBox(false);
 
-        //tabs样式修改
-        $target.addClass('active').siblings().removeClass('active');
+        this.sliderMenu($target);
 
         //对应容器的显示和隐藏
-        var $wrapper=$('#all-scroll-wrapper .wrapper'),that=this;
-        $wrapper.eq(index).show().siblings().hide();
+        var that=this,
+            $wrapper=$('#all-scroll-wrapper .wrapper');
+            //$wrapper.eq(index).show().siblings().hide();
 
         //修改标题
         var title = $('#tabs-bar .active').attr('data-name');
@@ -388,6 +423,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                     str+='<div style="clear:both;"></div></ul>';
                 }
             }
+            //str+='<ul style="height: 90px;"></ul>';
         }
         else{
             str='<p class="no-works">暂无相关作业</p>';
@@ -558,11 +594,6 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                 }else{
                     $targetUl.append(str);
                 }
-
-                //$('.lists-ul img').imglazyload({
-                //    container:''
-                //    //backgroundImg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAE4CAIAAABAHXg9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzQ0QjQxNTJFQjU0MTFFNUJEMzZGNkVENzY4QjMyOTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzQ0QjQxNTNFQjU0MTFFNUJEMzZGNkVENzY4QjMyOTEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3NDRCNDE1MEVCNTQxMUU1QkQzNkY2RUQ3NjhCMzI5MSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3NDRCNDE1MUVCNTQxMUU1QkQzNkY2RUQ3NjhCMzI5MSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmWADtgAAAiQSURBVHja7Nzfj1xl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"//,
-                //});
                 callback && callback(resutl);
             },
             eCallback: function (data) {

@@ -7,6 +7,8 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         fx:'sharecommon/fx_v1.1',
+        event:'sharecommon/zepto.event',
+        touch:'sharecommon/zepto.touch',
         prefixfree:'sharecommon/prefixfree.min',
         fastclick:'sharecommon/fastclick',
         iscroll:'sharecommon/iscroll',
