@@ -242,25 +242,6 @@ define(['fx','base'],function(fx,Base) {
         window.scrollTo(0, h);
     };
 
-    /*
-     *显示操作结果
-     *para:
-     *tip - {string} 内容结果
-     */
-    t.showTips=function(tip){
-        if(tip.length>8){
-            tip=tip.substr(0,7)+'…';
-        }
-        var $tip=$('body').find('.result-tips'),
-            $p=$tip.find('p').text(tip);
-        $tip.show();
-        window.setTimeout(function(){
-            $tip.hide();
-            $p.text('');
-        },1500);
-    };
-
-
 
     /*控制按钮的可用性*/
     t.controlCommitBtn=function(e){
