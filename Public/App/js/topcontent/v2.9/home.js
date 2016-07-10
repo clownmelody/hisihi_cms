@@ -186,7 +186,7 @@ define(['fx','base'],function(fx,Base) {
         }
         //没有登录
 
-        if (this.userInfo.session_id=='') {
+        if (!this.userInfo.session_id) {
             //提示登录框跳转方法
             this.doLogin();
             return;
