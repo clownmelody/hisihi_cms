@@ -15,19 +15,20 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <link type="text/css" href="__CSS__/v2content/topcontentv2.9.min.css" rel="stylesheet">
+    <link type="text/css" href="__CSS__/v2content/topcontentv2.9.css" rel="stylesheet">
+    <!--<link type="text/css" href="__CSS__/v2content/topcontentv2.9.min.css" rel="stylesheet">-->
     <title>{:C('WEB_SITE_TITLE')}</title>
 </head>
 <body data-id="{$articleId}" data-loaded="false">
     <div class="headlines-box wrapper">
         <div class="headlines-head">
             <div class="info-title">
-                <div style="float:left;margin-top:-10px;width:100%">
-                    <h2>{$top_content_info.title}</h2>
-                </div>
+                <h2>{$top_content_info.title}</h2>
             </div>
             <div class="info-time">
-                <p>{$top_content_info.create_time|date='m-d H:i',###}</p>
+                <img src="{$logo_pic}">
+                <span>{$source_name}</span>
+                <span>{$top_content_info.create_time|date='m-d H:i',###}</span>
             </div>
             <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
             </div>
@@ -75,6 +76,6 @@
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
     };
 </script>
-<!--<script type="text/javascript" data-main="__JS__/topcontent/v2.9/config"  src="__JS__/sharecommon/require.js" ></script>-->
-<script type="text/javascript" data-main="__JS__/topcontent/v2.9/topcontent-2.9.3.js" src="__JS__/sharecommon/require.js"></script>
+<script type="text/javascript" data-main="__JS__/topcontent/v2.9/config"  src="__JS__/sharecommon/require.js" ></script>
+<!--<script type="text/javascript" data-main="__JS__/topcontent/v2.9/topcontent-2.9.3.js" src="__JS__/sharecommon/require.js"></script>-->
 </html>

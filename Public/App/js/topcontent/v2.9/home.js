@@ -120,7 +120,7 @@ define(['fx','base'],function(fx,Base) {
                     item=dataList[i];
                     var upNum= item.support_count | 0,
                         nClass='num',
-                        uClass='icon-thumb_up icon-font-a';
+                        uClass='icon-thumb_up';
                     if(upNum>0){
                         if(upNum>9999){
                             upNum='10k+';
@@ -186,7 +186,7 @@ define(['fx','base'],function(fx,Base) {
         }
         //没有登录
 
-        if (this.userInfo.session_id==='') {
+        if (this.userInfo.session_id=='') {
             //提示登录框跳转方法
             this.doLogin();
             return;
@@ -198,7 +198,6 @@ define(['fx','base'],function(fx,Base) {
         }else{
             $thumb.addClass('active');
         }
-        //$thumb.addClass('animate');
         $target.addClass('voting');
 
         var url = this.baseUrl + '/document/doTopContentCommentSupport',
@@ -221,7 +220,7 @@ define(['fx','base'],function(fx,Base) {
                 that.showTips.call(that,data.txt);
             },
         };
-        //this.getDataAsync(para);
+        this.getDataAsync(para);
     };
 
     /*正在投票*/
