@@ -9,8 +9,10 @@ define(['$','fastclick'],function() {
     var Base = function () {
         var href= window.location.href,
             reg = /(\d+)\.(\d+)\.(\d+)\.(\d+)/; // 匹配ip地址  http://91.16.0.1/hisihi-cms/api.php?s=/public/topContentV2_9/id/1263
+
         this.isFromApp = href.indexOf('hisihi-app') >= 0;  //是否来源于app
         this.isLocal=false; //是否是本地调试来源于app  ，由于fastClick浏览器调试时，事件不方便，添加只是方便浏览器调式，以及本地取测试数据
+
         if(reg.test(href) || href.indexOf('localhost') >= 0){
             this.isLocal=true;
         }
@@ -73,8 +75,11 @@ define(['$','fastclick'],function() {
                                 callback && callback.call(that);
                             }
                         };
-                        this.getDataAsync(para);
-
+                        if(that.isLocal) {
+                            this.getDataAsync(para);
+                        }else{
+                            callback && callback.call(that);
+                        }
                         return;
                     }
                     var userInfo={

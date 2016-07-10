@@ -11,11 +11,9 @@ define(['fx','base'],function(fx,Base) {
         this.baseUrl=window.hisihiUrlObj.link_url;
         this.$wrapper = $(document);
         this.articleId = id;
-        this.userInfo = {session_id: ''};
         this.commentListPageCount=10;  //每次加载10条评论
-
         if(this.isLocal){
-            //eventName='touchend';
+            eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         if(!this.isFromApp){ //访问来源
@@ -26,8 +24,8 @@ define(['fx','base'],function(fx,Base) {
 
         this.$wrapper.on(eventName, '.up-comment-box', $.proxy(this, 'execVotUpForComment'));
 
-        /*发表评论*/
-        this.$wrapper.on(eventName, '#right-box', $.proxy(this, 'commitComment'));
+        /*重新加载评论*/
+        this.$wrapper.on(eventName, '.loadCommentAgain',function(){that.loadCommentInfo(1,that.commentListPageCount);});
 
         /*滚动加载更多评论*/
         $(window).on('scroll',function(e){
@@ -39,7 +37,7 @@ define(['fx','base'],function(fx,Base) {
         });
         //加载评论信息
         this.getUserInfo(function(){
-            that.loadCommentInfo(1,this.commentListPageCount);
+            that.loadCommentInfo(1,that.commentListPageCount);
         },0);
     };
 
@@ -211,7 +209,6 @@ define(['fx','base'],function(fx,Base) {
             paraData: {session_id: this.userInfo.session_id, id: $target.attr('data-id')},
             sCallback: function (data) {
                 $target.removeClass('voting');
-                $thumb.removeClass('animate');
                 if(data.success){
                     var $num=$target.find('.num'),
                         num=$num.text() | 0;
@@ -221,11 +218,10 @@ define(['fx','base'],function(fx,Base) {
             },
             eCallback: function (data) {
                 $target.removeClass('voting');
-                $thumb.removeClass('animate');
                 that.showTips.call(that,data.txt);
             },
         };
-        this.getDataAsync(para);
+        //this.getDataAsync(para);
     };
 
     /*正在投票*/
@@ -245,25 +241,6 @@ define(['fx','base'],function(fx,Base) {
         }
         window.scrollTo(0, h);
     };
-
-    /*
-     *显示操作结果
-     *para:
-     *tip - {string} 内容结果
-     */
-    t.showTips=function(tip){
-        if(tip.length>8){
-            tip=tip.substr(0,7)+'…';
-        }
-        var $tip=$('body').find('.result-tips'),
-            $p=$tip.find('p').text(tip);
-        $tip.show();
-        window.setTimeout(function(){
-            $tip.hide();
-            $p.text('');
-        },1500);
-    };
-
 
 
     /*控制按钮的可用性*/
