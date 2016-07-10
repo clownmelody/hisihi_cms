@@ -140,7 +140,7 @@ define(['fx','base'],function(fx,Base) {
                         '</div>'+
                         '<div class="list-main-right">'+
                         '<div>'+name+'</div>'+
-                        '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
+                        '<div>'+this.getTimeFromTimestamp(item.create_time,'MM-dd hh:mm')+'</div>'+
                         '<div><p>'+item.content +'</p></div>'+
                         '</div>'+
                         '<div class="up-comment-box" data-id="'+item.id+'" id="up-comment-'+item.id +'">'+
@@ -198,7 +198,7 @@ define(['fx','base'],function(fx,Base) {
         }else{
             $thumb.addClass('active');
         }
-        $thumb.addClass('animate');
+        //$thumb.addClass('animate');
         $target.addClass('voting');
 
         var url = this.baseUrl + '/document/doTopContentCommentSupport',
