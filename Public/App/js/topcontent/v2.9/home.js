@@ -200,6 +200,11 @@ define(['fx','base'],function(fx,Base) {
         }
         $target.addClass('voting');
 
+        var $num=$target.find('.num'),
+            num=$num.text() | 0;
+        num++;
+        $num.addClass('active').text(num);
+
         var url = this.baseUrl + '/document/doTopContentCommentSupport',
             that = this;
         var para = {
@@ -208,16 +213,14 @@ define(['fx','base'],function(fx,Base) {
             paraData: {session_id: this.userInfo.session_id, id: $target.attr('data-id')},
             sCallback: function (data) {
                 $target.removeClass('voting');
-                if(data.success){
-                    var $num=$target.find('.num'),
-                        num=$num.text() | 0;
-                    num++;
-                    $num.addClass('active').text(num);
-                }
             },
             eCallback: function (data) {
                 $target.removeClass('voting');
                 that.showTips.call(that,data.txt);
+                var $num=$target.find('.num'),
+                    num=$num.text() | 0;
+                num--;
+                $num.removeClass('active').text(num);
             },
         };
         this.getDataAsync(para);
