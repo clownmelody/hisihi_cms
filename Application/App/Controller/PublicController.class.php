@@ -427,9 +427,13 @@ class PublicController extends AppController {
         $Document->where(array('id' => $id))->setInc('view');
         $content = $Article->detail($id);
         $content = array_merge($info, $content);
+        $source_name = $this->getSourceName($id);
+        $logo_pic = $this->getSourceLogoPic($id);
         $this->assign('top_content_info', $content);
         $this->assign('article_type', 'top_content');
         $this->assign('articleId', $id);
+        $this->assign("source_name", $source_name);
+        $this->assign("logo_pic", $logo_pic);
         $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
         $this->display('topcontentv2_9');
     }
@@ -486,6 +490,10 @@ class PublicController extends AppController {
             $this->setTitle('{$top_content_info.title|op_t} — 嘿设汇');
             if((float)$version >=2.0){
                 if((float)$version >=2.9){
+                    $source_name = $this->getSourceName($id);
+                    $logo_pic = $this->getSourceLogoPic($id);
+                    $this->assign("source_name", $source_name);
+                    $this->assign("logo_pic", $logo_pic);
                     if(!S('topcontent-v2-9-'.$id)){
                         $html = $this->fetch('topcontentv2_9');
                         S('topcontent-v2-9-'.$id, null);
