@@ -136,7 +136,6 @@ define(['fx','base'],function(fx,Base) {
                     }
                     var name=item.user_info.username;
                     name=this.substrLongStr(name,12);
-                    alert(item.user_info.avatar_url);
                     str+='<li>'+
                         '<div class="list-main-left">'+
                         '<img src="'+item.user_info.avatar_url+'">'+
@@ -144,7 +143,6 @@ define(['fx','base'],function(fx,Base) {
                         '<div class="list-main-right">'+
                         '<div>'+name+'</div>'+
                         '<div>'+this.getTimeFromTimestamp(item.create_time,'yyyy-MM-dd hh:mm')+'</div>'+
-                        //'<div><p>哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊哈纠结啊</p></div>'+
                         '<div><p>'+item.content +'</p></div>'+
                         '</div>'+
                         '<div class="up-comment-box" data-id="'+item.id+'" id="up-comment-'+item.id +'">'+
@@ -455,7 +453,6 @@ define(['fx','base'],function(fx,Base) {
      * 滑动到评论列表区
      */
     window.scrollToComment=function() {
-        //alert('go');
         window.topContentObj.scrollToComment();
 
     };
