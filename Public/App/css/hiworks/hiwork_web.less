@@ -13,6 +13,7 @@
   bottom: @bottom;
   right: @right;
 }
+::-webkit-search-cancel-button { display: none; }
 @activeColor:#ff5a00;
 
 body{
@@ -331,7 +332,16 @@ ul{
         text-align: center;
       }
     }
-
+    &#list-wrapper-search{
+      .lists-ul {
+        margin-top: 17px;
+        padding-bottom: 60px;
+        padding-top: 2px;
+      }
+      .pullUp{
+        bottom: 0;
+      }
+    }
     .pullDown, .pullUp {
       background-color: #fff;
       height: 40px;

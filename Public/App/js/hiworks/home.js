@@ -17,6 +17,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
             //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
+        this.baseHiworkListUrl=this.baseUrl.replace('api.php','hiworks_list.php');
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
         });
@@ -41,6 +42,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
 
         //搜寻框可用性控制
         $(document).on('input','#search-txt', $.proxy(this,'controlSearchTxt'));
+        //$(document).on('keydown','#search-txt', $.proxy(this,'controlSearchTxt'));
 
         //执行搜索
         $(document).on(eventName,'#do-search', $.proxy(this,'doSearchByKeyWord'));
@@ -249,8 +251,6 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
             w+=$(this).width()+20;
         });
         w+='px';
-
-        console.log(l);
         $('.line').css({
             'width':$target.width()+'px',
             '-webkit-transform' :'translate('+w+')',
@@ -352,7 +352,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
 
 
         var para = {
-            url: this.baseUrl.replace('api.php','hiworks_list.php') + '/index/getHiworksListByCate',
+            url: this.baseHiworkListUrl + '/index/getHiworksListByCate',
             type: 'get',
             paraData: paraData,
             sCallback: function (resutl) {
@@ -516,6 +516,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
         var str=this.getScrollContent('search'),
             $target = $('#search-result-panel').append(str),
             $wrapper=$target.find('.wrapper');
+        $target.find('.lists-ul').attr('id','search-result-ul');
         if($wrapper.attr('data-init')=='true'){
             return;
         }
@@ -578,7 +579,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
             paraData={keyword : keyWord,page:page,count:this.perPageCount};
 
         var para = {
-            url: window.hisihiUrlObj.link_url + 'hiworks_list.php/index/searchHiworksByKeyWords',
+            url: this.baseHiworkListUrl+'/index/searchHiworksByKeyWords',
             type: 'get',
             paraData: paraData,
             sCallback: function (resutl) {
@@ -601,9 +602,9 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
                 that.showTips.call(that,txt);
                 $('.no-comment-info').hide();
 
-                $loadingMore.removeClass('active');
+                //$loadingMore.removeClass('active');
                 var $loadingError=$loadingMore.find('.loadError');  //加载失败对象
-                $loadingMoreMain.hide();
+                //$loadingMoreMain.hide();
                 $loadingError.show();
                 callback && callback();
             },
@@ -820,11 +821,9 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
                     that.showTips('', '<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
                     $('#email').val('');
                 }else{
-                    //that.showTips('邮件发送失败');
                     that.controlModelBox(1,0);
                 }
             },eCallback: function (data) {
-                //that.showTips('邮件发送失败');
                 that.controlModelBox(1,0);
             }
         };
@@ -933,6 +932,15 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
                     callback && callback();
                 }
             });
+    };
+
+
+    window.checkSearchKeyword=function(){
+        if(""==$('#search-txt').val().trim())  {//作业名称
+            return false; //离开函数
+        }else{
+            window.hiworks.doSearchByKeyWord();
+        }
     };
 
     /*
