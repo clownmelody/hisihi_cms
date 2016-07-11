@@ -329,13 +329,17 @@ class PublicController extends AppController {
             //解析并成立图片数据
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
-                if((float)$version>=2.7){
+                if((float)$version >=2.9){
+                    $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.9/type/view/id/'.$id;
+                }else if((float)$version>=2.7 && (float)$version<2.9){
                     $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$id;
                 } else {
                     $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.0/type/view/id/'.$id;
                 }
                 if((float)$version>=2.4){
-                    if((float)$version>=2.7){
+                    if((float)$version >=2.9){
+                        $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.9/type/view/id/'.$id;
+                    }else if((float)$version>=2.7 && (float)$version<2.9){
                         $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$id;
                     } else {
                         $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/v2contentforshare/type/view/id/'.$id;
@@ -647,7 +651,7 @@ class PublicController extends AppController {
 
     private function fetchImage($pic_id)
     {
-        if($pic_id == null)
+        if(empty($pic_id))
             return null;
 
         $pic_small = getThumbImageById($pic_id, 280, 160);
