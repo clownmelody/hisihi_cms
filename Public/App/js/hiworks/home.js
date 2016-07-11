@@ -2,7 +2,7 @@
  * Created by jimmy on 2016/4/18.
  * version-2.7
  */
-define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
+define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
     var HiWorks = function (url,baseId) {
         this.controlLoadingBox(true);
         this.baseUrl = url;
@@ -740,6 +740,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
                 var email=that.getInfoFromStorage('myemail');
                 if(email){
                     $('#email').val(email);
+                    $('#do-bind').addClass('abled btn');
                 }
             });
         }
@@ -818,7 +819,7 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
             sCallback: function (data) {
                 if(data.success) {
                     email = that.substrLongStr(email, 20);
-                    that.showTips('', '<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
+                    that.showTips('<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
                     $('#email').val('');
                 }else{
                     that.controlModelBox(1,0);

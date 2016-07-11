@@ -165,6 +165,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             var email=that.getInfoFromStorage('myemail');
             if(email){
                 $('#email').val(email);
+                $('#do-bind').addClass('abled btn');
             }
         });
     };
@@ -193,7 +194,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             sCallback: function (data) {
                 if(data.success) {
                     email = that.substrLongStr(email, 20);
-                    that.showTips('', '<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
+                    that.showTips('<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
                     that.controlModelBox(0,0);
                 }else{
                     that.showTips('邮件发送失败');

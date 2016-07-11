@@ -439,22 +439,20 @@ define(['$','fastclick'],function() {
          * 显示操作结果，防止出现在重复快速点击时，计时器混乱添加了  timeOutFlag  进行处理
          * @para:
          * tip - {string} 内容结果
-         * strFormat - {bool} 自定义的简单格式
          */
-        showTips:function(tip,strFormat){
+        showTips:function(tip){
             if(this.timeOutFlag){
                 return;
             }
+            if(tip.indexOf('<')<0){
+                tip='<p>'+tip+'</p>';
+            }
             this.timeOutFlag=true;
             var $tip=$('body').find('.result-tips'),
-                $p=$tip.find('p').text(tip),that=this;
-            if(strFormat){
-                $tip.html(strFormat);
-            }
-            $tip.show();
+                that=this;
+            $tip.html(tip).show();
             window.setTimeout(function(){
-                $tip.hide();
-                $p.text('');
+                $tip.hide().html('');
                 that.timeOutFlag=false;
             },1500);
         },
