@@ -651,7 +651,7 @@ class PublicController extends AppController {
 
     private function fetchImage($pic_id)
     {
-        if($pic_id == null)
+        if(empty($pic_id))
             return null;
 
         $pic_small = getThumbImageById($pic_id, 280, 160);
