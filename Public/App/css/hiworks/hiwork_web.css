@@ -519,7 +519,7 @@ ul li {
   height: 6px;
   list-style: none;
   background-color: #ccc;
-  margin: 0 10px;
+  margin: 0 4px;
   border-radius: 100%;
 }
 #work-detail-panel #detail-main #currentPage ul li.active {

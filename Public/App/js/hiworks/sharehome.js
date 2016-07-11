@@ -9,10 +9,11 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
         this.baseId=baseId;
 
         var eventName='click',that=this;
-        this.deviceType = this.operationType();
-        //if(this.deviceType.mobile){
-        //    eventName='touchend';
-        //}
+        if(this.isLocal){
+            //eventName='touchend';
+            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
+        }
+        this.baseHiworkListUrl=this.baseUrl.replace('api.php','hiworks_list.php');
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
         });
@@ -50,7 +51,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
         this.controlLoadingBox(true);
         var that=this;
         var para = {
-            url: window.hisihiUrlObj.link_url + 'hiworks_list.php/index/getHiworkDetailById',
+            url: this.baseHiworkListUrl+'/index/getHiworkDetailById',
             type: 'get',
             paraData: {hiwork_id:this.baseId},
             sCallback: function (result) {
@@ -211,40 +212,6 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
 
 
     /*******************通用功能*********************/
-
-    /*
-     *控制加载等待框
-     *@para
-     * flag - {bool} 默认隐藏
-     */
-    t.controlLoadingBox=function(flag){
-        var $target=$('#loading-data');
-        if(flag) {
-            $target.addClass('active');
-        }else{
-            $target.removeClass('active');
-        }
-    };
-
-    /*
-     *显示操作结果
-     *para:
-     *tip - {string} 内容结果
-     *strFormat - {bool} 自定义的简单格式
-     */
-    t.showTips=function(tip,strFormat){
-        var $tip=$('body').find('.result-tips'),
-            $p=$tip.find('p').text(tip);
-        if(strFormat){
-            $tip.html(strFormat);
-        }
-        $tip.show();
-        window.setTimeout(function(){
-            $tip.hide();
-            $p.text('');
-        },1500);
-    };
-
 
     /*
      *控模态窗口的显示 和 隐藏

@@ -11,7 +11,7 @@ requirejs.config({
         prefixfree:'sharecommon/prefixfree.min',
         touchslider:'hiworks/touchSlider-lib',
         scale:'hiworks/scale',
-        base:'sharecommon/base',
+        base:'sharecommon/base-1.1',
         home:'hiworks/sharehome',
     },
     shim: {
@@ -36,6 +36,11 @@ requirejs.config({
 
 
 require(['home','prefixfree'],function(works){
-    var id=$('body').data('id');
-    window.hiworks = new works(window.hisihiUrlObj.server_url,id);
+    var url = window.location.href;
+    if(url.indexOf('%2F')>0){
+        url=url.replace(/\%2F/g,'\/');
+    }
+    var reg = /hiword_id\/[1-9][0-9]*/g,
+        id = url.match(reg)[0].toString().replace(/hiword_id\//g,'');
+    window.hiworks = new works(window.hisihiUrlObj.link_url,id);
 });

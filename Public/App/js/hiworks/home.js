@@ -874,40 +874,6 @@ define(['fx','base','myscroll','touch','scale'],function(fx,Base,MyScroll) {
     /*******************通用功能*********************/
 
     /*
-    *控制加载等待框
-    *@para
-    * flag - {bool} 默认隐藏
-    */
-    t.controlLoadingBox=function(flag){
-        var $target=$('#loading-data');
-        if(flag) {
-            $target.addClass('active');
-        }else{
-            $target.removeClass('active');
-        }
-    };
-
-    /*
-     *显示操作结果
-     *para:
-     *tip - {string} 内容结果
-     *strFormat - {bool} 自定义的简单格式
-     */
-    t.showTips=function(tip,strFormat){
-        var $tip=$('body').find('.result-tips');
-        if(strFormat){
-            $tip.html(strFormat);
-        }else{
-            $tip.html('<p>'+tip+'</p>');
-        }
-        $tip.show();
-        window.setTimeout(function(){
-            $tip.hide().html('');
-        },1500);
-    };
-
-
-    /*
      *控模态窗口的显示 和 隐藏
      * Para:
      * opacity - {int} 透明度，1 表示显示，0表示隐藏
