@@ -653,21 +653,9 @@ class PublicController extends AppController {
     {
         if(empty($pic_id))
             return null;
-
         $pic_small = getThumbImageById($pic_id, 280, 160);
-        //http://forum-pic.oss-cn-qingdao.aliyuncs.com/2015-07-17/55a8a7873cd94_280_160.jpg
         $pathArray = explode("_",$pic_small);
-        //var_dump($pathArray);
         $pic_small = $pathArray[0].'.jpg';
-//        $pic = M('Picture')->where(array('status' => 1))->field('path')->getById($pic_id);
-//
-//        if(!is_bool(strpos( $pic['path'],'http://'))){
-//            $pic_src = $pic['path'];
-//        }else{
-//            $pic_src =getRootUrl(). substr( $pic['path'],1);
-//            //$pic_src =getRootUrl(). $pic['path'];
-//        }
-//        return $pic_src;
         return $pic_small;
     }
     //获取hisihi-other中的图片
