@@ -931,7 +931,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         var workObj=window.hiworks.currentWorksObj;
         var obj={
             tile: workObj.title.trim(),
-            url: window.hisihiUrlObj.link_url+'api.php?s=/Hiworks/hiworks_share/hiword_id/'+workObj.id,
+            url:workObj.baseUrl+'/Hiworks/hiworks_share/hiword_id/'+workObj.id,
             thumb: workObj.pic_url.trim(),
             description:'我在嘿设汇发现了⼀一个很棒的作业源⽂文件，居然可以直接下载'
         };
