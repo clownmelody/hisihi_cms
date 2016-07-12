@@ -15,7 +15,7 @@ body{
 .info-title h2{
   color: #212121;
   font-size: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 .info-time{
   height: 30px;
@@ -23,7 +23,6 @@ body{
   img{
     .size(30px,30px);
     .border-radius(15px);
-    margin-right:5px;
     vertical-align: middle;
   }
   span{
@@ -44,7 +43,12 @@ body{
     margin:0 15px;
   }
   .headlines-head{
-    margin:0 15px;
+    margin:0 0 0 15px;
+    border-bottom: 1px solid rgba(204,204,204,.5);
+  }
+  .commentbox-seperation{
+    height: 10px;
+    background-color: #f2f2f2;
   }
 }
 
@@ -53,66 +57,67 @@ body{
   @pl: 18px;
   @pr: 14px;
   @color:#F0674C;
+  margin-left: 15px;
   .list-header {
     height: 40px;
     box-sizing: border-box;
-    border-bottom: 1px solid #CCCCCC;
-    padding-left: @pl;
+    border-bottom: 1px solid rgba(204,204,204,.5);
     color: @color;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 40px;
   }
   .list-main {
     li {
       position: relative;
-      border-bottom: 1px solid #CCCCCC;
+      border-bottom: 1px solid rgba(204,204,204,.5);
       &:last-child {
         border-bottom: none;
       }
-      @w: 56px;
+      @w: 38px;
       .list-main-left {
         position: absolute;
-        padding: @pr @pr @pr @pl;
+        padding: 10px 10px 10px 0;
         img {
           .size(@w, @w);
-          //border-radius: 28px;
-          .border-radius(28px);
+          .border-radius(19px);
         }
       }
       .list-main-right {
-        margin-left: 90px;
-        padding: @pr @pl @pr 0;
+        margin-left: 48px;
+        padding: 9px @pl 10px 0;
         > div {
-          @mtop: 5px;
           &:nth-child(1) {
             color: @color !important;
-            font-size: 18px;
+            font-size: 15px;
             .txt-ellipsis;
           }
           &:nth-child(2) {
-            margin-top: @mtop;
+            margin-top: 4px;
             color: #808080 !important;
-            font-size: 14px;
+            font-size: 12px;
           }
           &:nth-child(3) {
-            margin-top: @mtop;
+            margin-top: 10px;
             p {
               color: #212121 !important;
               font-size: 14px;
+              line-height: 24px;
               .txt-ellipsis-p(13);
+              margin: 10px 0 0 0;
             }
           }
         }
       }
       .up-comment-box {
         position: absolute;
-        top: @pl;
-        right: @pl;
-        .size(40px, 40px);
+        top: 4px;
+        right: 15px;
+        min-width: 40px;
+        height: 40px;
         text-align: center;
         line-height: 40px;
         > span {
-          font-size: 22px;
+          font-size: 18px;
           color: #BDBDBD;
           display: inline-block;
           &:nth-child(1){
@@ -126,7 +131,7 @@ body{
 
           &.num {
             font-size: 20px;
-            padding-left: 5px;
+            padding-left: 4px;
             vertical-align: 2px;
             &.active {
               color: @activeColor;
@@ -137,15 +142,16 @@ body{
     }
   }
   .no-comment-info {
-    height: 70px;
+    height: 90px;
     text-align: center;
-    line-height: 70px;
+    line-height: 50px;
     font-size: 16px;
     color: #757373;
     display: none;
   }
   .loading-more-tips {
     margin: 10px auto;
+    padding-bottom: 20px;
     text-align: center;
     display: none;
     .loadingMoreResultTipsMain {

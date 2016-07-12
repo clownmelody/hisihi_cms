@@ -36,6 +36,7 @@ define(['fx','base'],function(fx,Base) {
             event.stopPropagation();
         });
         //加载评论信息
+
         this.getUserInfo(function(){
             that.loadCommentInfo(1,that.commentListPageCount);
         },0);
@@ -94,6 +95,17 @@ define(['fx','base'],function(fx,Base) {
         this.getDataAsync(para);
     },
 
+    //显示加载效果
+    t.controlLoadingMore=function(flag){
+
+        var $loadingMore=$('.loading-more-tips'),
+            $loadingMoreMain=$loadingMore.find('.loadingMoreResultTipsMain');
+        if(flag) {
+            $loadingMoreMain.show();
+            $loadingMore.addClass('active').show();
+        }
+    };
+
     /*
      *展示评论信息
      * para：
@@ -134,6 +146,7 @@ define(['fx','base'],function(fx,Base) {
                     }
                     var name=item.user_info.username;
                     name=this.substrLongStr(name,12);
+                    item.user_info.avatar_url='https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e';
                     str+='<li>'+
                         '<div class="list-main-left">'+
                         '<img src="'+item.user_info.avatar_url+'">'+

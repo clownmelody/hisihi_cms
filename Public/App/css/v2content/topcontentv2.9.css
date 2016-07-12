@@ -259,7 +259,7 @@ body {
 .info-title h2 {
   color: #212121;
   font-size: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 .info-time {
   height: 30px;
@@ -270,7 +270,6 @@ body {
   height: 30px;
   border-radius: 15px;
   background-clip: padding-box;
-  margin-right: 5px;
   vertical-align: middle;
 }
 .info-time span {
@@ -290,73 +289,82 @@ body {
   margin: 0 15px;
 }
 .headlines-box .headlines-head {
-  margin: 0 15px;
+  margin: 0 0 0 15px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.5);
+}
+.headlines-box .commentbox-seperation {
+  height: 10px;
+  background-color: #f2f2f2;
+}
+.comment-list-box {
+  margin-left: 15px;
 }
 .comment-list-box .list-header {
   height: 40px;
   box-sizing: border-box;
-  border-bottom: 1px solid #CCCCCC;
-  padding-left: 18px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.5);
   color: #f0674c;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 40px;
 }
 .comment-list-box .list-main li {
   position: relative;
-  border-bottom: 1px solid #CCCCCC;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.5);
 }
 .comment-list-box .list-main li:last-child {
   border-bottom: none;
 }
 .comment-list-box .list-main li .list-main-left {
   position: absolute;
-  padding: 14px 14px 14px 18px;
+  padding: 10px 10px 10px 0;
 }
 .comment-list-box .list-main li .list-main-left img {
-  width: 56px;
-  height: 56px;
-  border-radius: 28px;
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
   background-clip: padding-box;
 }
 .comment-list-box .list-main li .list-main-right {
-  margin-left: 90px;
-  padding: 14px 18px 14px 0;
+  margin-left: 48px;
+  padding: 9px 18px 10px 0;
 }
 .comment-list-box .list-main li .list-main-right > div:nth-child(1) {
   color: #f0674c !important;
-  font-size: 18px;
+  font-size: 15px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 .comment-list-box .list-main li .list-main-right > div:nth-child(2) {
-  margin-top: 5px;
+  margin-top: 4px;
   color: #808080 !important;
-  font-size: 14px;
+  font-size: 12px;
 }
 .comment-list-box .list-main li .list-main-right > div:nth-child(3) {
-  margin-top: 5px;
+  margin-top: 10px;
 }
 .comment-list-box .list-main li .list-main-right > div:nth-child(3) p {
   color: #212121 !important;
   font-size: 14px;
+  line-height: 24px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 13;
+  margin: 10px 0 0 0;
 }
 .comment-list-box .list-main li .up-comment-box {
   position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 40px;
+  top: 4px;
+  right: 15px;
+  min-width: 40px;
   height: 40px;
   text-align: center;
   line-height: 40px;
 }
 .comment-list-box .list-main li .up-comment-box > span {
-  font-size: 22px;
+  font-size: 18px;
   color: #BDBDBD;
   display: inline-block;
 }
@@ -371,22 +379,23 @@ body {
 }
 .comment-list-box .list-main li .up-comment-box > span.num {
   font-size: 20px;
-  padding-left: 5px;
+  padding-left: 4px;
   vertical-align: 2px;
 }
 .comment-list-box .list-main li .up-comment-box > span.num.active {
   color: #ff5a00;
 }
 .comment-list-box .no-comment-info {
-  height: 70px;
+  height: 90px;
   text-align: center;
-  line-height: 70px;
+  line-height: 50px;
   font-size: 16px;
   color: #757373;
   display: none;
 }
 .comment-list-box .loading-more-tips {
   margin: 10px auto;
+  padding-bottom: 20px;
   text-align: center;
   display: none;
 }
