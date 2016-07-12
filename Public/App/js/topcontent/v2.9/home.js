@@ -95,17 +95,6 @@ define(['fx','base'],function(fx,Base) {
         this.getDataAsync(para);
     },
 
-    //显示加载效果
-    t.controlLoadingMore=function(flag){
-
-        var $loadingMore=$('.loading-more-tips'),
-            $loadingMoreMain=$loadingMore.find('.loadingMoreResultTipsMain');
-        if(flag) {
-            $loadingMoreMain.show();
-            $loadingMore.addClass('active').show();
-        }
-    };
-
     /*
      *展示评论信息
      * para：
