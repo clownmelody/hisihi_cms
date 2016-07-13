@@ -34,10 +34,11 @@ class SchoolController extends AppController
         }
     }
 
-    /**根据省id查询所有高校信息
+    /**
+     * 根据省id查询所有高校信息
      * @param int $provinceid   省id
      */
-    public  function  school($provinceid = 1){
+    public function school($provinceid = 1){
         //实例化空模型
         //或者使用M快捷方法是等效的
         $Model = M();
@@ -46,7 +47,7 @@ class SchoolController extends AppController
         $count = $Model->query($countstr);
         $total = $count[0]['count'];
 
-        $sqlstr = "SELECT * FROM hisihi_school where school_pro_id = ".$provinceid;
+        $sqlstr = "SELECT school_id, school_name, school_pro_id, school_schooltype_id FROM hisihi_school where school_pro_id = ".$provinceid;
         //进行原生的SQL查询
         $list = $Model->query($sqlstr);
         if($total == 0){
@@ -67,7 +68,37 @@ class SchoolController extends AppController
         }
     }
 
-    /**根据省id分页查询高校信息
+    public function hot_school(){
+        //实例化空模型
+        //或者使用M快捷方法是等效的
+        $Model = M();
+        // 计算总数
+        $countstr = "SELECT count(*) as count FROM hisihi_school where is_hot = 1";
+        $count = $Model->query($countstr);
+        $total = $count[0]['count'];
+
+        $sqlstr = "SELECT school_id, school_name, school_pro_id, school_schooltype_id FROM hisihi_school where is_hot = 1";
+        //进行原生的SQL查询
+        $list = $Model->query($sqlstr);
+        if($total == 0){
+            $resultlist = array();
+            $resultlist["totalcount"] = $total;
+            $resultlist["data"] = array();
+            $this->apiSuccess("获取热门高校信息成功", null, $resultlist);
+        } else {
+            if($list){
+                $resultlist = array();
+                $resultlist["totalcount"] = $total;
+                $resultlist["data"] = $list;
+                $this->apiSuccess("获取热门高校信息成功", null, $resultlist);
+            } else {
+                $this->apiError("未查询到高校信息");
+            }
+        }
+    }
+
+    /**
+     * 根据省id分页查询高校信息
      * @param int $provinceid   省id
      * @param int $curpage      当前页码
      */
@@ -130,7 +161,8 @@ class SchoolController extends AppController
         }
     }
 
-    /**分页查询所有高校信息
+    /**
+     * 分页查询所有高校信息
      * @param int $curpage  当前页码
      */
     public  function  allschoolpaging($curpage=1){
