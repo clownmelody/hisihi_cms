@@ -380,7 +380,7 @@ define(['fx','base'],function(fx,Base) {
                 if(item.isSupported){
                     var $up=$('#up-comment-'+id);
                     if($up.length>0) {
-                        $up.find('span').eq(0).addClass('active');
+                        $up.find('span').addClass('active');
                     }
                 }
             }
