@@ -452,7 +452,7 @@ class PublicController extends AppController {
                         $this->responseHtml($cacheHtml);
                         return;
                     }
-                } else if((float)$version >=2.7){
+                } else if((float)$version >=2.7 && (float)$version <2.93){
                     $cacheHtml = S('topcontent-v2-7-'.$id);
                     if($cacheHtml){
                         $this->responseHtml($cacheHtml);
@@ -506,7 +506,7 @@ class PublicController extends AppController {
                     } else {
                         $this->display('topcontentv2_9');
                     }
-                } else if((float)$version >=2.7){
+                } else if((float)$version >=2.7 && (float)$version <2.93){
                     if(!S('topcontent-v2-7-'.$id)){
                         $html = $this->fetch('topcontentv2_7');
                         S('topcontent-v2-7-'.$id, null);
@@ -540,7 +540,7 @@ class PublicController extends AppController {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
                 if((float)$version>=2.93){
-                    $info['content_url'] = 'app.php/public/topcontent/version/2.9/type/view/id/'.$info['id'];
+                    $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.93/type/view/id/'.$info['id'];
                     $info['comment_count'] = $this->getTopContentCommentCount($info['id']);
                 } else if((float)$version>=2.7 && (float)$version<2.93){
                     $info['content_url'] = 'app.php/public/topcontent/version/2.7/type/view/id/'.$info['id'];
@@ -549,7 +549,7 @@ class PublicController extends AppController {
                 }
                 if((float)$version>=2.4){
                     if((float)$version>=2.93){
-                        $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.9/type/view/id/'.$id;
+                        $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.93/type/view/id/'.$id;
                     } else if((float)$version>=2.7 && (float)$version<2.93){
                         $info['share_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.7/type/view/id/'.$id;
                     } else {
