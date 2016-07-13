@@ -222,6 +222,10 @@ define(['fx','base'],function(fx,Base) {
                 var $num=$target.find('.num'),
                     num=$num.text() | 0;
                 num--;
+                if(num<=0){
+                    num='';
+                }
+                $thumb.removeClass('active');
                 $num.removeClass('active').text(num);
             },
         };
