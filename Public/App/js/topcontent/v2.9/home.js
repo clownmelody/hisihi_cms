@@ -135,7 +135,6 @@ define(['fx','base'],function(fx,Base) {
                     }
                     var name=item.user_info.username;
                     name=this.substrLongStr(name,12);
-                    item.user_info.avatar_url='https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e';
                     str+='<li>'+
                         '<div class="list-main-left">'+
                         '<img src="'+item.user_info.avatar_url+'">'+
@@ -218,7 +217,8 @@ define(['fx','base'],function(fx,Base) {
             },
             eCallback: function (data) {
                 $target.removeClass('voting');
-                that.showTips.call(that,data.txt);
+
+                that.showTips.call('<p>操作失败<p><p>'+that,data.txt+'</p>');
                 var $num=$target.find('.num'),
                     num=$num.text() | 0;
                 num--;

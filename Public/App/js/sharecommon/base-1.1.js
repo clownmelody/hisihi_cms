@@ -145,6 +145,9 @@ define(['$','fastclick'],function() {
                         } else {
                             var txt = result.message,
                                 code=result.error_code;
+                            if(txt.indexOf('已在其他位置登录')>=0){
+                                txt='需要登录';
+                            }
                             paras.eCallback && paras.eCallback({code:code,txt:txt});
                         }
                     }
