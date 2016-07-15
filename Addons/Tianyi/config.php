@@ -42,27 +42,4 @@ return array(
         'value' => '1728000',
     ),
 
-    'app_key' => array(
-        'title' => 'Mob APPKey：',
-        'type' => 'text',
-        'value' => '',
-    ),
-
-    'app_key_a' => array(
-        'title' => 'Mob APPKey for Android：',
-        'type' => 'text',
-        'value' => '8796437da614',
-    ),
-
-    'app_key_i' => array(
-        'title' => 'Mob APPKey for iOS：',
-        'type' => 'text',
-        'value' => '62c0e32ee020',
-    ),
-
-    'api_url' => array(
-        'title' => 'Mob API地址：',
-        'type' => 'text',
-        'value' => 'https://api.sms.mob.com',
-    ),
 );
