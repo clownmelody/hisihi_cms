@@ -15,7 +15,7 @@ class TianyiVerifyModel extends Model
     private $config;
     private $addonName = 'Tianyi';
 
-    private $api = 'https://webapi.sms.mob.com';
+    private $api = '';
 
     private $appkey_a = '8796437da614';
     private $appkey_i = '62c0e32ee020';
@@ -28,8 +28,6 @@ class TianyiVerifyModel extends Model
     {
         $this->config = $config;
         $this->api = $config['api_url'];
-        $this->appkey_a = $config['app_key_a'];
-        $this->appkey_i = $config['app_key_i'];
     }
 
 /**

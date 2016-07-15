@@ -63,6 +63,6 @@ return array(
     'api_url' => array(
         'title' => 'Mob API地址：',
         'type' => 'text',
-        'value' => '',
+        'value' => 'https://api.sms.mob.com',
     ),
 );
