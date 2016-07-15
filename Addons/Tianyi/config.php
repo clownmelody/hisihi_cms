@@ -51,7 +51,7 @@ return array(
     'app_key_a' => array(
         'title' => 'Mob APPKey for Android：',
         'type' => 'text',
-        'value' => '',
+        'value' => '8796437da614',
     ),
 
     'app_key_i' => array(

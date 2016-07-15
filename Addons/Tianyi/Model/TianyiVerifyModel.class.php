@@ -15,9 +15,9 @@ class TianyiVerifyModel extends Model
     private $config;
     private $addonName = 'Tianyi';
 
-    private $api = '接口地址';
+    private $api = 'https://webapi.sms.mob.com';
 
-    private $appkey_a = '您的Android appkey';
+    private $appkey_a = '8796437da614';
     private $appkey_i = '62c0e32ee020';
 
     /**
