@@ -244,7 +244,7 @@ abstract class AppController extends RestController {
     protected function verifyPassword($uid, $password) {
         $result = D('User/UcenterMember')->verifyUser($uid, $password);
         if(!$result) {
-            $this->apiError(0,'密码错误');
+            $this->apiError(-1, '密码错误');
         }
     }
 
