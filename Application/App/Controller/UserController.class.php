@@ -1120,6 +1120,7 @@ class UserController extends AppController
         $this->requireLogin();
         //获取用户编号
         $uid = $this->getUid();
+
         //将需要修改的字段填入数组
         $fields = array();
         if ($signature !== null) $fields['signature'] = $signature;
@@ -1167,7 +1168,7 @@ class UserController extends AppController
         if ($field_setting_list) {
             $data = null;
             foreach ($field_setting_list as $key => $val) {
-                $data[$key]['uid'] = is_login();
+                $data[$key]['uid'] = $uid;
                 $data[$key]['field_id'] = $val['id'];
                 switch ($val['field_name']) {
                     case 'college':
@@ -1220,17 +1221,17 @@ class UserController extends AppController
         $map['uid'] = $uid;
         foreach ($data as $dl) {
             $map['field_id'] = $dl['field_id'];
-            $res = D('field')->where($map)->find();
+            $res = M('Field')->where($map)->find();
             if (!$res) {
                 if ($dl['field_data'] != '' && $dl['field_data'] != null) {
                     $dl['createTime'] = $dl['changeTime'] = time();
-                    if (!D('field')->add($dl)) {
+                    if (!M('Field')->add($dl)) {
                         $this->apiError(1001,'认证信息添加时出错！');
                     }
                 }
             } else {
                 $dl['changeTime'] = time();
-                if (!D('field')->where('id=' . $res['id'])->save($dl)) {
+                if (!M('Field')->where('id=' . $res['id'])->save($dl)) {
                     $this->apiError(1002,'认证信息修改时出错！');
                 }
             }
