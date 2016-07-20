@@ -2426,4 +2426,8 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
 //        }
 //    }
 
+    public function checkSession(){
+        var_dump($this->getUid());
+    }
+
 }
