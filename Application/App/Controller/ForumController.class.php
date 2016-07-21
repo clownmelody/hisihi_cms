@@ -2649,9 +2649,11 @@ class ForumController extends AppController
         }
         $model = M('InformationFlowBanner');
         $totalCount = $model->where('status=1 and show_pos='.$show_pos)->count();
-        $banner_list = $model->field('id, pic_url, url, jump_type')->where('status=1 and show_pos='.$show_pos)
+        $banner_list = $model->field('id, pic_url, url, jump_type, organization_id')->where('status=1 and show_pos='.$show_pos)
             ->select();
         foreach($banner_list as &$banner){
+            $organization_id = $banner['organization_id'];
+            unset($banner['organization_id']);
             switch($banner['jump_type']){
                 case 1: // 网址
                     break;
@@ -2666,6 +2668,14 @@ class ForumController extends AppController
                 case 4: // 机构主页
                     $org_id = $banner['url'];
                     $banner['url'] = 'hisihi://organization/detailinfo?id='.$org_id;
+                    break;
+                case 5: // 大学主页
+                    $u_id = $banner['url'];
+                    $banner['url'] = 'hisihi://university/detailinfo?id='.$u_id;
+                    break;
+                case 6: // 活动详情页
+                    $promotion_id = $banner['url'];
+                    $banner['url'] = 'hisihi://promotion/detailinfo?id='.$promotion_id.'&oid='.$organization_id;
                     break;
             }
         }

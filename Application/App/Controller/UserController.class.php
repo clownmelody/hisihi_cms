@@ -1148,7 +1148,7 @@ class UserController extends AppController
             $model = D('Home/Member');
             $home = $model->create($home);
             $result = $model->where(array('uid' => $uid))->save($home);
-            if (!$result) {
+            if ($result === false) {
                 $this->apiError(0, '设置失败，请检查输入格式!');
             }
         }
@@ -1157,7 +1157,7 @@ class UserController extends AppController
             $ucenter['id'] = $uid;
             $ucenter = $model->create($ucenter);
             $result = $model->where(array('id' => $uid))->save($ucenter);
-            if (!$result) {
+            if ($result === false) {
                 $this->apiError(0, '设置失败，请检查输入格式!');
             }
         }
@@ -1231,7 +1231,8 @@ class UserController extends AppController
                 }
             } else {
                 $dl['changeTime'] = time();
-                if (!M('Field')->where('id=' . $res['id'])->save($dl)) {
+                $dl_res = M('Field')->where('id=' . $res['id'])->save($dl);
+                if ($dl_res === false) {
                     $this->apiError(1002,'认证信息修改时出错！');
                 }
             }
