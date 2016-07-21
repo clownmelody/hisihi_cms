@@ -377,6 +377,10 @@ class OrganizationController extends AppController
     /**
      * app获取机构基本信息
      * @param $organization_id
+     * @param int $uid
+     * @param null $type
+     * @param int $version
+     * @return mixed
      */
     public function appGetBaseInfo($organization_id, $uid=0, $type=null, $version=0){
         if($uid==0){
@@ -387,7 +391,6 @@ class OrganizationController extends AppController
             ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img, type')->find();
         if($result){
             $logo = $result['logo'];
-            //$logo = $this->getOrganizationLogo($logo_id);
             if(!$logo){
                 $logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
@@ -2184,6 +2187,7 @@ class OrganizationController extends AppController
         } else {
             $teacher_ids = M('OrganizationRelation')->distinct('uid')->field('uid')
                 ->where(array('organization_id'=>$organization_id,'status'=>1,'group'=>6))
+                ->order('create_time desc')
                 ->page($page, $count)->select();
         }
         $org_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');
@@ -2504,8 +2508,11 @@ class OrganizationController extends AppController
      * @param null $organization_id
      * @param int $page
      * @param int $count
+     * @param null $type
+     * @param int $version
+     * @return mixed
      */
-    public function appGetStudentWorks($organization_id=null,$page=1,$count=3,$type=null, $version=0){
+    public function appGetStudentWorks($organization_id=null, $page=1, $count=3, $type=null, $version=0){
         if(!$organization_id){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -2521,7 +2528,6 @@ class OrganizationController extends AppController
         $list = $model->field($field)->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_url = $work['url'];
-            //$origin_img_info = getimagesize($pic_url);
             $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_url);
             $new_pic_url = $new_pic_url . '@info';
             $origin_img_info = getOssImgSizeInfo($new_pic_url);
@@ -2534,7 +2540,6 @@ class OrganizationController extends AppController
                 'size'=>$src_size
             );
             $pic_small = $pic_url . '@50p';
-            //$origin_img_info = getimagesize($pic_small);
             $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_small);
             $new_pic_url = $new_pic_url . '&info';
             $origin_img_info = getOssImgSizeInfo($new_pic_url);
@@ -2561,8 +2566,10 @@ class OrganizationController extends AppController
      * @param null $organization_id
      * @param int $page
      * @param int $count
+     * @param null $type
+     * @return mixed
      */
-    public function appGetOrganizationEnvironment($organization_id=null,$page=1,$count=3,$type=null){
+    public function appGetOrganizationEnvironment($organization_id=null, $page=1, $count=3, $type=null){
         if(!$organization_id){
             $this->apiError(-1, '传入机构id不能为空');
         }
@@ -2574,7 +2581,6 @@ class OrganizationController extends AppController
         $list = $model->field('id, url, description, create_time')->order('create_time desc')->where($map)->page($page, $count)->select();
         foreach ($list as &$work) {
             $pic_url = $work['url'];
-            //$origin_img_info = getimagesize($pic_url);
             $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_url);
             $new_pic_url = $new_pic_url . '@info';
             $origin_img_info = getOssImgSizeInfo($new_pic_url);
@@ -2587,7 +2593,6 @@ class OrganizationController extends AppController
                 'size'=>$src_size
             );
             $pic_small = $pic_url . '@50p';
-            //$origin_img_info = getimagesize($pic_small);
             $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_small);
             $new_pic_url = $new_pic_url . '&info';
             $origin_img_info = getOssImgSizeInfo($new_pic_url);
@@ -3629,7 +3634,8 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取诚信机构列表成功', null, $data);
     }
 
-    /**获取机构专业列表
+    /**
+     * 获取机构专业列表
      * @param bool|false $is_hot
      */
     public function getOrganizationMajor($is_hot=false){
@@ -3639,7 +3645,7 @@ class OrganizationController extends AppController
         }else{
             $map['status'] = array('gt', 0);
         }
-        $major = M('OrganizationTag')->field('id, value, extra')->where($map)->select();
+        $major = M('OrganizationTag')->field('id, value, extra')->where($map)->order('id desc')->select();
         $data['list'] = $major;
         $this->apiSuccess('获取机构专业列表成功', null, $data);
     }
@@ -4077,7 +4083,8 @@ GROUP BY
         return $university;
     }
 
-    /**收藏机构
+    /**
+     * 收藏机构
      * @param int $uid
      * @param int $organization_id
      */
@@ -4228,8 +4235,9 @@ GROUP BY
 
     /**
      * @param int $organization_id
+     * @param float $version
      */
-    public function getPromotionCouponList($organization_id=0){
+    public function getPromotionCouponList($organization_id=0, $version=2.9){
         if($organization_id==0){
             $this->apiError(-1, '机构id不能为空');
         }
@@ -4240,12 +4248,24 @@ GROUP BY
                 ->where('id='.$pro['promotion_id'])
                 ->find();
             $now = time();
-            $coupon_list = M()->query('select t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
+            $coupon_list = M()->query('select t2.teaching_course_id, t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
 hisihi_teaching_course_organization_promotion_relation t1,
 hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
  and t2.coupon_id=t3.id and t2.status=1 and t1.status=1 and t3.status=1 and t3.end_time>='.$now.' and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
-            foreach($coupon_list as &$coupon){
-                $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+            $model = M('OrganizationTeachingCourse');
+            if((float)$version < 2.95){
+                foreach($coupon_list as &$coupon){
+                    $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+                    unset($coupon['teaching_course_id']);
+                }
+            } else {
+                foreach($coupon_list as &$coupon){
+                    $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+                    $course = $model->field('course_name')->where('id='.$coupon['teaching_course_id'])
+                        ->find();
+                    $coupon['teaching_course_name'] = $course['course_name'];
+                    unset($coupon['teaching_course_id']);
+                }
             }
             $obj['coupon_list'] = $coupon_list;
             $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
