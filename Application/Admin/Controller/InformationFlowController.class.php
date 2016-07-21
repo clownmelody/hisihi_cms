@@ -36,6 +36,7 @@ class InformationFlowController extends AdminController {
             $data['url'] = $_POST["url"];
             $data['show_pos'] = $_POST['show_pos'];
             $data['jump_type'] = $_POST['jump_type'];
+            $data['organization_id'] = $_POST['organization_id'];
             $pic_id = $_POST["picture"];
             if(!empty($pic_id)){
                 A('Organization')->uploadLogoPicToOSS($pic_id);
