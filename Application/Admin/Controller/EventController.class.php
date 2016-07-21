@@ -33,12 +33,15 @@ class EventController extends AdminController
             ->buttonSubmit('', '保存')->data($data);
         $admin_config->display();
     }
-    public function event($page = 1, $r = 10)
+    public function event($page = 1, $r = 10, $title='')
     {
+        if(!empty($title)){
+            $map['title'] = array('like', '%' . $title . '%');
+        }
         //读取列表
-        $map = array('status' => 1);
+        $map['status'] = 1;
         $model = $this->eventModel;
-        $list = $model->where($map)->page($page, $r)->select();
+        $list = $model->where($map)->page($page, $r)->order('create_time desc')->select();
         unset($li);
         $totalCount = $model->where($map)->count();
 
@@ -55,6 +58,7 @@ class EventController extends AdminController
             ->keyId()->keyLink('title', '标题', 'Event/add?id=###')->keyUid()->keyCreateTime()->keyStatus()->keyMap('is_recommend', '是否推荐', array(0 => '否', 1 => '是'))
             ->keyDoActionEdit( 'Event/add?id=###','编辑')
             ->data($list)
+            ->search('标题', 'title')
             ->pagination($totalCount, $r)
             ->display();
     }

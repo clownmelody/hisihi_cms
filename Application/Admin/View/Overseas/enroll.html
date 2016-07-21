@@ -15,6 +15,13 @@
                 <button class="btn ajax-post" target-form="ids" url="{:U("overseas/enroll_set_status",array("status"=>1))}">恢复正常</button>
             </div>
         </div>
+        <!-- 高级搜索 -->
+        <div class="search-form fr cf">
+            <div class="sleft">
+                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入手机号或姓名">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('overseas/enroll')}"><i class="btn-search"></i></a>
+            </div>
+        </div>
     </div>
     <!-- 数据列表 -->
     <div class="data-table table-striped">

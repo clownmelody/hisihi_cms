@@ -385,6 +385,10 @@ class IssueController extends AdminController
     }
 
     public function contents($page=1,$r=10){
+        $title = I('title');
+        if(!empty($title)){
+            $map['title'] = array('like', '%' . $title . '%');
+        }
         //读取列表
         $map['status'] = array('egt', 0);
         $model = M('IssueContent');
@@ -402,6 +406,7 @@ class IssueController extends AdminController
             ->keyId()->keyLink('title', '标题','editContents?id=###')->keyText('lecturer','讲师')->keyText('duration','时长（秒）')->keyCreateTime()->keyMap('status','状态',array(1 => '未推荐', 2 => '已推荐', 0 => '未激活'))
             ->keyDoActionEdit( 'Issue/editcontents?id=###','编辑')
             ->data($list)
+            ->search('标题', 'title')
             ->pagination($totalCount, $r)
             ->display();
     }

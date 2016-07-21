@@ -4,7 +4,7 @@
 	<!-- 标题 -->
 	<div class="main-title">
 		<h2>
-		资讯流内容列表
+		首页推荐列表
 		</h2>
 	</div>
 
@@ -54,11 +54,11 @@
 			<thead>
 			<tr>
 				<th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
-				<th class="">ID</th>
-				<th class="">内容类别</th>
+				<!--<th class="">ID</th>
+				<th class="">内容类别</th>-->
 				<th class="">内容ID</th>
 				<th class="">内容标题</th>
-				<th class="">配置类型</th>
+				<th class="">分类</th>
 				<th class="">排序</th>
 				<th class="">创建时间</th>
 				<th class="">状态</th>
@@ -70,8 +70,8 @@
 				<volist name="_list" id="vo">
 					<tr>
 						<td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
-						<td>{$vo.id}</td>
-						<td>{$vo.content_type}</td>
+						<!--<td>{$vo.id}</td>
+						<td>{$vo.content_type}</td>-->
 						<td>{$vo.content_id}</td>
 						<td>{$vo.content_name}</td>
 						<td>{$vo.config_type}</td>
@@ -82,10 +82,10 @@
 						</if>
 						</td>
 						<td>
-							<a href="{:U('informationFlow/setContentStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>
+							<!--<a href="{:U('informationFlow/setContentStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>-->
 							<a href="{:U('informationFlow/setContentStatus?status=-1&id='.$vo['id'])}" class="ajax-get confirm">删除</a>
-							<a href="{:U('informationFlow/setConfigType?id='.$vo['id'])}" >设置类型</a>
-							<a id="{$vo['content_id']}" class="setSort"  href="javascript:void(0)">设置排序</a>
+							<a href="{:U('informationFlow/setConfigType?id='.$vo['id'])}" >分类</a>
+							<a id="{$vo['content_id']}" class="setSort"  href="javascript:void(0)">排序</a>
 						</td>
 					</tr>
 				</volist>
