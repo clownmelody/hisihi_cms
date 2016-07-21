@@ -555,12 +555,19 @@ class OverseasController extends AdminController
     }
 
     public function enroll(){
+        $keywords = I('title');
+        $map = array();
+        if($keywords){
+            $map['student_name'] = array('like', '%'.$keywords.'%');
+            $map['student_phone_num'] = array('like', '%'.$keywords.'%');
+            $map['_logic'] = 'OR';
+        }
         $model = M('AbroadUniversity');
         $majorModel = M('OrganizationUniversityEnroll');
-        $count = $majorModel->count();
+        $count = $majorModel->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $majorModel->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+        $list = $majorModel->where($map)->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
         foreach($list as &$major){
             $university_id = $major['university_id'];
             $university_info = $model->field('name')->where('id='.$university_id)->find();
@@ -599,12 +606,18 @@ class OverseasController extends AdminController
     }
 
     public function plan(){
+        $org_id = I('org_id');
+        if($org_id){
+            $map['organization_id'] = $org_id;
+        }
+        $map['status'] = 1;
+
         $model = M('Organization');
         $planModel = M('OverseasPlan');
-        $count = $planModel->where('status=1')->count();
+        $count = $planModel->where($map)->count();
         $Page = new Page($count, 10);
         $show = $Page->show();
-        $list = $planModel->where('status=1')->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+        $list = $planModel->where($map)->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
         foreach($list as &$plan){
             $organization_id = $plan['organization_id'];
             $org_info = $model->field('name')->where('id='.$organization_id)->find();
