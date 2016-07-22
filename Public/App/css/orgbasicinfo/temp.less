@@ -1,0 +1,74 @@
+body{
+  padding: 0;
+  margin: 0;
+}
+#downloadCon{
+  top: 0;
+  background-color: #9E9A98;
+  opacity: 0;
+}
+#wrapper {
+
+}
+.logo-box{
+  .size(100%,200px);
+  position: relative;
+  margin-top:80px;
+  .filter{
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    img{
+      .size(100%,100%);
+      -webkit-filter: blur(20px);
+      -moz-filter: blur(20px);
+      -ms-filter: blur(20px);
+      filter: blur(20px);
+    }
+  }
+  .logo-main-info{
+    .logo-main-box {
+      height: 50%;
+      width: 80px;
+      margin: 0 auto;
+      position: relative;
+      //background-color: #fff;
+      text-align: center;
+      #logo {
+        .size(65px, 65px);
+        border-radius:10px;
+        border:1px solid #ccc;
+      }
+      .v-cert{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: inline-block;
+        .size(18px,18px);
+      }
+    }
+    .name-main-box{
+      text-align: center;
+      
+    }
+  }
+}
+.main-item{
+
+}
+
+/*响应式样式*/
+@media screen and (min-width: 750px) {
+  #wrapper,
+  #downloadCon {
+    width: 560px;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+@media screen and (max-width: 320px) {
+
+}
