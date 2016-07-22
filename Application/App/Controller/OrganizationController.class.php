@@ -387,8 +387,13 @@ class OrganizationController extends AppController
             $uid = $this->getUid();
         }
         $model=M("Organization");
-        $result = $model->where(array('id'=>$organization_id,'status'=>1))
-            ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img, type')->find();
+        if(floatval($version) >= 2.95){
+            $result = $model->where(array('id'=>$organization_id,'status'=>1))
+                ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img, type, is_listen_preview')->find();
+        } else {
+            $result = $model->where(array('id'=>$organization_id,'status'=>1))
+                ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img, type')->find();
+        }
         if($result){
             $logo = $result['logo'];
             if(!$logo){
@@ -1198,7 +1203,8 @@ class OrganizationController extends AppController
         }
     }
 
-    /**取消收藏机构课程
+    /**
+     * 取消收藏机构课程
      * @param int $uid
      * @param int $courses_id
      */
@@ -2370,6 +2376,17 @@ class OrganizationController extends AppController
         $organization_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');
         $this->assign("organization_name", $organization_name);
         $this->display('orgbasicinfo');
+    }
+
+    /**
+     * 机构web详情页 v2.9.5
+     * @param int $organization_id
+     */
+    public function OrganizationBasicInfo_v2_9_5($organization_id=0){
+        $this->assign("organization_id", $organization_id);
+        $organization_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');
+        $this->assign("organization_name", $organization_name);
+        $this->display('orgbasicinfo_v2_9_5');
     }
 
     /**
@@ -3947,7 +3964,8 @@ class OrganizationController extends AppController
         $this->apiSuccess('获取机构列表成功', null, $data);
     }
 
-    /**获取大学里机构的课程
+    /**
+     * 获取大学里机构的课程
      * @param null $organization_id
      * @param null $university_id
      * @return null
@@ -3971,7 +3989,8 @@ class OrganizationController extends AppController
         return $courses_list;
     }
 
-    /**获取机构下课程的报名数
+    /**
+     * 获取机构下课程的报名数
      * @param null $organization_id
      * @return int
      */
@@ -4346,6 +4365,74 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         $data['totalCount'] = count($_promotion_list);
         $data['list'] = $_promotion_list;
         $this->apiSuccess('获取机构活动列表成功', null, $data);
+    }
+
+    /**
+     * 机构培训课程收藏
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function doFavoriteTeachingCourses($uid=0, $courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+
+        $favorite['appname'] = 'OrganizationTeachingCourse';
+        $favorite['table'] = 'organization_teaching_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if ($favorite_model->where($favorite)->count()) {
+            $this->apiError(-100,'您已经收藏，不能再收藏了!');
+        } else {
+            $favorite['create_time'] = time();
+            if ($favorite_model->where($favorite)->add($favorite)) {
+                $this->apiSuccess('收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    /**
+     * 取消收藏机构培训课程
+     * @param int $uid
+     * @param int $courses_id
+     */
+    public function undoFavoriteTeachingCourses($uid=0,$courses_id=0){
+        if(empty($courses_id)){
+            $this->apiError(-1, '传入课程id为空');
+        }
+        if(empty($uid)){
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+
+        $favorite['appname'] = 'OrganizationTeachingCourse';
+        $favorite['table'] = 'organization_teaching_courses';
+        $favorite['row'] = $courses_id;
+        $favorite['uid'] = $uid;
+        $favorite_model = M('Favorite');
+        if (!$favorite_model->where($favorite)->count()) {
+            $this->apiError(-102,'您还没有收藏，不能取消收藏!');
+        } else {
+            if ($favorite_model->where($favorite)->delete()) {
+                $this->clearCache($favorite,'favorite');
+                $this->apiSuccess('取消收藏成功');
+            } else {
+                $this->apiError(-101,'写入数据库失败!');
+            }
+        }
+    }
+
+    public function getTeachingCourseInfo($id){
+        $info = M('OrganizationTeachingCourse')->field('id, organization_id, course_name, cover_pic, start_course_time, lesson_period, student_num, lecture_name, price, already_registered')
+            ->where('id='.$id)->find();
+        return $info;
     }
 
 }

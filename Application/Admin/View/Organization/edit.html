@@ -79,6 +79,15 @@
                         </div>
                     </div>
                     <div class="form-item cf">
+                        <label class="item-label">是否支持试听</label>
+                        <div class="controls">
+                            <ul class="dowebok">
+                                <li><input type="radio" value="0" data-labelauty="否" name="is_listen_preview" <eq name="organization['is_listen_preview']" value="0">checked</eq>/></li>
+                                <li><input type="radio" value="1" data-labelauty="是" name="is_listen_preview" <eq name="organization['is_listen_preview']" value="1">checked</eq>/></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-item cf">
                         <label class="item-label">优势标签</label>
                         <div class="controls">
                             <notempty name="_marks">
