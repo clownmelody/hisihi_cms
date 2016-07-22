@@ -406,7 +406,11 @@ class OrganizationController extends AppController
             }
             $result['phone_num'] = $this->get400PhoneNum();
             $result['logo'] = $logo;
-            $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
+            if((float)$version>=2.95){
+                $result['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
+            } else {
+                $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
+            }
             $result['followCount'] = $this->getFollowCount($organization_id);
             $result['teachersCount'] = $this->getTeachersCount($organization_id);
             $result['groupCount'] = $this->getGroupCount($organization_id);
@@ -1779,7 +1783,11 @@ class OrganizationController extends AppController
 
         foreach($org_list as &$org){
             $org_id = $org['id'];
-            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            if((float)$version>=2.95){
+                $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+            } else {
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            }
             $org['followCount'] = $this->getFollowCount($org_id);
             if(floatval($version) > 2.7){
                 $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
@@ -1889,7 +1897,11 @@ class OrganizationController extends AppController
         $uid = is_login();
         foreach($org_list as &$org){
             $org_id = $org['id'];
-            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            if((float)$version>=2.95){
+                $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+            } else {
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            }
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -2795,13 +2807,35 @@ class OrganizationController extends AppController
         $authModel = M('OrganizationAuthentication');
         $config_list = $model->field('id, name, pic_url, disable_pic_url, tag_pic_url, content, default_display')->where('status=1 and flag=0')->select();
         foreach($config_list as &$config){
-            //$config['pic_url'] = $config['pic_id'];
             $map['organization_id'] = $organization_id;
             $map['authentication_id'] = $config['id'];
             if($authModel->where($map)->find()){
                 $config['status'] = true;
             } else {
                 $config['status'] = false;
+            }
+        }
+        return $config_list;
+    }
+
+    /**
+     * 获取机构的认证信息v2.9.5  需要对“嘿设汇认证”做特殊标记
+     * @param $organization_id
+     */
+    private function getAuthenticationInfo_v2_9_5($organization_id=0){
+        $model = M('OrganizationAuthenticationConfig');
+        $authModel = M('OrganizationAuthentication');
+        $config_list = $model->field('id, name, pic_url, disable_pic_url, tag_pic_url, content, default_display')->where('status=1 and flag=0')->select();
+        foreach($config_list as &$config){
+            $map['organization_id'] = $organization_id;
+            $map['authentication_id'] = $config['id'];
+            if($authModel->where($map)->find()){
+                $config['status'] = true;
+            } else {
+                $config['status'] = false;
+            }
+            if($config['id']==4){ // 嘿设汇认证
+                $config['hisihi_add_v'] = true;
             }
         }
         return $config_list;
@@ -3109,9 +3143,10 @@ class OrganizationController extends AppController
     /**
      * 根据机构id获取机构基本信息
      * @param null $organization_id
+     * @param float $version
      * @return mixed
      */
-    public function findOrganizationById($organization_id=null){
+    public function findOrganizationById($organization_id=null, $version=2.9){
         $organization['id'] = $organization_id;
         $follow_other = M('Follow')->where(array('who_follow'=>$this->getUid(),'follow_who'=>$organization_id, 'type'=>2))->find();
         $be_follow = M('Follow')->where(array('who_follow'=>$organization_id,'follow_who'=>$this->getUid(), 'type'=>2))->find();
@@ -3133,7 +3168,11 @@ class OrganizationController extends AppController
             $organization['light_authentication'] = $organizationInfo['light_authentication'];
             $organization['followCount'] = $this->getFollowCount($organization_id);
             $organization['enrollCount'] = $this->getEnrollCount($organization_id);
-            $organization['authentication'] = $this->getAuthenticationInfo($organization_id);
+            if((float)$version>=2.95){
+                $organization['authentication'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
+            } else {
+                $organization['authentication'] = $this->getAuthenticationInfo($organization_id);
+            }
         }
         return $organization;
     }
@@ -3294,7 +3333,12 @@ class OrganizationController extends AppController
                 $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
-            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+
+            if((float)$version>=2.95){
+                $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+            } else {
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            }
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -3368,7 +3412,11 @@ class OrganizationController extends AppController
                 $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
-            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            if((float)$version>=2.95){
+                $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+            } else {
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            }
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -3558,7 +3606,11 @@ class OrganizationController extends AppController
                 $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
-            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            if((float)$version>=2.95){
+                $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+            } else {
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            }
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -3692,7 +3744,11 @@ class OrganizationController extends AppController
                 $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
-            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            if((float)$version>=2.95){
+                $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+            } else {
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            }
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -3810,7 +3866,11 @@ class OrganizationController extends AppController
                 $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
             }
             $org['type_tag'] = $this->getOrganizationType($org['type']);
-            $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            if((float)$version>=2.95){
+                $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+            } else {
+                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+            }
             $org['followCount'] = $this->getFollowCount($org_id);
             $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -3932,7 +3992,7 @@ class OrganizationController extends AppController
         return $enroll_count;
     }
 
-    public function searchOrgAndUniversity($name='', $type=null, $page=1, $count=10){
+    public function searchOrgAndUniversity($name='', $type=null, $page=1, $count=10, $version=0){
         $uid = is_login();
         $org_model = M('Organization');
         $u_model = M('AbroadUniversity');
@@ -3949,7 +4009,11 @@ class OrganizationController extends AppController
                     $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
                 }
                 $org['type_tag'] = $this->getOrganizationType($org['type']);
-                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+                if((float)$version>=2.95){
+                    $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+                } else {
+                    $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+                }
                 $org['followCount'] = $this->getFollowCount($org_id);
                 $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
                 $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -3989,7 +4053,11 @@ class OrganizationController extends AppController
                     $org['logo']='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
                 }
                 $org['type_tag'] = $this->getOrganizationType($org['type']);
-                $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+                if((float)$version>=2.95){
+                    $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
+                } else {
+                    $org['authenticationInfo'] = $this->getAuthenticationInfo($org_id);
+                }
                 $org['followCount'] = $this->getFollowCount($org_id);
                 $org['enrollCount'] = $this->getTeachingCourseEnrollCount($org_id);
                 $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
@@ -4113,7 +4181,8 @@ GROUP BY
         }
     }
 
-    /**取消收藏机构
+    /**
+     * 取消收藏机构
      * @param int $uid
      * @param int $organization_id
      */
@@ -4143,7 +4212,8 @@ GROUP BY
         }
     }
 
-    /**收藏大学
+    /**
+     * 收藏大学
      * @param int $uid
      * @param int $university_id
      */
@@ -4172,7 +4242,8 @@ GROUP BY
         }
     }
 
-    /**取消收藏机构
+    /**
+     * 取消收藏大学
      * @param int $uid
      * @param int $university_id
      */
