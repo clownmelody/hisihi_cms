@@ -14,7 +14,8 @@ define(['base'],function(Base){
             //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
-        this.setFootStyle();
+        this.loadBasicInfoData();
+        this.loadTopAnnouncement();
     }
 
     OrgBasicInfo.prototype=new Base();
@@ -126,144 +127,85 @@ define(['base'],function(Base){
     //
     //    },
     //
-    //    /*加载基本信息*/
-    //    loadBasicInfoData:function() {
-    //        var that=this,
-    //            $target=that.$wrapper.find('.logoAndCertInfo'),
-    //            queryPara={
-    //                url:window.urlObject.apiUrl+'appGetBaseInfo',
-    //                paraData:{organization_id:this.oid},
-    //                sCallback: $.proxy(this,'fillInBasicInfoData'),
-    //                eCallback:function(){
-    //                    $target.css('opacity',1);
-    //                    $target.find('.loadErrorCon').show();
-    //
-    //                }
-    //            };
-    //        this.loadData(queryPara);
-    //    },
-    //
-    //
-    //
-    //    /*显示具体信息*/
-    //    fillInBasicInfoData:function(result){
-    //        var data=result.data;
-    //
-    //        //var  authen1=data.authenticationInfo[2].status,
-    //        //    class1=authen1?'certed':'unCerted',
-    //        //    authen2=data.authenticationInfo[3].status,
-    //        //    class2=authen2?'certed':'unCerted';
-    //
-    //        var class1='certed',class2='certed';
-    //        /*20160408修改，诚信和机构和嘿设汇一起亮*/
-    //        if(data.light_authentication == '0'){
-    //            class1='unCerted';
-    //            class2='unCerted';
-    //        }
-    //
-    //        var url=data.logo;
-    //        if(this.deviceType.android){
-    //            url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
-    //        }
-    //        var name=data.name;
-    //        if(name.length>10){
-    //            name=name.substr(0,9)+' …';
-    //        }
-    //
-    //        var str='<div class="head mainContent">'+
-    //            '<div class="filter">'+
-    //            '<img class="logoBg myLogo" src="'+url+'" alt="logo"/>'+
-    //            '<div class="filterUp"></div>'+
-    //            '</div>'+
-    //            '<div class="mainInfo">'+
-    //            '<div class="left">'+
-    //            '<img id="myLogo" class="myLogo" src="'+data.logo+'" />'+
-    //            '</div>'+
-    //            '<div class="right">'+
-    //            '<div id="orgName">'+name+'</div>'+
-    //            '<div class="peopleInfo">'+
-    //            '<div class="peopleInfoItem">'+
-    //            '<div class="valInfo" id="viewedVal">'+data.view_count+'</div>'+
-    //            '<div class="filedInfo">查看人数</div>'+
-    //            '</div>'+
-    //            '<div class="peopleInfoItem">'+
-    //            '<div class="valInfo" id="teacherdVal">'+data.teachersCount+'</div>'+
-    //            '<div class="filedInfo">老师</div>'+
-    //            '</div>'+
-    //            '<div class="peopleInfoItem">'+
-    //            '<div class="valInfo" id="fansVal">'+data.followCount+'</div>'+
-    //            '<div class="filedInfo">粉丝</div>'+
-    //            '</div>'+
-    //            '<div class="peopleInfoItem">'+
-    //            '<div class="valInfo" id="groupsVal">'+data.groupCount+'</div>'+
-    //            '<div class="filedInfo">群主</div>'+
-    //            '</div>'+
-    //            '<div style="clear: both;"></div>'+
-    //            '</div>'+
-    //            '</div>'+
-    //            '</div>'+
-    //            '</div>'+
-    //            '<div class="bottom">'+
-    //            '<div class="cerInfoItem '+ class1 +'">'+
-    //            '<span>'+
-    //            '<i class="heiCerIcon spiteBg '+class1+'"></i>'+
-    //            '<span class="cerName '+class1+'">嘿设汇认证</span>'+
-    //            '<div style="clear: both;"></div>'+
-    //            '</span>'+
-    //            '</div>'+
-    //            '<div class="cerInfoItem  '+ class2 +'">'+
-    //            '<span>'+
-    //            '<i class="honestCerIcon spiteBg '+class2+'"></i>'+
-    //            '<span class="cerName '+class1+'">诚信机构认证</span>'+
-    //            '<div style="clear: both;"></div>'+
-    //            '</span>'+
-    //            '</div>'+
-    //                //'</div>'+
-    //            '</div>';
-    //        this.$wrapper.find('.logoAndCertInfo').html(str).css('opacity',1);
-    //        this.$wrapper.find('#myLogo').setImgBox();
-    //        this.fillInIntroduceInfo(result);
-    //
-    //
-    //    },
-    //
-    //    /*加载头条信息*/
-    //    loadTopAnnouncement:function(){
-    //        var that=this,
-    //            $target=that.$wrapper.find('.mainItemTopNews');
-    //        this.loadData({
-    //            url: window.urlObject.apiUrl + 'topPost',
-    //            paraData: {organization_id: this.oid},
-    //            sCallback: function(result){
-    //                $target.css('opacity',1);
-    //                that.fillInTopAnnouncement(result.data);
-    //            },
-    //            eCallback:function(txt){
-    //                $target.css('opacity',1);
-    //                $target.find('.loadErrorCon').show().find('a').text('获取头条信息失败，点击重新加载').show();
-    //            }
-    //        });
-    //    },
-    //
-    //    /*填充头条信息*/
-    //    fillInTopAnnouncement:function(data){
-    //        var str='',item;
-    //        if(!data || data.length==0){
-    //            str='<li><div class="nonData">暂无头条信息</div></li>';
-    //        }else {
-    //            var len = data.length;
-    //            for (var i = 0; i < len; i++) {
-    //                item = data[i];
-    //                str += '<li>' +
-    //                    '<div class="topNewLogo">头条</div>' +
-    //                    '<div class="title">' +
-    //                    '<a href="' + item.detail_url + '">' + item.title + '</a>' +
-    //                    '</div>' +
-    //                    '</li>';
-    //            }
-    //        }
-    //        this.$wrapper.find('.mainItemTopNews .mainContent').html(str);
-    //    },
+        /*加载基本信息*/
+    t.loadBasicInfoData=function() {
+        var that=this,
+            $target=that.$wrapper.find('.logoAndCertInfo'),
+            queryPara={
+                url:this.baseUrl+'appGetBaseInfo',
+                paraData:{organization_id:this.oid},
+                sCallback: $.proxy(this,'fillInBasicInfoData'),
+                eCallback:function(){
+                    $target.css('opacity',1);
+                    $target.find('.loadErrorCon').show();
+                },
+                type:'get'
+            };
+        this.getDataAsync(queryPara);
+    };
+
+
+
+    /*显示具体信息*/
+    t.fillInBasicInfoData=function(result){
+        var data=result.data, url=data.logo;
+        if(this.deviceType.android){
+            url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
+        }
+        var name=data.name;
+        if(name.length>10){
+            name=name.substr(0,9)+' …';
+        }
+        var $box=$('.logo-box');
+        //logo
+        $box.find('#filter-logo').attr('src',url);
+        $box.find('#logo').attr('src',data.logo);
+
+        // 视频、名称、认证
+        $box.find('.name-main-box label').text(data.name);
+
+        // 粉丝和观看人数
+        var $people=$box.find('.user-number-box label');
+        $people.eq(0).text(data.view_count);
+        $people.eq(1).text(data.followCount);
+        if(!data.light_authentication=='0'){
+            $box.find('.v-cert, .cert-box').show();
+        }
+    };
+
+    /*加载头条信息*/
+    t.loadTopAnnouncement=function(){
+        var that=this;
+        this.getDataAsync({
+            url: this.baseUrl + 'topPost',
+            paraData: {organization_id: this.oid},
+            sCallback: function(result){
+                that.fillInTopAnnouncement(result.data);
+            },
+            eCallback:function(txt){
+                $target.css('opacity',1);
+                $target.find('.loadErrorCon').show().find('a').text('获取头条信息失败，点击重新加载').show();
+            },
+            type:'get'
+        });
+    };
+
+        /*填充头条信息*/
+        t.fillInTopAnnouncement=function(data){
+            var str='',item,
+                $target=$('.news-box');
+            if(data || data.length!=0){
+                $target.show();
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                    if(i<2) {
+                        item = data[i];
+                        str += '<a href="' + item.detail_url + '"><p>' + item.title + '</p></a>';
+                    }
+                }
+            }
+            $('.right-item div').html(str);
+        };
     //
     //    /*加载报名信息*/
     //    loadSignUpInfo:function(){
