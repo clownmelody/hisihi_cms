@@ -258,7 +258,7 @@ class ForumController extends AdminController
 
 
     public function post($page = 1, $forum_id = null, $r = 20, $title = '', $content = '',
-                         $showtop=0, $showelite=null)
+                         $showtop=0, $showelite=null, $user = '')
     {
         //读取帖子数据
         $map = array('status' => array('EGT', 0));
@@ -268,16 +268,32 @@ class ForumController extends AdminController
         if ($content != '') {
             $map['content'] = array('like', '%' . $content . '%');
         }
+
+        if ($user != '') {
+            if(is_numeric($user)){
+                $map['uid'] = $user;
+            }else {
+                $user_map['nickname'] = array('like', '%' . $user . '%');
+                $user_ids = M('Member')->where($user_map)->field('uid')->select();
+                $ids = array();
+                foreach ($user_ids as $item){
+                    $ids[] = $item['uid'];
+                }
+                $map['uid'] = array('in', $ids);
+            }
+        }
+
         if($showtop==1) $map['is_top'] = 1;
         if($showelite==1) $map['is_elite'] = 1;
         if ($forum_id) $map['forum_id'] = $forum_id;
         $model = M('ForumPost');
         $list = $model->where($map)->order('last_reply_time desc')->page($page, $r)->select();
-        if(S('admin_forum_forum_post_total_count'.md5($map))){
-            $totalCount = S('admin_forum_forum_post_total_count'.md5($map));
+
+        if(S('admin_forum_forum_post_total_count'.md5(serialize($map)))){
+            $totalCount = S('admin_forum_forum_post_total_count'.md5(serialize($map)));
         } else {
             $totalCount = $model->where($map)->count();
-            S('admin_forum_forum_post_total_count'.md5($map), $totalCount, 600);
+            S('admin_forum_forum_post_total_count'.md5(serialize($map)), $totalCount, 600);
         }
         foreach ($list as &$v) {
             if ($v['is_top'] == 1) {
@@ -314,6 +330,7 @@ class ForumController extends AdminController
             ->setSearchPostUrl()
             /*->search('标题','title')*/
             ->search('内容','content')
+            ->search('用户昵称或uid','user')
             ->data($list)
             ->pagination($totalCount,$r)
             ->display();
