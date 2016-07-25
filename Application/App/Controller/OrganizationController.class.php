@@ -4350,6 +4350,25 @@ GROUP BY
         if($organization_id==0){
             $this->apiError(-1, '机构id不能为空');
         }
+        if((float)$version>=2.95){
+            $coupon_list = M()->query('select t2.teaching_course_id, t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
+hisihi.hisihi_teaching_course_organization_promotion_relation t1,
+hisihi.hisihi_teaching_course_coupon_relation t2, hisihi.hisihi_coupon t3
+where t1.teaching_course_id=t2.teaching_course_id
+            and t2.coupon_id=t3.id and t2.status=1 and t1.status=1 and t3.status=1
+            and t1.organization_id='.$organization_id.' order by t3.money desc');
+            $model = M('OrganizationTeachingCourse');
+            foreach($coupon_list as &$coupon){
+                $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+                $course = $model->field('course_name')->where('id='.$coupon['teaching_course_id'])
+                    ->find();
+                $coupon['teaching_course_name'] = $course['course_name'];
+                unset($coupon['teaching_course_id']);
+            }
+            $data['totalCount'] = count($coupon_list);
+            $data['list'] = $coupon_list;
+            $this->apiSuccess('获取机构优惠券列表成功', null, $data);
+        }
         $promotion_list = M()->query('select distinct(promotion_id) from hisihi_teaching_course_organization_promotion_relation where status=1 and organization_id='.$organization_id);
         $_promotion_list = array();
         foreach($promotion_list as $pro){
@@ -4357,24 +4376,13 @@ GROUP BY
                 ->where('id='.$pro['promotion_id'])
                 ->find();
             $now = time();
-            $coupon_list = M()->query('select t2.teaching_course_id, t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
+            $coupon_list = M()->query('select t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
 hisihi_teaching_course_organization_promotion_relation t1,
 hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
  and t2.coupon_id=t3.id and t2.status=1 and t1.status=1 and t3.status=1 and t3.end_time>='.$now.' and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
-            $model = M('OrganizationTeachingCourse');
-            if((float)$version < 2.95){
-                foreach($coupon_list as &$coupon){
-                    $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
-                    unset($coupon['teaching_course_id']);
-                }
-            } else {
-                foreach($coupon_list as &$coupon){
-                    $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
-                    $course = $model->field('course_name')->where('id='.$coupon['teaching_course_id'])
-                        ->find();
-                    $coupon['teaching_course_name'] = $course['course_name'];
-                    unset($coupon['teaching_course_id']);
-                }
+            foreach($coupon_list as &$coupon){
+                $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+                unset($coupon['teaching_course_id']);
             }
             $obj['coupon_list'] = $coupon_list;
             $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
