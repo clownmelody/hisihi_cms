@@ -1030,7 +1030,7 @@ class ForumController extends AppController
             if($fttpr){
                 $topic_id = $fttpr['topic_id'];
             }
-            $record = M('ForumTopic')->field('title, description, img_url, is_hot')->where('id='.$topic_id)->find();
+            $record = M('ForumTopic')->field('title, description, img_url, is_hot')->where('status=1 and id='.$topic_id)->find();
             $post['topic_info'] = $record;
         }
         $extra['data'] = $post;

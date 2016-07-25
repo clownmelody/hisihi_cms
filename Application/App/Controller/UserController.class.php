@@ -1343,11 +1343,11 @@ class UserController extends AppController
         //获取主题的详细资料
         foreach ($list as &$favorite) {
             switch($favorite['appname']){
-                case 'Issue':
+                case 'Issue':  // 视频
                     $favorite['type'] = 'Course';
                     $favorite['info'] = A('Course')->findCourse($favorite['row']);
                     break;
-                case 'Article':
+                case 'Article':  // 头条文章
                     $favorite['type'] = 'Article';
                     $favorite['info'] = A('Public')->findArticle($favorite['row'], $version);
                     $aid = $favorite['info']['id'];
@@ -1359,15 +1359,15 @@ class UserController extends AppController
                     $favorite['type'] = 'org_courses';
                     $favorite['info'] = A('Organization')->findCoursesById($favorite['row']);
                     break;
-                case 'OrganizationInfo' :
+                case 'OrganizationInfo' :  // 机构主页
                     $favorite['type'] = 'organization';
                     $favorite['info'] = A('Organization')->findOrganizationById($favorite['row']);
                     break;
-                case 'University' :
+                case 'University' :  // 大学
                     $favorite['type'] = 'university';
                     $favorite['info'] = A('Organization')->findUniversityById($favorite['row']);
                     break;
-                case 'OrganizationTeachingCourse':
+                case 'OrganizationTeachingCourse':  // 机构培训课程
                     $favorite['type'] = 'organization_teaching_course';
                     $favorite['info'] = A('Organization')->getTeachingCourseInfo($favorite['row']);
                     break;

@@ -59,6 +59,7 @@ body{
 }
 
 .pagination li a .active{border-color: #039674;background: #039674;color: #fff}
+#page_skip{width: 30px;}
 
 .tab-nav .current a, .tab-nav .current a:hover{
     border-color: #039674 rgb(224, 224, 224) rgb(246, 246, 246);
