@@ -4483,6 +4483,9 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
                 $sms_content = "用户".$mobile." 成功报名".$organization['name']."机构，快去处理吧";
             }
         } else {
+            if(!$this->isCanSendSMSTeachingCourseFrequence($mobile, $course_id)){
+                $this->apiSuccess('预约报名成功!');
+            }
             $teaching_course = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$course_id)->find();
             if(!empty($username)){
                 $sms_content = "用户".$username." 手机号".$mobile." 成功报名".$teaching_course['course_name']."课程，快去处理吧";
@@ -4535,6 +4538,20 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         $this->apiSuccess('大学报考成功!');
     }
 
+    public function isCanSendSMSTeachingCourseFrequence($mobile, $teaching_course_id=0){
+        if($teaching_course_id!=0){
+            $where_array['mobile'] = $mobile;
+            $where_array['course_id'] = $teaching_course_id;
+            $yuyue_info = M('OrganizationYuyue')->field('send_sms_time')->where($where_array)->find();
+            $last_send_time = (int)$yuyue_info['send_sms_time'];
+            $now = time();
+            if($now-$last_send_time>=300){
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
 
     public function sendSMS($mobile=array(), $content=null){
         if(empty($mobile)||empty($content)){
