@@ -1707,6 +1707,7 @@ class OrganizationController extends AdminController
         }
         $count = $model->where($filter)->count();
         $Page = new Page($count, C('LIST_ROWS'));
+
         $show = $Page->show();
         //用于用户名搜索
         $name = $_GET["title"];

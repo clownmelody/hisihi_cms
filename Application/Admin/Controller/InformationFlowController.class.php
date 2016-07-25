@@ -407,7 +407,7 @@ class InformationFlowController extends AdminController {
         $map['show_pos'] = $pos;
         $model = M('InformationFlowBanner');
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where($map)->order('sort asc , create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
 

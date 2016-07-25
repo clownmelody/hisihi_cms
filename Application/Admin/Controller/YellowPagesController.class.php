@@ -266,6 +266,7 @@ class YellowPagesController extends AdminController {
         $model = $this->pageClass;
         $count = $model->where('status=1')->count();
         $Page = new Page($count, C('LIST_ROWS'));
+
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -351,6 +352,7 @@ class YellowPagesController extends AdminController {
         $model = $this->pageLabel;
         $count = $model->where('status=1')->count();
         $Page = new Page($count, C('LIST_ROWS'));
+
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
