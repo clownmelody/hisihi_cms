@@ -4454,14 +4454,108 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         return $info;
     }
 
+    /**
+     * 预约报名
+     * @param null $mobile
+     * @param null $username
+     * @param int $organization_id
+     * @param int $course_id
+     * @param null $education
+     * @param null $major
+     */
+    public function yuyue($mobile=null, $username=null, $organization_id=0,
+                          $course_id=0, $education=null, $major=null){
+        if(empty($mobile)||empty($organization_id)){
+            $this->apiError(-1, "机构id和手机号不能为空");
+        }
+        $data['mobile'] = $mobile;
+        $data['username'] = $username;
+        $data['education'] = $education;
+        $data['major'] = $major;
+        $data['organization_id'] = $organization_id;
+        $data['course_id'] = $course_id;
+        $data['create_time'] = time();
+        $organization = M('Organization')->field('name')->where('id='.$organization_id)->find();
+        if(empty($course_id)){
+            if(!empty($username)){
+                $sms_content = "用户".$username." 手机号".$mobile." 成功报名".$organization['name']."机构，快去处理吧";
+            } else {
+                $sms_content = "用户".$mobile." 成功报名".$organization['name']."机构，快去处理吧";
+            }
+        } else {
+            if(!$this->isCanSendSMSTeachingCourseFrequence($mobile, $course_id)){
+                $this->apiSuccess('预约报名成功!');
+            }
+            $teaching_course = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$course_id)->find();
+            if(!empty($username)){
+                $sms_content = "用户".$username." 手机号".$mobile." 成功报名".$teaching_course['course_name']."课程，快去处理吧";
+            } else {
+                $sms_content = "用户".$mobile." 成功报名".$teaching_course['course_name']."课程，快去处理吧";
+            }
+        }
+        if($this->sendSMS(C('o_phone_array'), $sms_content)){
+            $data['send_sms_time'] = time();
+        } else {
+            $data['send_sms_time'] = 0;
+        }
+        M('OrganizationYuyue')->add($data);
+        $this->apiSuccess('预约报名成功!');
+    }
 
-    public function sendSMS($mobile=null, $content=null){
+    /**
+     * 留学大学报考
+     * @param null $mobile
+     * @param null $username
+     * @param int $university_id
+     * @param string $education
+     * @param string $major
+     */
+    public function baokao($mobile=null, $username=null, $university_id=0,
+                           $education='', $major=''){
+        if(empty($mobile)||empty($university_id)){
+            $this->apiError(-1, "大学id和手机号不能为空");
+        }
+        $data['mobile'] = $mobile;
+        $data['username'] = $username;
+        $data['education'] = $education;
+        $data['major'] = $major;
+        $data['university_id'] = $university_id;
+        $data['create_time'] = time();
+        $university = M('AbroadUniversity')->field('name')->where('id='.$university_id)->find();
+        if(!empty($username)){
+            $sms_content = "用户".$username." 手机号".$mobile." 成功报名".$university['name']."大学 ".
+                $education . " " . $major ."，快去处理吧";
+        } else {
+            $sms_content = "用户".$mobile." 成功报名".$university['name']."大学 ".
+                $education . " " . $major ."，快去处理吧";
+        }
+        if($this->sendSMS(C('liuxue_phone_array'), $sms_content)){
+            $data['send_sms_time'] = time();
+        } else {
+            $data['send_sms_time'] = 0;
+        }
+        M('OrganizationYuyue')->add($data);
+        $this->apiSuccess('大学报考成功!');
+    }
+
+    public function isCanSendSMSTeachingCourseFrequence($mobile, $teaching_course_id=0){
+        if($teaching_course_id!=0){
+            $where_array['mobile'] = $mobile;
+            $where_array['course_id'] = $teaching_course_id;
+            $yuyue_info = M('OrganizationYuyue')->field('send_sms_time')->where($where_array)->find();
+            $last_send_time = (int)$yuyue_info['send_sms_time'];
+            $now = time();
+            if($now-$last_send_time>=300){
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public function sendSMS($mobile=array(), $content=null){
         if(empty($mobile)||empty($content)){
             $this->apiError(-1, '传入手机号为空或短信内容为空');
-        } else {
-            if(!preg_match('/^1([0-9]{9})/',$mobile)){
-                $this->apiError(-2, '传入手机号不符合格式');
-            }
         }
         $url = C('bmob_sms_url');
         $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
@@ -4471,9 +4565,11 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         foreach( $headers as $n => $v ) {
             $headerArr[] = $n .':' . $v;
         }
-        $post_data = array('mobilePhoneNumber'=>urlencode($mobile), 'content'=>$content);
-        $post_data = json_encode($post_data);
-        $result = $this->request_by_curl($url, $headerArr, $post_data);
+        foreach($mobile as $phone_num){
+            $post_data = array('mobilePhoneNumber'=>urlencode($phone_num), 'content'=>$content);
+            $post_data = json_encode($post_data);
+            $result = $this->request_by_curl($url, $headerArr, $post_data);
+        }
         if($result){
             return true;
         } else {
