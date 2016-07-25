@@ -27,7 +27,7 @@ class OrganizationController extends AppController
      * 获取短信验证码
      * @param $mobile
      */
-    public function getSMS($mobile=null,$type='register'){
+    public function getSMS($mobile=null, $type='register'){
         if(empty($mobile)){
             $this->apiError(-1, '传入手机号为空');
         } else {
@@ -413,6 +413,7 @@ class OrganizationController extends AppController
             $result['logo'] = $logo;
             if((float)$version>=2.95){
                 $result['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
+                $result['is_favorite'] = $this->isOrganizationFavorite($uid, $organization_id);
             } else {
                 $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
             }
@@ -4232,6 +4233,24 @@ GROUP BY
     }
 
     /**
+     * 机构是否被收藏
+     * @param $uid
+     * @param $organization_id
+     * @return bool
+     */
+    public function isOrganizationFavorite($uid, $organization_id){
+        $favorite['appname'] = 'OrganizationInfo';
+        $favorite['table'] = 'organization';
+        $favorite['row'] = $organization_id;
+        $favorite['uid'] = $uid;
+        if (D('Favorite')->where($favorite)->count()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 收藏大学
      * @param int $uid
      * @param int $university_id
@@ -4433,6 +4452,33 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         $info = M('OrganizationTeachingCourse')->field('id, organization_id, course_name, cover_pic, start_course_time, lesson_period, student_num, lecture_name, price, already_registered')
             ->where('id='.$id)->find();
         return $info;
+    }
+
+
+    public function sendSMS($mobile=null, $content=null){
+        if(empty($mobile)||empty($content)){
+            $this->apiError(-1, '传入手机号为空或短信内容为空');
+        } else {
+            if(!preg_match('/^1([0-9]{9})/',$mobile)){
+                $this->apiError(-2, '传入手机号不符合格式');
+            }
+        }
+        $url = C('bmob_sms_url');
+        $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
+        $headers['X-Bmob-REST-API-Key'] = C('bmob_api_key');
+        $headers['Content-Type'] = 'application/json';
+        $headerArr = array();
+        foreach( $headers as $n => $v ) {
+            $headerArr[] = $n .':' . $v;
+        }
+        $post_data = array('mobilePhoneNumber'=>urlencode($mobile), 'content'=>$content);
+        $post_data = json_encode($post_data);
+        $result = $this->request_by_curl($url, $headerArr, $post_data);
+        if($result){
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
