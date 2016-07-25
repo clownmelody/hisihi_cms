@@ -13,6 +13,7 @@
 </head>
 <body>
     <div id="wrapper" data-oid="{$organization_id}">
+        <!--基本信息-->
         <div class="logo-box">
             <div class="filter">
                 <img id="filter-logo" src="http://pic.hisihi.com/2016-05-19/1463642572351446.png@38-38-392-392a" alt="logo">
@@ -33,6 +34,8 @@
                 </div>
             </div>
         </div>
+
+        <!--机构动态-->
         <div class="main-item news-box">
             <div class="left-item">
                 <!--<img src="__IMG__/orgbasicinfo/2.9.5/ic_dynamic@3x.png">-->
@@ -45,28 +48,29 @@
             </div>
         </div>
 
-        <div class="main-item singin-box">
+        <!--报名信息-->
+        <div class="main-item sing-in-box">
             <div class="left-item">
                 <label>报名领</label>
                 <i></i>
                 <label>:</label>
             </div>
             <div class="right-item">
-                <p><span>李浴缸</span>同学 于2015-11-02 成功报名</p>
-                <p><span>蒋中正</span>同学 于2015-11-02 成功报名</p>
-                <p><span>王小宝</span>同学 于2015-11-02 成功报名</p>
-                <p><span>张曼玉</span>同学 于2015-11-02 成功报名</p>
-                <p><span>赵又廷</span>同学 于2015-11-02 成功报名</p>
+                <div class="sing-in-detail-box">
+                    <p><span>李浴缸</span>同学 于 2015-11-02 成功报名</p>
+                    <p><span>蒋中正</span>同学 于 2015-11-02 成功报名</p>
+                    <p><span>王小宝</span>同学 于 2015-11-02 成功报名</p>
+                    <p><span>张曼玉</span>同学 于 2015-11-02 成功报名</p>
+                    <p><span>赵又廷</span>同学 于 2015-11-02 成功报名</p>
+                </div>
             </div>
         </div>
 
-        <div class="coupon">
+        <!--优惠券-->
+        <div class="coupon-box">
             <ul>
                 <li>
-                    <div class="coupon-header">
-                        <span>￥10000</span>
-                        <i></i>
-                    </div>
+                    <div class="coupon-header">￥10000</div>
                     <div class="coupon-bottom">
                         <p>适用于：PS大法速成班，以及什么吧啦吧啦的之类，反正不知道吃什么好</p>
                     </div>
@@ -101,58 +105,58 @@
             </ul>
         </div>
 
-        <!--头条信息-->
-        <div class="mainItem mainItemNormal mainItemTopNews">
-            <div class="loadErrorCon">
-                <a class="loadError" href="javascript:void(0)" data-index="1"></a>
+        <!--机构简介-->
+        <div class="main-item basic-info-box">
+            <div class="introduce main-content-item">
+                <div class="basic-header">机构简介</div>
+                <div class="my-introduce"></div>
             </div>
-            <ul class="topNewsCon mainContent"></ul>
-        </div>
 
-
-        <!--基本信息-->
-        <div class="mainItem mainItemNormal mainItemBasicInfo">
-            <div class="basicHeader"><span>机构简介</span></div>
-            <div class="mainContentItem introduce">
-                <div class="nonData">暂无基本信息</div>
-            </div>
             <!--地理位置-->
-            <div class="mainContentItem location">
-                <div class="basicHeaderWithArrow">
-                    <span>地址<span class="noDataInHeader"></span></span>
-                </div>
-                <div class="locationDetail">
-                    <p id="myLocation"></p>
-                </div>
+            <div class="location main-content-item">
+                <div class="basic-header">地址</div>
+                <div class="my-location"></div>
             </div>
-            <div class="mainContentItem advanceTags">
-                <div class="itemHeader">优势</div>
-                <ul class="itemContentDetail">
+
+            <!--标签-->
+            <div class="advance-tags main-content-item">
+                <div class="basic-header">优势</div>
+                <ul class="my-tags">
                     <li>暂无优势标签</li>
                 </ul>
             </div>
 
             <!--相册-->
-            <div class="mainContentItem pics-box" data-loaded="false" data-loading="false">
-                <div class="itemHeader">相册
+            <div class="pics-box main-content-item">
+                <div class="basic-header">相册
                     <span class="pics-number">
                         <label>2视频</label>
                         <label>34照片</label>
                     </span>
                 </div>
-                <div id="pics-preview-box">
+                <div class="pics-preview-box">
                     <ul>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
+                        <li class="vedio">
+                            <img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e">
+                            <span class="p-btn">
+                                <i class="icon-play"></i>
+                            </span>
+                        </li>
+                        <li class="vedio">
+                            <img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e">
+                            <span class="p-btn">
+                                <i class="icon-play"></i>
+                            </span>
+                        </li>
+                        <li> <img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e"></li>
+                        <li> <img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e"></li>
+                        <li> <img src="https://avatar.tower.im/a80e1f8718c14849ba60203aef5a755e"></li>
                     </ul>
                 </div>
             </div>
 
             <!--师资力量-->
-            <div class="mainContentItem mainItemTeacherPower" data-loaded="false" data-loading="false">
+            <div class="mainItemTeacherPower main-content-item " data-loaded="false" data-loading="false">
                 <div class="basicHeaderWithArrow">
                     <span>师资力量</span>
                 </div>
