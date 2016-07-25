@@ -56,12 +56,21 @@ body{
 }
 #wrapper {
   padding-top: 56px;
+  overflow-x: hidden;
+  //display: none;
 }
 .sprite-bg{
   background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
   background-size: 306px 65px;
 }
 @fcolor:rgb(21,21,21);
+
+.play-btn{
+  .sprite-bg;
+  .size(34px,33px);
+  display: inline-block;
+  background-position: -118px -32px;
+}
 
 .logo-box{
   .size(100%,150px);
@@ -106,16 +115,15 @@ body{
         display: inline-block;
         .size(18px,18px);
         display: none;
+
       }
     }
     .name-main-box{
       text-align: center;
       margin-top: 6px;
       i{
-        .sprite-bg;
-        .size(33px,33px);
-        display: inline-block;
-        background-position: -119px -32px;
+        .play-btn;
+        display: none;
       }
       label {
         vertical-align: 10px;
@@ -127,15 +135,13 @@ body{
         margin-left: 5px;
         img{
           .size(18px,18px);
+          margin-right: 5px;
         }
       }
     }
     .user-number-box{
       text-align: center;
       span{
-        &:first-child {
-          margin-right: 14px;
-        }
         i{
           .sprite-bg;
           .size(14px,9px);
@@ -143,9 +149,18 @@ body{
           background-position: -227px -32px;
           margin-right: 4px;
         }
+        &:last-child {
+          margin-left: 14px;
+          i{
+            .size(10px,11px);
+            background-position: -227px -9px;
+          }
+        }
+
         label{
           color: @fcolor;
           font-size: 11px;
+          vertical-align: 1px;
         }
       }
     }
@@ -155,6 +170,17 @@ body{
   background-color: #fff;
   margin:12px 8px;
   border-radius:4px;
+  padding-left:8px;
+  padding-right: 8px;
+  .basic-header{
+    height: 40px;
+    font-size: 14px;
+    color: #212121;
+    line-height: 40px;
+  }
+  .main-content-item{
+    //display: none;
+  }
 }
 .news-box{
   position: relative;
@@ -167,11 +193,7 @@ body{
     left:0;
     top: 12px;
     left: 8px;
-    //img{
-    //  .size(100%,100%);
-    //}
     .sprite-bg;
-    //background-size: 612px 130px;
     background-position: -243px 0;
     p{
       margin: 0;
@@ -198,9 +220,176 @@ body{
         p{
           .txt-ellipsis-p(1);
           margin: 7px 0;
-          //&.one{
-          //  margin: 21px 0;
-          //}
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
+
+.sing-in-box{
+  height: 25px;
+  position: relative;
+  padding-bottom: 15px;
+  overflow: hidden;
+  display: none;
+  .left-item{
+    position: absolute;
+    .size(91px,auto);
+    font-size: 14px;
+    color: @fcolor;
+    padding-top: 7px;
+    i{
+      display: inline-block;
+      .size(36px,22px);
+      .sprite-bg;
+      background-position: -117px -2px;
+      vertical-align: -3px;
+      margin-left: 1px;
+    }
+    label{
+      &:nth-child(3){
+        vertical-align: 1px;
+      }
+    }
+  }
+  .right-item{
+    margin-left:97px;
+    @h:28px;
+    @margin-top: 5px;
+    height:@h;
+    overflow: hidden;
+    .sing-in-detail-box {
+      p {
+        font-size: 13px;
+        .txt-ellipsis-p(1);
+        margin:0;
+        height: 40px;
+        line-height: 41px;
+        span{
+          &:nth-child(1){
+            color: #FF5A00;
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.coupon-box{
+  margin:12px 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  ul{
+    white-space: nowrap;
+    height: 80px;
+    li{
+      .sprite-bg;
+      .size(95px,70px);
+      display: inline-block;
+      margin-right: 5px;
+      color: #fff;
+      padding:0 8px;
+      .coupon-header{
+        height: 30px;
+        line-height: 30px;
+        font-size: 15px;
+      }
+      .coupon-bottom{
+        height: 40px;
+        p{
+          font-size: 12px;
+          margin: 2px 0;
+          white-space:normal;
+          .txt-ellipsis-p(2);
+        }
+      }
+    }
+  }
+}
+
+.basic-info-box {
+  .basic-header {
+    width: 150%;
+  }
+  .introduce {
+    .basic-header {
+      border-bottom: 1px solid #F3F3F3;
+    }
+    .my-introduce {
+      font-size: 14px;
+      color:#212121;
+      margin: 14px 0;
+    }
+  }
+  .location {
+    .basic-header {
+      border-top: 1px solid #F3F3F3;
+    }
+    .my-location {
+      color: #000;
+      margin: 8px 0 14px 0;
+      font-size: 14px;
+    }
+  }
+  .advance-tags {
+    .basic-header {
+      border-top: 1px solid #F3F3F3;
+    }
+    .my-tags{
+      li {
+        display: inline-block;
+        padding: 8px;
+        height: 15px;
+        line-height: 100%;
+        margin: 0 12px 12px 0;
+        border:1px solid #ff5a00;
+        border-radius: 3px;
+        font-size: 14px;
+        color: #ff5a00;
+      }
+    }
+  }
+  .pics-box{
+    .basic-header {
+      border-top: 1px solid #F3F3F3;
+    }
+    .pics-number{
+      color: #808080;
+      margin-left: 2px;
+    }
+    .pics-preview-box{
+      overflow-x: auto;
+      ul{
+        margin: 10px 0 14px 0;
+        white-space: nowrap;
+        li{
+          display: inline-block;
+          .size(90px,90px);
+          margin-right: 4px;
+            position: relative;
+            .p-btn{
+              position: absolute;
+              .size(32px,32px);
+              top:50%;
+              left: 50%;
+              margin-top:-16px;
+              margin-left:-16px;
+              border-radius: 16px;
+              background-color:#B2B2B2;
+              .icon-play{
+                display: inline-block;
+                color: white;
+                font-size: 20px;
+                line-height: 32px;
+                margin-left:8px;
+              }
+          }
+          img{
+            .size(100%,100%);
+          }
         }
       }
     }
@@ -218,4 +407,35 @@ body{
 }
 @media screen and (max-width: 320px) {
 
+}
+
+
+@font-face {
+  font-family: 'icomoon';
+  src:    url('fonts/icomoon.eot?k4ibku');
+  src:    url('fonts/icomoon.eot?k4ibku#iefix') format('embedded-opentype'),
+  url('fonts/icomoon.ttf?k4ibku') format('truetype'),
+  url('fonts/icomoon.woff?k4ibku') format('woff'),
+  url('fonts/icomoon.svg?k4ibku#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-play:before {
+  content: "\e052";
 }

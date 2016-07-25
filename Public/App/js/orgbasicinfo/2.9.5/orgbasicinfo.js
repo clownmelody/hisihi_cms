@@ -14,8 +14,13 @@ define(['base'],function(Base){
             //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
-        this.loadBasicInfoData();
-        this.loadTopAnnouncement();
+
+        this.async=false;  //同步加载所有的数据
+        this.controlLoadingBox(true);
+        window.setTimeout(function(){
+            that.initData();
+        },100);
+
     }
 
     OrgBasicInfo.prototype=new Base();
@@ -127,19 +132,33 @@ define(['base'],function(Base){
     //
     //    },
     //
-        /*加载基本信息*/
+
+    t.initData=function(){
+        this.loadBasicInfoData();
+        this.loadTopAnnouncement();
+        this.loadSignUpInfo();
+        this.loadCouponInfo();
+        this.loadVideo();
+        //this.loadPics();
+        $('#wrapper').show();
+        this.controlLoadingBox(false);
+    };
+
+    /*加载基本信息*/
     t.loadBasicInfoData=function() {
         var that=this,
             $target=that.$wrapper.find('.logoAndCertInfo'),
             queryPara={
                 url:this.baseUrl+'appGetBaseInfo',
-                paraData:{organization_id:this.oid},
+                paraData:{organization_id:this.oid,version:2.95},
                 sCallback: $.proxy(this,'fillInBasicInfoData'),
                 eCallback:function(){
-                    $target.css('opacity',1);
-                    $target.find('.loadErrorCon').show();
+                    //$target.css('opacity',1);
+                    //$target.find('.loadErrorCon').show();
                 },
-                type:'get'
+                type:'get',
+                async:this.async
+
             };
         this.getDataAsync(queryPara);
     };
@@ -150,7 +169,7 @@ define(['base'],function(Base){
     t.fillInBasicInfoData=function(result){
         var data=result.data, url=data.logo;
         if(this.deviceType.android){
-            url=window.urlObject.image+'/orgbasicinfo/blur.jpg';
+            url=window.hisihiUrlObj.image+'/orgbasicinfo/blur.jpg';
         }
         var name=data.name;
         if(name.length>10){
@@ -163,15 +182,87 @@ define(['base'],function(Base){
 
         // 视频、名称、认证
         $box.find('.name-main-box label').text(data.name);
+        if(data.is_listen_preview=='0'){
+            $('.name-main-box i').css('display','inline-block');
+        }
+        this.setCertInfo(data.authenticationInfo);
 
         // 粉丝和观看人数
         var $people=$box.find('.user-number-box label');
         $people.eq(0).text(data.view_count);
         $people.eq(1).text(data.followCount);
-        if(!data.light_authentication=='0'){
-            $box.find('.v-cert, .cert-box').show();
+
+        //基本信息
+        if(data.introduce){
+            $('.my-introduce').text(data.introduce).parent().show();
+        }
+        if(data.location){
+            $('.my-location').text(data.location).parent().show();
+        }
+        /*优势标签*/
+        if(data.advantage) {
+            var arr=data.advantage.split('#'),
+                str='';
+            for(var i=0;i<arr.length;i++){
+                str+='<li>'+arr[i]+'</li>';
+            }
+            $('.my-tags').html(str).parent().show();
         }
     };
+
+    //认证信息
+    t.setCertInfo=function(authen){
+        if(!authen || authen.length==0){
+            return;
+        }
+        var str='',
+            url='',
+            len=authen.length,
+            item;
+        for(var i=0;i<len;i++){
+            item=authen[i];
+            if(item.default_display=='1') {
+                //显示加v
+                if (item.name == '嘿设汇认证') {
+                    if (item.status && item.hisihi_add_v && item.hisihi_add_v == true) {
+                        $('.v-cert').show();
+                        continue;
+                    }
+                } else {
+                    if (item.status) {
+                        url = item.pic_url
+                    } else {
+                        url = item.disable_pic_url;
+                    }
+                    str += '<img src="' + url + '">';
+                }
+            }
+        }
+        $('.cert-box').html(str);
+    };
+
+    //优惠券信息
+    t.loadCouponInfo=function(){
+        var that=this;
+        this.getDataAsync({
+            url: this.baseUrl + 'getPromotionCouponList',
+            paraData: {organization_id: this.oid},
+            sCallback: function(result){
+                that.fillInCouponInfo(result.data);
+            },
+            eCallback:function(txt){
+                //$target.css('opacity',1);
+                //$target.find('.loadErrorCon').show().find('a').text('获取头条信息失败，点击重新加载').show();
+            },
+            type:'get',
+            async:this.async
+        });
+    };
+
+    t.fillInCouponInfo=function(data){
+        data;
+    };
+
 
     /*加载头条信息*/
     t.loadTopAnnouncement=function(){
@@ -183,82 +274,161 @@ define(['base'],function(Base){
                 that.fillInTopAnnouncement(result.data);
             },
             eCallback:function(txt){
-                $target.css('opacity',1);
-                $target.find('.loadErrorCon').show().find('a').text('获取头条信息失败，点击重新加载').show();
+                //$target.css('opacity',1);
+                //$target.find('.loadErrorCon').show().find('a').text('获取头条信息失败，点击重新加载').show();
             },
-            type:'get'
+            type:'get',
+            async:this.async
         });
     };
 
-        /*填充头条信息*/
-        t.fillInTopAnnouncement=function(data){
-            var str='',item,
-                $target=$('.news-box');
-            if(data || data.length!=0){
-                $target.show();
-                var len = data.length;
-                for (var i = 0; i < len; i++) {
-                    if(i<2) {
-                        item = data[i];
-                        str += '<a href="' + item.detail_url + '"><p>' + item.title + '</p></a>';
-                    }
+    /*填充头条信息*/
+    t.fillInTopAnnouncement=function(data){
+        var str='',item,
+            $target=$('.news-box');
+        if(data || data.length!=0){
+            $target.show();
+            var len = data.length;
+            for (var i = 0; i < len; i++) {
+                if(i<2) {
+                    item = data[i];
+                    str += '<a href="' + item.detail_url + '"><p>' + item.title + '</p></a>';
                 }
             }
-            $('.right-item div').html(str);
+        }
+        $target.find('.right-item div').html(str);
+    };
+
+    //滚动
+    t.scrollSingInInfo=function(){
+        var $target=$('.sing-in-detail-box'),
+            $item=$target.find('p'),
+            h=$item.height(),
+            len=$item.length,
+            ty= -h+'px';
+        var style={
+            'margin-top':ty,
+            '-webkit-transform':'translate3d(0,0,0)',
+            '-moz-transform':'translate3d(0,0,0)',
+            'opacity':'0.7'
         };
-    //
-    //    /*加载报名信息*/
-    //    loadSignUpInfo:function(){
-    //        var that=this,
-    //            $target=that.$wrapper.find('.mainItemSignUp');
-    //        this.loadData({
-    //            url: window.urlObject.apiUrl + 'enrollList',
-    //            paraData: {organization_id: this.oid,type:'all'},
-    //            sCallback: function(result){
-    //                $target.css('opacity',1);
-    //                $target.find('#leftSingUpNum').text(result.available_count);
-    //                that.fillInSignUpInfo(result.data);  /*填充报名信息*/
-    //
-    //            },
-    //            eCallback:function(txt){
-    //                $target.css('opacity',1);
-    //                $target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
-    //            }
-    //        });
-    //    },
-    //
-    //    /*填充报名信息*/
-    //    fillInSignUpInfo:function(data){
-    //        var str='',item,
-    //            flag=!data || data.length==0;
-    //
-    //        if(flag){
-    //            str='<div class="nonData">暂无人员报名</div>';
-    //        }else {
-    //            var len = data.length,
-    //                diff=Math.ceil(len/3)*3 - len;
-    //            for (var i = 0; i < len; i++) {
-    //                item = data[i];
-    //                var time = new Date(item.create_time * 1000).format('yyyy-MM-dd');
-    //                str += '<li>' +
-    //                    //'<span class="dot spiteBg"></span>' +
-    //                    '<span>' + item.student_name + '</span>' +
-    //                    '<span>&nbsp;同学于</span>' +
-    //                    '<span>&nbsp;' + time + '</span>' +
-    //                    '<span>&nbsp;成功报名</span>' +
-    //                    '</li>';
-    //            }
-    //            for(var i=0;i<diff;i++){
-    //                str += '<li></li>';
-    //            }
-    //        }
-    //        this.$wrapper.find('.mainItemSignUp .signUpConUl').html(str);
-    //
-    //        // 如果记录人数超过三条，则使用滚动显示的方式
-    //        if(!flag && data.length>3){
-    //            this.$wrapper.find('.signUpCon').Scroll({line:3,speed:2500,timer:2500,up:"btn1",down:"btn2"});
-    //        }
-    //    },
+        window.setInterval(function(){
+            $target.animate(
+                style,
+                500,'ease-out',
+                function(){
+                    $target.find('p').eq(0).appendTo($target);
+                    $target.css({marginTop:0,'opacity':'1'});
+                }
+            );
+
+        },2500);
+    };
+
+    /*加载报名信息*/
+    t.loadSignUpInfo=function(){
+        var that=this;
+        this.getDataAsync({
+            url:this.baseUrl + 'enrollList',
+            paraData: {organization_id: this.oid,type:'all'},
+            sCallback: function(result){
+                that.fillInSignUpInfo(result.data);  /*填充报名信息*/
+            },
+            eCallback:function(txt){
+                //$target.css('opacity',1);
+                //$target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
+            },
+            type:'get',
+            async:this.async
+        });
+    };
+
+    /*填充报名信息*/
+    t.fillInSignUpInfo=function(data){
+        var str='',item,
+            flag=!data || data.length==0;
+
+        //没有人报名
+        if(flag) {
+            return;
+        }
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            item = data[i];
+            var time = new Date(item.create_time * 1000).format('yyyy-MM-dd');
+            str += '<p><span>' + item.student_name + '</span>同学 于 ' + time + ' 成功报名</p>';
+        }
+
+        $('.sing-in-box').show().find('.sing-in-detail-box').html(str);
+
+        // 如果记录人数超过1条，则使用滚动显示的方式
+        if (data.length > 1) {
+            this.scrollSingInInfo();
+        }
+    };
+
+    /*加载相册*/
+    t.loadVideo=function(){
+        var that=this;
+        this.getDataAsync({
+            url:this.baseUrl + 'getPropagandaVideo',
+            paraData: {organization_id: this.oid,count:8},
+            sCallback: function(result){
+               var str = that.getVideoStr(result.data);  /*填充报名信息*/
+                that.loadPics(str);
+            },
+            eCallback:function(txt){
+                //$target.css('opacity',1);
+                //$target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
+            },
+            type:'get',
+            async:this.async
+        });
+    };
+
+    /*加载相册*/
+    t.loadPics=function(str){
+        var that=this;
+        this.getDataAsync({
+            url:this.baseUrl + 'appGetOrganizationEnvironment',
+            paraData: {organization_id: this.oid,count:8},
+            sCallback: function(result){
+                var newStr = that.getPicsStr(result.data);
+                $('.pics-preview-box ul').html(str+newStr);
+            },
+            eCallback:function(txt){
+                //$target.css('opacity',1);
+                //$target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
+            },
+            type:'get',
+            async:this.async
+        });
+    };
+
+    t.getPicsStr=function(data,type){
+        if(!data || data.length==0){
+            return;
+        }
+        var len=data.length,str='';
+        for(var i=0;i<len;i++){
+            str+='<li data-type="0" data-id="'+data[i].id+'">'+
+                    '<img src="'+data[i].url+'">'+
+                '</li>';
+        }
+        return str;
+    };
+
+    t.getVideoStr=function(data,type){
+        if(!data){
+            return;
+        }
+        return '<li data-type="1" data-url="'+data.video_url+'">'+
+                    '<img src="'+data.video_img+'">'+
+                    '<span class="p-btn"><i class="icon-play"></i></span>'+
+                '</li>';
+    };
+
+
     //
     //    /*填充简介信息*/
     //    fillInIntroduceInfo:function(result){

@@ -5,6 +5,7 @@ requirejs.config({
     baseUrl: window.hisihiUrlObj.js,
     paths: {
         $:'../sharecommon/zepto.min',
+        fx:'../sharecommon/fx_v1.1',
         prefixfree:'../sharecommon/prefixfree.min',
         base:'../sharecommon/base-1.1',
         fastclick:'../sharecommon/fastclick',
