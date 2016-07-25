@@ -59,9 +59,9 @@
                 &nbsp;&nbsp;<input class="major" type="radio" value="{$data['id']}" name="major">{$data.value}&nbsp;&nbsp;
             </volist>
         </div>
-        <div style="height: 35px;">
+        <!--<div style="height: 35px;">
             <button id="search4major" class="btn" style="float: right;">查询</button>
-        </div>
+        </div>-->
     </div>
     <!--类型查询-->
     <div id="org_type" style="display:none;position: fixed;top: 30%;left: 40%;width: 400px;background: white;border: 1px solid grey;">
@@ -352,6 +352,12 @@
             });
 
             $('#search4major').click(function(){
+                var major = $('.major:checked');
+                var param2 = major.val();
+                window.location.href = '{:U("Organization/searchMajor")}' + '&major=' + param2;
+            });
+
+            $('.major').change(function(){
                 var major = $('.major:checked');
                 var param2 = major.val();
                 window.location.href = '{:U("Organization/searchMajor")}' + '&major=' + param2;

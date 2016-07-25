@@ -129,7 +129,7 @@ class Page{
                 }
             }else{
                 if($page > 0 && $this->totalPages != 1){
-                    $link_page .= '<li class="active"><a class="active">' . $page . '</a></li>';
+                    $link_page .= '<li class="active"><a class="active" style="border-color: #039674;background: #039674;color: #fff">' . $page . '</a></li>';
                 }
             }
         }
