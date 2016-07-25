@@ -445,11 +445,12 @@ body {
     .coupon-right{
       width: @right;
       margin-left: -@right;
+      height: 100%;
       >*{
         float: left;
       }
       .sawtooth-right-main{
-        .size(@right,100%);
+        .size(50px,100%);
         background-color:@color1;
 
 
@@ -484,7 +485,7 @@ body {
           display: none;
           p {
             text-align: center;
-            font-size: 16px;
+            font-size: 12px;
             margin: 0;
             color: white;
             &:first-child {
@@ -532,6 +533,17 @@ body {
           background-position: -367px 0;
         }
       }
+
+      .sawtooth-left{
+        .size(@tooth-w,100%);
+        .bg-sprite-c;
+        background-position: 0 0;
+        margin-left: -100%;
+        &.used{
+          background-position: -188px 0;
+        }
+      }
+
     }
     .coupon-middle{
       width: 100%;
@@ -549,6 +561,7 @@ body {
             border-top: 1px solid @color1;
             border-left: 1px solid @color1;
             border-bottom: 1px solid @color1;
+            border-right: 1px solid @color1;
             &.used{
               background-color: @color2;
             }
@@ -572,24 +585,24 @@ body {
             }
           }
         }
-        .sawtooth-left{
-          .size(@tooth-w,100%);
-          .bg-sprite-c;
-          background-position: 0 0;
-          margin-left: -100%;
-          &.used{
-            background-position: -188px 0;
-          }
-        }
-        .sawtooth-right{
-          .size(@mw,100%);
-          .bg-sprite-c;
-          background-position: -93px 0;
-          margin-left: -@mw;
-          &.used{
-            background-position: -277px 0;
-          }
-        }
+        //.sawtooth-left{
+        //  .size(@tooth-w,100%);
+        //  .bg-sprite-c;
+        //  background-position: 0 0;
+        //  margin-left: -100%;
+        //  &.used{
+        //    background-position: -188px 0;
+        //  }
+        //}
+        //.sawtooth-right{
+        //  .size(@mw,100%);
+        //  .bg-sprite-c;
+        //  background-position: -93px 0;
+        //  margin-left: -@mw;
+        //  &.used{
+        //    background-position: -277px 0;
+        //  }
+        //}
       }
     }
   }

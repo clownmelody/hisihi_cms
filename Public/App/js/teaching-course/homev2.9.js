@@ -264,8 +264,8 @@ define(['base','fastclick'],function(Base){
                                     '</div>'+
                                 '</div>'+
                             '</div>'+
-                            '<div class="sawtooth-left '+className+'"></div>'+
-                            '<div class="sawtooth-right '+className+'"></div>'+
+                            //'<div class="sawtooth-left '+className+'"></div>'+
+                            //'<div class="sawtooth-right '+className+'"></div>'+
                         '</div>'+
                     '</div>'+
                     '<div class="coupon-left">'+
@@ -274,6 +274,7 @@ define(['base','fastclick'],function(Base){
                         '<span id="coupon-title">亿元补贴</span>'+
                     '</div>'+
                     '<div class="coupon-right">'+
+                        '<div class="sawtooth-left'+className+'"></div>'+
                         '<div class="sawtooth-right-main '+className+'">' +
                             strAndType.str+
                         '</div>'+
@@ -418,12 +419,13 @@ define(['base','fastclick'],function(Base){
         return num;
     };
 
-    /*得到认证的图片*/
+    ///*得到认证的图片*/
     t.getCerImg=function(data){
         var str='<div class="img-box">',len=data.length;
         for(var i=0;i<len;i++){
             if(data[i].default_display) {
-                str += '<img src="' + data[i].tag_pic_url + '">';
+                //嘿和信认证logo图片
+                //str += '<img src="' + data[i].tag_pic_url + '">';
             }
         }
         str +='</div>'

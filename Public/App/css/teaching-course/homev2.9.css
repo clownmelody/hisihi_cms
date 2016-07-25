@@ -630,12 +630,13 @@ body {
 .main-item.coupon-basic-info .coupon-right {
   width: 55px;
   margin-left: -55px;
+  height: 100%;
 }
 .main-item.coupon-basic-info .coupon-right > * {
   float: left;
 }
 .main-item.coupon-basic-info .coupon-right .sawtooth-right-main {
-  width: 55px;
+  width: 50px;
   height: 100%;
   background-color: #f9a825;
   /*戳*/
@@ -670,7 +671,7 @@ body {
 }
 .main-item.coupon-basic-info .coupon-right .sawtooth-right-main .do-take-in p {
   text-align: center;
-  font-size: 16px;
+  font-size: 12px;
   margin: 0;
   color: white;
 }
@@ -706,6 +707,16 @@ body {
 .main-item.coupon-basic-info .coupon-right i.used {
   background-position: -367px 0;
 }
+.main-item.coupon-basic-info .coupon-right .sawtooth-left {
+  width: 5px;
+  height: 100%;
+  background: url("../../images/teaching-course/sprite3.png");
+  background-position: 0 0;
+  margin-left: -100%;
+}
+.main-item.coupon-basic-info .coupon-right .sawtooth-left.used {
+  background-position: -188px 0;
+}
 .main-item.coupon-basic-info .coupon-middle {
   width: 100%;
 }
@@ -724,6 +735,7 @@ body {
   border-top: 1px solid #f9a825;
   border-left: 1px solid #f9a825;
   border-bottom: 1px solid #f9a825;
+  border-right: 1px solid #f9a825;
   height: 100%;
   margin: 0 8px 0 5px;
 }
@@ -742,26 +754,6 @@ body {
 .main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-bottom {
   font-size: 12px;
   padding-left: 5px;
-}
-.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-left {
-  width: 5px;
-  height: 100%;
-  background: url("../../images/teaching-course/sprite3.png");
-  background-position: 0 0;
-  margin-left: -100%;
-}
-.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-left.used {
-  background-position: -188px 0;
-}
-.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-right {
-  width: 8px;
-  height: 100%;
-  background: url("../../images/teaching-course/sprite3.png");
-  background-position: -93px 0;
-  margin-left: -8px;
-}
-.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .sawtooth-right.used {
-  background-position: -277px 0;
 }
 /*模态窗口*/
 .model-box {
