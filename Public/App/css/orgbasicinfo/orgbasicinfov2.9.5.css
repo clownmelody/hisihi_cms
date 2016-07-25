@@ -248,124 +248,66 @@ ul li {
   }
 }
 body {
+  padding: 0;
   margin: 0;
-  background: #F2F2F2;
-  max-width: 100%;
-  overflow: auto;
 }
-.font-icon {
-  display: inline-block;
+#downloadCon {
+  top: 0;
+  background-color: #9E9A98;
+  opacity: 0;
 }
-.center-content {
-  width: 90%;
-  margin: 0 auto;
-}
-body .main-item {
-  margin: 15px auto 0 auto;
-  background-color: #FFFFFF;
-  box-sizing: border-box;
-  padding-bottom: 8px;
-  /*基本信息*/
-  /*指数*/
-}
-body .main-item .center-content {
-  width: 90%;
-  margin: 0 auto;
-}
-body .main-item .head-txt {
-  font-size: 18px;
-  color: #212121;
+.logo-box {
   width: 100%;
-  height: 50px;
-  line-height: 50px;
+  height: 200px;
+  position: relative;
+  margin-top: 80px;
 }
-body .main-item .border-bottom {
-  border-bottom: 1px solid #e6e6e6;
-}
-body .main-item.introduce .center-content {
+.logo-box .filter {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
 }
-body .main-item.introduce .introduce-txt {
-  margin-top: 15px;
+.logo-box .filter img {
+  width: 100%;
+  height: 100%;
+  -webkit-filter: blur(20px);
+  -moz-filter: blur(20px);
+  -ms-filter: blur(20px);
+  filter: blur(20px);
 }
-body .main-item.introduce .introduce-txt p {
-  line-height: 25px;
-  box-sizing: border-box;
-  font-size: 14px;
-}
-body .main-item.nums ul {
-  border-bottom: 1px solid #cccccc;
-  padding: 15px 0;
-}
-body .main-item.nums ul li {
-  float: left;
-  width: 24%;
-  height: auto;
-  box-sizing: border-box;
-  border-left: 1px solid #CCCCCC;
+.logo-box .logo-main-info .logo-main-box {
+  height: 50%;
+  width: 80px;
+  margin: 0 auto;
+  position: relative;
   text-align: center;
 }
-body .main-item.nums ul li:first-child {
-  border: none;
+.logo-box .logo-main-info .logo-main-box #logo {
+  width: 65px;
+  height: 65px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
-body .main-item.nums ul li:last-of-type {
-  width: 28%;
-}
-body .main-item.nums ul li .nums-name {
-  font-size: 12px;
-  color: #B9B9B9;
-  height: 27px;
-  line-height: 27px;
-}
-body .main-item.nums ul li .nums-val {
-  color: #212121;
-  font-size: 14px;
-  height: 25px;
-}
-body .main-item.nums ul:last-child {
-  border: none;
-}
-body .main-item.majors .majors-item {
-  border-bottom: 1px solid #e6e6e6;
-}
-body .main-item.majors .majors-item ul {
-  padding-bottom: 20px;
-  margin-top: 5px;
-}
-body .main-item.majors .majors-item ul li {
+.logo-box .logo-main-info .logo-main-box .v-cert {
+  position: absolute;
+  bottom: 0;
+  right: 0;
   display: inline-block;
-  border: 1px solid #FF5A00;
-  color: #FF5A00;
-  border-radius: 2px;
-  background-clip: padding-box;
-  height: 32px;
-  line-height: 32px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  margin-right: 5px;
-  padding: 0 15px;
-  letter-spacing: 1px;
+  width: 18px;
+  height: 18px;
 }
-body .main-item.environment {
-  margin-top: 0;
+.logo-box .logo-main-info .name-main-box {
+  text-align: center;
 }
-body .main-item.environment .content-txt p {
-  color: #808080;
-  line-height: 25px;
-  margin-top: 0;
-  font-size: 14px;
-}
-body .nodata {
-  position: fixed;
-  width: 108px;
-  height: 60px;
-  top: 50%;
-  left: 50%;
-  margin-top: -30px;
-  margin-left: -54px;
-  display: none;
-}
-body .nodata p {
-  font-size: 16px;
-  color: #757070;
+/*��Ӧʽ��ʽ*/
+@media screen and (min-width: 750px) {
+  #wrapper,
+  #downloadCon {
+    width: 560px;
+    height: auto;
+    margin: 0 auto;
+  }
 }
