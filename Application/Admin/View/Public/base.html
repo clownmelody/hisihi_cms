@@ -212,6 +212,26 @@
                 }
             });
         }
+
+        $(window).keydown(function(event){
+            switch(event.keyCode) {
+                    // ...
+                    // 不同的按键可以做不同的事情
+                    // 不同的浏览器的keycode不同
+                    // 更多详细信息:     http://unixpapa.com/js/key.html
+                    // 常用keyCode： 空格 32   Enter 13   ESC 27
+
+            }
+            if(event.keyCode == 13){
+                var skip_num = $('#page_skip').val();
+                var skip_url = $('a.num:first').attr('href');
+                var index = skip_url.lastIndexOf('/');
+                skip_url = skip_url.substring(0, index);
+                skip_url = skip_url + '/' + skip_num + ".html";
+                window.location.href = skip_url;
+            }
+        });
+
     }();
 </script>
 <block name="script"></block>

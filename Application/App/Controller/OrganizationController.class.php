@@ -27,7 +27,7 @@ class OrganizationController extends AppController
      * 获取短信验证码
      * @param $mobile
      */
-    public function getSMS($mobile=null,$type='register'){
+    public function getSMS($mobile=null, $type='register'){
         if(empty($mobile)){
             $this->apiError(-1, '传入手机号为空');
         } else {
@@ -413,6 +413,7 @@ class OrganizationController extends AppController
             $result['logo'] = $logo;
             if((float)$version>=2.95){
                 $result['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
+                $result['is_favorite'] = $this->isOrganizationFavorite($uid, $organization_id);
             } else {
                 $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
             }
@@ -4232,6 +4233,24 @@ GROUP BY
     }
 
     /**
+     * 机构是否被收藏
+     * @param $uid
+     * @param $organization_id
+     * @return bool
+     */
+    public function isOrganizationFavorite($uid, $organization_id){
+        $favorite['appname'] = 'OrganizationInfo';
+        $favorite['table'] = 'organization';
+        $favorite['row'] = $organization_id;
+        $favorite['uid'] = $uid;
+        if (D('Favorite')->where($favorite)->count()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 收藏大学
      * @param int $uid
      * @param int $university_id
@@ -4331,6 +4350,25 @@ GROUP BY
         if($organization_id==0){
             $this->apiError(-1, '机构id不能为空');
         }
+        if((float)$version>=2.95){
+            $coupon_list = M()->query('select t2.teaching_course_id, t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
+hisihi.hisihi_teaching_course_organization_promotion_relation t1,
+hisihi.hisihi_teaching_course_coupon_relation t2, hisihi.hisihi_coupon t3
+where t1.teaching_course_id=t2.teaching_course_id
+            and t2.coupon_id=t3.id and t2.status=1 and t1.status=1 and t3.status=1
+            and t1.organization_id='.$organization_id.' order by t3.money desc');
+            $model = M('OrganizationTeachingCourse');
+            foreach($coupon_list as &$coupon){
+                $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+                $course = $model->field('course_name')->where('id='.$coupon['teaching_course_id'])
+                    ->find();
+                $coupon['teaching_course_name'] = $course['course_name'];
+                unset($coupon['teaching_course_id']);
+            }
+            $data['totalCount'] = count($coupon_list);
+            $data['list'] = $coupon_list;
+            $this->apiSuccess('获取机构优惠券列表成功', null, $data);
+        }
         $promotion_list = M()->query('select distinct(promotion_id) from hisihi_teaching_course_organization_promotion_relation where status=1 and organization_id='.$organization_id);
         $_promotion_list = array();
         foreach($promotion_list as $pro){
@@ -4338,24 +4376,13 @@ GROUP BY
                 ->where('id='.$pro['promotion_id'])
                 ->find();
             $now = time();
-            $coupon_list = M()->query('select t2.teaching_course_id, t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
+            $coupon_list = M()->query('select t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
 hisihi_teaching_course_organization_promotion_relation t1,
 hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
  and t2.coupon_id=t3.id and t2.status=1 and t1.status=1 and t3.status=1 and t3.end_time>='.$now.' and t1.promotion_id='.$obj["id"].' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,2');
-            $model = M('OrganizationTeachingCourse');
-            if((float)$version < 2.95){
-                foreach($coupon_list as &$coupon){
-                    $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
-                    unset($coupon['teaching_course_id']);
-                }
-            } else {
-                foreach($coupon_list as &$coupon){
-                    $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
-                    $course = $model->field('course_name')->where('id='.$coupon['teaching_course_id'])
-                        ->find();
-                    $coupon['teaching_course_name'] = $course['course_name'];
-                    unset($coupon['teaching_course_id']);
-                }
+            foreach($coupon_list as &$coupon){
+                $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
+                unset($coupon['teaching_course_id']);
             }
             $obj['coupon_list'] = $coupon_list;
             $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$organization_id;
@@ -4433,6 +4460,129 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         $info = M('OrganizationTeachingCourse')->field('id, organization_id, course_name, cover_pic, start_course_time, lesson_period, student_num, lecture_name, price, already_registered')
             ->where('id='.$id)->find();
         return $info;
+    }
+
+    /**
+     * 预约报名
+     * @param null $mobile
+     * @param null $username
+     * @param int $organization_id
+     * @param int $course_id
+     * @param null $education
+     * @param null $major
+     */
+    public function yuyue($mobile=null, $username=null, $organization_id=0,
+                          $course_id=0, $education=null, $major=null){
+        if(empty($mobile)||empty($organization_id)){
+            $this->apiError(-1, "机构id和手机号不能为空");
+        }
+        $data['mobile'] = $mobile;
+        $data['username'] = $username;
+        $data['education'] = $education;
+        $data['major'] = $major;
+        $data['organization_id'] = $organization_id;
+        $data['course_id'] = $course_id;
+        $data['create_time'] = time();
+        $organization = M('Organization')->field('name')->where('id='.$organization_id)->find();
+        if(empty($course_id)){
+            if(!empty($username)){
+                $sms_content = "用户".$username." 手机号".$mobile." 成功报名".$organization['name']."机构，快去处理吧";
+            } else {
+                $sms_content = "用户".$mobile." 成功报名".$organization['name']."机构，快去处理吧";
+            }
+        } else {
+            if(!$this->isCanSendSMSTeachingCourseFrequence($mobile, $course_id)){
+                $this->apiSuccess('预约报名成功!');
+            }
+            $teaching_course = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$course_id)->find();
+            if(!empty($username)){
+                $sms_content = "用户".$username." 手机号".$mobile." 成功报名".$teaching_course['course_name']."课程，快去处理吧";
+            } else {
+                $sms_content = "用户".$mobile." 成功报名".$teaching_course['course_name']."课程，快去处理吧";
+            }
+        }
+        if($this->sendSMS(C('o_phone_array'), $sms_content)){
+            $data['send_sms_time'] = time();
+        } else {
+            $data['send_sms_time'] = 0;
+        }
+        M('OrganizationYuyue')->add($data);
+        $this->apiSuccess('预约报名成功!');
+    }
+
+    /**
+     * 留学大学报考
+     * @param null $mobile
+     * @param null $username
+     * @param int $university_id
+     * @param string $education
+     * @param string $major
+     */
+    public function baokao($mobile=null, $username=null, $university_id=0,
+                           $education='', $major=''){
+        if(empty($mobile)||empty($university_id)){
+            $this->apiError(-1, "大学id和手机号不能为空");
+        }
+        $data['mobile'] = $mobile;
+        $data['username'] = $username;
+        $data['education'] = $education;
+        $data['major'] = $major;
+        $data['university_id'] = $university_id;
+        $data['create_time'] = time();
+        $university = M('AbroadUniversity')->field('name')->where('id='.$university_id)->find();
+        if(!empty($username)){
+            $sms_content = "用户".$username." 手机号".$mobile." 成功报名".$university['name']."大学 ".
+                $education . " " . $major ."，快去处理吧";
+        } else {
+            $sms_content = "用户".$mobile." 成功报名".$university['name']."大学 ".
+                $education . " " . $major ."，快去处理吧";
+        }
+        if($this->sendSMS(C('liuxue_phone_array'), $sms_content)){
+            $data['send_sms_time'] = time();
+        } else {
+            $data['send_sms_time'] = 0;
+        }
+        M('OrganizationYuyue')->add($data);
+        $this->apiSuccess('大学报考成功!');
+    }
+
+    public function isCanSendSMSTeachingCourseFrequence($mobile, $teaching_course_id=0){
+        if($teaching_course_id!=0){
+            $where_array['mobile'] = $mobile;
+            $where_array['course_id'] = $teaching_course_id;
+            $yuyue_info = M('OrganizationYuyue')->field('send_sms_time')->where($where_array)->find();
+            $last_send_time = (int)$yuyue_info['send_sms_time'];
+            $now = time();
+            if($now-$last_send_time>=300){
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public function sendSMS($mobile=array(), $content=null){
+        if(empty($mobile)||empty($content)){
+            $this->apiError(-1, '传入手机号为空或短信内容为空');
+        }
+        $url = C('bmob_sms_url');
+        $headers['X-Bmob-Application-Id'] = C('bmob_application_id');
+        $headers['X-Bmob-REST-API-Key'] = C('bmob_api_key');
+        $headers['Content-Type'] = 'application/json';
+        $headerArr = array();
+        foreach( $headers as $n => $v ) {
+            $headerArr[] = $n .':' . $v;
+        }
+        foreach($mobile as $phone_num){
+            $post_data = array('mobilePhoneNumber'=>urlencode($phone_num), 'content'=>$content);
+            $post_data = json_encode($post_data);
+            $result = $this->request_by_curl($url, $headerArr, $post_data);
+        }
+        if($result){
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

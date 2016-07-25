@@ -37,6 +37,7 @@ class ArticleLogic extends BaseLogic{
 		/* 添加或更新数据 */
 		if(empty($data['id'])){//新增数据
 			$data['id'] = $id;
+			$data['fake_support_count'] = mt_rand(1, 100);
 			$id = $this->add($data);
 			if(!$id){
 				$this->error = '新增详细内容失败！';
@@ -44,6 +45,10 @@ class ArticleLogic extends BaseLogic{
 			}
 		} else { //更新数据
 			$status = $this->save($data);
+			S('topcontent-v2-9-'.$id, null);
+			S('topcontent-v2-7-'.$id, null);
+			S('topcontent-v2-'.$id, null);
+			S('topcontent-v1-'.$id, null);
 			if(false === $status){
 				$this->error = '更新详细内容失败！';
 				return false;

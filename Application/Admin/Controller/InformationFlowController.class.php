@@ -15,7 +15,7 @@ class InformationFlowController extends AdminController {
     public function banner(){
         $model = M('InformationFlowBanner');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -108,27 +108,49 @@ class InformationFlowController extends AdminController {
     public function content(){
         $model = M('InformationFlowContent');
         $map['status'] = array('gt', -1);
+        $where = 'status > -1';
         if(I('config_type')){
             $map['config_type'] = I('config_type');
             $this->assign('type', I('config_type'));
+            $where = $where.' and config_type='.I('config_type');
         }
         if(I('content_type')){
             $map['content_type'] = I('content_type');
             $this->assign('content_type', I('content_type'));
+            $where = $where.' and content_type='.I('content_type');
+        }else{
+            $map['content_type'] = 1;
+            $this->assign('content_type', 1);
+            $where = $where.' and content_type=1';
         }
         $sort = 'sort desc ,create_time desc';
         if(I('sort')){
             $sort = 'create_time desc';
         }
-        $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+
+        $count = M()->query('SELECT count(id) as count from 
+(select id from hisihi_information_flow_content 
+ where '.$where.'
+ GROUP BY content_id)a ');
+        $Page = new Page($count[0]['count'], 20);
         $show = $Page->show();
-        $list = $model->where($map)->order($sort)->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($map)->group('content_id')->order($sort)->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$content){
-            $config_type = $content['config_type'];
-            $model = M('InformationFlowConfig');
-            $config_detail = $model->field('title')->where('id='.$config_type)->find();
-            $content['config_type'] = $config_detail['title'];
+            $map['content_id'] = $content['content_id'];
+            $config_type = $model->where($map)->field('config_type')->select();
+            $type_ids = array();
+            foreach ($config_type as $item){
+                $type_ids[] = $item['config_type'];
+            }
+            $config_model = M('InformationFlowConfig');
+            $type_map['id'] = array('in', $type_ids);
+            $config_detail = $config_model->field('title')->where($type_map)->select();
+            $type_name = '';
+            foreach ($config_detail as $item1){
+                $type_name = $type_name.$item1['title'].',';
+            }
+            $type_name = substr($type_name,0,strlen($type_name)-1);
+            $content['config_type'] = $type_name;
         }
         $config_type = M('InformationFlowConfig')->where('`status`>-1')->select();
 
@@ -170,7 +192,7 @@ class InformationFlowController extends AdminController {
     public function config(){
         $model = M('InformationFlowConfig');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -299,9 +321,12 @@ class InformationFlowController extends AdminController {
     public function setConfigUpdate($cid, $config_type){
         if(!empty($cid)){
             $model = M('InformationFlowContent');
-            $categories =  explode("#",$config_type);;
+            $categories =  explode("#",$config_type);
             $cid = intval($cid);
             $config_types = M('InformationFlowConfig')->where('status>-1')->order('id')->select();
+            $sort_map['content_id'] = $cid;
+            $sort_map['content_type'] = I('ctype');
+            $sort = $model->where($sort_map)->field('sort')->order('sort desc , create_time desc')->limit(1)->select();
             try {
                 $data_list = array();
                 foreach($config_types as &$item){
@@ -338,6 +363,7 @@ class InformationFlowController extends AdminController {
                             $data['content_name'] = I('cname');
                             $data['content_type'] = I('ctype');
                             $data['create_time'] = time();
+                            $data['sort'] = $sort[0]['sort'];
                             $data_list[] = $data;
                         }
                     }
@@ -381,7 +407,7 @@ class InformationFlowController extends AdminController {
         $map['show_pos'] = $pos;
         $model = M('InformationFlowBanner');
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where($map)->order('sort asc , create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
 

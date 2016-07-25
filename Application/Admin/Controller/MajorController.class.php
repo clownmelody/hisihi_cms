@@ -17,7 +17,7 @@ class MajorController extends AdminController {
     public function index(){
         $model = D('RecomendMajors');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where("status=1")->order('sort desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
