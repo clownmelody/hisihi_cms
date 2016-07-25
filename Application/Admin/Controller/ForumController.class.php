@@ -844,7 +844,7 @@ class ForumController extends AdminController
     public function forumcircle(){
         $model = M('ForumConfig');
         $count = $model->where('type=1 and status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where("type=1 and status=1")->order('create_time desc')
             ->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -927,7 +927,7 @@ class ForumController extends AdminController
     public function forumtoppost(){
         $model = M('ForumTopPost');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where("status=1")->order('create_time desc')
             ->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -1043,7 +1043,7 @@ class ForumController extends AdminController
         $map['status'] = 1;
         $model = M('ForumTopic');
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where($map)->order('sort asc, create_time desc')
             ->limit($Page->firstRow.','.$Page->listRows)->select();

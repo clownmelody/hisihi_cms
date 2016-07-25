@@ -15,7 +15,7 @@ class PromotionController extends AdminController
     public function index(){
         $model = M('Promotion');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -133,7 +133,7 @@ class PromotionController extends AdminController
     public function org_to_promotion(){
         $model = M('TeachingCourseOrganizationPromotionRelation');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$info){
@@ -154,7 +154,7 @@ class PromotionController extends AdminController
     public function teaching_course_to_coupon(){
         $model = M('TeachingCourseCouponRelation');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$info){

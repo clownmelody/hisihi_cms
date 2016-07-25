@@ -15,7 +15,7 @@ class OverseasController extends AdminController
     public function index(){
         $model = M('AbroadCountry');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -74,7 +74,7 @@ class OverseasController extends AdminController
     public function majors(){
         $model = M('AbroadUniversityMajors');
         $count = $model->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -202,10 +202,10 @@ class OverseasController extends AdminController
             $count = $model->table('hisihi_abroad_university university, hisihi_abroad_country country')
                 ->where($map)
                 ->count();
-            $Page = new Page($count, 10);
+            $Page = new Page($count, 20);
         }else{
             $count = $model->where('status=1')->count();
-            $Page = new Page($count, 10);
+            $Page = new Page($count, 20);
             $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$university){
@@ -264,7 +264,7 @@ class OverseasController extends AdminController
         $where_map['status'] = 1;
         $where_map['type'] = $type_id;
         $count = $model->where($where_map)->count();
-        $Page = new Page($count, 5);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];
@@ -476,7 +476,7 @@ class OverseasController extends AdminController
         $model = M('AbroadUniversity');
         $photoModel = M('AbroadUniversityPhotos');
         $count = $photoModel->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $photoModel->where('status=1')->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
         foreach($list as &$photo){
@@ -577,7 +577,7 @@ class OverseasController extends AdminController
         $model = M('AbroadUniversity');
         $majorModel = M('OrganizationUniversityEnroll');
         $count = $majorModel->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $majorModel->where($map)->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
         foreach($list as &$major){
@@ -627,7 +627,7 @@ class OverseasController extends AdminController
         $model = M('Organization');
         $planModel = M('OverseasPlan');
         $count = $planModel->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $planModel->where($map)->order('create_time desc')->limit($Page->firstRow . ',' . $Page->listRows)->select();
         foreach($list as &$plan){
