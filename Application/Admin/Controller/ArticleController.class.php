@@ -538,6 +538,7 @@ class ArticleController extends AdminController {
             $this->error('请选择要操作的数据');
         }
         $model = M('InformationFlowContent');
+        $sort = $model->where(array('content_type'=>1))->max('sort');
         try {
             foreach($ids as $rid){
                 $content_detail = $model->where('content_type=1 and content_id='.$rid)->find();
@@ -546,6 +547,7 @@ class ArticleController extends AdminController {
                         $model->where('content_type=1 and content_id='.$rid)->save(array('status'=>1));
                     }
                 } else {
+                    ++$sort;
                     $document_model = D('Document');
                     $document_detail = $document_model->where(array('id'=>$rid, 'status'=>1))->find();
                     $name = $document_detail['title'];
@@ -553,6 +555,7 @@ class ArticleController extends AdminController {
                     $data['content_type'] = 1;
                     $data['content_name'] = $name;
                     $data['create_time'] = time();
+                    $data['sort'] = $sort;
                     $model->add($data);
                 }
             }
