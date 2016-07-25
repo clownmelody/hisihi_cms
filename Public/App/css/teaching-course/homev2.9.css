@@ -618,25 +618,30 @@ body {
   width: 53px;
   margin-left: -100%;
   position: relative;
-  border: 1px solid #f9a825;
-  border-radius: 3px;
   height: 60px !important;
 }
-.main-item.coupon-basic-info .coupon-left #coupon-title {
-  font-family: 仿宋;
-  font-size: 25px;
-  color: #f9a825;
+.main-item.coupon-basic-info .coupon-left #coupon-icon {
+  max-width: 100%;
+  display: block;
+  margin: 4px 0px 0px 0px;
 }
 .main-item.coupon-basic-info .coupon-right {
   width: 55px;
-  margin-left: -55px;
+  margin-left: -63px;
   height: 100%;
 }
 .main-item.coupon-basic-info .coupon-right > * {
   float: left;
 }
+.main-item.coupon-basic-info .coupon-right #left-line {
+  background-position: -91px 0;
+  float: left;
+}
+.main-item.coupon-basic-info .coupon-right #right-line {
+  float: right;
+}
 .main-item.coupon-basic-info .coupon-right .sawtooth-right-main {
-  width: 50px;
+  width: 45px;
   height: 100%;
   background-color: #f9a825;
   /*戳*/
@@ -707,18 +712,9 @@ body {
 .main-item.coupon-basic-info .coupon-right i.used {
   background-position: -367px 0;
 }
-.main-item.coupon-basic-info .coupon-right .sawtooth-left {
-  width: 5px;
-  height: 100%;
-  background: url("../../images/teaching-course/sprite3.png");
-  background-position: 0 0;
-  margin-left: -100%;
-}
-.main-item.coupon-basic-info .coupon-right .sawtooth-left.used {
-  background-position: -188px 0;
-}
 .main-item.coupon-basic-info .coupon-middle {
   width: 100%;
+  height: 63px;
 }
 .main-item.coupon-basic-info .coupon-middle .coupon-middle-all {
   height: 100%;
@@ -735,7 +731,6 @@ body {
   border-top: 1px solid #f9a825;
   border-left: 1px solid #f9a825;
   border-bottom: 1px solid #f9a825;
-  border-right: 1px solid #f9a825;
   height: 100%;
   margin: 0 8px 0 5px;
 }

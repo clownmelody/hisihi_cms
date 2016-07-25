@@ -271,14 +271,15 @@ define(['base','fastclick'],function(Base){
                     '<div class="coupon-left">'+
                         //'<img src="'+promotionInfo.little_logo_url+'">'+
                         //删除优惠券亿元补贴图片
-                        '<span id="coupon-title">亿元补贴</span>'+
+                        //'<span id="coupon-title">亿元补贴</span>'+
+                        '<img id="coupon-icon" src="http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png"></img>' +
                     '</div>'+
                     '<div class="coupon-right">'+
-                        '<div class="sawtooth-left'+className+'"></div>'+
+                        '<i class="'+className+'" id="left-line"></i>'+
                         '<div class="sawtooth-right-main '+className+'">' +
                             strAndType.str+
                         '</div>'+
-                        '<i class="'+className+'"></i>'+
+                        '<i class="'+className+'" id="right-line"></i>'+
                     '</div>'+
                 '</div>'+
             '</div>';
@@ -651,6 +652,43 @@ define(['base','fastclick'],function(Base){
         //得到用户基本信息
         obj.getUserInfo(null,1);
     };
+
+
+    /**参数说明：
+     * 根据长度截取先使用字符串，超长部分追加W
+     * str 对象字符串
+     * len 目标字节长度
+     * 返回值： 处理结果字符串
+     */
+    function cutString(str, len) {
+        //length属性读出来的汉字长度为1
+        if(str.length*4 <= len) {
+            return str;
+        }
+        var strlen = 0;
+        var s = "";
+        for(var i = 0;i < str.length; i++) {
+            s = s + str.charAt(i);
+            if (str.charCodeAt(i) > 128) {
+                strlen = strlen + 2;
+                if(strlen >= len){
+                    return s.substring(0,s.length-1) + "W";
+                }
+            } else {
+                strlen = strlen + 1;
+                if(strlen >= len){
+                    return s.substring(0,s.length-2) + "...";
+                }
+            }
+        }
+
+        function getStrLength(str) {
+            var cArr = str.match(/[^\x00-\xff]/ig);
+            return str.length + (cArr == null ? 0 : cArr.length);
+        }
+
+        return s;
+    }
 
     return Course;
 });
