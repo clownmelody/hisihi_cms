@@ -45,7 +45,7 @@ class OrganizationController extends AdminController
     public function index(){
         $model = M('Organization');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 5);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];
@@ -457,7 +457,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
         }
         $count = $model->where($filter_map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于用户名称搜索
         $name = $_GET["title"];
@@ -626,7 +626,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
         }
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于图片描述搜索
         $name = $_GET["title"];
@@ -786,7 +786,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
         }
         $count = $model->where($filter_map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于机构名称搜索
         $name = $_GET["title"];
@@ -1014,7 +1014,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
         }
         $count = $model->where($filter_map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于机构名称搜索
         $name = $_GET["title"];
@@ -1251,7 +1251,7 @@ class OrganizationController extends AdminController
         $map['status'] = 1;
         $model = M('OrganizationAuthenticationConfig');
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
 
@@ -1397,7 +1397,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');
         }
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$config){
@@ -1552,7 +1552,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
         }
         $count = $model->where($filter)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于用户名搜索
         $name = $_GET["title"];
@@ -1706,7 +1706,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
         }
         $count = $model->where($filter)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于用户名搜索
         $name = $_GET["title"];
@@ -1820,7 +1820,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
         }
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于图片描述搜索
         $name = $_GET["title"];
@@ -1968,7 +1968,7 @@ class OrganizationController extends AdminController
         $map['status'] = array('egt',0);
         $map['course_id'] = $id;
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$video){
@@ -2109,7 +2109,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
         }
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于课程名称搜索
         $name = $_GET["title"];
@@ -2333,7 +2333,7 @@ class OrganizationController extends AdminController
         $map['status'] = array('gt',0);
         $model = M('Organization');
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where($map)->field('id,name,application_status,create_time')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -2408,7 +2408,7 @@ class OrganizationController extends AdminController
         }
         $model = D('OrganizationCertificate');
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$Certificate){
@@ -2544,7 +2544,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->getField('name');
         }
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于公告名称搜索
         $name = $_GET["title"];
@@ -2689,7 +2689,7 @@ class OrganizationController extends AdminController
         $model = M('OrganizationTag');
         $map['status'] = array('gt', 0);
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于配置值搜索
         $name = $_GET["title"];
@@ -2847,7 +2847,7 @@ class OrganizationController extends AdminController
         $model = M('OrganizationLectureGroup');
         $map['status'] = 1;
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于配置值搜索
         $name = $_GET["title"];
@@ -3186,7 +3186,7 @@ class OrganizationController extends AdminController
     public function imgroup(){
         $model = M('ImGroups');
         $count = $model->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -3455,7 +3455,7 @@ class OrganizationController extends AdminController
     public function userfindorganization(){
         $model = M('UserFindOrgRequest');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')
             ->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -3495,7 +3495,7 @@ class OrganizationController extends AdminController
     public function courselowprice(){
         $model = M('UserFindLowPrice');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')
             ->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -3533,7 +3533,7 @@ class OrganizationController extends AdminController
         $courseModel = M('OrganizationTeachingCourse');
         $orgModel = M('Organization');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')
             ->limit($Page->firstRow.','.$Page->listRows)->select();
@@ -3586,7 +3586,7 @@ class OrganizationController extends AdminController
             $organization_name = M('Organization')->where('status=1 and id='.$organization_id)->getField("name");
         }
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$course){
@@ -3696,7 +3696,7 @@ class OrganizationController extends AdminController
 
         $model = M('Organization');
         $count = $model->where($map)->count();
-        $Page = new Page($count, 5);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];
@@ -3819,11 +3819,11 @@ class OrganizationController extends AdminController
         if($name){
             $map['name'] = array('like','%'.$name.'%');
             $count = $model->where($map)->where('status=1')->count();
-            $Page = new Page($count, 5);
+            $Page = new Page($count, C('LIST_ROWS'));
             $list = $model->where($map)->where("status=1")->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
             $count = $model->where($map)->where('status=1')->count();
-            $Page = new Page($count, 5);
+            $Page = new Page($count, C('LIST_ROWS'));
             $list = $model->where($map)->where('status=1')->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         $show = $Page->show();
@@ -3865,11 +3865,11 @@ class OrganizationController extends AdminController
         if($name){
             $map['name'] = array('like','%'.$name.'%');
             $count = $model->where($map)->where('status=1')->count();
-            $Page = new Page($count, 5);
+            $Page = new Page($count, C('LIST_ROWS'));
             $list = $model->where($map)->where("status=1")->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }else{
             $count = $model->where($map)->where('status=1')->count();
-            $Page = new Page($count, 5);
+            $Page = new Page($count, C('LIST_ROWS'));
             $list = $model->where($map)->where('status=1')->order('sort asc, create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         $show = $Page->show();

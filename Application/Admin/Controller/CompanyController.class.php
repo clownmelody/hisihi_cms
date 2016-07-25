@@ -30,7 +30,7 @@ class CompanyController extends AdminController {
     public function index(){
         $model = D('Company');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];
@@ -419,7 +419,7 @@ class CompanyController extends AdminController {
     public function config(){
         $model = D('CompanyConfig');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];
@@ -537,7 +537,7 @@ class CompanyController extends AdminController {
     public function recruit(){
         $model = D('CompanyRecruit');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];

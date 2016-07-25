@@ -18,7 +18,7 @@ class CourseFeedBackController extends AdminController
     {
         $model = D('CourseFeedBack');
         $count = $model->where('resolved=0')->count();
-        $Page = new Page($count, 5);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where('resolved=0')->order('create_time')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);

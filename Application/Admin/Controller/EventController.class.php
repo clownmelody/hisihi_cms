@@ -35,6 +35,7 @@ class EventController extends AdminController
     }
     public function event($page = 1, $r = 10, $title='')
     {
+        $r = C('LIST_ROWS');
         if(!empty($title)){
             $map['title'] = array('like', '%' . $title . '%');
         }
