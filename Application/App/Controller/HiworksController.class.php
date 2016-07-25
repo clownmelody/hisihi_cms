@@ -186,6 +186,36 @@ class HiworksController extends AppController
         $this->apiSuccess("获取金榜作业成功", null, $extra);
     }
 
+    public function hiworksPreViewList(){
+        $model = M();
+        $result = $model->query("select document.id, document.title, document.category_id, document.cover_id, download.download from hisihi_document_download as download,
+                                  hisihi_document as document where download.id=document.id and document.cover_id!=0 and document.status=1
+                                  order by document.create_time desc limit 0,12");
+        foreach($result as &$value){
+            $pic_id = $value['cover_id'];
+            $category_id = $value['category_id'];
+            $category = $model->query("select title from hisihi_category where id=".$category_id);
+            $value['category_name'] = $category[0]['title'];
+            $value['pic'] = null;
+            $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+            if($pic_info){
+                $path = $pic_info[0]['path'];
+                $objKey = substr($path, 17);
+                $param["bucketName"] = "hisihi-other";
+                $param['objectKey'] = $objKey;
+                $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+                if($isExist){
+                    $picUrl = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/".$objKey;
+                    $value['pic'] = $picUrl;
+                }
+            }
+            unset($value['cover_id']);
+        }
+        $extra['data'] = $result;
+        $extra['totalCount'] = count($result);
+        $this->apiSuccess("获取云作业列表成功", null, $extra);
+    }
+
     /**
      * 获取云作业制定类别下的子分类
      * @param $category_id

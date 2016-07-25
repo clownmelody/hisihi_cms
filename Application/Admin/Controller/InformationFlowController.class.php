@@ -15,7 +15,7 @@ class InformationFlowController extends AdminController {
     public function banner(){
         $model = M('InformationFlowBanner');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -132,7 +132,7 @@ class InformationFlowController extends AdminController {
 (select id from hisihi_information_flow_content 
  where '.$where.'
  GROUP BY content_id)a ');
-        $Page = new Page($count[0]['count'], 10);
+        $Page = new Page($count[0]['count'], 20);
         $show = $Page->show();
         $list = $model->where($map)->group('content_id')->order($sort)->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$content){
@@ -192,7 +192,7 @@ class InformationFlowController extends AdminController {
     public function config(){
         $model = M('InformationFlowConfig');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -407,7 +407,7 @@ class InformationFlowController extends AdminController {
         $map['show_pos'] = $pos;
         $model = M('InformationFlowBanner');
         $count = $model->where($map)->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->where($map)->order('sort asc , create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
 

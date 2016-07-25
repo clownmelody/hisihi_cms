@@ -15,7 +15,7 @@ class FrontPageController extends AdminController {
     public function content(){
         $model = M('FrontPage');
         $count = $model->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach($list as &$content){
@@ -61,7 +61,7 @@ class FrontPageController extends AdminController {
     public function config(){
         $model = M('FrontPageCategory');
         $count = $model->count();
-        $Page = new Page($count, 10);
+        $Page = new Page($count, 20);
         $show = $Page->show();
         $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
