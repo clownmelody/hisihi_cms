@@ -260,8 +260,7 @@ define(['base','fastclick'],function(Base){
                                         '<span>'+couponInfo.money+'</span>'+
                                     '</div>'+
                                     '<div class="coupon-main-bottom">'+
-                                        '<span>有效期：'+'</span>'+
-                                        '<span>'+startTime+'-'+endTime+'</span>'+
+                                        '<span>有效期：'+'</span>'+'<span>'+startTime+'-'+endTime+'</span>'+
                                     '</div>'+
                                 '</div>'+
                             '</div>'+
@@ -270,7 +269,9 @@ define(['base','fastclick'],function(Base){
                         '</div>'+
                     '</div>'+
                     '<div class="coupon-left">'+
-                        '<img src="'+promotionInfo.little_logo_url+'">'+
+                        //'<img src="'+promotionInfo.little_logo_url+'">'+
+                        //删除优惠券亿元补贴图片
+                        '<span id="coupon-title">亿元补贴</span>'+
                     '</div>'+
                     '<div class="coupon-right">'+
                         '<div class="sawtooth-right-main '+className+'">' +
