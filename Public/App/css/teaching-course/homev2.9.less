@@ -105,41 +105,41 @@ body {
     }
     .center-content{
       height: 100%;
-      .otherinfo{
-        margin-top: 13px;
-        li{
-          display: inline-block;
-          color: @g-color;
-          margin-right: 13px;
-          @w:20px;
-          line-height:@w;
-          height: 32px;
-          i{
-            display: block;
-            @w:20px;
-            .size(@w,@w);
-            float: left;
-            margin-right: 5px;
-            //.bg-sprite;
-            .bg-sprite-middle;
-            &.cer{
-              background-position:-119px 0;
-            }
-            &.nums{
-              background-position:-154px 0;
-            }
-            &.comment{
-              background-position:-175px 0;
-              .size(16px,17px);
-            }
-          }
-          span{
-            display: block;
-            float: left;
-            font-size: 14px;
-          }
-        }
-      }
+      //.otherinfo{
+      //  margin-top: 13px;
+      //  li{
+      //    display: inline-block;
+      //    color: @g-color;
+      //    margin-right: 13px;
+      //    @w:20px;
+      //    line-height:@w;
+      //    height: 32px;
+      //    i{
+      //      display: block;
+      //      @w:20px;
+      //      .size(@w,@w);
+      //      float: left;
+      //      margin-right: 5px;
+      //      //.bg-sprite;
+      //      .bg-sprite-middle;
+      //      &.cer{
+      //        background-position:-119px 0;
+      //      }
+      //      &.nums{
+      //        background-position:-154px 0;
+      //      }
+      //      &.comment{
+      //        background-position:-175px 0;
+      //        .size(16px,17px);
+      //      }
+      //    }
+      //    span{
+      //      display: block;
+      //      float: left;
+      //      font-size: 14px;
+      //    }
+      //  }
+      //}
     }
 
   }
@@ -156,7 +156,7 @@ body {
         top:50%;
         left: 0;
         margin-top: -@h/2;
-        .border-radius(50%);
+        border-radius: 20%; //头像变成圆角
         .size(@h,@h);
       }
 
@@ -202,9 +202,10 @@ body {
   &.lessons-detail{
     .head-txt{
       .border-bottom();
+      width: 96%;
+      float: right;
     }
     ul{
-
       padding-bottom: 20px;
       margin-top: 5px;
       li{

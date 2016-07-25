@@ -25,7 +25,7 @@ class Page{
 
 	// 分页显示定制
     private $config  = array(
-        'header' => '<span class="rows">共 %TOTAL_ROW% 条记录</span>',
+        'header' => '<span class="rows">跳转到第<input id="page_skip" type="text" value=""/>页    共 %TOTAL_ROW% 条记录</span>',
         'prev'   => '<<',
         'next'   => '>>',
         'first'  => '1...',
@@ -129,7 +129,7 @@ class Page{
                 }
             }else{
                 if($page > 0 && $this->totalPages != 1){
-                    $link_page .= '<li class="active"><a class="active">' . $page . '</a></li>';
+                    $link_page .= '<li class="active"><a class="active" style="border-color: #039674;background: #039674;color: #fff">' . $page . '</a></li>';
                 }
             }
         }

@@ -1,0 +1,221 @@
+body{
+  padding: 0;
+  margin: 0;
+  background-color: RGB(242, 242, 242);
+}
+#downloadCon-new{
+  top: 0;
+  background-color: #9E9A98;
+  opacity: 1;
+  position: fixed;
+  .size(100%,56px);
+  > img {
+    .size(42px, 42px);
+    position: absolute;
+    left: 20px;
+    top: 9px;
+  }
+  .words{
+    margin-left: 71px;
+    padding-top: 9px;
+    color: white;
+    .title{
+      label{
+        font-size: 16px;
+      }
+      .stars{
+        margin-left: 5px;
+        img{
+          .size(10px,10px);
+          display: inline-block;
+        }
+      }
+    }
+    p{
+      margin: 1px 0;
+      font-size: 12px;
+      color:rgb(211,211,211);
+    }
+  }
+  #download{
+    .size(80px,32px);
+    position: absolute;
+    top:50%;
+    margin-top: -16px;
+    right: 12px;
+    display:block;
+    text-decoration: none;
+    background-color: #FF5A00;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    line-height: 32px;
+    z-index: 10001;
+  }
+}
+#wrapper {
+  padding-top: 56px;
+}
+.sprite-bg{
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+}
+@fcolor:rgb(21,21,21);
+
+.logo-box{
+  .size(100%,150px);
+  position: relative;
+  padding-top: 45px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid RGB(222, 222, 222);
+  background-color: rgba(255,255,255,0.8);
+  .filter{
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    img{
+      .size(100%,100%);
+      -webkit-filter: blur(20px);
+      -moz-filter: blur(20px);
+      -ms-filter: blur(20px);
+      filter: blur(20px);
+    }
+  }
+  .logo-main-info{
+    .logo-main-box {
+      height: 50%;
+      width: 80px;
+      margin: 0 auto;
+      position: relative;
+      //background-color: #fff;
+      text-align: center;
+      #logo {
+        .size(65px, 65px);
+        border-radius:10px;
+        border:1px solid #ccc;
+      }
+      .v-cert{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: inline-block;
+        .size(18px,18px);
+        display: none;
+      }
+    }
+    .name-main-box{
+      text-align: center;
+      margin-top: 6px;
+      i{
+        .sprite-bg;
+        .size(33px,33px);
+        display: inline-block;
+        background-position: -119px -32px;
+      }
+      label {
+        vertical-align: 10px;
+        color: @fcolor;
+        font-size: 14px;
+      }
+      .cert-box{
+        vertical-align: 7px;
+        margin-left: 5px;
+        img{
+          .size(18px,18px);
+        }
+      }
+    }
+    .user-number-box{
+      text-align: center;
+      span{
+        &:first-child {
+          margin-right: 14px;
+        }
+        i{
+          .sprite-bg;
+          .size(14px,9px);
+          display: inline-block;
+          background-position: -227px -32px;
+          margin-right: 4px;
+        }
+        label{
+          color: @fcolor;
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+.main-item{
+  background-color: #fff;
+  margin:12px 8px;
+  border-radius:4px;
+}
+.news-box{
+  position: relative;
+  height: 63px;
+  padding:12px 8px 14px 8px;
+  display: none;
+  .left-item{
+    .size(63px,65px);
+    position: absolute;
+    left:0;
+    top: 12px;
+    left: 8px;
+    //img{
+    //  .size(100%,100%);
+    //}
+    .sprite-bg;
+    //background-size: 612px 130px;
+    background-position: -243px 0;
+    p{
+      margin: 0;
+      &:first-child {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+      text-align: center;
+      font-family:serif;
+      font-size: 25px;
+    }
+  }
+  .right-item{
+    margin-left:70px;
+    height: 100%;
+    width: 100%;
+    display: table;
+    >div{
+      display: table-cell;
+      vertical-align: middle;
+      a{
+        display: block;
+        color:@fcolor;
+        p{
+          .txt-ellipsis-p(1);
+          margin: 7px 0;
+          //&.one{
+          //  margin: 21px 0;
+          //}
+        }
+      }
+    }
+  }
+}
+
+/*��Ӧʽ��ʽ*/
+@media screen and (min-width: 750px) {
+  #wrapper,
+  #downloadCon {
+    width: 560px;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+@media screen and (max-width: 320px) {
+
+}

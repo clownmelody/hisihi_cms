@@ -43,9 +43,9 @@
 				&nbsp;&nbsp;<input class="config_type" type="radio" value="{$data['id']}" name="config_type">{$data.title}&nbsp;&nbsp;
 			</volist>
 		</div>
-		<div style="height: 35px;">
+		<!--<div style="height: 35px;">
 			<button id="showByConfigType" class="btn" style="float: right;">提交</button>
-		</div>
+		</div>-->
 	</div>
 
 	<!-- 数据表格 -->
@@ -200,7 +200,21 @@ $(function(){
 		}
 
 		window.location.href = '{:U("informationFlow/content")}' + '&config_type=' + param2;
-	})
+	});
+
+	$('.config_type').change(function(){
+		var categories = $('.config_type:checked');
+		var param2 = '';
+		if(categories.length > 0){
+			var str = new Array();
+			categories.each(function(){
+				str.push($(this).val());
+			});
+			param2 = str.join(',');
+		}
+
+		window.location.href = '{:U("informationFlow/content")}' + '&config_type=' + param2;
+	});
 
 	$('#showadvs').click(function(){
 		window.location.href = '{:U("informationFlow/content")}' + '&config_type=1&content_type=3';
