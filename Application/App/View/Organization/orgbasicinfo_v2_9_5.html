@@ -15,7 +15,7 @@
     <div id="wrapper" data-oid="{$organization_id}">
         <div class="logo-box">
             <div class="filter">
-                <img class="logoBg myLogo" src="http://pic.hisihi.com/2016-05-19/1463642572351446.png@38-38-392-392a" alt="logo">
+                <img id="filter-logo" src="http://pic.hisihi.com/2016-05-19/1463642572351446.png@38-38-392-392a" alt="logo">
             </div>
             <div class="logo-main-info">
                 <div class="logo-main-box">
@@ -25,22 +25,23 @@
                 <div class="name-main-box">
                     <i></i>
                     <label>武汉什么吧啦吧啦</label>
-                    <span class="cert-box"><span>诚</span></span>
+                    <span class="cert-box"><img src="http://pic.hisihi.com/2015-12-03/565fb1c61bd54.png"></span>
+                </div>
+                <div class="user-number-box">
+                    <span><i></i><label>4.9w</label></span>
+                    <span><i></i><label>4.9w</label></span>
                 </div>
             </div>
-            <div class="user-number-box">
-                <span><i></i><label>4.9w</label></span>
-                <span><i></i><label>4.9w</label></span>
-            </div>
         </div>
-
         <div class="main-item news-box">
             <div class="left-item">
-                <p>机构</p>
-                <p>动态</p>
+                <!--<img src="__IMG__/orgbasicinfo/2.9.5/ic_dynamic@3x.png">-->
             </div>
             <div class="right-item">
-                <a href="#">关于郑州我知道的不多，为了爱情曾经到过那里。</a>
+                <div>
+                    <a href="#"><p class="one">关于郑州我知道的不多，为了爱情曾经到过那里。</p></a>
+                    <!--<a href="#"><p>关于郑州我知道的不多，为了爱情曾经到过那里。</p></a>-->
+                </div>
             </div>
         </div>
 
@@ -252,9 +253,22 @@
         </div>
     </div>
     <!--下载条-->
-    <div id="downloadCon">
-        <img src="__IMG__/orgbasicinfo/2.png" class="allDownImg" />
-        <a href="http://www.hisihi.com/download.php">立即下载</a>
+    <div id="downloadCon-new">
+        <img src="__IMG__/orgbasicinfo/2.9.5/1.png" class="allDownImg" />
+        <div class="words">
+            <div class="title">
+                <label>嘿设汇</label>
+                <span class="stars">
+                    <img src="__IMG__/orgbasicinfo/2.9.5/5.png">
+                    <img src="__IMG__/orgbasicinfo/2.9.5/5.png">
+                    <img src="__IMG__/orgbasicinfo/2.9.5/5.png">
+                    <img src="__IMG__/orgbasicinfo/2.9.5/5.png">
+                    <img src="__IMG__/orgbasicinfo/2.9.5/5.png">
+                </span>
+            </div>
+            <p>设计师必备，百万设计师都在用</p>
+        </div>
+        <a id="download" href="http://www.hisihi.com/download.php">立即下载</a>
     </div>
 </body>
 <script>

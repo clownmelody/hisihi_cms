@@ -250,25 +250,85 @@ ul li {
 body {
   padding: 0;
   margin: 0;
+  background-color: #f2f2f2;
 }
-#downloadCon {
+#downloadCon-new {
   top: 0;
   background-color: #9E9A98;
-  opacity: 0;
+  opacity: 1;
+  position: fixed;
+  width: 100%;
+  height: 56px;
+}
+#downloadCon-new > img {
+  width: 42px;
+  height: 42px;
+  position: absolute;
+  left: 20px;
+  top: 9px;
+}
+#downloadCon-new .words {
+  margin-left: 71px;
+  padding-top: 9px;
+  color: white;
+}
+#downloadCon-new .words .title label {
+  font-size: 16px;
+}
+#downloadCon-new .words .title .stars {
+  margin-left: 5px;
+}
+#downloadCon-new .words .title .stars img {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+#downloadCon-new .words p {
+  margin: 1px 0;
+  font-size: 12px;
+  color: #d3d3d3;
+}
+#downloadCon-new #download {
+  width: 80px;
+  height: 32px;
+  position: absolute;
+  top: 50%;
+  margin-top: -16px;
+  right: 12px;
+  display: block;
+  text-decoration: none;
+  background-color: #FF5A00;
+  text-align: center;
+  color: white;
+  font-size: 15px;
+  border-radius: 2px;
+  line-height: 32px;
+  z-index: 10001;
+}
+#wrapper {
+  padding-top: 56px;
+}
+.sprite-bg {
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
 }
 .logo-box {
   width: 100%;
-  height: 200px;
+  height: 150px;
   position: relative;
-  margin-top: 80px;
+  padding-top: 45px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #dedede;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 .logo-box .filter {
   position: absolute;
   z-index: -1;
   top: 0;
-  left: 0;
+  left: 0%;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 .logo-box .filter img {
   width: 100%;
@@ -298,9 +358,105 @@ body {
   display: inline-block;
   width: 18px;
   height: 18px;
+  display: none;
 }
 .logo-box .logo-main-info .name-main-box {
   text-align: center;
+  margin-top: 6px;
+}
+.logo-box .logo-main-info .name-main-box i {
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+  width: 33px;
+  height: 33px;
+  display: inline-block;
+  background-position: -119px -32px;
+}
+.logo-box .logo-main-info .name-main-box label {
+  vertical-align: 10px;
+  color: #151515;
+  font-size: 14px;
+}
+.logo-box .logo-main-info .name-main-box .cert-box {
+  vertical-align: 7px;
+  margin-left: 5px;
+}
+.logo-box .logo-main-info .name-main-box .cert-box img {
+  width: 18px;
+  height: 18px;
+}
+.logo-box .logo-main-info .user-number-box {
+  text-align: center;
+}
+.logo-box .logo-main-info .user-number-box span:first-child {
+  margin-right: 14px;
+}
+.logo-box .logo-main-info .user-number-box span i {
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+  width: 14px;
+  height: 9px;
+  display: inline-block;
+  background-position: -227px -32px;
+  margin-right: 4px;
+}
+.logo-box .logo-main-info .user-number-box span label {
+  color: #151515;
+  font-size: 11px;
+}
+.main-item {
+  background-color: #fff;
+  margin: 12px 8px;
+  border-radius: 4px;
+}
+.news-box {
+  position: relative;
+  height: 63px;
+  padding: 12px 8px 14px 8px;
+  display: none;
+}
+.news-box .left-item {
+  width: 63px;
+  height: 65px;
+  position: absolute;
+  left: 0;
+  top: 12px;
+  left: 8px;
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+  background-position: -243px 0;
+}
+.news-box .left-item p {
+  margin: 0;
+  text-align: center;
+  font-family: serif;
+  font-size: 25px;
+}
+.news-box .left-item p:first-child {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.news-box .right-item {
+  margin-left: 70px;
+  height: 100%;
+  width: 100%;
+  display: table;
+}
+.news-box .right-item > div {
+  display: table-cell;
+  vertical-align: middle;
+}
+.news-box .right-item > div a {
+  display: block;
+  color: #151515;
+}
+.news-box .right-item > div a p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  margin: 7px 0;
 }
 /*��Ӧʽ��ʽ*/
 @media screen and (min-width: 750px) {
