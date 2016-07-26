@@ -47,7 +47,7 @@
 				<th class="">显示位置</th>
 				<th class="">排序</th>
 				<th class="">创建时间</th>
-				<th class="">状态</th>
+				<!--<th class="">状态</th>-->
 				<th class="">操作</th>
 			</tr>
 			</thead>
@@ -57,7 +57,10 @@
 					<tr>
 						<td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
 						<td>{$vo.id}</td>
-						<td>{$vo.pic_url}</td>
+						<td><a class="fancy_img" href="{$vo.pic_url|op_t}" >
+							<img style="width: 24px;height: 24px;" src="{$vo.pic_url|op_t}"/>
+							</a>
+						</td>
 						<td>{$vo.url}</td>
 						<td><if condition="($vo.show_pos eq 0) "> 机构列表
 							<elseif condition="($vo.show_pos eq 1) "/> 资讯流
@@ -72,14 +75,14 @@
 						</td>
 						<td>{$vo.sort}</td>
 						<td><span>{$vo.create_time|time_format}</span></td>
-						<td><if condition="($vo.status eq 1) "> 正常
+						<!--<td><if condition="($vo.status eq 1) "> 正常
 							<else /> 删除
-						</if>
-						</td>
+							</if>
+						</td>-->
 						<td>
 							<a id="{$vo['id']}" class="setSort"  href="javascript:void(0)">设置排序</a>
 							<a href="{:U('informationFlow/editBanner?id='.$vo['id'])}" >编辑</a>
-							<a href="{:U('informationFlow/setBannerStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>
+							<!--<a href="{:U('informationFlow/setBannerStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>-->
 							<a href="{:U('informationFlow/setBannerStatus?status=-1&id='.$vo['id'])}" class="ajax-get confirm">删除</a>
 						</td>
 					</tr>
@@ -97,8 +100,15 @@
 
 </block>
 <block name="script">
+	<link rel="stylesheet" href="__CSS__/jquery.fancybox.css">
+	<script src="__STATIC__/thinkbox/jquery.thinkbox.js"></script>
+	<script src="__JS__/jquery.fancybox.js"></script>
 <script type="text/javascript">
-
+	$('.fancy_img').fancybox({
+		'transitionIn'	: 'elastic',
+		'transitionOut'	: 'elastic',
+		'titlePosition' : 'inside'
+	});
 	function setSortValue(){
 		var url = $('#addSort').attr('url');
 		if($('#pos').val() >= 0){
