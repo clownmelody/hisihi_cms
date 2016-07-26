@@ -414,6 +414,7 @@ class OrganizationController extends AppController
             if((float)$version>=2.95){
                 $result['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
                 $result['is_favorite'] = $this->isOrganizationFavorite($uid, $organization_id);
+                $result['is_enroll'] = $this->isYuYueOrganization($uid, $organization_id);
             } else {
                 $result['authenticationInfo'] = $this->getAuthenticationInfo($organization_id);
             }
@@ -4351,7 +4352,7 @@ GROUP BY
             $this->apiError(-1, '机构id不能为空');
         }
         if((float)$version>=2.95){
-            $coupon_list = M()->query('select t2.teaching_course_id, t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
+            $coupon_list = M()->query('select t2.teaching_course_id, t1.promotion_id, t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
 hisihi.hisihi_teaching_course_organization_promotion_relation t1,
 hisihi.hisihi_teaching_course_coupon_relation t2, hisihi.hisihi_coupon t3
 where t1.teaching_course_id=t2.teaching_course_id
@@ -4473,9 +4474,12 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
      */
     public function yuyue($mobile=null, $username=null, $organization_id=0,
                           $course_id=0, $education=null, $major=null){
+        $this->requireLogin();
+        $uid = $this->getUid();
         if(empty($mobile)||empty($organization_id)){
             $this->apiError(-1, "机构id和手机号不能为空");
         }
+        $data['uid'] = $uid;
         $data['mobile'] = $mobile;
         $data['username'] = $username;
         $data['education'] = $education;
@@ -4520,9 +4524,12 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
      */
     public function baokao($mobile=null, $username=null, $university_id=0,
                            $education='', $major=''){
+        $this->requireLogin();
+        $uid = $this->getUid();
         if(empty($mobile)||empty($university_id)){
             $this->apiError(-1, "大学id和手机号不能为空");
         }
+        $data['uid'] = $uid;
         $data['mobile'] = $mobile;
         $data['username'] = $username;
         $data['education'] = $education;
@@ -4583,6 +4590,22 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         } else {
             return false;
         }
+    }
+
+    /**
+     * 是否已预约/报名机构
+     * @param $uid
+     * @param $organization_id
+     * @return bool
+     */
+    public function isYuYueOrganization($uid, $organization_id){
+        $where_array['uid'] = $uid;
+        $where_array['organization_id'] = $organization_id;
+        $where_array['status'] = 1;
+        if(M('OrganizationYuyue')->where($where_array)->count()){
+            return true;
+        }
+        return false;
     }
 
 }
