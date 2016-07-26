@@ -410,8 +410,10 @@ body{
   width: 100%;
   display: none;
   opacity: 0;
-  background: rgba(0, 0, 0, 1);
-
+  background: rgba(255, 255, 255, 1);
+  &.video-modal{
+    background: rgba(72, 72, 72,1);
+  }
   &.show{
     animation: showmodal 150ms linear;
     animation-fill-mode: forwards;
@@ -451,13 +453,11 @@ body{
 
   .pic-main{
     .size(100%,100%);
-    //position: relative;
     text-align: center;
     display: table;
     .filter{
-      background: rgba(0,0,0,.8);
+      opacity: 0.8;
     }
-
     .view-pics-box{
       display: table-cell;
       vertical-align: middle;

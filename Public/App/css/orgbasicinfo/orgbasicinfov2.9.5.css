@@ -658,7 +658,10 @@ body {
   width: 100%;
   display: none;
   opacity: 0;
-  background: #000000;
+  background: #ffffff;
+}
+.modal.video-modal {
+  background: #484848;
 }
 .modal.show {
   animation: showmodal 150ms linear;
@@ -704,7 +707,7 @@ body {
   display: table;
 }
 .modal .pic-main .filter {
-  background: rgba(0, 0, 0, 0.8);
+  opacity: 0.8;
 }
 .modal .pic-main .view-pics-box {
   display: table-cell;

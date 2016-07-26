@@ -32,6 +32,14 @@ define(['base','mysilder'],function(Base,Myslider){
             }
         });
 
+        $(document).on('click','.video-modal', function(){
+            event.stopPropagation();
+            if(event.target==this){
+                $('.modal').removeClass('show');
+                that.myPlayer.pause();
+            }
+        });
+
 
     }
 
@@ -263,7 +271,7 @@ define(['base','mysilder'],function(Base,Myslider){
         var that=this;
         this.getDataAsync({
             url: this.baseUrl + 'getPromotionCouponList',
-            paraData: {organization_id: this.oid},
+            paraData: {organization_id: this.oid, version: 2.95},
             sCallback: function(result){
                 that.fillInCouponInfo(result.data);
             },
@@ -277,7 +285,18 @@ define(['base','mysilder'],function(Base,Myslider){
     };
 
     t.fillInCouponInfo=function(data){
-        data;
+        if(!data || data.list.length==0){
+            return;
+        }
+        var list=data.list,
+            len=list.length,
+            len2= 0,
+            str='',coupon;
+        for(var i=0;i<len;i++){
+            coupon=list[i];
+            //coupon_list=pomition.coupon_list,
+        }
+
     };
 
 
@@ -441,6 +460,7 @@ define(['base','mysilder'],function(Base,Myslider){
         if(!data){
             return;
         }
+        data.video_url='http://91.16.0.7/video/14/output.m3u8';
         return '<li data-url="'+data.video_url+'">'+
                     '<img src="'+data.video_img+'">'+
                     '<span class="p-btn"><i class="icon-play"></i></span>'+
@@ -448,19 +468,29 @@ define(['base','mysilder'],function(Base,Myslider){
     };
 
     t.showPicsAndVideoDetailInfo=function(e){
-        var $target=$(e.currentTarget),
-            $box=$('.modal');
+        var $target=$(e.currentTarget);
         $('body').attr('scroll','no');
+        //var $box=$('.modal');
         //图片
         if($target.hasClass('li-img')){
             var index= $('.li-img').index($target);
             var arr=t.getAllPics($('.pics-preview-box'));
-            $box.eq(1).addClass('show').find('.pics-nav span').text(index+1+'/'+arr.length);
+            $('.modal').eq(1).addClass('show').find('.pics-nav span').text(index+1+'/'+arr.length);
             this.initPicsScroll(arr,index);
 
         }else{
-            //this.myPlayer;
-            // $box.eq(0).addClass('show');
+            var url=$target.data('url'),
+                that=this;
+            if(url=='null' || url=='undefined'){
+                this.showTips('视频暂无');
+                return;
+            }
+
+            videojs("video-player").ready(function(){
+                that.myPlayer = this;
+                that.myPlayer.src({type: 'application/x-mpegURL',src:$target.data('url')});
+                $('.modal').eq(0).addClass('show');
+            });
         }
     };
 
@@ -481,12 +511,14 @@ define(['base','mysilder'],function(Base,Myslider){
         var arr=this.getItemStr(imgArr),
             $span=$('.pics-nav span'),
             num=$span.text().split('/')[1];
+        $('#filter-img').attr('src',imgArr[index]);
         new Myslider($('.view-pics-box'),arr,{
                 autoPlay:false,
                 showNav:false,
                 index:index,
-                changeCallback:function(type,index){
-                    $span.text((index+1)+'/'+num);
+                changeCallback:function(type,picIndex){
+                    $span.text((picIndex+1)+'/'+num);
+                    $('#filter-img').attr('src',imgArr[picIndex]);
             }
         });
     };
