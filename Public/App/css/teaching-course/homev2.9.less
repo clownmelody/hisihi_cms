@@ -389,17 +389,16 @@ body {
   }
 
   &.coupon-basic-info{
-    @left:63px;
-    @right:55px;
+    @left:53px;
+    @right:73px;
     @tooth-w:5px;
     @color1:#F9A825;
     @color2:#ccc;
+    @color3:#BDBDBD;
     height: 85px;
     border-top:1px solid #CCCCCC;
     border-bottom:1px solid #CCCCCC;
-    *{
-      color: @color1;
-    }
+
     .bg-sprite-c{
       background: url("../../images/teaching-course/sprite3.png");
     }
@@ -416,7 +415,7 @@ body {
       }
     }
     .coupon-left{
-      width: 53px;
+      width: @left;
       margin-left: -100%;
       position: relative;
       height: 60px !important;
@@ -439,118 +438,46 @@ body {
       #coupon-icon {
         max-width: 100%;
         display: block;
-        margin: 4px 0px 0px 0px;
+        margin:0px;
         //background-image: url("http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png");
-
       }
+    }
+    .new-coupon-bg{
+      background: url(../../images/teaching-course/sprite_coupon.png) 0 0 no-repeat;
+      background-size:324px*0.5 242px*0.5;
     }
     .coupon-right{
       width: @right;
-      margin-left: -@left;
-      height: 100%;
-      >*{
-        float: left;
-      }
-      #left-line {
-        background-position: -91px 0;
-        float: left;
-      }
-      #right-line {
-        float: right;
-      }
-      .sawtooth-right-main{
-        //立即领取
-        .size(45px,100%);
-        background-color:@color1;
+      height: 58px;
+      margin-left: -@right - 3px;
 
-
-
-
-
-        /*戳*/
-        .postmark{
-
-          margin: 0 auto;
-          .size(56px,44px);
-          .bg-sprite-c;
-          background-size:344px 91px;
-          background-position: -289px 0;
-        }
-
-        /*去使用*/
-        .to-used-btn{
-          display: none;
-          background-color: #FA4535;
-          .border-radius(15px);
-          color: white;
-          .size(60px,25px);
-          line-height: 25px;
-          text-align: center;
-          margin: 17px auto;
-          font-size: 12px;
-        }
-
-        /*去领取*/
-        .do-take-in {
-          display: none;
-          p {
-            text-align: center;
-            font-size: 12px;
-            margin: 0;
-            color: white;
-            &:first-child {
-              margin-top: 27px;
-            }
-            &:last-child {
-              margin-top: 3px;
-            }
-          }
-        }
-
-        /*未领取*/
+      position: relative;
+      .coupon-status{
+        .new-coupon-bg;
+        .size(100%,100%);
+        position: absolute;
+        top:-1px;
+        left: -2px;
+        z-index: 100;
         &.un-take-in {
-          .do-take-in{
-            display: block;
-          }
-          .postmark{
-            display: none;
-          }
+          background-position: -180*0.5px 0;
         }
-
-        /*已经使用*/
-        &.used{
-          background-color: @color2;
-          .postmark{
-            background-position: -233px 0;
-          }
+        &.unused {
+          background-position: -2px -130*0.5px;
         }
-
-        &.unused{
-          .to-used-btn{
-            display: block;
-          }
-        }
-
-      }
-      i{
-        display: block;
-        .size(@tooth-w,100%);
-        .bg-sprite-c;
-        background-position: -182px 0;
-        float: right;
-        &.used{
-          background-position: -367px 0;
+        &.used {
+          background-position: -180*0.5px -130px * 0.5;
         }
       }
-      //辣么可爱
 
+      //辣么可爱  writed by panxiao @2016.07.22
     }
     .coupon-middle{
       width: 100%;
       height: @left;
       .coupon-middle-all{
         height: 100%;
-        margin: 0 @right 0 @left;
+        margin: 0 @right 0 @left + 10px;
         @mw:8px;
         >div{
           height: 100%;
@@ -559,14 +486,15 @@ body {
         .coupon-box {
           width: 100%;
           .coupon-all-box{
-            border-top: 1px solid @color1;
-            border-left: 1px solid @color1;
-            border-bottom: 1px solid @color1;
+            border: 1px solid @color1;
+            border-right: 0;
+            color: @color1;
             &.used{
-              background-color: @color2;
+              border: 1px solid @color3;
+              color: @color3;
             }
             height: 100%;
-            margin: 0 @mw 0 @tooth-w;
+            margin: 0 0 0 @tooth-w;
             .coupon-main-top{
               height: 60%;
               //padding-top: 7px;
@@ -575,7 +503,7 @@ body {
                   font-size: 24px;
                 }
                 &:last-child{
-                  font-size: 34px;
+                  font-size: 26px;
                 }
               }
             }
@@ -777,17 +705,26 @@ body {
     &.coupon-basic-info {
       .coupon-middle {
         .coupon-middle-all {
-          margin-left: 67px;
+          margin-left: 60px;
           .coupon-box {
             .coupon-all-box {
               .coupon-main-top {
-                height: 45px;
+                height: 18px;
+                span{
+                  &:first-child{
+                    font-size: 15px;
+
+                  }
+                  &:last-child{
+                    font-size: 18px;
+                  }
+                }
               }
               .coupon-main-bottom{
                 span{
                   display: block;
                   font-size: 11px;
-                  margin-top: 5px;
+                  margin-top: 2px;
                 }
               }
             }

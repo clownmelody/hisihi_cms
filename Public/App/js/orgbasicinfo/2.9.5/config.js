@@ -10,6 +10,8 @@ requirejs.config({
         base:'../sharecommon/base-1.1',
         fastclick:'../sharecommon/fastclick',
         lazyloading:'../sharecommon/lazyloading',
+        touch:'../sharecommon/zepto.event.touch',
+        mysilder:'../sharecommon/myslider',
         home:'2.9.5/orgbasicinfo',
     },
     shim: {

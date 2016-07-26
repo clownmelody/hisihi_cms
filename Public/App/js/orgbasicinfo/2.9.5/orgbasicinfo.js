@@ -2,7 +2,7 @@
  * Created by jimmy on 2015/12/28.
  */
 
-define(['base'],function(Base){
+define(['base','mysilder'],function(Base,Myslider){
 
     function OrgBasicInfo($wrapper,oid,url) {
         this.$wrapper = $wrapper;
@@ -20,6 +20,18 @@ define(['base'],function(Base){
         window.setTimeout(function(){
             that.initData();
         },100);
+
+
+        $(document).on('click','.pics-preview-box li',$.proxy(this,'showPicsAndVideoDetailInfo'));
+
+        $(document).on('click','.view-pics-box', function(){
+            event.stopPropagation();
+            if(event.target==this){
+                $('.modal').removeClass('show');
+                $('body').removeAttr('scroll');
+            }
+        });
+
 
     }
 
@@ -134,14 +146,19 @@ define(['base'],function(Base){
     //
 
     t.initData=function(){
+        var that=this;
         this.loadBasicInfoData();
         this.loadTopAnnouncement();
         this.loadSignUpInfo();
         this.loadCouponInfo();
         this.loadVideo();
-        //this.loadPics();
         $('#wrapper').show();
         this.controlLoadingBox(false);
+
+        videojs("video-player").ready(function() {
+            that.myPlayer = this;
+        });
+
     };
 
     /*加载基本信息*/
@@ -182,7 +199,7 @@ define(['base'],function(Base){
 
         // 视频、名称、认证
         $box.find('.name-main-box label').text(data.name);
-        if(data.is_listen_preview=='0'){
+        if(data.is_listen_preview =='0'){
             $('.name-main-box i').css('display','inline-block');
         }
         this.setCertInfo(data.authenticationInfo);
@@ -367,7 +384,7 @@ define(['base'],function(Base){
         }
     };
 
-    /*加载相册*/
+    /*加载视频*/
     t.loadVideo=function(){
         var that=this;
         this.getDataAsync({
@@ -405,29 +422,84 @@ define(['base'],function(Base){
         });
     };
 
-    t.getPicsStr=function(data,type){
+    /*相册*/
+    t.getPicsStr=function(data){
         if(!data || data.length==0){
             return;
         }
         var len=data.length,str='';
         for(var i=0;i<len;i++){
-            str+='<li data-type="0" data-id="'+data[i].id+'">'+
+            str+='<li class="li-img" data-id="'+data[i].id+'">'+
                     '<img src="'+data[i].url+'">'+
                 '</li>';
         }
         return str;
     };
 
-    t.getVideoStr=function(data,type){
+    /*视频*/
+    t.getVideoStr=function(data){
         if(!data){
             return;
         }
-        return '<li data-type="1" data-url="'+data.video_url+'">'+
+        return '<li data-url="'+data.video_url+'">'+
                     '<img src="'+data.video_img+'">'+
                     '<span class="p-btn"><i class="icon-play"></i></span>'+
                 '</li>';
     };
 
+    t.showPicsAndVideoDetailInfo=function(e){
+        var $target=$(e.currentTarget),
+            $box=$('.modal');
+        $('body').attr('scroll','no');
+        //图片
+        if($target.hasClass('li-img')){
+            var index= $('.li-img').index($target);
+            var arr=t.getAllPics($('.pics-preview-box'));
+            $box.eq(1).addClass('show').find('.pics-nav span').text(index+1+'/'+arr.length);
+            this.initPicsScroll(arr,index);
+
+        }else{
+            //this.myPlayer;
+            // $box.eq(0).addClass('show');
+        }
+    };
+
+    /*得到所有图片地址*/
+    t.getAllPics=function($box){
+        var arr=[];
+        $box.find('.li-img').each(function(){
+            arr.push($(this).find('img').attr('src'));
+        });
+        return arr;
+    };
+
+
+    t.initPicsScroll=function(imgArr,index){
+        if(index=='undefined'){
+            index==0;
+        }
+        var arr=this.getItemStr(imgArr),
+            $span=$('.pics-nav span'),
+            num=$span.text().split('/')[1];
+        new Myslider($('.view-pics-box'),arr,{
+                autoPlay:false,
+                showNav:false,
+                index:index,
+                changeCallback:function(type,index){
+                    $span.text((index+1)+'/'+num);
+            }
+        });
+    };
+
+
+    t.getItemStr=function(data){
+        var len=data.length,arr=[];
+        for(var i=0;i<len;i++){
+            var item=data[i];
+            arr.push('<img  src="'+item+'">');
+        }
+        return arr;
+    };
 
     //
     //    /*填充简介信息*/
