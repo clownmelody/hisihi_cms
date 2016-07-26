@@ -15,7 +15,7 @@ class CouponController extends AdminController
     public function index(){
         $model = M('Coupon');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -127,7 +127,7 @@ class CouponController extends AdminController
     public function obtain_gift_list(){
         $model = M('UserGiftPackage');
         $count = $model->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach ($list as &$item){
@@ -162,7 +162,7 @@ class CouponController extends AdminController
     public function obtain_coupon_list(){
         $model = M('UserCoupon');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         foreach ($list as &$item) {
@@ -181,7 +181,7 @@ class CouponController extends AdminController
     public function gift_package(){
         $model = M('OrganizationGiftPackage');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
 

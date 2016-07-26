@@ -191,6 +191,7 @@ class IssueController extends AdminController
     }
 
     public function SyncCourse($page=1,$r=10,$type=0){
+        $r = C('LIST_ROWS');
         //读取列表
         $Videos = M('videos','tbl_','mysqli://hisihi_root:027hsh_db@rdse1jrbrxqx7x18irl5m.mysql.rds.aliyuncs.com:3306/video');
         $map['status'] = array('egt', 0);
@@ -385,6 +386,8 @@ class IssueController extends AdminController
     }
 
     public function contents($page=1,$r=10){
+        $r = C('LIST_ROWS');
+
         $title = I('title');
         if(!empty($title)){
             $map['title'] = array('like', '%' . $title . '%');
@@ -411,6 +414,7 @@ class IssueController extends AdminController
             ->display();
     }
     public function verify($page=1,$r=10){
+        $r = C('LIST_ROWS');
         //读取列表
         $map = array('status' => 0);
         $model = M('IssueContent');

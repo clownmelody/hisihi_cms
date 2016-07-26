@@ -25,7 +25,7 @@ class YellowPagesController extends AdminController {
     public function index(){
         $model = $this->yellowPages;
         $count = $model->where('status>=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于黄页名称搜索
         $name = $_GET["title"];
@@ -61,7 +61,7 @@ class YellowPagesController extends AdminController {
     public function showRecommend(){
         $model = $this->yellowPages;
         $count = $model->where('status=2')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于黄页名称搜索
         $name = $_GET["title"];
@@ -97,7 +97,7 @@ class YellowPagesController extends AdminController {
     public function showHot(){
         $model = $this->yellowPages;
         $count = $model->where('label=1 and status>=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于黄页名称搜索
         $name = $_GET["title"];
@@ -133,7 +133,7 @@ class YellowPagesController extends AdminController {
     public function showNew(){
         $model = $this->yellowPages;
         $count = $model->where('label=2 and status>=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于黄页名称搜索
         $name = $_GET["title"];
@@ -265,7 +265,8 @@ class YellowPagesController extends AdminController {
     public function category(){
         $model = $this->pageClass;
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
+
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
@@ -350,7 +351,8 @@ class YellowPagesController extends AdminController {
     public function label(){
         $model = $this->pageLabel;
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
+
         $show = $Page->show();
         $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);

@@ -17,7 +17,7 @@ class InspirationController extends AdminController {
     public function index(){
         $model = D('Inspiration');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         //用于公司名称搜索
         $name = $_GET["title"];
@@ -155,7 +155,7 @@ class InspirationController extends AdminController {
     public function config(){
         $model = D('InspirationConfig');
         $count = $model->where('status=1')->count();
-        $Page = new Page($count, 20);
+        $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
         $list = $model->where('status=1')->order('type')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);

@@ -260,23 +260,26 @@ define(['base','fastclick'],function(Base){
                                         '<span>'+couponInfo.money+'</span>'+
                                     '</div>'+
                                     '<div class="coupon-main-bottom">'+
-                                        '<span>有效期：'+'</span>'+
-                                        '<span>'+startTime+'-'+endTime+'</span>'+
+                                        '<span>有效期：'+'</span>'+'<span>'+startTime+'-'+endTime+'</span>'+
                                     '</div>'+
                                 '</div>'+
                             '</div>'+
-                            '<div class="sawtooth-left '+className+'"></div>'+
-                            '<div class="sawtooth-right '+className+'"></div>'+
+                            //'<div class="sawtooth-left '+className+'"></div>'+
+                            //'<div class="sawtooth-right '+className+'"></div>'+
                         '</div>'+
                     '</div>'+
                     '<div class="coupon-left">'+
-                        '<img src="'+promotionInfo.little_logo_url+'">'+
+                        //'<img src="'+promotionInfo.little_logo_url+'">'+
+                        //删除优惠券亿元补贴图片
+                        //'<span id="coupon-title">亿元补贴</span>'+
+                        '<img id="coupon-icon" src="http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png"></img>' +
                     '</div>'+
                     '<div class="coupon-right">'+
+                        '<i class="'+className+'" id="left-line"></i>'+
                         '<div class="sawtooth-right-main '+className+'">' +
                             strAndType.str+
                         '</div>'+
-                        '<i class="'+className+'"></i>'+
+                        '<i class="'+className+'" id="right-line"></i>'+
                     '</div>'+
                 '</div>'+
             '</div>';
@@ -417,12 +420,13 @@ define(['base','fastclick'],function(Base){
         return num;
     };
 
-    /*得到认证的图片*/
+    ///*得到认证的图片*/
     t.getCerImg=function(data){
         var str='<div class="img-box">',len=data.length;
         for(var i=0;i<len;i++){
             if(data[i].default_display) {
-                str += '<img src="' + data[i].tag_pic_url + '">';
+                //嘿和信认证logo图片
+                //str += '<img src="' + data[i].tag_pic_url + '">';
             }
         }
         str +='</div>'
@@ -648,6 +652,43 @@ define(['base','fastclick'],function(Base){
         //得到用户基本信息
         obj.getUserInfo(null,1);
     };
+
+
+    /**参数说明：
+     * 根据长度截取先使用字符串，超长部分追加W
+     * str 对象字符串
+     * len 目标字节长度
+     * 返回值： 处理结果字符串
+     */
+    function cutString(str, len) {
+        //length属性读出来的汉字长度为1
+        if(str.length*4 <= len) {
+            return str;
+        }
+        var strlen = 0;
+        var s = "";
+        for(var i = 0;i < str.length; i++) {
+            s = s + str.charAt(i);
+            if (str.charCodeAt(i) > 128) {
+                strlen = strlen + 2;
+                if(strlen >= len){
+                    return s.substring(0,s.length-1) + "W";
+                }
+            } else {
+                strlen = strlen + 1;
+                if(strlen >= len){
+                    return s.substring(0,s.length-2) + "...";
+                }
+            }
+        }
+
+        function getStrLength(str) {
+            var cArr = str.match(/[^\x00-\xff]/ig);
+            return str.length + (cArr == null ? 0 : cArr.length);
+        }
+
+        return s;
+    }
 
     return Course;
 });
