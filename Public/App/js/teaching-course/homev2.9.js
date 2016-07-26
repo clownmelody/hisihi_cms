@@ -209,7 +209,8 @@ define(['base','fastclick'],function(Base){
             '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
             '<div class="center-content">'+
             '<div class="left">'+
-            '<img src="'+logo+'">'+
+            '<img class="group-logo" src="'+logo+'">'+
+            '<img class="v-cert" src="../images/orgbasicinfo/2.9.5/ic_v@3x.png">'+
             '</div>'+
             '<div class="right">'+
             '<div class="org-name">'+
@@ -494,6 +495,8 @@ define(['base','fastclick'],function(Base){
         return str;
     };
 
+
+
     //更多
     t.getMoreStr=function(result){
         var courses=result.courses,
@@ -634,13 +637,15 @@ define(['base','fastclick'],function(Base){
     };
 
 
-    /**参数说明：
+    /**查看数和关注数人数超过一万的时候
+     * 截取前一位，加上W单位
+     * 参数说明：
      * 根据长度截取先使用字符串，超长部分追加W
      * str 对象字符串
      * len 目标字节长度
      * 返回值： 处理结果字符串
      */
-    function cutString(str, len) {
+    t.cutString=function(str,len){
         //length属性读出来的汉字长度为1
         if(str.length*4 <= len) {
             return str;
@@ -657,18 +662,28 @@ define(['base','fastclick'],function(Base){
             } else {
                 strlen = strlen + 1;
                 if(strlen >= len){
-                    return s.substring(0,s.length-2) + "...";
+                    return s.substring(0,s.length-2) + ".";
                 }
             }
-        }
-
-        function getStrLength(str) {
-            var cArr = str.match(/[^\x00-\xff]/ig);
-            return str.length + (cArr == null ? 0 : cArr.length);
         }
 
         return s;
     }
 
+
+    /*报名标签
+    * 如果报名人数为0，则右侧的报名人数不显示*/
+    t.ClassNum=function(info){
+        var str=info;
+        if(typeof info=='string'){
+            str=str.trim();
+        }
+        if(!info || info==''||info==0){
+            str='';
+        }
+        return str;
+    };
+
     return Course;
+
 });

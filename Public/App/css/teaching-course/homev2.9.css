@@ -353,7 +353,7 @@ body {
   width: 90px;
   height: 100%;
 }
-.main-item.org-basic-info .left img {
+.main-item.org-basic-info .left .group-logo {
   position: absolute;
   top: 50%;
   left: 0;
@@ -361,6 +361,15 @@ body {
   border-radius: 20%;
   width: 75px;
   height: 75px;
+}
+.main-item.org-basic-info .left .v-cert {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  display: none;
 }
 .main-item.org-basic-info .right {
   margin-left: 90px;
