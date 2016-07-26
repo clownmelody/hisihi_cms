@@ -201,5 +201,10 @@ define(['base'],function(Base){
                 '</div></div>';
     };
 
+    //大学相册
+    t.getAlbum=function(){
+
+    }
+
     return University;
 });
