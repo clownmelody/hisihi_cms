@@ -309,7 +309,8 @@ class InformationFlowController extends AdminController {
             }
         }
 
-
+        $sort = $article['sort'];
+        $this->assign('sort', $sort);
         $this->assign('_config_type', $type_array);
         $this->assign('cid', $article['content_id']);
         $this->assign('cname', $article['content_name']);
@@ -323,6 +324,12 @@ class InformationFlowController extends AdminController {
             $model = M('InformationFlowContent');
             $categories =  explode("#",$config_type);
             $cid = intval($cid);
+            $sort_value = I('sort');
+            if(!empty($sort_value)){
+                $content_map['content_id'] = $cid;
+                $content_map['content_type'] = 1;
+                $model->where($content_map)->save(array('sort'=>$sort_value));
+            }
             $config_types = M('InformationFlowConfig')->where('status>-1')->order('id')->select();
             $sort_map['content_id'] = $cid;
             $sort_map['content_type'] = I('ctype');

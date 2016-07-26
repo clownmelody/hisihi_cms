@@ -84,8 +84,8 @@
 						<td>
 							<!--<a href="{:U('informationFlow/setContentStatus?status=1&id='.$vo['id'])}" class="ajax-get confirm">启用</a>-->
 							<a href="{:U('informationFlow/setContentStatus?status=-1&id='.$vo['id'])}" class="ajax-get confirm">删除</a>
-							<a href="{:U('informationFlow/setConfigType?id='.$vo['id'])}" >分类</a>
-							<a id="{$vo['content_id']}" class="setSort"  href="javascript:void(0)">排序</a>
+							<a href="{:U('informationFlow/setConfigType?id='.$vo['id'])}" >设置</a>
+							<!--<a id="{$vo['content_id']}" class="setSort"  href="javascript:void(0)">排序</a>-->
 						</td>
 					</tr>
 				</volist>
