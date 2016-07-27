@@ -45,10 +45,10 @@ class ArticleLogic extends BaseLogic{
 			}
 		} else { //更新数据
 			$status = $this->save($data);
-			S('topcontent-v2-9-'.$id, null);
-			S('topcontent-v2-7-'.$id, null);
-			S('topcontent-v2-'.$id, null);
-			S('topcontent-v1-'.$id, null);
+			S('topcontent-v2-9-'.$data['id'], null);
+			S('topcontent-v2-7-'.$data['id'], null);
+			S('topcontent-v2-'.$data['id'], null);
+			S('topcontent-v1-'.$data['id'], null);
 			if(false === $status){
 				$this->error = '更新详细内容失败！';
 				return false;
