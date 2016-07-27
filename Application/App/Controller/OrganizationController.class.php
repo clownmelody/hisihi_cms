@@ -4488,8 +4488,8 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
                           $course_id=0, $education=null, $major=null){
         $this->requireLogin();
         $uid = $this->getUid();
-        if(empty($mobile)||empty($organization_id)){
-            $this->apiError(-1, "机构id和手机号不能为空");
+        if(empty($mobile)){
+            $this->apiError(-1, "手机号不能为空");
         }
         $data['uid'] = $uid;
         $data['mobile'] = $mobile;
