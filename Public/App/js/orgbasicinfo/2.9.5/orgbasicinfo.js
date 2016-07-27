@@ -2,7 +2,7 @@
  * Created by jimmy on 2015/12/28.
  */
 
-define(['base','mysilder'],function(Base,Myslider){
+define(['base','mysilder','scale'],function(Base,Myslider){
 
     function OrgBasicInfo($wrapper,oid,url) {
         this.$wrapper = $wrapper;
@@ -22,20 +22,26 @@ define(['base','mysilder'],function(Base,Myslider){
         },100);
 
 
-        $(document).on('click','.pics-preview-box li',$.proxy(this,'showPicsAndVideoDetailInfo'));
+        $(document).on(eventName,'.pics-preview-box li',$.proxy(this,'showPicsAndVideoDetailInfo'));
 
-        $(document).on('click','.view-pics-box', function(){
+        $(document).on(eventName,'.view-pics-box, .slider-item', function(){
             event.stopPropagation();
             if(event.target==this){
                 $('.modal').removeClass('show');
-                $('body').removeAttr('scroll');
+                $('html,body').removeClass('ovfHidden');
             }
         });
 
-        $(document).on('click','.video-modal', function(){
+        $(document).on('click','.view-pics-box img', function(){
+            //$(this).hide();
+            //$('.pics-nav label').hide();
+        });
+
+        $(document).on(eventName,'.video-modal', function(){
             event.stopPropagation();
             if(event.target==this){
                 $('.modal').removeClass('show');
+                $('html,body').removeClass('ovfHidden');
                 that.myPlayer.pause();
             }
         });
@@ -47,112 +53,6 @@ define(['base','mysilder'],function(Base,Myslider){
     OrgBasicInfo.constructor=OrgBasicInfo;
     var t=OrgBasicInfo.prototype;
 
-
-    //OrgBasicInfo.prototype={
-    //
-    //    /*加载等待框的位置*/
-    //    controlLoadingPos:function(){
-    //        var $loading = $('.loadingResultTips'),
-    //            $body=$('body'),
-    //            w=$loading.width(),
-    //            h=$loading.height(),
-    //            dw=$body.width(),
-    //            dh=$body.height();
-    //        $loading.css({'top':(dh-h)/2,'left':(dw-w)/2,'opacity':'1'});
-    //    },
-    //
-    //    /*机构视频预览的图片*/
-    //    videoPreviewBox:function(){
-    //
-    //        var $temp=this.$wrapper.find('#videoPreviewBox'),
-    //            w=this.$wrapper.width()-30,
-    //            h=parseInt(w*(9/16)),
-    //            $i=$temp.find('i'),
-    //            ih=$i.height(),
-    //            iw=$i.width();
-    //        this.$wrapper.find('#videoPreviewBox').css('height',h);
-    //        $i.css({'top':(h-ih)/2,'left':(w-iw)/2});
-    //    },
-    //
-    //    /*地图预览的图片*/
-    //    locationMapBox:function(){
-    //        var $temp=this.$wrapper.find('.mainItemLocation'),
-    //            w=this.$wrapper.width(),
-    //            h=parseInt(w*(7/16)),
-    //            $i=$temp.find('i'),
-    //            ih=$i.height(),
-    //            iw=$i.width();
-    //        this.$wrapper.find('#locationMap').css('height',h);
-    //    },
-    //
-    //    /*播放按钮图片*/
-    //    controlPlayBtnStyle:function(){
-    //        var $temp=this.$wrapper.find('#videoPreviewBox img'),
-    //            w=$temp.width(),
-    //            h=$temp.height(),
-    //            $i=$temp.next(),
-    //            ih=$i.height(),
-    //            iw=$i.width();
-    //        $i.css({'top':(h-ih)/2,'left':(w-iw)/2});
-    //    },
-    //
-    //    /*播放我的评论输入框样式*/
-    //    controlCommentInputStyle:function(){
-    //        var $input=this.$wrapper.find('#myComment'),
-    //            w=this.$wrapper.width()-35;
-    //        $input.css('width',w+'px');
-    //    },
-    //
-    //    loadData:function(paras){
-    //        if(!paras.type){
-    //            paras.type='get';
-    //        }
-    //        var that=this;
-    //        that.controlLoadingTips(1);
-    //        var loginXhr = $.ajax({
-    //            url: paras.url,
-    //            type: paras.type,
-    //            data: paras.paraData,
-    //            timeOut: 10,
-    //            contentType: 'application/json;charset=utf-8',
-    //            complete: function (xmlRequest, status) {
-    //                if(status=='success') {
-    //                    var rTxt = xmlRequest.responseText,
-    //                        result = {};
-    //                    if (rTxt) {
-    //                        result = JSON.parse(xmlRequest.responseText)
-    //                    } else {
-    //                        result.status = false;
-    //                    }
-    //
-    //                    if (result.success) {
-    //                        that.controlLoadingTips(0);
-    //                        paras.sCallback(JSON.parse(xmlRequest.responseText));
-    //                    } else {
-    //
-    //                        var txt=result.message;
-    //                        if(paras.eCallback){
-    //                            paras.eCallback(txt);
-    //                        }
-    //                        that.controlLoadingTips(0);
-    //                    }
-    //                }
-    //                //超时
-    //                else if (status == 'timeout') {
-    //                    loginXhr.abort();
-    //                    that.controlLoadingTips(0);
-    //                    paras.eCallback();
-    //                }
-    //                else {
-    //                    that.controlLoadingTips(0);
-    //                    paras.eCallback()
-    //                }
-    //            }
-    //        });
-    //
-    //    },
-    //
-
     t.initData=function(){
         var that=this;
         this.loadBasicInfoData();
@@ -160,6 +60,10 @@ define(['base','mysilder'],function(Base,Myslider){
         this.loadSignUpInfo();
         this.loadCouponInfo();
         this.loadVideo();
+        this.loadMyTeachersInfo();
+        this.loadTeachingVideoInfo();
+
+
         $('#wrapper').show();
         this.controlLoadingBox(false);
 
@@ -273,7 +177,7 @@ define(['base','mysilder'],function(Base,Myslider){
             url: this.baseUrl + 'getPromotionCouponList',
             paraData: {organization_id: this.oid, version: 2.95},
             sCallback: function(result){
-                that.fillInCouponInfo(result.data);
+                that.fillInCouponInfo(result);
             },
             eCallback:function(txt){
                 //$target.css('opacity',1);
@@ -290,13 +194,17 @@ define(['base','mysilder'],function(Base,Myslider){
         }
         var list=data.list,
             len=list.length,
-            len2= 0,
             str='',coupon;
-        for(var i=0;i<len;i++){
+        for(var i=0;i<5;i++){
             coupon=list[i];
-            //coupon_list=pomition.coupon_list,
+            str+='<li>'+
+                    '<div class="coupon-header">￥'+coupon.money+'</div>'+
+                    '<div class="coupon-bottom">'+
+                        '<p>适用于：'+coupon.teaching_course_name+'</p>'+
+                    '</div>'+
+                 '</li>'
         }
-
+        $('.coupon-box ul').html(str);
     };
 
 
@@ -339,7 +247,7 @@ define(['base','mysilder'],function(Base,Myslider){
     t.scrollSingInInfo=function(){
         var $target=$('.sing-in-detail-box'),
             $item=$target.find('p'),
-            h=$item.height(),
+            h=40,
             len=$item.length,
             ty= -h+'px';
         var style={
@@ -410,7 +318,7 @@ define(['base','mysilder'],function(Base,Myslider){
             url:this.baseUrl + 'getPropagandaVideo',
             paraData: {organization_id: this.oid,count:8},
             sCallback: function(result){
-               var str = that.getVideoStr(result.data);  /*填充报名信息*/
+               var str = that.getVideoStr([result.data]);  /*填充报名信息*/
                 that.loadPics(str);
             },
             eCallback:function(txt){
@@ -447,6 +355,7 @@ define(['base','mysilder'],function(Base,Myslider){
             return;
         }
         var len=data.length,str='';
+        $('.pics-number label').eq(1).text(len+'照片');
         for(var i=0;i<len;i++){
             str+='<li class="li-img" data-id="'+data[i].id+'">'+
                     '<img src="'+data[i].url+'">'+
@@ -455,22 +364,41 @@ define(['base','mysilder'],function(Base,Myslider){
         return str;
     };
 
-    /*视频*/
-    t.getVideoStr=function(data){
-        if(!data){
+    /*
+    * 视频
+    * para:
+    * data- {arr} 视频数据列表
+    * type - {bool} 是否计划视频列表的高度，教学视频时需要计算
+    */
+    t.getVideoStr=function(data,type){
+        if(!data || data.length==0){
             return;
         }
-        data.video_url='http://91.16.0.7/video/14/output.m3u8';
-        return '<li data-url="'+data.video_url+'">'+
-                    '<img src="'+data.video_img+'">'+
-                    '<span class="p-btn"><i class="icon-play"></i></span>'+
+        var len=data.length,
+            str='',
+            item,
+            style='';
+        if(type){
+            var h=$('body').height()*7/16;
+            style='height:'+h+'px;';
+        }
+
+        for(var i=0;i<len;i++) {
+            item=data[i];
+            item.video_img = item.video_img || item.img;
+            item.video_url = 'http://91.16.0.7/video/14/output.m3u8';
+            str+= '<li data-url="' + item.video_url + '" style='+style+'>' +
+                '<img src="' + item.video_img + '">' +
+                '<span class="p-btn"><i class="icon-play"></i></span>' +
                 '</li>';
+        }
+        return str;
     };
 
+    /*查看图片或者视频详细信息*/
     t.showPicsAndVideoDetailInfo=function(e){
         var $target=$(e.currentTarget);
-        $('body').attr('scroll','no');
-        //var $box=$('.modal');
+        $('html,body').addClass('ovfHidden');
         //图片
         if($target.hasClass('li-img')){
             var index= $('.li-img').index($target);
@@ -521,6 +449,24 @@ define(['base','mysilder'],function(Base,Myslider){
                     $('#filter-img').attr('src',imgArr[picIndex]);
             }
         });
+
+        var btnList=document.querySelectorAll('.view-pics-box .show-origin-pic');
+        //实例化缩放
+        ImagesZoom.init({
+            elem: ".view-pics-box",  //容器dom
+            btnsList:btnList,  //查看按钮
+            initCallback:function(dom){
+                $(dom).hide().parent().find('img').hide();
+                $('.pics-nav label').hide();
+            },
+            closeCallback:function(){
+                $('.view-pics-box .now img').show();
+                $('.pics-nav label').show();
+                for(var len=btnList.length,i=0;i<len;i++) {
+                    $(btnList[i]).show();
+                }
+            }
+        });
     };
 
 
@@ -528,133 +474,71 @@ define(['base','mysilder'],function(Base,Myslider){
         var len=data.length,arr=[];
         for(var i=0;i<len;i++){
             var item=data[i];
-            arr.push('<img  src="'+item+'">');
+            arr.push('<img  src="'+item+'"><div class="show-origin-pic">查看大图</div>');
         }
         return arr;
     };
 
-    //
-    //    /*填充简介信息*/
-    //    fillInIntroduceInfo:function(result){
-    //        var $target =this.$wrapper.find('.mainItemBasicInfo'),
-    //            $location=this.$wrapper.find('.mainItemLocation');
-    //        $target.add($location).css('opacity','1');
-    //        if(result &&result.data){
-    //            var data=result.data,
-    //                introduce=data.introduce,
-    //                advantage=data.advantage,
-    //                location=data.location,
-    //                locationImg=data.location_img,
-    //                locationNum=0;
-    //
-    //            /*简介*/
-    //            if(introduce) {
-    //                $target.find('.introduce').html('<p>'+introduce+'</p>');
-    //            }
-    //
-    //            /*优势标签*/
-    //            if(advantage) {
-    //                var arr=advantage.split('#'),
-    //                    str='';
-    //                for(var i=0;i<arr.length;i++){
-    //                    str+='<li>'+arr[i]+'</li>';
-    //                }
-    //                $target.find('.itemContentDetail').html(str);
-    //            }
-    //            if(location) {
-    //                $location.find('#myLocation').text(location);
-    //                locationNum++;
-    //            }
-    //            if(locationImg) {
-    //                $location.find('.locationMap img').attr('src', locationImg);
-    //                locationNum++;
-    //            }
-    //            if(locationNum==0){
-    //                $location.find('.noDataInHeader').html('&nbsp;&nbsp;&nbsp;&nbsp;地址信息暂无');
-    //            }
-    //        }
-    //    },
-    //
-    //
-    //    /*加载我的老师信息*/
-    //    loadMyTeachersInfo:function(callback){
-    //        var that=this,
-    //            $target=that.$wrapper.find('.mainItemTeacherPower');
-    //        this.loadData({
-    //            url: window.urlObject.apiUrl + 'appGetTeacherList',
-    //            paraData: {organization_id: this.oid},
-    //            sCallback: function(result){
-    //                $target.css('opacity',1);
-    //                that.fillMyTeachersInfo(result.teacherList);
-    //                callback&&callback();
-    //            },
-    //            eCallback:function(txt){
-    //                $target.css('opacity',1);
-    //                $target.find('.loadErrorCon').show().find('a').text('获得教师信息失败，点击重新加载').show();
-    //                callback&&callback();
-    //            }
-    //        });
-    //    },
-    //
-    //    /*填充我的老师信息*/
-    //    fillMyTeachersInfo:function(data){
-    //        var str='',itemInfo;
-    //        if(!data || data.length==0){
-    //            str='<div class="nonData">暂无老师</div>';
-    //        }
-    //        else {
-    //            var len = data.length,
-    //                isOdd=len%2== 0,
-    //                className='border';
-    //            for (var i = 0; i < len; i++) {
-    //                if(isOdd && i>=len-2){
-    //                    className='unBorder';
-    //                }
-    //                if(!isOdd && i>=len-1){
-    //                    className='unBorder';
-    //                }
-    //                itemInfo = data[i].info;
-    //                str += '<li class="'+className +'">' +
-    //                    '<div class="leftPic">' +
-    //                    '<img src="' + itemInfo.avatar128 + '"/>' +
-    //                    '</div>' +
-    //                    '<div class="rightUserInfo">' +
-    //                    '<div class="name">' + itemInfo.nickname + '</div>' +
-    //                    '<div class="desc">' + itemInfo.institution.substrLongStr(12) + '</div>' +
-    //                    '</div>' +
-    //                    '</li>';
-    //            }
-    //        }
-    //        this.$wrapper.find('.mainItemTeacherPower .teacherPowerDetail').prepend(str);
-    //    },
-    //
-    //    /*加载我的视频信息*/
-    //    loadMyVideoInfo:function(callback){
-    //        var that=this;
-    //        this.loadData({
-    //            url: window.urlObject.apiUrl + 'getPropagandaVideo',
-    //            paraData: {organization_id: this.oid},
-    //            sCallback: function(result){
-    //                if(result.success) {
-    //                    var src=result.data.video_img;
-    //                    if(src) {
-    //                        that.$wrapper.find('#videoPreview').attr('src', result.data.video_img);
-    //                    }else{
-    //                        that.$wrapper.find('.videoCon .itemHeader span').text('视频信息暂无');
-    //                    }
-    //                    callback();
-    //                }else{
-    //                    that.$wrapper.find('.noDataInHeader').text('视频信息暂无');
-    //                }
-    //            },
-    //            eCallback:function(txt){
-    //                $target.css('opacity',1);
-    //                $target.find('.loadErrorCon').show().find('a').text('获取视频信息失败，，点击重新加载').show();
-    //                callback();
-    //            }
-    //        });
-    //    },
-    //
+
+        /*加载我的老师信息*/
+    t.loadMyTeachersInfo=function(callback){
+        var that=this;
+        this.getDataAsync({
+            url: this.baseUrl + 'appGetTeacherList',
+            paraData: {organization_id: this.oid},
+            sCallback: function(result){
+                that.fillMyTeachersInfo(result.teacherList);
+            },
+            eCallback:function(txt){
+
+            },
+            type:'get'
+        });
+    };
+
+    /*填充我的老师信息*/
+    t.fillMyTeachersInfo=function(data){
+        var str='',itemInfo;
+        if(!data || data.length==0){
+            str='<div class="nonData">暂无老师</div>';
+        }
+        else {
+            var len = data.length;
+            for (var i = 0; i < len; i++) {
+                itemInfo = data[i].info;
+                str+='<li><img src="'+itemInfo.avatar128+'"><p>' + itemInfo.nickname + '</p></li>';
+            }
+        }
+        $('.teachers-detail').html(str);
+    }
+
+    /*加载我的视频教程信息*/
+    t.loadTeachingVideoInfo=function(callback){
+        var that=this;
+        this.getDataAsync({
+            url: this.baseUrl + 'appGetCoursesList',
+            paraData: {organization_id: this.oid},
+            sCallback: function(result){
+                that.fillInTeachingVedio(result);
+            },
+            eCallback:function(txt){
+                $target.css('opacity',1);
+                $target.find('.loadErrorCon').show().find('a').text('获取视频信息失败，，点击重新加载').show();
+                callback();
+            },
+            type:'get'
+        });
+    };
+
+    t.fillInTeachingVedio=function(data){
+        if(!data || data.coursesList.length==0){
+            return;
+        }
+        var str = this.getVideoStr(data.coursesList,true);
+        $('.video-preview-box .basic-header span').html('('+data.coursesList.length+')');
+        $('.video-preview-box ul').html(str);
+    };
+
     //
     //    /*加载我的评分息*/
     //    loadMyCompresAsseinfo:function(callback){
@@ -767,25 +651,7 @@ define(['base','mysilder'],function(Base,Myslider){
     //        this.$wrapper.find('.studentCommentDetail').append(str);
     //    },
     //
-    //
-    //    /*
-    //     *加载等待,
-    //     *para:
-    //     * status - {num} 状态控制 码
-    //     * 0.显示加载等待;  1 隐藏等待;
-    //     */
-    //    controlLoadingTips:function(status){
-    //        var $target=$('#loadingTip'),
-    //            $img=$target.find('.loadingImg');
-    //        if(status==1){
-    //            $target.css('z-index',1);
-    //            $img.addClass('active');
-    //        } else{
-    //            $target.css('z-index',-1);
-    //            $img.removeClass('active');
-    //        }
-    //
-    //    },
+
     //
     //    /*
     //     *滚动加载更多的数据
@@ -853,57 +719,7 @@ define(['base','mysilder'],function(Base,Myslider){
     //        //    });
     //        //}
     //    },
-    //
-    //    /*根据比例大小 计算图片的大小*/
-    //    initImgPercent:function(){
-    //        $.fn.setImgBox=function() {
-    //            if (this.length == 0) {
-    //                return;
-    //            }
-    //            var that=this,
-    //                img = new Image();
-    //            img.src = this[0].src;
-    //            img.onload = function () {
-    //                var height = img.height,
-    //                    width = img.width,
-    //                    mHeight = that.css('max-height'),
-    //                    mWidth = that.css('max-width');
-    //                if (!mHeight || mHeight == 'none') {
-    //                    mHeight = that.parent().height();
-    //                } else {
-    //                    mHeight = mHeight.replace('px', '');
-    //                }
-    //                if (!mWidth || mWidth == 'none') {
-    //                    mWidth = that.parent().width();
-    //                }
-    //                else {
-    //                    mWidth = mWidth.replace('px', '');
-    //                }
-    //                var flag1 = height > mHeight;
-    //                var flag2 = width > mWidth;
-    //                var radio = 1;
-    //                if (flag1 || flag2) {
-    //                    var radio1 = mHeight / height;
-    //                    var radio2 = mWidth / width;
-    //                    if (radio1 < radio2) {
-    //                        height = mHeight;
-    //                        width = width * radio1;
-    //                        radio = radio1;
-    //                    } else {
-    //                        width = mWidth;
-    //                        height = height * radio2;
-    //                        radio = radio2;
-    //                    }
-    //                }
-    //                that.css({
-    //                    'width': width + 'px',
-    //                    'height': height + 'px',
-    //                    'margin-top': (that.parent().height() - height) / 2 + 'px'
-    //                }).attr('data-radio', radio);
-    //            };
-    //            return this;
-    //        };
-    //    },
+
     //
     //    /*根据分数情况，得到星星的信息*/
     //    getStarInfoByScore:function(num){
