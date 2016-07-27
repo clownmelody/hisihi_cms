@@ -4363,7 +4363,7 @@ where t1.teaching_course_id=t2.teaching_course_id
                 $coupon['is_out_of_date'] = $this->isCouponOutOfDate($coupon['end_time']);
                 $course = $model->field('course_name')->where('id='.$coupon['teaching_course_id'])
                     ->find();
-                $coupon['teaching_course_name'] = $course['course_name'];
+                $coupon['course_name'] = $course['course_name'];
                 unset($coupon['teaching_course_id']);
             }
             $data['totalCount'] = count($coupon_list);
