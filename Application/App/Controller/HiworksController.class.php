@@ -210,6 +210,7 @@ class HiworksController extends AppController
                 }
             }
             unset($value['cover_id']);
+            $value['web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Hiworks/hiworks_share/hiword_id/'.$value['id'].'/user-agent/hisihi-app';
         }
         $extra['data'] = $result;
         $extra['totalCount'] = count($result);
