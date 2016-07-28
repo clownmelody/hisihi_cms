@@ -416,7 +416,7 @@ define(['zepto','common'],function(){
         fillMyTeachersInfo:function(data){
             var str='',itemInfo;
             if(!data || data.length==0){
-                str='<div class="nonData">暂无老师</div>';
+                return;
             }
             else {
                 var len = data.length,

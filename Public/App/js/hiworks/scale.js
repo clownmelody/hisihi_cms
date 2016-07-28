@@ -27,7 +27,7 @@
 				zoomImg   = document.querySelector(".imgzoom_pack .imgzoom_img img"),
 				zoomClose = document.querySelector(".imgzoom_pack .imgzoom_x"),
 				imgSrc    = "";
-
+			var btnsList= param.btnsList || imgList;
 			self.buffMove   = 3; //缓冲系数
 			self.buffScale  = 2; //放大系数
 			self.finger = false; //触摸手指的状态 false：单手指 true：多手指
@@ -42,11 +42,13 @@
 				self._destroy();
 
 				document.removeEventListener("touchmove", self.eventStop, false);
+				param.closeCallback && param.closeCallback();
 			}, false);
 
 			for(var len=imgList.length,i=0; i<len; i++){
-				imgList[i].addEventListener("click", function(){
-					imgSrc = this.getAttribute("src");
+				btnsList[i].addEventListener("click", function(){
+					param.initCallback && param.initCallback(this);
+					imgSrc = this.previousSibling.src;
 					zoomMask.style.cssText = "display:block";
 					zoomImg.src = imgSrc;
 
@@ -73,6 +75,7 @@
 			var self   = this,
 				params = param || {};
 
+			//self.element = document.querySelector(".imgzoom_pack img");
 			self.element = document.querySelector(".imgzoom_pack img");
 
 			//config set

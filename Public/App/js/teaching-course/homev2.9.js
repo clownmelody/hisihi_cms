@@ -194,11 +194,6 @@ define(['base','fastclick'],function(Base){
             '<div id="price" class="price">￥'+
             result.price+
             '</div>'+
-            //机构认证标签和报名数
-            //'<ul class="otherinfo">'+
-            //'<li><i class="cer"></i><span>认证机构</span></li>'+
-            //'<li><i class="nums"></i><span><span id="singin-nums">'+result.already_registered+'</span>人报名</span></li>'+
-            //'</ul>'+
             '</div>'+
             '</div>';
     };
@@ -214,7 +209,8 @@ define(['base','fastclick'],function(Base){
             '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
             '<div class="center-content">'+
             '<div class="left">'+
-            '<img src="'+logo+'">'+
+            '<img class="group-logo" src="'+logo+'">'+
+            '<img class="v-cert" src="../images/orgbasicinfo/2.9.5/ic_v@3x.png">'+
             '</div>'+
             '<div class="right">'+
             '<div class="org-name">'+
@@ -224,7 +220,6 @@ define(['base','fastclick'],function(Base){
             '</div>'+
             '<ul class="nums-info">'+
             '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>人查看</span></li>'+
-            //'<li><span id="singin-nums－org">'+this.transformNums(data.enroll_count) + '</span><span>人报名</span></li>'+
             '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>人关注</span></li>'+
             '</ul>'+
             '</div>'+
@@ -241,7 +236,6 @@ define(['base','fastclick'],function(Base){
         }
         var data=result.data[0],
             couponInfo=data.coupon_info,
-            promotionInfo=data.promotion_info,
             strAndType=this.getCouponState(couponInfo);
         if(strAndType.type===false){
             return'';
@@ -264,22 +258,13 @@ define(['base','fastclick'],function(Base){
                                     '</div>'+
                                 '</div>'+
                             '</div>'+
-                            //'<div class="sawtooth-left '+className+'"></div>'+
-                            //'<div class="sawtooth-right '+className+'"></div>'+
                         '</div>'+
                     '</div>'+
                     '<div class="coupon-left">'+
-                        //'<img src="'+promotionInfo.little_logo_url+'">'+
-                        //删除优惠券亿元补贴图片
-                        //'<span id="coupon-title">亿元补贴</span>'+
                         '<img id="coupon-icon" src="http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png"></img>' +
                     '</div>'+
                     '<div class="coupon-right">'+
-                        '<i class="'+className+'" id="left-line"></i>'+
-                        '<div class="sawtooth-right-main '+className+'">' +
-                            strAndType.str+
-                        '</div>'+
-                        '<i class="'+className+'" id="right-line"></i>'+
+                        '<div class="coupon-status '+className+'"></div>'+
                     '</div>'+
                 '</div>'+
             '</div>';
@@ -339,10 +324,6 @@ define(['base','fastclick'],function(Base){
             return;
         }
 
-        //已经使用
-        //if($target.hasClass('used')){
-        //    return;
-        //}
         //未使用
         if($target.hasClass('unused') || $target.hasClass('used')){
             var oid=$parent.attr('data-oid');
@@ -514,6 +495,8 @@ define(['base','fastclick'],function(Base){
         return str;
     };
 
+
+
     //更多
     t.getMoreStr=function(result){
         var courses=result.courses,
@@ -654,13 +637,15 @@ define(['base','fastclick'],function(Base){
     };
 
 
-    /**参数说明：
+    /**查看数和关注数人数超过一万的时候
+     * 截取前一位，加上W单位
+     * 参数说明：
      * 根据长度截取先使用字符串，超长部分追加W
      * str 对象字符串
      * len 目标字节长度
      * 返回值： 处理结果字符串
      */
-    function cutString(str, len) {
+    t.cutString=function(str,len){
         //length属性读出来的汉字长度为1
         if(str.length*4 <= len) {
             return str;
@@ -677,18 +662,28 @@ define(['base','fastclick'],function(Base){
             } else {
                 strlen = strlen + 1;
                 if(strlen >= len){
-                    return s.substring(0,s.length-2) + "...";
+                    return s.substring(0,s.length-2) + ".";
                 }
             }
-        }
-
-        function getStrLength(str) {
-            var cArr = str.match(/[^\x00-\xff]/ig);
-            return str.length + (cArr == null ? 0 : cArr.length);
         }
 
         return s;
     }
 
+
+    /*报名标签
+    * 如果报名人数为0，则右侧的报名人数不显示*/
+    t.ClassNum=function(info){
+        var str=info;
+        if(typeof info=='string'){
+            str=str.trim();
+        }
+        if(!info || info==''||info==0){
+            str='';
+        }
+        return str;
+    };
+
     return Course;
+
 });
