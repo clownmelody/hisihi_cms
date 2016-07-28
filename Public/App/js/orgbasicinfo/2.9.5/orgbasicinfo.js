@@ -60,6 +60,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         this.loadMyTeachersInfo();
         this.loadTeachingVideoInfo();
         this.loadWorksInfo();
+        this.loadGroupsInfo();
+        this.loadMyCompresAsseinfo();
 
         $('#wrapper').show();
         this.controlLoadingBox(false);
@@ -454,7 +456,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return arr;
     };
 
-
+    /*图片列表展示*/
     t.initPicsScroll=function(imgArr,index){
         if(index=='undefined'){
             index==0;
@@ -515,7 +517,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             eCallback:function(txt){
 
             },
-            type:'get'
+            type:'get',
+            async:this.async
         });
     };
 
@@ -549,7 +552,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                 $target.find('.loadErrorCon').show().find('a').text('获取视频信息失败，，点击重新加载').show();
                 callback();
             },
-            type:'get'
+            type:'get',
+            async:this.async
         });
     };
 
@@ -590,7 +594,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             eCallback:function(txt){
 
             },
-            type:'get'
+            type:'get',
+            async:this.async
         });
     };
 
@@ -618,118 +623,147 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
         }
     };
-    //
-    //    /*加载我的评分息*/
-    //    loadMyCompresAsseinfo:function(callback){
-    //        var that=this,
-    //            $target=that.$wrapper.find('.mainItemCompresAsse');
-    //        this.loadData({
-    //            url: window.urlObject.apiUrl + 'fractionalStatistics',
-    //            paraData: {organization_id: this.oid},
-    //            sCallback: function(result){
-    //                $target.css('opacity',1);
-    //                that.fillMyCompresAsseInfo(result);
-    //                callback && callback();
-    //            },
-    //            eCallback:function(txt){
-    //                $target.css('opacity',1);
-    //                $target.find('.loadErrorCon:eq(0)').show().find('a').text('获取评价信息失败，点击重新加载').show();
-    //                callback && callback();
-    //            }
-    //        });
-    //    },
-    //
-    //    /*填充我的评分信息*/
-    //    fillMyCompresAsseInfo:function(result){
-    //        var data=result.data;
-    //        if(!data || data.length==0){
-    //            return;
-    //        }
-    //        var str='',
-    //            that=this,
-    //            item,
-    //            $target=this.$wrapper.find('.mainItemCompresAsse'),
-    //            $basicHeader=$target.find('.basicHeader'),
-    //            $li=$target.find('.assessmentDetail li');
-    //
-    //        /*添加星星*/
-    //        var strStar= this.getStarInfoByScore(result.comprehensiveScore);
-    //        $basicHeader.find('#myAssessment').text(result.comprehensiveScore);
-    //        $basicHeader.find('#starsConForCompress').prepend(strStar);
-    //
-    //        /*色块评分*/
-    //        for(var i=0;i<data.length;i++){
-    //            item=data[i];
-    //            $li.each(function(){
-    //                var $this=$(this),
-    //                    result=that.getColorBlockInfoByScore(item.score);
-    //                if($this.find('.title').text()==item.value){
-    //                    $this.find('.score').text(item.score);
-    //                    $this.find('.fillIn').addClass(result.cName)
-    //                        .css('width',result.width+'%')
-    //                        .next().css('width',100-result.width+'%');
-    //                    return false;
-    //                }
-    //            });
-    //        }
-    //    },
-    //
-    //    /*加载我的评论信息*/
-    //    loadDetailCommentInfo:function(pageIndex,callback){
-    //        var that=this,
-    //            $target=that.$wrapper.find('.studentCommentCon');
-    //        this.loadData({
-    //            url: window.urlObject.apiUrl + 'commentList',
-    //            paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize},
-    //            sCallback: function(result){
-    //                that.pageSize=Math.ceil((result.totalCount|0)/that.perPageSize);
-    //                that.$wrapper.find('#commentNum').text(result.totalCount);
-    //                that.fillDetailCommentInfo(result);
-    //                callback&&callback.call(that);
-    //            },
-    //            eCallback:function(txt){
-    //                $target.find('.loadErrorCon:eq(1)').show().find('a').text('获取评论信息失败，点击重新加载').show();
-    //                callback&&callback.call(that);
-    //            }
-    //        });
-    //    },
-    //
-    //    /*填充我的评论信息*/
-    //    fillDetailCommentInfo:function(result){
-    //        var data=result.data,
-    //            str='';
-    //        if(!data || data.length==0){
-    //            str='<li><div class="nonData">暂无评论</div></li>';
-    //            this.$wrapper.find('.studentCommentDetail li').remove();
-    //        }else {
-    //            /*具体的评论信息*/
-    //            var len = data.length,
-    //                item, userInfo, dateTime;
-    //            for (var i = 0; i < len; i++) {
-    //                item = data[i];
-    //                userInfo = item.userInfo;
-    //                dateTime = this.getDiffTime(new Date(item.create_time * 1000));   //得到发表时间距现在的时间差
-    //                str += '<li>' +
-    //                    '<div class="imgCon">' +
-    //                        '<div><img src="' + userInfo.avatar128 + '"/></div>' +
-    //                    '</div>' +
-    //                    '<div class="commentCon">' +
-    //                    '<div class="commentHead">' +
-    //                    '<span class="commentNickname">' + userInfo.nickname + '</span>' +
-    //                    '<span class="rightItem starsCon">' +
-    //                    this.getStarInfoByScore(item.comprehensive_score | 0) +
-    //                    '<div style="clear: both;"></div>' +
-    //                    '</span>' +
-    //                    '</div>' +
-    //                    '<div class="content">' + item.comment + '</div>' +
-    //                    '<div class="publicTime">发表于' + dateTime + '</div>' +
-    //                    '</div>' +
-    //                    '</li>';
-    //            }
-    //        }
-    //        this.$wrapper.find('.studentCommentDetail').append(str);
-    //    },
-    //
+
+
+    /*加载群组*/
+    t.loadGroupsInfo=function(){
+        var that=this;
+        this.getDataAsyncPy({
+            url: window.hisihiUrlObj.apiUrlPy+'/v1/im/org/' +this.oid +'/groups',
+            paraData: {per_page:1},
+            sCallback: function(result){
+                that.filInGroupsInfo(result);
+            },
+            eCallback:function(txt){
+
+            },
+            type:'get',
+            async:this.async
+        });
+    };
+
+    t.filInGroupsInfo=function(result){
+        if(!result || result.data.length==0){
+            return;
+        }
+        var $box =  $('.groups-box').show(),
+            data=result.data[0],
+            str='<div class="left">'+
+                    '<img src="' + data.group_avatar + '">'+
+                '</div>'+
+                '<div class="right">'+
+                    '<p>' + data.description + '</p>'+
+                '</div>';
+        $box.find('.groups-detail-box').html(str);
+    };
+
+
+    /*加载我的评分息*/
+    t.loadMyCompresAsseinfo=function(callback){
+        var that=this;
+        this.getDataAsync({
+            url:this.baseUrl+ 'fractionalStatistics',
+            paraData: {organization_id: this.oid},
+            sCallback: function(result){
+                that.fillMyCompresAsseInfo(result);
+            },
+            eCallback:function(txt){},
+            type:'get',
+            async:this.async
+        });
+    };
+
+        /*填充我的评分信息*/
+    t.fillMyCompresAsseInfo=function(result){
+        var data=result.data;
+        if(!data || data.length==0){
+            return;
+        }
+        var str='',
+            that=this,
+            item,
+            $target=this.$wrapper.find('.mainItemCompresAsse'),
+            $basicHeader=$target.find('.basicHeader'),
+            $li=$target.find('.assessmentDetail li');
+
+        /*添加星星*/
+        var strStar= this.getStarInfoByScore(result.comprehensiveScore);
+        $('#myAssessment').text(result.comprehensiveScore);
+        $('#starsConForCompress').prepend(strStar);
+
+        /*色块评分*/
+        for(var i=0;i<data.length;i++){
+            item=data[i];
+            $li.each(function(){
+                var $this=$(this),
+                    result=that.getColorBlockInfoByScore(item.score);
+                if($this.find('.title').text()==item.value){
+                    $this.find('.score').text(item.score);
+                    $this.find('.fillIn').addClass(result.cName)
+                        .css('width',result.width+'%')
+                        .next().css('width',100-result.width+'%');
+                    return false;
+                }
+            });
+        }
+    };
+
+        /*加载我的评论信息*/
+    t.loadDetailCommentInfo=function(pageIndex,callback){
+        var that=this,
+            $target=that.$wrapper.find('.studentCommentCon');
+        this.loadData({
+            url: window.urlObject.apiUrl + 'commentList',
+            paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize},
+            sCallback: function(result){
+                that.pageSize=Math.ceil((result.totalCount|0)/that.perPageSize);
+                that.$wrapper.find('#commentNum').text(result.totalCount);
+                that.fillDetailCommentInfo(result);
+                callback&&callback.call(that);
+            },
+            eCallback:function(txt){
+                $target.find('.loadErrorCon:eq(1)').show().find('a').text('获取评论信息失败，点击重新加载').show();
+                callback&&callback.call(that);
+            }
+        });
+    };
+
+        /*填充我的评论信息*/
+    t.fillDetailCommentInfo=function(result){
+        var data=result.data,
+            str='';
+        if(!data || data.length==0){
+            str='<li><div class="nonData">暂无评论</div></li>';
+            this.$wrapper.find('.studentCommentDetail li').remove();
+        }else {
+            /*具体的评论信息*/
+            var len = data.length,
+                item, userInfo, dateTime;
+            for (var i = 0; i < len; i++) {
+                item = data[i];
+                userInfo = item.userInfo;
+                dateTime = this.getDiffTime(new Date(item.create_time * 1000));   //得到发表时间距现在的时间差
+                str += '<li>' +
+                    '<div class="imgCon">' +
+                        '<div><img src="' + userInfo.avatar128 + '"/></div>' +
+                    '</div>' +
+                    '<div class="commentCon">' +
+                    '<div class="commentHead">' +
+                    '<span class="commentNickname">' + userInfo.nickname + '</span>' +
+                    '<span class="rightItem starsCon">' +
+                    this.getStarInfoByScore(item.comprehensive_score | 0) +
+                    '<div style="clear: both;"></div>' +
+                    '</span>' +
+                    '</div>' +
+                    '<div class="content">' + item.comment + '</div>' +
+                    '<div class="publicTime">发表于' + dateTime + '</div>' +
+                    '</div>' +
+                    '</li>';
+            }
+        }
+        this.$wrapper.find('.studentCommentDetail').append(str);
+    };
+
 
     //
     //    /*
@@ -800,53 +834,53 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     //    },
 
     //
-    //    /*根据分数情况，得到星星的信息*/
-    //    getStarInfoByScore:function(num){
-    //        if(num.toString().indexOf('.')>0){
-    //            num=this.myRoundNumber(num);
-    //        }
-    //        var str='',
-    //            allNum=Math.floor(num),
-    //            tempNum=Math.ceil(num),
-    //            halfNum=tempNum==allNum? 0:1,
-    //            blankNum=5-tempNum;
-    //        for(var i=0;i<allNum;i++){
-    //            str+='<i class="allStar spiteBgOrigin"></i>';
-    //        }
-    //        if(halfNum==1){
-    //            str+='<i class="halfStar spiteBgOrigin"></i>';
-    //        }
-    //        for(var i=0;i<blankNum;i++){
-    //            str+='<i class="emptyStar spiteBgOrigin"></i>';
-    //        }
-    //        return str;
-    //    },
-    //
-    //    /*
-    //     *对评分进行四舍五入
-    //     * 按照以下类似规则：
-    //     * 1：   2.1，2.2  = 2.0
-    //     * 2：   2.3，2.4，2.5，2.6 = 2.5
-    //     * 3：   2.7，2.8，2.9  = 3.0
-    //     */
-    //    myRoundNumber:function(num){
-    //        num=num.toFixed(1);
-    //        var arr=num.split('.'),
-    //            firstNum=arr[0],
-    //            lastNum=arr[1];
-    //        if(lastNum!=0){
-    //            var flag1=lastNum<= 2,
-    //                flag2=lastNum>=7;
-    //            if(flag1){
-    //                return firstNum | 0;
-    //            }else if(flag2){
-    //                return firstNum | 0 + 1;
-    //            }
-    //            else{
-    //                return parseInt(firstNum) + 0.5;
-    //            }
-    //        }
-    //    },
+    /*根据分数情况，得到星星的信息*/
+    t.getStarInfoByScore=function(num){
+        if(num.toString().indexOf('.')>0){
+            num=this.myRoundNumber(num);
+        }
+        var str='',
+            allNum=Math.floor(num),
+            tempNum=Math.ceil(num),
+            halfNum=tempNum==allNum? 0:1,
+            blankNum=5-tempNum;
+        for(var i=0;i<allNum;i++){
+            str+='<i class="full"></i>';
+        }
+        if(halfNum==1){
+            str+='<i class="half"></i>';
+        }
+        for(var i=0;i<blankNum;i++){
+            str+='<i class="none"></i>';
+        }
+        return str;
+    };
+
+    /*
+     *对评分进行四舍五入
+     * 按照以下类似规则：
+     * 1：   2.1，2.2  = 2.0
+     * 2：   2.3，2.4，2.5，2.6 = 2.5
+     * 3：   2.7，2.8，2.9  = 3.0
+     */
+    t.myRoundNumber=function(num){
+        num=num.toFixed(1);
+        var arr=num.split('.'),
+            firstNum=arr[0],
+            lastNum=arr[1];
+        if(lastNum!=0){
+            var flag1=lastNum<= 2,
+                flag2=lastNum>=7;
+            if(flag1){
+                return firstNum | 0;
+            }else if(flag2){
+                return firstNum | 0 + 1;
+            }
+            else{
+                return parseInt(firstNum) + 0.5;
+            }
+        }
+    };
     //
     //    /*根据分数情况，得到色块的信息*/
     //    getColorBlockInfoByScore:function(score){

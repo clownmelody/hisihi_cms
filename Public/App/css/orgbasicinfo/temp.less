@@ -511,6 +511,83 @@ body{
   }
 }
 
+.groups-box{
+  display: none;
+  .groups-detail-box{
+    position: relative;
+    @w:50px;
+    height: @w;
+    padding-bottom: 14px;
+    .left{
+      position: absolute;
+      //.size(@w,@w);
+      img{
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        .size(@w,@w);
+      }
+    }
+    .right{
+      height: @w;
+      margin-left: @w + 8px;
+      width: 100%;
+      display: table;
+      p {
+        .txt-ellipsis-p(2);
+        color: #000;
+        font-size: 12px;
+        line-height: 20px;
+        word-break:break-word;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.comments-box {
+  .basic-header{
+    .left-item{
+      float: left;
+      #myAssessment{
+        color: #FF5A00;
+      }
+      &#starsConForCompress{
+        margin-left: 6px;
+        color: #FF5A00;
+        i{
+          display: inline-block;
+          .size(12px,12px);
+          margin-right: 2px;
+          .sprite-bg;
+          &.full{
+            background-position: -203px -8px;
+          }
+          &.half{
+            background-position: -203px -31px;
+          }
+          &.none{
+            background-position: -203px -50px;
+          }
+        }
+      }
+    }
+    .right-item{
+      float: right;
+      color: #808080;
+      font-size: 14px;
+    }
+  }
+  .assessmentDetail{
+    li{
+      display: inline-block;
+      width: 33.3%;
+      margin-right:-4px;
+      text-align: center;
+    }
+  }
+
+}
+
 /*视频*/
 .modal{
   position: fixed;
@@ -614,6 +691,7 @@ body{
 }
 
 
+/*图片查看列表*/
 .slider-container{
   min-height: 135px;
   position:relative;

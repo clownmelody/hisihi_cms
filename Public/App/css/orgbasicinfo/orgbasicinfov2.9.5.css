@@ -774,6 +774,79 @@ body {
 .works-box .works-preview-box ul li .img-box .img-main-box img {
   max-width: 100%;
 }
+.groups-box {
+  display: none;
+}
+.groups-box .groups-detail-box {
+  position: relative;
+  height: 50px;
+  padding-bottom: 14px;
+}
+.groups-box .groups-detail-box .left {
+  position: absolute;
+}
+.groups-box .groups-detail-box .left img {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 50px;
+  height: 50px;
+}
+.groups-box .groups-detail-box .right {
+  height: 50px;
+  margin-left: 58px;
+  width: 100%;
+  display: table;
+}
+.groups-box .groups-detail-box .right p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: #000;
+  font-size: 12px;
+  line-height: 20px;
+  word-break: break-word;
+  vertical-align: middle;
+}
+.comments-box .basic-header .left-item {
+  float: left;
+}
+.comments-box .basic-header .left-item #myAssessment {
+  color: #FF5A00;
+}
+.comments-box .basic-header .left-item#starsConForCompress {
+  margin-left: 6px;
+  color: #FF5A00;
+}
+.comments-box .basic-header .left-item#starsConForCompress i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+}
+.comments-box .basic-header .left-item#starsConForCompress i.full {
+  background-position: -203px -8px;
+}
+.comments-box .basic-header .left-item#starsConForCompress i.half {
+  background-position: -203px -31px;
+}
+.comments-box .basic-header .left-item#starsConForCompress i.none {
+  background-position: -203px -50px;
+}
+.comments-box .basic-header .right-item {
+  float: right;
+  color: #808080;
+  font-size: 14px;
+}
+.comments-box .assessmentDetail li {
+  display: inline-block;
+  width: 33.3%;
+  margin-right: -4px;
+  text-align: center;
+}
 /*视频*/
 .modal {
   position: fixed;
@@ -878,6 +951,7 @@ body {
   color: #fff;
   font-size: 12px;
 }
+/*图片查看列表*/
 .slider-container {
   min-height: 135px;
   position: relative;

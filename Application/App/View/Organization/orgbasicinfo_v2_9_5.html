@@ -136,36 +136,26 @@
         <div class="main-item works-box">
             <div class="basic-header">学生作品</div>
             <div class="works-preview-box">
-                <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
+                <ul></ul>
             </div>
         </div>
 
         <!--群组-->
-        <div class="mainItem groups-box">
-            <div class="basicHeader">群组</div>
-            <div class="basic-bottom">
-                <div class="left"></div>
-                <div class="right"></div>
+        <div class="main-item groups-box">
+            <div class="basic-header">群组</div>
+            <div class="groups-detail-box">
             </div>
         </div>
 
         <!--综合评价-->
-        <div class="mainItem mainItemNormal mainItemCompresAsse" data-loaded="false" data-loading="false">
-            <div class="basicHeader">
-                <span class="leftItem">
+        <div class="main-item comments-box" data-loaded="false" data-loading="false">
+            <div class="basic-header">
+                <span class="left-item">
                     <span>综合评价：</span>
                     <span id="myAssessment">4.5</span>
                 </span>
-                <span class="leftItem starsCon" id="starsConForCompress">
-                    <div style="clear: both;"></div>
-                </span>
-                <span class="rightItem">
+                <span class="left-item" id="starsConForCompress"></span>
+                <span class="right-item">
                     <span>共</span><span id="commentNum">51</span><span>份评论</span>
                 </span>
             </div>
@@ -210,6 +200,7 @@
             </div>
         </div>
     </div>
+
     <!--下载条-->
     <div id="downloadCon-new">
         <img src="__IMG__/orgbasicinfo/2.9.5/1.png" class="allDownImg" />
@@ -265,7 +256,9 @@
         image: "__IMG__",
         ctl:'__URL__',
         apiUrl:'http://{$Think.server.HTTP_HOST}/api.php?s=/Organization/',
+        apiUrlPy:'__API_URL__'
     };
+
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
     };
