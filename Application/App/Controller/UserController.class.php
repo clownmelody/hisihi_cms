@@ -1388,6 +1388,31 @@ class UserController extends AppController
         $this->apiSuccess("获取成功", null, array('total_count' => $totalCount, 'favoriteList' => $list));
     }
 
+    public function favoriteTabList(){
+        $list = array();
+        $videoTab = array();
+        $videoTab['name'] = "视频";
+        $videoTab['type'] = "Issue";
+        $articleTab = array();
+        $articleTab['name'] = "文章";
+        $articleTab['type'] = "Article";
+        $orgTab = array();
+        $orgTab['name'] = "机构";
+        $orgTab['type'] = "OrganizationInfo";
+        $universityTab = array();
+        $universityTab['name'] = "大学";
+        $universityTab['type'] = "University";
+        $teachingCourseTab = array();
+        $teachingCourseTab['name'] = "课程";
+        $teachingCourseTab['type'] = "OrganizationTeachingCourse";
+        $list[] = $videoTab;
+        $list[] = $articleTab;
+        $list[] = $orgTab;
+        $list[] = $universityTab;
+        $list[] = $teachingCourseTab;
+        $this->apiSuccess("获取成功收藏tab成功", null, array('total_count' => 5, 'favoriteList' => $list));
+    }
+
     public function deleteFavorite($favorite_id)
     {
         $this->requireLogin();
