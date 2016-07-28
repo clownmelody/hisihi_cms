@@ -2,7 +2,7 @@
  * Created by jimmy on 16/7/15.
  */
 
-define(['touch'],function(){
+define(['touch','toucher'],function(){
     var MySlider=function($wrapper,htmlArr,setting){
         if(!$wrapper || !htmlArr){
             return;
@@ -17,11 +17,16 @@ define(['touch'],function(){
 
         this.initContainer();
         if(!this.setting.touchDisabled){
-            //左滑动
-            this.$wrapper.on('swipeLeft','.slider-main .slider-item',$.proxy(this,'swipeLeft'));
+            ////左滑动
+            //this.$wrapper.on('swipeLeft','.slider-main .slider-item',$.proxy(this,'swipeLeft'));
+            //
+            ////右滑动
+            //this.$wrapper.on('swipeRight','.slider-main .slider-item', $.proxy(this,'swipeRight'));
 
-            //右滑动
-            this.$wrapper.on('swipeRight','.slider-main .slider-item', $.proxy(this,'swipeRight'));
+            var bodyTouch = util.toucher($wrapper[0]);
+            bodyTouch.on('swipeRight','.slider-item',$.proxy(this,'swipeRight'));
+            bodyTouch.on('swipeLeft','.slider-item',$.proxy(this,'swipeLeft'));
+
         };
         var index=this.setting.index;
         if(index!='0'){
@@ -33,6 +38,9 @@ define(['touch'],function(){
                 });
         }
         this.playAuto();
+
+
+
     };
     MySlider.prototype={
         /*默认参数设置*/
@@ -74,7 +82,8 @@ define(['touch'],function(){
         },
 
         swipeLeft:function(e){
-            var $target=$(e.currentTarget),
+            //var $target=$(e.currentTarget),
+            var $target=$(e.target).parent(),
                 index=$target.index(),
                 that=this;
             if(index==$target.siblings().length){
@@ -91,7 +100,8 @@ define(['touch'],function(){
         },
 
         swipeRight:function(e){
-            var $target=$(e.currentTarget),
+            //var $target=$(e.currentTarget),
+            var $target=$(e.target).parent(),
                 index=$target.index(),
                 that=this;
             if(index==0){

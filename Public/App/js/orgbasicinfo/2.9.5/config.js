@@ -10,6 +10,8 @@ requirejs.config({
         base:'../sharecommon/base-1.1',
         fastclick:'../sharecommon/fastclick',
         lazyloading:'../sharecommon/lazyloading',
+        scale:'../hiworks/scale',
+        toucher:'2.9.5/toucher',
         touch:'../sharecommon/zepto.event.touch',
         mysilder:'../sharecommon/myslider',
         home:'2.9.5/orgbasicinfo',
@@ -23,6 +25,12 @@ requirejs.config({
         },
         fastclick:{
             output:'fastclick'
+        },
+        scale:{
+            output:'scale'
+        },
+        toucher:{
+            output:'toucher'
         },
     }
 });
