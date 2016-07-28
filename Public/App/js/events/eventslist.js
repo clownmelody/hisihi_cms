@@ -163,7 +163,7 @@ hisihiActivities.prototype = {
                                 '</div>' +
                             '</div>' +
                             '</div>' +
-                        '</a>'+
+                        '</a>'+ 
                     '</li>';
             }
         }
