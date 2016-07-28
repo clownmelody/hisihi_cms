@@ -23,8 +23,9 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
 
         $(document).on(eventName,'.pics-preview-box li',$.proxy(this,'showPicsAndVideoDetailInfo'));
+        $(document).on(eventName,'.works-preview-box li',$.proxy(this,'showWorksPicsDetailInfo'));
 
-        $(document).on(eventName,'.view-pics-box, .slider-item', function(){
+        $(document).on(eventName,'.view-pics-box', function(){
             event.stopPropagation();
             if(event.target==this){
                 $('.modal').removeClass('show');
@@ -32,10 +33,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             }
         });
 
-        $(document).on('click','.view-pics-box img', function(){
-            //$(this).hide();
-            //$('.pics-nav label').hide();
-        });
+        $(document).on('click','.t-video-box li',$.proxy(this,'showTeachingVideo'));
 
         $(document).on(eventName,'.video-modal', function(){
             event.stopPropagation();
@@ -54,7 +52,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     var t=OrgBasicInfo.prototype;
 
     t.initData=function(){
-        var that=this;
         this.loadBasicInfoData();
         this.loadTopAnnouncement();
         this.loadSignUpInfo();
@@ -62,15 +59,32 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         this.loadVideo();
         this.loadMyTeachersInfo();
         this.loadTeachingVideoInfo();
-
+        this.loadWorksInfo();
 
         $('#wrapper').show();
         this.controlLoadingBox(false);
+        this.initVideoPlayer();
+    };
 
+    /*播放器控制*/
+    t.initVideoPlayer=function(){
+        var that=this;
         videojs("video-player").ready(function() {
             that.myPlayer = this;
         });
+    };
 
+    /*
+    *播放器地址控制
+    * url -{string} 视频地址，类似 http://91.16.0.7/video/14/output.m3u8
+    *
+    * */
+    t.resetVideoPlayerUrl=function(url){
+        if(!this.myPlayer){
+            this.initVideoPlayer();
+        }
+        this.myPlayer.src({type: 'application/x-mpegURL',src:url});
+        $('.modal').eq(0).addClass('show');
     };
 
     /*加载基本信息*/
@@ -200,7 +214,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             str+='<li>'+
                     '<div class="coupon-header">￥'+coupon.money+'</div>'+
                     '<div class="coupon-bottom">'+
-                        '<p>适用于：'+coupon.teaching_course_name+'</p>'+
+                        '<p>适用于：'+coupon.course_name+'</p>'+
                     '</div>'+
                  '</li>'
         }
@@ -337,8 +351,12 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             url:this.baseUrl + 'appGetOrganizationEnvironment',
             paraData: {organization_id: this.oid,count:8},
             sCallback: function(result){
-                var newStr = that.getPicsStr(result.data);
-                $('.pics-preview-box ul').html(str+newStr);
+                var newStr = that.getPicsStr(result.data,true),
+                    allStr=str+newStr;
+                if(allStr!='') {
+                    $('.pics-box').show().find('.pics-preview-box ul')
+                        .html(str + newStr);
+                }
             },
             eCallback:function(txt){
                 //$target.css('opacity',1);
@@ -349,16 +367,25 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         });
     };
 
-    /*相册*/
-    t.getPicsStr=function(data){
+    /*
+    * 相册
+    * para:
+    * data - {arr} 图片信息数组
+    * type - {bool} true 表示是  相册 模块调用；false 表示是  作品 模块调用
+    */
+    t.getPicsStr=function(data,type){
         if(!data || data.length==0){
             return;
         }
         var len=data.length,str='';
-        $('.pics-number label').eq(1).text(len+'照片');
+        type && $('.pics-number label').eq(1).text(len+'照片');
         for(var i=0;i<len;i++){
             str+='<li class="li-img" data-id="'+data[i].id+'">'+
-                    '<img src="'+data[i].url+'">'+
+                    '<div class="img-box">'+
+                        '<div class="img-main-box">'+
+                            '<img src="'+data[i].url+'">'+
+                        '</div>'+
+                    '</div>'+
                 '</li>';
         }
         return str;
@@ -379,14 +406,14 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             item,
             style='';
         if(type){
-            var h=$('body').height()*7/16;
+            var h=$('body').width()*7/16;
             style='height:'+h+'px;';
         }
 
         for(var i=0;i<len;i++) {
             item=data[i];
             item.video_img = item.video_img || item.img;
-            item.video_url = 'http://91.16.0.7/video/14/output.m3u8';
+            //item.video_url = 'http://91.16.0.7/video/14/output.m3u8';
             str+= '<li data-url="' + item.video_url + '" style='+style+'>' +
                 '<img src="' + item.video_img + '">' +
                 '<span class="p-btn"><i class="icon-play"></i></span>' +
@@ -401,8 +428,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         $('html,body').addClass('ovfHidden');
         //图片
         if($target.hasClass('li-img')){
-            var index= $('.li-img').index($target);
-            var arr=t.getAllPics($('.pics-preview-box'));
+            var index= $('.pics-preview-box .li-img').index($target);
+            var arr=t.getAllPics($target.parent());
             $('.modal').eq(1).addClass('show').find('.pics-nav span').text(index+1+'/'+arr.length);
             this.initPicsScroll(arr,index);
 
@@ -413,14 +440,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                 this.showTips('视频暂无');
                 return;
             }
-
-            videojs("video-player").ready(function(){
-                that.myPlayer = this;
-                that.myPlayer.src({type: 'application/x-mpegURL',src:$target.data('url')});
-                $('.modal').eq(0).addClass('show');
-            });
+            this.resetVideoPlayerUrl($target.data('url'));
         }
     };
+
 
     /*得到所有图片地址*/
     t.getAllPics=function($box){
@@ -480,7 +503,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     };
 
 
-        /*加载我的老师信息*/
+    /*加载我的老师信息*/
     t.loadMyTeachersInfo=function(callback){
         var that=this;
         this.getDataAsync({
@@ -519,7 +542,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             url: this.baseUrl + 'appGetCoursesList',
             paraData: {organization_id: this.oid},
             sCallback: function(result){
-                that.fillInTeachingVedio(result);
+                that.fillInTeachingVideo(result);
             },
             eCallback:function(txt){
                 $target.css('opacity',1);
@@ -530,15 +553,71 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         });
     };
 
-    t.fillInTeachingVedio=function(data){
+    t.fillInTeachingVideo=function(data){
         if(!data || data.coursesList.length==0){
             return;
         }
+        var $box =  $('.t-video-box').show();
         var str = this.getVideoStr(data.coursesList,true);
-        $('.video-preview-box .basic-header span').html('('+data.coursesList.length+')');
-        $('.video-preview-box ul').html(str);
+        $box.find('.basic-header span').html('('+data.coursesList.length+')');
+        $box.find('ul').html(str);
     };
 
+
+    /*播放教学视频*/
+    t.showTeachingVideo=function(e){
+        //var $target=$(e.currentTarget),
+        //    url=$target.data('url');
+        //if(url=='null' || url=='undefined'){
+        //    this.showTips('视频暂无');
+        //    return;
+        //}
+        //this.resetVideoPlayerUrl(url);
+        this.showTips('下载App');
+    };
+
+
+
+    /*加载学生作品*/
+    t.loadWorksInfo=function(){
+        var that=this;
+        this.getDataAsync({
+            url: this.baseUrl + 'appGetStudentWorks',
+            paraData: {organization_id: this.oid,count:8,version:2.9},
+            sCallback: function(result){
+                that.fillWorksInfo(result);
+            },
+            eCallback:function(txt){
+
+            },
+            type:'get'
+        });
+    };
+
+    t.fillWorksInfo=function(result){
+        if(!result || result.data.length==0){
+            return;
+        }
+        var $box =  $('.works-box').show(),
+            data=result.data,
+            len=data.length;
+        var str = this.getPicsStr(result.data,false);
+        $box.find('ul').html(str);
+    };
+
+    /*查看图片或者视频详细信息*/
+    t.showWorksPicsDetailInfo=function(e) {
+        var $target = $(e.currentTarget);
+        $('html,body').addClass('ovfHidden');
+        //图片
+        if ($target.hasClass('li-img')) {
+            var index = $('.works-preview-box .li-img').index($target);
+            var arr = t.getAllPics($target.parent());
+            $('.modal').eq(1).addClass('show').find('.pics-nav span').text(index + 1 + '/' + arr.length);
+            this.initPicsScroll(arr, index);
+
+        }
+    };
     //
     //    /*加载我的评分息*/
     //    loadMyCompresAsseinfo:function(callback){

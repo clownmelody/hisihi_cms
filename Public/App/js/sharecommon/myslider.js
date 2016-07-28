@@ -83,8 +83,14 @@ define(['touch','toucher'],function(){
 
         swipeLeft:function(e){
             //var $target=$(e.currentTarget),
-            var $target=$(e.target).parent(),
-                index=$target.index(),
+            var target= e.target,$target;
+            if(target.nodeName=='IMG'){
+                $target=$(target).parent();
+            }
+            else{
+                $target=$(e.target);
+            }
+            var index=$target.index(),
                 that=this;
             if(index==$target.siblings().length){
                 return
@@ -95,14 +101,21 @@ define(['touch','toucher'],function(){
                     that.setting.changeCallback && that.setting.changeCallback('right',index+1);
                     that.playAuto();
                     if(that.setting.showNav){
+
                     }
                 });
         },
 
         swipeRight:function(e){
             //var $target=$(e.currentTarget),
-            var $target=$(e.target).parent(),
-                index=$target.index(),
+            var target= e.target,$target;
+            if(target.nodeName=='IMG'){
+                $target=$(target).parent();
+            }
+            else{
+                $target=$(e.target);
+            }
+            var index=$target.index(),
                 that=this;
             if(index==0){
                 return
@@ -115,6 +128,7 @@ define(['touch','toucher'],function(){
                 });
 
         },
+
 
         playAuto:function(){
             clearInterval(this.timeInterval);
