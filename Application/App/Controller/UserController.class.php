@@ -1392,7 +1392,7 @@ class UserController extends AppController
         $list = array();
         $videoTab = array();
         $videoTab['name'] = "视频";
-        $videoTab['type'] = "Issue";
+        $videoTab['type'] = "Organization";
         $articleTab = array();
         $articleTab['name'] = "文章";
         $articleTab['type'] = "Article";
