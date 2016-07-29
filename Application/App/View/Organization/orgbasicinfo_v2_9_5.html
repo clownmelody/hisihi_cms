@@ -104,7 +104,7 @@
             <!--相册-->
             <div class="pics-box main-content-item">
                 <div class="basic-header">相册
-                    <span class="pics-number">
+                    <span class="pics-number num-tips">
                         <label>1视频</label>
                         <label>34照片</label>
                     </span>
@@ -126,66 +126,69 @@
 
         <!--视频教程-->
         <div class="main-item t-video-box">
-            <div class="basic-header">视频教程<span>(3)</span></div>
+            <div class="basic-header">视频教程<span class="num-tips">(3)</span></div>
             <div class="video-preview-box">
                 <ul></ul>
             </div>
         </div>
 
         <!--学生作品-->
-        <div class="mainItem works-box">
-            <div class="basicHeader">视频教程</div>
-            <div id="works-preview-box">
-                <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
+        <div class="main-item works-box">
+            <div class="basic-header">学生作品</div>
+            <div class="works-preview-box">
+                <ul></ul>
             </div>
         </div>
 
         <!--群组-->
-        <div class="mainItem groups-box">
-            <div class="basicHeader">群组</div>
-            <div class="basic-bottom">
-                <div class="left"></div>
-                <div class="right"></div>
+        <div class="main-item groups-box">
+            <div class="basic-header">群组</div>
+            <div class="groups-detail-box">
             </div>
         </div>
 
         <!--综合评价-->
-        <div class="mainItem mainItemNormal mainItemCompresAsse" data-loaded="false" data-loading="false">
-            <div class="basicHeader">
-                <span class="leftItem">
-                    <span>综合评价：</span>
-                    <span id="myAssessment">4.5</span>
-                </span>
-                <span class="leftItem starsCon" id="starsConForCompress">
-                    <div style="clear: both;"></div>
-                </span>
-                <span class="rightItem">
-                    <span>共</span><span id="commentNum">51</span><span>份评论</span>
-                </span>
-            </div>
-            <ul class="assessmentDetail">
+        <div class="main-item comments-box" data-loaded="false" data-loading="false">
+            <div class="comment-box-stars">
+                <div class="basic-header">
+                    <span class="left-item">
+                        <span>综合评价：</span>
+                        <span id="myAssessment">4.5</span>
+                    </span>
+                    <span class="left-item" id="starsConForCompress"></span>
+                    <span class="right-item">
+                        <span id="commentNum">51</span><span>份评论</span>
+                    </span>
+                </div>
+                <ul class="assessmentDetail">
                 <li id="priceColorBlock">
                     <div class="title">描述相符</div>
                     <div class="stars-block">
-
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="half"></i>
+                        <i class="none"></i>
                     </div>
                 </li>
                 <li id="gradeColorBlock">
                     <div class="title">教学态度</div>
                     <div class="stars-block">
-
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="half"></i>
+                        <i class="none"></i>
                     </div>
                 </li>
                 <li id="teacherPowerColorBlock">
                     <div class="title">授课质量</div>
                     <div class="stars-block">
-
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="half"></i>
+                        <i class="none"></i>
                     </div>
                 </li>
                 <div class="loadErrorCon">
@@ -193,23 +196,20 @@
                 </div>
                 <div style="clear: both;"></div>
             </ul>
-            <div class="studentCommentCon">
+            </div>
 
-                <div class="basicHeaderWithArrow">
+            <div class="comment-box-words">
+                <div class="basic-header">
                     <span>学员评价</span>
-                    <i class="spiteBgOrigin arrow"></i>
                 </div>
-                <div class="inputComment">
-                    <input type="text" placeholder="快来说说你的学习感受吧~" disabled="disabled" id="myComment"/>
-                </div>
+                <input type="text" placeholder="快来说说你的学习感受吧~" disabled="disabled" class="input-box"/>
                 <ul class="studentCommentDetail">
-                    <div class="loadErrorCon">
-                        <a class="loadError" href="javascript:void(0)" data-index="6"></a>
-                    </div>
+                    <div class="nodata"><p>暂无评价</p></div>
                 </ul>
             </div>
         </div>
     </div>
+
     <!--下载条-->
     <div id="downloadCon-new">
         <img src="__IMG__/orgbasicinfo/2.9.5/1.png" class="allDownImg" />
@@ -265,7 +265,9 @@
         image: "__IMG__",
         ctl:'__URL__',
         apiUrl:'http://{$Think.server.HTTP_HOST}/api.php?s=/Organization/',
+        apiUrlPy:'__API_URL__'
     };
+
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
     };

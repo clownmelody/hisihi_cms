@@ -48,11 +48,13 @@ define(['base'],function(Base){
         var strBasic=this.getBasicIntroduceInfo(result),
             strNums=this.getNumsInfoStr(result),
             strMajor=this.getMajorInfoStr(result),
-            strEn=this.getInEnvironmentStr(result);
+            strEn=this.getInEnvironmentStr(result),
+            strAlb=this.getAlbumStr(result);
         var str=strBasic+
             strNums+
             strMajor+
-            strEn;
+            strEn+
+            strAlb;
         $('body').html(str);
     };
 
@@ -119,6 +121,7 @@ define(['base'],function(Base){
                 '</div>';
     };
 
+    //人数超过+万单位
     t.transformNums=function(num){
         num =Number(num);
         if(num){
@@ -202,9 +205,17 @@ define(['base'],function(Base){
     };
 
     //大学相册
-    t.getAlbum=function(){
-
+    t.getAlbumStr=function(result){
+        '<div class="main-item album">+' +
+            '<div class="head-txt border-bottom">'+
+            '<span class="center-content">相册</span>'+
+            '</div>'+
+            '<div class="album">' +
+                '<p>'+result.overseas_study/university/1/photos/page+'</p>'+
+            '</div>'+
+        '</div>';
     }
+
 
     return University;
 });

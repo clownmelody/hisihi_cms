@@ -79,6 +79,25 @@ body{
   background-position: -118px -32px;
 }
 
+.li-preview-img(@w,@h,@ml:5px){
+  .size(@w,@h);
+  display: inline-block;
+  vertical-align: top;
+  margin-right: @ml;
+  .img-box {
+    display: table;
+    .size(100%,100%);
+    .img-main-box {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      img {
+        max-width: 100%;
+      }
+    }
+  }
+}
+
 .filter{
   position: absolute;
   z-index: -1;
@@ -185,9 +204,17 @@ body{
     font-size: 14px;
     color: #212121;
     line-height: 40px;
+    .num-tips{
+      color: #808080;
+      margin-left: 2px;
+      font-size: 12px;
+      label{
+        margin-right: 3px;
+      }
+    }
   }
   .main-content-item{
-    //display: none;
+    display: none;
   }
 }
 .news-box{
@@ -289,6 +316,7 @@ body{
   margin:12px 8px 0 8px;
   overflow-x: auto;
   overflow-y: hidden;
+  display: none;
   ul{
     white-space: nowrap;
     height: 80px;
@@ -367,25 +395,17 @@ body{
     .basic-header {
       .border-top;
     }
-    .pics-number{
-      color: #808080;
-      margin-left: 2px;
-      label{
-        font-size: 12px;
-        margin-right: 3px;
-      }
-    }
+
     .pics-preview-box{
       overflow-x: auto;
       ul{
-        margin: 10px 0 14px 0;
+        margin: 0px 0 14px 0;
         white-space: nowrap;
         li{
+          .li-preview-img(90px,90px,4px);
           display: inline-block;
-          .size(90px,90px);
-          margin-right: 4px;
           position: relative;
-            .p-btn{
+          .p-btn{
               position: absolute;
               .size(32px,32px);
               top:50%;
@@ -402,7 +422,7 @@ body{
                 margin-left:8px;
               }
           }
-          img{
+          >img{
             .size(100%,100%);
           }
         }
@@ -438,13 +458,15 @@ body{
 }
 
 .t-video-box{
+  display: none;
   .video-preview-box{
     overflow-x: auto;
     ul{
-      margin: 10px 0 14px 0;
+      margin: 0px 0 14px 0;
       white-space: nowrap;
       li{
         display: inline-block;
+        vertical-align: top;
         .size(100%,90px);
         margin-right: 4px;
         position: relative;
@@ -471,6 +493,185 @@ body{
       }
     }
   }
+}
+
+.works-box{
+  display: none;
+  .works-preview-box{
+    overflow-x: auto;
+    ul{
+      margin: 0px 0 14px 0;
+      white-space: nowrap;
+      li{
+        overflow-y: hidden;
+        border:1px solid rgba(145,145,145,.2);
+        .li-preview-img(40%,110px,5px);
+      }
+    }
+  }
+}
+
+.groups-box{
+  display: none;
+  .groups-detail-box{
+    position: relative;
+    @w:50px;
+    height: @w;
+    padding-bottom: 14px;
+    .left{
+      position: absolute;
+      //.size(@w,@w);
+      img{
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        .size(@w,@w);
+      }
+    }
+    .right{
+      height: @w;
+      margin-left: @w + 8px;
+      width: 100%;
+      display: table;
+      p {
+        .txt-ellipsis-p(2);
+        color: #000;
+        font-size: 12px;
+        line-height: 20px;
+        word-break:break-word;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.comments-box {
+  overflow-x:hidden;
+  .star-item {
+    display: inline-block;
+    .size(12px, 12px);
+    margin-right: 2px;
+    .sprite-bg;
+    background-position: -203px -8px;
+    &.half {
+      background-position: -203px -31px;
+    }
+    &.none {
+      background-position: -203px -50px;
+    }
+  }
+
+  .comment-box-stars {
+    .basic-header {
+      .left-item {
+        float: left;
+        #myAssessment {
+          color: #FF5A00;
+        }
+        &#starsConForCompress {
+          margin-left: 6px;
+          color: #FF5A00;
+          i {
+            .star-item;
+          }
+        }
+      }
+      .right-item {
+        float: right;
+        color: #808080;
+        font-size: 14px;
+      }
+    }
+    .assessmentDetail {
+      li {
+        display: inline-block;
+        width: 33.3%;
+        margin-right: -4px;
+        text-align: center;
+        .title {
+          font-size: 12px;
+          color: #808080;
+        }
+        .stars-block {
+          margin: 8px 0 10px 0;
+          i {
+            .star-item;
+            margin-right: -2px;
+          }
+        }
+      }
+    }
+
+  }
+  .comment-box-words{
+
+    .input-box{
+        display: block;
+        .size(100%, 30px);
+        height: 30px;
+        border:1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f2f2f2;
+        color: #808080;
+        font-size: 14px;
+        box-sizing: border-box;
+        padding: 8px;
+    }
+    .studentCommentDetail{
+      margin-top: 13px;
+      .nodata{
+        p{
+          font-size: 12px;
+        }
+      }
+      li{
+        min-height: 40px;
+        position: relative;
+        padding: 0 0 12px 0;
+
+        .imgCon {
+          position: absolute;
+          width: 45px;
+          height: 45px;
+          box-sizing: border-box;
+          img{
+            .size(100%,100%);
+          }
+        }
+        .commentCon {
+          padding-top: 3px;
+          margin-left: 53px;
+          //overflow-x: hidden;
+
+          .commentNickname {
+            color: #212121;
+            font-size: 14px;
+          }
+          .rightItem {
+            float: right;
+            margin-right:5px;
+            padding-top: 3px;
+            i{
+              .star-item;
+            }
+          }
+          .content {
+            padding: 8px 20px 5px 0;
+            font-size: 13px;
+            color: #212121;
+          }
+          .publicTime {
+            height: 20px;
+            color: #bdbdbd;
+            font-size: 12px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #ccc;
+            width: 104%;
+          }
+        }
+      }
+    }
+  }
+
 }
 
 /*视频*/
@@ -530,6 +731,7 @@ body{
     .size(100%,100%);
     text-align: center;
     display: table;
+    table-layout: fixed;
     .filter{
       opacity: 0.8;
     }
@@ -538,12 +740,19 @@ body{
       vertical-align: middle;
       width: 100%;
       height: 100%;
-      img{
-        width: 100%;
-        height: 30%;
-        //border-top:1px solid rgba(204,204,204,.7);
-        //border-bottom:1px solid rgba(204,204,204,.7);
-        vertical-align:93px;
+      img {
+        max-height: 180px;
+        max-width: 100%;
+        vertical-align: 45px;
+      }
+      .show-origin-pic{
+        .size(105px,30px);
+        margin: 0 auto;
+        border-radius: 2px;
+        line-height: 30px;
+        background-color: rgba(128,128,128,.7);
+        color: white;
+        font-size: 14px;
       }
     }
   }
@@ -568,6 +777,7 @@ body{
 }
 
 
+/*图片查看列表*/
 .slider-container{
   min-height: 135px;
   position:relative;
@@ -575,7 +785,7 @@ body{
     .slider-item {
       height: 100%;
       display: inline-block;
-      vertical-align:top;
+      vertical-align:middle;
     }
   }
   .default-nav{

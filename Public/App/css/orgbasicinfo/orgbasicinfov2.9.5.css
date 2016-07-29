@@ -439,6 +439,17 @@ body {
   color: #212121;
   line-height: 40px;
 }
+.main-item .basic-header .num-tips {
+  color: #808080;
+  margin-left: 2px;
+  font-size: 12px;
+}
+.main-item .basic-header .num-tips label {
+  margin-right: 3px;
+}
+.main-item .main-content-item {
+  display: none;
+}
 .news-box {
   position: relative;
   height: 63px;
@@ -541,6 +552,7 @@ body {
   margin: 12px 8px 0 8px;
   overflow-x: auto;
   overflow-y: hidden;
+  display: none;
 }
 .coupon-box ul {
   white-space: nowrap;
@@ -614,27 +626,33 @@ body {
 .basic-info-box .pics-box .basic-header {
   border-top: 1px solid #F3F3F3;
 }
-.basic-info-box .pics-box .pics-number {
-  color: #808080;
-  margin-left: 2px;
-}
-.basic-info-box .pics-box .pics-number label {
-  font-size: 12px;
-  margin-right: 3px;
-}
 .basic-info-box .pics-box .pics-preview-box {
   overflow-x: auto;
 }
 .basic-info-box .pics-box .pics-preview-box ul {
-  margin: 10px 0 14px 0;
+  margin: 0px 0 14px 0;
   white-space: nowrap;
 }
 .basic-info-box .pics-box .pics-preview-box ul li {
-  display: inline-block;
   width: 90px;
   height: 90px;
+  vertical-align: top;
   margin-right: 4px;
+  display: inline-block;
   position: relative;
+}
+.basic-info-box .pics-box .pics-preview-box ul li .img-box {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+.basic-info-box .pics-box .pics-preview-box ul li .img-box .img-main-box {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.basic-info-box .pics-box .pics-preview-box ul li .img-box .img-main-box img {
+  max-width: 100%;
 }
 .basic-info-box .pics-box .pics-preview-box ul li .p-btn {
   position: absolute;
@@ -654,7 +672,7 @@ body {
   line-height: 32px;
   margin-left: 8px;
 }
-.basic-info-box .pics-box .pics-preview-box ul li img {
+.basic-info-box .pics-box .pics-preview-box ul li > img {
   width: 100%;
   height: 100%;
 }
@@ -684,15 +702,19 @@ body {
   color: #212121;
   font-size: 12px;
 }
+.t-video-box {
+  display: none;
+}
 .t-video-box .video-preview-box {
   overflow-x: auto;
 }
 .t-video-box .video-preview-box ul {
-  margin: 10px 0 14px 0;
+  margin: 0px 0 14px 0;
   white-space: nowrap;
 }
 .t-video-box .video-preview-box ul li {
   display: inline-block;
+  vertical-align: top;
   width: 100%;
   height: 90px;
   margin-right: 4px;
@@ -719,6 +741,224 @@ body {
 .t-video-box .video-preview-box ul li img {
   width: 100%;
   height: 100%;
+}
+.works-box {
+  display: none;
+}
+.works-box .works-preview-box {
+  overflow-x: auto;
+}
+.works-box .works-preview-box ul {
+  margin: 0px 0 14px 0;
+  white-space: nowrap;
+}
+.works-box .works-preview-box ul li {
+  overflow-y: hidden;
+  border: 1px solid rgba(145, 145, 145, 0.2);
+  width: 40%;
+  height: 110px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 5px;
+}
+.works-box .works-preview-box ul li .img-box {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+.works-box .works-preview-box ul li .img-box .img-main-box {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.works-box .works-preview-box ul li .img-box .img-main-box img {
+  max-width: 100%;
+}
+.groups-box {
+  display: none;
+}
+.groups-box .groups-detail-box {
+  position: relative;
+  height: 50px;
+  padding-bottom: 14px;
+}
+.groups-box .groups-detail-box .left {
+  position: absolute;
+}
+.groups-box .groups-detail-box .left img {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  width: 50px;
+  height: 50px;
+}
+.groups-box .groups-detail-box .right {
+  height: 50px;
+  margin-left: 58px;
+  width: 100%;
+  display: table;
+}
+.groups-box .groups-detail-box .right p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: #000;
+  font-size: 12px;
+  line-height: 20px;
+  word-break: break-word;
+  vertical-align: middle;
+}
+.comments-box {
+  overflow-x: hidden;
+}
+.comments-box .star-item {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+  background-position: -203px -8px;
+}
+.comments-box .star-item.half {
+  background-position: -203px -31px;
+}
+.comments-box .star-item.none {
+  background-position: -203px -50px;
+}
+.comments-box .comment-box-stars .basic-header .left-item {
+  float: left;
+}
+.comments-box .comment-box-stars .basic-header .left-item #myAssessment {
+  color: #FF5A00;
+}
+.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress {
+  margin-left: 6px;
+  color: #FF5A00;
+}
+.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+  background-position: -203px -8px;
+}
+.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i.half {
+  background-position: -203px -31px;
+}
+.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i.none {
+  background-position: -203px -50px;
+}
+.comments-box .comment-box-stars .basic-header .right-item {
+  float: right;
+  color: #808080;
+  font-size: 14px;
+}
+.comments-box .comment-box-stars .assessmentDetail li {
+  display: inline-block;
+  width: 33.3%;
+  margin-right: -4px;
+  text-align: center;
+}
+.comments-box .comment-box-stars .assessmentDetail li .title {
+  font-size: 12px;
+  color: #808080;
+}
+.comments-box .comment-box-stars .assessmentDetail li .stars-block {
+  margin: 8px 0 10px 0;
+}
+.comments-box .comment-box-stars .assessmentDetail li .stars-block i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+  background-position: -203px -8px;
+  margin-right: -2px;
+}
+.comments-box .comment-box-stars .assessmentDetail li .stars-block i.half {
+  background-position: -203px -31px;
+}
+.comments-box .comment-box-stars .assessmentDetail li .stars-block i.none {
+  background-position: -203px -50px;
+}
+.comments-box .comment-box-words .input-box {
+  display: block;
+  width: 100%;
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f2f2f2;
+  color: #808080;
+  font-size: 14px;
+  box-sizing: border-box;
+  padding: 8px;
+}
+.comments-box .comment-box-words .studentCommentDetail {
+  margin-top: 13px;
+}
+.comments-box .comment-box-words .studentCommentDetail .nodata p {
+  font-size: 12px;
+}
+.comments-box .comment-box-words .studentCommentDetail li {
+  min-height: 40px;
+  position: relative;
+  padding: 0 0 12px 0;
+}
+.comments-box .comment-box-words .studentCommentDetail li .imgCon {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  box-sizing: border-box;
+}
+.comments-box .comment-box-words .studentCommentDetail li .imgCon img {
+  width: 100%;
+  height: 100%;
+}
+.comments-box .comment-box-words .studentCommentDetail li .commentCon {
+  padding-top: 3px;
+  margin-left: 53px;
+}
+.comments-box .comment-box-words .studentCommentDetail li .commentCon .commentNickname {
+  color: #212121;
+  font-size: 14px;
+}
+.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem {
+  float: right;
+  margin-right: 5px;
+  padding-top: 3px;
+}
+.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+  background-position: -203px -8px;
+}
+.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i.half {
+  background-position: -203px -31px;
+}
+.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i.none {
+  background-position: -203px -50px;
+}
+.comments-box .comment-box-words .studentCommentDetail li .commentCon .content {
+  padding: 8px 20px 5px 0;
+  font-size: 13px;
+  color: #212121;
+}
+.comments-box .comment-box-words .studentCommentDetail li .commentCon .publicTime {
+  height: 20px;
+  color: #bdbdbd;
+  font-size: 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #ccc;
+  width: 104%;
 }
 /*视频*/
 .modal {
@@ -779,6 +1019,7 @@ body {
   height: 100%;
   text-align: center;
   display: table;
+  table-layout: fixed;
 }
 .modal .pic-main .filter {
   opacity: 0.8;
@@ -790,9 +1031,19 @@ body {
   height: 100%;
 }
 .modal .pic-main .view-pics-box img {
-  width: 100%;
-  height: 30%;
-  vertical-align: 93px;
+  max-height: 180px;
+  max-width: 100%;
+  vertical-align: 45px;
+}
+.modal .pic-main .view-pics-box .show-origin-pic {
+  width: 105px;
+  height: 30px;
+  margin: 0 auto;
+  border-radius: 2px;
+  line-height: 30px;
+  background-color: rgba(128, 128, 128, 0.7);
+  color: white;
+  font-size: 14px;
 }
 .modal .pics-nav {
   width: 100%;
@@ -813,6 +1064,7 @@ body {
   color: #fff;
   font-size: 12px;
 }
+/*图片查看列表*/
 .slider-container {
   min-height: 135px;
   position: relative;
@@ -820,7 +1072,7 @@ body {
 .slider-container .slider-main .slider-item {
   height: 100%;
   display: inline-block;
-  vertical-align: top;
+  vertical-align: middle;
 }
 .slider-container .default-nav {
   position: absolute;
