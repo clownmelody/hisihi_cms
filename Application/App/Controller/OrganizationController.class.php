@@ -4522,6 +4522,9 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         } else {
             $data['send_sms_time'] = 0;
         }
+        if($this->isYuyue($uid, $organization_id, $course_id)){
+            $this->apiError(-2, '已经预约过');
+        }
         M('OrganizationYuyue')->add($data);
         $this->apiSuccess('预约报名成功!');
     }
@@ -4561,6 +4564,9 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         } else {
             $data['send_sms_time'] = 0;
         }
+        if($this->isBaokao($uid, $university_id)){
+            $this->apiError(-2, '已经报考过');
+        }
         M('OrganizationYuyue')->add($data);
         $this->apiSuccess('大学报考成功!');
     }
@@ -4578,6 +4584,23 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
             return false;
         }
         return true;
+    }
+
+    public function isYuyue($uid=0, $organization_id=0, $teaching_course_id=0){
+        $where_array['uid'] = $uid;
+        $where_array['organization_id'] = $organization_id;
+        $where_array['course_id'] = $teaching_course_id;
+        $where_array['status'] = 1;
+        $is_yuyue = M('OrganizationYuyue')->where($where_array)->count();
+        return $is_yuyue;
+    }
+
+    public function isBaokao($uid=0, $university_id=0){
+        $where_array['uid'] = $uid;
+        $where_array['university_id'] = $university_id;
+        $where_array['status'] = 1;
+        $is_baokao = M('OrganizationYuyue')->where($where_array)->count();
+        return $is_baokao;
     }
 
     public function sendSMS($mobile=array(), $content=null){
