@@ -1361,7 +1361,7 @@ class UserController extends AppController
                     break;
                 case 'OrganizationInfo' :  // 机构主页
                     $favorite['type'] = 'organization';
-                    $favorite['info'] = A('Organization')->findOrganizationById($favorite['row']);
+                    $favorite['info'] = A('Organization')->findOrganizationById($favorite['row'], $version);
                     break;
                 case 'University' :  // 大学
                     $favorite['type'] = 'university';

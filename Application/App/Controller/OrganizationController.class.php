@@ -3200,7 +3200,7 @@ class OrganizationController extends AppController
             $organization['followCount'] = $this->getFollowCount($organization_id);
             $organization['enrollCount'] = $this->getEnrollCount($organization_id);
             if((float)$version>=2.95){
-                $organization['authentication'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
+                $organization['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
             } else {
                 $organization['authentication'] = $this->getAuthenticationInfo($organization_id);
             }
@@ -4169,14 +4169,15 @@ GROUP BY
         return $enroll_count;
     }
 
-    /**根据id获取大学
+    /**
+     * 根据id获取大学
      * @param null $u_id
      * @return mixed
      */
     public function findUniversityById($u_id=null){
         $u_model = M('AbroadUniversity');
         $map['status'] = 1;
-        $map['university_id'] = $u_id;
+        $map['id'] = $u_id;
         $university = $u_model->field('id, name, logo_url')
             ->where($map)->find();
         $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
@@ -4522,6 +4523,9 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         } else {
             $data['send_sms_time'] = 0;
         }
+        if($this->isYuyue($uid, $organization_id, $course_id)){
+            $this->apiError(-2, '已经预约过');
+        }
         M('OrganizationYuyue')->add($data);
         $this->apiSuccess('预约报名成功!');
     }
@@ -4561,6 +4565,9 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         } else {
             $data['send_sms_time'] = 0;
         }
+        if($this->isBaokao($uid, $university_id)){
+            $this->apiError(-2, '已经报考过');
+        }
         M('OrganizationYuyue')->add($data);
         $this->apiSuccess('大学报考成功!');
     }
@@ -4578,6 +4585,23 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
             return false;
         }
         return true;
+    }
+
+    public function isYuyue($uid=0, $organization_id=0, $teaching_course_id=0){
+        $where_array['uid'] = $uid;
+        $where_array['organization_id'] = $organization_id;
+        $where_array['course_id'] = $teaching_course_id;
+        $where_array['status'] = 1;
+        $is_yuyue = M('OrganizationYuyue')->where($where_array)->count();
+        return $is_yuyue;
+    }
+
+    public function isBaokao($uid=0, $university_id=0){
+        $where_array['uid'] = $uid;
+        $where_array['university_id'] = $university_id;
+        $where_array['status'] = 1;
+        $is_baokao = M('OrganizationYuyue')->where($where_array)->count();
+        return $is_baokao;
     }
 
     public function sendSMS($mobile=array(), $content=null){
