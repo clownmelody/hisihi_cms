@@ -3200,7 +3200,7 @@ class OrganizationController extends AppController
             $organization['followCount'] = $this->getFollowCount($organization_id);
             $organization['enrollCount'] = $this->getEnrollCount($organization_id);
             if((float)$version>=2.95){
-                $organization['authentication'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
+                $organization['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($organization_id);
             } else {
                 $organization['authentication'] = $this->getAuthenticationInfo($organization_id);
             }
