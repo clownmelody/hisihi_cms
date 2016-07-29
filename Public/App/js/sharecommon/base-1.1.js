@@ -313,8 +313,6 @@ define(['$','fastclick'],function() {
          */
        getDiffTime:function (recordTime,yearsFlag) {
            if (recordTime) {
-               var ss = new Date(parseFloat(recordTime) * 1000).format('yyyy-MM-dd');
-               console.log(ss);
                recordTime=new Date(parseFloat(recordTime)*1000);
                var minute = 1000 * 60,
                    hour = minute * 60,

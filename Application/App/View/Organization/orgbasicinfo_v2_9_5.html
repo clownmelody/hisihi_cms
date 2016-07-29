@@ -163,38 +163,16 @@
                 <ul class="assessmentDetail">
                 <li id="priceColorBlock">
                     <div class="title">描述相符</div>
-                    <div class="stars-block">
-                        <i class="full"></i>
-                        <i class="full"></i>
-                        <i class="full"></i>
-                        <i class="half"></i>
-                        <i class="none"></i>
-                    </div>
+                    <div class="stars-block"></div>
                 </li>
                 <li id="gradeColorBlock">
                     <div class="title">教学态度</div>
-                    <div class="stars-block">
-                        <i class="full"></i>
-                        <i class="full"></i>
-                        <i class="full"></i>
-                        <i class="half"></i>
-                        <i class="none"></i>
-                    </div>
+                    <div class="stars-block"></div>
                 </li>
                 <li id="teacherPowerColorBlock">
                     <div class="title">授课质量</div>
-                    <div class="stars-block">
-                        <i class="full"></i>
-                        <i class="full"></i>
-                        <i class="full"></i>
-                        <i class="half"></i>
-                        <i class="none"></i>
-                    </div>
+                    <div class="stars-block"></div>
                 </li>
-                <div class="loadErrorCon">
-                    <a class="loadError" href="javascript:void(0)" data-index="5"></a>
-                </div>
-                <div style="clear: both;"></div>
             </ul>
             </div>
 
@@ -202,7 +180,7 @@
                 <div class="basic-header">
                     <span>学员评价</span>
                 </div>
-                <input type="text" placeholder="快来说说你的学习感受吧~" disabled="disabled" class="input-box"/>
+                <div class="input-box">快来说说你的学习感受吧~</div>
                 <ul class="studentCommentDetail">
                     <div class="nodata"><p>暂无评价</p></div>
                 </ul>
@@ -227,6 +205,20 @@
             <p>设计师必备，百万设计师都在用</p>
         </div>
         <a id="download" href="http://www.hisihi.com/download.php">立即下载</a>
+    </div>
+
+    <div id="footer">
+        <div class="collection">
+            <i></i>
+            <span>收藏</span>
+        </div>
+        <div class="contact">
+            <a href="#">
+                <i></i>
+                <span>咨询</span>
+            </a>
+        </div>
+        <div class="sing-in">预约试听</div>
     </div>
 
     <div class="modal video-modal">
@@ -256,6 +248,20 @@
             <div class="imgzoom_x btn"><span class="icon-cancel"></span></div>
             <div class="imgzoom_img"><img class="img-target" src="" /></div>
         </section>
+    </div>
+
+    <div class="modal sing-in-modal">
+        <div class="sing-in-box">
+            <div class="sing-in-header"><label>预约试听</label><div class="close-sing-in">×</div></div>
+            <div class="sing-in-item">
+                <input type="text" placeholder="输入手机号码" id="phone-num">
+            </div>
+            <div class="sing-in-item">
+                <input type="text" placeholder="输入姓名" id="user-name">
+            </div>
+            <p class="tips">课程顾问将在15分钟之内联系您</p>
+            <div class="sing-in-btn">确定预约</div>
+        </div>
     </div>
 
 </body>
