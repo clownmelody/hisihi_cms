@@ -149,33 +149,46 @@
 
         <!--综合评价-->
         <div class="main-item comments-box" data-loaded="false" data-loading="false">
-            <div class="basic-header">
-                <span class="left-item">
-                    <span>综合评价：</span>
-                    <span id="myAssessment">4.5</span>
-                </span>
-                <span class="left-item" id="starsConForCompress"></span>
-                <span class="right-item">
-                    <span>共</span><span id="commentNum">51</span><span>份评论</span>
-                </span>
-            </div>
-            <ul class="assessmentDetail">
+            <div class="comment-box-stars">
+                <div class="basic-header">
+                    <span class="left-item">
+                        <span>综合评价：</span>
+                        <span id="myAssessment">4.5</span>
+                    </span>
+                    <span class="left-item" id="starsConForCompress"></span>
+                    <span class="right-item">
+                        <span id="commentNum">51</span><span>份评论</span>
+                    </span>
+                </div>
+                <ul class="assessmentDetail">
                 <li id="priceColorBlock">
                     <div class="title">描述相符</div>
                     <div class="stars-block">
-
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="half"></i>
+                        <i class="none"></i>
                     </div>
                 </li>
                 <li id="gradeColorBlock">
                     <div class="title">教学态度</div>
                     <div class="stars-block">
-
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="half"></i>
+                        <i class="none"></i>
                     </div>
                 </li>
                 <li id="teacherPowerColorBlock">
                     <div class="title">授课质量</div>
                     <div class="stars-block">
-
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="full"></i>
+                        <i class="half"></i>
+                        <i class="none"></i>
                     </div>
                 </li>
                 <div class="loadErrorCon">
@@ -183,19 +196,15 @@
                 </div>
                 <div style="clear: both;"></div>
             </ul>
-            <div class="studentCommentCon">
+            </div>
 
-                <div class="basicHeaderWithArrow">
+            <div class="comment-box-words">
+                <div class="basic-header">
                     <span>学员评价</span>
-                    <i class="spiteBgOrigin arrow"></i>
                 </div>
-                <div class="inputComment">
-                    <input type="text" placeholder="快来说说你的学习感受吧~" disabled="disabled" id="myComment"/>
-                </div>
+                <input type="text" placeholder="快来说说你的学习感受吧~" disabled="disabled" class="input-box"/>
                 <ul class="studentCommentDetail">
-                    <div class="loadErrorCon">
-                        <a class="loadError" href="javascript:void(0)" data-index="6"></a>
-                    </div>
+                    <div class="nodata"><p>暂无评价</p></div>
                 </ul>
             </div>
         </div>

@@ -545,44 +545,130 @@ body{
 }
 
 .comments-box {
-  .basic-header{
-    .left-item{
-      float: left;
-      #myAssessment{
-        color: #FF5A00;
+  overflow-x:hidden;
+  .star-item {
+    display: inline-block;
+    .size(12px, 12px);
+    margin-right: 2px;
+    .sprite-bg;
+    background-position: -203px -8px;
+    &.half {
+      background-position: -203px -31px;
+    }
+    &.none {
+      background-position: -203px -50px;
+    }
+  }
+
+  .comment-box-stars {
+    .basic-header {
+      .left-item {
+        float: left;
+        #myAssessment {
+          color: #FF5A00;
+        }
+        &#starsConForCompress {
+          margin-left: 6px;
+          color: #FF5A00;
+          i {
+            .star-item;
+          }
+        }
       }
-      &#starsConForCompress{
-        margin-left: 6px;
-        color: #FF5A00;
-        i{
-          display: inline-block;
-          .size(12px,12px);
-          margin-right: 2px;
-          .sprite-bg;
-          &.full{
-            background-position: -203px -8px;
-          }
-          &.half{
-            background-position: -203px -31px;
-          }
-          &.none{
-            background-position: -203px -50px;
+      .right-item {
+        float: right;
+        color: #808080;
+        font-size: 14px;
+      }
+    }
+    .assessmentDetail {
+      li {
+        display: inline-block;
+        width: 33.3%;
+        margin-right: -4px;
+        text-align: center;
+        .title {
+          font-size: 12px;
+          color: #808080;
+        }
+        .stars-block {
+          margin: 8px 0 10px 0;
+          i {
+            .star-item;
+            margin-right: -2px;
           }
         }
       }
     }
-    .right-item{
-      float: right;
-      color: #808080;
-      font-size: 14px;
-    }
+
   }
-  .assessmentDetail{
-    li{
-      display: inline-block;
-      width: 33.3%;
-      margin-right:-4px;
-      text-align: center;
+  .comment-box-words{
+
+    .input-box{
+        display: block;
+        .size(100%, 30px);
+        height: 30px;
+        border:1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f2f2f2;
+        color: #808080;
+        font-size: 14px;
+        box-sizing: border-box;
+        padding: 8px;
+    }
+    .studentCommentDetail{
+      margin-top: 13px;
+      .nodata{
+        p{
+          font-size: 12px;
+        }
+      }
+      li{
+        min-height: 40px;
+        position: relative;
+        padding: 0 0 12px 0;
+
+        .imgCon {
+          position: absolute;
+          width: 45px;
+          height: 45px;
+          box-sizing: border-box;
+          img{
+            .size(100%,100%);
+          }
+        }
+        .commentCon {
+          padding-top: 3px;
+          margin-left: 53px;
+          //overflow-x: hidden;
+
+          .commentNickname {
+            color: #212121;
+            font-size: 14px;
+          }
+          .rightItem {
+            float: right;
+            margin-right:5px;
+            padding-top: 3px;
+            i{
+              .star-item;
+            }
+          }
+          .content {
+            padding: 8px 20px 5px 0;
+            font-size: 13px;
+            color: #212121;
+          }
+          .publicTime {
+            height: 20px;
+            color: #bdbdbd;
+            font-size: 12px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #ccc;
+            width: 104%;
+          }
+        }
+      }
     }
   }
 

@@ -309,8 +309,9 @@ define(['$','fastclick'],function() {
          *多少分钟前，多少小时前，然后是昨天，然后再是月日
          * Para :
          * recordTime - {float} 时间戳
+         * yearsFlag -{bool} 是否要年份
          */
-       getDiffTime:function (recordTime) {
+       getDiffTime:function (recordTime,yearsFlag) {
            if (recordTime) {
                var ss = new Date(parseFloat(recordTime) * 1000).format('yyyy-MM-dd');
                console.log(ss);
@@ -330,18 +331,22 @@ define(['$','fastclick'],function() {
                var minC = diff / minute;
                if (weekR >= 1) {
                    //result = recordTime.getFullYear() + '.' + (recordTime.getMonth() + 1) + '.' + recordTime.getDate();
-                   result=recordTime.format('MM-dd hh:mm');
-                   return result;
+                   var formate='MM-dd hh:mm';
+                   if(yearsFlag){
+                       formate='yyyy-MM-dd hh:mm';
+                   }
+                   return recordTime.format(formate);
                }
                else if (dayC == 1 ||(hourC <24 && recordTime.getDate()!=now.getDate())) {
                    result = '昨天'+ recordTime.getHours() + ':'+recordTime.getMinutes();
                    return result;
                }
                else if (dayC > 1) {
-                   result=recordTime.format('MM-dd hh:mm');
-                   return result;
-                   //result = parseInt(dayC) + '天前';
-                   //return result;
+                   var formate='MM-dd hh:mm';
+                   if(yearsFlag){
+                       formate='yyyy-MM-dd hh:mm';
+                   }
+                   return recordTime.format(formate);
                }
                else if (hourC >= 1) {
                    result = parseInt(hourC) + '小时前';

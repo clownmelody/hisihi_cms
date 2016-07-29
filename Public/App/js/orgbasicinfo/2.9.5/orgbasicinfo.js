@@ -14,7 +14,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
-
+        this.perPageSize=10;
         this.async=false;  //同步加载所有的数据
         this.controlLoadingBox(true);
         window.setTimeout(function(){
@@ -62,6 +62,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         this.loadWorksInfo();
         this.loadGroupsInfo();
         this.loadMyCompresAsseinfo();
+        this.loadDetailCommentInfo();
 
         $('#wrapper').show();
         this.controlLoadingBox(false);
@@ -600,7 +601,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     };
 
     t.fillWorksInfo=function(result){
-        if(!result || result.data.length==0){
+        if(!result || !result.data || result.data.length==0){
             return;
         }
         var $box =  $('.works-box').show(),
@@ -708,23 +709,22 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
     };
 
-        /*加载我的评论信息*/
+    /*加载我的评论信息*/
     t.loadDetailCommentInfo=function(pageIndex,callback){
         var that=this,
             $target=that.$wrapper.find('.studentCommentCon');
-        this.loadData({
-            url: window.urlObject.apiUrl + 'commentList',
+        this.getDataAsync({
+            url: this.baseUrl + 'commentList',
             paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize},
             sCallback: function(result){
                 that.pageSize=Math.ceil((result.totalCount|0)/that.perPageSize);
-                that.$wrapper.find('#commentNum').text(result.totalCount);
+                $('#commentNum').text(result.totalCount);
                 that.fillDetailCommentInfo(result);
                 callback&&callback.call(that);
             },
-            eCallback:function(txt){
-                $target.find('.loadErrorCon:eq(1)').show().find('a').text('获取评论信息失败，点击重新加载').show();
-                callback&&callback.call(that);
-            }
+            eCallback:function(txt){},
+            type:'get',
+            async:this.async
         });
     };
 
@@ -733,35 +733,35 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         var data=result.data,
             str='';
         if(!data || data.length==0){
-            str='<li><div class="nonData">暂无评论</div></li>';
-            this.$wrapper.find('.studentCommentDetail li').remove();
-        }else {
-            /*具体的评论信息*/
-            var len = data.length,
-                item, userInfo, dateTime;
-            for (var i = 0; i < len; i++) {
-                item = data[i];
-                userInfo = item.userInfo;
-                dateTime = this.getDiffTime(new Date(item.create_time * 1000));   //得到发表时间距现在的时间差
-                str += '<li>' +
-                    '<div class="imgCon">' +
-                        '<div><img src="' + userInfo.avatar128 + '"/></div>' +
-                    '</div>' +
-                    '<div class="commentCon">' +
-                    '<div class="commentHead">' +
-                    '<span class="commentNickname">' + userInfo.nickname + '</span>' +
-                    '<span class="rightItem starsCon">' +
-                    this.getStarInfoByScore(item.comprehensive_score | 0) +
-                    '<div style="clear: both;"></div>' +
-                    '</span>' +
-                    '</div>' +
-                    '<div class="content">' + item.comment + '</div>' +
-                    '<div class="publicTime">发表于' + dateTime + '</div>' +
-                    '</div>' +
-                    '</li>';
-            }
+            $('.studentCommentDetail .nodata').show();
+            return;
         }
-        this.$wrapper.find('.studentCommentDetail').append(str);
+
+        /*具体的评论信息*/
+        var len = data.length,
+            item, userInfo, dateTime;
+        for (var i = 0; i < len; i++) {
+            item = data[i];
+            userInfo = item.userInfo;
+            dateTime = this.getDiffTime(new Date(item.create_time * 1000),true);   //得到发表时间距现在的时间差
+            str += '<li>' +
+                '<div class="imgCon">' +
+                    '<div><img src="' + userInfo.avatar128 + '"/></div>' +
+                '</div>' +
+                '<div class="commentCon">' +
+                '<div class="commentHead">' +
+                '<span class="commentNickname">' + userInfo.nickname + '</span>' +
+                '<span class="rightItem starsCon">' +
+                this.getStarInfoByScore(item.comprehensive_score | 0) +
+                '<div style="clear: both;"></div>' +
+                '</span>' +
+                '</div>' +
+                '<div class="content">' + item.comment + '</div>' +
+                '<div class="publicTime">发表于' + dateTime + '</div>' +
+                '</div>' +
+                '</li>';
+        }
+        $('.studentCommentDetail').append(str);
     };
 
 
@@ -845,7 +845,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             halfNum=tempNum==allNum? 0:1,
             blankNum=5-tempNum;
         for(var i=0;i<allNum;i++){
-            str+='<i class="full"></i>';
+            str+='<i></i>';
         }
         if(halfNum==1){
             str+='<i class="half"></i>';
@@ -881,40 +881,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             }
         }
     };
-    //
-    //    /*根据分数情况，得到色块的信息*/
-    //    getColorBlockInfoByScore:function(score){
-    //        var scores=[
-    //            {min:0,max:2,cName:'greenFillIn'},
-    //            {min:2,max:4,cName:'yellowFillIn'},
-    //            {min:4,max:5.000000001,cName:'redFillIn'}
-    //        ];
-    //        var temp =$.grep(scores,function(n,i){
-    //            return score>= n.min && score<n.max
-    //        })[0];
-    //        return{
-    //            cName:temp.cName,
-    //            width:Math.ceil(score/5*100)
-    //        }
-    //    },
-    //
-    //    /*控制底部logo的位置样式*/
-    //    controlCoverFootStyle:function(){
-    //        var $target = $('#downloadCon'),
-    //            $a=$target.find('a'),
-    //            aw=$a.width(),
-    //            ah=aw*0.40,
-    //            bw=$target.width(),
-    //            h= bw*102/750;
-    //        $target.css({'height':h+'px','left':($('body').width()-bw)/2,'opacity':1});
-    //        this.$wrapper.css('bottom',h+'px');
-    //        var fontSize='16px';
-    //        if(bw<375){
-    //            fontSize='14px';
-    //        }
-    //        $a.css({'top':(h-ah)/2,'height':ah+'px','line-height':ah+'px','font-size':fontSize});
-    //    },
-    //
+
     //    /*
     //     *根据客户端的时间信息得到发表评论的时间格式
     //     *多少分钟前，多少小时前，然后是昨天，然后再是月日
