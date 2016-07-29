@@ -4169,14 +4169,15 @@ GROUP BY
         return $enroll_count;
     }
 
-    /**根据id获取大学
+    /**
+     * 根据id获取大学
      * @param null $u_id
      * @return mixed
      */
     public function findUniversityById($u_id=null){
         $u_model = M('AbroadUniversity');
         $map['status'] = 1;
-        $map['university_id'] = $u_id;
+        $map['id'] = $u_id;
         $university = $u_model->field('id, name, logo_url')
             ->where($map)->find();
         $university['organization_total_count'] = $this->getOrgCountInUniversity($u_id);
