@@ -113,6 +113,11 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             $('#currentPage ul li').on('touchend', function (e) {
                 var index = $(this).index();
                 t4.slide(index);
+
+                //下一个相册
+                if(index==$('#currentPage ul li').length-1){
+
+                }
             });
             $('#slider4').attr('data-init','true');
         }
