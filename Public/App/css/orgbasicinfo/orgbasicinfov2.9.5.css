@@ -1,5 +1,4 @@
 * {
-  -webkit-user-select: none;
   /*禁用手机浏览器的用户选择功能 */
   -moz-user-select: none;
   font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
@@ -272,11 +271,11 @@ body {
   width: 42px;
   height: 42px;
   position: absolute;
-  left: 20px;
+  left: 12px;
   top: 9px;
 }
 #downloadCon-new .words {
-  margin-left: 71px;
+  margin-left: 63px;
   padding-top: 9px;
   color: white;
 }
@@ -989,6 +988,7 @@ body {
   width: 100%;
   height: 50px;
   border-top: 1px solid #ccc;
+  background-color: #212121;
 }
 #footer > div {
   line-height: 50px;
@@ -996,6 +996,12 @@ body {
   display: inline-block;
   vertical-align: top;
   height: 100%;
+}
+#footer > div a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
 }
 #footer > div i {
   display: inline-block;
@@ -1024,12 +1030,6 @@ body {
 }
 #footer > div.contact i {
   background-position: -166px -29px;
-}
-#footer > div.contact a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  text-decoration: none;
 }
 #footer > div.sing-in {
   margin-left: -5px;
@@ -1296,6 +1296,22 @@ body {
   #footer {
     left: 50%;
     margin-left: -280px;
+  }
+}
+@media screen and (max-width: 320px) {
+  #downloadCon-new > img {
+    left: 10px;
+  }
+  #downloadCon-new .words {
+    margin-left: 61px;
+  }
+  #downloadCon-new #download {
+    width: 74px;
+    height: 30px;
+    margin-top: -13px;
+    font-size: 13px;
+    right: 10px;
+    line-height: 30px;
   }
 }
 @font-face {

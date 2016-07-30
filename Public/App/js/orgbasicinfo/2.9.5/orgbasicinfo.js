@@ -38,6 +38,11 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             }
         });
 
+        /*优惠券点击*/
+        $(document).on(eventName,'.coupon-box li',function(){
+            window.location.href='http://www.hisihi.com/download.php';
+        });
+
 
         $(document).on(eventName,'.t-video-box li',$.proxy(this,'showTeachingVideo'));
 
@@ -55,10 +60,12 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
         $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
 
+        //显示预约报名框
+        $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+        //预约
         $(document).on(eventName,'.sing-in', $.proxy(this,'showSingInModal'));
 
-        $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
-
+        //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
 
     }
@@ -231,8 +238,12 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         var list=data.list,
             len=list.length,
             str='',coupon;
+
         for(var i=0;i<5;i++){
             coupon=list[i];
+            if(coupon.is_out_of_date){
+                continue;
+            }
             str+='<li>'+
                     '<div class="coupon-header">￥'+coupon.money+'</div>'+
                     '<div class="coupon-bottom">'+
@@ -240,7 +251,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '</div>'+
                  '</li>'
         }
-        $('.coupon-box ul').html(str);
+        $('.coupon-box').show().find('ul').html(str);
     };
 
 

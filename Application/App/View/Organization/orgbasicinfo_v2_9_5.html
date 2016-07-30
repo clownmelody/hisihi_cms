@@ -14,6 +14,7 @@
     <title>{$organization_name}</title>
 </head>
 <body>
+
     <div id="wrapper" data-oid="{$organization_id}">
         <!--基本信息-->
         <div class="logo-box">
@@ -209,8 +210,10 @@
 
     <div id="footer">
         <div class="collection">
-            <i></i>
-            <span>收藏</span>
+            <a href="http://www.hisihi.com/download.php">
+                <i></i>
+                <span>收藏</span>
+            </a>
         </div>
         <div class="contact">
             <a href="#">
@@ -253,14 +256,16 @@
     <div class="modal sing-in-modal">
         <div class="sing-in-box">
             <div class="sing-in-header"><label>预约试听</label><div class="close-sing-in">×</div></div>
-            <div class="sing-in-item">
-                <input type="text" placeholder="输入手机号码" id="phone-num">
-            </div>
-            <div class="sing-in-item">
-                <input type="text" placeholder="输入姓名" id="user-name">
-            </div>
-            <p class="tips">课程顾问将在15分钟之内联系您</p>
-            <div class="sing-in-btn">确定预约</div>
+            <form action="#">
+                <div class="sing-in-item">
+                    <input type="text" placeholder="输入手机号码" id="phone-num">
+                </div>
+                <div class="sing-in-item">
+                    <input type="text" placeholder="输入姓名" id="user-name">
+                </div>
+                <p class="tips">课程顾问将在15分钟之内联系您</p>
+                <div class="sing-in-btn">确定预约</div>
+            </form>
         </div>
     </div>
 
