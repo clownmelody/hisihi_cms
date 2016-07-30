@@ -2,7 +2,7 @@
  * Created by jimmy on 2015/12/28.
  */
 
-define(['base','mysilder','scale'],function(Base,Myslider){
+define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     function OrgBasicInfo($wrapper,oid,url) {
         this.$wrapper = $wrapper;
@@ -39,12 +39,12 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         });
 
         /*优惠券点击*/
-        $(document).on(eventName,'.coupon-box li',function(){
+        $(document).on(eventName,'.coupon-box li, .t-video-box li',function(){
             window.location.href='http://www.hisihi.com/download.php';
         });
 
 
-        $(document).on(eventName,'.t-video-box li',$.proxy(this,'showTeachingVideo'));
+        //$(document).on(eventName,'.t-video-box li',$.proxy(this,'showTeachingVideo'));
 
         //关闭视频
         $(document).on(eventName,'.video-modal', function(){
@@ -90,6 +90,9 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         $('#wrapper,#footer').show();
         this.controlLoadingBox(false);
         this.initVideoPlayer();
+        $('.lazy-img').picLazyLoad($(window),{
+            threshold:150
+        });
     };
 
     /*播放器控制*/
@@ -157,9 +160,9 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         this.setCertInfo(data.authenticationInfo);
 
         // 粉丝和观看人数
-        var $people=$box.find('.user-number-box label');
-        $people.eq(0).text(data.view_count);
-        $people.eq(1).text(data.followCount);
+        var $people=$box.find('.user-number-box label')
+        $people.eq(0).text(this.translationCount(data.view_count));
+        $people.eq(1).text(this.translationCount(data.followCount));
 
         //基本信息
         if(data.introduce){
@@ -180,6 +183,25 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
         //电话号码
         $('.contact a').attr('href','tel:'+data.phone_num);
+    };
+
+    /*数值大于9999时，转换成万*/
+    t.translationCount=function(num){
+        num=parseInt(num);
+        if(num>9999){
+            num= (num/10000);
+            if(num%10000!=0){
+                num=num.toString();
+                var len=num.length,index=num.indexOf('.');
+                num=num.substr(0,index+2);
+                var arr=num.split('.');
+                if(arr[1]==0){
+                    num=arr[0];
+                }
+            }
+            num+='w';
+        }
+        return num;
     };
 
     //认证信息
@@ -416,7 +438,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             str+='<li class="li-img" data-id="'+data[i].id+'">'+
                     '<div class="img-box">'+
                         '<div class="img-main-box">'+
-                            '<img src="'+data[i].url+'">'+
+                            '<img class="lazy-img" data-original="'+data[i].url+'">'+
                         '</div>'+
                     '</div>'+
                 '</li>';
@@ -448,7 +470,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             item.video_img = item.video_img || item.img;
             //item.video_url = 'http://91.16.0.7/video/14/output.m3u8';
             str+= '<li data-url="' + item.video_url + '" style='+style+'>' +
-                '<img src="' + item.video_img + '">' +
+                '<img class="lazy-img" data-original="' + item.video_img + '">' +
                 '<span class="p-btn"><i class="icon-play"></i></span>' +
                 '</li>';
         }
@@ -863,16 +885,18 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
     t.showSingInModal=function(){
         $('.sing-in-modal').addClass('show');
+        if($('.sing-in-item input').eq(0).val()){
+            $('.sing-in-btn').addClass('active');
+        }
         $('html,body').addClass('ovfHidden');
     };
 
     t.singInBtnControl=function(e){
         var $target=$('.sing-in-item input'),
             txt1=$target.eq(0).val().trim(),
-            txt2=$target.eq(1).val().trim(),
             $btn=$('.sing-in-btn'),
             nc='active';
-        if(txt1 && txt2){
+        if(txt1){
             $btn.addClass(nc);
         }else{
             $btn.removeClass(nc);
@@ -890,25 +914,29 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             this.showTips('请正确输入手机号码');
             return;
         }
-        if(!name){
-            this.showTips('请输入姓名');
-            return;
-        }
+        this.controlLoadingBox(true);
         this.getDataAsync({
-            url: this.baseUrl + 'yuyue',
-            paraData: {organization_id: this.oid,mobile:number,username:name},
+            url: this.baseUrl + 'yuyue/organization_id/'+this.oid+'/mobile/'+number+'/username/'+name,
+            //paraData:JSON.stringify({organization_id: this.oid,mobile:number,username:name}),
             sCallback: function(result){
+                that.controlLoadingBox(false);
                 if(result.success){
                     $('.sing-in-modal .tips').css('opacity', '1');
+                    that.showTips('预约成功');
                 }else{
                     that.showTips('预约失败');
                 }
+
             },
-            eCallback:function(txt){
-                that.showTips('预约失败');
+            eCallback:function(resutl){
+                that.controlLoadingBox(false);
+                var txt='预约失败';
+                if(resutl.code==-2){
+                    txt='不能重复预约';
+                }
+                that.showTips(txt);
             },
-            type:'post',
-            async:this.async
+            type:'get'
         });
     };
 

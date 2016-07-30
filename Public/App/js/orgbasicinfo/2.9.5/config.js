@@ -7,6 +7,7 @@ requirejs.config({
         $:'../sharecommon/zepto.min',
         fx:'../sharecommon/fx_v1.1',
         prefixfree:'../sharecommon/prefixfree.min',
+        async:'../sharecommon/async.min',
         base:'../sharecommon/base-1.1',
         fastclick:'../sharecommon/fastclick',
         lazyloading:'../sharecommon/lazyloading',
@@ -19,6 +20,9 @@ requirejs.config({
     shim: {
         $:{
             output:'$'
+        },
+        async:{
+            output:'async'
         },
         prefixfree:{
             output:'prefixfree'
