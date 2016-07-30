@@ -811,6 +811,7 @@ body {
 }
 .comments-box {
   overflow-x: hidden;
+  margin-bottom: 65px;
 }
 .comments-box .star-item {
   display: inline-block;
@@ -826,6 +827,9 @@ body {
 }
 .comments-box .star-item.none {
   background-position: -203px -50px;
+}
+.comments-box .star-item:last-child {
+  margin-right: 0;
 }
 .comments-box .comment-box-stars .basic-header .left-item {
   float: left;
@@ -851,6 +855,9 @@ body {
 }
 .comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i.none {
   background-position: -203px -50px;
+}
+.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i:last-child {
+  margin-right: 0;
 }
 .comments-box .comment-box-stars .basic-header .right-item {
   float: right;
@@ -886,6 +893,13 @@ body {
 .comments-box .comment-box-stars .assessmentDetail li .stars-block i.none {
   background-position: -203px -50px;
 }
+.comments-box .comment-box-stars .assessmentDetail li .stars-block i:last-child {
+  margin-right: 0;
+}
+.comments-box .comment-box-words .basic-header {
+  border-top: 1px solid #f3f3f3;
+  width: 110%;
+}
 .comments-box .comment-box-words .input-box {
   display: block;
   width: 100%;
@@ -896,7 +910,7 @@ body {
   color: #808080;
   font-size: 14px;
   box-sizing: border-box;
-  padding: 8px;
+  padding: 4px 8px;
 }
 .comments-box .comment-box-words .studentCommentDetail {
   margin-top: 13px;
@@ -929,8 +943,6 @@ body {
 }
 .comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem {
   float: right;
-  margin-right: 5px;
-  padding-top: 3px;
 }
 .comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i {
   display: inline-block;
@@ -947,23 +959,90 @@ body {
 .comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i.none {
   background-position: -203px -50px;
 }
+.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i:last-child {
+  margin-right: 0;
+}
 .comments-box .comment-box-words .studentCommentDetail li .commentCon .content {
-  padding: 8px 20px 5px 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 20;
+  padding: 2px 0px 2px 0;
   font-size: 13px;
   color: #212121;
+  margin: 0;
+  line-height: 22px;
 }
 .comments-box .comment-box-words .studentCommentDetail li .commentCon .publicTime {
   height: 20px;
   color: #bdbdbd;
   font-size: 12px;
   margin-bottom: 6px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #F3F3F3;
   width: 104%;
+}
+#footer {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  border-top: 1px solid #ccc;
+}
+#footer > div {
+  line-height: 50px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  height: 100%;
+}
+#footer > div i {
+  display: inline-block;
+  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
+  background-size: 306px 65px;
+  width: 23px;
+  height: 23px;
+}
+#footer > div span {
+  display: inline-block;
+  vertical-align: 5px;
+  color: #212121;
+  font-size: 12px;
+}
+#footer > div.collection {
+  width: 25%;
+  background-color: #fafafa;
+}
+#footer > div.collection i {
+  background-position: -166px -1px;
+}
+#footer > div.contact {
+  width: 25%;
+  background-color: #fafafa;
+  margin-left: -5px;
+}
+#footer > div.contact i {
+  background-position: -166px -29px;
+}
+#footer > div.contact a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+#footer > div.sing-in {
+  margin-left: -5px;
+  width: 50%;
+  font-size: 15px;
+  color: #fff;
+  line-height: 50px;
+  background-color: #212121;
 }
 /*视频*/
 .modal {
   position: fixed;
-  z-index: 8889;
+  z-index: 1000;
   top: 0;
   left: 0;
   bottom: 0;
@@ -1064,6 +1143,76 @@ body {
   color: #fff;
   font-size: 12px;
 }
+.sing-in-modal .sing-in-box {
+  width: 100%;
+  height: 350px;
+  background-color: #fff;
+  display: block;
+}
+.sing-in-modal .sing-in-box .sing-in-header {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  color: #212121;
+  font-size: 18px;
+  line-height: 50px;
+  text-align: center;
+}
+.sing-in-modal .sing-in-box .sing-in-header .close-sing-in {
+  position: absolute;
+  right: 0;
+  top: -10px;
+  padding: 8px;
+  font-size: 25px;
+  width: 40px;
+  height: 50px;
+}
+.sing-in-modal .sing-in-box .sing-in-item {
+  height: 50px;
+  margin: 14px 12px;
+}
+.sing-in-modal .sing-in-box .sing-in-item input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid rgba(204, 204, 204, 0.5);
+  border-radius: 4px;
+  color: #212121;
+  font-size: 14px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+}
+.sing-in-modal .sing-in-box .tips {
+  margin: 0 0 14px;
+  text-align: center;
+  color: #808080;
+  font-size: 12px;
+  opacity: 0;
+}
+.sing-in-modal .sing-in-box .sing-in-btn {
+  height: 50px;
+  margin: 14px 12px;
+  color: #fff;
+  background-color: #212121;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  opacity: 0.5;
+}
+.sing-in-modal .sing-in-box .sing-in-btn input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid rgba(204, 204, 204, 0.5);
+  border-radius: 4px;
+  color: #212121;
+  font-size: 14px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+}
+.sing-in-modal .sing-in-box .sing-in-btn.active {
+  opacity: 1;
+}
 /*图片查看列表*/
 .slider-container {
   min-height: 135px;
@@ -1138,10 +1287,15 @@ body {
 /*��Ӧʽ��ʽ*/
 @media screen and (min-width: 750px) {
   #wrapper,
-  #downloadCon {
+  #downloadCon-new,
+  #footer {
     width: 560px;
-    height: auto;
     margin: 0 auto;
+  }
+  #downloadCon-new,
+  #footer {
+    left: 50%;
+    margin-left: -280px;
   }
 }
 @font-face {

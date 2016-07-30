@@ -15,6 +15,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.perPageSize=10;
+        this.pageIndex=1;
         this.async=false;  //同步加载所有的数据
         this.controlLoadingBox(true);
         window.setTimeout(function(){
@@ -22,9 +23,13 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         },100);
 
 
+        //相册、视频信息查看
         $(document).on(eventName,'.pics-preview-box li',$.proxy(this,'showPicsAndVideoDetailInfo'));
+
+        //学生作品信息查看
         $(document).on(eventName,'.works-preview-box li',$.proxy(this,'showWorksPicsDetailInfo'));
 
+        //关闭相册信息
         $(document).on(eventName,'.view-pics-box', function(){
             event.stopPropagation();
             if(event.target==this){
@@ -33,8 +38,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             }
         });
 
-        $(document).on('click','.t-video-box li',$.proxy(this,'showTeachingVideo'));
 
+        $(document).on(eventName,'.t-video-box li',$.proxy(this,'showTeachingVideo'));
+
+        //关闭视频
         $(document).on(eventName,'.video-modal', function(){
             event.stopPropagation();
             if(event.target==this){
@@ -44,6 +51,15 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             }
         });
 
+        $(window).on('scroll',$.proxy(this,'scrollContainer'));
+
+        $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
+
+        $(document).on(eventName,'.sing-in', $.proxy(this,'showSingInModal'));
+
+        $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+
+        $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
 
     }
 
@@ -62,9 +78,9 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         this.loadWorksInfo();
         this.loadGroupsInfo();
         this.loadMyCompresAsseinfo();
-        this.loadDetailCommentInfo();
+        this.loadDetailCommentInfo(1);
 
-        $('#wrapper').show();
+        $('#wrapper,#footer').show();
         this.controlLoadingBox(false);
         this.initVideoPlayer();
     };
@@ -154,6 +170,9 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             }
             $('.my-tags').html(str).parent().show();
         }
+
+        //电话号码
+        $('.contact a').attr('href','tel:'+data.phone_num);
     };
 
     //认证信息
@@ -683,9 +702,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         var str='',
             that=this,
             item,
-            $target=this.$wrapper.find('.mainItemCompresAsse'),
-            $basicHeader=$target.find('.basicHeader'),
-            $li=$target.find('.assessmentDetail li');
+            $li=$('.assessmentDetail li');
 
         /*添加星星*/
         var strStar= this.getStarInfoByScore(result.comprehensiveScore);
@@ -697,12 +714,9 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             item=data[i];
             $li.each(function(){
                 var $this=$(this),
-                    result=that.getColorBlockInfoByScore(item.score);
+                    result=that.getStarInfoByScore(item.score);
                 if($this.find('.title').text()==item.value){
-                    $this.find('.score').text(item.score);
-                    $this.find('.fillIn').addClass(result.cName)
-                        .css('width',result.width+'%')
-                        .next().css('width',100-result.width+'%');
+                    $this.find('.stars-block').html(result);
                     return false;
                 }
             });
@@ -711,8 +725,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
     /*加载我的评论信息*/
     t.loadDetailCommentInfo=function(pageIndex,callback){
-        var that=this,
-            $target=that.$wrapper.find('.studentCommentCon');
+        var that=this;
         this.getDataAsync({
             url: this.baseUrl + 'commentList',
             paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize},
@@ -743,7 +756,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         for (var i = 0; i < len; i++) {
             item = data[i];
             userInfo = item.userInfo;
-            dateTime = this.getDiffTime(new Date(item.create_time * 1000),true);   //得到发表时间距现在的时间差
+            dateTime = this.getDiffTime(item.create_time,true);   //得到发表时间距现在的时间差
+            if(dateTime.indexOf('-')>=0){
+                dateTime=dateTime.split(' ')[0];
+            }
             str += '<li>' +
                 '<div class="imgCon">' +
                     '<div><img src="' + userInfo.avatar128 + '"/></div>' +
@@ -753,87 +769,39 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                 '<span class="commentNickname">' + userInfo.nickname + '</span>' +
                 '<span class="rightItem starsCon">' +
                 this.getStarInfoByScore(item.comprehensive_score | 0) +
-                '<div style="clear: both;"></div>' +
                 '</span>' +
                 '</div>' +
-                '<div class="content">' + item.comment + '</div>' +
-                '<div class="publicTime">发表于' + dateTime + '</div>' +
+                '<p class="content">' + item.comment + '</p>' +
+                '<div class="publicTime">' + dateTime + '</div>' +
                 '</div>' +
                 '</li>';
         }
         $('.studentCommentDetail').append(str);
     };
 
+    /*
+     *滚动加载更多的数据
+     * 通过滚动条是否在底部来确定
+     * 同时通过 loadingData 类 来防止连续快速滚动导致的重复加载
+     */
+    t.scrollContainer=function(){
+        var $target= $('body'),
+            height = $target[0].scrollHeight -$(window).height(),
+            scrollTop=$target.scrollTop();
+        //加载更加多评论内容
+        if (scrollTop >= height -320 && !$target.hasClass('loading')) {  //滚动到底部
+            var tempIndex=this.pageIndex+1;
+            if(tempIndex>this.pageSize){
+                return;
+            }
+            $target.addClass('loading');
+            this.loadDetailCommentInfo(tempIndex,function(){
+                $target.removeClass('loading');
+                this.pageIndex++;
+            });
+        }
+    };
 
-    //
-    //    /*
-    //     *滚动加载更多的数据
-    //     * 通过滚动条是否在底部来确定
-    //     * 同时通过 loadingData 类 来防止连续快速滚动导致的重复加载
-    //     */
-    //    scrollContainer:function(e){
-    //        var target= e.currentTarget,
-    //            height = target.scrollHeight - $(target).height(),
-    //            scrollTop=$(target).scrollTop(),
-    //            arrScrollTop=[300,550];
-    //
-    //        //加载我的老师
-    //        var $targetTeacher=this.$wrapper.find('.mainItemTeacherPower'),
-    //            $targetCompress=this.$wrapper.find('.mainItemCompresAsse');
-    //
-    //        //如果是 300 到500 之间，并且 没有加载过，也 不在加载过程中，则加载新数据
-    //        if(scrollTop>=arrScrollTop[0] &&
-    //            scrollTop<arrScrollTop[1] &&
-    //            $targetTeacher.attr('data-loading')=='false' &&
-    //            $targetTeacher.attr('data-loaded')=='false'){
-    //            var flag=$targetTeacher.attr('data-loaded');
-    //            $targetTeacher.attr('data-loading','true');
-    //            if(flag=='false') {
-    //                this.loadMyTeachersInfo(function(){
-    //                    $targetTeacher.attr({'data-loaded':'true','data-loading':'false'});
-    //                });
-    //                this.loadMyVideoInfo(function(){
-    //                    $targetTeacher.prev().find('.videoCon').attr({'data-loaded':'true','data-loading':'false'});
-    //                });
-    //            }
-    //            return;
-    //        }
-    //
-    //        //加载我的评分
-    //        //如果 大于 500 ，并且 没有加载过，也 不在加载过程中，则加载新数据
-    //        if(scrollTop>=arrScrollTop[1] &&
-    //            $targetCompress.attr('data-loading')=='false' &&
-    //            $targetCompress.attr('data-loaded')=='false'){
-    //            var flag=$targetCompress.attr('data-loaded');
-    //            $targetCompress.attr('data-loading','true');
-    //            if('false'==flag) {
-    //                this.loadMyCompresAsseinfo(function(){
-    //                    $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
-    //                });
-    //
-    //                //加载评论内容
-    //                this.loadDetailCommentInfo(this.pageIndex,function(){
-    //                    $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
-    //                    this.pageIndex++;
-    //                });
-    //            }
-    //            return;
-    //        }
-    //
-    //        //加载更加多评论内容
-    //        //if ($(target).scrollTop() >= height -120 && $targetCompress.attr('data-loading')=='false') {  //滚动到底部
-    //        //    if(this.pageIndex>this.pageSize){
-    //        //        return;
-    //        //    }
-    //        //    $targetCompress.attr('data-loading','true');
-    //        //    this.loadDetailCommentInfo(this.pageIndex,function(){
-    //        //        $targetCompress.attr({'data-loaded':'true','data-loading':'false'});
-    //        //        this.pageIndex++;
-    //        //    });
-    //        //}
-    //    },
-
-    //
     /*根据分数情况，得到星星的信息*/
     t.getStarInfoByScore=function(num){
         if(num.toString().indexOf('.')>0){
@@ -882,99 +850,63 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
     };
 
-    //    /*
-    //     *根据客户端的时间信息得到发表评论的时间格式
-    //     *多少分钟前，多少小时前，然后是昨天，然后再是月日
-    //     */
-    //    getDiffTime: function (recordTime) {
-    //        if (recordTime) {
-    //            var minute = 1000 * 60;
-    //            var hour = minute * 60;
-    //            var day = hour * 24;
-    //            var diff = new Date() - recordTime;
-    //            var result = '';
-    //            if (diff < 0) {
-    //                return result;
-    //            }
-    //            var weekR = diff / (7 * day);
-    //            var dayC = diff / day;
-    //            var hourC = diff / hour;
-    //            var minC = diff / minute;
-    //            if (weekR >= 1) {
-    //                result = recordTime.getFullYear() + '.' + (recordTime.getMonth() + 1) + '.' + recordTime.getDate();
-    //                return result;
-    //            }
-    //            else if (dayC >= 1) {
-    //                result = parseInt(dayC) + '天前';
-    //                return result;
-    //            }
-    //            else if (hourC >= 1) {
-    //                result = parseInt(hourC) + '小时前';
-    //                return result;
-    //            }
-    //            else if (minC >= 1) {
-    //                result = parseInt(minC) + '分钟前';
-    //                return result;
-    //            } else {
-    //                result = '刚刚';
-    //                return result;
-    //            }
-    //        }
-    //        return '';
-    //    },
-    //
-    //
-    //    /*拓展滚动*/
-    //    extendJqueryForScroll:function(){
-    //        var that=this;
-    //        $.extend($.fn, {
-    //            Scroll:function(opt,callback){
-    //                //参数初始化
-    //                if(!opt) var opt={};
-    //                var timerID;
-    //
-    //                var _this=this.eq(0).find("ul"),
-    //                    $li=_this.find("li"),
-    //                    lineH=$li.eq(0).height(), //获取行高
-    //                    line=opt.line?parseInt(opt.line,10):parseInt(this.height()/lineH,10), //每次滚动的行数，默认为一屏<a href="http://www.codesky.net" class="hden">源码天空</a>，即父容器高度
-    //                    speed=opt.speed?parseInt(opt.speed,10):500, //卷动速度，数值越大，速度越慢（毫秒）
-    //                    timer=opt.timer; //?parseInt(opt.timer,10):3000; //滚动的时间间隔（毫秒）
-    //
-    //                if(line==0) line=1;
-    //                var upHeight=0-line*lineH;
-    //                //滚动函数
-    //                var scrollUp=function(){
-    //                    var style={
-    //                        'margin-top':upHeight,
-    //                    };
-    //                    if(that.deviceType.android){
-    //                         style={
-    //                            'margin-top':upHeight,
-    //                            '-webkit-transform':'translate3d(0,0,0)',
-    //                            '-moz-transform':'translate3d(0,0,0)'
-    //                        };
-    //                    }
-    //                    _this.animate(
-    //                        style,
-    //                        500,'ease-out',
-    //                        function(){
-    //                            for(var i=1;i<=line;i++){
-    //                                _this.find("li").eq(0).appendTo(_this);
-    //                            }
-    //                            _this.css({marginTop:0});
-    //                        }
-    //                    );
-    //                }
-    //
-    //                //Shawphy:自动播放
-    //                var autoPlay = function(){
-    //                    if(timer)timerID = window.setInterval(scrollUp,timer);
-    //                };
-    //                autoPlay();
-    //            }
-    //        })
-    //    },
-    //};
+    t.showSingInModal=function(){
+        $('.sing-in-modal').addClass('show');
+        $('html,body').addClass('ovfHidden');
+    };
+
+    t.singInBtnControl=function(e){
+        var $target=$('.sing-in-item input'),
+            txt1=$target.eq(0).val().trim(),
+            txt2=$target.eq(1).val().trim(),
+            $btn=$('.sing-in-btn'),
+            nc='active';
+        if(txt1 && txt2){
+            $btn.addClass(nc);
+        }else{
+            $btn.removeClass(nc);
+        }
+    };
+
+    //预约报名
+    t.singIn=function() {
+        var $input = $target=$('.sing-in-item input'),
+            that=this,
+            number = $input.eq(0).val().trim(),
+            name = $input.eq(1).val().trim(),
+            reg=/^1\d{10}$/;
+        if (!reg.test(number)) {
+            this.showTips('请正确输入手机号码');
+            return;
+        }
+        if(!name){
+            this.showTips('请输入姓名');
+            return;
+        }
+        this.getDataAsync({
+            url: this.baseUrl + 'yuyue',
+            paraData: {organization_id: this.oid,mobile:number,username:name},
+            sCallback: function(result){
+                if(result.success){
+                    $('.sing-in-modal .tips').css('opacity', '1');
+                }else{
+                    that.showTips('预约失败');
+                }
+            },
+            eCallback:function(txt){
+                that.showTips('预约失败');
+            },
+            type:'post',
+            async:this.async
+        });
+    };
+
+    //取消预约
+    t.closeSingInBox=function(){
+        $('.sing-in-modal').removeClass('show');
+        $('html,body').removeClass('ovfHidden');
+    };
+
 
     return OrgBasicInfo;
 });
