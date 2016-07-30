@@ -192,7 +192,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             num= (num/10000);
             if(num%10000!=0){
                 num=num.toString();
-                var len=num.length,index=num.indexOf('.');
+                var index=num.indexOf('.');
                 num=num.substr(0,index+2);
                 var arr=num.split('.');
                 if(arr[1]==0){

@@ -94,6 +94,9 @@ ul li {
   height: 95%;
   margin: 0 auto;
 }
+#work-detail-panel #detail-main .touchSlider.app {
+  margin: 2.5% auto;
+}
 #work-detail-panel #detail-main .touchSlider ul {
   height: 100%;
   white-space: nowrap;
@@ -136,7 +139,7 @@ ul li {
   width: 100%;
   height: 15px;
   position: absolute;
-  bottom: 8px;
+  bottom: 20px;
   text-align: center;
 }
 #work-detail-panel #detail-main #currentPage ul {
@@ -157,14 +160,17 @@ ul li {
   background-color: white;
 }
 #work-detail-panel .detail-bottom-btns {
-  width: 100%;
-  height: 80px;
+  display: none;
   margin: 0 auto;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.7);
   position: absolute;
   bottom: 0;
 }
-#work-detail-panel .detail-bottom-btns .color-block {
+#work-detail-panel .detail-bottom-btns.share-page-btns {
+  width: 100%;
+  height: 80px;
+}
+#work-detail-panel .detail-bottom-btns.share-page-btns .color-block {
   width: 185px;
   height: 45px;
   margin: 20px auto;
@@ -172,23 +178,76 @@ ul li {
   border-radius: 5px;
   background-clip: padding-box;
 }
-#work-detail-panel .detail-bottom-btns .color-block.down {
+#work-detail-panel .detail-bottom-btns.share-page-btns .color-block.down {
   background-color: #FF8638;
 }
-#work-detail-panel .detail-bottom-btns .color-block span {
+#work-detail-panel .detail-bottom-btns.share-page-btns .color-block span {
   color: white;
   font-size: 28px;
   display: inline-block;
   float: left;
 }
-#work-detail-panel .detail-bottom-btns .color-block span:first-child {
+#work-detail-panel .detail-bottom-btns.share-page-btns .color-block span:first-child {
   margin-left: 30px;
   line-height: 45px;
 }
-#work-detail-panel .detail-bottom-btns .color-block span.label {
+#work-detail-panel .detail-bottom-btns.share-page-btns .color-block span.label {
   font-size: 18px;
   margin-left: 6px;
   line-height: 50px;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns {
+  width: 100%;
+  height: 95px;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns > div {
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item {
+  float: left;
+  width: 30%;
+  text-align: center;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item .btn {
+  width: 53px;
+  height: 73px;
+  margin: 14px auto;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item .btn .color-block {
+  width: 53px;
+  height: 53px;
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 5px;
+  background-clip: padding-box;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item .btn .color-block.down {
+  background-color: #FF8638;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item .btn .color-block.link {
+  margin: 0 3%;
+  background-color: #039be5;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item .btn .color-block.share {
+  margin: 0 3%;
+  background-color: #23a438;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item .btn .color-block span {
+  color: white;
+  font-size: 26px;
+  display: inline-block;
+  line-height: 53px;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item .btn .label {
+  margin-top: 5px;
+  font-size: 13px;
+  color: #838383;
+}
+#work-detail-panel .detail-bottom-btns.web-page-btns .item:nth-child(2) {
+  margin-left: 3%;
+  margin-right: 3%;
 }
 /*模态窗口*/
 .model-box {
@@ -356,6 +415,7 @@ ul li {
 }
 /*下载条*/
 #downloadCon {
+  display: none;
   width: 100%;
   height: atuo;
   position: absolute;
