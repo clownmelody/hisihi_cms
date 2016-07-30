@@ -4487,12 +4487,16 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
      */
     public function yuyue($mobile=null, $username=null, $organization_id=0,
                           $course_id=0, $education=null, $major=null){
-        $this->requireLogin();
+        //$this->requireLogin();
         $uid = $this->getUid();
         if(empty($mobile)){
             $this->apiError(-1, "手机号不能为空");
         }
-        $data['uid'] = $uid;
+        if($uid==0){
+            $data['uid'] = $mobile;
+        } else {
+            $data['uid'] = $uid;
+        }
         $data['mobile'] = $mobile;
         $data['username'] = $username;
         $data['education'] = $education;
@@ -4523,7 +4527,7 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         } else {
             $data['send_sms_time'] = 0;
         }
-        if($this->isYuyue($uid, $organization_id, $course_id)){
+        if($this->isYuyue($data['uid'], $organization_id, $course_id)){
             $this->apiError(-2, '已经预约过');
         }
         M('OrganizationYuyue')->add($data);
@@ -4540,12 +4544,16 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
      */
     public function baokao($mobile=null, $username=null, $university_id=0,
                            $education='', $major=''){
-        $this->requireLogin();
+        //$this->requireLogin();
         $uid = $this->getUid();
         if(empty($mobile)||empty($university_id)){
             $this->apiError(-1, "大学id和手机号不能为空");
         }
-        $data['uid'] = $uid;
+        if($uid==0){
+            $data['uid'] = $mobile;
+        } else {
+            $data['uid'] = $uid;
+        }
         $data['mobile'] = $mobile;
         $data['username'] = $username;
         $data['education'] = $education;
@@ -4565,7 +4573,7 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         } else {
             $data['send_sms_time'] = 0;
         }
-        if($this->isBaokao($uid, $university_id)){
+        if($this->isBaokao($data['uid'], $university_id)){
             $this->apiError(-2, '已经报考过');
         }
         M('OrganizationYuyue')->add($data);
