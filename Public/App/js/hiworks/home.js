@@ -1,6 +1,7 @@
 /**
  * Created by jimmy on 2016/4/18.
  * version-2.7
+ * version-2.9 修改 下拉刷新和上拉加载更多的样式，添加滑动 可以查看其他相册功能
  */
 define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
     var HiWorks = function (url,baseId) {
@@ -48,7 +49,9 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         $(document).on(eventName,'#do-search', $.proxy(this,'doSearchByKeyWord'));
 
         //源作业详细信息查询
-        $(document).on('tap','.lists-ul li',$.proxy(this,'viewWorksDetailInfo'));
+        $(document).on('tap','.lists-ul li',function(){
+            that.viewWorksDetailInfo($(this));
+        });
 
         //返回到列表
         $(document).on(eventName,'#back-to-list',$.proxy(this,'backToList'));
@@ -271,7 +274,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
     t.switchTabs=function(e){
         var $target=$(e.currentTarget),
             index=$target.index();
-        this.scrollNavTabs($target);
+        //this.scrollNavTabs($target);
         //情况3
         if($target.hasClass('active')){
             return;
@@ -615,8 +618,16 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
 
     /*******************作业详细信息查看**********************/
 
-    t.viewWorksDetailInfo=function(e){
-        var $target=$(e.currentTarget);
+    t.viewWorksDetailInfo=function($target){
+        //添加selected 类名，方便查找
+
+        $('.lists-ul li.selected').removeClass('selected');
+        $target.addClass('selected')
+            .parents('.wrapper').addClass('selected')
+            .siblings().removeClass('selected');
+
+
+
         this.currentWorksObj=JSON.parse($target.attr('data-json').replace(/'/g,'"'));  //当前选中的作业信息
 
         var title=this.substrLongStr(this.currentWorksObj.title,12);
@@ -656,8 +667,13 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
             this.t4.destroy();
         }
         this.t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
-        this.t4.on('before', function (m, n) {
-            $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
+        this.t4.on('before', function (m, n,type) {
+            //已经查看完本相册，查看其他相册
+            if(m==n){
+                that.viewAnotherWorks(type);
+            }else {
+                $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
+            }
         });
         if(!flag) {
             $('#currentPage ul li').on('click', function (e) {
@@ -708,6 +724,71 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
 
         //初始滑动
         this.initTouchSlider();
+    };
+
+    /*查看其他的作业*/
+    t.viewAnotherWorks=function(type){
+        var obj = this.getNextOrPrevHiworkObj(type),
+            flag=false,
+            that=this,
+            timeOut=1500;
+
+        //下一个
+        if(type=='left'){
+            if(!obj){
+                return;
+            }
+            this.showTips('正在加载下一素材…',timeOut);
+            flag=true;
+        }
+        //上一个
+        else{
+            if(!obj){
+                return;
+            }
+            this.showTips('正在加载上一素材…',timeOut);
+            flag=true;
+        }
+        if(flag){
+            this.controlLoadingBox(true);
+            window.setTimeout(function(){
+                that.controlLoadingBox(false);
+                that.viewWorksDetailInfo(obj);  //加载内容
+            },timeOut);
+
+        }
+    };
+
+
+    /*得到上一个或者下一个源作业id*/
+    t.getNextOrPrevHiworkObj=function(type){
+        var $wrapper=$('.wrapper.selected'),
+            $li=$wrapper.find('.selected');
+        if(type=='left'){
+            var $nl=$li.next();
+            if($nl[0].nodeName=='DIV'){
+                var $pnext=$nl.parent().next();
+                if($pnext.length!=0){
+                    var $newLi=$pnext.find('li');
+                    $nl=$newLi.eq(0);
+                }else{
+                    $nl=null;
+                }
+            }
+            return $nl;
+        }
+
+        var $pl=$li.prev();
+        if($pl.length==0){
+            var $pprev=$pl.parent().prev();
+            if($pprev.length!=0){
+                var $newLi=$pprev.find('li');
+                $pl=$newLi.eq($newLi.length-1);
+            }else{
+                $pl=null;
+            }
+        }
+        return $pl;
     };
 
 
