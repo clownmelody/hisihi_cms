@@ -11,7 +11,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         this.oid=oid;
         var eventName='click',that=this;
         if(this.isLocal){
-            //eventName='touchend';
+            eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.perPageSize=10;
@@ -35,6 +35,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             if(event.target==this){
                 $('.modal').removeClass('show');
                 $('html,body').removeClass('ovfHidden');
+
             }
         });
 
@@ -93,6 +94,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         $('.lazy-img').picLazyLoad($(window),{
             threshold:150
         });
+
     };
 
     /*播放器控制*/
@@ -125,8 +127,8 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
                 paraData:{organization_id:this.oid,version:2.95},
                 sCallback: $.proxy(this,'fillInBasicInfoData'),
                 eCallback:function(){
-                    //$target.css('opacity',1);
-                    //$target.find('.loadErrorCon').show();
+                    //电话号码
+                    $('.contact a').attr('href','javacript:void(0)').css('opacity','0.3');
                 },
                 type:'get',
                 async:this.async
@@ -139,6 +141,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     /*显示具体信息*/
     t.fillInBasicInfoData=function(result){
+        $('.logo-box').show();
         var data=result.data, url=data.logo;
         if(this.deviceType.android){
             url=window.hisihiUrlObj.image+'/orgbasicinfo/blur.jpg';
@@ -889,6 +892,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             $('.sing-in-btn').addClass('active');
         }
         $('html,body').addClass('ovfHidden');
+        //$('.sing-in-modal')[0].addEventListener('touchmove', forbiddenScroll, false);
     };
 
     t.singInBtnControl=function(e){
@@ -944,8 +948,9 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     t.closeSingInBox=function(){
         $('.sing-in-modal').removeClass('show');
         $('html,body').removeClass('ovfHidden');
+        //document.body.removeEventListener('touchmove',forbiddenScroll);
     };
-
+    
 
     return OrgBasicInfo;
 });

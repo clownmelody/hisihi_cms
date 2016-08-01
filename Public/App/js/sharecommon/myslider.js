@@ -2,7 +2,7 @@
  * Created by jimmy on 16/7/15.
  */
 
-define(['touch','toucher'],function(){
+define(['toucher'],function(){
     var MySlider=function($wrapper,htmlArr,setting){
         if(!$wrapper || !htmlArr){
             return;

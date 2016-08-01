@@ -13,7 +13,7 @@ requirejs.config({
         lazyloading:'../sharecommon/lazyloading',
         scale:'../hiworks/scale',
         toucher:'2.9.5/toucher',
-        touch:'../sharecommon/zepto.event.touch',
+        //touch:'../sharecommon/zepto.event.touch',
         mysilder:'../sharecommon/myslider',
         home:'2.9.5/orgbasicinfo',
     },

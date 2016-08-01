@@ -85,14 +85,16 @@ body{
   vertical-align: top;
   margin-right: @ml;
   .img-box {
-    display: table;
+    //display: table;
     .size(100%,100%);
     .img-main-box {
-      display: table-cell;
-      vertical-align: middle;
-      text-align: center;
+      //display: table-cell;
+      //vertical-align: middle;
+      //text-align: center;
+      .size(100%,100%);
       img {
-        max-width: 100%;
+        //max-width: 100%;
+        .size(100%,100%);
       }
     }
   }
@@ -116,6 +118,7 @@ body{
 }
 
 .logo-box{
+  display: none;
   .size(100%,150px);
   position: relative;
   padding-top: 45px;
@@ -864,7 +867,7 @@ body{
     }
     .sing-in-item{
       height: 50px;
-      margin:14px 12px;
+      margin:7px 12px;
       input{
         .size(100%,40px);
         border:1px solid rgba(204,204,204,.5);
@@ -876,7 +879,7 @@ body{
       }
     }
     .tips{
-      margin: 0 0 14px;
+      margin: 0 0 8px;
       text-align: center;
       color: #808080;
       font-size: 12px;
@@ -1010,9 +1013,7 @@ body{
         height: 40px;
       }
       .sing-in-item{
-        margin: 8px 12px;
         height: 42px;
-
       }
       .tips{
         margin: 0 0 5px 0;
