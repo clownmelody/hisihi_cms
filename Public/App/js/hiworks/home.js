@@ -14,7 +14,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
 
         var eventName='click',that=this;
         if(this.isLocal){
-            //eventName='touchend';
+            eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.baseHiworkListUrl=this.baseUrl.replace('api.php','hiworks_list.php');
@@ -843,7 +843,6 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                 var info= window.getShareInfo();
                 AppFunction.share(info);//调用app的方法，得到用户的基体信息
             }
-
         }
         else if(this.deviceType.ios){
             //如果方法存在
@@ -931,7 +930,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         var workObj=window.hiworks.currentWorksObj;
         var obj={
             tile: workObj.title.trim(),
-            url:workObj.baseUrl+'/Hiworks/hiworks_share/hiword_id/'+workObj.id,
+            url: window.hiworks.baseUrl+'/Hiworks/hiworks_share/hiword_id/'+workObj.id,
             thumb: workObj.pic_url.trim(),
             description:'我在嘿设汇发现了⼀一个很棒的作业源⽂文件，居然可以直接下载'
         };

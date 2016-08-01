@@ -49,6 +49,12 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
 
         this.controlCoverFootStyle();  //控制下载条样式
 
+        /*禁用浏览器的左右滑动翻页功能*/
+        var control = navigator.control || {};
+        if (control.gesture) {
+            control.gesture(false);
+        }
+
     };
     HiWorks.prototype =new Base(true);
     HiWorks.constructor=HiWorks;
@@ -67,7 +73,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
         var para = {
             url: this.baseHiworkListUrl+'/index/getHiworkDetailById',
             type: 'get',
-            paraData: {hiwork_id:this.baseId},
+            paraData: {hiwork_id:this.baseId,version:2.95},
             sCallback: function (result) {
                 that.controlLoadingBox(false);
                 if(!result.success){
@@ -112,41 +118,40 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             nh=h-80;
         }
         $('#detail-main').height(nh).css('opacity','1');
-        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true}),
-            that=this;
+
+        if(this.t4){
+            this.t4.destroy();
+        }
+        this.t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
+        var that=this;
+
+        this.t4.on('before', function (m, n,type) {
+            //已经查看完本相册，查看其他相册
+            if(m==n){
+                that.viewAnotherWorks(type);
+            }else {
+                $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
+            }
+        });
+
         if(!flag) {
-            t4.on('before', function (m, n) {
-
-                //已经查看完本相册，查看其他相册
-                if(m==n){
-                    that.viewAnotherWorks();
-                }else {
-                    $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
-                }
-
-
-                if(n==$('#currentPage ul li').length-1){
-                    that.showTips('over');
-                }
-            });
             $('#currentPage ul li').on('touchend', function (e) {
                 var index = $(this).index();
-                t4.slide(index);
-
-
+                that.t4.slide(index);
             });
             $('#slider4').attr('data-init','true');
         }
     };
 
     /*查看其他的作业*/
-    t.viewAnotherWorks=function(n){
+    t.viewAnotherWorks=function(type){
         //下一个
-        if(n){
+        if(type=='left'){
             if(!this.nextHiWorksId){
                 return;
             }
             this.baseId=this.nextHiWorksId;
+            this.showTips('正在加载下一素材…');
         }
          //上一个
          else{
@@ -154,6 +159,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                 return;
             }
             this.baseId=this.prevHiWorksId;
+            this.showTips('正在加载上一素材…');
         }
         this.viewWorksDetailInfo();  //加载内容
     };
