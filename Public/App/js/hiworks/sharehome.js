@@ -45,7 +45,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             window.location.href = "http://www.hisihi.com/download.php";
         });
 
-        this.viewWorksDetailInfo();  //加载内容
+        this.viewWorksDetailInfo(this.baseId);  //加载内容
 
         this.controlCoverFootStyle();  //控制下载条样式
 
@@ -56,8 +56,11 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
     var t=HiWorks.prototype;
 
 
-    /*******************作业详细信息查看**********************/
+    /*****************************************/
 
+    /*
+    * 作业详细信息查看
+    */
     t.viewWorksDetailInfo=function(){
         this.controlLoadingBox(true);
         var that=this;
@@ -75,8 +78,9 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
 
                 that.setTitle(data.title);  //标题设置
 
+
                 that.nextHiWorksId=data.next_hiwork_id;
-                that.prevHiWorksId=data.prev_hiwork_id;
+                that.prevHiWorksId=data.pre_hiwork_id;
 
                 var covers=data.multi_cover_info,
                     flag=true;
@@ -115,7 +119,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
 
                 //已经查看完本相册，查看其他相册
                 if(m==n){
-
+                    that.viewAnotherWorks();
                 }else {
                     $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
                 }
@@ -137,12 +141,21 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
 
     /*查看其他的作业*/
     t.viewAnotherWorks=function(n){
-        if(n==0){
-            //上一个
-        }else{
-
-            //下一个
+        //下一个
+        if(n){
+            if(!this.nextHiWorksId){
+                return;
+            }
+            this.baseId=this.nextHiWorksId;
         }
+         //上一个
+         else{
+            if(!this.prevHiWorksId){
+                return;
+            }
+            this.baseId=this.prevHiWorksId;
+        }
+        this.viewWorksDetailInfo();  //加载内容
     };
 
     /*
