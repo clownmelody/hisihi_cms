@@ -100,6 +100,9 @@ ul{
     .touchSlider {
       .size(90%, 95%);
       margin: 0 auto;
+      &.app{
+        margin: 2.5% auto;
+      }
       ul {
         height: 100%;
         white-space: nowrap;
@@ -142,7 +145,7 @@ ul{
     #currentPage{
       .size(100%,15px);
       position: absolute;
-      bottom: 8px;
+      bottom: 20px;
       text-align: center;
       ul{
         margin: 0 auto;
@@ -163,34 +166,86 @@ ul{
     }
   }
   .detail-bottom-btns{
-    .size(100%,@bottom);
+    display: none;
     margin: 0 auto;
-    background-color: white;
+    background-color: rgba(255,255,255,.7);
     position: absolute;
     bottom: 0;
-    @h:45px;
-    .color-block {
-      .size(185px,@h);
-      margin: 20px auto;
-      text-align: center;
-      .border-radius(5px);
-      &.down {
-        background-color: #FF8638;
-      }
-      span {
-        color: white;
-        font-size: 28px;
-        display: inline-block;
-
-        float: left;
-        &:first-child{
-          margin-left: 30px;
-          line-height: @h;
+    &.share-page-btns {
+      .size(100%,@bottom);
+      @h:45px;
+      .color-block {
+        .size(185px, @h);
+        margin: 20px auto;
+        text-align: center;
+        .border-radius(5px);
+        &.down {
+          background-color: #FF8638;
         }
-        &.label{
-          font-size: 18px;
-          margin-left: 6px;
-          line-height: @h+5;
+        span {
+          color: white;
+          font-size: 28px;
+          display: inline-block;
+
+          float: left;
+          &:first-child {
+            margin-left: 30px;
+            line-height: @h;
+          }
+          &.label {
+            font-size: 18px;
+            margin-left: 6px;
+            line-height: @h+5;
+          }
+        }
+      }
+    }
+    &.web-page-btns{
+      .size(100%,95px);
+      @width:53px;
+      >div{
+        .size(90%,100%);
+        margin: 0 auto;
+      }
+      .item{
+        float: left;
+        width: 30%;
+        text-align: center;
+        .btn {
+          .size(@width, @width+20);
+          margin: 14px auto;
+          .color-block {
+            .size(@width, @width);
+            margin: 0 auto;
+            text-align: center;
+            .border-radius(5px);
+            &.down {
+              background-color: #FF8638;
+            }
+            &.link {
+              margin: 0 3%;
+              background-color: #039BE5
+            }
+            &.share {
+              margin: 0 3%;
+              background-color: #23A438
+            }
+            span {
+              color: white;
+              font-size: 26px;
+              display: inline-block;
+              line-height: @width;
+            }
+          }
+          .label{
+            margin-top: 5px;
+            font-size: 13px;
+            color: #838383;
+          }
+        }
+        &:nth-child(2){
+          margin-left:3%;
+          margin-right: 3%;
         }
       }
     }
@@ -376,6 +431,7 @@ ul{
 
 /*下载条*/
 #downloadCon {
+  display: none;
   .size(100%,atuo);
   position: absolute;
   z-index: 1000;
