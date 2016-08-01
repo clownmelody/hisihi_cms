@@ -950,7 +950,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         $('html,body').removeClass('ovfHidden');
         //document.body.removeEventListener('touchmove',forbiddenScroll);
     };
-    
+
 
     return OrgBasicInfo;
 });

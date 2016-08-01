@@ -34,7 +34,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
         //取消绑定
         $(document).on(eventName,'#cancle-bind',$.proxy(this,'hideBindEmail'));
 
-        //下载、复制、分享
+        //下载
         $(document).on(eventName,'.share-page-btns .btn',$.proxy(this,'doOperationForWorkShare'));
 
         //下载、复制、分享
@@ -45,7 +45,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             window.location.href = "http://www.hisihi.com/download.php";
         });
 
-        this.viewWorksDetailInfo();  //加载图片
+        this.viewWorksDetailInfo();  //加载内容
 
         this.controlCoverFootStyle();  //控制下载条样式
 
@@ -73,8 +73,11 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                 var data=result.data;
                 that.currentWorksObj=data;
 
-                var title=that.substrLongStr(data.title,12);
-                $('#detail-title').text(title);
+                that.setTitle(data.title);  //标题设置
+
+                that.nextHiWorksId=data.next_hiwork_id;
+                that.prevHiWorksId=data.prev_hiwork_id;
+
                 var covers=data.multi_cover_info,
                     flag=true;
                 if(!covers || covers.count==0){
@@ -105,21 +108,40 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             nh=h-80;
         }
         $('#detail-main').height(nh).css('opacity','1');
-        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
+        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true}),
+            that=this;
         if(!flag) {
             t4.on('before', function (m, n) {
-                $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
+
+                //已经查看完本相册，查看其他相册
+                if(m==n){
+
+                }else {
+                    $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
+                }
+
+
+                if(n==$('#currentPage ul li').length-1){
+                    that.showTips('over');
+                }
             });
             $('#currentPage ul li').on('touchend', function (e) {
                 var index = $(this).index();
                 t4.slide(index);
 
-                //下一个相册
-                if(index==$('#currentPage ul li').length-1){
 
-                }
             });
             $('#slider4').attr('data-init','true');
+        }
+    };
+
+    /*查看其他的作业*/
+    t.viewAnotherWorks=function(n){
+        if(n==0){
+            //上一个
+        }else{
+
+            //下一个
         }
     };
 
@@ -357,6 +379,26 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                 beginShare();//调用app的方法，得到用户的基体信息
             }
         }
+    };
+
+    /*设置页面的标题，
+    * 针对ios在页面生成后，js 不能修改的情况
+    */
+    t.setTitle=function(title){
+        if(this.deviceType.ios) {
+            var $body = $('body');
+            document.title = title;
+
+            // hack在微信等webview中无法修改document.title的情况
+            var $iframe = $('<iframe src="/favicon.ico"></iframe>').on('load', function () {
+                setTimeout(function () {
+                    $iframe.off('load').remove()
+                }, 0)
+            }).appendTo($body);
+        }else{
+            $('title').text(title);
+        }
+
     };
 
     return HiWorks;
