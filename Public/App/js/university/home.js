@@ -204,6 +204,7 @@ define(['base'],function(Base){
                 '</div></div>';
     };
 
+
     //大学相册
     t.getAlbumStr=function(result){
         '<div class="main-item album">+' +
@@ -211,7 +212,8 @@ define(['base'],function(Base){
             '<span class="center-content">相册</span>'+
             '</div>'+
             '<div class="album">' +
-                '<p>'+result.overseas_study/university/1/photos/page+'</p>'+
+                '<p>'+item,result+'</p>'+
+            //此处需要添加相册列表数据
             '</div>'+
         '</div>';
     }

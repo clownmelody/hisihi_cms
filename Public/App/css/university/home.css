@@ -355,13 +355,6 @@ body .main-item.environment .content-txt p {
   margin-top: 0;
   font-size: 14px;
 }
-body .main-item.album {
-  height: 40px;
-  border: 10px solid #000000;
-}
-body .main-item.album .center-content {
-  font-family: 20px;
-}
 body .nodata {
   position: fixed;
   width: 108px;

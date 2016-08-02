@@ -908,5 +908,13 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     };
 
 
+    //字符串截取
+    //t.substrLongStr: function (str, len) {
+    //    if (str.length > len) {
+    //        str = str.substr(0, parseInt(len - 1)) + '……';
+    //    }
+    //    return str;
+    //};
+
     return OrgBasicInfo;
 });
