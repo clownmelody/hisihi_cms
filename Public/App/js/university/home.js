@@ -50,6 +50,7 @@ define(['base'],function(Base){
             strMajor=this.getMajorInfoStr(result),
             strEn=this.getInEnvironmentStr(result),
             strAlb=this.getAlbumStr(result);
+        console.log(strAlb);
         var str=strBasic+
             strNums+
             strMajor+
@@ -193,6 +194,7 @@ define(['base'],function(Base){
                     '<div class="head-txt">'+
                     '<div class="center-content">学校环境</div>'+
                     '</div>'+
+
                     '<div class="content-txt center-content">'+
                     '<p>'+
                         result.school_environment+
@@ -207,17 +209,17 @@ define(['base'],function(Base){
 
     //大学相册
     t.getAlbumStr=function(result){
-        '<div class="main-item album">+' +
+        var str='<div class="main-item album">'+
             '<div class="head-txt border-bottom">'+
-            '<span class="center-content">相册</span>'+
+            '<span class="center-content album-name">相册</span>'+
             '</div>'+
             '<div class="album">' +
-                '<p>'+item,result+'</p>'+
+                '<p>'+result.text+'</p>'+
             //此处需要添加相册列表数据
             '</div>'+
         '</div>';
+        $('.album').html(str);
+        return str;
     }
-
-
     return University;
 });
