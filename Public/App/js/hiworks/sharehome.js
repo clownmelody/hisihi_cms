@@ -13,6 +13,13 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
+        var $bottom=$('.detail-bottom-btns');
+        if(this.isFromApp){
+            $bottom.eq(1).show();
+            $('.touchSlider').addClass('app');
+        }else{
+            $bottom.eq(0).add($('#downloadCon')).show();
+        }
         this.baseHiworkListUrl=this.baseUrl.replace('api.php','hiworks_list.php');
         $(document).on(eventName,'.btn',function(){
             event.stopPropagation();
@@ -27,16 +34,26 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
         //取消绑定
         $(document).on(eventName,'#cancle-bind',$.proxy(this,'hideBindEmail'));
 
+        //下载
+        $(document).on(eventName,'.share-page-btns .btn',$.proxy(this,'doOperationForWorkShare'));
+
         //下载、复制、分享
-        $(document).on(eventName,'.detail-bottom-btns .btn',$.proxy(this,'doOperationForWork'));
+        $(document).on(eventName,'.web-page-btns .item',$.proxy(this,'doOperationForWork'));
+
 
         $('#downloadCon .btnElement').on(eventName,function(){
             window.location.href = "http://www.hisihi.com/download.php";
         });
 
-        this.viewWorksDetailInfo();  //加载图片
+        this.viewWorksDetailInfo(this.baseId);  //加载内容
 
         this.controlCoverFootStyle();  //控制下载条样式
+
+        /*禁用浏览器的左右滑动翻页功能*/
+        var control = navigator.control || {};
+        if (control.gesture) {
+            control.gesture(false);
+        }
 
     };
     HiWorks.prototype =new Base(true);
@@ -45,15 +62,18 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
     var t=HiWorks.prototype;
 
 
-    /*******************作业详细信息查看**********************/
+    /*****************************************/
 
+    /*
+    * 作业详细信息查看
+    */
     t.viewWorksDetailInfo=function(){
         this.controlLoadingBox(true);
         var that=this;
         var para = {
             url: this.baseHiworkListUrl+'/index/getHiworkDetailById',
             type: 'get',
-            paraData: {hiwork_id:this.baseId},
+            paraData: {hiwork_id:this.baseId,version:2.95},
             sCallback: function (result) {
                 that.controlLoadingBox(false);
                 if(!result.success){
@@ -62,8 +82,12 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                 var data=result.data;
                 that.currentWorksObj=data;
 
-                var title=that.substrLongStr(data.title,12);
-                $('#detail-title').text(title);
+                that.setTitle(data.title);  //标题设置
+
+
+                that.nextHiWorksId=data.next_hiwork_id;
+                that.prevHiWorksId=data.pre_hiwork_id;
+
                 var covers=data.multi_cover_info,
                     flag=true;
                 if(!covers || covers.count==0){
@@ -88,19 +112,56 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
     /*滑动图片*/
     t.initTouchSlider=function(){
         var h=$('body').height(),
-            flag=$('#slider4').attr('data-init');
-        $('#detail-main').height(h-135).css('opacity','1');
-        var t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
-        if(!flag) {
-            t4.on('before', function (m, n) {
+            flag=$('#slider4').attr('data-init'),
+            nh=h-135;
+        if(this.isFromApp){
+            nh=h-80;
+        }
+        $('#detail-main').height(nh).css('opacity','1');
+
+        if(this.t4){
+            this.t4.destroy();
+        }
+        this.t4=new TouchSlider('slider4',{speed:1000, direction:0, interval:60*60*1000, fullsize:true});
+        var that=this;
+
+        this.t4.on('before', function (m, n,type) {
+            //已经查看完本相册，查看其他相册
+            if(m==n){
+                that.viewAnotherWorks(type);
+            }else {
                 $('#currentPage ul li').eq(n).addClass('active').siblings().removeClass('active');
-            });
+            }
+        });
+
+        if(!flag) {
             $('#currentPage ul li').on('touchend', function (e) {
                 var index = $(this).index();
-                t4.slide(index);
+                that.t4.slide(index);
             });
             $('#slider4').attr('data-init','true');
         }
+    };
+
+    /*查看其他的作业*/
+    t.viewAnotherWorks=function(type){
+        //下一个
+        if(type=='left'){
+            if(!this.nextHiWorksId){
+                return;
+            }
+            this.baseId=this.nextHiWorksId;
+            this.showTips('正在加载下一素材…');
+        }
+         //上一个
+         else{
+            if(!this.prevHiWorksId){
+                return;
+            }
+            this.baseId=this.prevHiWorksId;
+            this.showTips('正在加载上一素材…');
+        }
+        this.viewWorksDetailInfo();  //加载内容
     };
 
     /*
@@ -153,8 +214,8 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
         }
     };
 
-    /*下载、分享、复制*/
-    t.doOperationForWork=function(e){
+    /*share 下载*/
+    t.doOperationForWorkShare=function(e){
         var $target=$(e.currentTarget),
             index=$target.index(),
             that=this;
@@ -168,6 +229,32 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                 $('#do-bind').addClass('abled btn');
             }
         });
+    };
+
+    /*下载、分享、复制*/
+    t.doOperationForWork=function(e){
+        var $target=$(e.currentTarget),
+            index=$target.index(),that=this;
+
+        //下载
+        if(index==0){
+            this.controlModelBox(1,0,function(){
+                //如果本地存储有邮箱信息，直接加载
+                var email=that.getInfoFromStorage('myemail');
+                if(email){
+                    $('#email').val(email);
+                    $('#do-bind').addClass('abled btn');
+                }
+            });
+        }
+        //复制链接
+        else if(index==1){
+            this.copyLink();
+        }
+        //分享
+        else{
+            this.execShare();
+        }
     };
 
     //确定邮箱
@@ -276,6 +363,61 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
      */
     window.showFullImg=function(index){
         window.hiworks.showFullImg(index);
+    };
+
+
+    /*复制链接*/
+    t.copyLink=function(){
+        var link=window.getClipboradInfo();  //获得要粘贴的信息
+        if (this.deviceType.android) {
+            if (typeof AppFunction != "undefined" && typeof AppFunction.setClipboardInfo != "undefined") {
+                AppFunction.setClipboardInfo(link);//调用app的方法，调用系统粘贴板
+            }
+
+        }
+        else if(this.deviceType.ios){
+            //如果方法存在
+            if (typeof setClipboardInfo != "undefined") {
+                setClipboardInfo('getClipboradInfo()');//调用app的方法，调用系统粘贴板
+            }
+        }
+        this.showTips('链接已经复制到粘贴板');
+    };
+
+    /*分享文章*/
+    t.execShare=function(){
+        if (this.deviceType.android) {
+            if (typeof AppFunction.share != "undefined") {
+                var info= window.getShareInfo();
+                AppFunction.share(info);//调用app的方法，得到用户的基体信息
+            }
+        }
+        else if(this.deviceType.ios){
+            //如果方法存在
+            if (typeof beginShare != "undefined") {
+                beginShare();//调用app的方法，得到用户的基体信息
+            }
+        }
+    };
+
+    /*设置页面的标题，
+    * 针对ios在页面生成后，js 不能修改的情况
+    */
+    t.setTitle=function(title){
+        if(this.deviceType.ios) {
+            var $body = $('body');
+            document.title = title;
+
+            // hack在微信等webview中无法修改document.title的情况
+            var $iframe = $('<iframe src="/favicon.ico"></iframe>').on('load', function () {
+                setTimeout(function () {
+                    $iframe.off('load').remove()
+                }, 0)
+            }).appendTo($body);
+        }else{
+            $('title').text(title);
+        }
+
     };
 
     return HiWorks;

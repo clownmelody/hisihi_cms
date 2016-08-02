@@ -1,5 +1,4 @@
 * {
-  -webkit-user-select: none;
   /*禁用手机浏览器的用户选择功能 */
   -moz-user-select: none;
   font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
@@ -50,25 +49,26 @@ ul li {
 }
 .result-tips {
   position: fixed;
-  width: 200px;
-  height: auto;
-  min-height: 50px;
-  background: rgba(51, 51, 51, 0.85);
-  margin-left: -100px;
-  margin-top: -35px;
   top: 40%;
   left: 50%;
   z-index: 1001;
+  width: 200px;
+  height: auto;
+  min-height: 40px;
+  background: rgba(51, 51, 51, 0.85);
+  margin-left: -100px;
+  margin-top: -35px;
   border-radius: 3px;
   background-clip: padding-box;
   color: #fff;
   text-align: center;
   display: none;
 }
-.result-tips .result-tips p {
+.result-tips p {
   color: white;
   font-size: 15px;
   text-align: center;
+  margin: 10px 0;
 }
 #loading-data {
   position: fixed;
@@ -78,7 +78,7 @@ ul li {
   margin-top: -50px;
   top: 50%;
   left: 50%;
-  z-index: 555;
+  z-index: 5555;
   text-align: center;
   display: none;
 }
@@ -272,11 +272,11 @@ body {
   width: 42px;
   height: 42px;
   position: absolute;
-  left: 20px;
+  left: 12px;
   top: 9px;
 }
 #downloadCon-new .words {
-  margin-left: 71px;
+  margin-left: 63px;
   padding-top: 9px;
   color: white;
 }
@@ -344,6 +344,7 @@ body {
   filter: blur(20px);
 }
 .logo-box {
+  display: none;
   width: 100%;
   height: 150px;
   position: relative;
@@ -642,17 +643,16 @@ body {
   position: relative;
 }
 .basic-info-box .pics-box .pics-preview-box ul li .img-box {
-  display: table;
   width: 100%;
   height: 100%;
 }
 .basic-info-box .pics-box .pics-preview-box ul li .img-box .img-main-box {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
+  width: 100%;
+  height: 100%;
 }
 .basic-info-box .pics-box .pics-preview-box ul li .img-box .img-main-box img {
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
 }
 .basic-info-box .pics-box .pics-preview-box ul li .p-btn {
   position: absolute;
@@ -762,17 +762,16 @@ body {
   margin-right: 5px;
 }
 .works-box .works-preview-box ul li .img-box {
-  display: table;
   width: 100%;
   height: 100%;
 }
 .works-box .works-preview-box ul li .img-box .img-main-box {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
+  width: 100%;
+  height: 100%;
 }
 .works-box .works-preview-box ul li .img-box .img-main-box img {
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
 }
 .groups-box {
   display: none;
@@ -989,6 +988,7 @@ body {
   width: 100%;
   height: 50px;
   border-top: 1px solid #ccc;
+  background-color: #212121;
 }
 #footer > div {
   line-height: 50px;
@@ -996,6 +996,12 @@ body {
   display: inline-block;
   vertical-align: top;
   height: 100%;
+}
+#footer > div a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
 }
 #footer > div i {
   display: inline-block;
@@ -1024,12 +1030,6 @@ body {
 }
 #footer > div.contact i {
   background-position: -166px -29px;
-}
-#footer > div.contact a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  text-decoration: none;
 }
 #footer > div.sing-in {
   margin-left: -5px;
@@ -1169,7 +1169,7 @@ body {
 }
 .sing-in-modal .sing-in-box .sing-in-item {
   height: 50px;
-  margin: 14px 12px;
+  margin: 7px 12px;
 }
 .sing-in-modal .sing-in-box .sing-in-item input {
   width: 100%;
@@ -1182,7 +1182,7 @@ body {
   box-sizing: border-box;
 }
 .sing-in-modal .sing-in-box .tips {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
   text-align: center;
   color: #808080;
   font-size: 12px;
@@ -1190,7 +1190,7 @@ body {
 }
 .sing-in-modal .sing-in-box .sing-in-btn {
   height: 50px;
-  margin: 14px 12px;
+  margin: 7px 12px;
   color: #fff;
   background-color: #212121;
   border-radius: 4px;
@@ -1296,6 +1296,36 @@ body {
   #footer {
     left: 50%;
     margin-left: -280px;
+  }
+}
+@media screen and (max-width: 320px) {
+  #downloadCon-new > img {
+    left: 10px;
+  }
+  #downloadCon-new .words {
+    margin-left: 61px;
+  }
+  #downloadCon-new #download {
+    width: 74px;
+    height: 30px;
+    margin-top: -13px;
+    font-size: 13px;
+    right: 10px;
+    line-height: 30px;
+  }
+  .sing-in-modal .sing-in-box .sing-in-header {
+    height: 40px;
+  }
+  .sing-in-modal .sing-in-box .sing-in-item {
+    height: 42px;
+  }
+  .sing-in-modal .sing-in-box .tips {
+    margin: 0 0 5px 0;
+  }
+  .sing-in-modal .sing-in-box .sing-in-btn {
+    height: 35px;
+    line-height: 35px;
+    margin: 2px 12px;
   }
 }
 @font-face {

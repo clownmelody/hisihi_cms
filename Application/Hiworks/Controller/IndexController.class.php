@@ -278,8 +278,9 @@ class IndexController extends HiworksController
     /**
      * 根据id获取作业详情
      * @param int $hiwork_id
+     * @param int $version
      */
-    public function getHiworkDetailById($hiwork_id=0){
+    public function getHiworkDetailById($hiwork_id=0, $version=0){
         $Document = M('Document');
         $doc_info = $Document->field('id, category_id, title, cover_id')->where('id='.$hiwork_id)->find();
         $detail = D('Document')->detail($doc_info['id']);
@@ -313,9 +314,46 @@ class IndexController extends HiworksController
         $doc_info['download_url'] = C('HOST_NAME_PREFIX').'/hiworks_list.php/file/downloadZip/key/'.$this->caesar_encode($doc_info['id'], 'hisihi_hiworks_downlaod');
         $doc_info['size'] = $this->conversion($detail['size']);
         $doc_info['download'] = $detail['download'];
+        if((float)$version>=2.95){
+            $doc_info['next_hiwork_id'] = $this->getNextHiworkId($hiwork_id);
+            $doc_info['pre_hiwork_id'] = $this->getPreHiworkId($hiwork_id);
+        }
         $this->apiSuccess('获取云作业详情成功', null, array('data'=>$doc_info));
 
     }
+
+    /**
+     * @param int $hiwork_id
+     * @return int
+     */
+    private function getNextHiworkId($hiwork_id=0){
+        $model = M();
+        $next_id = 0;
+        $result = $model->query("select document.id, document.title, document.category_id, document.cover_id, download.download from hisihi_document_download as download,
+                                  hisihi_document as document where download.id=document.id and document.id<".$hiwork_id." and document.cover_id!=0 and document.status=1
+                                  order by document.create_time desc limit 0,1");
+        foreach($result as $value){
+            $next_id = $value['id'];
+        }
+        return $next_id;
+    }
+
+    /**
+     * @param int $hiwork_id
+     * @return int
+     */
+    private function getPreHiworkId($hiwork_id=0){
+        $model = M();
+        $next_id = 0;
+        $result = $model->query("select document.id, document.title, document.category_id, document.cover_id, download.download from hisihi_document_download as download,
+                                  hisihi_document as document where download.id=document.id and document.id>".$hiwork_id." and document.cover_id!=0 and document.status=1
+                                  order by document.create_time limit 0,1");
+        foreach($result as $value){
+            $next_id = $value['id'];
+        }
+        return $next_id;
+    }
+
 
     /**
      * 根据关键词搜索云作业

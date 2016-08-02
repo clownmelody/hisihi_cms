@@ -22,11 +22,11 @@ body{
   > img {
     .size(42px, 42px);
     position: absolute;
-    left: 20px;
+    left: 12px;
     top: 9px;
   }
   .words{
-    margin-left: 71px;
+    margin-left: 63px;
     padding-top: 9px;
     color: white;
     .title{
@@ -85,14 +85,16 @@ body{
   vertical-align: top;
   margin-right: @ml;
   .img-box {
-    display: table;
+    //display: table;
     .size(100%,100%);
     .img-main-box {
-      display: table-cell;
-      vertical-align: middle;
-      text-align: center;
+      //display: table-cell;
+      //vertical-align: middle;
+      //text-align: center;
+      .size(100%,100%);
       img {
-        max-width: 100%;
+        //max-width: 100%;
+        .size(100%,100%);
       }
     }
   }
@@ -116,6 +118,7 @@ body{
 }
 
 .logo-box{
+  display: none;
   .size(100%,150px);
   position: relative;
   padding-top: 45px;
@@ -687,12 +690,18 @@ body{
   bottom: 0;
   .size(100%,50px);
   border-top: 1px solid #ccc;
+  background-color: #212121;
   >div{
     line-height: 50px;
     text-align: center;
     display: inline-block;
     vertical-align: top;
     height: 100%;
+    a{
+      display: block;
+      .size(100%,100%);
+      text-decoration: none;
+    }
     i{
       display:inline-block;
       .sprite-bg;
@@ -706,6 +715,7 @@ body{
     }
     &.collection{
       width: 25%;
+      //opacity: 0.5;
       background-color: #fafafa;
       i{
         background-position: -166px -1px;
@@ -717,11 +727,6 @@ body{
       margin-left: -5px;
       i{
         background-position: -166px -29px;
-      }
-      a{
-        display: block;
-        .size(100%,100%);
-        text-decoration: none;
       }
     }
     &.sing-in{
@@ -862,7 +867,7 @@ body{
     }
     .sing-in-item{
       height: 50px;
-      margin:14px 12px;
+      margin:7px 12px;
       input{
         .size(100%,40px);
         border:1px solid rgba(204,204,204,.5);
@@ -874,7 +879,7 @@ body{
       }
     }
     .tips{
-      margin: 0 0 14px;
+      margin: 0 0 8px;
       text-align: center;
       color: #808080;
       font-size: 12px;
@@ -987,7 +992,39 @@ body{
 
 }
 @media screen and (max-width: 320px) {
-
+  #downloadCon-new {
+    > img {
+      left: 10px;
+    }
+    .words {
+      margin-left: 61px;
+    }
+    #download {
+      .size(74px, 30px);
+      margin-top: -13px;
+      font-size: 13px;
+      right:10px;
+      line-height: 30px;
+    }
+  }
+  .sing-in-modal {
+    .sing-in-box {
+      .sing-in-header {
+        height: 40px;
+      }
+      .sing-in-item{
+        height: 42px;
+      }
+      .tips{
+        margin: 0 0 5px 0;
+      }
+      .sing-in-btn{
+        height: 35px;
+        line-height: 35px;
+        margin: 2px 12px;
+      }
+    }
+  }
 }
 
 

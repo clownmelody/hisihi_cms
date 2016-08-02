@@ -457,7 +457,9 @@
                 duration*=Math.min(1,Math.abs(tarPos-curPos)/curSize)||10;
                 this.current=index;
                 this.latestTime=stime+duration;
-                this.fire('before',current,index);
+                //添加一个滑动动方向标志
+                var dirType=tarPos-curPos>0?'left':'right';
+                this.fire('before',current,index,dirType);
                 this.end=function(){
                     delete self.timer;
                     self.fire('after',index,current);

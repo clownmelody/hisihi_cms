@@ -445,11 +445,13 @@ define(['$','fastclick'],function() {
          * 显示操作结果，防止出现在重复快速点击时，计时器混乱添加了  timeOutFlag  进行处理
          * @para:
          * tip - {string} 内容结果
+         * timeOut - {number} 显示时间
          */
-        showTips:function(tip){
+        showTips:function(tip,timeOut){
             if(this.timeOutFlag){
                 return;
             }
+            timeOut= timeOut || 1500;
             if(tip.indexOf('<')<0){
                 tip='<p>'+tip+'</p>';
             }
@@ -460,7 +462,7 @@ define(['$','fastclick'],function() {
             window.setTimeout(function(){
                 $tip.hide().html('');
                 that.timeOutFlag=false;
-            },1500);
+            },timeOut);
         },
 
         /*

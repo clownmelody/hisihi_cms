@@ -1,5 +1,4 @@
 * {
-  -webkit-user-select: none;
   /*禁用手机浏览器的用户选择功能 */
   -moz-user-select: none;
   font-family: "Microsoft Yahei", "Microsoft YaHei", "黑体", "宋体", sans-serif;
@@ -50,25 +49,26 @@ ul li {
 }
 .result-tips {
   position: fixed;
-  width: 200px;
-  height: auto;
-  min-height: 50px;
-  background: rgba(51, 51, 51, 0.85);
-  margin-left: -100px;
-  margin-top: -35px;
   top: 40%;
   left: 50%;
   z-index: 1001;
+  width: 200px;
+  height: auto;
+  min-height: 40px;
+  background: rgba(51, 51, 51, 0.85);
+  margin-left: -100px;
+  margin-top: -35px;
   border-radius: 3px;
   background-clip: padding-box;
   color: #fff;
   text-align: center;
   display: none;
 }
-.result-tips .result-tips p {
+.result-tips p {
   color: white;
   font-size: 15px;
   text-align: center;
+  margin: 10px 0;
 }
 #loading-data {
   position: fixed;
@@ -78,7 +78,7 @@ ul li {
   margin-top: -50px;
   top: 50%;
   left: 50%;
-  z-index: 555;
+  z-index: 5555;
   text-align: center;
   display: none;
 }
