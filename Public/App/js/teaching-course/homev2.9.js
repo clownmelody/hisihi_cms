@@ -13,7 +13,7 @@ define(['base','fastclick'],function(Base){
         }
         this.controlLoadingBox(true);
         this.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
-        this.getBasicInfo.call(that,function(result){;
+        this.getBasicInfo.call(that,function(result){
             that.getOrgBasicInfo.call(that,result,function(resultOrg){
                 that.getPromotionsInfo.call(that,result,resultOrg);
             });
@@ -162,17 +162,11 @@ define(['base','fastclick'],function(Base){
 
     //当前课程的详细信息显示
     t.fillInCourseInfo=function(result,orgResult,proResult){
-        var strBasic=this.getBasicIntroduceInfo(result),
-            strOrg=this.getOrgInfoStr(orgResult),
-            strCoupon=this.getCoupon(proResult),
-            strIntroduce=this.getIntroduceStr(result),
-            strSingIn=this.getSingInStr(result);
-        var str=strBasic+
-            strOrg+
-            strCoupon+
-            strIntroduce+
-            strSingIn;
-        $('#current-info').html(str);
+        this.getBasicIntroduceInfo(result);
+        this.getOrgInfoStr(orgResult);
+        this.getCoupon(proResult);
+        this.getIntroduceStr(result),
+        this.getSingInStr(result);
     };
 
     //更多课程信息列表显示
@@ -186,55 +180,59 @@ define(['base','fastclick'],function(Base){
 
     //课程简介
     t.getBasicIntroduceInfo=function(result){
-        return '<div class="main-item basic-info">'+
-            '<div class="center-content">'+
-            '<div class="head-txt" id="current-title">'+
-            result.course_name+
-            '</div>'+
-            '<div id="price" class="price">￥'+
-            result.price+
-            '</div>'+
-            '</div>'+
-            '</div>';
+        if(!result){
+            return;
+        }
+        var str = '<div class="center-content">'+
+                    '<div class="head-txt" id="current-title">'+
+                        result.course_name+
+                    '</div>'+
+                    '<div id="price" class="price">￥'+
+                        result.price+
+                    '</div>'+
+                '</div>';
+        $('.basic-info').html(str).show();
     };
 
     //机构信息
     t.getOrgInfoStr=function(data){
-        var name=data.name,logo=data.logo;
+        if(!data){
+            return;
+        }
+        var name=data.name,logo=data.logo,str='';
         name=this.substrLongStr(name,10);
         if(!logo){
             logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png'
         }
-        return '<div class="main-item org-basic-info">'+
-            '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
-            '<div class="center-content">'+
-            '<div class="left">'+
-            '<img class="group-logo" src="'+logo+'">'+
-            '<img class="v-cert" src="../images/orgbasicinfo/2.9.5/ic_v@3x.png">'+
-            '</div>'+
-            '<div class="right">'+
-            '<div class="org-name">'+
-            '<div class="name">'+name+'</div>'+
-            this.getCerImg(data.auth)+
-            '<div style="clear: both;"></div>'+
-            '</div>'+
-            '<ul class="nums-info">'+
-            '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>人查看</span></li>'+
-            '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>人关注</span></li>'+
-            '</ul>'+
-            '</div>'+
-            '</a>'+
-            '</div>'+
-            '</div>';
+        str = '<a href="hisihi://organization/detailinfo?id='+this.oid+'">'+
+                    '<div class="center-content">'+
+                        '<div class="left">'+
+                            '<img class="group-logo" src="'+logo+'">'+
+                            '<img class="v-cert" src="../images/orgbasicinfo/2.9.5/ic_v@3x.png">'+
+                        '</div>'+
+                        '<div class="right">'+
+                        '<div class="org-name">'+
+                            '<div class="name">'+name+'</div>'+
+                            this.getCerImg(data.auth)+
+                            '<div style="clear: both;"></div>'+
+                        '</div>'+
+                        '<ul class="nums-info">'+
+                            '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>人查看</span></li>'+
+                            '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>人关注</span></li>'+
+                        '</ul>'+
+                      '</div>'+
+                    '</div>'+
+                '</a>';
+        $('.org-basic-info').html(str).show();
     };
 
     /*优惠券*/
     t.getCoupon=function(result){
-        var str='';
         if(!result ||!result.data || result.data.length==0){
-            return str;
+            return;
         }
-        var data=result.data[0],
+        var str='',
+            data=result.data[0],
             couponInfo=data.coupon_info,
             strAndType=this.getCouponState(couponInfo);
         if(strAndType.type===false){
@@ -243,7 +241,7 @@ define(['base','fastclick'],function(Base){
         var startTime=this.getTimeFromTimestamp(couponInfo.start_time,'yyyy.MM.dd'),
             endTime=this.getTimeFromTimestamp(couponInfo.end_time,'yyyy.MM.dd'),
             className=strAndType.type;
-        return '<div class="main-item coupon-basic-info" data-id="'+couponInfo.id+'" data-oid="'+couponInfo.obtain_id+'">'+
+        str = '<div class="main-item coupon-basic-info" data-id="'+couponInfo.id+'" data-oid="'+couponInfo.obtain_id+'">'+
                    '<div class="center-content">'+
                     '<div class="coupon-middle">'+
                         '<div class="coupon-middle-all">'+
@@ -268,6 +266,8 @@ define(['base','fastclick'],function(Base){
                     '</div>'+
                 '</div>'+
             '</div>';
+        $('.org-basic-info').html(str).show()
+            .attr({'data-id':couponInfo.id,'data-oid':couponInfo.obtain_id});
     };
 
     /*通过优惠券的状态，得到相应的样式*/
@@ -416,6 +416,9 @@ define(['base','fastclick'],function(Base){
 
     //简介 和 安排信息
     t.getIntroduceStr=function(data){
+        if(!data){
+            return;
+        }
         var sTime='',
             sTime1= this.judgeInfoNullInfo(data.start_course_time),
             sTime2= this.judgeInfoNullInfo(data.end_course_time),
@@ -425,36 +428,35 @@ define(['base','fastclick'],function(Base){
         if(!sTime1 && !sTime2){
             sTime='';
         }
-        if(plan==''){
-            plan='<label class="no-result-data">暂无课程安排</label>';
+        if(''!=intro) {
+            var str1 = '<div class="center-content">' +
+                            '<div class="lessons-item">' +
+                                '<div class="head-txt">' +
+                                    '<label>课程简介</label>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="content-txt">' +
+                                '<p>' +
+                                    intro +
+                                '</p>' +
+                            '</div>' +
+                        '</div>';
+            $('.lessons-detail').html(str1).show();
         }
-        if(intro==''){
-            intro='<label class="no-result-data">暂无课程简介</label>';
+        if(''!=plan) {
+            var str2 = '<div class="center-content">' +
+                            '<div class="head-txt">' +
+                                '<label>课程安排</label>' +
+                            '</div>' +
+                            '<div class="content-txt">' +
+                                sTime +
+                                '<p>' +
+                                    plan +
+                                '</p>' +
+                            '</div>' +
+                        '</div>';
+            $('.lessons-plan').html(str2).show();
         }
-        return '<div class="main-item lessons-detail">'+
-            '<div class="lessons-item">'+
-            '<div class="head-txt">'+
-            '<div class="center-content">课程简介</div>'+
-            '</div>'+
-            '<div class="content-txt center-content">'+
-            '<p>'+
-            intro+
-            '</p>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-
-            '<div class="main-item lessons-detail">'+
-            '<div class="head-txt">'+
-            '<div class="center-content">课程安排</div>'+
-            '</div>'+
-            '<div class="content-txt center-content">'+
-                sTime+
-            '<p>'+
-                plan+
-            '</p>'+
-            '</div>'+
-            '</div>';
     };
 
     /*判断字段信息是否为空*/
@@ -471,18 +473,20 @@ define(['base','fastclick'],function(Base){
 
     //报名信息
     t.getSingInStr=function(result){
+        if(!result){
+            return;
+        }
         var enrollArr=result.data,
             str='';
         if(enrollArr) {
             var len = enrollArr.length;
             if(len==0){
-                return str;
+                return;
             }
-            str = '<div class="main-item lessons-singin">' +
-                '<div class="head-txt">' +
-                '<div class="center-content"><span class="singin-nums">'+len+'</span>人报名</div>' +
-                '</div>' +
-                '<ul class="center-content">';
+            str ='<div class="head-txt">' +
+                    '<div class="center-content"><span class="singin-nums">'+len+'</span>人报名</div>' +
+                    '</div>' +
+                    '<ul class="center-content">';
             for (var i = 0; i < len; i++) {
                 var avatar = enrollArr[i].avatar;
                 if(!avatar){
@@ -490,9 +494,10 @@ define(['base','fastclick'],function(Base){
                 }
                 str += '<li><a href="hisihi://user/detailinfo?uid='+enrollArr[i].uid+'"><img src="'+avatar+'"></a></li>';
             }
-            str += '</ul></div>';
+            str += '</ul>';
+            $('.lessons-sing-in').html(str).show();
         }
-        return str;
+
     };
 
 
