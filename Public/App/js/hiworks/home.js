@@ -206,19 +206,17 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
         var str='<div class="wrapper" style="width:'+w+'" id="'+this.listPrexName+i+'" data-pcount="0" data-pindex="1">'+
                     '<div class="scroller">'+
                         '<div class="pullDown">'+
-                            '<span class="pullDownIcon icon normal"></span>'+
-                            //'<div class="loader"><span></span><span></span><span></span><span></span></div>'+
-                            '<span class="pullDownLabel">下拉刷新</span>'+
+                            '<span class="font-icon icon-arrow-up"></span>'+
+                            '<span class="label-tips">下拉刷新</span>'+
                         '</div>'+
-                        '<div class="lists-ul">'+
-                        '</div>'+
+                            '<div class="lists-ul">'+
+                            '</div>'+
                         '<div class="pullUp">'+
-                            '<span class="pullUpIcon icon normal"></span>'+
-                            //'<div class="loader"><span></span><span></span><span></span><span></span></div>'+
-                            '<span class="pullUpLabel">上拉加载更多</span>'+
+                            '<span class="font-icon icon-arrow-down"></span>'+
+                            '<span class="label-tips">上拉加载更多</span>'+
                         '</div>'+
                     '</div>'+
-            '</div>';
+                '</div>';
         return str;
     };
 
