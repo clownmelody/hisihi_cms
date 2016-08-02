@@ -780,7 +780,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
 
         var $pl=$li.prev();
         if($pl.length==0){
-            var $pprev=$pl.parent().prev();
+            var $pprev=$li.parent().prev();
             if($pprev.length!=0){
                 var $newLi=$pprev.find('li');
                 $pl=$newLi.eq($newLi.length-1);
