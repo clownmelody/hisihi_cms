@@ -205,13 +205,13 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
     t.getScrollContent=function(i,w){
         var str='<div class="wrapper" style="width:'+w+'" id="'+this.listPrexName+i+'" data-pcount="0" data-pindex="1">'+
                     '<div class="scroller">'+
-                        '<div class="pullDown">'+
+                        '<div class="pull-down">'+
                             '<span class="font-icon icon-arrow-up"></span>'+
                             '<span class="label-tips">下拉刷新</span>'+
                         '</div>'+
                             '<div class="lists-ul">'+
                             '</div>'+
-                        '<div class="pullUp">'+
+                        '<div class="pull-up">'+
                             '<span class="font-icon icon-arrow-down"></span>'+
                             '<span class="label-tips">上拉加载更多</span>'+
                         '</div>'+

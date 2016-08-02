@@ -13,7 +13,7 @@ requirejs.config({
         touchslider:'hiworks/touchSlider-lib',
         scale:'hiworks/scale',
         base:'sharecommon/base-1.1',
-        myscroll:'hiworks/myscroll',
+        myscroll:'hiworks/myscroll-v2.0',
         home:'hiworks/home',
     },
     shim: {
