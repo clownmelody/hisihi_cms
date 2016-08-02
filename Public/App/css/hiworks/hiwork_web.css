@@ -326,7 +326,7 @@ ul li {
   width: 100%;
   display: none;
 }
-#main-content .scroller .pullDown {
+#main-content .scroller .pull-down {
   top: -20px;
   background-color: #fff;
   height: 40px;
@@ -340,7 +340,7 @@ ul li {
   width: 100%;
   display: none;
 }
-#main-content .scroller .pullUp {
+#main-content .scroller .pull-up {
   bottom: 30px;
   background-color: #fff;
   height: 40px;
