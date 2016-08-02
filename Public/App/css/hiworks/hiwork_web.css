@@ -403,6 +403,12 @@ ul li {
   bottom: 0;
   right: 0;
 }
+#main-content #search-result-panel .pull-down {
+  top: -40px;
+}
+#main-content #search-result-panel .pull-up {
+  bottom: 10px;
+}
 /*详情页面*/
 #work-detail-panel {
   display: none;
