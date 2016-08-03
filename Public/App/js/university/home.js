@@ -15,6 +15,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
         $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
 
+        $(document).on(eventName,'.album-name',function(){
+            window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
+        });
+
         //关闭相册信息
         $(document).on(eventName,'.view-pics-box', function(){
             event.stopPropagation();

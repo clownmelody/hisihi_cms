@@ -30,12 +30,11 @@ body{
 }
 .course-box{
   opacity: 0;
-  border-top: 1px solid #CCC;
   background-color: white;
   min-height: 90px;
   .header {
     height: 40px;
-    font-size: 16px;
+    font-size: 14px;
     color: #212121;
     border-bottom: 1px solid #CCC;
     padding-left: @padding-l;
@@ -44,9 +43,9 @@ body{
   }
   .list{
     li{
-      @w-l:120px;
+      @w-l:66px;
       @w-r:80px;
-      .size(auto,110px);
+      .size(auto,90px);
       border-bottom: 1px solid #ccc;
       //a{
       //  display: block;
@@ -54,7 +53,7 @@ body{
       //}
       .item-main{
         height: 100%;
-        margin: 5px @padding-r 5px @padding-l;
+        margin: 0px @padding-r 0@padding-l;
         >div{
           float: left;
           height: 100%;
@@ -64,44 +63,43 @@ body{
           height: 100%;
           .middle {
             height: 100%;
-            margin: 0 @w-r 0 @w-l+15;
+            margin: 0 @w-r 0 @w-l+16;
             p {
-              margin: 5px 0;
+              margin: 0px 0;
             }
             .title-info {
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
-              font-size: 17px;
-              height: 30px;
-              line-height: 35px;
-              color: #333333;
+              font-size: 14px;
+              color: #212121;
+              margin:12px 0 0 0;
             }
             .money-info {
               color: #FA4535;
               font-size: 20px;
               font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+              margin: 2px 0;
               .noprice{
                 font-size: 16px;
               }
             }
             .time-info {
               color: #8E8E8E;
+              font-size: 11px;
             }
           }
         }
         .left{
-          width:@w-l;
+          width:@w-l + 10px;
           margin-left: -100%;
           .img-box{
             .size(100%);
             margin: 0 auto;
             text-align: center;
-            //background: url('http://pic.hisihi.com/2016-06-02/1464833264193150.png') 0 0 no-repeat;
+            padding:12px 10px 12px 0;
             img {
-              //border:0;
-              .size(100%,85px);
-              margin:11px 20px 0 0;
+              .size(@w-l,@w-l);
             }
           }
         }
@@ -119,7 +117,7 @@ body{
               position: relative;
             }
             .coupon-money {
-              margin-top: 15px;
+              margin-top: 9px;
               span {
                 font-size: 20px;
                 &:first-child {
