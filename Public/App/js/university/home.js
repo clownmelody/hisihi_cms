@@ -251,7 +251,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '<img src="'+result.list[i].pic_url+'">'+
                 '</li>';
         }
-        strLi+=strLi;
+        //strLi+=strLi;
         strLi+='<div style="clear: both;"></div>';
         var str='<div class="main-item album">'+
             '<div class="head-txt border-bottom">'+
