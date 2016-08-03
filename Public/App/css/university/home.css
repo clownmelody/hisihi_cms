@@ -337,12 +337,12 @@ body .main-item.majors .majors-item ul li {
   color: #FF5A00;
   border-radius: 2px;
   background-clip: padding-box;
-  height: 32px;
-  line-height: 32px;
-  margin-bottom: 10px;
-  font-size: 14px;
+  height: 22px;
+  line-height: 22px;
+  margin-bottom: 12px;
+  font-size: 12px;
   margin-right: 12px;
-  padding: 0 15px;
+  padding: 0 10px;
   letter-spacing: 1px;
 }
 body .main-item.environment {
