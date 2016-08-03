@@ -257,6 +257,7 @@ p {
   line-height: 22px;
   box-sizing: border-box;
   font-size: 14px;
+  margin: 0 0 14px 0;
 }
 .center-info {
   padding-left: 14px;
