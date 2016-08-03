@@ -2306,11 +2306,16 @@ class OrganizationController extends AppController
     /**
      * 分享机构详情
      * @param int $organization_id
+     * @param null $version
      */
-    public function shareOrganization($organization_id=0){
+    public function shareOrganization($organization_id=0, $version=null){
         $result = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->find();
         if($result){
-            $extra['org_share_url'] = "api.php/Organization/OrganizationBasicInfo/organization_id/".$organization_id;
+            if((float)$version>=2.95){
+                $extra['org_share_url'] = "api.php/Organization/OrganizationBasicInfo_v2_9_5/organization_id/".$organization_id;
+            } else {
+                $extra['org_share_url'] = "api.php/Organization/OrganizationBasicInfo/organization_id/".$organization_id;
+            }
             $uid = $this->getUid();
             if($uid){
                 if($this->checkUserDoShareCache($uid)){
