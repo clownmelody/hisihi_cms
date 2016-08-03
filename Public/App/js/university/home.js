@@ -202,6 +202,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '</div>'+
                     '</div>'+
                 '</div>'+
+                '<div class="head-txt border-bottom">'+
+                '</div>'+
                 '<div class="majors-item">'+
                     '<div class="head-txt">'+
                     '<div class="center-content">学校环境</div>'+
