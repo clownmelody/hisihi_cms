@@ -246,32 +246,30 @@ define(['base','fastclick'],function(Base){
         var startTime=this.getTimeFromTimestamp(couponInfo.start_time,'yyyy.MM.dd'),
             endTime=this.getTimeFromTimestamp(couponInfo.end_time,'yyyy.MM.dd'),
             className=strAndType.type;
-        str = '<div class="main-item coupon-basic-info" data-id="'+couponInfo.id+'" data-oid="'+couponInfo.obtain_id+'">'+
-                   '<div class="center-content">'+
-                    '<div class="coupon-middle">'+
-                        '<div class="coupon-middle-all">'+
-                            '<div class="coupon-box">'+
-                                '<div class="coupon-all-box '+className+'">'+
-                                    '<div class="coupon-main-top">'+
-                                        '<span>￥</span>'+
-                                        '<span>'+couponInfo.money+'</span>'+
-                                    '</div>'+
-                                    '<div class="coupon-main-bottom">'+
-                                        '<span>有效期：'+'</span>'+'<span>'+startTime+'-'+endTime+'</span>'+
-                                    '</div>'+
+        str = '<div class="center-content">'+
+                '<div class="coupon-middle">'+
+                    '<div class="coupon-middle-all">'+
+                        '<div class="coupon-box">'+
+                            '<div class="coupon-all-box '+className+'">'+
+                                '<div class="coupon-main-top">'+
+                                    '<span>￥</span>'+
+                                    '<span>'+couponInfo.money+'</span>'+
+                                '</div>'+
+                                '<div class="coupon-main-bottom">'+
+                                    '<span>有效期：'+'</span>'+'<span>'+startTime+'-'+endTime+'</span>'+
                                 '</div>'+
                             '</div>'+
                         '</div>'+
                     '</div>'+
-                    '<div class="coupon-left">'+
-                        '<img id="coupon-icon" src="http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png"></img>' +
-                    '</div>'+
-                    '<div class="coupon-right">'+
-                        '<div class="coupon-status '+className+'"></div>'+
-                    '</div>'+
+                '</div>'+
+                '<div class="coupon-left">'+
+                    '<img id="coupon-icon" src="http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png"></img>' +
+                '</div>'+
+                '<div class="coupon-right">'+
+                    '<div class="coupon-status '+className+'"></div>'+
                 '</div>'+
             '</div>';
-        $('.org-basic-info').html(str).show()
+        $('.coupon-basic-info').html(str).show()
             .attr({'data-id':couponInfo.id,'data-oid':couponInfo.obtain_id});
     };
 

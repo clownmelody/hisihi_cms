@@ -335,6 +335,8 @@ body {
 }
 .main-item.basic-info .center-content {
   height: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 .main-item.org-basic-info {
   position: relative;
@@ -603,9 +605,11 @@ body {
   height: 16px;
 }
 .main-item.coupon-basic-info {
-  height: 85px;
-  border-top: 1px solid #CCCCCC;
-  border-bottom: 1px solid #CCCCCC;
+  height: 72px;
+}
+.main-item.coupon-basic-info .center-content {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 .main-item.coupon-basic-info .bg-sprite-c {
   background: url("../../images/teaching-course/sprite3.png");
