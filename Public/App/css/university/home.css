@@ -253,6 +253,11 @@ body {
   max-width: 100%;
   overflow: auto;
 }
+p {
+  line-height: 22px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
 .center-info {
   padding-left: 14px;
   padding-right: 14px;
@@ -284,7 +289,7 @@ body .main-item .center-content {
 body .main-item .head-txt {
   font-size: 18px;
   color: #212121;
-  line-height: 50px;
+  line-height: 40px;
 }
 body .main-item .border-bottom {
   border-bottom: 1px solid #e6e6e6;
@@ -294,11 +299,6 @@ body .main-item.introduce .center-content {
 }
 body .main-item.introduce .introduce-txt {
   margin-top: 15px;
-}
-body .main-item.introduce .introduce-txt p {
-  line-height: 25px;
-  box-sizing: border-box;
-  font-size: 14px;
 }
 body .main-item.nums ul {
   border-bottom: 1px solid #cccccc;
