@@ -49,13 +49,13 @@ define(['base'],function(Base){
             strNums=this.getNumsInfoStr(result),
             strMajor=this.getMajorInfoStr(result),
             strEn=this.getInEnvironmentStr(result),
-            strAlb=this.getAlbumStr(result);
-        console.log(strAlb);
+            strAlbum=this.getAlbumInfo();
+
         var str=strBasic+
             strNums+
             strMajor+
             strEn+
-            strAlb;
+            strAlbum;
         $('body').html(str);
     };
 
@@ -206,19 +206,47 @@ define(['base'],function(Base){
                 '</div></div>';
     };
 
+    t.getAlbumInfo= function () {
+        var that=this,
+            str='';
+        this.getDataAsyncPy({
+            url: window.hisihiUrlObj.api_url+'/v1/overseas_study/university/' +this.uid +'/photos',
+            paraData: {per_page:8},
+            sCallback: function(result){
+                str = that.getAlbumStr(result);
+            },
+            eCallback:function(txt){
+                str = '';
+            },
+            type:'get',
+            async:false
+        });
+        return str;
+    }
+
 
     //大学相册
     t.getAlbumStr=function(result){
+        if(!result || result.count==0){
+            return '';
+        }
+        var strLi='',
+            len=result.list.length;
+        for(var i=0;i<len;i++){
+            strLi+='<li>'+
+                    '<img src="'+result.list[i].pic_url+'">'+
+                '</li>';
+        }
         var str='<div class="main-item album">'+
             '<div class="head-txt border-bottom">'+
-            '<span class="center-content album-name">相册</span>'+
+            '<div class="center-content album-name">相册</div>'+
             '</div>'+
-            '<div class="album">' +
-                '<p>'+result.text+'</p>'+
-            //此处需要添加相册列表数据
+            '<div class="album-info">' +
+                '<ul class="album-ul">'+
+                    strLi+
+                '</ul>'+
             '</div>'+
         '</div>';
-        $('.album').html(str);
         return str;
     }
     return University;
