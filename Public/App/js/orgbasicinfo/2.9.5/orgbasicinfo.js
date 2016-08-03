@@ -582,7 +582,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     t.fillMyTeachersInfo=function(data){
         var str='',itemInfo;
         if(!data || data.length==0){
-            str='<div class="nonData">暂无老师</div>';
+            return;
         }
         else {
             var len = data.length;
@@ -591,6 +591,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
                 str+='<li><img src="'+itemInfo.avatar128+'"><p>' + itemInfo.nickname + '</p></li>';
             }
         }
+        $('.teachers-box').show();
         $('.teachers-detail').html(str);
     }
 

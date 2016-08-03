@@ -353,6 +353,9 @@ body {
   border-bottom: 1px solid #dedede;
   background-color: rgba(255, 255, 255, 0.8);
 }
+.logo-box .filter {
+  opacity: .5;
+}
 .logo-box .logo-main-info .logo-main-box {
   height: 50%;
   width: 80px;
@@ -615,13 +618,13 @@ body {
 }
 .basic-info-box .advance-tags .my-tags li {
   display: inline-block;
-  padding: 8px;
-  height: 15px;
-  line-height: 100%;
+  padding: 0 8px;
+  height: 22px;
+  line-height: 22px;
   margin: 0 12px 12px 0;
   border: 1px solid #ff5a00;
-  border-radius: 3px;
-  font-size: 14px;
+  border-radius: 2px;
+  font-size: 12px;
   color: #ff5a00;
 }
 .basic-info-box .pics-box .basic-header {
