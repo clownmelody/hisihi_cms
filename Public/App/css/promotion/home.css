@@ -277,13 +277,12 @@ body {
 }
 .course-box {
   opacity: 0;
-  border-top: 1px solid #CCC;
   background-color: white;
   min-height: 90px;
 }
 .course-box .header {
   height: 40px;
-  font-size: 16px;
+  font-size: 14px;
   color: #212121;
   border-bottom: 1px solid #CCC;
   padding-left: 10px;
@@ -292,12 +291,12 @@ body {
 }
 .course-box .list li {
   width: auto;
-  height: 110px;
+  height: 90px;
   border-bottom: 1px solid #ccc;
 }
 .course-box .list li .item-main {
   height: 100%;
-  margin: 5px 13px 5px 10px;
+  margin: 0px 13px 0 10px;
 }
 .course-box .list li .item-main > div {
   float: left;
@@ -309,33 +308,34 @@ body {
 }
 .course-box .list li .item-main .main-content .middle {
   height: 100%;
-  margin: 0 80px 0 135px;
+  margin: 0 80px 0 82px;
 }
 .course-box .list li .item-main .main-content .middle p {
-  margin: 5px 0;
+  margin: 0px 0;
 }
 .course-box .list li .item-main .main-content .middle .title-info {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  font-size: 17px;
-  height: 30px;
-  line-height: 35px;
-  color: #333333;
+  font-size: 14px;
+  color: #212121;
+  margin: 12px 0 0 0;
 }
 .course-box .list li .item-main .main-content .middle .money-info {
   color: #FA4535;
   font-size: 20px;
   font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  margin: 2px 0;
 }
 .course-box .list li .item-main .main-content .middle .money-info .noprice {
   font-size: 16px;
 }
 .course-box .list li .item-main .main-content .middle .time-info {
   color: #8E8E8E;
+  font-size: 11px;
 }
 .course-box .list li .item-main .left {
-  width: 120px;
+  width: 76px;
   margin-left: -100%;
 }
 .course-box .list li .item-main .left .img-box {
@@ -343,11 +343,11 @@ body {
   height: 100%;
   margin: 0 auto;
   text-align: center;
+  padding: 12px 10px 12px 0;
 }
 .course-box .list li .item-main .left .img-box img {
-  width: 100%;
-  height: 85px;
-  margin: 11px 20px 0 0;
+  width: 66px;
+  height: 66px;
 }
 .course-box .list li .item-main .right {
   position: relative;
@@ -365,7 +365,7 @@ body {
   position: relative;
 }
 .course-box .list li .item-main .right .coupon-money {
-  margin-top: 15px;
+  margin-top: 9px;
 }
 .course-box .list li .item-main .right .coupon-money span {
   font-size: 20px;

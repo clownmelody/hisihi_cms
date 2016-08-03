@@ -708,7 +708,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
                     '<img src="' + data.group_avatar + '">'+
                 '</div>'+
                 '<div class="right">'+
-                    '<p>' + data.description + '</p>'+
+                    '<p>' + data.group_name + '</p>'+
                 '</div>';
         $box.find('.groups-detail-box').html(str);
     };
@@ -878,7 +878,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             if(flag1){
                 return firstNum | 0;
             }else if(flag2){
-                return firstNum | 0 + 1;
+                return parseInt (firstNum) + 1;
             }
             else{
                 return parseInt(firstNum) + 0.5;

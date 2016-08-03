@@ -15,6 +15,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
         $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
 
+        $(document).on(eventName,'.album-name',function(){
+            window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
+        });
+
         //关闭相册信息
         $(document).on(eventName,'.view-pics-box', function(){
             event.stopPropagation();
@@ -78,7 +82,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                         '<div class="center-content">简介</div>'+
                     '</div>'+
                     '<div class="introduce-txt">'+
-                        '<div class="center-content">'+
+                        '<div class="center-info">'+
                             '<p>'+result.introduction+'</p>'+
                         '</div>'+
                     '</div>'+
@@ -194,7 +198,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '<div class="head-txt">'+
                         '<div class="center-content">申请要求</div>'+
                     '</div>'+
-                    '<div class="content-txt center-content">'+
+                    '<div class="center-info">'+
                     '<p>'+
                         result.application_requirements+
                     '</p>'+
@@ -209,11 +213,11 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '<div class="center-content">学校环境</div>'+
                     '</div>'+
 
-                    '<div class="content-txt center-content">'+
+                    '<div class="center-info">'+
                     '<p>'+
                         result.school_environment+
                     '</p>'+
-                    '<div class="center-content">'+
+                    '<div class="center-info">'+
                     '</div>'+
                     '</div>'+
                     '</div>'+
