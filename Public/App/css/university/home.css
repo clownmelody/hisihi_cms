@@ -269,14 +269,13 @@ body .main-item {
   /*指数*/
 }
 body .main-item .center-content {
-  width: 90%;
+  padding-left: 14px;
+  padding-right: 14px;
   margin: 0 auto;
 }
 body .main-item .head-txt {
   font-size: 18px;
   color: #212121;
-  width: 100%;
-  height: 50px;
   line-height: 50px;
 }
 body .main-item .border-bottom {
@@ -355,6 +354,25 @@ body .main-item.environment .content-txt p {
   margin-top: 0;
   font-size: 14px;
 }
+body .main-item.album {
+  margin: 15px auto 0 auto;
+  height: 160px;
+}
+body .main-item.album .album-info .album-ul {
+  padding-top: 10px;
+  padding-bottom: 14px;
+}
+body .main-item.album .album-info .album-ul > li {
+  float: left;
+}
+body .main-item.album .album-info .album-ul > li > img {
+  width: 80px;
+  height: 80px;
+  padding-left: 5px;
+}
+body .main-item.album .album-info .album-ul > li:first-child {
+  padding-left: 15px;
+}
 body .nodata {
   position: fixed;
   width: 108px;
@@ -369,3 +387,4 @@ body .nodata p {
   font-size: 16px;
   color: #757070;
 }
+/*凯尔特竖琴*/
