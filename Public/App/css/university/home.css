@@ -386,6 +386,9 @@ body .main-item.album .album-info .album-ul > li > img {
 body .main-item.album .album-info .album-ul > li:first-child {
   padding-left: 15px;
 }
+body .main-item.album .album-info .album-ul > li:first-child > img {
+  padding-left: 0;
+}
 body .nodata {
   position: fixed;
   width: 108px;
