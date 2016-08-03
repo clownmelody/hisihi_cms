@@ -12,12 +12,15 @@ define(['base','fastclick'],function(Base){
             eventName='touchend';
         }
         this.controlLoadingBox(true);
-        this.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
-        this.getBasicInfo.call(that,function(result){
-            that.getOrgBasicInfo.call(that,result,function(resultOrg){
-                that.getPromotionsInfo.call(that,result,resultOrg);
+        window.setTimeout(function(){
+            that.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
+            that.getBasicInfo.call(that,function(result){
+                that.getOrgBasicInfo.call(that,result,function(resultOrg){
+                    that.getPromotionsInfo.call(that,result,resultOrg);
+                });
             });
-        });
+            that.geMoreCourseInfo();
+        },100);
 
         //领取优惠券
         $(document).on(eventName,'.sawtooth-right-main', $.proxy(this,'operateCoupon'));
@@ -26,7 +29,7 @@ define(['base','fastclick'],function(Base){
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
-        this.geMoreCourseInfo();
+
     };
 
     Course.prototype=new Base();
@@ -124,9 +127,7 @@ define(['base','fastclick'],function(Base){
 
     //获得更多课程的详细信息
     t.geMoreCourseInfo=function(callback){
-        //this.controlLoadingBox(true);
         var paraData={
-            //oid: this.oid,
             except_id: this.cid | 0,
             page: 1,
             per_page: 100000
@@ -142,19 +143,19 @@ define(['base','fastclick'],function(Base){
                     callback && callback(data);
                 },
                 eCallback: function (data) {
-                    var txt=data.txt,
-                        $nodata=$('#more-info .nodata'),
-                        $p=$nodata.find('p');
-                    if(data.code==404){
-                        txt='信息加载失败';
-                    }
-                    if(data.code==1001){
-                        txt='暂无推荐课程';
-                    }
-                    $p.text(txt);
-                    $nodata.show();
-                    that.controlLoadingBox(false);
-                    callback && callback();
+                    //var txt=data.txt,
+                    //    $nodata=$('#more-info .nodata'),
+                    //    $p=$nodata.find('p');
+                    //if(data.code==404){
+                    //    txt='信息加载失败';
+                    //}
+                    //if(data.code==1001){
+                    //    txt='暂无推荐课程';
+                    //}
+                    //$p.text(txt);
+                    //$nodata.show();
+                    //that.controlLoadingBox(false);
+                    //callback && callback();
                 },
             };
         this.getDataAsyncPy(para);
@@ -172,7 +173,11 @@ define(['base','fastclick'],function(Base){
     //更多课程信息列表显示
     t.fillInMoreCourseInfo=function(result){
         var str=this.getMoreStr(result);
-        $('#more-info').html(str);
+        if(''==str) {
+            return;
+        }
+        $('#more-info').show();
+        $('#more-info .lessons-more').show().find('ul').html(str);
         this.drawArrowColorBlock();
     };
 
@@ -217,8 +222,8 @@ define(['base','fastclick'],function(Base){
                             '<div style="clear: both;"></div>'+
                         '</div>'+
                         '<ul class="nums-info">'+
-                            '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>人查看</span></li>'+
-                            '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>人关注</span></li>'+
+                            '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>查看</span></li>'+
+                            '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>关注</span></li>'+
                         '</ul>'+
                       '</div>'+
                     '</div>'+
@@ -241,32 +246,30 @@ define(['base','fastclick'],function(Base){
         var startTime=this.getTimeFromTimestamp(couponInfo.start_time,'yyyy.MM.dd'),
             endTime=this.getTimeFromTimestamp(couponInfo.end_time,'yyyy.MM.dd'),
             className=strAndType.type;
-        str = '<div class="main-item coupon-basic-info" data-id="'+couponInfo.id+'" data-oid="'+couponInfo.obtain_id+'">'+
-                   '<div class="center-content">'+
-                    '<div class="coupon-middle">'+
-                        '<div class="coupon-middle-all">'+
-                            '<div class="coupon-box">'+
-                                '<div class="coupon-all-box '+className+'">'+
-                                    '<div class="coupon-main-top">'+
-                                        '<span>￥</span>'+
-                                        '<span>'+couponInfo.money+'</span>'+
-                                    '</div>'+
-                                    '<div class="coupon-main-bottom">'+
-                                        '<span>有效期：'+'</span>'+'<span>'+startTime+'-'+endTime+'</span>'+
-                                    '</div>'+
+        str = '<div class="center-content">'+
+                '<div class="coupon-middle">'+
+                    '<div class="coupon-middle-all">'+
+                        '<div class="coupon-box">'+
+                            '<div class="coupon-all-box '+className+'">'+
+                                '<div class="coupon-main-top">'+
+                                    '<span>￥</span>'+
+                                    '<span>'+couponInfo.money+'</span>'+
+                                '</div>'+
+                                '<div class="coupon-main-bottom">'+
+                                    '<span>有效期：'+'</span>'+'<span>'+startTime+'-'+endTime+'</span>'+
                                 '</div>'+
                             '</div>'+
                         '</div>'+
                     '</div>'+
-                    '<div class="coupon-left">'+
-                        '<img id="coupon-icon" src="http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png"></img>' +
-                    '</div>'+
-                    '<div class="coupon-right">'+
-                        '<div class="coupon-status '+className+'"></div>'+
-                    '</div>'+
+                '</div>'+
+                '<div class="coupon-left">'+
+                    '<img id="coupon-icon" src="http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png"></img>' +
+                '</div>'+
+                '<div class="coupon-right">'+
+                    '<div class="coupon-status '+className+'"></div>'+
                 '</div>'+
             '</div>';
-        $('.org-basic-info').html(str).show()
+        $('.coupon-basic-info').html(str).show()
             .attr({'data-id':couponInfo.id,'data-oid':couponInfo.obtain_id});
     };
 
@@ -504,82 +507,71 @@ define(['base','fastclick'],function(Base){
 
     //更多
     t.getMoreStr=function(result){
+        if(!result || !result.courses || result.courses.length == 0) {
+            return '';
+        }
         var courses=result.courses,
+            len = courses.length,
             str='';
-        if(courses) {
-            var len = courses.length;
-            if (len == 0) {
-                return str;
+
+        for(var i=0;i<len;i++) {
+            var item, courseName='', teacher='', sTeacher='', money='';
+            item=courses[i];
+            courseName=item.course_name;
+            //teacher=this.judgeInfoNullInfo(item.lecture_name);
+            //if(teacher!=''){
+            //    sTeacher='<span>老师：'+teacher+'</span>';
+            //}
+            money=this.judgeInfoNullInfo(item.price);
+            if(money!=''){
+                money='￥'+money;
+            }else{
+                money='<label class="noprice">暂无报价</label>';
             }
-            var str = '<div class="main-item lessons-more">' +
-                '<div class="head-txt">' +
-                '<div class="center-content">' +
-                '<span>机构其他套餐</span>' +
-                //'<i></i>' +
-                '</div>' +
-                '</div>' +
-                '<ul>';
-            for(var i=0;i<len;i++) {
-                var item, courseName='', teacher='', sTeacher='', money='';
-                item=courses[i];
-                courseName=item.course_name;
-                teacher=this.judgeInfoNullInfo(item.lecture_name);
-                if(teacher!=''){
-                    sTeacher='<span>老师：'+teacher+'</span>';
-                }
-                money=this.judgeInfoNullInfo(item.price);
-                if(money!=''){
-                    money='￥'+money;
-                }else{
-                    money='<label class="noprice">暂无报价</label>';
-                }
-                str += '<li class="normal">' +
-                    '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
-                    '<div class="main-content">'+
-                    '<div class="left">' +
-                    '<img src="'+item.cover_pic+'">' +
-                    '</div>' +
-                    '<div class="right">' +
-                    '<div class="lesson-name">'+courseName+'</div>' +
-                    '<div class="lesson-view-info">' +
-                        this.getMiddleItemStr(item)+
-                    '</div>' +
-                    '<div class="teacher-info">' +
-                    '<div class="left-item">' +
-                    sTeacher+
-                    '</div>' +
-                    '<div class="right-item price">'+money+'</div>' +
-                    '<div style="clear: both;"></div>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="singin-limit-nums">' +
-                    '<div><canvas></canvas></div>'+
-                    '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
-                    '</div>' +
-                    '</div>'+
-                    '</a>'+
+            var limitStr='';
+            if(item.student_num!=0){
+                limitStr ='<div class="singin-limit-nums">' +
+                                '<div><canvas></canvas></div>'+
+                                '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
+                            '</div>';
+            }
+            str += '<li class="normal">' +
+                        '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                            '<div class="main-content">'+
+                                '<div class="left">' +
+                                    '<img src="'+item.cover_pic+'">' +
+                                '</div>' +
+                                '<div class="right">' +
+                                    '<div class="lesson-name">'+courseName+'</div>' +
+                                    '<div class="right-item price">'+money+'</div>' +
+                                    '<div class="lesson-view-info">' +
+                                        this.getMiddleItemStr(item)+
+                                    '</div>' +
+                                '</div>' +
+                                limitStr +
+                            '</div>'+
+                        '</a>'+
                     '</li>' +
                     '<li class="seperation"></li>';
-            }
-            str+='</ul></div>';
         }
         return str;
     };
 
     t.getMiddleItemStr=function(item){
         var period=this.judgeInfoNullInfo(item.lesson_period),
-            num=this.judgeInfoNullInfo(item.student_num),
+            //num=this.judgeInfoNullInfo(item.student_num),
+            teacher=this.judgeInfoNullInfo(item.lecture_name),
             stime=this.judgeInfoNullInfo(item.start_course_time),
             arr=[],
             str='';
         if(period!=''){
             arr.push(period+'次课');
         }
-        if(num!=''){
-            arr.push(num+'人班');
-        }
         if(stime!=''){
             arr.push(stime+'开课');
+        }
+        if(teacher!=''){
+            arr.push('老师：'+teacher);
         }
         $.each(arr,function(){
             str+='<span>'+this+'</span>';

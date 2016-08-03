@@ -56,10 +56,7 @@ body {
   min-height: 400px;
   position: relative;
 }
-#more-info{
-  min-height: 200px;
-  position: relative;
-}
+
 .main-item{
   margin: 0 auto 15px auto;
   background-color: #FFFFFF;
@@ -99,6 +96,8 @@ body {
     }
     .center-content{
       height: 100%;
+      padding-top:8px;
+      padding-bottom:8px;
     }
   }
 
@@ -171,39 +170,35 @@ body {
     }
   }
 
-  &.lessons-detail + .lessons-plan{
+  .word-info{
+    color: #212121;
+    font-size: 14px;
+    padding-top: 10px;
+    p{
+      line-height: 22px;
+      margin: 0;
+      padding-bottom: 10px;
+      .no-result-data{
+        color: #757070;
+      }
+    }
+  }
+
+  &.lessons-detail{
     .head-txt{
       .border-bottom();
     }
-    ul{
-      padding-bottom: 20px;
-      margin-top: 5px;
-      li{
-        display: inline-block;
-        background-color: #FF5A00;
-        color: white;
-        .border-radius(2px);
-        height: 32px;
-        line-height: 32px;
-        margin-bottom: 10px;
-        font-size: 14px;
-        margin-right: 5px;
-        padding:0 15px;
-        letter-spacing: 1px;
-      }
+    .content-txt{
+      .word-info;
+    }
+  }
+
+  &.lessons-plan{
+    .head-txt{
+      .border-bottom();
     }
     .content-txt{
-      color: #212121;
-      font-size: 14px;
-      p{
-        line-height: 22px;
-        margin: 0;
-        padding-bottom: 8px;
-        .no-result-data{
-          font-size: 14px;
-          color: #757070;
-        }
-      }
+      .word-info;
     }
   }
 
@@ -252,12 +247,14 @@ body {
       }
     }
     ul{
-      margin-top: 15px;
+      margin-top: 10px;
+      background-color: #f2f2f2;
       li{
         position: relative;
-        .border-bottom();
         &.normal{
-          min-height: 114px;
+          min-height: 94px;
+          border-radius: 6px;
+          background-color: #fff;
         }
         &.seperation {
           height: 15px;
@@ -272,12 +269,13 @@ body {
         a {
           display: block;
           height: 100%;
+          margin: 0 14px;
         }
         .main-content {
-          @w: 75px;
+          @w: 66px;
+          height: @w + 14 * 2;
           margin:0 auto;
-          padding: 20px 0;
-          width: @width-p;
+          padding: 14px 0;
           box-sizing: border-box;
           display: block;
           .left {
@@ -288,18 +286,18 @@ body {
             }
           }
           .right {
-            margin-left: @w+15px;
+            margin-left: @w+10px;
             .lesson-name {
-              color: #333333;
-              font-size: 16px;
-              margin-right: 22px;
+              color: #212121;
+              font-size: 14px;
+              margin-right: 32px;
               .txt-ellipsis;
             }
             .lesson-view-info {
-              color: @g-color;
-              font-size: 12px;
-              margin: 8px 0 1px 0;
-              .txt-ellipsis;
+              color: #808080;
+              font-size: 11px;
+              margin: 2px 0 1px 0;
+              //.txt-ellipsis-p(2);
               span {
                 padding-right: 3px;
                 margin-right: 5px;
@@ -321,23 +319,18 @@ body {
                 text-align: left;
                 .txt-ellipsis;
               }
-              .right-item {
-                display: inline-block;
-                width: 48%;
-                text-align: right;
-              }
             }
           }
           .singin-limit-nums {
             position: absolute;
             @h: 16px;
-            .size(42px, @h);
-            top: 20px;
-            right: 0;
+            .size(32px, @h);
+            top: 14px;
+            right: 8px;
             text-align: center;
             color: white;
             line-height: @h;
-            font-size: 10px;
+            font-size: 9px;
             padding-left: 2px;
             canvas{
               height: 35px;
@@ -366,9 +359,11 @@ body {
     @color1:#F9A825;
     @color2:#ccc;
     @color3:#BDBDBD;
-    height: 85px;
-    border-top:1px solid #CCCCCC;
-    border-bottom:1px solid #CCCCCC;
+    height: 72px;
+    .center-content{
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
 
     .bg-sprite-c{
       background: url("../../images/teaching-course/sprite3.png");
@@ -492,6 +487,18 @@ body {
 
 }
 
+#more-info{
+  min-height: 200px;
+  position: relative;
+  display: none;
+  .head-txt{
+    span{
+      margin-left: 14px;
+      color: #212121;
+      font-size: 14px;
+    }
+  }
+}
 /*模态窗口*/
 .model-box{
   background-color:rgba(0,0,0,.1);
@@ -553,6 +560,7 @@ body {
     /*基本信息*/
     &.basic-info {
       .center-content {
+
         .otherinfo {
           margin-top: 8px;
           li {
@@ -622,18 +630,8 @@ body {
 
       ul {
         li {
-          &.normal{
-            min-height: 103px;
-          }
           .main-content {
-            @w: 85px;
-            .left {
-              img {
-                .size(@w, @w*0.75);
-              }
-            }
             .right {
-              margin-left: @w+10px;
               .lesson-name {
                 font-size: 12px;
               }

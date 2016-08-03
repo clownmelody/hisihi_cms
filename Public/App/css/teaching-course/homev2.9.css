@@ -297,10 +297,6 @@ body {
   min-height: 400px;
   position: relative;
 }
-#more-info {
-  min-height: 200px;
-  position: relative;
-}
 .main-item {
   margin: 0 auto 15px auto;
   background-color: #FFFFFF;
@@ -339,6 +335,8 @@ body {
 }
 .main-item.basic-info .center-content {
   height: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 .main-item.org-basic-info {
   position: relative;
@@ -406,39 +404,51 @@ body {
 .main-item.org-basic-info .right .nums-info li span:first-child {
   margin-right: 2px;
 }
-.main-item.lessons-detail + .lessons-plan .head-txt {
+.main-item .word-info {
+  color: #212121;
+  font-size: 14px;
+  padding-top: 10px;
+}
+.main-item .word-info p {
+  line-height: 22px;
+  margin: 0;
+  padding-bottom: 10px;
+}
+.main-item .word-info p .no-result-data {
+  color: #757070;
+}
+.main-item.lessons-detail .head-txt {
   border-bottom: 1px solid #f3f3f3;
   width: 110%;
 }
-.main-item.lessons-detail + .lessons-plan ul {
-  padding-bottom: 20px;
-  margin-top: 5px;
-}
-.main-item.lessons-detail + .lessons-plan ul li {
-  display: inline-block;
-  background-color: #FF5A00;
-  color: white;
-  border-radius: 2px;
-  background-clip: padding-box;
-  height: 32px;
-  line-height: 32px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  margin-right: 5px;
-  padding: 0 15px;
-  letter-spacing: 1px;
-}
-.main-item.lessons-detail + .lessons-plan .content-txt {
+.main-item.lessons-detail .content-txt {
   color: #212121;
   font-size: 14px;
+  padding-top: 10px;
 }
-.main-item.lessons-detail + .lessons-plan .content-txt p {
+.main-item.lessons-detail .content-txt p {
   line-height: 22px;
   margin: 0;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
 }
-.main-item.lessons-detail + .lessons-plan .content-txt p .no-result-data {
+.main-item.lessons-detail .content-txt p .no-result-data {
+  color: #757070;
+}
+.main-item.lessons-plan .head-txt {
+  border-bottom: 1px solid #f3f3f3;
+  width: 110%;
+}
+.main-item.lessons-plan .content-txt {
+  color: #212121;
   font-size: 14px;
+  padding-top: 10px;
+}
+.main-item.lessons-plan .content-txt p {
+  line-height: 22px;
+  margin: 0;
+  padding-bottom: 10px;
+}
+.main-item.lessons-plan .content-txt p .no-result-data {
   color: #757070;
 }
 .main-item.lessons-singin .head-txt {
@@ -491,15 +501,16 @@ body {
   margin-top: 15px;
 }
 .main-item.lessons-more ul {
-  margin-top: 15px;
+  margin-top: 10px;
+  background-color: #f2f2f2;
 }
 .main-item.lessons-more ul li {
   position: relative;
-  border-bottom: 1px solid #f3f3f3;
-  width: 110%;
 }
 .main-item.lessons-more ul li.normal {
-  min-height: 114px;
+  min-height: 94px;
+  border-radius: 6px;
+  background-color: #fff;
 }
 .main-item.lessons-more ul li.seperation {
   height: 15px;
@@ -513,41 +524,39 @@ body {
 .main-item.lessons-more ul li a {
   display: block;
   height: 100%;
+  margin: 0 14px;
 }
 .main-item.lessons-more ul li .main-content {
+  height: 94px;
   margin: 0 auto;
-  padding: 20px 0;
-  width: 90%;
+  padding: 14px 0;
   box-sizing: border-box;
   display: block;
 }
 .main-item.lessons-more ul li .main-content .left {
-  width: 75px;
+  width: 66px;
   height: auto;
   position: absolute;
 }
 .main-item.lessons-more ul li .main-content .left img {
-  width: 75px;
-  height: 75px;
+  width: 66px;
+  height: 66px;
 }
 .main-item.lessons-more ul li .main-content .right {
-  margin-left: 90px;
+  margin-left: 76px;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-name {
-  color: #333333;
-  font-size: 16px;
-  margin-right: 22px;
+  color: #212121;
+  font-size: 14px;
+  margin-right: 32px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-view-info {
-  color: #807e7e;
-  font-size: 12px;
-  margin: 8px 0 1px 0;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  color: #808080;
+  font-size: 11px;
+  margin: 2px 0 1px 0;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-view-info span {
   padding-right: 3px;
@@ -572,21 +581,16 @@ body {
   overflow: hidden;
   white-space: nowrap;
 }
-.main-item.lessons-more ul li .main-content .right .teacher-info .right-item {
-  display: inline-block;
-  width: 48%;
-  text-align: right;
-}
 .main-item.lessons-more ul li .main-content .singin-limit-nums {
   position: absolute;
-  width: 42px;
+  width: 32px;
   height: 16px;
-  top: 20px;
-  right: 0;
+  top: 14px;
+  right: 8px;
   text-align: center;
   color: white;
   line-height: 16px;
-  font-size: 10px;
+  font-size: 9px;
   padding-left: 2px;
 }
 .main-item.lessons-more ul li .main-content .singin-limit-nums canvas {
@@ -604,9 +608,11 @@ body {
   height: 16px;
 }
 .main-item.coupon-basic-info {
-  height: 85px;
-  border-top: 1px solid #CCCCCC;
-  border-bottom: 1px solid #CCCCCC;
+  height: 72px;
+}
+.main-item.coupon-basic-info .center-content {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 .main-item.coupon-basic-info .bg-sprite-c {
   background: url("../../images/teaching-course/sprite3.png");
@@ -700,6 +706,16 @@ body {
 .main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-bottom {
   font-size: 12px;
   padding-left: 5px;
+}
+#more-info {
+  min-height: 200px;
+  position: relative;
+  display: none;
+}
+#more-info .head-txt span {
+  margin-left: 14px;
+  color: #212121;
+  font-size: 14px;
 }
 /*模态窗口*/
 .model-box {
@@ -822,16 +838,6 @@ body {
   }
   .main-item.org-basic-info .right .nums-info li span {
     font-size: 14px;
-  }
-  .main-item.lessons-more ul li.normal {
-    min-height: 103px;
-  }
-  .main-item.lessons-more ul li .main-content .left img {
-    width: 85px;
-    height: 63.75px;
-  }
-  .main-item.lessons-more ul li .main-content .right {
-    margin-left: 95px;
   }
   .main-item.lessons-more ul li .main-content .right .lesson-name {
     font-size: 12px;
