@@ -3,7 +3,7 @@ body{
   margin: 0;
   background-color: #F2F2F2;
 }
-@padding-l:10px;
+@padding-l:14px;
 @padding-r:13px;
 .promotion-box{
   opacity: 0;
@@ -46,14 +46,15 @@ body{
       @w-l:66px;
       @w-r:80px;
       .size(auto,90px);
-      border-bottom: 1px solid #ccc;
+
       //a{
       //  display: block;
       //  .size(100%,100%);
       //}
       .item-main{
         height: 100%;
-        margin: 0px @padding-r 0@padding-l;
+        margin: 0px 0 0 @padding-l;
+        border-bottom: 1px solid #ccc;
         >div{
           float: left;
           height: 100%;
@@ -65,7 +66,7 @@ body{
             height: 100%;
             margin: 0 @w-r 0 @w-l+16;
             p {
-              margin: 0px 0;
+              margin: 0  0 14px 0 ;
             }
             .title-info {
               text-overflow: ellipsis;
@@ -73,7 +74,7 @@ body{
               overflow: hidden;
               font-size: 14px;
               color: #212121;
-              margin:12px 0 0 0;
+              margin: 12px 14px 0 0 ;
             }
             .money-info {
               color: #FA4535;
@@ -96,8 +97,7 @@ body{
           .img-box{
             .size(100%);
             margin: 0 auto;
-            text-align: center;
-            padding:12px 10px 12px 0;
+            padding:12px 10px 0 0;
             img {
               .size(@w-l,@w-l);
             }
@@ -284,6 +284,7 @@ body{
               margin: 0 @w-r 0 @w-l;
               .title-info {
                 margin-top: 12px;
+                margin-right:14px;
                 height: 26px;
                 line-height: 26px;
                 font-size: 12px;
