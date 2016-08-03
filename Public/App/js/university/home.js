@@ -2,16 +2,28 @@
  * Created by jimmy on 2016/5/10.
  */
 
-define(['base'],function(Base){
+define(['base','mysilder','scale'],function(Base,Myslider){
     var University=function(id){
         this.uid = id;
         var eventName='click',that=this;
         this.deviceType = this.operationType();
         this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
         if(this.deviceType.mobile && this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
         }
         this.getBasicInfo();
+
+        $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
+
+        //关闭相册信息
+        $(document).on(eventName,'.view-pics-box', function(){
+            event.stopPropagation();
+            if(event.target==this){
+                $('.modal').removeClass('show');
+                $('html,body').removeClass('ovfHidden');
+
+            }
+        });
     };
 
     University.prototype=new Base();
@@ -56,7 +68,7 @@ define(['base'],function(Base){
             strMajor+
             strEn+
             strAlbum;
-        $('body').html(str);
+        $('body').append(str);
     };
 
     //简介
@@ -190,6 +202,8 @@ define(['base'],function(Base){
                     '</div>'+
                     '</div>'+
                 '</div>'+
+                '<div class="head-txt border-bottom">'+
+                '</div>'+
                 '<div class="majors-item">'+
                     '<div class="head-txt">'+
                     '<div class="center-content">学校环境</div>'+
@@ -237,6 +251,8 @@ define(['base'],function(Base){
                     '<img src="'+result.list[i].pic_url+'">'+
                 '</li>';
         }
+        strLi+=strLi;
+        strLi+='<div style="clear: both;"></div>';
         var str='<div class="main-item album">'+
             '<div class="head-txt border-bottom">'+
             '<div class="center-content album-name">相册</div>'+
@@ -248,6 +264,66 @@ define(['base'],function(Base){
             '</div>'+
         '</div>';
         return str;
-    }
+    };
+
+    t.viewPics=function(e){
+        var $target=$(e.currentTarget),
+            index=$target.index(),
+            arr=[],
+            imgArr=[],
+            $li =$('.album-ul li'),
+            len=$li.length;
+        for(var i=0;i<len;i++){
+            var url=$li.eq(i).find('img').attr('src');
+            imgArr.push(url);
+        }
+        var arr=this.getItemStr(imgArr);
+
+
+        var $span=$('.pics-nav span');
+        $span.text(index+1+'/'+len);
+        $('#filter-img').attr('src',imgArr[0]);
+
+        $('.pic-modal').addClass('show');
+        $('html,body').addClass('ovfHidden');
+
+        new Myslider($('.view-pics-box'),arr,{
+            autoPlay:false,
+            showNav:false,
+            index:index,
+            changeCallback:function(type,picIndex){
+                $span.text((picIndex+1)+'/'+len);
+                $('#filter-img').attr('src',imgArr[picIndex]);
+            }
+        });
+
+        var btnList=document.querySelectorAll('.view-pics-box .show-origin-pic');
+        //实例化缩放
+        ImagesZoom.init({
+            elem: ".view-pics-box",  //容器dom
+            btnsList:btnList,  //查看按钮
+            initCallback:function(dom){
+                $(dom).hide().parent().find('img').hide();
+                $('.pics-nav label').hide();
+            },
+            closeCallback:function(){
+                $('.view-pics-box .now img').show();
+                $('.pics-nav label').show();
+                for(var len=btnList.length,i=0;i<len;i++) {
+                    $(btnList[i]).show();
+                }
+            }
+        });
+    };
+
+    t.getItemStr=function(data){
+        var len=data.length,arr=[];
+        for(var i=0;i<len;i++){
+            var item=data[i];
+            arr.push('<img  src="'+item+'"><div class="show-origin-pic">查看大图</div>');
+        }
+        return arr;
+    };
+
     return University;
 });
