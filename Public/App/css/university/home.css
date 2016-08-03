@@ -253,11 +253,16 @@ body {
   max-width: 100%;
   overflow: auto;
 }
+.center-info {
+  padding-left: 14px;
+  padding-right: 14px;
+  margin: 0 auto;
+  font-size: 14px;
+}
 .font-icon {
   display: inline-block;
 }
 .center-content {
-  width: 90%;
   margin: 0 auto;
 }
 body .main-item {
@@ -272,6 +277,9 @@ body .main-item .center-content {
   padding-left: 14px;
   padding-right: 14px;
   margin: 0 auto;
+  color: #444444;
+  font-size: 14px;
+  font-weight: bold;
 }
 body .main-item .head-txt {
   font-size: 18px;
@@ -349,7 +357,7 @@ body .main-item.environment {
   margin-top: 0;
 }
 body .main-item.environment .content-txt p {
-  color: #808080;
+  color: #212121;
   line-height: 25px;
   margin-top: 0;
   font-size: 14px;
