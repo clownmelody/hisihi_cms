@@ -2875,6 +2875,11 @@ class OrganizationController extends AppController
                 $config['status'] = false;
             }
             if($config['id']==4){ // 嘿设汇认证
+                $org_info =M('Organization')->field('light_authentication')
+                    ->where('id='.$organization_id)->find();
+                if($org_info['light_authentication']){
+                    $config['status'] = true;
+                }
                 $config['hisihi_add_v'] = true;
             }
         }
