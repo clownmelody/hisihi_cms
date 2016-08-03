@@ -48,7 +48,11 @@
 			for(var len=imgList.length,i=0; i<len; i++){
 				btnsList[i].addEventListener("click", function(){
 					param.initCallback && param.initCallback(this);
-					imgSrc = this.previousSibling.src;
+					var imgTarget=this;
+					if(param.btnsList){
+						imgTarget=this.previousSibling;
+					}
+					imgSrc = imgTarget.src;
 					zoomMask.style.cssText = "display:block";
 					zoomImg.src = imgSrc;
 

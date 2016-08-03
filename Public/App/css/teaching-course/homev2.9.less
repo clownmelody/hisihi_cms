@@ -2,7 +2,7 @@
 //@g-color:#bdbdbd;
 @g-color:#807E7E;
 @width-p:90%;
-.border-bottom(@c:#e6e6e6){
+.border-bottom(@c:#F3F3F3){
   border-bottom:1px solid @c;
 }
 body{
@@ -14,10 +14,6 @@ body{
 
 .font-icon{
   display: inline-block;
-}
-.center-content {
-  width: @width-p;
-  margin: 0 auto;
 }
 .bg-sprite {
   background: url("../../images/teaching-course/sprite.png");
@@ -68,16 +64,14 @@ body {
   margin: 0 auto 15px auto;
   background-color: #FFFFFF;
   box-sizing: border-box;
-  padding:10px 0;
+  display: none;
   .center-content {
-    width: 90%;
-    margin: 0 auto;
-    position: relative;
+    margin: 0 14px;
   }
   .head-txt{
-    font-size: 18px;
-    color: @color;
-    @h:50px;
+    font-size: 14px;
+    color:#444;
+    @h:40px;
     .size(100%,@h);
     line-height: @h;
     text-overflow: ellipsis;
@@ -86,6 +80,7 @@ body {
   }
   .border-bottom{
     .border-bottom();
+    width: 110%;
   }
   .price{
     color: #ff6531;
@@ -109,8 +104,14 @@ body {
 
   &.org-basic-info{
     position: relative;
-    @h:75px;
-    @p:15px;
+    height: 78px;
+    width: 100%;
+    @h:50px;
+    @p:14px;
+    a{
+      display: block;
+      .size(100%,100%);
+    }
     .left{
       position: absolute;
       .size(@h+@p,100%);
@@ -139,7 +140,7 @@ body {
       .org-name{
         color:RGB(33, 33, 33);
         .name{
-          font-size: 20px;
+          font-size: 14px;
           margin-right: 10px;
           float: left;
         }
@@ -155,11 +156,11 @@ body {
         }
       }
       .nums-info{
-        margin-top: 10px;
         li{
           display: inline-block;
-          color: @g-color;
+          color: #808080;
           margin-right: 10px;
+          font-size: 12px;
           span{
             &:first-child{
               margin-right: 2px;
@@ -170,11 +171,9 @@ body {
     }
   }
 
-  &.lessons-detail{
+  &.lessons-detail + .lessons-plan{
     .head-txt{
       .border-bottom();
-      width: 96%;
-      float: right;
     }
     ul{
       padding-bottom: 20px;
@@ -194,12 +193,12 @@ body {
       }
     }
     .content-txt{
-      margin-top: 15px;
+      color: #212121;
+      font-size: 14px;
       p{
-        color: @color;
-        line-height: 25px;
+        line-height: 22px;
         margin: 0;
-        padding-bottom: 15px;
+        padding-bottom: 8px;
         .no-result-data{
           font-size: 14px;
           color: #757070;
@@ -275,7 +274,7 @@ body {
           height: 100%;
         }
         .main-content {
-          @w: 110px;
+          @w: 75px;
           margin:0 auto;
           padding: 20px 0;
           width: @width-p;
@@ -285,7 +284,7 @@ body {
             .size(@w, auto);
             position: absolute;
             img {
-              .size(@w, @w*0.68);
+              .size(@w, @w);
             }
           }
           .right {

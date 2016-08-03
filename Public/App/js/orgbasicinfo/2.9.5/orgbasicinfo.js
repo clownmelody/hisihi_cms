@@ -950,7 +950,15 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         $('html,body').removeClass('ovfHidden');
         //document.body.removeEventListener('touchmove',forbiddenScroll);
     };
-    
+
+
+    //字符串截取
+    //t.substrLongStr: function (str, len) {
+    //    if (str.length > len) {
+    //        str = str.substr(0, parseInt(len - 1)) + '……';
+    //    }
+    //    return str;
+    //};
 
     return OrgBasicInfo;
 });

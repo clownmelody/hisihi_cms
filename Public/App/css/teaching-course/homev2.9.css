@@ -49,25 +49,26 @@ ul li {
 }
 .result-tips {
   position: fixed;
-  width: 200px;
-  height: auto;
-  min-height: 50px;
-  background: rgba(51, 51, 51, 0.85);
-  margin-left: -100px;
-  margin-top: -35px;
   top: 40%;
   left: 50%;
   z-index: 1001;
+  width: 200px;
+  height: auto;
+  min-height: 40px;
+  background: rgba(51, 51, 51, 0.85);
+  margin-left: -100px;
+  margin-top: -35px;
   border-radius: 3px;
   background-clip: padding-box;
   color: #fff;
   text-align: center;
   display: none;
 }
-.result-tips .result-tips p {
+.result-tips p {
   color: white;
   font-size: 15px;
   text-align: center;
+  margin: 10px 0;
 }
 #loading-data {
   position: fixed;
@@ -255,10 +256,6 @@ body {
 .font-icon {
   display: inline-block;
 }
-.center-content {
-  width: 90%;
-  margin: 0 auto;
-}
 .bg-sprite {
   background: url("../../images/teaching-course/sprite.png");
   background-size: 239px 32px;
@@ -308,26 +305,25 @@ body {
   margin: 0 auto 15px auto;
   background-color: #FFFFFF;
   box-sizing: border-box;
-  padding: 10px 0;
+  display: none;
   /*基本信息*/
 }
 .main-item .center-content {
-  width: 90%;
-  margin: 0 auto;
-  position: relative;
+  margin: 0 14px;
 }
 .main-item .head-txt {
-  font-size: 18px;
-  color: #212121;
+  font-size: 14px;
+  color: #444;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 40px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 .main-item .border-bottom {
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid #f3f3f3;
+  width: 110%;
 }
 .main-item .price {
   color: #ff6531;
@@ -346,20 +342,27 @@ body {
 }
 .main-item.org-basic-info {
   position: relative;
+  height: 78px;
+  width: 100%;
+}
+.main-item.org-basic-info a {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .main-item.org-basic-info .left {
   position: absolute;
-  width: 90px;
+  width: 64px;
   height: 100%;
 }
 .main-item.org-basic-info .left .group-logo {
   position: absolute;
   top: 50%;
   left: 0;
-  margin-top: -37.5px;
+  margin-top: -25px;
   border-radius: 20%;
-  width: 75px;
-  height: 75px;
+  width: 50px;
+  height: 50px;
 }
 .main-item.org-basic-info .left .v-cert {
   position: absolute;
@@ -371,15 +374,15 @@ body {
   display: none;
 }
 .main-item.org-basic-info .right {
-  margin-left: 90px;
-  padding-top: 20px;
+  margin-left: 64px;
+  padding-top: 19px;
   padding-bottom: 25px;
 }
 .main-item.org-basic-info .right .org-name {
   color: #212121;
 }
 .main-item.org-basic-info .right .org-name .name {
-  font-size: 20px;
+  font-size: 14px;
   margin-right: 10px;
   float: left;
 }
@@ -394,27 +397,24 @@ body {
   margin-top: 2px;
   margin-right: 7px;
 }
-.main-item.org-basic-info .right .nums-info {
-  margin-top: 10px;
-}
 .main-item.org-basic-info .right .nums-info li {
   display: inline-block;
-  color: #807e7e;
+  color: #808080;
   margin-right: 10px;
+  font-size: 12px;
 }
 .main-item.org-basic-info .right .nums-info li span:first-child {
   margin-right: 2px;
 }
-.main-item.lessons-detail .head-txt {
-  border-bottom: 1px solid #e6e6e6;
-  width: 96%;
-  float: right;
+.main-item.lessons-detail + .lessons-plan .head-txt {
+  border-bottom: 1px solid #f3f3f3;
+  width: 110%;
 }
-.main-item.lessons-detail ul {
+.main-item.lessons-detail + .lessons-plan ul {
   padding-bottom: 20px;
   margin-top: 5px;
 }
-.main-item.lessons-detail ul li {
+.main-item.lessons-detail + .lessons-plan ul li {
   display: inline-block;
   background-color: #FF5A00;
   color: white;
@@ -428,21 +428,22 @@ body {
   padding: 0 15px;
   letter-spacing: 1px;
 }
-.main-item.lessons-detail .content-txt {
-  margin-top: 15px;
-}
-.main-item.lessons-detail .content-txt p {
+.main-item.lessons-detail + .lessons-plan .content-txt {
   color: #212121;
-  line-height: 25px;
-  margin: 0;
-  padding-bottom: 15px;
+  font-size: 14px;
 }
-.main-item.lessons-detail .content-txt p .no-result-data {
+.main-item.lessons-detail + .lessons-plan .content-txt p {
+  line-height: 22px;
+  margin: 0;
+  padding-bottom: 8px;
+}
+.main-item.lessons-detail + .lessons-plan .content-txt p .no-result-data {
   font-size: 14px;
   color: #757070;
 }
 .main-item.lessons-singin .head-txt {
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid #f3f3f3;
+  width: 110%;
 }
 .main-item.lessons-singin ul {
   white-space: nowrap;
@@ -475,7 +476,8 @@ body {
   padding-bottom: 0 ;
 }
 .main-item.lessons-more .head-txt {
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid #f3f3f3;
+  width: 110%;
 }
 .main-item.lessons-more .head-txt i {
   background: url("../../images/teaching-course/sprite.png");
@@ -493,7 +495,8 @@ body {
 }
 .main-item.lessons-more ul li {
   position: relative;
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid #f3f3f3;
+  width: 110%;
 }
 .main-item.lessons-more ul li.normal {
   min-height: 114px;
@@ -519,16 +522,16 @@ body {
   display: block;
 }
 .main-item.lessons-more ul li .main-content .left {
-  width: 110px;
+  width: 75px;
   height: auto;
   position: absolute;
 }
 .main-item.lessons-more ul li .main-content .left img {
-  width: 110px;
-  height: 74.8px;
+  width: 75px;
+  height: 75px;
 }
 .main-item.lessons-more ul li .main-content .right {
-  margin-left: 125px;
+  margin-left: 90px;
 }
 .main-item.lessons-more ul li .main-content .right .lesson-name {
   color: #333333;
