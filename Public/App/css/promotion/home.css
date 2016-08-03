@@ -296,6 +296,7 @@ body {
 .course-box .list li .item-main {
   height: 100%;
   margin: 0px 0 0 14px;
+  padding-right: 14px;
   border-bottom: 1px solid #ccc;
 }
 .course-box .list li .item-main > div {
@@ -311,7 +312,7 @@ body {
   margin: 0 80px 0 82px;
 }
 .course-box .list li .item-main .main-content .middle p {
-  margin: 0  0 14px 0 ;
+  margin: 0;
 }
 .course-box .list li .item-main .main-content .middle .title-info {
   text-overflow: ellipsis;
@@ -319,7 +320,10 @@ body {
   overflow: hidden;
   font-size: 14px;
   color: #212121;
-  margin: 12px 14px 0 0 ;
+  margin-top: 12px;
+}
+.course-box .list li .item-main .main-content .middle .title-info.hasCoupon {
+  margin-right: 14px;
 }
 .course-box .list li .item-main .main-content .middle .money-info {
   color: #FA4535;
