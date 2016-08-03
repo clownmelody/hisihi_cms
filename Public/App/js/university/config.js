@@ -6,8 +6,12 @@ requirejs.config({
     baseUrl: window.hisihiUrlObj.js,
     paths: {
         $:'sharecommon/zepto.min',
+        fastclick:'sharecommon/fastclick',
         prefixfree:'sharecommon/prefixfree.min',
-        base:'sharecommon/base',
+        base:'sharecommon/base-1.1',
+        scale:'sharecommon/scale',
+        mysilder:'sharecommon/myslider',
+        toucher:'orgbasicinfo/2.9.5/toucher',
         home:'university/home',
     },
     shim: {
@@ -16,6 +20,9 @@ requirejs.config({
         },
         prefixfree:{
             output:'prefixfree'
+        },
+        scale:{
+            output:'scale'
         },
     }
 });
