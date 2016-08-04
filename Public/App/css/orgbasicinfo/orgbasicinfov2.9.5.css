@@ -410,6 +410,7 @@ body {
   height: 13px;
   display: inline-block;
   margin-right: 2px;
+  transform: scale(0.8);
 }
 .logo-box .logo-main-info .user-number-box span:last-child {
   margin-left: 14px;
@@ -417,6 +418,7 @@ body {
 .logo-box .logo-main-info .user-number-box span:last-child img {
   width: 12px;
   height: 13px;
+  transform: scale(1);
 }
 .logo-box .logo-main-info .user-number-box span label {
   color: #212121;
