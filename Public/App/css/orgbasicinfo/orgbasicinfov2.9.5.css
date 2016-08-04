@@ -134,6 +134,56 @@ ul li {
   line-height: 32px;
   z-index: 10001;
 }
+#downloadCon-new {
+  opacity: 1;
+  position: fixed;
+  width: 100%;
+  height: 56px;
+}
+#downloadCon-new > img {
+  width: 42px;
+  height: 42px;
+  position: absolute;
+  left: 12px;
+  top: 7px;
+}
+#downloadCon-new .words {
+  margin-left: 63px;
+  padding-top: 9px;
+  color: white;
+}
+#downloadCon-new .words .title label {
+  font-size: 16px;
+}
+#downloadCon-new .words .title .stars {
+  margin-left: 5px;
+}
+#downloadCon-new .words .title .stars img {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+#downloadCon-new .words p {
+  margin: 1px 0;
+  font-size: 12px;
+  color: #d3d3d3;
+}
+#downloadCon-new #download {
+  width: 80px;
+  height: 32px;
+  position: absolute;
+  top: 50%;
+  margin-top: -16px;
+  right: 12px;
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  color: white;
+  font-size: 15px;
+  border-radius: 2px;
+  line-height: 32px;
+  z-index: 10001;
+}
 /*IScroll的样式*/
 .scroller {
   position: relative;
@@ -260,59 +310,6 @@ body {
   margin: 0;
   background-color: #f2f2f2;
 }
-#downloadCon-new {
-  top: 0;
-  background-color: #9E9A98;
-  opacity: 1;
-  position: fixed;
-  width: 100%;
-  height: 56px;
-}
-#downloadCon-new > img {
-  width: 42px;
-  height: 42px;
-  position: absolute;
-  left: 12px;
-  top: 9px;
-}
-#downloadCon-new .words {
-  margin-left: 63px;
-  padding-top: 9px;
-  color: white;
-}
-#downloadCon-new .words .title label {
-  font-size: 16px;
-}
-#downloadCon-new .words .title .stars {
-  margin-left: 5px;
-}
-#downloadCon-new .words .title .stars img {
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-}
-#downloadCon-new .words p {
-  margin: 1px 0;
-  font-size: 12px;
-  color: #d3d3d3;
-}
-#downloadCon-new #download {
-  width: 80px;
-  height: 32px;
-  position: absolute;
-  top: 50%;
-  margin-top: -16px;
-  right: 12px;
-  display: block;
-  text-decoration: none;
-  background-color: #FF5A00;
-  text-align: center;
-  color: white;
-  font-size: 15px;
-  border-radius: 2px;
-  line-height: 32px;
-  z-index: 10001;
-}
 #wrapper {
   padding-top: 56px;
   overflow-x: hidden;
@@ -397,8 +394,8 @@ body {
   font-size: 14px;
 }
 .logo-box .logo-main-info .name-main-box .cert-box {
-  vertical-align: 7px;
-  margin-left: 5px;
+  vertical-align: 6px;
+  margin-left: 2px;
 }
 .logo-box .logo-main-info .name-main-box .cert-box img {
   width: 18px;

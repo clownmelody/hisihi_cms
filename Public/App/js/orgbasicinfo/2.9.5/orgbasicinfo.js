@@ -71,7 +71,13 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     }
 
-    OrgBasicInfo.prototype=new Base();
+    var config={
+        downloadBar:{
+            show:true,
+            pos:0
+        }
+    };
+    OrgBasicInfo.prototype=new Base(config)
     OrgBasicInfo.constructor=OrgBasicInfo;
     var t=OrgBasicInfo.prototype;
 
@@ -220,17 +226,16 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             item=authen[i];
             if(item.default_display=='1') {
                 //显示加v
-                if (item.name == '嘿设汇认证') {
-                    if (item.status && item.hisihi_add_v && item.hisihi_add_v == true) {
-                        $('.v-cert').show();
-                        continue;
-                    }
-                } else {
-                    if (item.status) {
-                        url = item.pic_url
-                    } else {
-                        url = item.disable_pic_url;
-                    }
+                if (item.hisihi_add_v && item.hisihi_add_v == true) {
+                    $('.v-cert').show();
+                    continue;
+                }
+                 else {
+                    //if (item.status) {
+                        url = item.tag_pic_url
+                    //} else {
+                    //    url = item.disable_pic_url;
+                    //}
                     str += '<img src="' + url + '">';
                 }
             }
