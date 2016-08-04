@@ -152,7 +152,8 @@ define(['base','lazyloading','fastclick'],function(Base){
                 couponId= 0,
                 courseId=item.course_id,
                 rightStr='',
-                marginRight=0;
+                marginRight= 0,
+                className='';
 
             //有优惠券
             if(coupon) {
@@ -162,6 +163,7 @@ define(['base','lazyloading','fastclick'],function(Base){
                 couponId = coupon.id;
                 rightStr=this.getRightStrAndMarginInfo(coupon);
                 marginRight='80px';
+                className='hasCoupon';
             }
             money=this.judgeInfoNullInfo(item.price);
             if(money!=''){
@@ -177,7 +179,7 @@ define(['base','lazyloading','fastclick'],function(Base){
                         '<div class="item-main">'+
                             '<div class="main-content">'+
                                 '<div class="middle" style="margin-right:'+marginRight+'">'+
-                                    '<p class="title-info">'+item.course_name+'</p>'+
+                                    '<p class="title-info ' + className + '">'+item.course_name+'</p>'+
                                     '<p class="money-info">'+money+'</p>'+
                                     '<p class="time-info">'+stime+'</p>'+
                                 '</div>'+

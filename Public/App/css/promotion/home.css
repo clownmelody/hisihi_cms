@@ -267,7 +267,7 @@ body {
   max-width: 100%;
 }
 .promotion-box .content-box {
-  margin: 0 13px 0 10px;
+  margin: 0 13px 0 14px;
 }
 .promotion-box .content-box p {
   color: #808080;
@@ -285,18 +285,19 @@ body {
   font-size: 14px;
   color: #212121;
   border-bottom: 1px solid #CCC;
-  padding-left: 10px;
+  padding-left: 14px;
   line-height: 40px;
   font-weight: bold;
 }
 .course-box .list li {
   width: auto;
   height: 90px;
-  border-bottom: 1px solid #ccc;
 }
 .course-box .list li .item-main {
   height: 100%;
-  margin: 0px 13px 0 10px;
+  margin: 0px 0 0 14px;
+  padding-right: 14px;
+  border-bottom: 1px solid #ccc;
 }
 .course-box .list li .item-main > div {
   float: left;
@@ -311,7 +312,7 @@ body {
   margin: 0 80px 0 82px;
 }
 .course-box .list li .item-main .main-content .middle p {
-  margin: 0px 0;
+  margin: 0;
 }
 .course-box .list li .item-main .main-content .middle .title-info {
   text-overflow: ellipsis;
@@ -319,7 +320,10 @@ body {
   overflow: hidden;
   font-size: 14px;
   color: #212121;
-  margin: 12px 0 0 0;
+  margin-top: 12px;
+}
+.course-box .list li .item-main .main-content .middle .title-info.hasCoupon {
+  margin-right: 14px;
 }
 .course-box .list li .item-main .main-content .middle .money-info {
   color: #FA4535;
@@ -342,8 +346,7 @@ body {
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  text-align: center;
-  padding: 12px 10px 12px 0;
+  padding: 12px 10px 0 0;
 }
 .course-box .list li .item-main .left .img-box img {
   width: 66px;
@@ -488,7 +491,7 @@ body {
 }
 @media screen and (max-width: 320px) {
   .course-box .list li .item-main {
-    margin: 0 13px 0 10px;
+    margin: 0 13px 0 14px;
   }
   .course-box .list li .item-main .main-content .middle {
     height: 100%;
@@ -496,6 +499,7 @@ body {
   }
   .course-box .list li .item-main .main-content .middle .title-info {
     margin-top: 12px;
+    margin-right: 14px;
     height: 26px;
     line-height: 26px;
     font-size: 12px;
