@@ -163,8 +163,8 @@ body{
 
     &.underTip {
       position: fixed;
-      left:0px;
-      right:0px;
+      left: 0px;
+      right: 0px;
       bottom: 0px;
       @p: #fafafa;
       @x: #212121;
@@ -182,20 +182,26 @@ body{
         height: 100%;
         line-height: @u;
       }
+      a:link {
+        color: @x;
+      }
       .button {
+        background-color: #cccccc;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
         .img {
           background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
           background-size: 612px*0.5 130px*0.5;
           display: inline-block;
           margin-left: 16%;
           margin-top: 13%;
-      }
+        }
         #colImg {
-          .size(@m,@m);
+          .size(@m, @m);
           background-position: -166px 0px;
         }
         #reqImg {
-          .size(@o,@o);
+          .size(@o, @o);
           background-position: -166px -30px;
         }
         span {
@@ -217,9 +223,63 @@ body{
         .listing {
           color: @l;
           text-align: center;
+        }
       }
-      }
+
     }
+
+      &.have-class {
+        height: 400px;
+        background-color: #ffffff;
+        text-align: center;
+        @a: 18px;
+        @q: 40px;
+        @e: 90%;
+        @y: 14px;
+        @color: #808080;
+        @x: #212121;
+        @l: #ffffff;
+        .input {
+          height: @q;
+          margin-bottom: @y;
+          border: 1px solid #cccccc;
+          border-radius: 4px;
+          width: @e;
+        }
+        .class-title {
+          font-size: @a;
+          font-weight: bold;
+          padding-top: 24px;
+          padding-bottom: 15px;
+          #close {
+            float: right;
+            padding-right: 5%;
+          }
+        }
+        .class-num {
+        }
+        .class-num {
+        }
+        .class-major{
+          margin-left: 5%;
+          line-height: @q;
+          font-size: @y;
+        }
+        #warning-tip {
+          color: @color;
+          font-size: 12px;
+        }
+        .class-button {
+          margin-top: @y;
+          color: @l;
+          background-color: @x;
+        }
+
+
+
+
+      }
+
 
   }
 

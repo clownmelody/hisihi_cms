@@ -462,6 +462,14 @@ body .main-item.underTip li {
   height: 100%;
   line-height: 50px;
 }
+body .main-item.underTip a:link {
+  color: #212121;
+}
+body .main-item.underTip .button {
+  background-color: #cccccc;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
 body .main-item.underTip .button .img {
   background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
   background-size: 306px 65px;
@@ -498,6 +506,42 @@ body .main-item.underTip #join-class {
 body .main-item.underTip #join-class .listing {
   color: #ffffff;
   text-align: center;
+}
+body .main-item.have-class {
+  height: 400px;
+  background-color: #ffffff;
+  text-align: center;
+}
+body .main-item.have-class .input {
+  height: 40px;
+  margin-bottom: 14px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  width: 90%;
+}
+body .main-item.have-class .class-title {
+  font-size: 18px;
+  font-weight: bold;
+  padding-top: 24px;
+  padding-bottom: 15px;
+}
+body .main-item.have-class .class-title #close {
+  float: right;
+  padding-right: 5%;
+}
+body .main-item.have-class .class-major {
+  margin-left: 5%;
+  line-height: 40px;
+  font-size: 14px;
+}
+body .main-item.have-class #warning-tip {
+  color: #808080;
+  font-size: 12px;
+}
+body .main-item.have-class .class-button {
+  margin-top: 14px;
+  color: #ffffff;
+  background-color: #212121;
 }
 body .nodata {
   position: fixed;

@@ -86,6 +86,9 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         $('body').append(str);
     };
 
+    //电话号码
+    //$('#request a').attr('href','tel:'+data.phone_num);
+
     //简介
     t.getBasicIntroduceInfo=function(result){
         return '<div class="main-item introduce">'+
@@ -338,23 +341,37 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return arr;
     };
 
+    //底部功能条（收藏/咨询/预约试听）
+    t.getUnderTip=function() {
+            //return '<ul class="main-item underTip">' +
+            //    '<li id="collection">' +
+            //        '<a href="http://www.hisihi.com/download.php">'+
+            //            '<div class="button"><div class="img" id="colImg"></div><span>收藏</span><div>' +
+            //        '</a>'+
+            //    '</li>' +
+            //    '<li id="request">' +
+            //        '<a href="tel:10001">'+
+            //        '<div class="button"><div class="img" id="reqImg"></div><span>客服</span><div>' +
+            //        '</a>'+
+            //    '</li>' +
+            //    '<li id="join-class">' +
+            //        '<div class="rightInfo listing">预约试听</div>' +
+            //    '</li>' +
+            //        '<div style="clear: both;"></div>' +
+            //    '</ul>',
 
 
-        //底部功能条（收藏/咨询/预约试听）
-        t.getUnderTip=function() {
-            return '<ul class="main-item underTip">' +
-                '<li id="collection">' +
-                '<div class="button"><div class="img" id="colImg"></div><span>收藏</span><div>' +
-                '</li>' +
-                '<li id="request">' +
-                '<div class="button"><div class="img" id="reqImg"></div><span>收藏</span><div>' +
-                '</li>' +
-                '<li id="join-class">' +
-                '<div class="rightInfo listing">预约试听</div>' +
-                '</li>' +
-                '<div style="clear: both;"></div>' +
-                '</ul>';
-        }
+            return '<div class="main-item have-class">'+
+            '<div class="class-title">我想报考<span id="close">x</span></div>'+
+            '<input type="number" class="class-num input" placeholder="电话号码" size="14"></input>'+
+            '<input type="text" class="class-name input" placeholder="姓名" size="14"></input>'+
+            '<input class="class-qualifications input" placeholder="学历" size="14"></input>'+
+            '<div class="class-major input">视觉传达设计</div>'+
+            '<span id="warning-tip">留学顾问将在15分钟之内联系您</span>'+
+            '<button class="class-button input">提交</button>'+
+        '</div>';
+
+    }
 
     return University;
 });
