@@ -6,7 +6,7 @@
 define(['$','fastclick'],function() {
     FastClick.attach(document.body);
     /**基础类**/
-    var Base = function () {
+    var Base = function (config) {
         var href= window.location.href,
             reg = /(\d+)\.(\d+)\.(\d+)\.(\d+)/; // 匹配ip地址  http://91.16.0.1/hisihi-cms/api.php?s=/public/topContentV2_9/id/1263
 
@@ -25,14 +25,45 @@ define(['$','fastclick'],function() {
         };
         this.timeOutFlag=false; //防止出现在重复快速点击时，计时器混乱添加的回调方法
 
+        this.extentSetting(config);
+
         this._initTimeFormat();
         this._initStringExtentFn();
         this._addTip();
         this._addLoadingImg();
+        this._addDownloadBar(config);
 
     };
 
     Base.prototype = {
+
+        /*默认参数设置*/
+        extentSetting:function(config){
+            this.config=defaultConfig;
+            if(!config){
+                return;
+            }
+            for(var item in defaultConfig){
+                var val=config[item];
+                if(val!='undefined'){
+                    if(typeof val =='object'){
+                        this.config[item]=this.extentSettingSub(this.config[item],val);
+                    }else {
+                        this.config[item] = val;
+                    }
+                }
+            }
+        },
+
+        extentSettingSub:function(defaultObj,obj){
+            for(var item in defaultObj){
+                if(typeof obj[item]!='undefined'){
+                    defaultObj[item]=obj[item];
+                }
+            }
+            return defaultObj;
+        },
+
 
         /*
          *获得用户的信息 区分安卓和ios
@@ -561,6 +592,53 @@ define(['$','fastclick'],function() {
             $wrapper.css({'margin-bottom': h +'px'});
             return h;
         },
+
+        /*添加下载条*/
+        _addDownloadBar:function(){
+            var downloadBar=this.config.downloadBar;
+            if(downloadBar.show){
+                var style='bottom:0';
+                if(!downloadBar.pos){
+                    style='top:0';
+                }
+
+                var str='<div id="downloadCon-new" style="'+style +';background-color:'+downloadBar.backgroundColor+'">'+
+                            '<img src="'+downloadBar.logo+'" class="allDownImg" />'+
+                            '<div class="words">'+
+                                '<div class="title">'+
+                                    '<label>'+downloadBar.title+'</label>'+
+                                    '<span class="stars">'+
+                                        '<img src="'+downloadBar.starImg+'">'+
+                                        '<img src="'+downloadBar.starImg+'">'+
+                                        '<img src="'+downloadBar.starImg+'">'+
+                                        '<img src="'+downloadBar.starImg+'">'+
+                                        '<img src="'+downloadBar.starImg+'">'+
+                                    '</span>'+
+                                '</div>'+
+                                '<p>'+downloadBar.description+'</p>'+
+                            '</div>'+
+                            '<a id="download" style="background-color:'+downloadBar.btnBgColor+'" href="http://www.hisihi.com/download.php">'+downloadBar.downloadBtnWord+'</a>'+
+                        '</div>';
+                $('body').append(str);
+            }
+        },
+
+
     };
+
+    var defaultConfig={
+        downloadBar:{
+            show:false,
+            pos:1,//1 表示在底部，0表示在顶部
+            title:'嘿设汇',
+            description:'设计师必备，百万设计师都在用',
+            logo:'http://pic.hisihi.com/2016-08-04/1470283879133258.png',
+            starImg:'http://pic.hisihi.com/2016-08-04/1470283927495292.png',
+            downloadBtnWord:'立即下载',
+            btnBgColor:'#FF5A00',
+            backgroundColor:'#9E9A98',
+        }
+    };
+
     return Base;
 });

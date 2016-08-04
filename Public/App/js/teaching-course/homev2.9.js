@@ -263,7 +263,7 @@ define(['base','fastclick'],function(Base){
                     '</div>'+
                 '</div>'+
                 '<div class="coupon-left">'+
-                    '<img id="coupon-icon" src="http://91.16.0.13/hisihi-cms/Public/App/images/teaching-course/ic.png"></img>' +
+                    '<img id="coupon-icon" src="/hisihi-cms/Public/App/images/teaching-course/ic_class.png">' +
                 '</div>'+
                 '<div class="coupon-right">'+
                     '<div class="coupon-status '+className+'"></div>'+
