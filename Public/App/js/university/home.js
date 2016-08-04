@@ -65,13 +65,15 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             strNums=this.getNumsInfoStr(result),
             strMajor=this.getMajorInfoStr(result),
             strEn=this.getInEnvironmentStr(result),
-            strAlbum=this.getAlbumInfo();
+            strAlbum=this.getAlbumInfo(),
+            strUnder=this.getUnderTip(result);
 
         var str=strBasic+
             strNums+
             strMajor+
             strEn+
-            strAlbum;
+            strAlbum+
+            strUnder;
         $('body').append(str);
     };
 
@@ -328,6 +330,34 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
         return arr;
     };
+
+
+    //下载条
+
+
+    //底部功能条（收藏/咨询/预约试听）
+    t.getUnderTip=function(result){
+        if(!result || result.count==0){
+             //show  display none ;
+        }
+        return '<ul class="main-item underTip">'+
+                    '<li id="collection">'+
+                        '<div class="underTip-content"><span class="leftInfo"></span><span class="rightInfo">收藏</span></div>'+
+                    '</li>'+
+                    '<li id="request">'+
+                        '<div class="underTip-content"><span class="leftInfo"></span><span class="rightInfo">咨询</span></div>'+
+                    '</li>'+
+                    '<li id="join-class">'+
+                        '<div class="underTip-content join-class"><span class="rightInfo listing">预约试听</span></div>'+
+                    '</li>'+
+                    '<div style="clear: both;"></div>'+
+                '</ul>';
+    };
+
+
+
+
+
 
     return University;
 });
