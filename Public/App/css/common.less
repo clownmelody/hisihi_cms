@@ -134,6 +134,11 @@ ul li {
   }
 }
 
+.noscroll{
+  height: 100%;
+  overflow: hidden;
+}
+
 #downloadCon{
   position: fixed;
   bottom: 0;
@@ -172,6 +177,7 @@ ul li {
     position: absolute;
     left: 12px;
     top: (@h - @ih)/2;
+    margin-right: 2px;
   }
   .words{
     margin-left: 63px;
@@ -186,6 +192,7 @@ ul li {
         img{
           .size(10px,10px);
           display: inline-block;
+          margin-right: 2px;
         }
       }
     }
@@ -323,7 +330,7 @@ ul li {
       width: 700px;
       margin: 0 auto;
     }
-    #downloadCon{
+    #downloadCon,#downloadCon-new{
       width: 700px;
       left:50%;
       margin-left: -350px;

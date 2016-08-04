@@ -107,6 +107,10 @@ ul li {
   color: #757070;
   text-align: center;
 }
+.noscroll {
+  height: 100%;
+  overflow: hidden;
+}
 #downloadCon {
   position: fixed;
   bottom: 0;
@@ -146,6 +150,7 @@ ul li {
   position: absolute;
   left: 12px;
   top: 7px;
+  margin-right: 2px;
 }
 #downloadCon-new .words {
   margin-left: 63px;
@@ -162,6 +167,7 @@ ul li {
   width: 10px;
   height: 10px;
   display: inline-block;
+  margin-right: 2px;
 }
 #downloadCon-new .words p {
   margin: 1px 0;
@@ -291,7 +297,8 @@ ul li {
     width: 700px;
     margin: 0 auto;
   }
-  #downloadCon {
+  #downloadCon,
+  #downloadCon-new {
     width: 700px;
     left: 50%;
     margin-left: -350px;
@@ -301,17 +308,12 @@ ul li {
   background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
   background-size: 306px 65px;
 }
-.ovfHidden {
-  overflow: hidden;
-  height: 100%;
-}
 body {
   padding: 0;
   margin: 0;
   background-color: #f2f2f2;
 }
 #wrapper {
-  padding-top: 56px;
   overflow-x: hidden;
   display: none;
 }
@@ -379,19 +381,16 @@ body {
   text-align: center;
   margin-top: 6px;
 }
-.logo-box .logo-main-info .name-main-box i {
-  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
-  background-size: 306px 65px;
-  width: 34px;
-  height: 33px;
-  display: inline-block;
-  background-position: -118px -32px;
+.logo-box .logo-main-info .name-main-box img {
   display: none;
+  width: 36px;
+  height: 36px;
 }
 .logo-box .logo-main-info .name-main-box label {
   vertical-align: 10px;
   color: #212121;
   font-size: 14px;
+  margin-left: 3px;
 }
 .logo-box .logo-main-info .name-main-box .cert-box {
   vertical-align: 6px;
@@ -404,28 +403,25 @@ body {
 }
 .logo-box .logo-main-info .user-number-box {
   text-align: center;
+  margin-top: 3px;
 }
-.logo-box .logo-main-info .user-number-box span i {
-  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
-  background-size: 306px 65px;
-  width: 14px;
-  height: 9px;
+.logo-box .logo-main-info .user-number-box span img {
+  width: 21px;
+  height: 13px;
   display: inline-block;
-  background-position: -227px -32px;
-  margin-right: 4px;
+  margin-right: 2px;
 }
 .logo-box .logo-main-info .user-number-box span:last-child {
   margin-left: 14px;
 }
-.logo-box .logo-main-info .user-number-box span:last-child i {
-  width: 10px;
-  height: 11px;
-  background-position: -227px -9px;
+.logo-box .logo-main-info .user-number-box span:last-child img {
+  width: 12px;
+  height: 13px;
 }
 .logo-box .logo-main-info .user-number-box span label {
   color: #212121;
-  font-size: 11px;
-  vertical-align: 1px;
+  font-size: 12px;
+  vertical-align: 2px;
 }
 .main-item {
   background-color: #fff;
@@ -810,7 +806,6 @@ body {
 }
 .comments-box {
   overflow-x: hidden;
-  margin-bottom: 65px;
 }
 .comments-box .star-item {
   display: inline-block;
@@ -880,11 +875,10 @@ body {
   display: inline-block;
   width: 12px;
   height: 12px;
-  margin-right: 2px;
   background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
   background-size: 306px 65px;
   background-position: -203px -8px;
-  margin-right: -2px;
+  margin-right: 2px;
 }
 .comments-box .comment-box-stars .assessmentDetail li .stars-block i.half {
   background-position: -203px -31px;

@@ -7,7 +7,7 @@ requirejs.config({
     paths: {
         $:'sharecommon/zepto.min',
         prefixfree:'sharecommon/prefixfree.min',
-        base:'sharecommon/base',
+        base:'sharecommon/base-1.1',
         fastclick:'sharecommon/fastclick',
         lazyloading:'sharecommon/lazyloading',
         home:'promotion/home',

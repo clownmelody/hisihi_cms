@@ -23,7 +23,7 @@ define(['base','fastclick'],function(Base){
         },100);
 
         //领取优惠券
-        $(document).on(eventName,'.sawtooth-right-main', $.proxy(this,'operateCoupon'));
+        $(document).on(eventName,'.coupon-right .coupon-status', $.proxy(this,'operateCoupon'));
 
         /*模态窗口操作*/
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
@@ -263,7 +263,7 @@ define(['base','fastclick'],function(Base){
                     '</div>'+
                 '</div>'+
                 '<div class="coupon-left">'+
-                    '<img id="coupon-icon" src="/hisihi-cms/Public/App/images/teaching-course/ic_class.png">' +
+                    '<img id="coupon-icon" src="/hisihi-cms/Public/App/images/teaching-course/ic.png">' +
                 '</div>'+
                 '<div class="coupon-right">'+
                     '<div class="coupon-status '+className+'"></div>'+
@@ -282,9 +282,6 @@ define(['base','fastclick'],function(Base){
         if(!data){
             return temp;
         }
-        //data.is_obtain=true;
-        //data.is_used=true;
-        //data.is_out_of_date=false;
         var is_obtain=data.is_obtain,
             is_used=data.is_used,
             out_date=data.is_out_of_date;
@@ -315,12 +312,16 @@ define(['base','fastclick'],function(Base){
         }
         var $target=$(e.currentTarget),
             $parent=$target.parents('.coupon-basic-info'),
-            id=$parent.attr('data-id');
+            id=$parent.attr('data-id'),
+            that=this;
         //未领取
         if($target.hasClass('un-take-in')){
             this.execTakeInCoupon(id,function(result) {
                 if (result !== false) {
                     window.location.href = 'hisihi://coupon/detailinfo?id=' + result.obtain_id;
+
+                    //数据统计平台
+                    that.updateStatisticsNum('coupon_obtain');
                     return;
                 }
             });
@@ -358,7 +359,7 @@ define(['base','fastclick'],function(Base){
     * */
     t.execTakeInCoupon=function(id,callback){
         this.showTipsNoHide('领取中…');
-        var $btn=$('.sawtooth-right-main'),
+        var $btn=$('.coupon-status'),
             that = this,
             para = {
                 url: window.hisihiUrlObj.api_url + 'v1/user/coupons',

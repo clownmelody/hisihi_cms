@@ -25,6 +25,8 @@ define(['base','lazyloading','fastclick'],function(Base){
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
+        this.updateStatisticsNum('coupon_obtain');
+
         this.init();
     };
 
@@ -274,12 +276,16 @@ define(['base','lazyloading','fastclick'],function(Base){
         var $target=$(e.currentTarget),
             $parent=$target.parents('li'),
             couponId=$parent.attr('data-coupon-id'),  //券id
-            courceId=$parent.attr('data-course-id');  //课程id
+            courceId=$parent.attr('data-course-id'),  //课程id
+            that=this;
         //未领取
         if($target.hasClass('un-take-in')){
             this.execTakeInCoupon($target,couponId,courceId,function(result){
                 if(result!==false){
-                    window.location.href='hisihi://coupon/detailinfo?id='+result.obtain_id;
+                    window.location.href='hisihi://coupon/detailinfo?id='+result.obtain_id;  //领取成功后，跳转到优惠券详情
+
+                    //调用数据平台接口，统计领取量
+                    that.updateStatisticsNum('coupon_obtain');
                     return;
                 }
             });
@@ -298,6 +304,7 @@ define(['base','lazyloading','fastclick'],function(Base){
             return;
         }
     };
+
 
     /*
      * 领取优惠券

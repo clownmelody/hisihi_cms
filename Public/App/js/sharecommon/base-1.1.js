@@ -23,6 +23,8 @@ define(['$','fastclick'],function() {
             session_id:null,
             name:this.staticUserNameStr
         };
+        this.statisticToken;  //统计平台使用的 公用token
+
         this.timeOutFlag=false; //防止出现在重复快速点击时，计时器混乱添加的回调方法
 
         this.extentSetting(config);
@@ -129,6 +131,11 @@ define(['$','fastclick'],function() {
                         that.userInfo.token=token;
                         that.userInfo.name=userInfo.account;
                         callback && callback.call(that,that.userInfo);
+
+                        //统计平台使用的 token
+                        if(userInfo.account==that.staticUserNameStr) {
+                            that.statisticToken = token;
+                        }
                     });
                 }
             }
@@ -264,6 +271,16 @@ define(['$','fastclick'],function() {
                     }
                 };
             this.getDataAsyncPy(para);
+        },
+
+        /*统计平台数据更新*/
+        updateStatisticsNum:function(statisticsType){
+            this.getDataAsyncPy({
+                    url:hisihiUrlObj.athena_api_url+'/bootstrap',
+                    paras:{type:statisticsType},
+                    needToken:true,
+                    token:this.statisticToken
+                });
         },
 
 
@@ -597,9 +614,10 @@ define(['$','fastclick'],function() {
         _addDownloadBar:function(){
             var downloadBar=this.config.downloadBar;
             if(downloadBar.show){
-                var style='bottom:0';
+                var style='bottom:0',style1={'padding-bottom': downloadBar.height};
                 if(!downloadBar.pos){
                     style='top:0';
+                    style1={'padding-top': downloadBar.height};
                 }
 
                 var str='<div id="downloadCon-new" style="'+style +';background-color:'+downloadBar.backgroundColor+'">'+
@@ -619,10 +637,26 @@ define(['$','fastclick'],function() {
                             '</div>'+
                             '<a id="download" style="background-color:'+downloadBar.btnBgColor+'" href="http://www.hisihi.com/download.php">'+downloadBar.downloadBtnWord+'</a>'+
                         '</div>';
-                $('body').append(str);
+                $('body').append(str).css(style1);
             }
         },
 
+        /*
+        * 禁止(恢复)滚动
+        * para：
+        * flag - {bool} 允许（true）或者禁止（false）滚动
+        * $target - {jquery obj} 滚动对象
+        */
+        scrollControl:function(flag,$target){
+            if(!flag) {
+                $target = $target || $('body');
+                this.scrollTop = $target.scrollTop();
+                $('html,body').addClass('noscroll');
+            }else{
+                $('html,body').removeClass('noscroll');
+                window.scrollTo(0, this.scrollTop);
+            }
+        },
 
     };
 
@@ -637,6 +671,7 @@ define(['$','fastclick'],function() {
             downloadBtnWord:'立即下载',
             btnBgColor:'#FF5A00',
             backgroundColor:'#9E9A98',
+            height:'56px'
         }
     };
 

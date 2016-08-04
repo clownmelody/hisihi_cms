@@ -107,6 +107,10 @@ ul li {
   color: #757070;
   text-align: center;
 }
+.noscroll {
+  height: 100%;
+  overflow: hidden;
+}
 #downloadCon {
   position: fixed;
   bottom: 0;
@@ -146,6 +150,7 @@ ul li {
   position: absolute;
   left: 12px;
   top: 7px;
+  margin-right: 2px;
 }
 #downloadCon-new .words {
   margin-left: 63px;
@@ -162,6 +167,7 @@ ul li {
   width: 10px;
   height: 10px;
   display: inline-block;
+  margin-right: 2px;
 }
 #downloadCon-new .words p {
   margin: 1px 0;
@@ -291,7 +297,8 @@ ul li {
     width: 700px;
     margin: 0 auto;
   }
-  #downloadCon {
+  #downloadCon,
+  #downloadCon-new {
     width: 700px;
     left: 50%;
     margin-left: -350px;
@@ -632,10 +639,10 @@ body {
 }
 .main-item.lessons-more ul li .main-content .singin-limit-nums {
   position: absolute;
-  width: 32px;
+  width: 40px;
   height: 16px;
   top: 14px;
-  right: 8px;
+  right: 0;
   text-align: center;
   color: white;
   line-height: 16px;
@@ -644,7 +651,7 @@ body {
 }
 .main-item.lessons-more ul li .main-content .singin-limit-nums canvas {
   height: 35px;
-  width: 85px;
+  width: 100px;
 }
 .main-item.lessons-more ul li .main-content .singin-limit-nums span {
   display: block;
