@@ -309,7 +309,7 @@ body {
   background: #F2F2F2;
   max-width: 100%;
   overflow: auto;
-  position: absolute;
+  padding-bottom: 50px;
 }
 p {
   line-height: 22px;
@@ -449,6 +449,9 @@ body .main-item.album .album-info .album-ul > li:first-child > img {
 }
 body .main-item.underTip {
   position: fixed;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
   font-size: 12px;
   height: 50px;
   padding: 0;

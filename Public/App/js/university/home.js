@@ -235,6 +235,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                 '</div></div>';
     };
 
+    //大学相册
     t.getAlbumInfo= function () {
         var that=this,
             str='';
@@ -253,8 +254,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return str;
     }
 
-
-    //大学相册
     t.getAlbumStr=function(result){
         if(!result || result.count==0){
             return '';
@@ -293,7 +292,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             imgArr.push(url);
         }
         var arr=this.getItemStr(imgArr);
-
 
         var $span=$('.pics-nav span');
         $span.text(index+1+'/'+len);
@@ -343,10 +341,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
 
         //底部功能条（收藏/咨询/预约试听）
-        t.getUnderTip=function(result) {
-            if (!result || result.count == 0) {
-                //show  display none ;
-            }
+        t.getUnderTip=function() {
             return '<ul class="main-item underTip">' +
                 '<li id="collection">' +
                 '<div class="button"><div class="img" id="colImg"></div><span>收藏</span><div>' +
