@@ -160,20 +160,43 @@ body{
       }
     }
 
-    .underTip {
+    &.underTip {
       @p: #fafafa;
       @x: #212121;
       @l: #ffffff;
+      @m: 40px;
+      @u: 50px;
       font-size: 12px;
-      ul {
-        float: left;
+      height: @u;
+      padding: 0;
+      margin: 0;
+        li {
+          display: inline-block;
+          float: left;
+          height: 100%;
+          line-height: @u;
+        }
+      .leftInfo {
+        background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
+        background-size: @m @m;
+        .size(@m,@m);
       }
       #collection {
         width: 25%;
-        background: url("../../origin");
+        color: @x;
       }
-
-
+      #request {
+        width: 25%;
+      }
+      #join-class {
+        width: 50%;
+        font-size: 15px;
+        background-color: @x;
+        .listing {
+          color: @l;
+          text-align: center;
+      }
+      }
     }
 
   }

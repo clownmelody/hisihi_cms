@@ -392,7 +392,7 @@ body .main-item.majors .majors-item ul {
 }
 body .main-item.majors .majors-item ul li {
   display: inline-block;
-  border: 1px solid #FF5A00;
+  border: 0.5px solid #FF5A00;
   color: #FF5A00;
   border-radius: 2px;
   background-clip: padding-box;
@@ -438,6 +438,40 @@ body .main-item.album .album-info .album-ul > li:first-child {
 }
 body .main-item.album .album-info .album-ul > li:first-child > img {
   padding-left: 0;
+}
+body .main-item.underTip {
+  font-size: 12px;
+  height: 50px;
+  padding: 0;
+  margin: 0;
+}
+body .main-item.underTip li {
+  display: inline-block;
+  float: left;
+  height: 100%;
+  line-height: 50px;
+}
+body .main-item.underTip .leftInfo {
+  background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
+  background-size: 40px 40px;
+  width: 40px;
+  height: 40px;
+}
+body .main-item.underTip #collection {
+  width: 25%;
+  color: #212121;
+}
+body .main-item.underTip #request {
+  width: 25%;
+}
+body .main-item.underTip #join-class {
+  width: 50%;
+  font-size: 15px;
+  background-color: #212121;
+}
+body .main-item.underTip #join-class .listing {
+  color: #ffffff;
+  text-align: center;
 }
 body .nodata {
   position: fixed;
@@ -657,4 +691,3 @@ body .nodata p {
 .icon-play:before {
   content: "\e052";
 }
-/*凯尔特竖琴*/

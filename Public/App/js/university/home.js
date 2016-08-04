@@ -30,7 +30,14 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         });
     };
 
-    University.prototype=new Base();
+    var config={
+        downloadBar:{
+            show:true,
+            pos:0
+        }
+    };
+
+    University.prototype=new Base(config);
     University.constructor=University;
     var t=University.prototype;
 
@@ -342,20 +349,18 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
         return '<ul class="main-item underTip">'+
                     '<li id="collection">'+
-                        '<div class="underTip-content"><span class="leftInfo"></span><span class="rightInfo">收藏</span></div>'+
+                        //'<span class="leftInfo"></span><span class="rightInfo">收藏</span>'+
+                        '<div class="button"><div class="img"></div><span>收藏</span><div>'+
                     '</li>'+
                     '<li id="request">'+
-                        '<div class="underTip-content"><span class="leftInfo"></span><span class="rightInfo">咨询</span></div>'+
+                        '<span class="leftInfo"></span><span class="rightInfo">咨询</span>'+
                     '</li>'+
                     '<li id="join-class">'+
-                        '<div class="underTip-content join-class"><span class="rightInfo listing">预约试听</span></div>'+
+                        '<div class="rightInfo listing">预约试听</div>'+
                     '</li>'+
                     '<div style="clear: both;"></div>'+
                 '</ul>';
     };
-
-
-
 
 
 
