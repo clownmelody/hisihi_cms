@@ -150,6 +150,7 @@ ul li {
   position: absolute;
   left: 12px;
   top: 7px;
+  margin-right: 2px;
 }
 #downloadCon-new .words {
   margin-left: 63px;
@@ -166,6 +167,7 @@ ul li {
   width: 10px;
   height: 10px;
   display: inline-block;
+  margin-right: 2px;
 }
 #downloadCon-new .words p {
   margin: 1px 0;

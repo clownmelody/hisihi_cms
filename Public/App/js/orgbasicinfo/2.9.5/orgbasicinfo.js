@@ -11,7 +11,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         this.oid=oid;
         var eventName='click',that=this;
         if(this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.perPageSize=10;
@@ -163,7 +163,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         // 视频、名称、认证
         $box.find('.name-main-box label').text(data.name);
         if(data.is_listen_preview =='0'){
-            $('.name-main-box i').css('display','inline-block');
+            $('.name-main-box img').css('display','inline-block');
         }
         this.setCertInfo(data.authenticationInfo);
 

@@ -11,7 +11,6 @@ body{
 }
 
 #wrapper {
-  padding-top: 56px;
   overflow-x: hidden;
   display: none;
 }
@@ -100,14 +99,16 @@ body{
     .name-main-box{
       text-align: center;
       margin-top: 6px;
-      i{
-        .play-btn;
+      img{
+        //.play-btn;
         display: none;
+        .size(36px,36px);
       }
       label {
         vertical-align: 10px;
         color: @fcolor;
         font-size: 14px;
+        margin-left: 3px;
       }
       .cert-box{
         vertical-align: 6px;
@@ -120,26 +121,27 @@ body{
     }
     .user-number-box{
       text-align: center;
+      margin-top: 3px;
       span{
-        i{
-          .sprite-bg;
-          .size(14px,9px);
+        img{
+          //.sprite-bg;
+          .size(21px,13px);
           display: inline-block;
-          background-position: -227px -32px;
-          margin-right: 4px;
+          //background-position: -227px -32px;
+          margin-right: 2px;
         }
         &:last-child {
           margin-left: 14px;
-          i{
-            .size(10px,11px);
-            background-position: -227px -9px;
+          img{
+            .size(12px,13px);
+            //background-position: -227px -9px;
           }
         }
 
         label{
           color: @fcolor;
-          font-size: 11px;
-          vertical-align: 1px;
+          font-size: 12px;
+          vertical-align: 2px;
         }
       }
     }
@@ -498,7 +500,6 @@ body{
 
 .comments-box {
   overflow-x:hidden;
-  margin-bottom: 65px;
   .star-item {
     display: inline-block;
     .size(12px, 12px);
@@ -551,7 +552,7 @@ body{
           margin: 8px 0 10px 0;
           i {
             .star-item;
-            margin-right: -2px;
+            margin-right: 2px;
           }
         }
       }
