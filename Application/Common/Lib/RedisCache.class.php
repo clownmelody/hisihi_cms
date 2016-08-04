@@ -230,7 +230,7 @@ class RedisCache
         // 某些action的缓存，多版本会共用一个缓存
         // 每个action可能对应多个版本号集合
         // 每个版本号集合的第一位代表该集合的转换值
-        $version_same_kind = array('forumfilter'=> array(array('2.91', '2.91', '2.92', '2.93', '2.94')));
+        $version_same_kind = array('forumfilter'=> array(array('2.91', '2.91', '2.92', '2.93', '2.94', '2.95')));
 
 //        $actions = ['forumfilter'];
         if (!array_key_exists($action_name, $version_same_kind)){
