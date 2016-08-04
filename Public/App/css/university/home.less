@@ -8,6 +8,7 @@ body{
   max-width: 100%;
   // .abs-all-zero();
   overflow: auto;
+  position: absolute;
 }
 p{
   line-height: 22px;
@@ -134,8 +135,8 @@ body{
     }
 
     &.album {
-      margin:15px auto 0 auto;
-      height: 160px;
+      margin:15px auto 10px auto;
+      height: 150px;
       .album-info {
         overflow: auto;
         .album-ul {
@@ -161,25 +162,43 @@ body{
     }
 
     &.underTip {
+      position: fixed;
       @p: #fafafa;
       @x: #212121;
       @l: #ffffff;
-      @m: 40px;
+      @o: 22px;
+      @m: 25px;
       @u: 50px;
+      @k: 6px;
       font-size: 12px;
       height: @u;
       padding: 0;
       margin: 0;
-        li {
+      li {
+        float: left;
+        height: 100%;
+        line-height: @u;
+      }
+      .button {
+        .img {
+          background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
+          background-size: 612px*0.5 130px*0.5;
           display: inline-block;
-          float: left;
-          height: 100%;
-          line-height: @u;
+          margin-left: 16%;
+          margin-top: 13%;
+      }
+        #colImg {
+          .size(@m,@m);
+          background-position: -166px 0px;
         }
-      .leftInfo {
-        background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
-        background-size: @m @m;
-        .size(@m,@m);
+        #reqImg {
+          .size(@o,@o);
+          background-position: -166px -30px;
+        }
+        span {
+          vertical-align: @k;
+          padding-left: @k;
+        }
       }
       #collection {
         width: 25%;

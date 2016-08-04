@@ -30,11 +30,13 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         });
     };
 
+    //下载条
     var config={
         downloadBar:{
             show:true,
             pos:0
         }
+
     };
 
     University.prototype=new Base(config);
@@ -339,30 +341,25 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     };
 
 
-    //下载条
 
-
-    //底部功能条（收藏/咨询/预约试听）
-    t.getUnderTip=function(result){
-        if(!result || result.count==0){
-             //show  display none ;
-        }
-        return '<ul class="main-item underTip">'+
-                    '<li id="collection">'+
-                        //'<span class="leftInfo"></span><span class="rightInfo">收藏</span>'+
-                        '<div class="button"><div class="img"></div><span>收藏</span><div>'+
-                    '</li>'+
-                    '<li id="request">'+
-                        '<span class="leftInfo"></span><span class="rightInfo">咨询</span>'+
-                    '</li>'+
-                    '<li id="join-class">'+
-                        '<div class="rightInfo listing">预约试听</div>'+
-                    '</li>'+
-                    '<div style="clear: both;"></div>'+
+        //底部功能条（收藏/咨询/预约试听）
+        t.getUnderTip=function(result) {
+            if (!result || result.count == 0) {
+                //show  display none ;
+            }
+            return '<ul class="main-item underTip">' +
+                '<li id="collection">' +
+                '<div class="button"><div class="img" id="colImg"></div><span>收藏</span><div>' +
+                '</li>' +
+                '<li id="request">' +
+                '<div class="button"><div class="img" id="reqImg"></div><span>收藏</span><div>' +
+                '</li>' +
+                '<li id="join-class">' +
+                '<div class="rightInfo listing">预约试听</div>' +
+                '</li>' +
+                '<div style="clear: both;"></div>' +
                 '</ul>';
-    };
-
-
+        }
 
     return University;
 });

@@ -302,6 +302,7 @@ body {
   background: #F2F2F2;
   max-width: 100%;
   overflow: auto;
+  position: absolute;
 }
 p {
   line-height: 22px;
@@ -414,8 +415,8 @@ body .main-item.environment .content-txt p {
   font-size: 14px;
 }
 body .main-item.album {
-  margin: 15px auto 0 auto;
-  height: 160px;
+  margin: 15px auto 10px auto;
+  height: 150px;
 }
 body .main-item.album .album-info {
   overflow: auto;
@@ -440,22 +441,37 @@ body .main-item.album .album-info .album-ul > li:first-child > img {
   padding-left: 0;
 }
 body .main-item.underTip {
+  position: fixed;
   font-size: 12px;
   height: 50px;
   padding: 0;
   margin: 0;
 }
 body .main-item.underTip li {
-  display: inline-block;
   float: left;
   height: 100%;
   line-height: 50px;
 }
-body .main-item.underTip .leftInfo {
+body .main-item.underTip .button .img {
   background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
-  background-size: 40px 40px;
-  width: 40px;
-  height: 40px;
+  background-size: 306px 65px;
+  display: inline-block;
+  margin-left: 16%;
+  margin-top: 13%;
+}
+body .main-item.underTip .button #colImg {
+  width: 25px;
+  height: 25px;
+  background-position: -166px 0px;
+}
+body .main-item.underTip .button #reqImg {
+  width: 22px;
+  height: 22px;
+  background-position: -166px -30px;
+}
+body .main-item.underTip .button span {
+  vertical-align: 6px;
+  padding-left: 6px;
 }
 body .main-item.underTip #collection {
   width: 25%;
