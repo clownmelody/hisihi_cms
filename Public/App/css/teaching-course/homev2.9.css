@@ -384,15 +384,15 @@ body {
 .main-item .price .noprice {
   font-size: 16px;
 }
-.main-item.basic-info #current-title {
-  min-height: 30px;
-  line-height: 30px;
-  height: auto;
-}
 .main-item.basic-info .center-content {
   height: 100%;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.main-item.basic-info #current-title {
+  font-size: 16px;
+  color: #000;
+  height: auto;
 }
 .main-item.org-basic-info {
   position: relative;
@@ -420,15 +420,15 @@ body {
 }
 .main-item.org-basic-info .left .v-cert {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 9px;
+  right: 6px;
   display: inline-block;
   width: 18px;
   height: 18px;
   display: none;
 }
 .main-item.org-basic-info .right {
-  margin-left: 64px;
+  margin-left: 68px;
   padding-top: 20px;
   padding-bottom: 20px;
 }
@@ -438,7 +438,13 @@ body {
 .main-item.org-basic-info .right .org-name .name {
   font-size: 14px;
   margin-right: 10px;
-  float: left;
+  display: inline-block;
+  vertical-align: top;
+}
+.main-item.org-basic-info .right .org-name span img {
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
 }
 .main-item.org-basic-info .right .org-name .img-box {
   float: left;

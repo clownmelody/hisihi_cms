@@ -4,12 +4,14 @@
 
 define(['base','fastclick'],function(Base){
     FastClick.attach(document.body);
-    var Course=function(id,oid){
+    var Course=function(id,oid,url){
         this.cid = id;
         this.oid=oid;
         var eventName='click',that=this;
-        if(this.deviceType.mobile && this.isLocal){
+        this.baseUrl = url;
+        if(this.isLocal){
             eventName='touchend';
+            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.controlLoadingBox(true);
         window.setTimeout(function(){
@@ -65,27 +67,46 @@ define(['base','fastclick'],function(Base){
 
     //获得当前机构的基本信息
     t.getOrgBasicInfo=function(result,callback){
-        var that = this,
-            para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/'+this.oid+'/base',
-                type: 'get',
-                paraData: null,
-                async:false,
-                sCallback: function (orgResutl) {
+        //var that = this,
+        //    para = {
+        //        url: window.hisihiUrlObj.api_url + 'v1/org/'+this.oid+'/base',
+        //        type: 'get',
+        //        paraData: null,
+        //        async:false,
+        //        sCallback: function (orgResutl) {
+        //            callback && callback(orgResutl);
+        //        },
+        //        eCallback: function (data) {
+        //            var txt=data.txt;
+        //            if(data.code=404){
+        //                txt='信息加载失败';
+        //            }
+        //            that.controlLoadingBox(false);
+        //            that.showTips.call(that,txt);
+        //            $('#current-info .nodata').show();
+        //            callback && callback();
+        //        },
+        //    };
+        //this.getDataAsyncPy(para);
+
+
+        var that=this,
+            queryPara={
+                url:this.baseUrl+'appGetBaseInfo',
+                paraData:{organization_id:this.oid,version:2.95},
+                sCallback:function(orgResutl){
                     callback && callback(orgResutl);
                 },
-                eCallback: function (data) {
-                    var txt=data.txt;
-                    if(data.code=404){
-                        txt='信息加载失败';
-                    }
-                    that.controlLoadingBox(false);
-                    that.showTips.call(that,txt);
-                    $('#current-info .nodata').show();
-                    callback && callback();
+                eCallback:function(){
+                    ////电话号码
+                    //$('.contact a').attr('href','javacript:void(0)').css('opacity','0.3');
                 },
+                type:'get',
+                async:false
+
             };
-        this.getDataAsyncPy(para);
+        this.getDataAsync(queryPara);
+
     };
 
     //获得当前课程的优惠券详细信息
@@ -188,23 +209,37 @@ define(['base','fastclick'],function(Base){
         if(!result){
             return;
         }
+        var money=result.price;
+        if(money){
+            money='￥'+money;
+        }else{
+            money='<label class="noprice">暂无报价</label>';
+        }
         var str = '<div class="center-content">'+
-                    '<div class="head-txt" id="current-title">'+
+                    '<div id="current-title">'+
                         result.course_name+
                     '</div>'+
-                    '<div id="price" class="price">￥'+
-                        result.price+
+                    '<div id="price" class="price">'+
+                        money+
                     '</div>'+
                 '</div>';
         $('.basic-info').html(str).show();
     };
 
     //机构信息
-    t.getOrgInfoStr=function(data){
-        if(!data){
+    t.getOrgInfoStr=function(result){
+        if(!result || !result.data){
             return;
         }
-        var name=data.name,logo=data.logo,str='';
+        var data=result.data,
+            name=data.name,
+            logo=data.logo,
+            str='',
+            cerInfo=this.setCertInfo(data.authenticationInfo),
+            vStyle='';
+        if(cerInfo.v){
+            vStyle='display:inline-block;';
+        }
         name=this.substrLongStr(name,10);
         if(!logo){
             logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png'
@@ -213,13 +248,12 @@ define(['base','fastclick'],function(Base){
                     '<div class="center-content">'+
                         '<div class="left">'+
                             '<img class="group-logo" src="'+logo+'">'+
-                            '<img class="v-cert" src="'+hisihiUrlObj.img_url+'/orgbasicinfo/2.9.5/ic_v@3x.png">'+
+                            '<img class="v-cert" src="'+hisihiUrlObj.img_url+'/orgbasicinfo/2.9.5/ic_v@3x.png" style="'+vStyle+'">'+
                         '</div>'+
                         '<div class="right">'+
                         '<div class="org-name">'+
                             '<div class="name">'+name+'</div>'+
-                            this.getCerImg(data.auth)+
-                            '<div style="clear: both;"></div>'+
+                            '<span>'+cerInfo.str+'</span>'+
                         '</div>'+
                         '<ul class="nums-info">'+
                             '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>查看</span></li>'+
@@ -229,6 +263,42 @@ define(['base','fastclick'],function(Base){
                     '</div>'+
                 '</a>';
         $('.org-basic-info').html(str).show();
+
+    };
+
+    //认证信息
+    t.setCertInfo=function(authen){
+        var obj={
+            str:'',
+            v:false
+        };
+        if(!authen || authen.length==0){
+            return obj;
+        }
+        var str='',
+            url='',
+            len=authen.length,
+            item;
+        for(var i=0;i<len;i++){
+            item=authen[i];
+            if(item.default_display=='1') {
+                //显示加v
+                if (item.hisihi_add_v && item.hisihi_add_v == true) {
+                    obj.v=true;
+                    continue;
+                }
+                else {
+                    //if (item.status) {
+                    url = item.tag_pic_url
+                    //} else {
+                    //    url = item.disable_pic_url;
+                    //}
+                    str += '<img src="' + url + '">';
+                }
+            }
+        }
+        obj.str=str;
+        return obj;
     };
 
     /*优惠券*/
@@ -524,7 +594,7 @@ define(['base','fastclick'],function(Base){
             //    sTeacher='<span>老师：'+teacher+'</span>';
             //}
             money=this.judgeInfoNullInfo(item.price);
-            if(money!=''){
+            if(money){
                 money='￥'+money;
             }else{
                 money='<label class="noprice">暂无报价</label>';

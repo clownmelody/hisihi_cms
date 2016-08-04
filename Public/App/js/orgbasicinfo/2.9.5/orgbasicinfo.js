@@ -479,7 +479,8 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         for(var i=0;i<len;i++) {
             item=data[i];
-            item.video_img = item.video_img || item.img;
+            item.video_img = item.video_img || item.img || '';
+            item.video_url = item.video_url || '';
             //item.video_url = 'http://91.16.0.7/video/14/output.m3u8';
             str+= '<li data-url="' + item.video_url + '" style='+style+'>' +
                 '<img class="lazy-img" data-original="' + item.video_img + '">' +
@@ -503,7 +504,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         }else{
             var url=$target.data('url'),
                 that=this;
-            if(url=='null' || url=='undefined'){
+            if(!url){
                 this.showTips('视频暂无');
                 return;
             }

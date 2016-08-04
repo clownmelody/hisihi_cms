@@ -8,7 +8,7 @@ requirejs.config({
         $:'sharecommon/zepto.min',
         prefixfree:'sharecommon/prefixfree.min',
         fastclick:'sharecommon/fastclick',
-        base:'sharecommon/base',
+        base:'sharecommon/base-1.1',
         home:'teaching-course/homev2.9',
     },
     shim: {
@@ -29,6 +29,7 @@ require(['home','prefixfree'],function(course){
     var userAgent = window.location.href,
         reg = /course_id\/[1-9][0-9]*/g,
         id = userAgent.match(reg)[0].toString().replace(/course_id\//g,'');
-    var oid=$('body').attr('data-oid');
-    window.course = new course(id,oid);
+    var oid=$('body').attr('data-oid'),
+        url=window.hisihiUrlObj.link_url+'api.php?s=/Organization/';
+    window.course = new course(id,oid,url);
 });

@@ -88,15 +88,15 @@ body {
 
   /*基本信息*/
   &.basic-info{
-    #current-title{
-      min-height: 30px;
-      line-height: 30px;
-      height: auto;
-    }
     .center-content{
       height: 100%;
-      padding-top:8px;
-      padding-bottom:8px;
+      padding-top:14px;
+      padding-bottom:14px;
+    }
+    #current-title{
+      font-size: 16px;
+      color: #000;
+      height: auto;
     }
   }
 
@@ -123,8 +123,8 @@ body {
       }
       .v-cert {
         position: absolute;
-        bottom: 0;
-        right: 0;
+        bottom: 9px;
+        right: 6px;
         display: inline-block;
         .size(18px,18px);
         display: none;
@@ -132,7 +132,7 @@ body {
 
     }
     .right{
-      margin-left:@h+@p;
+      margin-left:@h + @p + 4;
       padding-top:20px;
       padding-bottom:20px;
       .org-name{
@@ -140,7 +140,14 @@ body {
         .name{
           font-size: 14px;
           margin-right: 10px;
-          float: left;
+          display: inline-block;
+          vertical-align: top;
+        }
+        span{
+           img{
+             .size(18px,18px);
+             margin-right: 2px;
+           }
         }
         .img-box {
           float: left;
