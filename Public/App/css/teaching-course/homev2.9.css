@@ -107,6 +107,10 @@ ul li {
   color: #757070;
   text-align: center;
 }
+.noscroll {
+  height: 100%;
+  overflow: hidden;
+}
 #downloadCon {
   position: fixed;
   bottom: 0;
@@ -291,7 +295,8 @@ ul li {
     width: 700px;
     margin: 0 auto;
   }
-  #downloadCon {
+  #downloadCon,
+  #downloadCon-new {
     width: 700px;
     left: 50%;
     margin-left: -350px;

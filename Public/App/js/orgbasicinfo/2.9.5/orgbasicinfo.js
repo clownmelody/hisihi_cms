@@ -34,8 +34,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             event.stopPropagation();
             if(event.target==this){
                 $('.modal').removeClass('show');
-                $('html,body').removeClass('ovfHidden');
-
+                that.scrollControl(true);  //恢复滚动
             }
         });
 
@@ -52,7 +51,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             event.stopPropagation();
             if(event.target==this){
                 $('.modal').removeClass('show');
-                $('html,body').removeClass('ovfHidden');
+                that.scrollControl(true);  //恢复滚动
                 that.myPlayer.pause();
             }
         });
@@ -77,7 +76,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             pos:0
         }
     };
-    OrgBasicInfo.prototype=new Base(config)
+    OrgBasicInfo.prototype=new Base(config);
     OrgBasicInfo.constructor=OrgBasicInfo;
     var t=OrgBasicInfo.prototype;
 
@@ -488,7 +487,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     /*查看图片或者视频详细信息*/
     t.showPicsAndVideoDetailInfo=function(e){
         var $target=$(e.currentTarget);
-        $('html,body').addClass('ovfHidden');
+
         //图片
         if($target.hasClass('li-img')){
             var index= $('.pics-preview-box .li-img').index($target);
@@ -505,6 +504,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             }
             this.resetVideoPlayerUrl($target.data('url'));
         }
+        this.scrollControl(false);  //禁止滚动
     };
 
 
@@ -675,14 +675,14 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     /*查看图片或者视频详细信息*/
     t.showWorksPicsDetailInfo=function(e) {
         var $target = $(e.currentTarget);
-        $('html,body').addClass('ovfHidden');
+
         //图片
         if ($target.hasClass('li-img')) {
             var index = $('.works-preview-box .li-img').index($target);
             var arr = t.getAllPics($target.parent());
             $('.modal').eq(1).addClass('show').find('.pics-nav span').text(index + 1 + '/' + arr.length);
+            this.scrollControl(false);  //禁止滚动
             this.initPicsScroll(arr, index);
-
         }
     };
 
@@ -897,7 +897,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         if($('.sing-in-item input').eq(0).val()){
             $('.sing-in-btn').addClass('active');
         }
-        $('html,body').addClass('ovfHidden');
+        this.scrollControl(false);  //禁止滚动
         //$('.sing-in-modal')[0].addEventListener('touchmove', forbiddenScroll, false);
     };
 
@@ -953,18 +953,9 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     //取消预约
     t.closeSingInBox=function(){
         $('.sing-in-modal').removeClass('show');
-        $('html,body').removeClass('ovfHidden');
-        //document.body.removeEventListener('touchmove',forbiddenScroll);
+        this.scrollControl(true);  //恢复滚动
     };
 
-
-    //字符串截取
-    //t.substrLongStr: function (str, len) {
-    //    if (str.length > len) {
-    //        str = str.substr(0, parseInt(len - 1)) + '……';
-    //    }
-    //    return str;
-    //};
 
     return OrgBasicInfo;
 });

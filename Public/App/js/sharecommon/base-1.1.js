@@ -623,6 +623,22 @@ define(['$','fastclick'],function() {
             }
         },
 
+        /*
+        * 禁止(恢复)滚动
+        * para：
+        * flag - {bool} 允许（true）或者禁止（false）滚动
+        * $target - {jquery obj} 滚动对象
+        */
+        scrollControl:function(flag,$target){
+            if(!flag) {
+                $target = $target || $('body');
+                this.scrollTop = $target.scrollTop();
+                $('html,body').addClass('noscroll');
+            }else{
+                $('html,body').removeClass('noscroll');
+                window.scrollTo(0, this.scrollTop);
+            }
+        },
 
     };
 
