@@ -213,7 +213,7 @@ define(['base','fastclick'],function(Base){
                     '<div class="center-content">'+
                         '<div class="left">'+
                             '<img class="group-logo" src="'+logo+'">'+
-                            '<img class="v-cert" src="../images/orgbasicinfo/2.9.5/ic_v@3x.png">'+
+                            '<img class="v-cert" src="'+hisihiUrlObj.img_url+'/orgbasicinfo/2.9.5/ic_v@3x.png">'+
                         '</div>'+
                         '<div class="right">'+
                         '<div class="org-name">'+
@@ -263,7 +263,7 @@ define(['base','fastclick'],function(Base){
                     '</div>'+
                 '</div>'+
                 '<div class="coupon-left">'+
-                    '<img id="coupon-icon" src="/hisihi-cms/Public/App/images/teaching-course/ic.png">' +
+                    '<img id="coupon-icon" src="'+hisihiUrlObj.img_url+'/teaching-course/ic.png">' +
                 '</div>'+
                 '<div class="coupon-right">'+
                     '<div class="coupon-status '+className+'"></div>'+

@@ -381,7 +381,7 @@ body {
   text-align: center;
   margin-top: 6px;
 }
-.logo-box .logo-main-info .name-main-box img {
+.logo-box .logo-main-info .name-main-box > img {
   display: none;
   width: 36px;
   height: 36px;
@@ -806,6 +806,7 @@ body {
 }
 .comments-box {
   overflow-x: hidden;
+  margin-bottom: 56px;
 }
 .comments-box .star-item {
   display: inline-block;
@@ -828,7 +829,7 @@ body {
 .comments-box .comment-box-stars .basic-header .left-item {
   float: left;
 }
-.comments-box .comment-box-stars .basic-header .left-item #myAssessment {
+.comments-box .comment-box-stars .basic-header .left-item .red-word {
   color: #FF5A00;
 }
 .comments-box .comment-box-stars .basic-header .left-item#starsConForCompress {

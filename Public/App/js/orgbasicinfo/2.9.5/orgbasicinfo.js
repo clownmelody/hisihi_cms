@@ -268,7 +268,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             len=list.length,
             str='',coupon;
 
-        for(var i=0;i<5;i++){
+        for(var i=0;i<len;i++){
             coupon=list[i];
             if(coupon.is_out_of_date){
                 continue;
@@ -287,11 +287,10 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     /*加载头条信息*/
     t.loadTopAnnouncement=function(){
         var that=this;
-        this.getDataAsync({
-            url: this.baseUrl + 'topPost',
-            paraData: {organization_id: this.oid},
+        this.getDataAsyncPy({
+            url:window.hisihiUrlObj.apiUrlPy+'v1/org/' +this.oid +'/news',
             sCallback: function(result){
-                that.fillInTopAnnouncement(result.data);
+                that.fillInTopAnnouncement(result);
             },
             eCallback:function(txt){
                 //$target.css('opacity',1);
@@ -299,21 +298,25 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             },
             type:'get',
             async:this.async
+
         });
     };
 
     /*填充头条信息*/
-    t.fillInTopAnnouncement=function(data){
-        var str='',item,
+    t.fillInTopAnnouncement=function(result){
+        if(!result || !result.news || result.news.length==0){
+            return;
+        }
+        var str='',
+            item,
+            data=result.news,
             $target=$('.news-box');
-        if(data || data.length!=0){
-            $target.show();
-            var len = data.length;
-            for (var i = 0; i < len; i++) {
-                if(i<2) {
-                    item = data[i];
-                    str += '<a href="' + item.detail_url + '"><p>' + item.title + '</p></a>';
-                }
+        $target.show();
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            if(i<2) {
+                item = data[i];
+                str += '<a href="' + item.detail_url + '"><p>' + item.title + '</p></a>';
             }
         }
         $target.find('.right-item div').html(str);
@@ -436,11 +439,13 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     * type - {bool} true 表示是  相册 模块调用；false 表示是  作品 模块调用
     */
     t.getPicsStr=function(data,type){
+        var $label=$('.pics-number label').eq(1);
         if(!data || data.length==0){
-            return;
+            $label.text('0照片')
+            return '';
         }
         var len=data.length,str='';
-        type && $('.pics-number label').eq(1).text(len+'照片');
+        type && $label.text(len+'照片');
         for(var i=0;i<len;i++){
             str+='<li class="li-img" data-id="'+data[i].id+'">'+
                     '<div class="img-box">'+
@@ -748,7 +753,11 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         /*添加星星*/
         var strStar= this.getStarInfoByScore(result.comprehensiveScore);
-        $('#myAssessment').text(result.comprehensiveScore);
+        var scores=result.comprehensiveScore;
+        if(scores.toString().indexOf('.')<0){
+            scores=parseInt(scores)+'.0';
+        }
+        $('#myAssessment').text(scores);
         $('#starsConForCompress').prepend(strStar);
 
         /*色块评分*/
