@@ -33,7 +33,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     //下载条
     var config={
         downloadBar:{
-            show:true,
+            show:false,
             pos:0
         }
 
@@ -74,15 +74,15 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             strNums=this.getNumsInfoStr(result),
             strMajor=this.getMajorInfoStr(result),
             strEn=this.getInEnvironmentStr(result),
-            strAlbum=this.getAlbumInfo(),
-            strUnder=this.getUnderTip(result);
+            strAlbum=this.getAlbumInfo();
+            //strUnder=this.getUnderTip(result);
 
         var str=strBasic+
             strNums+
             strMajor+
             strEn+
-            strAlbum+
-            strUnder;
+            strAlbum
+            //strUnder;
         $('body').append(str);
     };
 
