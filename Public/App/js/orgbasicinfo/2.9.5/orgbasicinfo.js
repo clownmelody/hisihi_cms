@@ -14,6 +14,8 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
+
+
         this.perPageSize=10;
         this.pageIndex=1;
         this.async=false;  //同步加载所有的数据
