@@ -555,7 +555,6 @@ body {
 }
 .coupon-box ul {
   white-space: nowrap;
-  height: 80px;
 }
 .coupon-box ul li {
   background: url(../../images/orgbasicinfo/2.9.5/sprite.png);

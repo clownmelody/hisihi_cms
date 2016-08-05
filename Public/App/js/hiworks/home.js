@@ -15,7 +15,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
 
         var eventName='click',that=this;
         if(this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.baseHiworkListUrl=this.baseUrl.replace('api.php','hiworks_list.php');
@@ -84,7 +84,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
             });
         },100);
     };
-    HiWorks.prototype =new Base(true);
+    HiWorks.prototype =new Base();
     HiWorks.constructor=HiWorks;
 
     var t=HiWorks.prototype;

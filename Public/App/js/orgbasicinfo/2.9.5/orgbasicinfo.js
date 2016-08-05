@@ -162,7 +162,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         // 视频、名称、认证
         $box.find('.name-main-box label').text(data.name);
-        if(data.is_listen_preview =='0'){
+        if(data.is_listen_preview =='1'){
             $('.name-main-box img').css('display','inline-block');
         }
         this.setCertInfo(data.authenticationInfo);
@@ -197,8 +197,9 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     t.translationCount=function(num){
         num=parseInt(num);
         if(num>9999){
+            var lessNum=num%10000;
             num= (num/10000);
-            if(num%10000!=0){
+            if(lessNum!=0){
                 num=num.toString();
                 var index=num.indexOf('.');
                 num=num.substr(0,index+2);
@@ -397,7 +398,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             url:this.baseUrl + 'getPropagandaVideo',
             paraData: {organization_id: this.oid,count:8},
             sCallback: function(result){
-               var str = that.getVideoStr([result.data]);  /*填充报名信息*/
+               var str = that.getVideoStr([result.data]);
                 that.loadPics(str);
             },
             eCallback:function(txt){
@@ -475,6 +476,10 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         if(type){
             var h=$('body').width()*7/16;
             style='height:'+h+'px;';
+        }else{
+            if(!data[0].video_url) {
+                return '';
+            }
         }
 
         for(var i=0;i<len;i++) {
@@ -755,7 +760,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         /*添加星星*/
         var strStar= this.getStarInfoByScore(result.comprehensiveScore);
         var scores=result.comprehensiveScore;
-        if(scores.toString().indexOf('.')<0){
+        if(scores.toString().indexOf('.')<0  && scores>0){
             scores=parseInt(scores)+'.0';
         }
         $('#myAssessment').text(scores);

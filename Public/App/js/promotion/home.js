@@ -9,7 +9,7 @@ define(['base','lazyloading','fastclick'],function(Base){
         this.pid = id;
         var eventName='click',that=this;
         if(this.deviceType.mobile && this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
         }
         this.controlLoadingBox(true);
         this.getUserInfo(null,1);  // 0 不使用token ，使用session_id的形式，1 基础令牌,  否则为具体用户令牌
@@ -25,7 +25,7 @@ define(['base','lazyloading','fastclick'],function(Base){
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
-        this.updateStatisticsNum('coupon_obtain');
+        //this.updateStatisticsNum('coupon_obtain');
 
         this.init();
     };
