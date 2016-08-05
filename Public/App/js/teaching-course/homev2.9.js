@@ -10,7 +10,7 @@ define(['base','fastclick'],function(Base){
         var eventName='click',that=this;
         this.baseUrl = url;
         if(this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.controlLoadingBox(true);
