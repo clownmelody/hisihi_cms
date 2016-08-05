@@ -11,13 +11,12 @@ body{
   right: 0;
   overflow-x: hidden;
 }
-@padding-l:10px;
+@padding-l:14px;
 @padding-r:13px;
 .promotion-box{
   opacity: 0;
   background-color: white;
-  border-bottom:1px solid #E6E6E6;
-  margin-bottom:15px;
+  margin-bottom:10px;
   min-height:230px;
   .img-box{
     width: 100%;
@@ -27,42 +26,43 @@ body{
     }
   }
   .content-box{
-    margin: 0 @padding-r 0 @padding-l;
+    margin: 0 @padding-l 0 @padding-l;
+    padding:12px 0 18px 0 ;
     p{
+      margin: 0;
       color: #808080;
-      font-size: 14px;
+      font-size: 12px;
       line-height: 24px;
-      margin-bottom: 30px;
     }
   }
 }
 .course-box{
   opacity: 0;
-  border-top: 1px solid #CCC;
   background-color: white;
   min-height: 90px;
   .header {
     height: 40px;
-    font-size: 16px;
+    font-size: 14px;
     color: #212121;
     border-bottom: 1px solid #CCC;
-    padding-left: @padding-l;
+    margin-left: @padding-l;
     line-height: 40px;
-    font-weight: bold;
   }
   .list{
     li{
-      @w-l:120px;
+      @w-l:66px;
       @w-r:80px;
-      .size(auto,110px);
-      border-bottom: 1px solid #ccc;
-      //a{
-      //  display: block;
-      //  .size(100%,100%);
-      //}
+      .size(auto,90px);
+      &:last-child{
+        .item-main{
+          border: none;
+        }
+      }
       .item-main{
         height: 100%;
-        margin: 5px @padding-r 5px @padding-l;
+        margin: 0px 0 0 @padding-l;
+        padding-right: @padding-l;
+        border-bottom: 1px solid #ccc;
         >div{
           float: left;
           height: 100%;
@@ -72,130 +72,153 @@ body{
           height: 100%;
           .middle {
             height: 100%;
-            margin: 0 @w-r 0 @w-l+15;
+            margin: 0 @w-r 0 @w-l+14;
+            padding-top: 12px;
+            box-sizing: border-box;
             p {
-              margin: 5px 0;
+              margin: 0;
             }
             .title-info {
               text-overflow: ellipsis;
               white-space: nowrap;
               overflow: hidden;
-              font-size: 17px;
-              height: 30px;
-              line-height: 35px;
-              color: #333333;
+              font-size: 14px;
+              color: #212121;
+              &.hasCoupon{
+                margin-right: @padding-l;
+              }
             }
             .money-info {
               color: #FA4535;
               font-size: 20px;
               font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+              margin: 2px 0;
               .noprice{
                 font-size: 16px;
               }
             }
             .time-info {
               color: #8E8E8E;
+              font-size: 11px;
             }
           }
         }
         .left{
-          width:@w-l;
+          width:@w-l + 10px;
           margin-left: -100%;
           .img-box{
             .size(100%);
             margin: 0 auto;
-            text-align: center;
-            //background: url('http://pic.hisihi.com/2016-06-02/1464833264193150.png') 0 0 no-repeat;
+            padding:12px 10px 0 0;
             img {
-              //border:0;
-              .size(100%,85px);
-              margin:11px 20px 0 0;
+              .size(@w-l,@w-l);
             }
           }
         }
         .right {
           position: relative;
           width: @w-r;
+          @post-h:33px;
           margin-left: -@w-r;
-            .coupon-money, .coupon-state {
-              .size(100%, 35px);
-              background-color: #F9A825;
-              color: white;
-              text-align: center;
-              line-height: 35px;
+          .coupon-money, .coupon-state {
+            .size(100%, @post-h);
+            background-color: #F9A825;
+            color: white;
+            text-align: center;
+            line-height: @post-h;
+            position: relative;
+          }
+          .coupon-money {
+            margin-top: 9px;
+            span {
+              font-size: 20px;
+              &:first-child {
+                font-size: 12px;
+              }
             }
-            .coupon-money {
-              margin-top: 15px;
-              span {
-                font-size: 20px;
+          }
+          .coupon-state {
+            font-size: 14px;
+            p {
+              text-align: center;
+              margin: 0;
+
+              //&:last-child {
+              display: none;
+              //}
+            }
+          }
+          .seperation {
+            background: url(../../images/promotion/sprite.png);
+            height: 6px;
+            background-position: -20px 0;
+          }
+          .postmark{
+            position: absolute;
+            .size(42px,@post-h);
+            left: 50%;
+            top:0;
+            margin-left: -21px;
+            background: url("../../images/teaching-course/sprite3.png");
+            background-size:258px 68px;
+            background-position: -217px 0;
+            display: none;
+          }
+          &.un-take-in{
+            .coupon-state {
+              p {
                 &:first-child {
-                  font-size: 12px;
+                  display: block;
                 }
               }
             }
+          }
+          &.unused {
+            .coupon-money, .coupon-state {
+              background-color: #F9A825;
+            }
+            .postmark{
+              display: block;
+            }
             .coupon-state {
-              font-size: 14px;
               p {
-                text-align: center;
-                margin: 0;
-
-                //&:last-child {
-                  display: none;
-                //}
+                &:nth-child(2){
+                  display: block;
+                  span {
+                    background-color: #FA4535;
+                    .border-radius(15px);
+                    color: white;
+                    .size(75%, 23px);
+                    line-height: 23px;
+                    text-align: center;
+                    margin: 4px 10px;
+                    font-size: 12px;
+                    float: left;
+                  }
+                }
               }
             }
             .seperation {
-              background: url(../../images/promotion/sprite.png);
-              height: 6px;
-              background-position: -20px 0;
+              //background-position: -20px 0;
             }
-            &.un-take-in{
-              .coupon-state {
-                p {
-                  &:first-child {
-                    display: block;
-                  }
-                }
-              }
-            }
-            &.unused {
-              .coupon-money, .coupon-state {
-                background-color: #cccccc;
-              }
-              .coupon-state {
-                p {
-                  //&:first-child {
-                  //  display: none;
-                  //}
-                  &:nth-child(2){
-                    display: block;
-                  }
-                  //&:last-child {
-                  //  display: none;
-                  //}
-                }
-              }
-              .seperation {
-                background-position: -96px 0;
-              }
+          }
+
+          &.used{
+            .coupon-money, .coupon-state {
+              background-color: #cccccc;
             }
 
-            &.used{
-              .coupon-money, .coupon-state {
-                background-color: #cccccc;
-              }
-              .coupon-state {
-                p {
-                  &:last-child {
-                    display: block;
-                  }
+            .coupon-state {
+              p {
+                &:last-child {
+                  display: block;
                 }
               }
-              .seperation {
-                background-position: -96px 0;
-              }
             }
-
+            .seperation {
+              background-position: -96px 0;
+            }
+          }
         }
       }
     }
@@ -246,51 +269,14 @@ body{
   }
 }
 
-@media screen and(max-width: 320px) {
-  .course-box {
-    .list {
-      li {
-        .item-main {
-          @w-l: 100px;
-          @w-r: 80px;
-          //.size(auto, 90px);
-          margin: 0 @padding-r 0 @padding-l;
-          .main-content {
-            .middle {
-              height: 100%;
-              margin: 0 @w-r 0 @w-l;
-              .title-info {
-                margin-top: 12px;
-                height: 26px;
-                line-height: 26px;
-                font-size: 12px;
-              }
-              .money-info {
-                .noprice {
-                  font-size: 14px;
-                }
-              }
-              .time-info {
-                font-size: 12px;
-              }
-            }
-          }
-          .left {
-            width: @w-l;
-            .img-box {
-              img {
-                margin: 20px 20px 0 0;
-                .size(65px, 65px);
-              }
-            }
-          }
-          .right {
-            .right-main {
-              transform: scale(0.9);
-            }
-          }
-        }
-      }
-    }
+@media screen and (min-width: 750px) {
+  .wrapper,#downloadCon{
+    width: 560px;
+    margin: 0 auto;
   }
+  #downloadCon{
+    left:50%;
+    margin-left: -560px/2;
+  }
+
 }

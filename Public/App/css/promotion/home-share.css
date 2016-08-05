@@ -52,11 +52,11 @@ ul li {
   top: 40%;
   left: 50%;
   z-index: 1001;
-  width: 200px;
+  width: 160px;
   height: auto;
-  min-height: 40px;
+  min-height: 34px;
   background: rgba(51, 51, 51, 0.85);
-  margin-left: -100px;
+  margin-left: -80px;
   margin-top: -35px;
   border-radius: 3px;
   background-clip: padding-box;
@@ -66,7 +66,7 @@ ul li {
 }
 .result-tips p {
   color: white;
-  font-size: 15px;
+  font-size: 12px;
   text-align: center;
   margin: 10px 0;
 }
@@ -320,8 +320,7 @@ body {
 .promotion-box {
   opacity: 0;
   background-color: white;
-  border-bottom: 1px solid #E6E6E6;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   min-height: 230px;
 }
 .promotion-box .img-box {
@@ -332,37 +331,40 @@ body {
   max-width: 100%;
 }
 .promotion-box .content-box {
-  margin: 0 13px 0 10px;
+  margin: 0 14px 0 14px;
+  padding: 12px 0 18px 0 ;
 }
 .promotion-box .content-box p {
+  margin: 0;
   color: #808080;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 24px;
-  margin-bottom: 30px;
 }
 .course-box {
   opacity: 0;
-  border-top: 1px solid #CCC;
   background-color: white;
   min-height: 90px;
 }
 .course-box .header {
   height: 40px;
-  font-size: 16px;
+  font-size: 14px;
   color: #212121;
   border-bottom: 1px solid #CCC;
-  padding-left: 10px;
+  margin-left: 14px;
   line-height: 40px;
-  font-weight: bold;
 }
 .course-box .list li {
   width: auto;
-  height: 110px;
-  border-bottom: 1px solid #ccc;
+  height: 90px;
+}
+.course-box .list li:last-child .item-main {
+  border: none;
 }
 .course-box .list li .item-main {
   height: 100%;
-  margin: 5px 13px 5px 10px;
+  margin: 0px 0 0 14px;
+  padding-right: 14px;
+  border-bottom: 1px solid #ccc;
 }
 .course-box .list li .item-main > div {
   float: left;
@@ -374,45 +376,49 @@ body {
 }
 .course-box .list li .item-main .main-content .middle {
   height: 100%;
-  margin: 0 80px 0 135px;
+  margin: 0 80px 0 80px;
+  padding-top: 12px;
+  box-sizing: border-box;
 }
 .course-box .list li .item-main .main-content .middle p {
-  margin: 5px 0;
+  margin: 0;
 }
 .course-box .list li .item-main .main-content .middle .title-info {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  font-size: 17px;
-  height: 30px;
-  line-height: 35px;
-  color: #333333;
+  font-size: 14px;
+  color: #212121;
+}
+.course-box .list li .item-main .main-content .middle .title-info.hasCoupon {
+  margin-right: 14px;
 }
 .course-box .list li .item-main .main-content .middle .money-info {
   color: #FA4535;
   font-size: 20px;
   font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  margin: 2px 0;
 }
 .course-box .list li .item-main .main-content .middle .money-info .noprice {
   font-size: 16px;
 }
 .course-box .list li .item-main .main-content .middle .time-info {
   color: #8E8E8E;
+  font-size: 11px;
 }
 .course-box .list li .item-main .left {
-  width: 120px;
+  width: 76px;
   margin-left: -100%;
 }
 .course-box .list li .item-main .left .img-box {
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  text-align: center;
+  padding: 12px 10px 0 0;
 }
 .course-box .list li .item-main .left .img-box img {
-  width: 100%;
-  height: 85px;
-  margin: 11px 20px 0 0;
+  width: 66px;
+  height: 66px;
 }
 .course-box .list li .item-main .right {
   position: relative;
@@ -422,14 +428,15 @@ body {
 .course-box .list li .item-main .right .coupon-money,
 .course-box .list li .item-main .right .coupon-state {
   width: 100%;
-  height: 35px;
+  height: 33px;
   background-color: #F9A825;
   color: white;
   text-align: center;
-  line-height: 35px;
+  line-height: 33px;
+  position: relative;
 }
 .course-box .list li .item-main .right .coupon-money {
-  margin-top: 15px;
+  margin-top: 9px;
 }
 .course-box .list li .item-main .right .coupon-money span {
   font-size: 20px;
@@ -450,18 +457,43 @@ body {
   height: 6px;
   background-position: -20px 0;
 }
+.course-box .list li .item-main .right .postmark {
+  position: absolute;
+  width: 42px;
+  height: 33px;
+  left: 50%;
+  top: 0;
+  margin-left: -21px;
+  background: url("../../images/teaching-course/sprite3.png");
+  background-size: 258px 68px;
+  background-position: -217px 0;
+  display: none;
+}
 .course-box .list li .item-main .right.un-take-in .coupon-state p:first-child {
   display: block;
 }
 .course-box .list li .item-main .right.unused .coupon-money,
 .course-box .list li .item-main .right.unused .coupon-state {
-  background-color: #cccccc;
+  background-color: #F9A825;
+}
+.course-box .list li .item-main .right.unused .postmark {
+  display: block;
 }
 .course-box .list li .item-main .right.unused .coupon-state p:nth-child(2) {
   display: block;
 }
-.course-box .list li .item-main .right.unused .seperation {
-  background-position: -96px 0;
+.course-box .list li .item-main .right.unused .coupon-state p:nth-child(2) span {
+  background-color: #FA4535;
+  border-radius: 15px;
+  background-clip: padding-box;
+  color: white;
+  width: 75%;
+  height: 23px;
+  line-height: 23px;
+  text-align: center;
+  margin: 4px 10px;
+  font-size: 12px;
+  float: left;
 }
 .course-box .list li .item-main .right.used .coupon-money,
 .course-box .list li .item-main .right.used .coupon-state {
@@ -516,35 +548,14 @@ body {
   line-height: 32px;
   z-index: 10001;
 }
-@media screen and (max-width: 320px) {
-  .course-box .list li .item-main {
-    margin: 0 13px 0 10px;
+@media screen and (min-width: 750px) {
+  .wrapper,
+  #downloadCon {
+    width: 560px;
+    margin: 0 auto;
   }
-  .course-box .list li .item-main .main-content .middle {
-    height: 100%;
-    margin: 0 80px 0 100px;
-  }
-  .course-box .list li .item-main .main-content .middle .title-info {
-    margin-top: 12px;
-    height: 26px;
-    line-height: 26px;
-    font-size: 12px;
-  }
-  .course-box .list li .item-main .main-content .middle .money-info .noprice {
-    font-size: 14px;
-  }
-  .course-box .list li .item-main .main-content .middle .time-info {
-    font-size: 12px;
-  }
-  .course-box .list li .item-main .left {
-    width: 100px;
-  }
-  .course-box .list li .item-main .left .img-box img {
-    margin: 20px 20px 0 0;
-    width: 65px;
-    height: 65px;
-  }
-  .course-box .list li .item-main .right .right-main {
-    transform: scale(0.9);
+  #downloadCon {
+    left: 50%;
+    margin-left: -280px;
   }
 }

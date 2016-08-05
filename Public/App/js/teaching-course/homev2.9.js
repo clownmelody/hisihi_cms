@@ -10,7 +10,7 @@ define(['base','fastclick'],function(Base){
         var eventName='click',that=this;
         this.baseUrl = url;
         if(this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.controlLoadingBox(true);
@@ -257,7 +257,7 @@ define(['base','fastclick'],function(Base){
                         '</div>'+
                         '<ul class="nums-info">'+
                             '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>查看</span></li>'+
-                            '<li><span id="view-watch">'+this.transformNums(data.follow_count) + '</span><span>关注</span></li>'+
+                            '<li><span id="view-watch">'+this.transformNums(data.followCount) + '</span><span>关注</span></li>'+
                         '</ul>'+
                       '</div>'+
                     '</div>'+
@@ -462,18 +462,26 @@ define(['base','fastclick'],function(Base){
 
     };
 
+    /*数值大于9999时，转换成万*/
     t.transformNums=function(num){
-        num =Number(num);
-        if(num){
-            if(num>10000){
-                num=num/10000 +'万'
-                return num;
+        num=parseInt(num);
+        if(num>9999){
+            var lessNum=num%10000;
+            num= (num/10000);
+            if(lessNum!=0){
+                num=num.toString();
+                var index=num.indexOf('.');
+                num=num.substr(0,index+2);
+                var arr=num.split('.');
+                if(arr[1]==0){
+                    num=arr[0];
+                }
             }
-        }else{
-            num=0;
+            num+='w';
         }
         return num;
     };
+
 
     ///*得到认证的图片*/
     t.getCerImg=function(data){
