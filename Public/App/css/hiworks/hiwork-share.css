@@ -429,6 +429,7 @@ ul li {
   background-clip: padding-box;
   overflow: hidden;
   box-shadow: 0px 0px 10px 4px #ADA8A8;
+  background-color: #fff;
 }
 #work-detail-panel #detail-main .touchSlider ul li a img {
   display: block;
