@@ -9,15 +9,15 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         this.deviceType = this.operationType();
         this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
         if(this.deviceType.mobile && this.isLocal){
-            //eventName='touchend';
+            eventName='touchend';
         }
         this.getBasicInfo();
 
         //点击报名事件
-        //$(document).on(eventName,'#join-class',function () {
-        //    that.haveClass(true);
-        //});
-        //
+        $(document).on(eventName,'#join-class',function () {
+            $('.class-show').addClass('show');
+        });
+
         //$(document).on(eventName,'#join-class',function () {
         //    event.stopPropagation();
         //        if(event.target==this){
@@ -42,15 +42,13 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         });
 
 
-        $(window).on('scroll',$.proxy(this,'scrollContainer'));
-
-        $(document).on('input','.class-num, .class-name', $.proxy(this,'singInBtnControl'));
+        //$(document).on('input','.class-num, .class-name', $.proxy(this,'singInBtnControl'));
 
         //显示预约报名框
-        $(document).on(eventName,'#join-class .active', $.proxy(this,'signIn'));
+        //$(document).on(eventName,'#join-class .active', $.proxy(this,'signIn'));
 
         //我想报考
-        $(document).on(eventName,'.rightInfo .listing', $.proxy(this,'showSingInModal'));
+        //$(document).on(eventName,'.rightInfo .listing', $.proxy(this,'showSingInModal'));
 
         //关闭预约
         $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
@@ -59,7 +57,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     //下载条
     var config={
         downloadBar:{
-            show:false,
+            show:true,
             pos:0
         }
 
@@ -397,7 +395,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
     //手机号码判断
     t.signIn=function() {
-        var $input = $target=$('.class-num input'),
+        var $input = $('.class-num input'),
             that=this,
             number = $input.eq(0).val().trim(),
             name = $input.eq(1).val().trim(),

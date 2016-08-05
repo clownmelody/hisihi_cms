@@ -940,7 +940,6 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         this.controlLoadingBox(true);
         this.getDataAsync({
             url: this.baseUrl + 'yuyue/organization_id/'+this.oid+'/mobile/'+number+'/username/'+name,
-            //paraData:JSON.stringify({organization_id: this.oid,mobile:number,username:name}),
             sCallback: function(result){
                 that.controlLoadingBox(false);
                 if(result.success){
