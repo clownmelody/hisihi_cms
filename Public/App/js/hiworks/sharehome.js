@@ -56,7 +56,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
         }
 
     };
-    HiWorks.prototype =new Base(true);
+    HiWorks.prototype =new Base();
     HiWorks.constructor=HiWorks;
 
     var t=HiWorks.prototype;
