@@ -321,38 +321,6 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-text-size-adjust: none;
 }
-* {
-  -webkit-user-select: none;
-  /*�����ֻ����������û�ѡ������ */
-  -moz-user-select: none;
-  font-family: "Microsoft Yahei", "Microsoft YaHei", "����", "����", sans-serif;
-  -webkit-overflow-scrolling: touch;
-}
-a,
-a:hover,
-a:link,
-a:hover,
-a:active,
-a:visited {
-  text-decoration: none;
-  word-break: break-all;
-}
-a:focus {
-  outline: none;
-  -moz-outline: none;
-}
-input,
-textarea {
-  -webkit-appearance: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-}
-input:focus,
-textarea:focus {
-  outline: none;
-}
-.btn:active {
-  transform: scale(0.8);
-}
 .font-icon {
   display: inline-block;
 }
@@ -523,7 +491,7 @@ ul li {
 .header #search-bar .search-box .search-box-bg #search-txt {
   display: block;
   border: none;
-  margin-left: 32px;
+  margin-left: 28px;
   height: 100%;
   width: 80%;
   outline: none;
@@ -531,6 +499,10 @@ ul li {
   box-sizing: border-box;
   -webkit-user-select: text;
   font-size: 14px;
+}
+.header #search-bar .search-box .search-box-bg #search-txt:focus {
+  outline: 0;
+  box-shadow: none;
 }
 .header #search-bar .search-btns {
   position: absolute;

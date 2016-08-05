@@ -190,7 +190,12 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             }
             str1+='<li class="'+className+'"></li>';
         }
+
         $('#slider4').html(str);
+
+        if(len<2) {
+            str1='';
+        }
         $('#currentPage ul').html(str1);
 
         //实例化缩放
@@ -417,7 +422,23 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
         }else{
             $('title').text(title);
         }
+    };
 
+    //返回分享信息，供app调用
+    window.getShareInfo=function(){
+        var workObj=window.hiworks.currentWorksObj;
+        var obj={
+            tile: workObj.title.trim(),
+            url: window.hiworks.baseUrl+'/Hiworks/hiworks_share/hiword_id/'+workObj.id,
+            thumb: workObj.pic_url.trim(),
+            description:'我在嘿设汇发现了⼀一个很棒的作业源⽂文件，居然可以直接下载'
+        };
+        return JSON.stringify(obj);
+    };
+
+    /*返回链接地址给IOS，用于粘贴板*/
+    window.getClipboradInfo=function(){
+        return  window.hiworks.currentWorksObj.download_url.trim();
     };
 
     return HiWorks;

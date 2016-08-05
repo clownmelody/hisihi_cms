@@ -39,7 +39,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         });
 
         /*优惠券点击*/
-        $(document).on(eventName,'.coupon-box li, .t-video-box li',function(){
+        $(document).on(eventName,'.coupon-box li, .t-video-box li, .name-main-box img',function(){
             window.location.href='http://www.hisihi.com/download.php';
         });
 
@@ -162,9 +162,9 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         // 视频、名称、认证
         $box.find('.name-main-box label').text(data.name);
-        if(data.is_listen_preview =='1'){
-            $('.name-main-box img').css('display','inline-block');
-        }
+        //if(data.is_listen_preview =='1'){
+        //    $('.name-main-box img').css('display','inline-block');
+        //}
         this.setCertInfo(data.authenticationInfo);
 
         // 粉丝和观看人数
@@ -634,6 +634,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         if(!data || data.coursesList.length==0){
             return;
         }
+        $('.name-main-box img').css('display','inline-block');
         var $box =  $('.t-video-box').show();
         var str = this.getVideoStr(data.coursesList,true);
         $box.find('.basic-header span').html('('+data.coursesList.length+')');

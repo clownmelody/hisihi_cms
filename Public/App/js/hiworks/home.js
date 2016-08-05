@@ -711,6 +711,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
             str1+='<li class="'+className+'"></li>';
         }
         $('#slider4').html(str);
+
         if(len<2) {
             str1='';
         }
