@@ -446,7 +446,8 @@ body .main-item.album .album-info .album-ul > li:first-child {
 body .main-item.album .album-info .album-ul > li:first-child > img {
   padding-left: 0;
 }
-body .main-item.underTip {
+body .underTip {
+  display: none;
   border-top: 1px solid #ccc;
   position: fixed;
   left: 0px;
@@ -457,51 +458,51 @@ body .main-item.underTip {
   padding: 0;
   margin: 0;
 }
-body .main-item.underTip li {
+body .underTip li {
   float: left;
   height: 100%;
   line-height: 50px;
 }
-body .main-item.underTip a:link {
+body .underTip a:link {
   color: #212121;
 }
-body .main-item.underTip .button {
+body .underTip .button {
   background-color: #fafafa;
 }
-body .main-item.underTip .button .img {
+body .underTip .button .img {
   background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
   background-size: 306px 65px;
   display: inline-block;
   margin-left: 16%;
   margin-top: 13%;
 }
-body .main-item.underTip .button #colImg {
+body .underTip .button #colImg {
   width: 25px;
   height: 25px;
   background-position: -166px 0px;
 }
-body .main-item.underTip .button #reqImg {
+body .underTip .button #reqImg {
   width: 22px;
   height: 22px;
   background-position: -166px -30px;
 }
-body .main-item.underTip .button span {
+body .underTip .button span {
   vertical-align: 6px;
   padding-left: 6px;
 }
-body .main-item.underTip #collection {
+body .underTip #collection {
   width: 25%;
   color: #212121;
 }
-body .main-item.underTip #request {
+body .underTip #request {
   width: 25%;
 }
-body .main-item.underTip #join-class {
+body .underTip #join-class {
   width: 50%;
   font-size: 15px;
   background-color: #212121;
 }
-body .main-item.underTip #join-class .listing {
+body .underTip #join-class .listing {
   color: #ffffff;
   text-align: center;
 }
@@ -528,6 +529,7 @@ body .class-show .have-class .class-title {
   font-size: 18px;
   padding-top: 24px;
   padding-bottom: 15px;
+  position: relative;
 }
 body .class-show .have-class .class-title #close {
   font-size: 25px;
@@ -535,8 +537,9 @@ body .class-show .have-class .class-title #close {
   padding-right: 5%;
   height: 50px;
   width: 40px;
-  position: relative;
-  top: -6px;
+  position: absolute;
+  top: 17px;
+  right: 0;
 }
 body .class-show .have-class .class-major {
   width: 100%;

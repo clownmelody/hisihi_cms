@@ -42,7 +42,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         });
 
 
-        //$(document).on('input','.class-num, .class-name', $.proxy(this,'singInBtnControl'));
+        $(document).on('input','.class-num, .class-name', $.proxy(this,'singInBtnControl'));
 
         //显示预约报名框
         //$(document).on(eventName,'#join-class .active', $.proxy(this,'signIn'));
@@ -98,16 +98,17 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             strNums=this.getNumsInfoStr(result),
             strMajor=this.getMajorInfoStr(result),
             strEn=this.getInEnvironmentStr(result),
-            strAlbum=this.getAlbumInfo(),
-            strUnder=this.getUnderTip();
+            strAlbum=this.getAlbumInfo();
 
         var str=strBasic+
             strNums+
             strMajor+
             strEn+
-            strAlbum+
-            strUnder;
+            strAlbum;
         $('body').append(str);
+        if(!this.isFromApp) {
+            $('.underTip').show();
+        }
     };
 
     //电话号码
@@ -365,25 +366,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return arr;
     };
 
-    //底部功能条（收藏/咨询/预约试听）
-    t.getUnderTip=function() {
-        return '<ul class="main-item underTip">' +
-            '<li id="collection">' +
-                '<a href="http://www.hisihi.com/download.php">'+
-                    '<div class="button"><div class="img" id="colImg"></div><span>收藏</span><div>' +
-                '</a>'+
-            '</li>' +
-            '<li id="request">' +
-                '<a href="tel:10001">'+
-                    '<div class="button"><div class="img" id="reqImg"></div><span>咨询</span><div>' +
-                '</a>'+
-            '</li>' +
-            '<li id="join-class">' +
-                '<div class="rightInfo listing">我想报考</div>' +
-            '</li>' +
-                '<div style="clear: both;"></div>' +
-            '</ul>';
-    }
+
+
 
     t.showSingInModal=function() {
         $('.class-show .show').addClass('show');
@@ -427,6 +411,18 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             },
             type:'get'
         });
+    };
+
+    t.singInBtnControl=function(e){
+        var $target=$('.class-num'),
+            txt1=$target.val().trim(),
+            $btn=$('.class-button'),
+            nc='active';
+        if(txt1){
+            $btn.addClass(nc);
+        }else{
+            $btn.removeClass(nc);
+        }
     };
 
     //取消预约
