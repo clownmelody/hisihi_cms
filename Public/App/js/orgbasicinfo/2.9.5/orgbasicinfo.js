@@ -72,6 +72,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     }
 
+    //下载条
     var config={
         downloadBar:{
             show:true,

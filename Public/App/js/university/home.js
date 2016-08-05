@@ -47,13 +47,13 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         $(document).on('input','.class-num, .class-name', $.proxy(this,'singInBtnControl'));
 
         //显示预约报名框
-        $(document).on(eventName,'#join-class', $.proxy(this,'singIn'));
+        $(document).on(eventName,'#join-class .active', $.proxy(this,'signIn'));
 
         //我想报考
-        $(document).on(eventName,'.rightInfo .listing', $.proxy(this,'showhave-class'));
+        $(document).on(eventName,'.rightInfo .listing', $.proxy(this,'showSingInModal'));
 
         //关闭预约
-        $(document).on(eventName,'#close', $.proxy(this,'closehave-class'));
+        $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
     };
 
     //下载条
@@ -101,7 +101,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             strMajor=this.getMajorInfoStr(result),
             strEn=this.getInEnvironmentStr(result),
             strAlbum=this.getAlbumInfo(),
-            strUnder=this.getUnderTip(result);
+            strUnder=this.getUnderTip();
 
         var str=strBasic+
             strNums+
@@ -113,7 +113,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     };
 
     //电话号码
-    $('#request a').attr('href','tel:'+data.phone_num);
+    //$('#request a').attr('href','tel:'+data.phone_num);
 
     //简介
     t.getBasicIntroduceInfo=function(result){
@@ -387,8 +387,16 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             '</ul>';
     }
 
+    t.showSingInModal=function() {
+        $('.class-show .show').addClass('show');
+        if ($('.input input').eq(0).val()) {
+            $('.class-button').addClass('active');
+        }
+        this.scrollControl(false);
+    }
+
     //手机号码判断
-    t.getSignIn=function() {
+    t.signIn=function() {
         var $input = $target=$('.class-num input'),
             that=this,
             number = $input.eq(0).val().trim(),
@@ -404,7 +412,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             sCallback: function(result){
                 that.controlLoadingBox(false);
                 if(result.success){
-                    $('.have-class .tips').css('opacity', '1');
+                    $('.have-class').css('opacity', '1');
                     that.showTips('预约成功');
                 }else{
                     that.showTips('预约失败');
@@ -424,12 +432,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     };
 
     //取消预约
-    t.closeSingInBox=function(){
-        $('.sing-in-modal').removeClass('show');
+    t.closeHaveClass=function(){
+        $('.class-show').removeClass('show');
         this.scrollControl(true);  //恢复滚动
     };
-
-
 
     return University;
 });

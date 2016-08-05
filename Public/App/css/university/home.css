@@ -329,10 +329,6 @@ p {
 .center-content {
   margin: 0 auto;
 }
-.ovlHidden {
-  overflow: hidden;
-  height: 100%;
-}
 body .main-item {
   margin: 15px auto 0 auto;
   background-color: #FFFFFF;
@@ -510,19 +506,16 @@ body .main-item.underTip #join-class .listing {
   color: #ffffff;
   text-align: center;
 }
-body .have-class {
-  animation: showmodal 150ms linear;
-  animation-fill-mode: forwards;
-  display: block;
+body .class-show .have-class {
   background-color: #ffffff;
   text-align: center;
   height: 350px;
 }
-body .have-class .input {
+body .class-show .have-class .input {
   height: 40px;
   margin: 7px 14px;
 }
-body .have-class .input input {
+body .class-show .have-class .input input {
   width: 100%;
   height: 40px;
   border: 1px solid rgba(204, 204, 204, 0.5);
@@ -532,17 +525,17 @@ body .have-class .input input {
   padding: 4px 10px;
   box-sizing: border-box;
 }
-body .have-class .class-title {
+body .class-show .have-class .class-title {
   font-size: 18px;
   font-weight: bold;
   padding-top: 24px;
   padding-bottom: 15px;
 }
-body .have-class .class-title #close {
+body .class-show .have-class .class-title #close {
   float: right;
   padding-right: 5%;
 }
-body .have-class .class-major {
+body .class-show .have-class .class-major {
   width: 100%;
   height: 40px;
   border: 1px solid rgba(204, 204, 204, 0.5);
@@ -551,11 +544,11 @@ body .have-class .class-major {
   font-size: 14px;
   text-align: left;
 }
-body .have-class #warning-tip {
+body .class-show .have-class #warning-tip {
   color: #808080;
   font-size: 12px;
 }
-body .have-class .class-button {
+body .class-show .have-class .class-button {
   color: #fff;
   background-color: #212121;
   border-radius: 4px;
@@ -565,8 +558,13 @@ body .have-class .class-button {
   text-align: center;
   opacity: 0.5;
 }
-body .have-class .class-button.active {
+body .class-show .have-class .class-button.active {
   opacity: 1;
+}
+body .show {
+  animation: showmodal 150ms linear;
+  animation-fill-mode: forwards;
+  display: block;
 }
 body .nodata {
   position: fixed;
@@ -754,10 +752,6 @@ body .nodata p {
   position: absolute;
   top: 50%;
   box-shadow: 0 2px 5px rgba(33, 33, 33, 0.35);
-}
-.ovfHidden {
-  overflow: hidden;
-  height: 100%;
 }
 @font-face {
   font-family: 'icomoon';

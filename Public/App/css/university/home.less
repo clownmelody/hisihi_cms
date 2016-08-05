@@ -28,10 +28,6 @@ p{
 .center-content {
   margin: 0 auto;
 }
-.ovlHidden  {
-  overflow: hidden;
-  height: 100%;
-}
 body{
   .main-item {
     margin:15px auto 0 auto;
@@ -235,69 +231,73 @@ body{
 
   }
 
-  .have-class {
-    animation: showmodal 150ms linear;
-    animation-fill-mode: forwards;
-    display: block;
-    background-color: #ffffff;
-    text-align: center;
-    height: 350px;
-    @a: 18px;
-    @q: 40px;
-    @e: 90%;
-    @y: 14px;
-    @color: #808080;
-    @x: #212121;
-    @l: #ffffff;
-    .input {
-      height: @q;
-      margin: @y*0.5  @y;
-      input {
+  .class-show {
+
+    .have-class {
+      background-color: #ffffff;
+      text-align: center;
+      height: 350px;
+      @a: 18px;
+      @q: 40px;
+      @e: 90%;
+      @y: 14px;
+      @color: #808080;
+      @x: #212121;
+      @l: #ffffff;
+      .input {
+        height: @q;
+        margin: @y*0.5  @y;
+        input {
+          .size(100%,@q);
+          border:1px solid rgba(204,204,204,.5);
+          border-radius:4px;
+          color: #212121;
+          font-size: @y;
+          padding:4px 10px;
+          box-sizing: border-box;
+        }
+      }
+      .class-title {
+        font-size: @a;
+        font-weight: bold;
+        padding-top: 24px;
+        padding-bottom: 15px;
+        #close {
+          float: right;
+          padding-right: 5%;
+        }
+      }
+      .class-major{
         .size(100%,@q);
         border:1px solid rgba(204,204,204,.5);
         border-radius:4px;
-        color: #212121;
+        line-height: @q;
         font-size: @y;
-        padding:4px 10px;
-        box-sizing: border-box;
+        text-align: left;
+      }
+      #warning-tip {
+        color: @color;
+        font-size: 12px;
+      }
+      .class-button {
+        color: #fff;
+        background-color: #212121;
+        border-radius: 4px;
+        font-size: 14px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        opacity: 0.5;
+        &.active{
+          opacity:1;
+        }
       }
     }
-    .class-title {
-      font-size: @a;
-      font-weight: bold;
-      padding-top: 24px;
-      padding-bottom: 15px;
-      #close {
-        float: right;
-        padding-right: 5%;
-      }
-    }
-    .class-major{
-      .size(100%,@q);
-      border:1px solid rgba(204,204,204,.5);
-      border-radius:4px;
-      line-height: @q;
-      font-size: @y;
-      text-align: left;
-    }
-    #warning-tip {
-      color: @color;
-      font-size: 12px;
-    }
-    .class-button {
-      color: #fff;
-      background-color: #212121;
-      border-radius: 4px;
-      font-size: 14px;
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-      opacity: 0.5;
-      &.active{
-        opacity:1;
-      }
-    }
-
+  }
+  .show {
+    animation: showmodal 150ms linear;
+    animation-fill-mode: forwards;
+    display: block;
   }
 
   .nodata{
@@ -492,10 +492,10 @@ body{
   }
 }
 
-.ovfHidden{
-  overflow: hidden;
-  height: 100%;
-}
+//.ovfHidden{
+//  overflow: hidden;
+//  height: 100%;
+//}
 
 
 
