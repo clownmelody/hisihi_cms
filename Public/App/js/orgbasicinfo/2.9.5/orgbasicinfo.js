@@ -317,7 +317,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         for (var i = 0; i < len; i++) {
             if(i<2) {
                 item = data[i];
-                str += '<a href="' + item.detail_url + '"><p>' + item.title + '</p></a>';
+                str += '<a href="' + item.url + '"><p>' + item.title + '</p></a>';
             }
         }
         $target.find('.right-item div').html(str);

@@ -409,7 +409,6 @@ body {
   width: 21px;
   height: 13px;
   display: inline-block;
-  margin-right: 2px;
   transform: scale(0.8);
 }
 .logo-box .logo-main-info .user-number-box span:last-child {
