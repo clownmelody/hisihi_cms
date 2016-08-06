@@ -357,29 +357,6 @@ ul {
 ul li {
   list-style: none;
 }
-#loading-data {
-  position: fixed;
-  width: 100px;
-  height: 40px;
-  margin-left: -50px;
-  margin-top: -20px;
-  top: 50%;
-  left: 50%;
-  z-index: 555;
-  text-align: center;
-  display: none;
-}
-#loading-data .loding-img {
-  width: 40px;
-  height: 40px;
-  display: inline-block;
-}
-#loading-data.active {
-  display: block;
-}
-#loading-data.active .loding-img {
-  animation: turning 1s linear infinite;
-}
 /*����ҳ��*/
 #work-detail-panel {
   z-index: 100;

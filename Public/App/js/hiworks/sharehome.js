@@ -285,6 +285,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
             paraData: { email: email, hiwork_id:this.currentWorksObj.id},
             sCallback: function (data) {
                 if(data.success) {
+                    that.controlLoadingBox(false);
                     email = that.substrLongStr(email, 20);
                     that.showTips('<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
                     that.controlModelBox(0,0);
@@ -292,10 +293,15 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                     that.showTips('邮件发送失败');
                 }
             },eCallback: function (data) {
+                that.controlLoadingBox(false);
                 that.showTips('邮件发送失败');
             }
         };
-        this.getDataAsync(para);
+        this.controlModelBox(0,0);
+        this.controlLoadingBox(true);
+        window.setTimeout(function(){
+            that.getDataAsync(para);
+        },300);
     };
 
     //取消绑定邮箱
@@ -406,7 +412,7 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
     };
 
     /*设置页面的标题，
-    * 针对ios在页面生成后，js 不能修改的情况
+    * 针对ios在页面生成后，js 不能修改的情况,所以添加了一个 iframe
     */
     t.setTitle=function(title){
         if(this.deviceType.ios) {
@@ -419,9 +425,15 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                     $iframe.off('load').remove()
                 }, 0)
             }).appendTo($body);
-        }else{
-            $('title').text(title);
+            return;
         }
+        if(this.deviceType.android && this.isFromApp){
+            if (typeof AppFunction.share != "undefined") {
+                AppFunction.modifyHiworksTitle(title);  //调用app的方法，修改标题
+            }
+            return;
+        }
+        $('title').text(title);
     };
 
     //返回分享信息，供app调用

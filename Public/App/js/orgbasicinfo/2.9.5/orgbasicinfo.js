@@ -444,7 +444,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     t.getPicsStr=function(data,type){
         var $label=$('.pics-number label').eq(1);
         if(!data || data.length==0){
-            $label.text('0照片')
+            $label.hide();
             return '';
         }
         var len=data.length,str='';
