@@ -343,7 +343,6 @@ body .main-item .center-content {
   margin: 0 auto;
   color: #444444;
   font-size: 14px;
-  font-weight: bold;
 }
 body .main-item .head-txt {
   font-size: 18px;
@@ -447,7 +446,9 @@ body .main-item.album .album-info .album-ul > li:first-child {
 body .main-item.album .album-info .album-ul > li:first-child > img {
   padding-left: 0;
 }
-body .main-item.underTip {
+body .underTip {
+  display: none;
+  border-top: 1px solid #ccc;
   position: fixed;
   left: 0px;
   right: 0px;
@@ -457,91 +458,119 @@ body .main-item.underTip {
   padding: 0;
   margin: 0;
 }
-body .main-item.underTip li {
+body .underTip li {
   float: left;
   height: 100%;
   line-height: 50px;
 }
-body .main-item.underTip a:link {
+body .underTip a:link {
   color: #212121;
 }
-body .main-item.underTip .button {
-  background-color: #cccccc;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
+body .underTip .button {
+  background-color: #fafafa;
 }
-body .main-item.underTip .button .img {
+body .underTip .button .img {
   background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
   background-size: 306px 65px;
   display: inline-block;
   margin-left: 16%;
   margin-top: 13%;
 }
-body .main-item.underTip .button #colImg {
+body .underTip .button #colImg {
   width: 25px;
   height: 25px;
   background-position: -166px 0px;
 }
-body .main-item.underTip .button #reqImg {
+body .underTip .button #reqImg {
   width: 22px;
   height: 22px;
   background-position: -166px -30px;
 }
-body .main-item.underTip .button span {
+body .underTip .button span {
   vertical-align: 6px;
   padding-left: 6px;
 }
-body .main-item.underTip #collection {
+body .underTip #collection {
   width: 25%;
   color: #212121;
 }
-body .main-item.underTip #request {
+body .underTip #request {
   width: 25%;
 }
-body .main-item.underTip #join-class {
+body .underTip #join-class {
   width: 50%;
   font-size: 15px;
   background-color: #212121;
 }
-body .main-item.underTip #join-class .listing {
+body .underTip #join-class .listing {
   color: #ffffff;
   text-align: center;
 }
-body .main-item.have-class {
-  height: 400px;
+body .class-show .have-class {
   background-color: #ffffff;
   text-align: center;
+  height: 350px;
 }
-body .main-item.have-class .input {
+body .class-show .have-class .input {
   height: 40px;
-  margin-bottom: 14px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  width: 90%;
+  margin: 7px 14px;
 }
-body .main-item.have-class .class-title {
+body .class-show .have-class .input input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid rgba(204, 204, 204, 0.5);
+  border-radius: 4px;
+  color: #212121;
+  font-size: 14px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+}
+body .class-show .have-class .class-title {
   font-size: 18px;
-  font-weight: bold;
   padding-top: 24px;
   padding-bottom: 15px;
+  position: relative;
 }
-body .main-item.have-class .class-title #close {
+body .class-show .have-class .class-title #close {
+  font-size: 25px;
   float: right;
   padding-right: 5%;
+  height: 50px;
+  width: 40px;
+  position: absolute;
+  top: 17px;
+  right: 0;
 }
-body .main-item.have-class .class-major {
-  margin-left: 5%;
+body .class-show .have-class .class-major {
+  width: 100%;
+  height: 40px;
+  border: 1px solid rgba(204, 204, 204, 0.5);
+  border-radius: 4px;
   line-height: 40px;
   font-size: 14px;
+  text-align: left;
 }
-body .main-item.have-class #warning-tip {
+body .class-show .have-class #warning-tip {
   color: #808080;
   font-size: 12px;
 }
-body .main-item.have-class .class-button {
-  margin-top: 14px;
-  color: #ffffff;
+body .class-show .have-class .class-button {
+  color: #fff;
   background-color: #212121;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  opacity: 0.5;
+}
+body .class-show .have-class .class-button.active {
+  opacity: 1;
+}
+body .show {
+  animation: showmodal 150ms linear;
+  animation-fill-mode: forwards;
+  display: block;
 }
 body .nodata {
   position: fixed;
@@ -729,10 +758,6 @@ body .nodata p {
   position: absolute;
   top: 50%;
   box-shadow: 0 2px 5px rgba(33, 33, 33, 0.35);
-}
-.ovfHidden {
-  overflow: hidden;
-  height: 100%;
 }
 @font-face {
   font-family: 'icomoon';

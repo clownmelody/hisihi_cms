@@ -14,6 +14,8 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
+
+
         this.perPageSize=10;
         this.pageIndex=1;
         this.async=false;  //同步加载所有的数据
@@ -39,7 +41,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         });
 
         /*优惠券点击*/
-        $(document).on(eventName,'.coupon-box li, .t-video-box li, .name-main-box img',function(){
+        $(document).on(eventName,'.coupon-box li, .t-video-box li',function(){
             window.location.href='http://www.hisihi.com/download.php';
         });
 
@@ -70,6 +72,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     }
 
+    //下载条
     var config={
         downloadBar:{
             show:true,
@@ -162,9 +165,9 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         // 视频、名称、认证
         $box.find('.name-main-box label').text(data.name);
-        //if(data.is_listen_preview =='1'){
-        //    $('.name-main-box img').css('display','inline-block');
-        //}
+        if(data.is_listen_preview =='0'){
+            $('.name-main-box img').css('display','inline-block');
+        }
         this.setCertInfo(data.authenticationInfo);
 
         // 粉丝和观看人数
@@ -197,9 +200,8 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     t.translationCount=function(num){
         num=parseInt(num);
         if(num>9999){
-            var lessNum=num%10000;
             num= (num/10000);
-            if(lessNum!=0){
+            if(num%10000!=0){
                 num=num.toString();
                 var index=num.indexOf('.');
                 num=num.substr(0,index+2);
@@ -317,7 +319,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         for (var i = 0; i < len; i++) {
             if(i<2) {
                 item = data[i];
-                str += '<a href="' + item.url + '"><p>' + item.title + '</p></a>';
+                str += '<a href="' + item.detail_url + '"><p>' + item.title + '</p></a>';
             }
         }
         $target.find('.right-item div').html(str);
@@ -398,7 +400,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             url:this.baseUrl + 'getPropagandaVideo',
             paraData: {organization_id: this.oid,count:8},
             sCallback: function(result){
-               var str = that.getVideoStr([result.data]);
+               var str = that.getVideoStr([result.data]);  /*填充报名信息*/
                 that.loadPics(str);
             },
             eCallback:function(txt){
@@ -476,10 +478,6 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         if(type){
             var h=$('body').width()*7/16;
             style='height:'+h+'px;';
-        }else{
-            if(!data[0].video_url) {
-                return '';
-            }
         }
 
         for(var i=0;i<len;i++) {
@@ -634,7 +632,6 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         if(!data || data.coursesList.length==0){
             return;
         }
-        $('.name-main-box img').css('display','inline-block');
         var $box =  $('.t-video-box').show();
         var str = this.getVideoStr(data.coursesList,true);
         $box.find('.basic-header span').html('('+data.coursesList.length+')');
@@ -761,7 +758,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         /*添加星星*/
         var strStar= this.getStarInfoByScore(result.comprehensiveScore);
         var scores=result.comprehensiveScore;
-        if(scores.toString().indexOf('.')<0  && scores>0){
+        if(scores.toString().indexOf('.')<0){
             scores=parseInt(scores)+'.0';
         }
         $('#myAssessment').text(scores);
@@ -943,7 +940,6 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         this.controlLoadingBox(true);
         this.getDataAsync({
             url: this.baseUrl + 'yuyue/organization_id/'+this.oid+'/mobile/'+number+'/username/'+name,
-            //paraData:JSON.stringify({organization_id: this.oid,mobile:number,username:name}),
             sCallback: function(result){
                 that.controlLoadingBox(false);
                 if(result.success){

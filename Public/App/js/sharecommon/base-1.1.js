@@ -613,7 +613,7 @@ define(['$','fastclick'],function() {
         /*添加下载条*/
         _addDownloadBar:function(){
             var downloadBar=this.config.downloadBar;
-            if(downloadBar.show){
+            if(downloadBar.show && !this.isFromApp){
                 var style='bottom:0',style1={'padding-bottom': downloadBar.height};
                 if(!downloadBar.pos){
                     style='top:0';

@@ -9,9 +9,21 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         this.deviceType = this.operationType();
         this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
         if(this.deviceType.mobile && this.isLocal){
-            //eventName='touchend';
+            eventName='touchend';
         }
         this.getBasicInfo();
+
+        //点击报名事件
+        $(document).on(eventName,'#join-class',function () {
+            $('.class-show').addClass('show');
+        });
+
+        //$(document).on(eventName,'#join-class',function () {
+        //    event.stopPropagation();
+        //        if(event.target==this){
+        //            that.haveClass(false);
+        //        }
+        //});
 
         $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
 
@@ -28,12 +40,24 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
             }
         });
+
+
+        $(document).on('input','.class-num, .class-name', $.proxy(this,'singInBtnControl'));
+
+        //显示预约报名框
+        //$(document).on(eventName,'#join-class .active', $.proxy(this,'signIn'));
+
+        //我想报考
+        //$(document).on(eventName,'.rightInfo .listing', $.proxy(this,'showSingInModal'));
+
+        //关闭预约
+        $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
     };
 
     //下载条
     var config={
         downloadBar:{
-            show:false,
+            show:true,
             pos:0
         }
 
@@ -75,15 +99,16 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             strMajor=this.getMajorInfoStr(result),
             strEn=this.getInEnvironmentStr(result),
             strAlbum=this.getAlbumInfo();
-            //strUnder=this.getUnderTip(result);
 
         var str=strBasic+
             strNums+
             strMajor+
             strEn+
-            strAlbum
-            //strUnder;
+            strAlbum;
         $('body').append(str);
+        if(!this.isFromApp) {
+            $('.underTip').show();
+        }
     };
 
     //电话号码
@@ -341,37 +366,70 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return arr;
     };
 
-    //底部功能条（收藏/咨询/预约试听）
-    t.getUnderTip=function() {
-            //return '<ul class="main-item underTip">' +
-            //    '<li id="collection">' +
-            //        '<a href="http://www.hisihi.com/download.php">'+
-            //            '<div class="button"><div class="img" id="colImg"></div><span>收藏</span><div>' +
-            //        '</a>'+
-            //    '</li>' +
-            //    '<li id="request">' +
-            //        '<a href="tel:10001">'+
-            //        '<div class="button"><div class="img" id="reqImg"></div><span>客服</span><div>' +
-            //        '</a>'+
-            //    '</li>' +
-            //    '<li id="join-class">' +
-            //        '<div class="rightInfo listing">预约试听</div>' +
-            //    '</li>' +
-            //        '<div style="clear: both;"></div>' +
-            //    '</ul>',
 
 
-            return '<div class="main-item have-class">'+
-            '<div class="class-title">我想报考<span id="close">x</span></div>'+
-            '<input type="number" class="class-num input" placeholder="电话号码" size="14"></input>'+
-            '<input type="text" class="class-name input" placeholder="姓名" size="14"></input>'+
-            '<input class="class-qualifications input" placeholder="学历" size="14"></input>'+
-            '<div class="class-major input">视觉传达设计</div>'+
-            '<span id="warning-tip">留学顾问将在15分钟之内联系您</span>'+
-            '<button class="class-button input">提交</button>'+
-        '</div>';
 
+    t.showSingInModal=function() {
+        $('.class-show .show').addClass('show');
+        if ($('.input input').eq(0).val()) {
+            $('.class-button').addClass('active');
+        }
+        this.scrollControl(false);
     }
+
+    //手机号码判断
+    t.signIn=function() {
+        var $input = $('.class-num input'),
+            that=this,
+            number = $input.eq(0).val().trim(),
+            name = $input.eq(1).val().trim(),
+            reg=/^1\d{10}$/;
+        if (!reg.test(number)) {
+            this.showTips('请正确输入手机号码');
+            return;
+        }
+        this.controlLoadingBox(true);
+        this.getDataAsync({
+            url: this.baseUrl + 'yuyue/organization_id/'+this.oid+'/mobile/'+number+'/username/'+name,
+            sCallback: function(result){
+                that.controlLoadingBox(false);
+                if(result.success){
+                    $('.have-class').css('opacity', '1');
+                    that.showTips('预约成功');
+                }else{
+                    that.showTips('预约失败');
+                }
+
+            },
+            eCallback:function(resutl){
+                that.controlLoadingBox(false);
+                var txt='预约失败';
+                if(resutl.code==-2){
+                    txt='不能重复预约';
+                }
+                that.showTips(txt);
+            },
+            type:'get'
+        });
+    };
+
+    t.singInBtnControl=function(e){
+        var $target=$('.class-num'),
+            txt1=$target.val().trim(),
+            $btn=$('.class-button'),
+            nc='active';
+        if(txt1){
+            $btn.addClass(nc);
+        }else{
+            $btn.removeClass(nc);
+        }
+    };
+
+    //取消预约
+    t.closeHaveClass=function(){
+        $('.class-show').removeClass('show');
+        this.scrollControl(true);  //恢复滚动
+    };
 
     return University;
 });

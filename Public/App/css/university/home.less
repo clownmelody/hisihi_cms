@@ -40,7 +40,6 @@ body{
       margin: 0 auto;
       color:#444444;
       font-size: 14px;
-      font-weight: bold;
     }
     .head-txt{
       font-size: 18px;
@@ -161,126 +160,150 @@ body{
       }
     }
 
-    &.underTip {
-      position: fixed;
-      left: 0px;
-      right: 0px;
-      bottom: 0px;
-      @p: #fafafa;
-      @x: #212121;
-      @l: #ffffff;
-      @o: 22px;
-      @m: 25px;
-      @u: 50px;
-      @k: 6px;
-      font-size: 12px;
-      height: @u;
-      padding: 0;
-      margin: 0;
-      li {
-        float: left;
-        height: 100%;
-        line-height: @u;
-      }
-      a:link {
-        color: @x;
-      }
-      .button {
-        background-color: #cccccc;
-        opacity: 0.5;
-        filter: alpha(opacity=50);
-        .img {
-          background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
-          background-size: 612px*0.5 130px*0.5;
-          display: inline-block;
-          margin-left: 16%;
-          margin-top: 13%;
-        }
-        #colImg {
-          .size(@m, @m);
-          background-position: -166px 0px;
-        }
-        #reqImg {
-          .size(@o, @o);
-          background-position: -166px -30px;
-        }
-        span {
-          vertical-align: @k;
-          padding-left: @k;
-        }
-      }
-      #collection {
-        width: 25%;
-        color: @x;
-      }
-      #request {
-        width: 25%;
-      }
-      #join-class {
-        width: 50%;
-        font-size: 15px;
-        background-color: @x;
-        .listing {
-          color: @l;
-          text-align: center;
-        }
-      }
+  }
 
+  .underTip {
+    display: none;
+    border-top: 1px solid #ccc;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    @p: #fafafa;
+    @x: #212121;
+    @l: #ffffff;
+    @o: 22px;
+    @m: 25px;
+    @u: 50px;
+    @k: 6px;
+    font-size: 12px;
+    height: @u;
+    padding: 0;
+    margin: 0;
+    li {
+      float: left;
+      height: 100%;
+      line-height: @u;
+    }
+    a:link {
+      color: @x;
+    }
+    .button {
+      background-color: #fafafa;
+      //opacity: 0.5;
+      //filter: alpha(opacity=50);
+      .img {
+        background: url("../../images/orgbasicinfo/2.9.5/sprite.png") no-repeat;
+        background-size: 612px*0.5 130px*0.5;
+        display: inline-block;
+        margin-left: 16%;
+        margin-top: 13%;
+      }
+      #colImg {
+        .size(@m, @m);
+        background-position: -166px 0px;
+      }
+      #reqImg {
+        .size(@o, @o);
+        background-position: -166px -30px;
+      }
+      span {
+        vertical-align: @k;
+        padding-left: @k;
+      }
+    }
+    #collection {
+      width: 25%;
+      color: @x;
+    }
+    #request {
+      width: 25%;
+    }
+    #join-class {
+      width: 50%;
+      font-size: 15px;
+      background-color: @x;
+      .listing {
+        color: @l;
+        text-align: center;
+      }
     }
 
-      &.have-class {
-        height: 400px;
-        background-color: #ffffff;
-        text-align: center;
-        @a: 18px;
-        @q: 40px;
-        @e: 90%;
-        @y: 14px;
-        @color: #808080;
-        @x: #212121;
-        @l: #ffffff;
-        .input {
-          height: @q;
-          margin-bottom: @y;
-          border: 1px solid #cccccc;
-          border-radius: 4px;
-          width: @e;
-        }
-        .class-title {
-          font-size: @a;
-          font-weight: bold;
-          padding-top: 24px;
-          padding-bottom: 15px;
-          #close {
-            float: right;
-            padding-right: 5%;
-          }
-        }
-        .class-num {
-        }
-        .class-num {
-        }
-        .class-major{
-          margin-left: 5%;
-          line-height: @q;
+  }
+
+  .class-show {
+
+    .have-class {
+      background-color: #ffffff;
+      text-align: center;
+      height: 350px;
+      @a: 18px;
+      @q: 40px;
+      @e: 90%;
+      @y: 14px;
+      @color: #808080;
+      @x: #212121;
+      @l: #ffffff;
+      .input {
+        height: @q;
+        margin: @y*0.5  @y;
+        input {
+          .size(100%,@q);
+          border:1px solid rgba(204,204,204,.5);
+          border-radius:4px;
+          color: #212121;
           font-size: @y;
+          padding:4px 10px;
+          box-sizing: border-box;
         }
-        #warning-tip {
-          color: @color;
-          font-size: 12px;
-        }
-        .class-button {
-          margin-top: @y;
-          color: @l;
-          background-color: @x;
-        }
-
-
-
-
       }
-
-
+      .class-title {
+        font-size: @a;
+        padding-top: 24px;
+        padding-bottom: 15px;
+        position: relative;
+        #close {
+          font-size: 25px;
+          float: right;
+          padding-right: 5%;
+          height: 50px;
+          width: 40px;
+          position: absolute;
+          top: 17px;
+          right: 0;
+        }
+      }
+      .class-major{
+        .size(100%,@q);
+        border:1px solid rgba(204,204,204,.5);
+        border-radius:4px;
+        line-height: @q;
+        font-size: @y;
+        text-align: left;
+      }
+      #warning-tip {
+        color: @color;
+        font-size: 12px;
+      }
+      .class-button {
+        color: #fff;
+        background-color: #212121;
+        border-radius: 4px;
+        font-size: 14px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        opacity: 0.5;
+        &.active{
+          opacity:1;
+        }
+      }
+    }
+  }
+  .show {
+    animation: showmodal 150ms linear;
+    animation-fill-mode: forwards;
+    display: block;
   }
 
   .nodata{
@@ -475,10 +498,10 @@ body{
   }
 }
 
-.ovfHidden{
-  overflow: hidden;
-  height: 100%;
-}
+//.ovfHidden{
+//  overflow: hidden;
+//  height: 100%;
+//}
 
 
 
