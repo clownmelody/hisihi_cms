@@ -3749,7 +3749,7 @@ class OrganizationController extends AppController
         }else{
             $map['status'] = array('gt', 0);
         }
-        $major = M('OrganizationTag')->field('id, value, extra')->where($map)->order('id desc')->select();
+        $major = M('OrganizationTag')->field('id, value, extra')->where($map)->order('id asc')->select();
         $data['list'] = $major;
         $this->apiSuccess('获取机构专业列表成功', null, $data);
     }
