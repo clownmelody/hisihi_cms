@@ -525,6 +525,23 @@ body .class-show .have-class .input input {
   padding: 4px 10px;
   box-sizing: border-box;
 }
+body .class-show .have-class .input select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding-left: 10px;
+  width: 100%;
+  height: 100%;
+}
+body .class-show .have-class .class-select {
+  background: url('http://ourjs.github.io/static/2015/arrow.png') right center no-repeat;
+  height: 40px;
+  overflow: hidden;
+  border: solid 1px #ccc;
+  border: 1px solid rgba(204, 204, 204, 0.5);
+}
 body .class-show .have-class .class-title {
   font-size: 18px;
   padding-top: 24px;

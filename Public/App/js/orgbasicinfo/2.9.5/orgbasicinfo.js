@@ -934,7 +934,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     //预约报名
     t.singIn=function() {
-        var $input = $target=$('.sing-in-item input'),
+        var $input =$('.sing-in-item input'),
             that=this,
             number = $input.eq(0).val().trim(),
             name = $input.eq(1).val().trim(),

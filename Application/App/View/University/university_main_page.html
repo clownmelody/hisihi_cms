@@ -62,11 +62,23 @@
             <div class="input">
                 <input type="text" class="class-name" placeholder="姓名" size="14">
             </div>
-            <div class="input">
-                <input class="class-qualifications" placeholder="学历" size="14">
+            <div class="input class-select" >
+                <select id="select1">
+                    <option value ="junior-high-school">初中</option>
+                    <option value ="high-school">高中</option>
+                    <option value ="undergraduate">本科</option>
+                    <option value ="graduate">硕士</option>
+                </select>
             </div>
-            <div class="input">
-                <div class="class-major">视觉传达设计</div>
+            <div class="input class-select" >
+                <!--<div class="class-major">视觉传达设计</div>-->
+                <!--获取大学下的专业列表  GET      overseas_study/university/<int:uid>/majors-->
+                <select id="select2">
+                    <option value ="">1</option>
+                    <option value ="">2</option>
+                    <option value ="">3</option>
+                    <option value ="">4</option>
+                </select>
             </div>
             <span id="warning-tip">留学顾问将在15分钟之内联系您</span>
             <div class="class-button input">提交</div>
