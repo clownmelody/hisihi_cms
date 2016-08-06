@@ -186,14 +186,12 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     //专业信息
     t.getMajorInfoStr=function(data){
         var str='',
-            str2='',
             unMajors=data.undergraduate_major,
             len=unMajors.length,
             gMajors=data.graduate_major,
             len1=gMajors.length;
         if(len>0 || len1>0){
             str='<div class="main-item majors">';
-            //str2='<div class="main-item majors">';
         }
         if(len>0){
             str+=this.getMajorItemInfoStr('本科专业',unMajors);
