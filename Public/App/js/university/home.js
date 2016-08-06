@@ -18,12 +18,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             $('.class-show').addClass('show');
         });
 
-        //$(document).on(eventName,'#join-class',function () {
-        //    event.stopPropagation();
-        //        if(event.target==this){
-        //            that.haveClass(false);
-        //        }
-        //});
 
         $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
 
@@ -110,9 +104,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             $('.underTip').show();
         }
     };
-
-    //电话号码
-    //$('#request a').attr('href','tel:'+data.phone_num);
 
     //简介
     t.getBasicIntroduceInfo=function(result){
@@ -365,9 +356,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
         return arr;
     };
-
-
-
 
     t.showSingInModal=function() {
         $('.class-show .show').addClass('show');
