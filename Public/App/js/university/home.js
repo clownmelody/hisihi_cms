@@ -35,16 +35,16 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             }
         });
 
+        //保存报名信息
+        $(document).on('input','.class-num, .class-name', $.proxy(this,'btnSave'));
 
-        $(document).on('input','.class-num, .class-name', $.proxy(this,'singInBtnControl'));
+        //手机号码输入，确定报名
+        $(document).on(eventName,'.class-button.active', $.proxy(this,'signIn'));
 
-        //显示预约报名框
-        //$(document).on(eventName,'#join-class .active', $.proxy(this,'signIn'));
+        //我想报考，显示模态窗口
+        $(document).on(eventName,'.rightInfo .listing', $.proxy(this,'showSingInModal'));
 
-        //我想报考
-        //$(document).on(eventName,'.rightInfo .listing', $.proxy(this,'showSingInModal'));
-
-        //关闭预约
+        //关闭
         $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
     };
 
@@ -362,15 +362,19 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         if ($('.input input').eq(0).val()) {
             $('.class-button').addClass('active');
         }
-        this.scrollControl(false);
     }
 
     //手机号码判断
     t.signIn=function() {
-        var $input = $('.class-num input'),
-            that=this,
-            number = $input.eq(0).val().trim(),
-            name = $input.eq(1).val().trim(),
+        var $input = $('.class-num'),
+            $name=$('.class-name'),
+            $major=$('#select1 option:selected'),
+            $education=$('#select2 option:selected');
+        var that=this,
+            number = $input.val().trim(),
+            name = $name.val(),
+            major= $major.val(),
+            education=$education.val(),
             reg=/^1\d{10}$/;
         if (!reg.test(number)) {
             this.showTips('请正确输入手机号码');
@@ -378,7 +382,19 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
         this.controlLoadingBox(true);
         this.getDataAsync({
-            url: this.baseUrl + 'yuyue/organization_id/'+this.oid+'/mobile/'+number+'/username/'+name,
+            url: 'http://localhost/hisihi-cms/api.php?s=/organization/baokao'+
+                '/mobile/'+number+
+                '/username/'+name+
+                '/university_id/'+this.uid+
+                '/education/'+education+
+                '/major/'+major,
+            //paraData:{
+            //    mobile:number,
+            //    university_id:this.uid,
+            //    username:name,
+            //    major:major,
+            //    education:education,
+            //},
             sCallback: function(result){
                 that.controlLoadingBox(false);
                 if(result.success){
@@ -401,7 +417,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         });
     };
 
-    t.singInBtnControl=function(e){
+    //必填项手机号码输入后按钮变色
+    t.btnSave=function(e){
         var $target=$('.class-num'),
             txt1=$target.val().trim(),
             $btn=$('.class-button'),
@@ -413,7 +430,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
     };
 
-    //取消预约
+
+    //取消
     t.closeHaveClass=function(){
         $('.class-show').removeClass('show');
         this.scrollControl(true);  //恢复滚动
