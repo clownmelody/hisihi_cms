@@ -386,20 +386,19 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             return;
         }
         this.controlLoadingBox(true);
+        var paraStr='/mobile/'+number+ '/university_id/'+this.uid;
+        if(name){
+            paraStr+='/username/'+name;
+        }
+        if(education){
+            paraStr+='/education/'+education;
+        }
+        if(major){
+            paraStr+='/major/'+major;
+        }
+
         this.getDataAsync({
-            url: 'http://localhost/hisihi-cms/api.php?s=/organization/baokao'+
-                '/mobile/'+number+
-                '/username/'+name+
-                '/university_id/'+this.uid+
-                '/education/'+education+
-                '/major/'+major,
-            //paraData:{
-            //    mobile:number,
-            //    university_id:this.uid,
-            //    username:name,
-            //    major:major,
-            //    education:education,
-            //},
+            url: 'http://localhost/hisihi-cms/api.php?s=/organization/baokao'+paraStr,
             sCallback: function(result){
                 that.controlLoadingBox(false);
                 if(result.success){

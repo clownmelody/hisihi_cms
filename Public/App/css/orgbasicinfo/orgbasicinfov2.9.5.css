@@ -444,6 +444,7 @@ body {
 }
 .main-item .basic-header .num-tips label {
   margin-right: 3px;
+  display: none;
 }
 .main-item .main-content-item {
   display: none;

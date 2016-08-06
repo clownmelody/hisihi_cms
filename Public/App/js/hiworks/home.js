@@ -898,19 +898,25 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
             paraData: {email: email, hiwork_id:this.currentWorksObj.id},
             sCallback: function (data) {
                 if(data.success) {
+                    that.controlLoadingBox(false);
                     email = that.substrLongStr(email, 20);
                     that.showTips('<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
-                    $('#email').val('');
                     //更新数据统计
                     that.updateStatisticsNum('hiworks');
                 }else{
-                    that.controlModelBox(1,0);
+                    that.controlLoadingBox(false);
+                    that.showTips('邮件发送失败');
                 }
             },eCallback: function (data) {
-                that.controlModelBox(1,0);
+                that.showTips('邮件发送失败');
             }
         };
-        this.getDataAsync(para);
+        this.controlModelBox(0,0);
+        this.controlLoadingBox(true);
+        window.setTimeout(function(){
+            that.getDataAsync(para);
+        },300);
+
     };
 
     //取消绑定邮箱
