@@ -911,7 +911,6 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             $('.sing-in-btn').addClass('active');
         }
         this.scrollControl(false);  //禁止滚动
-        //$('.sing-in-modal')[0].addEventListener('touchmove', forbiddenScroll, false);
     };
 
     t.singInBtnControl=function(e){

@@ -18,9 +18,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             $('.class-show').addClass('show');
         });
 
-
+        //获取相册
         $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
 
+        //点击相册，查看大图
         $(document).on(eventName,'.album-name',function(){
             window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
         });
@@ -185,12 +186,14 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     //专业信息
     t.getMajorInfoStr=function(data){
         var str='',
+            str2='',
             unMajors=data.undergraduate_major,
             len=unMajors.length,
             gMajors=data.graduate_major,
             len1=gMajors.length;
         if(len>0 || len1>0){
             str='<div class="main-item majors">';
+            //str2='<div class="main-item majors">';
         }
         if(len>0){
             str+=this.getMajorItemInfoStr('本科专业',unMajors);
@@ -364,6 +367,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
     }
 
+    //获取大学专业信息
+    t
     //手机号码判断
     t.signIn=function() {
         var $input = $('.class-num'),
