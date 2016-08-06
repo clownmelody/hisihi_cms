@@ -444,11 +444,10 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     t.getPicsStr=function(data,type){
         var $label=$('.pics-number label').eq(1);
         if(!data || data.length==0){
-            $label.hide();
             return '';
         }
         var len=data.length,str='';
-        type && $label.text(len+'照片');
+        type && $label.text(len+'照片').css('display','inline');
         for(var i=0;i<len;i++){
             str+='<li class="li-img" data-id="'+data[i].id+'">'+
                     '<div class="img-box">'+
@@ -474,10 +473,17 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         var len=data.length,
             str='',
             item,
-            style='';
+            style='',
+            $label=$('.pics-number label').eq(0);
         if(type){
             var h=$('body').width()*7/16;
             style='height:'+h+'px;';
+        }else{
+            if(!data[0].video_url) {
+                $label.hide();
+                return '';
+            }
+            $label.text(len+'视频').show();
         }
 
         for(var i=0;i<len;i++) {

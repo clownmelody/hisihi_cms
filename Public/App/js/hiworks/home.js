@@ -901,7 +901,6 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
                     that.controlLoadingBox(false);
                     email = that.substrLongStr(email, 20);
                     that.showTips('<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
-                    $('#email').val('');
                     //更新数据统计
                     that.updateStatisticsNum('hiworks');
                 }else{

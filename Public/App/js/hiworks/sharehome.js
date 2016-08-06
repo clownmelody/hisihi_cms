@@ -288,7 +288,8 @@ define(['fx','base','scale','fastclick'],function(fx,Base) {
                     that.controlLoadingBox(false);
                     email = that.substrLongStr(email, 20);
                     that.showTips('<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
-                    that.controlModelBox(0,0);
+                    //更新数据统计
+                    that.updateStatisticsNum('hiworks');
                 }else{
                     that.showTips('邮件发送失败');
                 }
