@@ -2,66 +2,19 @@
  * Created by jimmy on 2016/5/10.
  */
 
-define(['base','mysilder','scale'],function(Base,Myslider){
+define(['base'],function(Base){
     var University=function(id){
         this.uid = id;
         var eventName='click',that=this;
         this.deviceType = this.operationType();
         this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
-        this.baseUrl=window.hisihiUrlObj.link_url;
         if(this.deviceType.mobile && this.isLocal){
-            //eventName='touchend';
-            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
+            eventName='touchend';
         }
         this.getBasicInfo();
-
-        //点击报名事件
-        $(document).on(eventName,'#join-class',function () {
-            $('.class-show').addClass('show');
-        });
-
-        //获取相册
-        $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
-
-        //点击相册，查看大图
-        $(document).on(eventName,'.album-name',function(){
-            window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
-        });
-
-        //关闭相册信息
-        $(document).on(eventName,'.view-pics-box', function(){
-            event.stopPropagation();
-            if(event.target==this){
-                $('.modal').removeClass('show');
-            }
-        });
-
-        //控制确定报名按钮的可用性
-        $(document).on('input','.class-num', $.proxy(this,'singUpBtnControl'));
-
-        //手机号码输入，确定报名
-        $(document).on(eventName,'.class-button.active', $.proxy(this,'signUp'));
-
-        //我想报考，显示模态窗口
-        $(document).on(eventName,'.rightInfo.listing', $.proxy(this,'showSingUpModal'));
-
-        //关闭
-        $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
-
-        this.getPhoneNumber();
-
     };
 
-    //下载条
-    var config={
-        downloadBar:{
-            show:true,
-            pos:0
-        }
-
-    };
-
-    University.prototype=new Base(config);
+    University.prototype=new Base();
     University.constructor=University;
     var t=University.prototype;
 
@@ -95,20 +48,12 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         var strBasic=this.getBasicIntroduceInfo(result),
             strNums=this.getNumsInfoStr(result),
             strMajor=this.getMajorInfoStr(result),
-            strEn=this.getInEnvironmentStr(result),
-            strAlbum=this.getAlbumInfo();
-
+            strEn=this.getInEnvironmentStr(result);
         var str=strBasic+
             strNums+
             strMajor+
-            strEn+
-            strAlbum;
-        $('body').append(str);
-        if(!this.isFromApp) {
-            $('.underTip').show();
-        }
-
-        this.getMajorSelect(result);
+            strEn;
+        $('body').html(str);
     };
 
     //简介
@@ -118,7 +63,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                         '<div class="center-content">简介</div>'+
                     '</div>'+
                     '<div class="introduce-txt">'+
-                        '<div class="center-info">'+
+                        '<div class="center-content">'+
                             '<p>'+result.introduction+'</p>'+
                         '</div>'+
                     '</div>'+
@@ -174,7 +119,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                 '</div>';
     };
 
-    //人数超过+万单位
     t.transformNums=function(num){
         num =Number(num);
         if(num){
@@ -210,22 +154,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return str
     };
 
-    //专业选择
-    t.getMajorSelect=function(data) {
-        var str='<option value=""></option>',
-            unMajors=data.undergraduate_major,
-            gMajors=data.graduate_major,
-            len1=unMajors.length,
-            len2=gMajors.length;
-        for(var i=0;i<len1;i++){
-            str+='<option value="'+unMajors[i]+'">'+unMajors[i]+'</option>';
-        }
-        for(var j=0;j<len2;j++){
-            str+='<option  value="'+gMajors[j]+'">'+gMajors[j]+'</option>';
-        }
-        $('#select2').html(str);
-    }
-
     t.getMajorItemInfoStr=function(title,arr){
         var len=arr.length,
             str='<div class="majors-item">'+
@@ -250,7 +178,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '<div class="head-txt">'+
                         '<div class="center-content">申请要求</div>'+
                     '</div>'+
-                    '<div class="center-info">'+
+                    '<div class="content-txt center-content">'+
                     '<p>'+
                         result.application_requirements+
                     '</p>'+
@@ -258,221 +186,19 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '</div>'+
                     '</div>'+
                 '</div>'+
-                '<div class="head-txt border-bottom">'+
-                '</div>'+
                 '<div class="majors-item">'+
                     '<div class="head-txt">'+
                     '<div class="center-content">学校环境</div>'+
                     '</div>'+
-
-                    '<div class="center-info">'+
+                    '<div class="content-txt center-content">'+
                     '<p>'+
                         result.school_environment+
                     '</p>'+
-                    '<div class="center-info">'+
+                    '<div class="center-content">'+
                     '</div>'+
                     '</div>'+
                     '</div>'+
                 '</div></div>';
-    };
-
-    //大学相册
-    t.getAlbumInfo= function () {
-        var that=this,
-            str='';
-        this.getDataAsyncPy({
-            url: window.hisihiUrlObj.api_url+'/v1/overseas_study/university/' +this.uid +'/photos',
-            paraData: {per_page:8},
-            sCallback: function(result){
-                str = that.getAlbumStr(result);
-            },
-            eCallback:function(txt){
-                str = '';
-            },
-            type:'get',
-            async:false
-        });
-        return str;
-    }
-
-    t.getAlbumStr=function(result){
-        if(!result || result.count==0){
-            return '';
-        }
-        var strLi='',
-            len=result.list.length;
-        for(var i=0;i<len;i++){
-            strLi+='<li>'+
-                    '<img src="'+result.list[i].pic_url+'">'+
-                '</li>';
-        }
-        //strLi+=strLi;
-        strLi+='<div style="clear: both;"></div>';
-        var str='<div class="main-item album">'+
-            '<div class="head-txt border-bottom">'+
-            '<div class="center-content album-name">相册</div>'+
-            '</div>'+
-            '<div class="album-info">' +
-                '<ul class="album-ul">'+
-                    strLi+
-                '</ul>'+
-            '</div>'+
-        '</div>';
-        return str;
-    };
-
-    t.viewPics=function(e){
-        var $target=$(e.currentTarget),
-            index=$target.index(),
-            arr=[],
-            imgArr=[],
-            $li =$('.album-ul li'),
-            len=$li.length;
-        for(var i=0;i<len;i++){
-            var url=$li.eq(i).find('img').attr('src');
-            imgArr.push(url);
-        }
-        var arr=this.getItemStr(imgArr);
-
-        var $span=$('.pics-nav span');
-        $span.text(index+1+'/'+len);
-        $('#filter-img').attr('src',imgArr[0]);
-
-        $('.pic-modal').addClass('show');
-        $('html,body').addClass('ovfHidden');
-
-        new Myslider($('.view-pics-box'),arr,{
-            autoPlay:false,
-            showNav:false,
-            index:index,
-            changeCallback:function(type,picIndex){
-                $span.text((picIndex+1)+'/'+len);
-                $('#filter-img').attr('src',imgArr[picIndex]);
-            }
-        });
-
-        var btnList=document.querySelectorAll('.view-pics-box .show-origin-pic');
-        //实例化缩放
-        ImagesZoom.init({
-            elem: ".view-pics-box",  //容器dom
-            btnsList:btnList,  //查看按钮
-            initCallback:function(dom){
-                $(dom).hide().parent().find('img').hide();
-                $('.pics-nav label').hide();
-            },
-            closeCallback:function(){
-                $('.view-pics-box .now img').show();
-                $('.pics-nav label').show();
-                for(var len=btnList.length,i=0;i<len;i++) {
-                    $(btnList[i]).show();
-                }
-            }
-        });
-    };
-
-    t.getItemStr=function(data){
-        var len=data.length,arr=[];
-        for(var i=0;i<len;i++){
-            var item=data[i];
-            arr.push('<img  src="'+item+'"><div class="show-origin-pic">查看大图</div>');
-        }
-        return arr;
-    };
-
-    t.showSingUpModal=function() {
-        $('.class-show').addClass('show');
-        this.scrollControl(false);  //恢复滚动
-        if ($('.input input').eq(0).val()) {
-            $('.class-button').addClass('active');
-        }
-    }
-
-
-    //手机号码判断
-    t.signUp=function() {
-        var $input = $('.class-num'),
-            $name=$('.class-name'),
-            $major=$('#select1 option:selected'),
-            $education=$('#select2 option:selected');
-        var that=this,
-            number = $input.val().trim(),
-            name = $name.val(),
-            major= $major.val(),
-            education=$education.val(),
-            reg=/^1\d{10}$/;
-        if (!reg.test(number)) {
-            this.showTips('请正确输入手机号码');
-            return;
-        }
-        this.controlLoadingBox(true);
-        var paraStr='/mobile/'+number+ '/university_id/'+this.uid;
-        if(name){
-            paraStr+='/username/'+name;
-        }
-        if(education){
-            paraStr+='/education/'+education;
-        }
-        if(major){
-            paraStr+='/major/'+major;
-        }
-
-        this.getDataAsync({
-            url: this.baseUrl+'?s=/organization/baokao'+paraStr,
-            sCallback: function(result){
-                that.controlLoadingBox(false);
-                if(result.success){
-                    $('.have-class').css('opacity', '1');
-                    that.showTips('预约成功');
-                }else{
-                    that.showTips('预约失败');
-                }
-
-            },
-            eCallback:function(resutl){
-                that.controlLoadingBox(false);
-                var txt='预约失败';
-                if(resutl.code==-2){
-                    txt='不能重复预约';
-                }
-                that.showTips(txt);
-            },
-            type:'get'
-        });
-    };
-
-    //必填项手机号码输入后按钮变色
-    t.singUpBtnControl=function(e){
-        var $target=$('.class-num'),
-            txt1=$target.val().trim(),
-            $btn=$('.class-button'),
-            nc='active';
-        if(txt1){
-            $btn.addClass(nc);
-        }else{
-            $btn.removeClass(nc);
-        }
-    };
-
-
-    //取消
-    t.closeHaveClass=function(){
-        $('.class-show').removeClass('show');
-        this.scrollControl(true);  //恢复滚动
-    };
-
-
-    /*得到大学的咨询电话*/
-    t.getPhoneNumber=function(){
-        this.getDataAsync({
-            url: this.baseUrl+'?s=/organization/getServicePhoneNum',
-            sCallback: function(result){
-                $('#request a').attr('href','tel:'+result.phone_num);
-            },
-            eCallback:function(){
-                $('#request a').attr('href','javacript:void(0)').css('opacity','0.3');
-            },
-            type:'get'
-        });
     };
 
     return University;
