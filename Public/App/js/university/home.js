@@ -8,13 +8,22 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         var eventName='click',that=this;
         this.deviceType = this.operationType();
         this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
+        this.baseUrl=window.hisihiUrlObj.link_url;
         if(this.deviceType.mobile && this.isLocal){
             //eventName='touchend';
+            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.getBasicInfo();
 
+        //点击报名事件
+        $(document).on(eventName,'#join-class',function () {
+            $('.class-show').addClass('show');
+        });
+
+        //获取相册
         $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
 
+        //点击相册，查看大图
         $(document).on(eventName,'.album-name',function(){
             window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
         });
@@ -24,13 +33,32 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             event.stopPropagation();
             if(event.target==this){
                 $('.modal').removeClass('show');
-                $('html,body').removeClass('ovfHidden');
-
             }
         });
+
+        //控制确定报名按钮的可用性
+        $(document).on('input','.class-num', $.proxy(this,'singUpBtnControl'));
+
+        //手机号码输入，确定报名
+        $(document).on(eventName,'.class-button.active', $.proxy(this,'signUp'));
+
+        //我想报考，显示模态窗口
+        $(document).on(eventName,'.rightInfo.listing', $.proxy(this,'showSingUpModal'));
+
+        //关闭
+        $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
     };
 
-    University.prototype=new Base();
+    //下载条
+    var config={
+        downloadBar:{
+            show:true,
+            pos:0
+        }
+
+    };
+
+    University.prototype=new Base(config);
     University.constructor=University;
     var t=University.prototype;
 
@@ -73,6 +101,11 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             strEn+
             strAlbum;
         $('body').append(str);
+        if(!this.isFromApp) {
+            $('.underTip').show();
+        }
+
+        this.getMajorSelect(result);
     };
 
     //简介
@@ -174,6 +207,22 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return str
     };
 
+    //专业选择
+    t.getMajorSelect=function(data) {
+        var str='<option value=""></option>',
+            unMajors=data.undergraduate_major,
+            gMajors=data.graduate_major,
+            len1=unMajors.length,
+            len2=gMajors.length;
+        for(var i=0;i<len1;i++){
+            str+='<option value="'+unMajors[i]+'">'+unMajors[i]+'</option>';
+        }
+        for(var j=0;j<len2;j++){
+            str+='<option  value="'+gMajors[j]+'">'+gMajors[j]+'</option>';
+        }
+        $('#select2').html(str);
+    }
+
     t.getMajorItemInfoStr=function(title,arr){
         var len=arr.length,
             str='<div class="majors-item">'+
@@ -224,6 +273,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                 '</div></div>';
     };
 
+    //大学相册
     t.getAlbumInfo= function () {
         var that=this,
             str='';
@@ -242,8 +292,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return str;
     }
 
-
-    //大学相册
     t.getAlbumStr=function(result){
         if(!result || result.count==0){
             return '';
@@ -282,7 +330,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             imgArr.push(url);
         }
         var arr=this.getItemStr(imgArr);
-
 
         var $span=$('.pics-nav span');
         $span.text(index+1+'/'+len);
@@ -327,6 +374,87 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             arr.push('<img  src="'+item+'"><div class="show-origin-pic">查看大图</div>');
         }
         return arr;
+    };
+
+    t.showSingUpModal=function() {
+        $('.class-show').addClass('show');
+        this.scrollControl(false);  //恢复滚动
+        if ($('.input input').eq(0).val()) {
+            $('.class-button').addClass('active');
+        }
+    }
+
+
+    //手机号码判断
+    t.signUp=function() {
+        var $input = $('.class-num'),
+            $name=$('.class-name'),
+            $major=$('#select1 option:selected'),
+            $education=$('#select2 option:selected');
+        var that=this,
+            number = $input.val().trim(),
+            name = $name.val(),
+            major= $major.val(),
+            education=$education.val(),
+            reg=/^1\d{10}$/;
+        if (!reg.test(number)) {
+            this.showTips('请正确输入手机号码');
+            return;
+        }
+        this.controlLoadingBox(true);
+        var paraStr='/mobile/'+number+ '/university_id/'+this.uid;
+        if(name){
+            paraStr+='/username/'+name;
+        }
+        if(education){
+            paraStr+='/education/'+education;
+        }
+        if(major){
+            paraStr+='/major/'+major;
+        }
+
+        this.getDataAsync({
+            url: this.baseUrl+'?s=/organization/baokao'+paraStr,
+            sCallback: function(result){
+                that.controlLoadingBox(false);
+                if(result.success){
+                    $('.have-class').css('opacity', '1');
+                    that.showTips('预约成功');
+                }else{
+                    that.showTips('预约失败');
+                }
+
+            },
+            eCallback:function(resutl){
+                that.controlLoadingBox(false);
+                var txt='预约失败';
+                if(resutl.code==-2){
+                    txt='不能重复预约';
+                }
+                that.showTips(txt);
+            },
+            type:'get'
+        });
+    };
+
+    //必填项手机号码输入后按钮变色
+    t.singUpBtnControl=function(e){
+        var $target=$('.class-num'),
+            txt1=$target.val().trim(),
+            $btn=$('.class-button'),
+            nc='active';
+        if(txt1){
+            $btn.addClass(nc);
+        }else{
+            $btn.removeClass(nc);
+        }
+    };
+
+
+    //取消
+    t.closeHaveClass=function(){
+        $('.class-show').removeClass('show');
+        this.scrollControl(true);  //恢复滚动
     };
 
     return University;

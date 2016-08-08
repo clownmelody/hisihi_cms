@@ -52,11 +52,11 @@ ul li {
   top: 40%;
   left: 50%;
   z-index: 1001;
-  width: 200px;
+  width: 160px;
   height: auto;
-  min-height: 40px;
+  min-height: 34px;
   background: rgba(51, 51, 51, 0.85);
-  margin-left: -100px;
+  margin-left: -80px;
   margin-top: -35px;
   border-radius: 3px;
   background-clip: padding-box;
@@ -66,7 +66,7 @@ ul li {
 }
 .result-tips p {
   color: white;
-  font-size: 15px;
+  font-size: 12px;
   text-align: center;
   margin: 10px 0;
 }
@@ -302,6 +302,22 @@ ul li {
     width: 700px;
     left: 50%;
     margin-left: -350px;
+  }
+}
+@media screen and (max-width: 320px) {
+  #downloadCon-new > img {
+    left: 10px;
+  }
+  #downloadCon-new .words {
+    margin-left: 61px;
+  }
+  #downloadCon-new #download {
+    width: 74px;
+    height: 30px;
+    margin-top: -13px;
+    font-size: 13px;
+    right: 10px;
+    line-height: 30px;
   }
 }
 body {

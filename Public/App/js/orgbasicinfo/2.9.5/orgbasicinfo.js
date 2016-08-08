@@ -14,6 +14,8 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
+
+
         this.perPageSize=10;
         this.pageIndex=1;
         this.async=false;  //同步加载所有的数据
@@ -70,6 +72,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     }
 
+    //下载条
     var config={
         downloadBar:{
             show:true,
@@ -441,11 +444,10 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     t.getPicsStr=function(data,type){
         var $label=$('.pics-number label').eq(1);
         if(!data || data.length==0){
-            $label.text('0照片')
             return '';
         }
         var len=data.length,str='';
-        type && $label.text(len+'照片');
+        type && $label.text(len+'照片').css('display','inline');
         for(var i=0;i<len;i++){
             str+='<li class="li-img" data-id="'+data[i].id+'">'+
                     '<div class="img-box">'+
@@ -471,15 +473,23 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         var len=data.length,
             str='',
             item,
-            style='';
+            style='',
+            $label=$('.pics-number label').eq(0);
         if(type){
             var h=$('body').width()*7/16;
             style='height:'+h+'px;';
+        }else{
+            if(!data[0].video_url) {
+                $label.hide();
+                return '';
+            }
+            $label.text(len+'视频').show();
         }
 
         for(var i=0;i<len;i++) {
             item=data[i];
-            item.video_img = item.video_img || item.img;
+            item.video_img = item.video_img || item.img || '';
+            item.video_url = item.video_url || '';
             //item.video_url = 'http://91.16.0.7/video/14/output.m3u8';
             str+= '<li data-url="' + item.video_url + '" style='+style+'>' +
                 '<img class="lazy-img" data-original="' + item.video_img + '">' +
@@ -503,7 +513,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         }else{
             var url=$target.data('url'),
                 that=this;
-            if(url=='null' || url=='undefined'){
+            if(!url){
                 this.showTips('视频暂无');
                 return;
             }
@@ -907,7 +917,6 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             $('.sing-in-btn').addClass('active');
         }
         this.scrollControl(false);  //禁止滚动
-        //$('.sing-in-modal')[0].addEventListener('touchmove', forbiddenScroll, false);
     };
 
     t.singInBtnControl=function(e){
@@ -924,7 +933,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     //预约报名
     t.singIn=function() {
-        var $input = $target=$('.sing-in-item input'),
+        var $input =$('.sing-in-item input'),
             that=this,
             number = $input.eq(0).val().trim(),
             name = $input.eq(1).val().trim(),
@@ -936,7 +945,6 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         this.controlLoadingBox(true);
         this.getDataAsync({
             url: this.baseUrl + 'yuyue/organization_id/'+this.oid+'/mobile/'+number+'/username/'+name,
-            //paraData:JSON.stringify({organization_id: this.oid,mobile:number,username:name}),
             sCallback: function(result){
                 that.controlLoadingBox(false);
                 if(result.success){

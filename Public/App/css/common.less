@@ -73,15 +73,16 @@ ul li {
   list-style: none;
 }
 .result-tips {
+  @w:160px;
+  @h:34px;
   position: fixed;
   top: 40%;
   left: 50%;
   z-index: 1001;
-  width: 200px;
-  height: auto;
-  min-height: 40px;
+  .size(@w,auto);
+  min-height: @h;
   background: rgba(51, 51, 51, 0.85);
-  margin-left: -100px;
+  margin-left: -@w / 2;
   margin-top: -35px;
   border-radius: 3px;
   background-clip: padding-box;
@@ -90,7 +91,7 @@ ul li {
   display: none;
   p {
     color: white;
-    font-size: 15px;
+    font-size: 12px;
     text-align: center;
     margin: 10px 0;
   }
@@ -335,4 +336,22 @@ ul li {
       left:50%;
       margin-left: -350px;
     }
+}
+
+@media screen and (max-width: 320px) {
+  #downloadCon-new {
+    > img {
+      left: 10px;
+    }
+    .words {
+      margin-left: 61px;
+    }
+    #download {
+      .size(74px, 30px);
+      margin-top: -13px;
+      font-size: 13px;
+      right:10px;
+      line-height: 30px;
+    }
+  }
 }

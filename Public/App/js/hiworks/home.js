@@ -15,7 +15,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
 
         var eventName='click',that=this;
         if(this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.baseHiworkListUrl=this.baseUrl.replace('api.php','hiworks_list.php');
@@ -84,7 +84,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
             });
         },100);
     };
-    HiWorks.prototype =new Base(true);
+    HiWorks.prototype =new Base();
     HiWorks.constructor=HiWorks;
 
     var t=HiWorks.prototype;
@@ -711,6 +711,7 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
             str1+='<li class="'+className+'"></li>';
         }
         $('#slider4').html(str);
+
         if(len<2) {
             str1='';
         }
@@ -897,19 +898,25 @@ define(['fx','base','myscroll','scale'],function(fx,Base,MyScroll) {
             paraData: {email: email, hiwork_id:this.currentWorksObj.id},
             sCallback: function (data) {
                 if(data.success) {
+                    that.controlLoadingBox(false);
                     email = that.substrLongStr(email, 20);
                     that.showTips('<p>已成功发送至邮箱</p><p>' + email + '</p><p>请注意查收</p>');
-                    $('#email').val('');
                     //更新数据统计
                     that.updateStatisticsNum('hiworks');
                 }else{
-                    that.controlModelBox(1,0);
+                    that.controlLoadingBox(false);
+                    that.showTips('邮件发送失败');
                 }
             },eCallback: function (data) {
-                that.controlModelBox(1,0);
+                that.showTips('邮件发送失败');
             }
         };
-        this.getDataAsync(para);
+        this.controlModelBox(0,0);
+        this.controlLoadingBox(true);
+        window.setTimeout(function(){
+            that.getDataAsync(para);
+        },300);
+
     };
 
     //取消绑定邮箱

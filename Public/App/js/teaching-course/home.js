@@ -10,7 +10,7 @@ define(['base'],function(Base){
         this.deviceType = this.operationType();
         this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
         if(this.deviceType.mobile && this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
         }
         this.getBasicInfo(function(result){
             if(result){

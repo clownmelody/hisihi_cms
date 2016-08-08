@@ -123,17 +123,15 @@ body{
       margin-top: 3px;
       span{
         img{
-          //.sprite-bg;
           .size(21px,13px);
           display: inline-block;
-          //background-position: -227px -32px;
-          margin-right: 2px;
+          transform: scale(0.8);
         }
         &:last-child {
           margin-left: 14px;
           img{
             .size(12px,13px);
-            //background-position: -227px -9px;
+            transform: scale(1);
           }
         }
 
@@ -163,6 +161,7 @@ body{
       font-size: 12px;
       label{
         margin-right: 3px;
+        display: none;
       }
     }
   }
@@ -272,7 +271,7 @@ body{
   display: none;
   ul{
     white-space: nowrap;
-    height: 80px;
+    //height: 75px;
     li{
       .sprite-bg;
       .size(95px,70px);
@@ -942,21 +941,6 @@ body{
 
 }
 @media screen and (max-width: 320px) {
-  #downloadCon-new {
-    > img {
-      left: 10px;
-    }
-    .words {
-      margin-left: 61px;
-    }
-    #download {
-      .size(74px, 30px);
-      margin-top: -13px;
-      font-size: 13px;
-      right:10px;
-      line-height: 30px;
-    }
-  }
   .sing-in-modal {
     .sing-in-box {
       .sing-in-header {

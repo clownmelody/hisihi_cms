@@ -52,11 +52,11 @@ ul li {
   top: 40%;
   left: 50%;
   z-index: 1001;
-  width: 200px;
+  width: 160px;
   height: auto;
-  min-height: 40px;
+  min-height: 34px;
   background: rgba(51, 51, 51, 0.85);
-  margin-left: -100px;
+  margin-left: -80px;
   margin-top: -35px;
   border-radius: 3px;
   background-clip: padding-box;
@@ -66,7 +66,7 @@ ul li {
 }
 .result-tips p {
   color: white;
-  font-size: 15px;
+  font-size: 12px;
   text-align: center;
   margin: 10px 0;
 }
@@ -304,6 +304,22 @@ ul li {
     margin-left: -350px;
   }
 }
+@media screen and (max-width: 320px) {
+  #downloadCon-new > img {
+    left: 10px;
+  }
+  #downloadCon-new .words {
+    margin-left: 61px;
+  }
+  #downloadCon-new #download {
+    width: 74px;
+    height: 30px;
+    margin-top: -13px;
+    font-size: 13px;
+    right: 10px;
+    line-height: 30px;
+  }
+}
 body {
   padding: 0;
   margin: 0;
@@ -368,7 +384,7 @@ body {
 }
 .course-box .list li .item-main .main-content .middle {
   height: 100%;
-  margin: 0 80px 0 82px;
+  margin: 0 80px 0 80px;
   padding-top: 12px;
   box-sizing: border-box;
 }
@@ -548,39 +564,6 @@ body {
   text-align: center;
   line-height: 50px;
   color: #000;
-}
-@media screen and (max-width: 320px) {
-  .course-box .list li .item-main {
-    margin: 0 13px 0 14px;
-  }
-  .course-box .list li .item-main .main-content .middle {
-    height: 100%;
-    margin: 0 80px 0 100px;
-  }
-  .course-box .list li .item-main .main-content .middle .title-info {
-    margin-top: 12px;
-    margin-right: 14px;
-    height: 26px;
-    line-height: 26px;
-    font-size: 12px;
-  }
-  .course-box .list li .item-main .main-content .middle .money-info .noprice {
-    font-size: 14px;
-  }
-  .course-box .list li .item-main .main-content .middle .time-info {
-    font-size: 12px;
-  }
-  .course-box .list li .item-main .left {
-    width: 100px;
-  }
-  .course-box .list li .item-main .left .img-box img {
-    margin: 20px 20px 0 0;
-    width: 65px;
-    height: 65px;
-  }
-  .course-box .list li .item-main .right .right-main {
-    transform: scale(0.9);
-  }
 }
 @media screen and (min-width: 750px) {
   .wrapper {

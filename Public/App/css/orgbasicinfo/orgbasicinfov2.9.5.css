@@ -52,11 +52,11 @@ ul li {
   top: 40%;
   left: 50%;
   z-index: 1001;
-  width: 200px;
+  width: 160px;
   height: auto;
-  min-height: 40px;
+  min-height: 34px;
   background: rgba(51, 51, 51, 0.85);
-  margin-left: -100px;
+  margin-left: -80px;
   margin-top: -35px;
   border-radius: 3px;
   background-clip: padding-box;
@@ -66,7 +66,7 @@ ul li {
 }
 .result-tips p {
   color: white;
-  font-size: 15px;
+  font-size: 12px;
   text-align: center;
   margin: 10px 0;
 }
@@ -304,6 +304,22 @@ ul li {
     margin-left: -350px;
   }
 }
+@media screen and (max-width: 320px) {
+  #downloadCon-new > img {
+    left: 10px;
+  }
+  #downloadCon-new .words {
+    margin-left: 61px;
+  }
+  #downloadCon-new #download {
+    width: 74px;
+    height: 30px;
+    margin-top: -13px;
+    font-size: 13px;
+    right: 10px;
+    line-height: 30px;
+  }
+}
 .sprite-bg {
   background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
   background-size: 306px 65px;
@@ -409,7 +425,7 @@ body {
   width: 21px;
   height: 13px;
   display: inline-block;
-  margin-right: 2px;
+  transform: scale(0.8);
 }
 .logo-box .logo-main-info .user-number-box span:last-child {
   margin-left: 14px;
@@ -417,6 +433,7 @@ body {
 .logo-box .logo-main-info .user-number-box span:last-child img {
   width: 12px;
   height: 13px;
+  transform: scale(1);
 }
 .logo-box .logo-main-info .user-number-box span label {
   color: #212121;
@@ -443,6 +460,7 @@ body {
 }
 .main-item .basic-header .num-tips label {
   margin-right: 3px;
+  display: none;
 }
 .main-item .main-content-item {
   display: none;
@@ -553,7 +571,6 @@ body {
 }
 .coupon-box ul {
   white-space: nowrap;
-  height: 80px;
 }
 .coupon-box ul li {
   background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
@@ -1294,20 +1311,6 @@ body {
   }
 }
 @media screen and (max-width: 320px) {
-  #downloadCon-new > img {
-    left: 10px;
-  }
-  #downloadCon-new .words {
-    margin-left: 61px;
-  }
-  #downloadCon-new #download {
-    width: 74px;
-    height: 30px;
-    margin-top: -13px;
-    font-size: 13px;
-    right: 10px;
-    line-height: 30px;
-  }
   .sing-in-modal .sing-in-box .sing-in-header {
     height: 40px;
   }

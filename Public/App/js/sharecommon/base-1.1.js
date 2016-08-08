@@ -275,12 +275,28 @@ define(['$','fastclick'],function() {
 
         /*统计平台数据更新*/
         updateStatisticsNum:function(statisticsType){
-            this.getDataAsyncPy({
-                    url:hisihiUrlObj.athena_api_url+'/bootstrap',
-                    paras:{type:statisticsType},
+            var tokent=this.statisticToken,
+                that=this,
+                para={
+                    url:window.hisihiUrlObj.statis_url+'bootstrap',
+                    paraData:JSON.stringify({data:[{type:statisticsType}]}),
                     needToken:true,
-                    token:this.statisticToken
+                    token:tokent,
+                    sCallback:function(){},
+                    eCallback:function(){}
+                }
+            if(!tokent){
+                this.getBasicToken({
+                    account: this.staticUserNameStr,
+                    secret: 'VbkzpPlZ6H4OvqJW',
+                    type: 100
+                },true,function(tokent){
+                    para.token=tokent;
+                    that.getDataAsyncPy(para);
                 });
+            }else{
+                that.getDataAsyncPy(para);
+            }
         },
 
 
@@ -613,7 +629,7 @@ define(['$','fastclick'],function() {
         /*添加下载条*/
         _addDownloadBar:function(){
             var downloadBar=this.config.downloadBar;
-            if(downloadBar.show){
+            if(downloadBar.show && !this.isFromApp){
                 var style='bottom:0',style1={'padding-bottom': downloadBar.height};
                 if(!downloadBar.pos){
                     style='top:0';

@@ -17,8 +17,6 @@
     <div id="loading-data">
         <img class="loding-img" src="http://pic.hisihi.com/2016-06-13/1465811180777234.png"/>
     </div>
-    <!--操作结果-->
-    <div class="result-tips"></div>
     <!--主要列表-->
     <div id="main-content">
         <div class="header">
@@ -160,13 +158,15 @@
     window.hisihiUrlObj={
         link_url:'http://{$Think.server.HTTP_HOST}/api.php?s=/',
         img_url:'__IMG__',
-        js: "__JS__"
+        js: "__JS__",
+        api_url:'__API_URL__',
+        statis_url:'__STATIS_URL__'
     };
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
     };
 </script>
 <script type="text/javascript" src="__JS__/hiworks/touchSlider-lib.js"></script>
-<!--<script type="text/javascript" data-main="__JS__/hiworks/hiworks-2.9.3"  src="__JS__/sharecommon/require.js" ></script>-->
-<script type="text/javascript" data-main="__JS__/hiworks/config"  src="__JS__/sharecommon/require.js" ></script>
+<script type="text/javascript" data-main="__JS__/hiworks/hiworks-2.9.5"  src="__JS__/sharecommon/require.js" ></script>
+<!--<script type="text/javascript" data-main="__JS__/hiworks/config"  src="__JS__/sharecommon/require.js" ></script>-->
 </html>

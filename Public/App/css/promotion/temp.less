@@ -64,7 +64,7 @@ body{
           height: 100%;
           .middle {
             height: 100%;
-            margin: 0 @w-r 0 @w-l+16;
+            margin: 0 @w-r 0 @w-l+14;
             padding-top: 12px;
             box-sizing: border-box;
             p {
@@ -211,7 +211,6 @@ body{
                 background-position: -96px 0;
               }
             }
-
         }
       }
     }
@@ -273,59 +272,10 @@ body{
 }
 
 
-@media screen and(max-width: 320px) {
-  .course-box {
-    .list {
-      li {
-        .item-main {
-          @w-l: 100px;
-          @w-r: 80px;
-          //.size(auto, 90px);
-          margin: 0 @padding-r 0 @padding-l;
-          .main-content {
-            .middle {
-              height: 100%;
-              margin: 0 @w-r 0 @w-l;
-              .title-info {
-                margin-top: 12px;
-                margin-right:14px;
-                height: 26px;
-                line-height: 26px;
-                font-size: 12px;
-              }
-              .money-info {
-                .noprice {
-                  font-size: 14px;
-                }
-              }
-              .time-info {
-                font-size: 12px;
-              }
-            }
-          }
-          .left {
-            width: @w-l;
-            .img-box {
-              img {
-                margin: 20px 20px 0 0;
-                .size(65px, 65px);
-              }
-            }
-          }
-          .right {
-            .right-main {
-              transform: scale(0.9);
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 @media screen and(min-width: 750px){
   .wrapper{
     width: 700px;
     margin: 0 auto;
   }
 }
+
