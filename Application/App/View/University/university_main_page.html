@@ -57,27 +57,21 @@
         <div class="have-class">
             <div class="class-title"><label>我想报考</label><span id="close">×</span></div>
             <div class="input">
-                <input type="number" class="class-num" placeholder="电话号码" size="14">
+                <input type="text" class="class-num" placeholder="电话号码" size="14">
             </div>
             <div class="input">
                 <input type="text" class="class-name" placeholder="姓名" size="14">
             </div>
             <div class="input class-select" >
                 <select id="select1">
-                    <option value ="junior-high-school">初中</option>
-                    <option value ="high-school">高中</option>
-                    <option value ="undergraduate">本科</option>
-                    <option value ="graduate">硕士</option>
+                    <option value ="初中">初中</option>
+                    <option value ="高中">高中</option>
+                    <option value ="本科">本科</option>
+                    <option value ="硕士">硕士</option>
                 </select>
             </div>
             <div class="input class-select" >
-                <!--获取大学下的专业列表  GET      overseas_study/university/<int:uid>/majors-->
-                <select id="select2">
-                    <option value ="">1</option>
-                    <option value ="">2</option>
-                    <option value ="">3</option>
-                    <option value ="">4</option>
-                </select>
+                <select id="select2"></select>
             </div>
             <span id="warning-tip">留学顾问将在15分钟之内联系您</span>
             <div class="class-button input">提交</div>
@@ -88,7 +82,7 @@
 </body>
 <script type="application/javascript">
     window.hisihiUrlObj={
-        link_url:'http://{$Think.server.HTTP_HOST}/',
+        link_url:'http://{$Think.server.HTTP_HOST}/api.php',
         img_url:'__IMG__',
         js: "__JS__",
         api_url:'__API_URL__'
@@ -97,11 +91,11 @@
     window.onload=function() {
         document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
     };
-    var aLink=document.getElementsByTagName("a");
-    for(var i=0; i<aLink.length; i++){
-        aLink[i].href = "javascript:void(0);";
-        aLink[i].setAttribute("disabled", "disabled");
-    }
+//    var aLink=document.getElementsByTagName("a");
+//    for(var i=0; i<aLink.length; i++){
+//        aLink[i].href = "javascript:void(0);";
+//        aLink[i].setAttribute("disabled", "disabled");
+//    }
 </script>
 <script type="text/javascript" data-main="__JS__/university/config"  src="__JS__/sharecommon/require.js" ></script>
 </html>

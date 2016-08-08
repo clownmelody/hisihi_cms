@@ -8,8 +8,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         var eventName='click',that=this;
         this.deviceType = this.operationType();
         this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
+        this.baseUrl=window.hisihiUrlObj.link_url;
         if(this.deviceType.mobile && this.isLocal){
-            eventName='touchend';
+            //eventName='touchend';
+            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.getBasicInfo();
 
@@ -102,6 +104,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         if(!this.isFromApp) {
             $('.underTip').show();
         }
+
+        this.getMajorSelect(result);
     };
 
     //简介
@@ -202,6 +206,22 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
         return str
     };
+
+    //专业选择
+    t.getMajorSelect=function(data) {
+        var str='<option value=""></option>',
+            unMajors=data.undergraduate_major,
+            gMajors=data.graduate_major,
+            len1=unMajors.length,
+            len2=gMajors.length;
+        for(var i=0;i<len1;i++){
+            str+='<option value="'+unMajors[i]+'">'+unMajors[i]+'</option>';
+        }
+        for(var j=0;j<len2;j++){
+            str+='<option  value="'+gMajors[j]+'">'+gMajors[j]+'</option>';
+        }
+        $('#select2').html(str);
+    }
 
     t.getMajorItemInfoStr=function(title,arr){
         var len=arr.length,
@@ -394,7 +414,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         }
 
         this.getDataAsync({
-            url: 'http://localhost/hisihi-cms/api.php?s=/organization/baokao'+paraStr,
+            url: this.baseUrl+'?s=/organization/baokao'+paraStr,
             sCallback: function(result){
                 that.controlLoadingBox(false);
                 if(result.success){

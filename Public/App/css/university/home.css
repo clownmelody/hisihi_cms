@@ -479,7 +479,10 @@ body .underTip li {
   height: 100%;
   line-height: 50px;
 }
-body .underTip a:link {
+body .underTip a {
+  display: block;
+  height: 100%;
+  width: 100%;
   color: #212121;
 }
 body .underTip .button {
