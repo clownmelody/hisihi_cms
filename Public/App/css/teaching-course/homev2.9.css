@@ -891,10 +891,9 @@ body {
     width: 75px;
     height: 100%;
   }
-  .main-item.org-basic-info .left img {
-    width: 60px;
-    height: 60px;
-    margin-top: -30px;
+  .main-item.org-basic-info .left .v-cert {
+    right: 17px;
+    bottom: 7px;
   }
   .main-item.org-basic-info .right {
     margin-left: 75px;
