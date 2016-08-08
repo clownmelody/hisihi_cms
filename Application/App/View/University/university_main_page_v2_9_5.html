@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html  style="overflow-x: hidden;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="Resource-type" content="Document">
+    <!--禁止缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--禁止数字识别为手机号-->
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link type="text/css" href="__CSS__/university/2.9.5/home.css" rel="stylesheet">
+    <title>大学主页</title>
+</head>
+<body>
+<div class="nodata">
+    <p>数据加载失败</p>
+</div>
+<div class="modal pic-modal">
+    <div class="pics-nav"><span>1/8</span><label>点击查看大图</label></div>
+    <div class="pic-main">
+        <div class="filter">
+            <img id="filter-img" src="http://pic.hisihi.com/2016-05-19/1463642572351446.png@38-38-392-392a" alt="logo">
+        </div>
+
+        <div class="view-pics-box">
+            <img src="http://pic.hisihi.com/2016-05-19/1463642572351446.png@38-38-392-392a">
+        </div>
+    </div>
+    <section class="imgzoom_pack">
+        <div class="imgzoom_x btn"><span class="icon-cancel"></span></div>
+        <div class="imgzoom_img"><img class="img-target" src="" /></div>
+    </section>
+</div>
+
+<!--底部功能条（收藏/咨询/预约试听）-->
+<ul class="main-item underTip">
+    <li id="collection">
+        <a href="http://www.hisihi.com/download.php">
+            <div class="button"><div class="img" id="colImg"></div><span>收藏</span></div>
+        </a>
+    </li>
+    <li id="request">
+        <a href="">
+            <div class="button"><div class="img" id="reqImg"></div><span>咨询</span></div>
+        </a>
+    </li>
+    <li id="join-class">
+        <div class="rightInfo listing">我想报考</div>
+    </li>
+    <div style="clear: both;"></div>
+</ul>
+<div class="modal class-show">
+    <div class="have-class">
+        <div class="class-title"><label>我想报考</label><span id="close">×</span></div>
+        <div class="input">
+            <input type="text" class="class-num" placeholder="电话号码" size="14">
+        </div>
+        <div class="input">
+            <input type="text" class="class-name" placeholder="姓名" size="14">
+        </div>
+        <div class="input class-select" >
+            <select id="select1">
+                <option value =""></option>
+                <option value ="初中">初中</option>
+                <option value ="高中">高中</option>
+                <option value ="本科">本科</option>
+                <option value ="硕士">硕士</option>
+            </select>
+        </div>
+        <div class="input class-select" >
+            <select id="select2"></select>
+        </div>
+        <span id="warning-tip">留学顾问将在15分钟之内联系您</span>
+        <div class="class-button input">提交</div>
+    </div>
+</div>
+
+
+</body>
+<script type="application/javascript">
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/api.php',
+        img_url:'__IMG__',
+        js: "__JS__",
+        api_url:'__API_URL__'
+    };
+    window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+</script>
+<script type="text/javascript" data-main="__JS__/university/2.9.5/config"  src="__JS__/sharecommon/require.js" ></script>
+</html>
