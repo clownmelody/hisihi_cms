@@ -450,28 +450,23 @@ body {
 }
 .main-item.org-basic-info .right .org-name {
   color: #212121;
+  display: inline-block;
 }
 .main-item.org-basic-info .right .org-name .name {
   font-size: 14px;
   margin-right: 10px;
   display: inline-block;
   vertical-align: top;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
-.main-item.org-basic-info .right .org-name span img {
+.main-item.org-basic-info .right .cert-box img {
   width: 18px;
   height: 18px;
   margin-right: 2px;
-}
-.main-item.org-basic-info .right .org-name .img-box {
-  float: left;
-}
-.main-item.org-basic-info .right .org-name .img-box img {
-  width: 24px;
-  height: 24px;
-  border-radius: 2px;
-  background-clip: padding-box;
-  margin-top: 2px;
-  margin-right: 7px;
 }
 .main-item.org-basic-info .right .nums-info li {
   display: inline-block;
@@ -882,39 +877,6 @@ body {
     background-position: -175px 0;
     width: 16px;
     height: 17px;
-  }
-  .main-item.org-basic-info {
-    position: relative;
-  }
-  .main-item.org-basic-info .left {
-    position: absolute;
-    width: 75px;
-    height: 100%;
-  }
-  .main-item.org-basic-info .left .v-cert {
-    right: 17px;
-    bottom: 7px;
-  }
-  .main-item.org-basic-info .right {
-    margin-left: 75px;
-  }
-  .main-item.org-basic-info .right .org-name .name {
-    font-size: 18px;
-  }
-  .main-item.org-basic-info .right .org-name .img-box img {
-    width: 20px;
-    height: 20px;
-    margin-right: 3px;
-  }
-  .main-item.org-basic-info .right .nums-info {
-    margin-top: 0px;
-  }
-  .main-item.org-basic-info .right .nums-info li {
-    margin-right: 6px;
-    margin-top: 5px;
-  }
-  .main-item.org-basic-info .right .nums-info li span {
-    font-size: 14px;
   }
   .main-item.lessons-more ul li .main-content .right .lesson-name {
     font-size: 12px;

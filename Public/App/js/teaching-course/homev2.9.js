@@ -240,7 +240,7 @@ define(['base','fastclick'],function(Base){
         if(cerInfo.v){
             vStyle='display:inline-block;';
         }
-        name=this.substrLongStr(name,10);
+        //name=this.substrLongStr(name,10);
         if(!logo){
             logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png'
         }
@@ -253,8 +253,8 @@ define(['base','fastclick'],function(Base){
                         '<div class="right">'+
                         '<div class="org-name">'+
                             '<div class="name">'+name+'</div>'+
-                            '<span>'+cerInfo.str+'</span>'+
                         '</div>'+
+                        '<span class="cert-box">'+cerInfo.str+'</span>'+
                         '<ul class="nums-info">'+
                             '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>查看</span></li>'+
                             '<li><span id="view-watch">'+this.transformNums(data.followCount) + '</span><span>关注</span></li>'+

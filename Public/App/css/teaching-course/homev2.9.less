@@ -137,27 +137,19 @@ body {
       padding-bottom:20px;
       .org-name{
         color:RGB(33, 33, 33);
+        display: inline-block;
         .name{
           font-size: 14px;
           margin-right: 10px;
           display: inline-block;
           vertical-align: top;
+          .txt-ellipsis-p(1);
         }
-        span{
-           img{
-             .size(18px,18px);
-             margin-right: 2px;
-           }
-        }
-        .img-box {
-          float: left;
-          img {
-            @w: 24px;
-            .size(@w, @w);
-            .border-radius(2px);
-            margin-top: 2px;
-            margin-right: 7px;
-          }
+      }
+      .cert-box{
+        img{
+          .size(18px,18px);
+          margin-right: 2px;
         }
       }
       .nums-info{
@@ -594,44 +586,41 @@ body {
         }
       }
     }
-    &.org-basic-info {
-      position: relative;
-      @h: 60px;
-      @p: 15px;
-      .left {
-        position: absolute;
-        .size(@h+@p, 100%);
-        .v-cert{
-          right: 17px;
-          bottom: 7px;
-        }
-
-      }
-      .right {
-        margin-left:@h+@p;
-        .org-name {
-          .name {
-            font-size: 18px;
-          }
-          .img-box {
-            img {
-              .size(20px, 20px);
-              margin-right: 3px;
-            }
-          }
-        }
-        .nums-info{
-          margin-top: 0px;
-          li{
-            margin-right: 6px;
-            margin-top: 5px;
-            span{
-              font-size: 14px;
-            }
-          }
-        }
-      }
-    }
+    //&.org-basic-info {
+    //  position: relative;
+    //  @h: 60px;
+    //  @p: 15px;
+    //  .left {
+    //    position: absolute;
+    //    .size(@h+@p, 100%);
+    //    .v-cert{
+    //      right: 17px;
+    //      bottom: 7px;
+    //    }
+    //
+    //  }
+    //  .right {
+    //    margin-left:@h+@p;
+    //    .org-name {
+    //      .img-box {
+    //        img {
+    //          .size(20px, 20px);
+    //          margin-right: 3px;
+    //        }
+    //      }
+    //    }
+    //    .nums-info{
+    //      margin-top: 0px;
+    //      li{
+    //        margin-right: 6px;
+    //        margin-top: 5px;
+    //        span{
+    //          font-size: 14px;
+    //        }
+    //      }
+    //    }
+    //  }
+    //}
     &.lessons-more {
 
       ul {
