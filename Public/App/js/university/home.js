@@ -47,6 +47,9 @@ define(['base','mysilder','scale'],function(Base,Myslider){
 
         //关闭
         $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
+
+        this.getPhoneNumber();
+
     };
 
     //下载条
@@ -455,6 +458,21 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     t.closeHaveClass=function(){
         $('.class-show').removeClass('show');
         this.scrollControl(true);  //恢复滚动
+    };
+
+
+    /*得到大学的咨询电话*/
+    t.getPhoneNumber=function(){
+        this.getDataAsync({
+            url: this.baseUrl+'?s=/organization/getServicePhoneNum',
+            sCallback: function(result){
+                $('#request a').attr('href','tel:'+result.phone_num);
+            },
+            eCallback:function(){
+                $('#request a').attr('href','javacript:void(0)').css('opacity','0.3');
+            },
+            type:'get'
+        });
     };
 
     return University;
