@@ -304,6 +304,22 @@ ul li {
     margin-left: -350px;
   }
 }
+@media screen and (max-width: 320px) {
+  #downloadCon-new > img {
+    left: 10px;
+  }
+  #downloadCon-new .words {
+    margin-left: 61px;
+  }
+  #downloadCon-new #download {
+    width: 74px;
+    height: 30px;
+    margin-top: -13px;
+    font-size: 13px;
+    right: 10px;
+    line-height: 30px;
+  }
+}
 body {
   padding: 0;
   margin: 0;

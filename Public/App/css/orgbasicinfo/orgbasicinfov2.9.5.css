@@ -304,6 +304,22 @@ ul li {
     margin-left: -350px;
   }
 }
+@media screen and (max-width: 320px) {
+  #downloadCon-new > img {
+    left: 10px;
+  }
+  #downloadCon-new .words {
+    margin-left: 61px;
+  }
+  #downloadCon-new #download {
+    width: 74px;
+    height: 30px;
+    margin-top: -13px;
+    font-size: 13px;
+    right: 10px;
+    line-height: 30px;
+  }
+}
 .sprite-bg {
   background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
   background-size: 306px 65px;
@@ -1295,20 +1311,6 @@ body {
   }
 }
 @media screen and (max-width: 320px) {
-  #downloadCon-new > img {
-    left: 10px;
-  }
-  #downloadCon-new .words {
-    margin-left: 61px;
-  }
-  #downloadCon-new #download {
-    width: 74px;
-    height: 30px;
-    margin-top: -13px;
-    font-size: 13px;
-    right: 10px;
-    line-height: 30px;
-  }
   .sing-in-modal .sing-in-box .sing-in-header {
     height: 40px;
   }

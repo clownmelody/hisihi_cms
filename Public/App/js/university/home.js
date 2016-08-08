@@ -31,19 +31,17 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             event.stopPropagation();
             if(event.target==this){
                 $('.modal').removeClass('show');
-                $('html,body').removeClass('ovfHidden');
-
             }
         });
 
-        //保存报名信息
-        $(document).on('input','.class-num, .class-name', $.proxy(this,'btnSave'));
+        //控制确定报名按钮的可用性
+        $(document).on('input','.class-num', $.proxy(this,'singUpBtnControl'));
 
         //手机号码输入，确定报名
-        $(document).on(eventName,'.class-button.active', $.proxy(this,'signIn'));
+        $(document).on(eventName,'.class-button.active', $.proxy(this,'signUp'));
 
         //我想报考，显示模态窗口
-        $(document).on(eventName,'.rightInfo .listing', $.proxy(this,'showSingInModal'));
+        $(document).on(eventName,'.rightInfo.listing', $.proxy(this,'showSingUpModal'));
 
         //关闭
         $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
@@ -358,17 +356,17 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         return arr;
     };
 
-    t.showSingInModal=function() {
-        $('.class-show .show').addClass('show');
+    t.showSingUpModal=function() {
+        $('.class-show').addClass('show');
+        this.scrollControl(false);  //恢复滚动
         if ($('.input input').eq(0).val()) {
             $('.class-button').addClass('active');
         }
     }
 
-    //获取大学专业信息
-    t
+
     //手机号码判断
-    t.signIn=function() {
+    t.signUp=function() {
         var $input = $('.class-num'),
             $name=$('.class-name'),
             $major=$('#select1 option:selected'),
@@ -420,7 +418,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     };
 
     //必填项手机号码输入后按钮变色
-    t.btnSave=function(e){
+    t.singUpBtnControl=function(e){
         var $target=$('.class-num'),
             txt1=$target.val().trim(),
             $btn=$('.class-button'),
