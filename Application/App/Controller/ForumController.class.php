@@ -1131,6 +1131,9 @@ class ForumController extends AppController
                 $lzl['lzl_id'] = $lzl['id'];
                 unset($lzl['id']);
                 $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
+                if(floatval($version) >= 2.96){
+                    $lzl['toUserInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['to_uid']);
+                }
                 unset($lzl['uid']);
 
                 $map_pos['type'] = 2;
@@ -1638,7 +1641,8 @@ class ForumController extends AppController
      * @param null $pictures
      * @param null $sound
      */
-    public function doReply($post_id, $content = ' ', $pos = null, $pictures = null, $sound = null, $toStudent=0)
+    public function doReply($post_id, $content = ' ', $pos = null, $pictures = null, $sound = null,
+                            $toStudent=0, $toUid=0, $version=0)
     {
         $this->requireLogin();
 
