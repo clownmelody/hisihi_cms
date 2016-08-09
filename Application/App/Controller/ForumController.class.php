@@ -1453,6 +1453,16 @@ class ForumController extends AppController
             $user_works_model->saveWorks($user_works_data);
         }
 
+        // 解析帖子内容绑定话题
+        if((float)$version>=2.96){
+            if(!empty($origin_content)){
+                $topic_id_list = $this->resolveTopicIdFromContent($origin_content);
+                foreach($topic_id_list as $topic_id){
+                    $this->bindPostToTopicId($post_id, $topic_id);
+                }
+            }
+        }
+
         /* -- 记录自动回复数据 -- */
         if($at_type == 1){
             $auto_reply = S('auto_reply');
@@ -1560,16 +1570,6 @@ class ForumController extends AppController
         if((float)$version>=2.9&&(float)$version<2.96){
             if($topicId!=0){
                 $this->bindPostToTopicId($post_id, $topicId);
-            }
-        }
-
-        // 解析帖子内容绑定话题
-        if((float)$version>=2.96){
-            if(!empty($origin_content)){
-                $topic_id_list = $this->resolveTopicIdFromContent($origin_content);
-                foreach($topic_id_list as $topic_id){
-                    $this->bindPostToTopicId($post_id, $topic_id);
-                }
             }
         }
 
@@ -3346,8 +3346,8 @@ LIMIT 1');
         return $rr;
     }
 
-    public function resolveTopicIdFromContent($text){
-        //$text = "我要<user id='1' nickname='Atyyy'/>他要<user id='2' nickname='Atwww'/>哈维大SAV生栋覆屋参与<topic id='33' title='T一个自定义话题'/>按时缴费的无人撒<topic id='55' title='T啥地方拉风'/>我去玩儿sfe";
+    public function resolveTopicIdFromContent($text=null){
+        //$text = "送福利卡进入过期日期<user id='112' nickname='孙杨'/>UI温热听你说的方便而<topic id='6' title='里约奥运会'/>考计算机的疯狗娃儿";
         $topic_preg = "/<topic.*?id='(.*?)'(.*?)title='(.*?)'\/>/i";
         $topic_id_list = array();
         preg_match_all($topic_preg, $text, $out);
