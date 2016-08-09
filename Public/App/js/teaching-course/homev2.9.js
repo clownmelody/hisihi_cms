@@ -251,15 +251,18 @@ define(['base','fastclick'],function(Base){
                             '<img class="v-cert" src="'+hisihiUrlObj.img_url+'/orgbasicinfo/2.9.5/ic_v@3x.png" style="'+vStyle+'">'+
                         '</div>'+
                         '<div class="right">'+
-                        '<div class="org-name">'+
-                            '<div class="name">'+name+'</div>'+
+                            '<div class="name-cerbox">'+
+                                '<div class="org-name">'+
+                                    '<div class="name">'+name+'</div>'+
+                                '</div>'+
+                                '<span class="cert-box">'+cerInfo.str+'</span>'+
+
+                                '<ul class="nums-info">'+
+                                    '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>查看</span></li>'+
+                                    '<li><span id="view-watch">'+this.transformNums(data.followCount) + '</span><span>关注</span></li>'+
+                                '</ul>'+
+                            '</div>'+
                         '</div>'+
-                        '<span class="cert-box">'+cerInfo.str+'</span>'+
-                        '<ul class="nums-info">'+
-                            '<li><span id="view-nums">'+this.transformNums(data.view_count) + '</span><span>查看</span></li>'+
-                            '<li><span id="view-watch">'+this.transformNums(data.followCount) + '</span><span>关注</span></li>'+
-                        '</ul>'+
-                      '</div>'+
                     '</div>'+
                 '</a>';
         $('.org-basic-info').html(str).show();
