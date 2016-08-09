@@ -392,7 +392,7 @@ class ForumController extends AppController
             $map['forum_id'] = array('in',$ids);
         }
 
-        if($field_type==-1){
+        if($field_type==-1&&$circle_type!=3){
             if((float)$version>=2.96){
                 $uid = $this->getUid();
                 $ids = $this->getPostsFromUnFollowers($uid);
