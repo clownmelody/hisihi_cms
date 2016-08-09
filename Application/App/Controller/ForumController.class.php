@@ -121,6 +121,16 @@ class ForumController extends AppController
         return $ids;
     }
 
+    //获取非关注人发帖
+    private function getPostsFromUnFollowers($uid=null){
+        $model = new \Think\Model();
+        $ids = $model->query("select id from hisihi_forum_post"
+            ." where status=1 and uid != 0 and uid not in"
+            ." (select distinct follow_who from hisihi_follow where who_follow=".$uid.")"
+            ." order by create_time desc");
+        return $ids;
+    }
+
     //获取上次发帖的forum_id
     private function getLastForumId($uid){
         $forum_id = M('ForumPost')->where('status=1 and uid='.$uid)
@@ -382,6 +392,17 @@ class ForumController extends AppController
             $map['forum_id'] = array('in',$ids);
         }
 
+        if($field_type==-1){
+            if((float)$version>=2.96){
+                $uid = $this->getUid();
+                $ids = $this->getPostsFromUnFollowers($uid);
+                $post_ids = array();
+                foreach($ids as &$post_id){
+                    $post_ids[] = $post_id['id'];
+                }
+                $map['id'] = array('in', $post_ids);
+            }
+        }
         if($field_type == -2)  // 无回复
             $map['reply_count'] = 0;
         if($field_type == -3)  // 有回复
@@ -1362,7 +1383,7 @@ class ForumController extends AppController
             $content = $content.$pic;
         }
 
-        $content = filterBase64($content);
+        //$content = filterBase64($content);
         //检测图片src是否为图片并进行过滤
         $content = filterImage($content);
 
@@ -3425,7 +3446,7 @@ LIMIT 1');
         }
         $result['totalCount'] = count($teacherReplyList);
         $result['data'] = $teacherReplyList;
-        $this->apiSuccess('获取最新评论成功', null, $result);
+        return $result;
     }
 
 }
