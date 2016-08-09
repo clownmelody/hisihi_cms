@@ -451,21 +451,25 @@ body {
 .main-item.org-basic-info .right .org-name {
   color: #212121;
   display: inline-block;
+  vertical-align: top;
 }
 .main-item.org-basic-info .right .org-name .name {
   font-size: 14px;
   margin-right: 10px;
   display: inline-block;
-  vertical-align: top;
+  vertical-align: middle;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
+.main-item.org-basic-info .right .cert-box {
+  vertical-align: top;
+}
 .main-item.org-basic-info .right .cert-box img {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   margin-right: 2px;
 }
 .main-item.org-basic-info .right .nums-info li {
