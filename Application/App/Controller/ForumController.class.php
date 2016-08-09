@@ -204,9 +204,9 @@ class ForumController extends AppController
             $v['sound'] = $this->fetchSound($v['id'],0);
 
             if((float)$version<2.96){
-                $v['content'] = $this->parseAtAndTopic($v['content']);
+                $v['content'] = $this->parseAtAndTopic(op_t($v['content']));
             } else {
-                $v['content'] = $v['content'];
+                $v['content'] = op_t($v['content']);
             }
 
             $map_support['row'] = $v['id'];
