@@ -205,9 +205,9 @@ class ForumController extends AppController
 
             if((float)$version<2.96){
                 $v['content'] = strip_tags($v['content'], '<user><topic>');
-                $v['content'] = $this->parseAtAndTopic($v['content']);
+                $v['content'] = trim($this->parseAtAndTopic($v['content']));
             } else {
-                $v['content'] = strip_tags($v['content'], '<user><topic>');
+                $v['content'] = trim(strip_tags($v['content'], '<user><topic>'));
             }
 
             $map_support['row'] = $v['id'];
@@ -393,7 +393,7 @@ class ForumController extends AppController
             $map['forum_id'] = array('in',$ids);
         }
 
-        /*if($field_type==-1&&$circle_type!=3){
+        if($field_type==-1&&$circle_type!=3){
             if((float)$version>=2.96){
                 $uid = $this->getUid();
                 $ids = $this->getPostsFromUnFollowers($uid);
@@ -403,7 +403,7 @@ class ForumController extends AppController
                 }
                 $map['id'] = array('in', $post_ids);
             }
-        }*/
+        }
         if($field_type == -2)  // 无回复
             $map['reply_count'] = 0;
         if($field_type == -3)  // 有回复
@@ -3313,7 +3313,7 @@ LIMIT 1');
         $ee = preg_replace_callback(
             $at_preg,
             function ($matches) {
-                $name = '@'.$matches[3];
+                $name = '@'.$matches[3].' ';
                 str_replace($matches[0], $name, $matches);
                 return $name;
             },
@@ -3443,7 +3443,6 @@ LIMIT 1');
         }
         $result['totalCount'] = count($teacherReplyList);
         $result['data'] = $teacherReplyList;
-        $this->apiSuccess('ok', null, $result);
         return $result;
     }
 
