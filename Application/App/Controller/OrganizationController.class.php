@@ -389,10 +389,10 @@ class OrganizationController extends AppController
         $model=M("Organization");
         if(floatval($version) >= 2.95){
             $result = $model->where(array('id'=>$organization_id,'status'=>1))
-                ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img, type, is_listen_preview')->find();
+                ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,available_num,light_authentication,location_img, type, is_listen_preview')->find();
         } else {
             $result = $model->where(array('id'=>$organization_id,'status'=>1))
-                ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,light_authentication,location_img, type')->find();
+                ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,available_num,light_authentication,location_img, type')->find();
         }
         if($result){
             $logo = $result['logo'];
@@ -434,9 +434,9 @@ class OrganizationController extends AppController
                 $result['relationship'] = 0;
             }
             $advantage = $result['advantage'];
-            $enroll_ = M('OrganizationEnroll')->distinct(true)->field('student_uid')->where(array('organization_id'=>$organization_id,'status'=>array('gt',0)))->select();
+            /*$enroll_ = M('OrganizationEnroll')->distinct(true)->field('student_uid')->where(array('organization_id'=>$organization_id,'status'=>array('gt',0)))->select();
             $enroll_count = count($enroll_);
-            $result['available_num'] = $result['guarantee_num'] - $enroll_count;
+            $result['available_num'] = $result['guarantee_num'] - $enroll_count;*/
             $result['advantage']=$advantage;
             $relationModel = M('OrganizationRelation');
             $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.$uid)->find();
