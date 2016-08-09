@@ -4,7 +4,6 @@
 
 define(['base','lazyloading'],function(Base){
     var Topic=function(){
-        Base.call(this,true);  //属性继承
         this.tid=$('body').data('id');
         if(this.isLocal){
             window.urlObj.localApi+='hisihi-cms/';
@@ -90,7 +89,8 @@ define(['base','lazyloading'],function(Base){
         $('.topic-real-name').text(title);
         $('title').text(title);
         $('.banner-desc').text(desc);
-        $('.img-box img').attr('src',imgUrl);
+        var h=$(document).width()*7/16+'px';
+        $('.img-box img').attr('src',imgUrl).css('height',h);
     }
 
     /*加载10条帖子*/

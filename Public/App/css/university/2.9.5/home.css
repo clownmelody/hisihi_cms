@@ -321,9 +321,9 @@ ul li {
   }
 }
 body {
-  margin: 0;
+  margin: 0 auto;
+  max-width: 700px;
   background: #F2F2F2;
-  max-width: 100%;
   overflow: auto;
   padding-bottom: 50px;
 }
@@ -463,6 +463,8 @@ body .main-item.album .album-info .album-ul > li:first-child > img {
   padding-left: 0;
 }
 body .underTip {
+  margin: 0 auto;
+  max-width: 700px;
   display: none;
   border-top: 1px solid #ccc;
   position: fixed;
@@ -472,7 +474,6 @@ body .underTip {
   font-size: 12px;
   height: 50px;
   padding: 0;
-  margin: 0;
 }
 body .underTip li {
   float: left;
@@ -524,6 +525,10 @@ body .underTip #join-class {
 body .underTip #join-class .listing {
   color: #ffffff;
   text-align: center;
+}
+body .class-show {
+  max-width: 700px;
+  margin: 0 auto;
 }
 body .class-show .have-class {
   background-color: #ffffff;
