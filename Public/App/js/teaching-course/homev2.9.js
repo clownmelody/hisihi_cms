@@ -240,7 +240,7 @@ define(['base','fastclick'],function(Base){
         if(cerInfo.v){
             vStyle='display:inline-block;';
         }
-        name=this.substrLongStr(name,10);
+        //name=this.substrLongStr(name,10);
         if(!logo){
             logo='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png'
         }
