@@ -1380,7 +1380,7 @@ class ForumController extends AppController
             $content = $content.$pic;
         }
 
-        $content = filterBase64($content);
+        //$content = filterBase64($content);
         //检测图片src是否为图片并进行过滤
         $content = filterImage($content);
 
