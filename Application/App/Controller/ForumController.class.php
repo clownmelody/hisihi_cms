@@ -1371,9 +1371,6 @@ class ForumController extends AppController
             }
             //$this->apiError(-101,'未选择标签');
         }
-        //if (strlen($content) < 5) {
-        //    $this->apiError(-102,'提问失败：内容长度不能小于5');
-        //}
 
         $pictures_ids_str = $pictures;
         $pictures = $this->fetchImage($pictures);
@@ -1401,7 +1398,6 @@ class ForumController extends AppController
             } else { //@公司发帖，post_type=2
                 $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5, 'post_type'=>2);
             }
-
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
             $after = getMyScore();

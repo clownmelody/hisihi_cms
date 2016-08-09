@@ -44,9 +44,6 @@ class ForumPostModel extends Model {
         //对帖子内容进行安全过滤
         if(!$data) return false;
 
-
-
-
         $content = $this->filterPostContent($data['content']);
         $data['content']=$content;
         $data['title']=op_t($data['title']);
@@ -75,9 +72,11 @@ class ForumPostModel extends Model {
 
     private function filterPostContent($content)
     {
-        $content = op_h($content);
+        //$content = op_h($content);
+        $content = trim($content);
         $content = $this->limitPictureCount($content);
-        $content = op_h($content);
+        $content = trim($content);
+        //$content = op_h($content);
         return $content;
     }
     private function limitPictureCount($content)
