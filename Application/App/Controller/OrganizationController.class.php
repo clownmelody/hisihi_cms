@@ -1147,7 +1147,11 @@ class OrganizationController extends AppController
         $category_id = $course['category_id'];
         $course['ViewCount'] = $course['view_count'];
         $course['type'] = $issue_model->where('id='.$category_id)->getField('title');
-        $course['lecturer_name'] = $member_model->where('uid='.$course['lecturer'])->getField('nickname');
+        if(!empty($course['lecture'])){
+            $course['lecturer_name'] = $member_model->where('uid='.$course['lecturer'])->getField('nickname');
+        } else {
+            $course['lecturer_name'] = "小嘿出品";
+        }
         //解析并生成图片数据
         $oss_pic_pre = 'http://game-pic.oss-cn-qingdao.aliyuncs.com/';
         if(substr_count($course['img_str'], 'OSS')){

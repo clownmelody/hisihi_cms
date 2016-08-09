@@ -17,4 +17,9 @@ class UniversityController extends AppController {
         $this->display('university_main_page');
     }
 
+    public function university_main_page_v2_9_5($university_id=0){
+        $this->assign('university_id', $university_id);
+        $this->display('university_main_page_v2_9_5');
+    }
+
 }

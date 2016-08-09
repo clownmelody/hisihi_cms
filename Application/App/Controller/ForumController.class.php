@@ -189,7 +189,11 @@ class ForumController extends AppController
 
             $v['sound'] = $this->fetchSound($v['id'],0);
 
-            $v['content'] = op_t($v['content']);
+            if((float)$version<2.96){
+                $v['content'] = $this->parseAtAndTopic(op_t($v['content']));
+            } else {
+                $v['content'] = op_t($v['content']);
+            }
 
             $map_support['row'] = $v['id'];
             $supportCount = $this->getSupportCountCache($map_support);
@@ -1365,11 +1369,7 @@ class ForumController extends AppController
             }
         } else {
             $content_md5 = md5($content);
-            /*$t_uid = is_login();
-            $t_list = D('Forum/ForumPost')->where(array('uid' => $t_uid, 'content_md5' => $content_md5))->find();
-            if($t_list){
-                $this->apiError(-2, "你已经发过该帖子了");
-            }*/
+
             if($at_type == 1){
                 $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
             } else { //@公司发帖，post_type=2
@@ -1523,9 +1523,19 @@ class ForumController extends AppController
         }
 
         // 绑定帖子与话题
-        if((float)$version>=2.9){
+        if((float)$version>=2.9&&(float)$version<2.96){
             if($topicId!=0){
                 $this->bindPostToTopicId($post_id, $topicId);
+            }
+        }
+
+        // 解析帖子内容绑定话题
+        if((float)$version>=2.96){
+            if(!empty($content)){
+                $topic_id_list = $this->resolveTopicIdFromContent($content);
+                foreach($topic_id_list as $topic_id){
+                    $this->bindPostToTopicId($post_id, $topic_id);
+                }
             }
         }
 
@@ -3267,7 +3277,43 @@ LIMIT 1');
         }else{
             return null;
         }
+    }
 
+
+    public function parseAtAndTopic($text=null){
+        //$text = "我要<user id='1' nickname='Atyyy'/>他要<user id='2' nickname='Atwww'/>哈维大SAV生栋覆屋参与<topic id='33' title='T一个自定义话题'/>按时缴费的无人撒<topic id='55' title='T啥地方拉风'/>我去玩儿sfe";
+        $at_preg = "/<user.*?id='(.*?)'(.*?)nickname='(.*?)'\/>/i";
+        $topic_preg = "/<topic.*?id='(.*?)'(.*?)title='(.*?)'\/>/i";
+        $ee = preg_replace_callback(
+            $at_preg,
+            function ($matches) {
+                $name = '@'.$matches[3];
+                str_replace($matches[0], $name, $matches);
+                return $name;
+            },
+            $text
+        );
+        $rr = preg_replace_callback(
+            $topic_preg,
+            function ($matches) {
+                $topic = '#'.$matches[3].'#';
+                str_replace(trim($matches[0]), $topic, $matches[0]);
+                return $topic;
+            },
+            $ee
+        );
+        return $rr;
+    }
+
+    public function resolveTopicIdFromContent($text){
+        //$text = "我要<user id='1' nickname='Atyyy'/>他要<user id='2' nickname='Atwww'/>哈维大SAV生栋覆屋参与<topic id='33' title='T一个自定义话题'/>按时缴费的无人撒<topic id='55' title='T啥地方拉风'/>我去玩儿sfe";
+        $topic_preg = "/<topic.*?id='(.*?)'(.*?)title='(.*?)'\/>/i";
+        $topic_id_list = array();
+        preg_match_all($topic_preg, $text, $out);
+        foreach($out[1] as $item){
+            $topic_id_list[] = $item;
+        }
+        return $topic_id_list;
     }
 
 }
