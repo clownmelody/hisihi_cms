@@ -165,9 +165,9 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         // 视频、名称、认证
         $box.find('.name-main-box label').text(data.name);
-        if(data.is_listen_preview =='0'){
-            $('.name-main-box img').css('display','inline-block');
-        }
+        //if(data.is_listen_preview =='0'){
+        //    $('.name-main-box img').css('display','inline-block');
+        //}
         this.setCertInfo(data.authenticationInfo);
 
         // 粉丝和观看人数
@@ -484,6 +484,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
                 return '';
             }
             $label.text(len+'视频').show();
+            $('.name-main-box img').css('display','inline-block');
         }
 
         for(var i=0;i<len;i++) {
