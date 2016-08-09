@@ -106,9 +106,13 @@ body {
     width: 100%;
     @h:50px;
     @p:14px;
+
     a{
       display: block;
       .size(100%,100%);
+    }
+    .center-content{
+      height: 100%;
     }
     .left{
       position: absolute;
@@ -133,30 +137,30 @@ body {
     }
     .right{
       margin-left:@h + @p + 4;
-      padding-top:20px;
-      padding-bottom:20px;
-      .org-name{
-        color:RGB(33, 33, 33);
-        .name{
-          font-size: 14px;
-          margin-right: 10px;
+      display: table;
+      height: 100%;
+      box-sizing: border-box;
+      .name-cerbox {
+        display: table-cell;
+        vertical-align: middle;
+        .org-name {
+          color: RGB(33, 33, 33);
           display: inline-block;
           vertical-align: top;
+          margin-right: 10px;
+          .name {
+            font-size: 14px;
+            display: inline-block;
+            vertical-align: middle;
+            .txt-ellipsis-p(1);
+          }
         }
-        span{
-           img{
-             .size(18px,18px);
-             margin-right: 2px;
-           }
-        }
-        .img-box {
-          float: left;
+        .cert-box {
+          vertical-align: top;
           img {
-            @w: 24px;
-            .size(@w, @w);
-            .border-radius(2px);
-            margin-top: 2px;
-            margin-right: 7px;
+            //vertical-align: middle;
+            .size(15px, 15px);
+            margin-right: 2px;
           }
         }
       }
@@ -589,44 +593,6 @@ body {
                 background-position:-175px 0;
                 .size(16px,17px);
               }
-            }
-          }
-        }
-      }
-    }
-    &.org-basic-info {
-      position: relative;
-      @h: 60px;
-      @p: 15px;
-      .left {
-        position: absolute;
-        .size(@h+@p, 100%);
-        .v-cert{
-          right: 17px;
-          bottom: 7px;
-        }
-
-      }
-      .right {
-        margin-left:@h+@p;
-        .org-name {
-          .name {
-            font-size: 18px;
-          }
-          .img-box {
-            img {
-              .size(20px, 20px);
-              margin-right: 3px;
-            }
-          }
-        }
-        .nums-info{
-          margin-top: 0px;
-          li{
-            margin-right: 6px;
-            margin-top: 5px;
-            span{
-              font-size: 14px;
             }
           }
         }

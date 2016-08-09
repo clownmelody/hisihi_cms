@@ -121,6 +121,16 @@ class ForumController extends AppController
         return $ids;
     }
 
+    //获取非关注人发帖
+    private function getPostsFromUnFollowers($uid=null){
+        $model = new \Think\Model();
+        $ids = $model->query("select id from hisihi_forum_post"
+            ." where status=1 and uid != 0 and uid not in"
+            ." (select distinct follow_who from hisihi_follow where who_follow=".$uid.")"
+            ." order by create_time desc");
+        return $ids;
+    }
+
     //获取上次发帖的forum_id
     private function getLastForumId($uid){
         $forum_id = M('ForumPost')->where('status=1 and uid='.$uid)
@@ -184,12 +194,20 @@ class ForumController extends AppController
                 $v['topic_info'] = $record;
             }
 
+            if((float)$version>=2.96 && $circle_type==3){
+                $v['newly_comment'] = $this->getNewlyThreeCommentByPostId($v['post_id']);
+            }
+
             //解析并成立图片数据
             $v['img'] = $this->match_img($v['content']);
 
             $v['sound'] = $this->fetchSound($v['id'],0);
 
-            $v['content'] = op_t($v['content']);
+            if((float)$version<2.96){
+                $v['content'] = $this->parseAtAndTopic(op_t($v['content']));
+            } else {
+                $v['content'] = op_t($v['content']);
+            }
 
             $map_support['row'] = $v['id'];
             $supportCount = $this->getSupportCountCache($map_support);
@@ -374,6 +392,17 @@ class ForumController extends AppController
             $map['forum_id'] = array('in',$ids);
         }
 
+        if($field_type==-1){
+            if((float)$version>=2.96){
+                $uid = $this->getUid();
+                $ids = $this->getPostsFromUnFollowers($uid);
+                $post_ids = array();
+                foreach($ids as &$post_id){
+                    $post_ids[] = $post_id['id'];
+                }
+                $map['id'] = array('in', $post_ids);
+            }
+        }
         if($field_type == -2)  // 无回复
             $map['reply_count'] = 0;
         if($field_type == -3)  // 有回复
@@ -1351,7 +1380,7 @@ class ForumController extends AppController
             $content = $content.$pic;
         }
 
-        $content = filterBase64($content);
+        //$content = filterBase64($content);
         //检测图片src是否为图片并进行过滤
         $content = filterImage($content);
 
@@ -1365,11 +1394,7 @@ class ForumController extends AppController
             }
         } else {
             $content_md5 = md5($content);
-            /*$t_uid = is_login();
-            $t_list = D('Forum/ForumPost')->where(array('uid' => $t_uid, 'content_md5' => $content_md5))->find();
-            if($t_list){
-                $this->apiError(-2, "你已经发过该帖子了");
-            }*/
+
             if($at_type == 1){
                 $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5);
             } else { //@公司发帖，post_type=2
@@ -1523,9 +1548,19 @@ class ForumController extends AppController
         }
 
         // 绑定帖子与话题
-        if((float)$version>=2.9){
+        if((float)$version>=2.9&&(float)$version<2.96){
             if($topicId!=0){
                 $this->bindPostToTopicId($post_id, $topicId);
+            }
+        }
+
+        // 解析帖子内容绑定话题
+        if((float)$version>=2.96){
+            if(!empty($content)){
+                $topic_id_list = $this->resolveTopicIdFromContent($content);
+                foreach($topic_id_list as $topic_id){
+                    $this->bindPostToTopicId($post_id, $topic_id);
+                }
             }
         }
 
@@ -3267,7 +3302,147 @@ LIMIT 1');
         }else{
             return null;
         }
+    }
 
+
+    public function parseAtAndTopic($text=null){
+        //$text = "我要<user id='1' nickname='Atyyy'/>他要<user id='2' nickname='Atwww'/>哈维大SAV生栋覆屋参与<topic id='33' title='T一个自定义话题'/>按时缴费的无人撒<topic id='55' title='T啥地方拉风'/>我去玩儿sfe";
+        $at_preg = "/<user.*?id='(.*?)'(.*?)nickname='(.*?)'\/>/i";
+        $topic_preg = "/<topic.*?id='(.*?)'(.*?)title='(.*?)'\/>/i";
+        $ee = preg_replace_callback(
+            $at_preg,
+            function ($matches) {
+                $name = '@'.$matches[3];
+                str_replace($matches[0], $name, $matches);
+                return $name;
+            },
+            $text
+        );
+        $rr = preg_replace_callback(
+            $topic_preg,
+            function ($matches) {
+                $topic = '#'.$matches[3].'#';
+                str_replace(trim($matches[0]), $topic, $matches[0]);
+                return $topic;
+            },
+            $ee
+        );
+        return $rr;
+    }
+
+    public function resolveTopicIdFromContent($text){
+        //$text = "我要<user id='1' nickname='Atyyy'/>他要<user id='2' nickname='Atwww'/>哈维大SAV生栋覆屋参与<topic id='33' title='T一个自定义话题'/>按时缴费的无人撒<topic id='55' title='T啥地方拉风'/>我去玩儿sfe";
+        $topic_preg = "/<topic.*?id='(.*?)'(.*?)title='(.*?)'\/>/i";
+        $topic_id_list = array();
+        preg_match_all($topic_preg, $text, $out);
+        foreach($out[1] as $item){
+            $topic_id_list[] = $item;
+        }
+        return $topic_id_list;
+    }
+
+
+    public function getNewlyThreeCommentByPostId($post_id, $page=1, $count=3){
+        $id = intval($post_id);
+        $page = intval($page);
+        $count = intval($count);
+
+        $this->requirePostExists($id);
+
+        //读取回复列表
+        $map['post_id'] = $id;
+        $map['status'] = array('in','1,3');
+        $replyList = D('Forum/ForumPostReply')->getNoCacheTeacherReplyList($map, 'create_time desc', $page, $count);
+
+        $model = M('AuthGroupAccess');
+        $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
+        $replyTotalCount = 0;
+        foreach($replyTotalList as $t_reply){
+            $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
+            if($identify&&$t_reply['reply_to_student']==0){
+                $replyTotalCount++;
+            }
+        }
+
+        $teacherReplyList = array();
+        foreach ($replyList as &$reply) {
+            $reply_uid = $reply['uid'];
+            $toStudent = $reply['reply_to_student'];
+            $access_list = $model->where('group_id=6 and uid='.$reply_uid)->find();  // 只显示老师的回复
+            if(empty($access_list)||$toStudent==1){
+                continue;
+            }
+            $reply['reply_id'] = $reply['id'];
+            unset($reply['id']);
+
+            $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+
+            unset($reply['uid']);
+            unset($reply['user']);
+
+            unset($pos);
+            unset($map_pos);
+
+            //解析并成立图片数据
+            $reply['img'] = $this->match_img($reply['content']);
+
+            $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
+
+            $reply['content'] = op_t($reply['content']);
+
+            $teacherReplyList[] = $reply;
+        }
+        unset($reply);
+
+        $teacherReplyCount = count($teacherReplyList);
+        if($teacherReplyCount<3){
+            $replyList = D('Forum/ForumPostReply')->getNoCacheStudentReplyList($map, 'create_time desc', $page, 3-$teacherReplyCount);
+
+            $model = M('AuthGroupAccess');
+            $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
+            $replyTotalCount = 0;
+            foreach($replyTotalList as $t_reply){
+                $identify = $model->where('group_id=5 and uid='.$t_reply['uid'])->find();  // 判断学生身份
+                $toStudent = $t_reply['reply_to_student'];
+                if($identify||$toStudent==1){
+                    $replyTotalCount++;
+                }
+            }
+
+            foreach ($replyList as &$reply) {
+                $reply_uid = $reply['uid'];
+                $toStudent = $reply['reply_to_student'];
+                $access_list = $model->where('group_id=5 and uid='.$reply_uid)->find();
+                if(empty($access_list)&&$toStudent==0){
+                    continue;
+                }
+                $reply['reply_id'] = $reply['id'];
+                unset($reply['id']);
+
+                $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+
+                unset($reply['uid']);
+
+                unset($pos);
+                unset($map_pos);
+
+                //解析并成立图片数据
+                $reply['img'] = $this->match_img($reply['content']);
+
+                $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
+
+                $reply['content'] = op_t($reply['content']);
+
+                unset($reply['user']);
+
+                $teacherReplyList[] = $reply;
+            }
+            unset($reply);
+            unset($replyList);
+        }
+        $result['totalCount'] = count($teacherReplyList);
+        $result['data'] = $teacherReplyList;
+        return $result;
     }
 
 }
