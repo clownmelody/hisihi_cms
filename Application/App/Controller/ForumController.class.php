@@ -184,6 +184,10 @@ class ForumController extends AppController
                 $v['topic_info'] = $record;
             }
 
+            if((float)$version>=2.96 && $circle_type==3){
+                $v['newly_comment'] = $this->getNewlyThreeCommentByPostId($v['post_id']);
+            }
+
             //解析并成立图片数据
             $v['img'] = $this->match_img($v['content']);
 
@@ -3314,6 +3318,110 @@ LIMIT 1');
             $topic_id_list[] = $item;
         }
         return $topic_id_list;
+    }
+
+
+    public function getNewlyThreeCommentByPostId($post_id, $page=1, $count=3){
+        $id = intval($post_id);
+        $page = intval($page);
+        $count = intval($count);
+
+        $this->requirePostExists($id);
+
+        //读取回复列表
+        $map['post_id'] = $id;
+        $map['status'] = array('in','1,3');
+        $replyList = D('Forum/ForumPostReply')->getNoCacheTeacherReplyList($map, 'create_time desc', $page, $count);
+
+        $model = M('AuthGroupAccess');
+        $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
+        $replyTotalCount = 0;
+        foreach($replyTotalList as $t_reply){
+            $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
+            if($identify&&$t_reply['reply_to_student']==0){
+                $replyTotalCount++;
+            }
+        }
+
+        $teacherReplyList = array();
+        foreach ($replyList as &$reply) {
+            $reply_uid = $reply['uid'];
+            $toStudent = $reply['reply_to_student'];
+            $access_list = $model->where('group_id=6 and uid='.$reply_uid)->find();  // 只显示老师的回复
+            if(empty($access_list)||$toStudent==1){
+                continue;
+            }
+            $reply['reply_id'] = $reply['id'];
+            unset($reply['id']);
+
+            $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+
+            unset($reply['uid']);
+            unset($reply['user']);
+
+            unset($pos);
+            unset($map_pos);
+
+            //解析并成立图片数据
+            $reply['img'] = $this->match_img($reply['content']);
+
+            $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
+
+            $reply['content'] = op_t($reply['content']);
+
+            $teacherReplyList[] = $reply;
+        }
+        unset($reply);
+
+        $teacherReplyCount = count($teacherReplyList);
+        if($teacherReplyCount<3){
+            $replyList = D('Forum/ForumPostReply')->getNoCacheStudentReplyList($map, 'create_time desc', $page, 3-$teacherReplyCount);
+
+            $model = M('AuthGroupAccess');
+            $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
+            $replyTotalCount = 0;
+            foreach($replyTotalList as $t_reply){
+                $identify = $model->where('group_id=5 and uid='.$t_reply['uid'])->find();  // 判断学生身份
+                $toStudent = $t_reply['reply_to_student'];
+                if($identify||$toStudent==1){
+                    $replyTotalCount++;
+                }
+            }
+
+            foreach ($replyList as &$reply) {
+                $reply_uid = $reply['uid'];
+                $toStudent = $reply['reply_to_student'];
+                $access_list = $model->where('group_id=5 and uid='.$reply_uid)->find();
+                if(empty($access_list)&&$toStudent==0){
+                    continue;
+                }
+                $reply['reply_id'] = $reply['id'];
+                unset($reply['id']);
+
+                $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+
+                unset($reply['uid']);
+
+                unset($pos);
+                unset($map_pos);
+
+                //解析并成立图片数据
+                $reply['img'] = $this->match_img($reply['content']);
+
+                $reply['sound'] = $this->fetchSound($reply['reply_id'],1);
+
+                $reply['content'] = op_t($reply['content']);
+
+                unset($reply['user']);
+
+                $teacherReplyList[] = $reply;
+            }
+            unset($reply);
+            unset($replyList);
+        }
+        $result['totalCount'] = count($teacherReplyList);
+        $result['data'] = $teacherReplyList;
+        $this->apiSuccess('获取最新评论成功', null, $result);
     }
 
 }
