@@ -55,7 +55,7 @@ class IndexController extends Controller
      */
     public function forum($id = 0, $page = 1, $order = 'reply')
     {
-        $id = intval($id);
+        /*$id = intval($id);
         $page = intval($page);
         $order = op_t($order);
 
@@ -125,7 +125,7 @@ class IndexController extends Controller
             $this->assign('order', 1);
         } else {
             $this->assign('order', 0);
-        }
+        }*/
         $this->display();
     }
 

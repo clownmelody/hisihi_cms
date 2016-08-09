@@ -26,7 +26,9 @@
                 <h2>{$top_content_info.title}</h2>
             </div>
             <div class="info-time">
-                <img src="{$logo_pic}">
+                <notempty name="$logo_pic">
+                    <img src="{$logo_pic}">
+                </notempty>
                 <span>{$source_name}</span>
                 <span>{$top_content_info.create_time|date='m-d H:i',###}</span>
             </div>
