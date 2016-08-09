@@ -204,9 +204,10 @@ class ForumController extends AppController
             $v['sound'] = $this->fetchSound($v['id'],0);
 
             if((float)$version<2.96){
-                $v['content'] = $this->parseAtAndTopic(op_t($v['content']));
+                $v['content'] = strip_tags($v['content'], '<user><topic>');
+                $v['content'] = trim($this->parseAtAndTopic($v['content']));
             } else {
-                $v['content'] = op_t($v['content']);
+                $v['content'] = trim(strip_tags($v['content'], '<user><topic>'));
             }
 
             $map_support['row'] = $v['id'];
@@ -359,7 +360,7 @@ class ForumController extends AppController
         $page = intval($page);
         $count = intval($count);
         $order = op_t($order);
-        $circle_type = intval(  $circle_type);
+        $circle_type = intval($circle_type);
         $reply_type = intval($reply_type);
 
         if ($order == 'ctime') {
@@ -392,7 +393,7 @@ class ForumController extends AppController
             $map['forum_id'] = array('in',$ids);
         }
 
-        if($field_type==-1){
+        if($field_type==-1&&$circle_type!=3){
             if((float)$version>=2.96){
                 $uid = $this->getUid();
                 $ids = $this->getPostsFromUnFollowers($uid);
@@ -1152,6 +1153,9 @@ class ForumController extends AppController
                 $lzl['lzl_id'] = $lzl['id'];
                 unset($lzl['id']);
                 $lzl['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['uid']);
+                if(floatval($version) >= 2.96){
+                    $lzl['toUserInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $lzl['to_uid']);
+                }
                 unset($lzl['uid']);
 
                 $map_pos['type'] = 2;
@@ -1181,7 +1185,7 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function studentReplyList($post_id=null, $page = 1, $count = 10){
+    public function studentReplyList($post_id=null, $page = 1, $count = 10, $version=0){
         $id = intval($post_id);
         $page = intval($page);
         $count = intval($count);
@@ -1220,6 +1224,13 @@ class ForumController extends AppController
             $reply['pos'] = $pos['pos'];
 
             $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+            if(floatval($version) >= 2.96){
+                if(intval($reply['to_uid']) > 0){
+                    $reply['toUserInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['to_uid']);
+                }else{
+                    $reply['toUserInfo'] = null;
+                }
+            }
 
             $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$reply['uid']))->find();
             $isfans = D('Follow')->where(array('who_follow'=>$reply['uid'],'follow_who'=>get_uid()))->find();
@@ -1370,9 +1381,6 @@ class ForumController extends AppController
             }
             //$this->apiError(-101,'未选择标签');
         }
-        //if (strlen($content) < 5) {
-        //    $this->apiError(-102,'提问失败：内容长度不能小于5');
-        //}
 
         $pictures_ids_str = $pictures;
         $pictures = $this->fetchImage($pictures);
@@ -1380,9 +1388,11 @@ class ForumController extends AppController
             $content = $content.$pic;
         }
 
-        //$content = filterBase64($content);
+        $content = filterBase64($content);
         //检测图片src是否为图片并进行过滤
         $content = filterImage($content);
+
+        $origin_content = $content;
 
         //写入帖子的内容
         $model = D('Forum/ForumPost');
@@ -1400,7 +1410,6 @@ class ForumController extends AppController
             } else { //@公司发帖，post_type=2
                 $data = array('uid' => is_login(), 'title' => $title, 'content' => $content, 'parse' => 0, 'forum_id' => $forum_id, 'content_md5' => $content_md5, 'post_type'=>2);
             }
-
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
             $after = getMyScore();
@@ -1556,8 +1565,8 @@ class ForumController extends AppController
 
         // 解析帖子内容绑定话题
         if((float)$version>=2.96){
-            if(!empty($content)){
-                $topic_id_list = $this->resolveTopicIdFromContent($content);
+            if(!empty($origin_content)){
+                $topic_id_list = $this->resolveTopicIdFromContent($origin_content);
                 foreach($topic_id_list as $topic_id){
                     $this->bindPostToTopicId($post_id, $topic_id);
                 }
@@ -1659,7 +1668,8 @@ class ForumController extends AppController
      * @param null $pictures
      * @param null $sound
      */
-    public function doReply($post_id, $content = ' ', $pos = null, $pictures = null, $sound = null, $toStudent=0)
+    public function doReply($post_id, $content = ' ', $pos = null, $pictures = null, $sound = null,
+                            $toStudent=0, $toUid=0, $version=0)
     {
         $this->requireLogin();
 
@@ -1692,7 +1702,13 @@ class ForumController extends AppController
             $model = D('Forum/ForumPostReply');
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
-            $result = $model->addReply($post_id, $content, $toStudent);
+            if(floatval($version) >= 2.96){
+                if(intval($toStudent) > 0 || intval($toUid) > 0)
+                    $toStudent = 1;
+                $result = $model->addReply($post_id, $content, $toStudent, intval($toUid));
+            }else{
+                $result = $model->addReply($post_id, $content, $toStudent);
+            }
             if (!$result) {
                 $this->apiError($model->getError(),'回复失败');
             }
@@ -3312,7 +3328,7 @@ LIMIT 1');
         $ee = preg_replace_callback(
             $at_preg,
             function ($matches) {
-                $name = '@'.$matches[3];
+                $name = '@'.$matches[3].' ';
                 str_replace($matches[0], $name, $matches);
                 return $name;
             },
