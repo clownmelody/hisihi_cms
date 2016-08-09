@@ -1392,6 +1392,8 @@ class ForumController extends AppController
         //检测图片src是否为图片并进行过滤
         $content = filterImage($content);
 
+        $origin_content = $content;
+
         //写入帖子的内容
         $model = D('Forum/ForumPost');
         if ($isEdit) {
@@ -1563,8 +1565,8 @@ class ForumController extends AppController
 
         // 解析帖子内容绑定话题
         if((float)$version>=2.96){
-            if(!empty($content)){
-                $topic_id_list = $this->resolveTopicIdFromContent($content);
+            if(!empty($origin_content)){
+                $topic_id_list = $this->resolveTopicIdFromContent($origin_content);
                 foreach($topic_id_list as $topic_id){
                     $this->bindPostToTopicId($post_id, $topic_id);
                 }
