@@ -1184,7 +1184,7 @@ class ForumController extends AppController
      * @param int $page
      * @param int $count
      */
-    public function studentReplyList($post_id=null, $page = 1, $count = 10){
+    public function studentReplyList($post_id=null, $page = 1, $count = 10, $version=0){
         $id = intval($post_id);
         $page = intval($page);
         $count = intval($count);
@@ -1223,6 +1223,13 @@ class ForumController extends AppController
             $reply['pos'] = $pos['pos'];
 
             $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
+            if(floatval($version) >= 2.96){
+                if(intval($reply['to_uid']) > 0){
+                    $reply['toUserInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['to_uid']);
+                }else{
+                    $reply['toUserInfo'] = null;
+                }
+            }
 
             $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$reply['uid']))->find();
             $isfans = D('Follow')->where(array('who_follow'=>$reply['uid'],'follow_who'=>get_uid()))->find();
@@ -1696,7 +1703,13 @@ class ForumController extends AppController
             $model = D('Forum/ForumPostReply');
             $before = getMyScore();
             $tox_money_before = getMyToxMoney();
-            $result = $model->addReply($post_id, $content, $toStudent);
+            if(floatval($version) >= 2.96){
+                if(intval($toStudent) > 0 || intval($toUid) > 0)
+                    $toStudent = 1;
+                $result = $model->addReply($post_id, $content, $toStudent, intval($toUid));
+            }else{
+                $result = $model->addReply($post_id, $content, $toStudent);
+            }
             if (!$result) {
                 $this->apiError($model->getError(),'回复失败');
             }

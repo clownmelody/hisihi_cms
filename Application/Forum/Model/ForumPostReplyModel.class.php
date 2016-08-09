@@ -22,10 +22,11 @@ class ForumPostReplyModel extends Model
         array('status', '1', self::MODEL_INSERT),
     );
 
-    public function addReply($post_id, $content, $toStudent=0)
+    public function addReply($post_id, $content, $toStudent=0, $toUid=0)
     {
         //新增一条回复
-        $data = array('uid' => is_login(), 'post_id' => $post_id, 'parse' => 0, 'content' => $content, 'reply_to_student'=>$toStudent);
+        $data = array('uid' => is_login(), 'post_id' => $post_id, 'parse' => 0, 'content' => $content,
+            'reply_to_student'=>$toStudent, 'to_uid'=>$toUid);
         $data = $this->create($data);
         if (!$data) return false;
         $result = $this->add($data);
