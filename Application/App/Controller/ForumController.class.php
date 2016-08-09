@@ -204,9 +204,9 @@ class ForumController extends AppController
             $v['sound'] = $this->fetchSound($v['id'],0);
 
             if((float)$version<2.96){
-                $v['content'] = $this->parseAtAndTopic(op_t($v['content']));
+                $v['content'] = $this->parseAtAndTopic($v['content']);
             } else {
-                $v['content'] = op_t($v['content']);
+                $v['content'] = $v['content'];
             }
 
             $map_support['row'] = $v['id'];
@@ -359,7 +359,7 @@ class ForumController extends AppController
         $page = intval($page);
         $count = intval($count);
         $order = op_t($order);
-        $circle_type = intval(  $circle_type);
+        $circle_type = intval($circle_type);
         $reply_type = intval($reply_type);
 
         if ($order == 'ctime') {
@@ -1380,7 +1380,7 @@ class ForumController extends AppController
             $content = $content.$pic;
         }
 
-        //$content = filterBase64($content);
+        $content = filterBase64($content);
         //检测图片src是否为图片并进行过滤
         $content = filterImage($content);
 
@@ -3442,6 +3442,7 @@ LIMIT 1');
         }
         $result['totalCount'] = count($teacherReplyList);
         $result['data'] = $teacherReplyList;
+        $this->apiSuccess('ok', null, $result);
         return $result;
     }
 
