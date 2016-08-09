@@ -24,7 +24,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
 
         //点击相册，查看大图
-        $(document).on(eventName,'.album-name',function(){
+        $(document).on(eventName,'#watch-more',function(){
             window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
         });
 
@@ -310,7 +310,10 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         strLi+='<div style="clear: both;"></div>';
         var str='<div class="main-item album">'+
             '<div class="head-txt border-bottom">'+
-            '<div class="center-content album-name">相册</div>'+
+                '<div class="center-content album-name">' +
+                    '<label>相册</label>'+
+                    '<span id="watch-more"></span>'+
+                '</div>'+
             '</div>'+
             '<div class="album-info">' +
                 '<ul class="album-ul">'+

@@ -346,9 +346,10 @@ p {
   margin: 0 auto;
 }
 body .main-item {
-  margin: 15px auto 0 auto;
+  margin: 15px 2% 0 2%;
   background-color: #FFFFFF;
   box-sizing: border-box;
+  border-radius: 4px;
   padding-bottom: 8px;
   /*基本信息*/
   /*指数*/
@@ -415,7 +416,7 @@ body .main-item.majors .majors-item ul {
 }
 body .main-item.majors .majors-item ul li {
   display: inline-block;
-  border: 0.5px solid #FF5A00;
+  border: 1px solid #FF5A00;
   color: #FF5A00;
   border-radius: 2px;
   background-clip: padding-box;
@@ -437,7 +438,6 @@ body .main-item.environment .content-txt p {
   font-size: 14px;
 }
 body .main-item.album {
-  margin: 15px auto 10px auto;
   height: 150px;
 }
 body .main-item.album .album-info {
@@ -461,6 +461,14 @@ body .main-item.album .album-info .album-ul > li:first-child {
 }
 body .main-item.album .album-info .album-ul > li:first-child > img {
   padding-left: 0;
+}
+body .main-item.album #watch-more {
+  background-image: url('../../../images/orgbasicinfo/2.9.5/bottom-right.png');
+  background-size: 9px 16px;
+  width: 9px;
+  height: 16px;
+  position: absolute;
+  margin: 14px 8px 0 77%;
 }
 body .underTip {
   margin: 0 auto;
