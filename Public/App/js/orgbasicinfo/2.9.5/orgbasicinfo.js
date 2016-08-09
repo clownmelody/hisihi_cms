@@ -41,7 +41,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         });
 
         /*优惠券点击*/
-        $(document).on(eventName,'.coupon-box li, .t-video-box li',function(){
+        $(document).on(eventName,'.coupon-box li, .t-video-box li,.name-main-box img',function(){
             window.location.href='http://www.hisihi.com/download.php';
         });
 
@@ -118,11 +118,15 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
     * url -{string} 视频地址，类似 http://91.16.0.7/video/14/output.m3u8
     *
     * */
-    t.resetVideoPlayerUrl=function(url){
+    t.resetVideoPlayerUrl=function(url,poster){
         if(!this.myPlayer){
             this.initVideoPlayer();
         }
         this.myPlayer.src({type: 'application/x-mpegURL',src:url});
+        if(!poster){
+            poster='http://pic.hisihi.com/hisihi_home_pic/video_cover.png';
+        }
+        this.myPlayer.poster(poster);
         $('.modal').eq(0).addClass('show');
     };
 
@@ -165,9 +169,9 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         // 视频、名称、认证
         $box.find('.name-main-box label').text(data.name);
-        if(data.is_listen_preview =='0'){
-            $('.name-main-box img').css('display','inline-block');
-        }
+        //if(data.is_listen_preview =='0'){
+        //    $('.name-main-box img').css('display','inline-block');
+        //}
         this.setCertInfo(data.authenticationInfo);
 
         // 粉丝和观看人数
@@ -478,6 +482,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         if(type){
             var h=$('body').width()*7/16;
             style='height:'+h+'px;';
+            $('.name-main-box img').css('display','inline-block');
         }else{
             if(!data[0].video_url) {
                 $label.hide();
@@ -517,7 +522,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
                 this.showTips('视频暂无');
                 return;
             }
-            this.resetVideoPlayerUrl($target.data('url'));
+            this.resetVideoPlayerUrl($target.data('url'),$target.find('img').attr('src'));
         }
         this.scrollControl(false);  //禁止滚动
     };
