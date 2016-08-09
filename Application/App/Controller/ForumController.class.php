@@ -3421,7 +3421,7 @@ LIMIT 1');
         }
         $result['totalCount'] = count($teacherReplyList);
         $result['data'] = $teacherReplyList;
-        $this->apiSuccess('获取最新评论成功', null, $result);
+        return $result;
     }
 
 }
