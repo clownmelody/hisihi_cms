@@ -215,6 +215,7 @@ class OrganizationController extends AdminController
             $data["advantage"] = $_POST["advantage"];
             $data["introduce"] = $_POST["introduce"];
             $data["guarantee_num"] = $_POST["guarantee_num"];
+            $data["available_num"] = $_POST["available_num"];
             $data["video"] = $_POST["video"];
             $data["sort"] = $_POST["sort"];
             $data["view_count"] = $_POST["view_count"];
