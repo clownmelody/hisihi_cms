@@ -106,9 +106,13 @@ body {
     width: 100%;
     @h:50px;
     @p:14px;
+
     a{
       display: block;
       .size(100%,100%);
+    }
+    .center-content{
+      height: 100%;
     }
     .left{
       position: absolute;
@@ -133,26 +137,30 @@ body {
     }
     .right{
       margin-left:@h + @p + 4;
-      padding-top:20px;
-      padding-bottom:20px;
-      .org-name{
-        color:RGB(33, 33, 33);
-        display: inline-block;
-        vertical-align: top;
-        .name{
-          font-size: 14px;
-          margin-right: 10px;
+      display: table;
+      height: 100%;
+      box-sizing: border-box;
+      .name-cerbox {
+        display: table-cell;
+        vertical-align: middle;
+        .org-name {
+          color: RGB(33, 33, 33);
           display: inline-block;
-          vertical-align: middle;
-          .txt-ellipsis-p(1);
+          vertical-align: top;
+          .name {
+            font-size: 14px;
+            display: inline-block;
+            vertical-align: middle;
+            .txt-ellipsis-p(1);
+          }
         }
-      }
-      .cert-box{
-        vertical-align: top;
-        img{
-          //vertical-align: middle;
-          .size(15px,15px);
-          margin-right: 2px;
+        .cert-box {
+          vertical-align: top;
+          img {
+            //vertical-align: middle;
+            .size(15px, 15px);
+            margin-right: 2px;
+          }
         }
       }
       .nums-info{
