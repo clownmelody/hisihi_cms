@@ -482,13 +482,13 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         if(type){
             var h=$('body').width()*7/16;
             style='height:'+h+'px;';
+            $('.name-main-box img').css('display','inline-block');
         }else{
             if(!data[0].video_url) {
                 $label.hide();
                 return '';
             }
             $label.text(len+'视频').show();
-            $('.name-main-box img').css('display','inline-block');
         }
 
         for(var i=0;i<len;i++) {
