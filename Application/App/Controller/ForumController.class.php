@@ -503,12 +503,13 @@ class ForumController extends AppController
         }
         $map['is_top'] = 0;
         $forumPost = M('ForumPost');
-        if(S('app_forum_forumfilter_post_total_count'.md5($map))){
+        /*if(S('app_forum_forumfilter_post_total_count'.md5($map))){
             $totalCount = S('app_forum_forumfilter_post_total_count'.md5($map));
         } else {
             $totalCount = $forumPost->where($map)->count();
             S('app_forum_forumfilter_post_total_count'.md5($map), $totalCount, 600);
-        }
+        }*/
+        $totalCount = $forumPost->where($map)->count();
         $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
