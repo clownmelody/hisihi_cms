@@ -349,6 +349,7 @@ body {
 .banner-box .img-box img {
   width: 100%;
   display: block;
+  max-height: 250px;
 }
 .banner-box .desc-box {
   top: 0;
