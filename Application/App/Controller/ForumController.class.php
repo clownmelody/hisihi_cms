@@ -112,6 +112,23 @@ class ForumController extends AppController
         return $ids;
     }
 
+    private function getSameMajorUsers($major=null){
+        if($major == '其他'){
+            $uids = M()->query("select distinct uid from hisihi_forum_post"
+                ." where status=1 and uid != 0 and uid not in"
+                ." (select distinct uid from hisihi_field where field_id=37)");
+            $map['field_id'] = 37;
+            $map['field_data'] = '其他';
+            $second_uids = M('Field')->where($map)->field('uid')->select();
+            array_push($uids, $second_uids);
+        }else{
+            $map['field_id'] = 37;
+            $map['field_data'] = $major;
+            $uids = M('Field')->where($map)->field('uid')->select();
+        }
+        return $uids;
+    }
+
     //获取关注人发帖
     private function getForumsFromFollows($uid=null){
         $model = new \Think\Model();
@@ -353,7 +370,8 @@ class ForumController extends AppController
      */
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply',
                                 $show_adv=false, $post_type=1, $version=null, $circle_type=null,
-                                $reply_type=null,$position=null, $grade=null, $no_read_cache=false)
+                                $reply_type=null,$position=null, $grade=null, $major=null,
+                                $no_read_cache=false)
     {
         $no_read_cache = intval($no_read_cache);
         $field_type = intval($field_type);
@@ -410,6 +428,17 @@ class ForumController extends AppController
             $map['reply_count'] = array('gt',0);
         if($field_type == -4){  // 热门
             $order = "reply_count desc";
+        }
+
+        if((float)$version>=2.96){
+            if(!empty($major)){
+                $ids = $this->getSameMajorUsers($major);
+                $post_ids = array();
+                foreach($ids as &$post_id){
+                    $post_ids[] = $post_id['uid'];
+                }
+                $map['uid'] = array('in', $post_ids);
+            }
         }
 
         //2.2以上版本筛选条件
@@ -474,12 +503,13 @@ class ForumController extends AppController
         }
         $map['is_top'] = 0;
         $forumPost = M('ForumPost');
-        if(S('app_forum_forumfilter_post_total_count'.md5($map))){
+        /*if(S('app_forum_forumfilter_post_total_count'.md5($map))){
             $totalCount = S('app_forum_forumfilter_post_total_count'.md5($map));
         } else {
             $totalCount = $forumPost->where($map)->count();
             S('app_forum_forumfilter_post_total_count'.md5($map), $totalCount, 600);
-        }
+        }*/
+        $totalCount = $forumPost->where($map)->count();
         $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');

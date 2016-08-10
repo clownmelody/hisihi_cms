@@ -1860,7 +1860,12 @@ class OrganizationController extends AppController
                         }
                     }
                     if($valid_coupon_count>0){
-                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj = M('Promotion')->field('id, title, tag_url')
+                            ->where('id='.$promotion['promotion_id'])->find();
+                        $money = $this->getMaxMoneyCouponByOrganizationIdAndPromotionId($org_id, $obj['id']);
+                        if($money){
+                            $obj['title'] = $obj['title'].', 最高优惠'.$money.'元';
+                        }
                         $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $obj['share_detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail_share/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $promotion_list[] = $obj;
@@ -3701,7 +3706,12 @@ class OrganizationController extends AppController
                         }
                     }
                     if($valid_coupon_count>0){
-                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj = M('Promotion')->field('id, title, tag_url')
+                            ->where('id='.$promotion['promotion_id'])->find();
+                        $money = $this->getMaxMoneyCouponByOrganizationIdAndPromotionId($org_id, $obj['id']);
+                        if($money){
+                            $obj['title'] = $obj['title'].', 最高优惠'.$money.'元';
+                        }
                         $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $obj['share_detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail_share/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $promotion_list[] = $obj;
@@ -3839,7 +3849,12 @@ class OrganizationController extends AppController
                         }
                     }
                     if($valid_coupon_count>0){
-                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj = M('Promotion')->field('id, title, tag_url')
+                            ->where('id='.$promotion['promotion_id'])->find();
+                        $money = $this->getMaxMoneyCouponByOrganizationIdAndPromotionId($org_id, $obj['id']);
+                        if($money){
+                            $obj['title'] = $obj['title'].', 最高优惠'.$money.'元';
+                        }
                         $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $obj['share_detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail_share/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $promotion_list[] = $obj;
@@ -3961,7 +3976,12 @@ class OrganizationController extends AppController
                         }
                     }
                     if($valid_coupon_count>0){
-                        $obj = M('Promotion')->field('id, title, tag_url')->where('id='.$promotion['promotion_id'])->find();
+                        $obj = M('Promotion')->field('id, title, tag_url')
+                            ->where('id='.$promotion['promotion_id'])->find();
+                        $money = $this->getMaxMoneyCouponByOrganizationIdAndPromotionId($org_id, $obj['id']);
+                        if($money){
+                            $obj['title'] = $obj['title'].', 最高优惠'.$money.'元';
+                        }
                         $obj['detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $obj['share_detail_web_url'] = C('HOST_NAME_PREFIX').'api.php?s=/Promotion/promotion_detail_share/promotion_id/'.$obj['id'].'/organization_id/'.$org_id;
                         $promotion_list[] = $obj;
@@ -4431,6 +4451,25 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         $data['totalCount'] = count($_promotion_list);
         $data['list'] = $_promotion_list;
         $this->apiSuccess('获取机构活动列表成功', null, $data);
+    }
+
+    /**
+     * 获取活动的最高优惠券金额
+     * @param int $organization_id
+     * @param int $promotion_id
+     * @return int
+     */
+    public function getMaxMoneyCouponByOrganizationIdAndPromotionId($organization_id=0, $promotion_id=0){
+        $money = 0;
+        $now = time();
+        $coupon_list = M()->query('select t3.id, t3.name, t3.type, t3.start_time, t3.end_time, t3.money from
+hisihi_teaching_course_organization_promotion_relation t1,
+hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_course_id=t2.teaching_course_id
+ and t2.coupon_id=t3.id and t2.status=1 and t1.status=1 and t3.status=1 and t3.end_time>='.$now.' and t1.promotion_id='.$promotion_id.' and t1.organization_id='.$organization_id.' order by t3.money desc limit 0,1');
+        foreach($coupon_list as $coupon){
+            $money = $coupon['money'];
+        }
+        return $money;
     }
 
     /**

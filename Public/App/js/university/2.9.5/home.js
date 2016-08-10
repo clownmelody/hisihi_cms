@@ -264,7 +264,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '<div class="head-txt">'+
                     '<div class="center-content">学校环境</div>'+
                     '</div>'+
-
                     '<div class="center-info">'+
                     '<p>'+
                         result.school_environment+
@@ -309,7 +308,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         //strLi+=strLi;
         strLi+='<div style="clear: both;"></div>';
         var str='<div class="main-item album">'+
-            '<div class="head-txt border-bottom">'+
+            '<div class="head-txt">'+
                 '<div class="center-content album-name">' +
                     '<label>相册</label>'+
                     '<span id="watch-more"></span>'+
@@ -327,6 +326,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
     t.viewPics=function(e){
         var $target=$(e.currentTarget),
             index=$target.index(),
+
             arr=[],
             imgArr=[],
             $li =$('.album-ul li'),
