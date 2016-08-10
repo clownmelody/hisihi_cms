@@ -367,8 +367,8 @@ body .main-item .head-txt {
   line-height: 40px;
 }
 body .main-item .border-bottom {
-  width: 95%;
-  padding-left: 2%;
+  width: 98%;
+  margin-left: 2%;
   border-bottom: 1px solid #e6e6e6;
 }
 body .main-item.introduce .center-content {
@@ -378,9 +378,8 @@ body .main-item.introduce .introduce-txt {
   margin-top: 15px;
 }
 body .main-item.nums ul {
-  width: 95%;
-  padding-left: 2%;
-  border-bottom: 1px solid #cccccc;
+  width: 100%;
+  border-bottom: 1px solid #CCCCCC;
   padding: 15px 0;
 }
 body .main-item.nums ul li {
@@ -412,8 +411,8 @@ body .main-item.nums ul:last-child {
   border: none;
 }
 body .main-item.majors .majors-item {
-  width: 95%;
-  padding-left: 2%;
+  width: 98%;
+  margin-left: 2%;
   border-bottom: 1px solid #e6e6e6;
 }
 body .main-item.majors .majors-item ul {
