@@ -326,6 +326,7 @@ body {
   background: #F2F2F2;
   overflow: auto;
   padding-bottom: 50px;
+  overflow-x: hidden;
 }
 p {
   line-height: 22px;
@@ -334,8 +335,8 @@ p {
   margin: 0 0 14px 0;
 }
 .center-info {
-  padding-left: 14px;
-  padding-right: 14px;
+  padding-left: 8px;
+  padding-right: 8px;
   margin: 0 auto;
   font-size: 14px;
 }
@@ -350,7 +351,7 @@ body .main-item {
   background-color: #FFFFFF;
   box-sizing: border-box;
   border-radius: 4px;
-  padding-bottom: 8px;
+  overflow: hidden;
   /*基本信息*/
   /*指数*/
 }
@@ -366,9 +367,12 @@ body .main-item .head-txt {
   color: #212121;
   line-height: 40px;
 }
+body .main-item .head-txt .center-content {
+  padding-left: 0px;
+}
 body .main-item .border-bottom {
-  width: 98%;
-  margin-left: 2%;
+  width: 100%;
+  margin-left: 8px;
   border-bottom: 1px solid #e6e6e6;
 }
 body .main-item.introduce .center-content {
@@ -385,7 +389,7 @@ body .main-item.nums ul {
 body .main-item.nums ul li {
   float: left;
   width: 24%;
-  height: auto;
+  height: 52px;
   box-sizing: border-box;
   border-left: 1px solid #CCCCCC;
   text-align: center;
@@ -411,13 +415,12 @@ body .main-item.nums ul:last-child {
   border: none;
 }
 body .main-item.majors .majors-item {
-  width: 98%;
-  margin-left: 2%;
+  width: 100%;
+  margin-left: 8px;
   border-bottom: 1px solid #e6e6e6;
 }
 body .main-item.majors .majors-item ul {
-  padding-bottom: 14px;
-  margin-top: 5px;
+  padding-bottom: 2px;
 }
 body .main-item.majors .majors-item ul li {
   display: inline-block;
@@ -436,6 +439,9 @@ body .main-item.majors .majors-item ul li {
 body .main-item.environment {
   margin-top: 0;
 }
+body .main-item.environment .head-txt .center-content {
+  padding-left: 8px;
+}
 body .main-item.environment .content-txt p {
   color: #212121;
   line-height: 25px;
@@ -444,6 +450,12 @@ body .main-item.environment .content-txt p {
 }
 body .main-item.album {
   height: 150px;
+}
+body .main-item.album .head-txt .center-content {
+  padding-left: 8px;
+}
+body .main-item.album .head-txt .album-name {
+  position: relative;
 }
 body .main-item.album .album-info {
   overflow: auto;
@@ -462,18 +474,26 @@ body .main-item.album .album-info .album-ul > li > img {
   padding-left: 5px;
 }
 body .main-item.album .album-info .album-ul > li:first-child {
-  padding-left: 15px;
+  padding-left: 8px;
 }
 body .main-item.album .album-info .album-ul > li:first-child > img {
   padding-left: 0;
 }
 body .main-item.album #watch-more {
-  background-image: url('../../../images/orgbasicinfo/2.9.5/bottom-right.png');
-  background-size: 9px 16px;
+  width: 28px;
+  height: 28px;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  box-sizing: border-box;
+  text-align: center;
+}
+body .main-item.album #watch-more span {
   width: 9px;
   height: 16px;
-  position: absolute;
-  margin: 14px 8px 0 77%;
+  display: inline-block;
+  background-image: url('../../../images/orgbasicinfo/2.9.5/bottom-right.png');
+  background-size: 9px 16px;
 }
 body .underTip {
   margin: 0 auto;

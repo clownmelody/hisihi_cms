@@ -232,7 +232,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
                     '<div class="head-txt">'+
                     '<div class="center-content">'+title+'</div>'+
                 '</div>'+
-                '<ul class="center-content">';
+                '<ul>';
             for(var i=0;i<len;i++){
                 var name=arr[i];
                 name=this.substrLongStr(name,8);
@@ -311,7 +311,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             '<div class="head-txt">'+
                 '<div class="center-content album-name">' +
                     '<label>相册</label>'+
-                    '<span id="watch-more"></span>'+
+                    '<span id="watch-more"><span></span></span>'+
                 '</div>'+
             '</div>'+
             '<div class="album-info">' +

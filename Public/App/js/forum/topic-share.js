@@ -5,15 +5,17 @@
 define(['base','lazyloading'],function(Base){
     var Topic=function(){
         this.tid=$('body').data('id');
+        this.baseUrl=window.hisihiUrlObj.link_url;
         if(this.isLocal){
-            window.urlObj.localApi+='hisihi-cms/';
+            //eventName='touchend';
+            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.initStyle();
         this.loadData();
     };
 
 
-    Topic.prototype=new Base(true);
+    Topic.prototype=new Base();
     Topic.constructor=Topic;
     var t=Topic.prototype;
 
@@ -59,7 +61,7 @@ define(['base','lazyloading'],function(Base){
     t.loadTopicInfo=function(){
         var that=this,
             para={
-            url:window.urlObj.api+'topic/'+ this.tid,
+            url:window.hisihiUrlObj.api_url+'/v1/topic/'+ this.tid,
             type:'get',
             sCallback:function(result){
                 if(result.data){
@@ -97,7 +99,7 @@ define(['base','lazyloading'],function(Base){
         this.controlLoadingBox(true);
         var that =this,
             para={
-            url:window.urlObj.localApi+'api.php?s=/forum/forumFilterByTopic/topicId/'+this.tid+'/page/1/count/10',
+            url:this.baseUrl+'?s=/forum/forumFilterByTopic/topicId/'+this.tid+'/page/1/count/10',
             type:'get',
             sCallback:function(result){
                 that.controlLoadingBox(false);
@@ -131,7 +133,7 @@ define(['base','lazyloading'],function(Base){
              item=null,
              name='',pic='',
              type='',
-             orgStr='';
+             orgStr='',title='';
         for(var i=0;i<len;i++){
             item=data[i];
             name=item.userInfo.nickname;
@@ -142,6 +144,11 @@ define(['base','lazyloading'],function(Base){
             pic=item.userInfo.avatar128;
             if(!pic){
                 pic='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
+            }
+            if(!item.topic_info || !item.topic_info.title) {
+                title =$('.topic-real-name').text();
+            }else{
+                title = item.topic_info.title;
             }
             str+='<li><div class="li-main">'+
                     '<div class="user-info">'+
@@ -161,7 +168,7 @@ define(['base','lazyloading'],function(Base){
                         '<div style="clear: both;"></div>'+
                     '</div>'+
                     '<p class="post-word">'+
-                        '<span class="topic-name">#'+item.topic_info.title+'#</span>' +item.content+
+                        '<span class="topic-name">#'+title+'#</span>' +item.content+
                     '</p>'+
                     '<ul class="post-img-box">'+
                         t.getPostImgStr(item.img)+
