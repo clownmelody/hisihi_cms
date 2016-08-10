@@ -435,7 +435,7 @@ class ForumController extends AppController
                 $ids = $this->getSameMajorUsers($major);
                 $post_ids = array();
                 foreach($ids as &$post_id){
-                    $post_ids[] = $post_id['id'];
+                    $post_ids[] = $post_id['uid'];
                 }
                 $map['uid'] = array('in', $post_ids);
             }
