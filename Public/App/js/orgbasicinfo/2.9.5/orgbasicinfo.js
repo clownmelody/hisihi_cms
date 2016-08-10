@@ -331,7 +331,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     //滚动
     t.scrollSingInInfo=function(){
-        var $target=$('.sing-in-detail-box'),
+        var $target=$('.sing-up-detail-box'),
             $item=$target.find('p'),
             h=40,
             len=$item.length,
@@ -389,7 +389,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             str += '<p><span>' + item.student_name + '</span>同学 于 ' + time + ' 成功报名</p>';
         }
 
-        $('.sing-in-box').show().find('.sing-in-detail-box').html(str);
+        $('.sing-up-box').show().find('.sing-up-detail-box').html(str);
 
         // 如果记录人数超过1条，则使用滚动显示的方式
         if (data.length > 1) {
