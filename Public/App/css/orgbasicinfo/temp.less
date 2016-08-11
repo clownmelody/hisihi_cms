@@ -108,6 +108,7 @@ body{
         color: @fcolor;
         font-size: 14px;
         margin-left: 3px;
+        //.txt-ellipsis-p(1);
       }
       .cert-box{
         vertical-align: 6px;
@@ -214,52 +215,67 @@ body{
   }
 }
 
-.sing-in-box{
-  height: 25px;
+.sing-up-box{
   position: relative;
   padding-bottom: 15px;
   overflow: hidden;
   display: none;
-  .left-item{
-    position: absolute;
-    .size(91px,auto);
-    font-size: 14px;
-    color: @fcolor;
-    padding-top: 7px;
-    i{
-      display: inline-block;
-      .size(36px,22px);
-      .sprite-bg;
-      background-position: -117px -2px;
-      vertical-align: -3px;
-      margin-left: 1px;
-    }
-    label{
-      &:nth-child(3){
-        vertical-align: 1px;
+  .sing-up-name {
+    height: 40px;
+    .left-item {
+      position: absolute;
+      .size(91px, auto);
+      font-size: 14px;
+      color: @fcolor;
+      padding-top: 7px;
+      i {
+        display: inline-block;
+        .size(36px, 22px);
+        .sprite-bg;
+        background-position: -117px -2px;
+        vertical-align: -3px;
+        margin-left: 1px;
+      }
+      label {
+        &:nth-child(3) {
+          vertical-align: 1px;
+        }
       }
     }
-  }
-  .right-item{
-    margin-left:97px;
-    @h:28px;
-    @margin-top: 5px;
-    height:@h;
-    overflow: hidden;
-    .sing-in-detail-box {
-      p {
-        font-size: 13px;
-        .txt-ellipsis-p(2);
-        margin:0;
-        height: 40px;
-        line-height: 41px;
-        span{
-          &:nth-child(1){
-            color: #FF5A00;
-            margin-right: 5px;
+    .right-item {
+      margin-left: 97px;
+      @h: 28px;
+      @margin-top: 5px;
+      height: @h;
+      overflow: hidden;
+      .sing-up-detail-box {
+        p {
+          font-size: 13px;
+          .txt-ellipsis-p(2);
+          margin: 0;
+          height: 40px;
+          line-height: 41px;
+          span {
+            &:nth-child(1) {
+              color: #FF5A00;
+              margin-right: 5px;
+            }
           }
         }
       }
+    }
+  }
+  .sing-up-guarantee{
+    height: 35px;
+    border-top: 1px solid #F3F3F3;
+    position: relative;
+    .guarantee-left{
+      position: absolute;
+      .size(100px,100%);
+    }
+    .guarantee-right{
+      margin-left: 100px;
+      text-align: right;
     }
   }
 }
@@ -303,7 +319,7 @@ body{
     border-top: 1px solid #F3F3F3;
   }
   .basic-header {
-    width: 150%;
+    width: 110%;
   }
   .introduce {
     .basic-header {

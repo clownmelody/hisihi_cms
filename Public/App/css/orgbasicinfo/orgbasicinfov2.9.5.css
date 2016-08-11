@@ -515,14 +515,16 @@ body {
   margin: 7px 0;
   font-size: 13px;
 }
-.sing-in-box {
-  height: 25px;
+.sing-up-box {
   position: relative;
   padding-bottom: 15px;
   overflow: hidden;
   display: none;
 }
-.sing-in-box .left-item {
+.sing-up-box .sing-up-name {
+  height: 40px;
+}
+.sing-up-box .sing-up-name .left-item {
   position: absolute;
   width: 91px;
   height: auto;
@@ -530,7 +532,7 @@ body {
   color: #212121;
   padding-top: 7px;
 }
-.sing-in-box .left-item i {
+.sing-up-box .sing-up-name .left-item i {
   display: inline-block;
   width: 36px;
   height: 22px;
@@ -540,15 +542,15 @@ body {
   vertical-align: -3px;
   margin-left: 1px;
 }
-.sing-in-box .left-item label:nth-child(3) {
+.sing-up-box .sing-up-name .left-item label:nth-child(3) {
   vertical-align: 1px;
 }
-.sing-in-box .right-item {
+.sing-up-box .sing-up-name .right-item {
   margin-left: 97px;
   height: 28px;
   overflow: hidden;
 }
-.sing-in-box .right-item .sing-in-detail-box p {
+.sing-up-box .sing-up-name .right-item .sing-up-detail-box p {
   font-size: 13px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -559,9 +561,23 @@ body {
   height: 40px;
   line-height: 41px;
 }
-.sing-in-box .right-item .sing-in-detail-box p span:nth-child(1) {
+.sing-up-box .sing-up-name .right-item .sing-up-detail-box p span:nth-child(1) {
   color: #FF5A00;
   margin-right: 5px;
+}
+.sing-up-box .sing-up-guarantee {
+  height: 35px;
+  border-top: 1px solid #F3F3F3;
+  position: relative;
+}
+.sing-up-box .sing-up-guarantee .guarantee-left {
+  position: absolute;
+  width: 100px;
+  height: 100%;
+}
+.sing-up-box .sing-up-guarantee .guarantee-right {
+  margin-left: 100px;
+  text-align: right;
 }
 .coupon-box {
   margin: 12px 8px 0 8px;
@@ -605,7 +621,7 @@ body {
   border-top: 1px solid #F3F3F3;
 }
 .basic-info-box .basic-header {
-  width: 150%;
+  width: 110%;
 }
 .basic-info-box .introduce .basic-header {
   border-bottom: 1px solid #F3F3F3;
