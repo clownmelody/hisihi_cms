@@ -178,8 +178,9 @@ GROUP BY
             $second_uids = M('Field')->where($map)->field('uid')->select();
             array_push($uids, $second_uids);
         }else{
+            $major_array = explode("#", $major);
             $map['field_id'] = 37;
-            $map['field_data'] = $major;
+            $map['field_data'] = array('in', $major_array);
             $uids = M('Field')->where($map)->field('uid')->select();
         }
         return $uids;
