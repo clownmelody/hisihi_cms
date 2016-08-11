@@ -112,6 +112,62 @@ class ForumController extends AppController
         return $ids;
     }
 
+    //获取老师发帖
+    private function getForumsFromRandTeachers($uid=null){
+        $model = new \Think\Model();
+        $uids = $model->query("SELECT DISTINCT
+	uid
+FROM
+	hisihi_auth_group_access
+WHERE
+	group_id = 6
+AND uid IN (
+	SELECT DISTINCT
+		uid
+	FROM
+		hisihi_field
+	WHERE
+		field_data = (
+			SELECT
+				field_data
+			FROM
+				hisihi_field
+			WHERE
+				field_id = 37
+			AND uid = ".$uid."
+		)
+	AND uid != ".$uid."
+) order by id desc LIMIT 10");
+        if(empty($uids)){
+            $uids = $model->query("SELECT DISTINCT
+	uid
+FROM
+	hisihi_auth_group_access
+WHERE
+	group_id = 6
+	AND uid != ".$uid."
+ order by id desc LIMIT 10");
+        }
+        $uid_arr = array();
+        foreach ($uids as $id){
+            $uid_arr[] = $id;
+        }
+        $uid_str = implode(',', $uid_arr);
+        $ids = $model->query("SELECT * from (SELECT
+	id,
+	uid,
+	create_time
+FROM
+	hisihi_forum_post
+WHERE
+	STATUS = 1
+AND uid != 0
+AND uid IN (".$uid_str.") ORDER BY id desc) a
+GROUP BY
+	a.uid");
+        return $ids;
+    }
+
     private function getSameMajorUsers($major=null){
         if($major == '其他'){
             $uids = M()->query("select distinct uid from hisihi_forum_post"
@@ -462,7 +518,11 @@ class ForumController extends AppController
             $uid = $this->getUid();//session_id
             $ids = $this->getForumsFromFollows($uid);
             if(empty($ids)){
-                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
+                if(floatval($version) >= 2.96){
+                    $ids = $this->getForumsFromRandTeachers($uid);
+                }else{
+                    $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
+                }
             }
             $post_ids = array();
             foreach($ids as &$post_id){

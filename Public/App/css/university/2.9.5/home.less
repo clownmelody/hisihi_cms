@@ -1,7 +1,7 @@
 @activeColor:#ff5a00;
 .border-bottom(@c:#e6e6e6){
-  width: 98%;
-  margin-left: 2%;
+  width: 100%;
+  margin-left: 8px;
   border-bottom:1px solid @c;
 }
 body{
@@ -10,6 +10,7 @@ body{
   background: #F2F2F2;
   overflow: auto;
   padding-bottom: 50px;
+  overflow-x: hidden;
 }
 p{
   line-height: 22px;
@@ -18,8 +19,8 @@ p{
   margin: 0 0 14px 0;
 }
 .center-info{
-  padding-left: 14px;
-  padding-right: 14px;
+  padding-left: 8px;
+  padding-right: 8px;
   margin: 0 auto;
   font-size: 14px;
 }
@@ -35,7 +36,7 @@ body{
     background-color: #FFFFFF;
     box-sizing: border-box;
     border-radius: 4px;
-    padding-bottom: 8px;
+    overflow: hidden;
     .center-content {
       padding-left: 14px;
       padding-right: 14px;
@@ -49,6 +50,9 @@ body{
       @h:40px;
       //.size(100%,@h);
       line-height: @h;
+      .center-content{
+        padding-left: 0px;
+      }
     }
     .border-bottom{
       .border-bottom();
@@ -73,7 +77,7 @@ body{
         padding: 15px 0;
         li{
           float: left;
-          .size(24%,auto);
+          .size(24%,52px);
           box-sizing: border-box;
           border-left:1px solid #CCCCCC;
           text-align: center;
@@ -105,9 +109,9 @@ body{
     &.majors{
       .majors-item{
         .border-bottom();
+
         ul{
-          padding-bottom: 14px;
-          margin-top: 5px;
+          padding-bottom: 2px;
           li{
             display: inline-block;
             border: 1px solid #FF5A00;
@@ -127,6 +131,11 @@ body{
 
     &.environment{
       margin-top: 0;
+      .head-txt{
+        .center-content{
+          padding-left: 8px;
+        }
+      }
       .content-txt{
         p{
           color: #212121;
@@ -139,6 +148,14 @@ body{
 
     &.album {
       height: 150px;
+      .head-txt{
+        .center-content{
+          padding-left: 8px;
+        }
+        .album-name{
+          position: relative;
+        }
+      }
       .album-info {
         overflow: auto;
         .album-ul {
@@ -152,7 +169,7 @@ body{
               padding-left: 5px;
             }
             &:first-child {
-              padding-left: 15px;
+              padding-left: 8px;
               >img{
                 padding-left: 0;
               }
@@ -162,12 +179,19 @@ body{
         }
       }
       #watch-more {
-        background-image: url('../../../images/orgbasicinfo/2.9.5/bottom-right.png');
-        background-size: 18px*0.5 32px*0.5;
-        width: 9px;
-        height: 16px;
+        width: 28px;
+        height: 28px;
         position: absolute;
-        margin: 14px 8px 0 77%;
+        right: 4px;
+        top: 4px;
+        box-sizing: border-box;
+        text-align: center;
+        span{
+          .size(9px,16px);
+          display: inline-block;
+          background-image: url('../../../images/orgbasicinfo/2.9.5/bottom-right.png');
+          background-size: 18px*0.5 32px*0.5;
+        }
       }
     }
   }

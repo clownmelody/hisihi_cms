@@ -3,17 +3,17 @@
  */
 
 requirejs.config({
-    baseUrl: window.urlObj.js,
+    baseUrl: window.hisihiUrlObj.js,
     paths: {
         $:'sharecommon/zepto.min',
         fx:'sharecommon/fx_v1.1',
+        fastclick:'sharecommon/fastclick',
         lazyloading:'sharecommon/lazyloading',
-        //lazyloading:'hiworks/imglazyload.min',
         prefixfree:'sharecommon/prefixfree.min',
         iscroll:'sharecommon/iscroll',
         myscroll:'sharecommon/myscroll-v2.0',
         home:'forum/topic-share',
-        base:'sharecommon/base'
+        base:'sharecommon/base-1.1'
     },
     shim: {
         $:{
