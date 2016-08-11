@@ -3387,7 +3387,6 @@ LIMIT 1');
         return $topic_id_list;
     }
 
-
     public function getNewlyThreeCommentByPostId($post_id, $page=1, $count=3){
         $id = intval($post_id);
         $page = intval($page);
