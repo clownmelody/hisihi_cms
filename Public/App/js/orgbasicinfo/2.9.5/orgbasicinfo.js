@@ -19,6 +19,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         this.perPageSize=10;
         this.pageIndex=1;
         this.async=false;  //同步加载所有的数据
+        this.showGuaranteeBorder=false; //  是是否显示担保容器的边框
         this.controlLoadingBox(true);
         window.setTimeout(function(){
             that.initData();
@@ -168,10 +169,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         $box.find('#logo').attr('src',data.logo);
 
         // 视频、名称、认证
-        $box.find('.name-main-box label').text(data.name);
-        //if(data.is_listen_preview =='0'){
-        //    $('.name-main-box img').css('display','inline-block');
-        //}
+        $box.find('.name-main-box .org-name').text(data.name);
         this.setCertInfo(data.authenticationInfo);
 
         // 粉丝和观看人数
@@ -198,6 +196,10 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         //电话号码
         $('.contact a').attr('href','tel:'+data.phone_num);
+
+        //担保信息
+        this.setColorBar(data);
+
     };
 
     /*数值大于9999时，转换成万*/
@@ -247,6 +249,30 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             }
         }
         $('.cert-box').html(str);
+    };
+
+    /*担保信息*/
+    t.setColorBar=function(data){
+        var gNum=data.guarantee_num,
+            $guarantee=$('.sing-up-guarantee');
+        if(gNum){
+            this.showGuaranteeBorder=true;  //显示担保边框
+            gNum=gNum | 0;
+            $guarantee.show().find('.guarantee-right span').text('共'+gNum+'个担保名额');
+            var $disabled=$guarantee.find('.disabled'),
+                $available=$guarantee.find('.available'),
+                aNum=data.available_num,
+                dNum;
+            if(aNum==null || aNum=='' || aNum=='undefined'){
+                aNum=0;
+            }
+            $guarantee.show().find('.left-num-box span').text('剩余'+aNum+'人');
+            dNum=gNum-aNum;
+            var dPercent=(dNum/gNum*100).toFixed(2),
+                aPercent=100-dPercent;
+            $disabled.css('width',dPercent+'%');
+            $available.css('width',aPercent+'%');
+        }
     };
 
     //优惠券信息
@@ -389,7 +415,12 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             str += '<p><span>' + item.student_name + '</span>同学 于 ' + time + ' 成功报名</p>';
         }
 
-        $('.sing-up-box').show().find('.sing-up-detail-box').html(str);
+        $('.sing-up-main').show().find('.sing-up-detail-box').html(str);
+
+        //显示担保边框
+        if(this.showGuaranteeBorder){
+            $('.sing-up-guarantee').addClass('border');
+        }
 
         // 如果记录人数超过1条，则使用滚动显示的方式
         if (data.length > 1) {

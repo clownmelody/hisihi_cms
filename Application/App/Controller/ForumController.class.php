@@ -112,6 +112,62 @@ class ForumController extends AppController
         return $ids;
     }
 
+    //获取老师发帖
+    private function getForumsFromRandTeachers($uid=null){
+        $model = new \Think\Model();
+        $uids = $model->query("SELECT DISTINCT
+	uid
+FROM
+	hisihi_auth_group_access
+WHERE
+	group_id = 6
+AND uid IN (
+	SELECT DISTINCT
+		uid
+	FROM
+		hisihi_field
+	WHERE
+		field_data = (
+			SELECT
+				field_data
+			FROM
+				hisihi_field
+			WHERE
+				field_id = 37
+			AND uid = ".$uid."
+		)
+	AND uid != ".$uid."
+) order by id desc LIMIT 10");
+        if(empty($uids)){
+            $uids = $model->query("SELECT DISTINCT
+	uid
+FROM
+	hisihi_auth_group_access
+WHERE
+	group_id = 6
+	AND uid != ".$uid."
+ order by id desc LIMIT 10");
+        }
+        $uid_arr = array();
+        foreach ($uids as $id){
+            $uid_arr[] = $id;
+        }
+        $uid_str = implode(',', $uid_arr);
+        $ids = $model->query("SELECT * from (SELECT
+	id,
+	uid,
+	create_time
+FROM
+	hisihi_forum_post
+WHERE
+	STATUS = 1
+AND uid != 0
+AND uid IN (".$uid_str.") ORDER BY id desc) a
+GROUP BY
+	a.uid");
+        return $ids;
+    }
+
     private function getSameMajorUsers($major=null){
         if($major == '其他'){
             $uids = M()->query("select distinct uid from hisihi_forum_post"
@@ -161,7 +217,7 @@ class ForumController extends AppController
         $this->apiSuccess("获取类别标签成功", null, array('types' => $forum_type));
     }
 
-    private function formatList($list, $version, $circle_type)
+    private function formatList($list, $version, $circle_type, $uid=0)
     {
         $map_support['appname'] = 'Forum';
         $map_support['table'] = 'post';
@@ -212,6 +268,17 @@ class ForumController extends AppController
             }
 
             if((float)$version>=2.96 && $circle_type==3){
+                $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$v['uid']))->find();
+                $be_follow = D('Follow')->where(array('who_follow'=>$v['uid'],'follow_who'=>$uid))->find();
+                if($follow_other&&$be_follow){
+                    $v['userInfo']['relationship'] = 3;
+                } else if($follow_other&&(!$be_follow)){
+                    $v['userInfo']['relationship'] = 2;
+                } else if((!$follow_other)&&$be_follow){
+                    $v['userInfo']['relationship'] = 1;
+                } else {
+                    $v['userInfo']['relationship'] = 0;
+                }
                 $v['newly_comment'] = $this->getNewlyThreeCommentByPostId($v['post_id']);
             }
 
@@ -462,7 +529,11 @@ class ForumController extends AppController
             $uid = $this->getUid();//session_id
             $ids = $this->getForumsFromFollows($uid);
             if(empty($ids)){
-                $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
+                if(floatval($version) >= 2.96){
+                    $ids = $this->getForumsFromRandTeachers($uid);
+                }else{
+                    $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
+                }
             }
             $post_ids = array();
             foreach($ids as &$post_id){
@@ -513,7 +584,7 @@ class ForumController extends AppController
         $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
-            $list = $this->formatList($list, $version, $circle_type);
+            $list = $this->formatList($list, $version, $circle_type, is_login());
             if($show_adv==true){
                 $adv_pos = $this->getAdvsPostion();
                 foreach($adv_pos as $pos){
@@ -3386,7 +3457,6 @@ LIMIT 1');
         }
         return $topic_id_list;
     }
-
 
     public function getNewlyThreeCommentByPostId($post_id, $page=1, $count=3){
         $id = intval($post_id);

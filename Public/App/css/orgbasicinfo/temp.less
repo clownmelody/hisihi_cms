@@ -97,24 +97,35 @@ body{
       }
     }
     .name-main-box{
+      height: 40px;
       text-align: center;
       margin-top: 6px;
       >img{
         display: none;
         .size(36px,36px);
+        vertical-align: top;
       }
-      label {
-        vertical-align: 10px;
+      .org-name-box {
+        vertical-align: top;
+        max-width: 280px;
+        height: 100%;
+        display: inline-block;
         color: @fcolor;
         font-size: 14px;
         margin-left: 3px;
-        //.txt-ellipsis-p(1);
+        .org-name {
+          margin-top: 9px;
+          .txt-ellipsis-p(1);
+        }
       }
       .cert-box{
-        vertical-align: 6px;
+        //vertical-align: top;
+        display: inline-block;
         margin-left: 2px;
         img{
+          display: inline-block;
           .size(18px,18px);
+          margin-top: 9px;
           margin-right: 5px;
         }
       }
@@ -217,11 +228,14 @@ body{
 
 .sing-up-box{
   position: relative;
-  padding-bottom: 15px;
   overflow: hidden;
-  display: none;
-  .sing-up-name {
-    height: 40px;
+
+  >div{
+    height: 44px;
+    display: none;
+  }
+  .sing-up-main {
+    display: none;
     .left-item {
       position: absolute;
       .size(91px, auto);
@@ -266,16 +280,56 @@ body{
     }
   }
   .sing-up-guarantee{
-    height: 35px;
-    border-top: 1px solid #F3F3F3;
+    width: 110%;
     position: relative;
+    &.border{
+      border-top: 1px solid #f3f3f3;
+    }
     .guarantee-left{
       position: absolute;
       .size(100px,100%);
+      .color-bar-box{
+        border-radius: 3px;
+        text-align: center;
+        position: relative;
+        .size(100%,22px);
+        margin: 11px 0;
+        @c:#fdbe0d;
+        border:1px solid @c;
+        font-size:0;
+        .color-item {
+          display: inline-block;
+          height: 100%;
+          &.disabled {
+            background-color: @c;
+            width: 60%;
+          }
+          &.available {
+            width: 40%;
+            background-color: #fff;
+          }
+        }
+        .left-num-box {
+          position: absolute;
+          top:0;
+          left:0;
+          .size(100%,100%);
+          text-align: center;
+          span {
+            font-size: 12px;
+            color: #212121;
+            line-height: 22px;
+          }
+        }
+      }
     }
     .guarantee-right{
+      padding-right: 10%;
       margin-left: 100px;
       text-align: right;
+      font-size: 13px;
+      line-height: 44px;
+      color: #212121;
     }
   }
 }
@@ -972,6 +1026,15 @@ body{
         height: 35px;
         line-height: 35px;
         margin: 2px 12px;
+      }
+    }
+  }
+  .logo-box {
+    .logo-main-info {
+      .name-main-box {
+        .org-name-box {
+          max-width: 220px;
+        }
       }
     }
   }
