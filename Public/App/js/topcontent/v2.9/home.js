@@ -134,7 +134,7 @@ define(['fx','base'],function(fx,Base) {
                         uClass +=' active';
                     }
                     var name=item.user_info.username;
-                    name=this.substrLongStr(name,12);
+                    //name=this.substrLongStr(name,12);
                     str+='<li>'+
                         '<div class="list-main-left">'+
                         '<img src="'+item.user_info.avatar_url+'">'+
@@ -199,7 +199,9 @@ define(['fx','base'],function(fx,Base) {
         }else{
             $thumb.addClass('active');
         }
-        $target.addClass('voting');
+        $thumb.addClass('voting');
+
+        //return;
 
         var $num=$target.find('.num'),
             num=$num.text() | 0;
