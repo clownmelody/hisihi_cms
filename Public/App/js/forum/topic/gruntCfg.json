@@ -1,0 +1,36 @@
+{
+  "name": "话题分享",
+  "version": "2.9.5",
+  "description": "修改头部banner样式",
+  "author":"jimmy",
+  "requirejs":{
+    "main":{
+      "options":{
+        "baseUrl":"",
+        "paths":{
+          "$":"../../sharecommon/zepto.min",
+          "fx":"../../sharecommon/fx_v1.1",
+          "prefixfree":"../../sharecommon/prefixfree.min",
+          "fastclick":"../../sharecommon/fastclick",
+          "lazyloading":"../../sharecommon/lazyloading",
+          "base":"../../sharecommon/base-1.1",
+          "home":"topic-share",
+          "config":"topic-config"
+        },
+        "web":{
+          "include":[
+            "$",
+            "fx",
+            "prefixfree",
+            "fastclick",
+            "lazyloading",
+            "base",
+            "home",
+            "config"
+          ],
+          "out":"topic-"
+        }
+      }
+    }
+  }
+}
