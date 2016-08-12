@@ -394,6 +394,7 @@ body {
   display: none;
 }
 .logo-box .logo-main-info .name-main-box {
+  height: 40px;
   text-align: center;
   margin-top: 6px;
 }
@@ -401,20 +402,34 @@ body {
   display: none;
   width: 36px;
   height: 36px;
+  vertical-align: top;
 }
-.logo-box .logo-main-info .name-main-box label {
-  vertical-align: 10px;
+.logo-box .logo-main-info .name-main-box .org-name-box {
+  vertical-align: top;
+  max-width: 280px;
+  height: 100%;
+  display: inline-block;
   color: #212121;
   font-size: 14px;
   margin-left: 3px;
 }
+.logo-box .logo-main-info .name-main-box .org-name-box .org-name {
+  margin-top: 9px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
 .logo-box .logo-main-info .name-main-box .cert-box {
-  vertical-align: 6px;
+  display: inline-block;
   margin-left: 2px;
 }
 .logo-box .logo-main-info .name-main-box .cert-box img {
+  display: inline-block;
   width: 18px;
   height: 18px;
+  margin-top: 9px;
   margin-right: 5px;
 }
 .logo-box .logo-main-info .user-number-box {
@@ -515,14 +530,18 @@ body {
   margin: 7px 0;
   font-size: 13px;
 }
-.sing-in-box {
-  height: 25px;
+.sing-up-box {
   position: relative;
-  padding-bottom: 15px;
   overflow: hidden;
+}
+.sing-up-box > div {
+  height: 44px;
   display: none;
 }
-.sing-in-box .left-item {
+.sing-up-box .sing-up-main {
+  display: none;
+}
+.sing-up-box .sing-up-main .left-item {
   position: absolute;
   width: 91px;
   height: auto;
@@ -530,7 +549,7 @@ body {
   color: #212121;
   padding-top: 7px;
 }
-.sing-in-box .left-item i {
+.sing-up-box .sing-up-main .left-item i {
   display: inline-block;
   width: 36px;
   height: 22px;
@@ -540,15 +559,15 @@ body {
   vertical-align: -3px;
   margin-left: 1px;
 }
-.sing-in-box .left-item label:nth-child(3) {
+.sing-up-box .sing-up-main .left-item label:nth-child(3) {
   vertical-align: 1px;
 }
-.sing-in-box .right-item {
+.sing-up-box .sing-up-main .right-item {
   margin-left: 97px;
   height: 28px;
   overflow: hidden;
 }
-.sing-in-box .right-item .sing-in-detail-box p {
+.sing-up-box .sing-up-main .right-item .sing-up-detail-box p {
   font-size: 13px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -559,9 +578,64 @@ body {
   height: 40px;
   line-height: 41px;
 }
-.sing-in-box .right-item .sing-in-detail-box p span:nth-child(1) {
+.sing-up-box .sing-up-main .right-item .sing-up-detail-box p span:nth-child(1) {
   color: #FF5A00;
   margin-right: 5px;
+}
+.sing-up-box .sing-up-guarantee {
+  width: 110%;
+  position: relative;
+}
+.sing-up-box .sing-up-guarantee.border {
+  border-top: 1px solid #f3f3f3;
+}
+.sing-up-box .sing-up-guarantee .guarantee-left {
+  position: absolute;
+  width: 100px;
+  height: 100%;
+}
+.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box {
+  border-radius: 3px;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 22px;
+  margin: 11px 0;
+  border: 1px solid #fdbe0d;
+  font-size: 0;
+}
+.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .color-item {
+  display: inline-block;
+  height: 100%;
+}
+.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .color-item.disabled {
+  background-color: #fdbe0d;
+  width: 60%;
+}
+.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .color-item.available {
+  width: 40%;
+  background-color: #fff;
+}
+.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .left-num-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .left-num-box span {
+  font-size: 12px;
+  color: #212121;
+  line-height: 22px;
+}
+.sing-up-box .sing-up-guarantee .guarantee-right {
+  padding-right: 10%;
+  margin-left: 100px;
+  text-align: right;
+  font-size: 13px;
+  line-height: 44px;
+  color: #212121;
 }
 .coupon-box {
   margin: 12px 8px 0 8px;
@@ -605,7 +679,7 @@ body {
   border-top: 1px solid #F3F3F3;
 }
 .basic-info-box .basic-header {
-  width: 150%;
+  width: 110%;
 }
 .basic-info-box .introduce .basic-header {
   border-bottom: 1px solid #F3F3F3;
@@ -1324,6 +1398,9 @@ body {
     height: 35px;
     line-height: 35px;
     margin: 2px 12px;
+  }
+  .logo-box .logo-main-info .name-main-box .org-name-box {
+    max-width: 220px;
   }
 }
 @font-face {

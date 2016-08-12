@@ -178,8 +178,9 @@ GROUP BY
             $second_uids = M('Field')->where($map)->field('uid')->select();
             array_push($uids, $second_uids);
         }else{
+            $major_array = explode("#", $major);
             $map['field_id'] = 37;
-            $map['field_data'] = $major;
+            $map['field_data'] = array('in', $major_array);
             $uids = M('Field')->where($map)->field('uid')->select();
         }
         return $uids;
@@ -217,7 +218,7 @@ GROUP BY
         $this->apiSuccess("获取类别标签成功", null, array('types' => $forum_type));
     }
 
-    private function formatList($list, $version, $circle_type)
+    private function formatList($list, $version, $circle_type, $uid=0)
     {
         $map_support['appname'] = 'Forum';
         $map_support['table'] = 'post';
@@ -268,6 +269,17 @@ GROUP BY
             }
 
             if((float)$version>=2.96 && $circle_type==3){
+                $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$v['uid']))->find();
+                $be_follow = D('Follow')->where(array('who_follow'=>$v['uid'],'follow_who'=>$uid))->find();
+                if($follow_other&&$be_follow){
+                    $v['userInfo']['relationship'] = 3;
+                } else if($follow_other&&(!$be_follow)){
+                    $v['userInfo']['relationship'] = 2;
+                } else if((!$follow_other)&&$be_follow){
+                    $v['userInfo']['relationship'] = 1;
+                } else {
+                    $v['userInfo']['relationship'] = 0;
+                }
                 $v['newly_comment'] = $this->getNewlyThreeCommentByPostId($v['post_id']);
             }
 
@@ -574,7 +586,7 @@ GROUP BY
         $list = $forumPost->where($map)->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
-            $list = $this->formatList($list, $version, $circle_type);
+            $list = $this->formatList($list, $version, $circle_type, is_login());
             if($show_adv==true){
                 $adv_pos = $this->getAdvsPostion();
                 foreach($adv_pos as $pos){
@@ -3449,7 +3461,6 @@ LIMIT 1');
         }
         return $topic_id_list;
     }
-
 
     public function getNewlyThreeCommentByPostId($post_id, $page=1, $count=3){
         $id = intval($post_id);
