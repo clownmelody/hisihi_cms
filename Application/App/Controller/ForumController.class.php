@@ -529,13 +529,16 @@ GROUP BY
         if($circle_type == 3){//朋友圈
             $uid = $this->getUid();//session_id
             $ids = $this->getForumsFromFollows($uid);
+            if(floatval($version) >= 2.96){
+                $extra['is_recommend'] = 2;
+            }
             if(empty($ids)){
                 if(floatval($version) >= 2.96){
                     $ids = $this->getForumsFromRandTeachers($uid);
                     $extra['is_recommend'] =1;
                     $has_follow = M('Follow')->where('who_follow='.$uid)->find();
                     if(empty($has_follow)){
-                        $extra['is_recommend'] = 2;
+                        $extra['is_recommend'] = 0;
                     }
                 }else{
                     $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
