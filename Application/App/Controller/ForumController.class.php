@@ -533,6 +533,10 @@ GROUP BY
                 if(floatval($version) >= 2.96){
                     $ids = $this->getForumsFromRandTeachers($uid);
                     $extra['is_recommend'] =1;
+                    $has_follow = M('Follow')->where('who_follow='.$uid)->find();
+                    if(empty($has_follow)){
+                        $extra['is_recommend'] = 2;
+                    }
                 }else{
                     $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
                 }
