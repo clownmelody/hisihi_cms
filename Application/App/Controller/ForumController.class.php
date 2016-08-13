@@ -150,7 +150,7 @@ WHERE
         }
         $uid_arr = array();
         foreach ($uids as $id){
-            $uid_arr[] = $id;
+            $uid_arr[] = $id['uid'];
         }
         $uid_str = implode(',', $uid_arr);
         $ids = $model->query("SELECT * from (SELECT
@@ -406,7 +406,7 @@ GROUP BY
      * forumFilter拦截器，用于缓存Api结果
      * created by leilei @2016.4.6
      */
-    public function _before_forumFilter(){
+/*    public function _before_forumFilter(){
         if (intval(I('get.no_read_cache')) || intval(I('post.no_read_cache'))){
             // 如果no_cache参数不传或者传入1，则不去读缓存
             return;
@@ -420,7 +420,7 @@ GROUP BY
             $this->apiSuccess('获取提问列表成功', null, array( 'total_count' => $res_array['total_count'],
                 'forumList' => $res_array['list']));
         }
-    }
+    }*/
 
     /**
      * 论坛数据筛选
@@ -529,9 +529,17 @@ GROUP BY
         if($circle_type == 3){//朋友圈
             $uid = $this->getUid();//session_id
             $ids = $this->getForumsFromFollows($uid);
+            if(floatval($version) >= 2.96){
+                $extra['is_recommend'] = 2;
+            }
             if(empty($ids)){
                 if(floatval($version) >= 2.96){
                     $ids = $this->getForumsFromRandTeachers($uid);
+                    $extra['is_recommend'] =1;
+                    $has_follow = M('Follow')->where('who_follow='.$uid)->find();
+                    if(empty($has_follow)){
+                        $extra['is_recommend'] = 0;
+                    }
                 }else{
                     $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
                 }
@@ -606,7 +614,9 @@ GROUP BY
             $cache->setPublicResCache($list, $totalCount);
             $cache->close();
         }
-        $this->apiSuccess("获取提问列表成功", null, array( 'total_count' => $totalCount_copy, 'forumList' => $list_copy));
+        $extra['total_count'] = $totalCount_copy;
+        $extra['forumList'] = $list_copy;
+        $this->apiSuccess("获取提问列表成功", null, $extra);
     }
 
 
@@ -1697,14 +1707,20 @@ GROUP BY
      * @param int $topicId
      */
     public function bindPostToTopicId($postId=0, $topicId=0){
+        $model = M('ForumTopicToPostRelation');
         if($postId==0 || $topicId==0){
             $this->apiError(-1, '帖子id和话题id不能为空!');
         }
-        $data['topic_id'] = $topicId;
-        $data['post_id'] = $postId;
-        $data['create_time'] = time();
-        $model = M('ForumTopicToPostRelation');
-        $model->add($data);
+        $select_array['topic_id'] = $topicId;
+        $select_array['post_id'] = $postId;
+        $select_array['status'] = 1;
+        $count = $model->where($select_array)->count();
+        if($count==0){
+            $data['topic_id'] = $topicId;
+            $data['post_id'] = $postId;
+            $data['create_time'] = time();
+            $model->add($data);
+        }
     }
 
     public function topicPostListView($topicId=0){
