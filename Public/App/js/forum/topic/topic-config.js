@@ -10,8 +10,12 @@ requirejs.config({
         fastclick:'sharecommon/fastclick',
         lazyloading:'sharecommon/lazyloading',
         prefixfree:'sharecommon/prefixfree.min',
-
-        home:'forum/topic-share',
+        photoswipe:'sharecommon/photoswipe/photoswipe.min',
+        photoswipeui:'sharecommon/photoswipe/photoswipe-ui-default.min',
+        MyPhotoSwipe:'sharecommon/photoswipe/myphotoswipe',
+        mysilder:'sharecommon/myimgslider',
+        //toucher:'orgbasicinfo/2.9.5/toucher',
+        home:'forum/topic/topic-share',
         base:'sharecommon/base-1.1'
     },
     shim: {
@@ -22,12 +26,22 @@ requirejs.config({
             steps:['$'],
             output:'fx'
         },
+        photoswipe:{
+            output:'photoswipe'
+        },
+        photoswipeui:{
+            steps:['photoswipe'],
+            output:'photoswipeui'
+        },
         lazyloading:{
             steps:['$','fx'],
             output:'lazyloading'
         },
         prefixfree:{
             output:'prefixfree'
+        },
+        scale:{
+            output:'scale'
         },
     }
 });
