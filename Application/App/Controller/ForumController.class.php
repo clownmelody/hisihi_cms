@@ -1697,14 +1697,20 @@ GROUP BY
      * @param int $topicId
      */
     public function bindPostToTopicId($postId=0, $topicId=0){
+        $model = M('ForumTopicToPostRelation');
         if($postId==0 || $topicId==0){
             $this->apiError(-1, '帖子id和话题id不能为空!');
         }
-        $data['topic_id'] = $topicId;
-        $data['post_id'] = $postId;
-        $data['create_time'] = time();
-        $model = M('ForumTopicToPostRelation');
-        $model->add($data);
+        $select_array['topic_id'] = $topicId;
+        $select_array['post_id'] = $postId;
+        $select_array['status'] = 1;
+        $count = $model->where($select_array)->count();
+        if($count==0){
+            $data['topic_id'] = $topicId;
+            $data['post_id'] = $postId;
+            $data['create_time'] = time();
+            $model->add($data);
+        }
     }
 
     public function topicPostListView($topicId=0){
