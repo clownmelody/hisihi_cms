@@ -3,19 +3,43 @@
  */
 
 define(['photoswipe','photoswipeui','$'],function(PhotoSwipe, PhotoSwipeUI_Default){
-    var MyPhotoSwipe=function(gallerySelector){
+    var MyPhotoSwipe=function(gallerySelector,config){
+        this.extend(config);
         $(document).on('click',gallerySelector, $.proxy(this,'onThumbnailsClick'));
-        this.appendModalDom();  //����ģ̬����
+        this.appendModalDom();  //添加模态容器
     };
 
     MyPhotoSwipe.prototype ={
-         
+
+        //参数拓展
+        extend:function(config){
+            this.config=defaultConfig;
+            if(!config){
+                return;
+            }
+
+            for(var item in config){
+                var val=config[item];
+                if(val){
+                    this.config[item]=val;
+                }
+            }
+        },
+
         appendModalDom:function(){
             if($('.pswp').length>0){
                 return;
             }
+            var filterStr='';
+
+            if(this.config.bgFilter){
+                filterStr='<div class="filter">'+
+                    '<img class="filter-img" src="" alt="">'+
+                    '</div>';
+            }
+
             var str='<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">'+
-                '<div class="pswp__bg"></div>'+
+                '<div class="pswp__bg">'+filterStr+'</div>'+
                 '<div class="pswp__scroll-wrap">'+
                 '<div class="pswp__container">'+
                 '<div class="pswp__item"></div>'+
@@ -27,8 +51,8 @@ define(['photoswipe','photoswipeui','$'],function(PhotoSwipe, PhotoSwipeUI_Defau
                 '<div class="pswp__top-bar">'+
                 '<div class="pswp__counter"></div>'+
                 '<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>'+
-                //'<button class="pswp__button pswp__button--share" title="Share"></button>'+
-                '<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>'+
+                    //'<button class="pswp__button pswp__button--share" title="Share"></button>'+
+                //'<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>'+
                 '<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>'+
                 '<div class="pswp__preloader">'+
                 '<div class="pswp__preloader__icn">'+
@@ -186,7 +210,6 @@ define(['photoswipe','photoswipeui','$'],function(PhotoSwipe, PhotoSwipeUI_Defau
 
         openPhotoSwipe : function(index, galleryElement, disableAnimation, fromURL) {
             var pswpElement = document.querySelectorAll('.pswp')[0],
-                gallery,
                 options,
                 items;
 
@@ -240,9 +263,30 @@ define(['photoswipe','photoswipeui','$'],function(PhotoSwipe, PhotoSwipeUI_Defau
             }
 
             // Pass data to PhotoSwipe and initialize it
-            gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
-            gallery.init();
+            this.gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+            this.gallery.init();
+            // Image loaded
+            //this.gallery.listen('imageLoadComplete', $.proxy(this,'imageLoadComplete'));
+            this.gallery.listen('afterChange', $.proxy(this,'afterChange'));
+            this.afterChange();
         },
+
+        imageLoadComplete:function(index,item){
+            if(this.config.bgFilter){
+                $('.pswp__bg .filter img').attr('src',item.src);
+            }
+            //pswp.currItem
+            //index;
+            //item;
+        },
+
+        afterChange:function(){
+            if(this.config.bgFilter){
+                $('.pswp__bg .filter img').attr('src',this.gallery.currItem.src);
+            }
+
+        },
+
 
         // loop through all gallery elements and bind events
 
@@ -250,6 +294,10 @@ define(['photoswipe','photoswipeui','$'],function(PhotoSwipe, PhotoSwipeUI_Defau
 
 // execute above function
 //    initPhotoSwipeFromDOM('.my-gallery');
+
+    var defaultConfig={
+        bgFilter:false, //模糊背景
+    };
 
     return MyPhotoSwipe;
 });

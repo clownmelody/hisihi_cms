@@ -18,7 +18,9 @@ define(['base','MyPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         this.loadData();
 
         //photoswipe
-        new MyPhotoSwipe('.post-img-box');
+        new MyPhotoSwipe('.post-img-box',{
+            bgFilter:true,
+        });
     };
 
 
