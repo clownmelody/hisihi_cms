@@ -210,7 +210,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                     num=arr[0];
                 }
             }
-            num+='w';
+            num+='万';
         }
         return num;
     };
