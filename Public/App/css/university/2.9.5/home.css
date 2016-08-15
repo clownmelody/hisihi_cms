@@ -656,6 +656,7 @@ body .main-item.album #watch-more {
   top: 4px;
   box-sizing: border-box;
   text-align: center;
+  display: none;
 }
 body .main-item.album #watch-more span {
   width: 9px;
