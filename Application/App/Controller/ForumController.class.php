@@ -406,7 +406,7 @@ GROUP BY
      * forumFilter拦截器，用于缓存Api结果
      * created by leilei @2016.4.6
      */
-/*    public function _before_forumFilter(){
+    public function _before_forumFilter(){
         if (intval(I('get.no_read_cache')) || intval(I('post.no_read_cache'))){
             // 如果no_cache参数不传或者传入1，则不去读缓存
             return;
@@ -420,7 +420,7 @@ GROUP BY
             $this->apiSuccess('获取提问列表成功', null, array( 'total_count' => $res_array['total_count'],
                 'forumList' => $res_array['list']));
         }
-    }*/
+    }
 
     /**
      * 论坛数据筛选
@@ -818,6 +818,14 @@ GROUP BY
         $post['post_id'] = $id;
 
         $post['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $post['uid']);
+        if(floatval($version) >= 2.96){
+            $isfollowing = D('Follow')->where(array('who_follow'=>get_uid(),'follow_who'=>$post['uid']))->find();
+            $isfans = D('Follow')->where(array('who_follow'=>$post['uid'],'follow_who'=>get_uid()))->find();
+            $isfollowing = $isfollowing ? 2:0;
+            $isfans = $isfans ? 1:0;
+            $post['userInfo']['relationship'] = $isfollowing | $isfans;
+        }
+
         if((float)$version>=2.2){
             $profile_group = A('User')->_profile_group($post['uid']);
             $info_list = A('User')->_info_list($profile_group['id'], $post['uid'], $version);
