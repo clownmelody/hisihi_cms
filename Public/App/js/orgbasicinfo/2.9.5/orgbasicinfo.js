@@ -247,17 +247,22 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
 
     /*担保信息*/
     t.setColorBar=function(data){
-        var gNum=data.guarantee_num,
+        var gNum=data.guarantee_num | 0,
             $guarantee=$('.sing-up-guarantee');
         if(gNum){
             this.showGuaranteeBorder=true;  //显示担保边框
-            gNum=gNum | 0;
             $guarantee.show().find('.guarantee-right span').text('共'+gNum+'个担保名额');
             var $disabled=$guarantee.find('.disabled'),
                 $available=$guarantee.find('.available'),
                 aNum=data.available_num,
                 dNum;
             if(aNum==null || aNum=='' || aNum=='undefined'){
+                aNum=gNum;
+            }
+            else{
+                aNum = aNum | 0;
+            }
+            if(aNum>gNum){
                 aNum=gNum;
             }
             $guarantee.show().find('.left-num-box span').text('剩余'+aNum+'人');
