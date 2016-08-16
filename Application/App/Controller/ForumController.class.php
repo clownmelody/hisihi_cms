@@ -1203,7 +1203,7 @@ GROUP BY
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $replyTotalCount = 0;
         $rcount = M()->query('SELECT COUNT(a.id) as count from hisihi_forum_post_reply a LEFT JOIN hisihi_auth_group_access b ON a.uid = b.uid
-WHERE b.group_id=6 and a.post_id=5461 and a.`status` in (1,3) and a.reply_to_student=0
+WHERE b.group_id=6 and a.post_id='.$post_id.' and a.`status` in (1,3) and a.reply_to_student=0
 ORDER BY a.create_time DESC');
         $replyTotalCount = intval($rcount[0]['count']);
         /*foreach($replyTotalList as $t_reply){
@@ -1316,13 +1316,18 @@ ORDER BY a.create_time DESC');
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $replyTotalCount = 0;
-        foreach($replyTotalList as $t_reply){
+        $rcount = M()->query('SELECT COUNT(a.id) as count from hisihi_forum_post_reply a LEFT JOIN hisihi_auth_group_access b ON a.uid = b.uid
+WHERE (a.reply_to_student=1 and a.post_id='.$post_id.')
+ or (b.group_id=5 and a.post_id='.$post_id.' and a.`status` in (1,3))
+ORDER BY a.create_time DESC');
+        $replyTotalCount = intval($rcount[0]['count']);
+        /*foreach($replyTotalList as $t_reply){
             $identify = $model->where('group_id=5 and uid='.$t_reply['uid'])->find();  // 判断学生身份
             $toStudent = $t_reply['reply_to_student'];
             if($identify||$toStudent==1){
                 $replyTotalCount++;
             }
-        }
+        }*/
 
         $studentReplyList = array();
         foreach ($replyList as &$reply) {
