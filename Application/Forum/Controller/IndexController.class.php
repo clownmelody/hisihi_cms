@@ -47,7 +47,8 @@ class IndexController extends Controller
         // redirect(U('forum', array('page' => intval($page))));
     }
 
-    /**某个版块的帖子列表
+    /**
+     * 某个版块的帖子列表
      * @param int    $id 版块ID
      * @param int    $page 分页
      * @param string $order 回复排序方式
