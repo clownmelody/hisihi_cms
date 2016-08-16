@@ -1,5 +1,6 @@
 /**
  * Created by jimmy on 16/7/15.
+ * 需要自定义html dom 结构，包括简单的图片查看 也要自己定义
  */
 
 define(['toucher'],function(){
@@ -40,7 +41,6 @@ define(['toucher'],function(){
         this.playAuto();
 
 
-
     };
     MySlider.prototype={
         /*默认参数设置*/
@@ -55,6 +55,7 @@ define(['toucher'],function(){
                 }
             }
         },
+
         initContainer:function(){
             var len=this.htmlArr.length,
                 str='<div class="slider-container"><div class="slider-main" style="width:'+len*100+'%;">',
@@ -81,6 +82,7 @@ define(['toucher'],function(){
             this.$wrapper.html(str);
         },
 
+        /*向左滑动， 即下一张*/
         swipeLeft:function(e){
             //var $target=$(e.currentTarget),
             var target= e.target,$target;
@@ -106,6 +108,7 @@ define(['toucher'],function(){
                 });
         },
 
+        /*向右滑动， 即上一张*/
         swipeRight:function(e){
             //var $target=$(e.currentTarget),
             var target= e.target,$target;
@@ -130,6 +133,7 @@ define(['toucher'],function(){
         },
 
 
+        /*自动播放*/
         playAuto:function(){
             clearInterval(this.timeInterval);
             var that=this;
@@ -154,6 +158,7 @@ define(['toucher'],function(){
             }
         },
 
+        /*滚动图片*/
         transform:function(f,$target,callback){
             $target.addClass('now').siblings().removeClass('now');
             this.$wrapper.find('.slider-main').css({

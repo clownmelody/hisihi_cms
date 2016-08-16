@@ -2,16 +2,23 @@
  * Created by jimmy on 2016/6/13.
  */
 
-define(['base','lazyloading'],function(Base){
+define(['base','MyPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
     var Topic=function(){
         this.tid=$('body').data('id');
         this.baseUrl=window.hisihiUrlObj.link_url;
+        var eventsName='click';
         if(this.isLocal){
-            //eventName='touchend';
+            eventsName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
+
+        //查看图片
+        //$(document).on(eventsName,'.post-img-box li', $.proxy(this,'viewPics'));
         this.initStyle();
         this.loadData();
+
+        //photoswipe
+        new MyPhotoSwipe('.post-img-box');
     };
 
 
@@ -106,10 +113,17 @@ define(['base','lazyloading'],function(Base){
                 if(result.success){
                     var str = that.getPostInfo(result.forumList);
                     $('.content-box ul').append(str);
+
+
+
+                    //惰性加载
                     $('.content-box img').picLazyLoad($('.wrapper'),{
                         settings:10,
                         placeholder:'http://pic.hisihi.com/2016-06-15/1465987988057181.png'
                     });
+
+
+
                 }else{
                     that.showTips('帖子信息加载失败');
                 }
@@ -179,6 +193,28 @@ define(['base','lazyloading'],function(Base){
         return str;
     };
 
+    t.viewPics=function(e){
+        var $target=$(e.currentTarget),
+            index=$target.index(),
+            imgArr=[],
+            $li =$target.parent().find('li'),
+            len=$li.length,
+            that=this;
+        for(var i=0;i<len;i++){
+            var url=$li.eq(i).find('img').attr('src');
+            imgArr.push(url);
+        }
+        var slider = new Myslider(imgArr,{
+            index:index,
+            showOrHideCallback:function(type){
+                var flag=type=='show'?false:true;
+                that.scrollControl(flag);  //恢复滚动
+            }
+        });
+
+        slider.show();
+    };
+
     /*如果是老师，则取出其对应的 机构或者学校信息*/
     t.getOrgStr=function(arr){
         var str='',
@@ -209,7 +245,8 @@ define(['base','lazyloading'],function(Base){
         var str='',
             cName='',
             h='',
-            style='';
+            style='',
+            size='';
         if(len==1){
             cName='img-size1';
         }
@@ -224,13 +261,19 @@ define(['base','lazyloading'],function(Base){
             style='width:'+h+';height:'+h;
         }
         for(var i=0;i<len;i++){
-            var url=imgList[i].thumb;
-            if(!url){
-                url='http://pic.hisihi.com/2016-06-02/1464833264193150.png';
-            }
+            var url=imgList[i].src,
+                thumb=imgList[i].thumb;
+            if(!thumb){
+                thumb='http://pic.hisihi.com/2016-06-02/1464833264193150.png';
 
+            }
+            if(!url){
+                url='http://pic.hisihi.com/2016-06-02/1464867656861374.png';
+            }
+            size=imgList[i].src_size;
             str+='<li class="'+cName+'" style="'+style+'">'+
-                    '<img  data-original="' + url + '">'+
+                    '<a href="'+url+'" data-size="'+size[0]+'x'+size[1]+'"></a>'+
+                    '<img  data-original="' + thumb + '">'+
                  '</li>';
         }
         return str;
