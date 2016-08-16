@@ -12,9 +12,7 @@ requirejs.config({
         prefixfree:'sharecommon/prefixfree.min',
         photoswipe:'sharecommon/photoswipe/photoswipe.min',
         photoswipeui:'sharecommon/photoswipe/photoswipe-ui-default.min',
-        MyPhotoSwipe:'sharecommon/photoswipe/myphotoswipe',
-        mysilder:'sharecommon/myimgslider',
-        //toucher:'orgbasicinfo/2.9.5/toucher',
+        myPhotoSwipe:'sharecommon/photoswipe/myphotoswipe',
         home:'forum/topic/topic-share',
         base:'sharecommon/base-1.1'
     },

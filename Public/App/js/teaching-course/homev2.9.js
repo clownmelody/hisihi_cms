@@ -480,7 +480,7 @@ define(['base','fastclick'],function(Base){
                     num=arr[0];
                 }
             }
-            num+='w';
+            num+='万';
         }
         return num;
     };

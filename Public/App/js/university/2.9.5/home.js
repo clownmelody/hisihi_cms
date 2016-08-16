@@ -2,12 +2,11 @@
  * Created by jimmy on 2016/5/10.
  */
 
-define(['base','mysilder','scale'],function(Base,Myslider){
+define(['base','myPhotoSwipe'],function(Base,MyPhotoSwipe){
     var University=function(id){
         this.uid = id;
-        var eventName='click',that=this;
-        this.deviceType = this.operationType();
-        this.isLocal=window.location.href.indexOf('hisihi-cms')>=0;
+        var eventName='click',
+            that=this;
         this.baseUrl=window.hisihiUrlObj.link_url;
         if(this.deviceType.mobile && this.isLocal){
             //eventName='touchend';
@@ -20,21 +19,11 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             $('.class-show').addClass('show');
         });
 
-        //获取相册
-        $(document).on(eventName,'.album-ul li', $.proxy(this,'viewPics'));
-
-        //点击相册，查看大图
+        //点击相册，查看全部
         $(document).on(eventName,'#watch-more',function(){
             window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
         });
 
-        //关闭相册信息
-        $(document).on(eventName,'.view-pics-box', function(){
-            event.stopPropagation();
-            if(event.target==this){
-                $('.modal').removeClass('show');
-            }
-        });
 
         //控制确定报名按钮的可用性
         $(document).on('input','.class-num', $.proxy(this,'singUpBtnControl'));
@@ -49,6 +38,11 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         $(document).on(eventName,'#close', $.proxy(this,'closeHaveClass'));
 
         this.getPhoneNumber();
+
+        //photoswipe   查看相册
+        new MyPhotoSwipe('.album-ul',{
+            bgFilter:true,
+        });
 
     };
 
@@ -106,6 +100,8 @@ define(['base','mysilder','scale'],function(Base,Myslider){
         $('body').append(str);
         if(!this.isFromApp) {
             $('.underTip').show();
+        }else{
+            $('#watch-more').show();
         }
 
         this.getMajorSelect(result);
@@ -302,6 +298,7 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             len=result.list.length;
         for(var i=0;i<len;i++){
             strLi+='<li>'+
+                    '<a href="'+result.list[i].pic_url+'" data-size="1000x1000"></a>'+
                     '<img src="'+result.list[i].pic_url+'">'+
                 '</li>';
         }
@@ -321,65 +318,6 @@ define(['base','mysilder','scale'],function(Base,Myslider){
             '</div>'+
         '</div>';
         return str;
-    };
-
-    t.viewPics=function(e){
-        var $target=$(e.currentTarget),
-            index=$target.index(),
-
-            arr=[],
-            imgArr=[],
-            $li =$('.album-ul li'),
-            len=$li.length;
-        for(var i=0;i<len;i++){
-            var url=$li.eq(i).find('img').attr('src');
-            imgArr.push(url);
-        }
-        var arr=this.getItemStr(imgArr);
-
-        var $span=$('.pics-nav span');
-        $span.text(index+1+'/'+len);
-        $('#filter-img').attr('src',imgArr[0]);
-
-        $('.pic-modal').addClass('show');
-        $('html,body').addClass('ovfHidden');
-
-        new Myslider($('.view-pics-box'),arr,{
-            autoPlay:false,
-            showNav:false,
-            index:index,
-            changeCallback:function(type,picIndex){
-                $span.text((picIndex+1)+'/'+len);
-                $('#filter-img').attr('src',imgArr[picIndex]);
-            }
-        });
-
-        var btnList=document.querySelectorAll('.view-pics-box .show-origin-pic');
-        //实例化缩放
-        ImagesZoom.init({
-            elem: ".view-pics-box",  //容器dom
-            btnsList:btnList,  //查看按钮
-            initCallback:function(dom){
-                $(dom).hide().parent().find('img').hide();
-                $('.pics-nav label').hide();
-            },
-            closeCallback:function(){
-                $('.view-pics-box .now img').show();
-                $('.pics-nav label').show();
-                for(var len=btnList.length,i=0;i<len;i++) {
-                    $(btnList[i]).show();
-                }
-            }
-        });
-    };
-
-    t.getItemStr=function(data){
-        var len=data.length,arr=[];
-        for(var i=0;i<len;i++){
-            var item=data[i];
-            arr.push('<img  src="'+item+'"><div class="show-origin-pic">查看大图</div>');
-        }
-        return arr;
     };
 
     t.showSingUpModal=function() {

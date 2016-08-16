@@ -2,7 +2,7 @@
  * Created by jimmy on 2016/6/13.
  */
 
-define(['base','MyPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
+define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
     var Topic=function(){
         this.tid=$('body').data('id');
         this.baseUrl=window.hisihiUrlObj.link_url;
@@ -18,7 +18,9 @@ define(['base','MyPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         this.loadData();
 
         //photoswipe
-        new MyPhotoSwipe('.post-img-box');
+        new MyPhotoSwipe('.post-img-box',{
+            bgFilter:true,
+        });
     };
 
 
