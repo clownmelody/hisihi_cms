@@ -9,9 +9,9 @@ requirejs.config({
         fastclick:'sharecommon/fastclick',
         prefixfree:'sharecommon/prefixfree.min',
         base:'sharecommon/base-1.1',
-        scale:'sharecommon/scale',
-        mysilder:'sharecommon/myslider',
-        toucher:'orgbasicinfo/2.9.5/toucher',
+        photoswipe:'sharecommon/photoswipe/photoswipe.min',
+        photoswipeui:'sharecommon/photoswipe/photoswipe-ui-default.min',
+        myPhotoSwipe:'sharecommon/photoswipe/myphotoswipe',
         home:'university/2.9.5/home',
     },
     shim: {
@@ -21,8 +21,8 @@ requirejs.config({
         prefixfree:{
             output:'prefixfree'
         },
-        scale:{
-            output:'scale'
+        fastclick:{
+            output:'fastclick'
         },
     }
 });

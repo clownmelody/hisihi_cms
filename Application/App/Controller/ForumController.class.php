@@ -1187,7 +1187,7 @@ GROUP BY
      * @param int $count
      * @param int $version
      */
-    public function teacherReplyList($post_id, $page = 1, $count = 10, $version = 1){
+    public function teacherReplyList($post_id, $page = 1, $count = 10, $version = 1, $last_id=0){
         $id = intval($post_id);
         $page = intval($page);
         $count = intval($count);
@@ -1197,17 +1197,21 @@ GROUP BY
         //读取回复列表
         $map['post_id'] = $id;
         $map['status'] = array('in','1,3');
-        $replyList = D('Forum/ForumPostReply')->getNoCacheTeacherReplyList($map, 'create_time desc', $page, $count);
+        $replyList = D('Forum/ForumPostReply')->getNoCacheTeacherReplyList($map, 'create_time desc', $page, $count, $last_id);
 
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $replyTotalCount = 0;
-        foreach($replyTotalList as $t_reply){
+        $rcount = M()->query('SELECT COUNT(a.id) as count from hisihi_forum_post_reply a LEFT JOIN hisihi_auth_group_access b ON a.uid = b.uid
+WHERE b.group_id=6 and a.post_id='.$post_id.' and a.`status` in (1,3) and a.reply_to_student=0
+ORDER BY a.create_time DESC');
+        $replyTotalCount = intval($rcount[0]['count']);
+        /*foreach($replyTotalList as $t_reply){
             $identify = $model->where('group_id=6 and uid='.$t_reply['uid'])->find();  // 判断老师身份
             if($identify&&$t_reply['reply_to_student']==0){
                 $replyTotalCount++;
             }
-        }
+        }*/
 
         $teacherReplyList = array();
         foreach ($replyList as &$reply) {
@@ -1312,13 +1316,18 @@ GROUP BY
         $model = M('AuthGroupAccess');
         $replyTotalList = D('ForumPostReply')->field('uid, reply_to_student')->where($map)->select();
         $replyTotalCount = 0;
-        foreach($replyTotalList as $t_reply){
+        $rcount = M()->query('SELECT COUNT(a.id) as count from hisihi_forum_post_reply a LEFT JOIN hisihi_auth_group_access b ON a.uid = b.uid
+WHERE (a.reply_to_student=1 and a.post_id='.$post_id.')
+ or (b.group_id=5 and a.post_id='.$post_id.' and a.`status` in (1,3))
+ORDER BY a.create_time DESC');
+        $replyTotalCount = intval($rcount[0]['count']);
+        /*foreach($replyTotalList as $t_reply){
             $identify = $model->where('group_id=5 and uid='.$t_reply['uid'])->find();  // 判断学生身份
             $toStudent = $t_reply['reply_to_student'];
             if($identify||$toStudent==1){
                 $replyTotalCount++;
             }
-        }
+        }*/
 
         $studentReplyList = array();
         foreach ($replyList as &$reply) {

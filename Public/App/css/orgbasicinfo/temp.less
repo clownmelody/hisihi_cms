@@ -29,20 +29,11 @@ body{
   display: inline-block;
   vertical-align: top;
   margin-right: @ml;
-  .img-box {
-    //display: table;
+  img {
+    //max-width: 100%;
     .size(100%,100%);
-    .img-main-box {
-      //display: table-cell;
-      //vertical-align: middle;
-      //text-align: center;
-      .size(100%,100%);
-      img {
-        //max-width: 100%;
-        .size(100%,100%);
-      }
-    }
   }
+
 }
 
 .filter{
@@ -423,6 +414,7 @@ body{
       ul{
         margin: 0px 0 14px 0;
         white-space: nowrap;
+        display: inline-block;
         li{
           .li-preview-img(90px,90px,4px);
           display: inline-block;
@@ -528,6 +520,9 @@ body{
         overflow-y: hidden;
         border:1px solid rgba(145,145,145,.2);
         .li-preview-img(40%,110px,5px);
+        img{
+          .size(100%,100%);
+        }
       }
     }
   }

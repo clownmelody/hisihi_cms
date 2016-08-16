@@ -7,34 +7,23 @@ requirejs.config({
         $:'../sharecommon/zepto.min',
         fx:'../sharecommon/fx_v1.1',
         prefixfree:'../sharecommon/prefixfree.min',
-        async:'../sharecommon/async.min',
         base:'../sharecommon/base-1.1',
         fastclick:'../sharecommon/fastclick',
         lazyloading:'../sharecommon/lazyloading',
-        scale:'../hiworks/scale',
-        toucher:'2.9.5/toucher',
-        //touch:'../sharecommon/zepto.event.touch',
-        mysilder:'../sharecommon/myslider',
+        photoswipe:'../sharecommon/photoswipe/photoswipe.min',
+        photoswipeui:'../sharecommon/photoswipe/photoswipe-ui-default.min',
+        myPhotoSwipe:'../sharecommon/photoswipe/myphotoswipe',
         home:'2.9.5/orgbasicinfo',
     },
     shim: {
         $:{
             output:'$'
         },
-        async:{
-            output:'async'
-        },
         prefixfree:{
             output:'prefixfree'
         },
         fastclick:{
             output:'fastclick'
-        },
-        scale:{
-            output:'scale'
-        },
-        toucher:{
-            output:'toucher'
         },
     }
 });
