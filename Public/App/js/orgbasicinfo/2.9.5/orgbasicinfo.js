@@ -258,7 +258,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                 aNum=data.available_num,
                 dNum;
             if(aNum==null || aNum=='' || aNum=='undefined'){
-                aNum=0;
+                aNum=gNum;
             }
             $guarantee.show().find('.left-num-box span').text('剩余'+aNum+'人');
             dNum=gNum-aNum;
