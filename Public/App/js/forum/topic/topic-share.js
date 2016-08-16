@@ -75,7 +75,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
             sCallback:function(result){
                 if(result.data){
                     that.fillInTopicInfo(result.data);
-
+                    $('.wrapper').css('opacity','1');
                 }else{
                     that.showTips('话题基本信息加载失败');
                 }
