@@ -2,7 +2,7 @@
  * Created by jimmy on 2015/12/28.
  */
 
-define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
+define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
 
     function OrgBasicInfo($wrapper,oid,url) {
         this.$wrapper = $wrapper;
@@ -26,20 +26,9 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         },100);
 
 
-        //相册、视频信息查看
-        $(document).on(eventName,'.pics-preview-box li',$.proxy(this,'showPicsAndVideoDetailInfo'));
+        //视频信息查看
+        $(document).on(eventName,'.pics-preview-box .li-video',$.proxy(this,'showPicsAndVideoDetailInfo'));
 
-        //学生作品信息查看
-        $(document).on(eventName,'.works-preview-box li',$.proxy(this,'showWorksPicsDetailInfo'));
-
-        //关闭相册信息
-        $(document).on(eventName,'.view-pics-box', function(){
-            event.stopPropagation();
-            if(event.target==this){
-                $('.modal').removeClass('show');
-                that.scrollControl(true);  //恢复滚动
-            }
-        });
 
         /*优惠券点击*/
         $(document).on(eventName,'.coupon-box li, .t-video-box li,.name-main-box img',function(){
@@ -70,6 +59,11 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
         //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
+
+        //photoswipe   //学生作品信息查看  相册、视频信息查看
+        new MyPhotoSwipe('.works-preview-box',{
+            bgFilter:true,
+        });
 
     }
 
@@ -216,7 +210,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
                     num=arr[0];
                 }
             }
-            num+='w';
+            num+='万';
         }
         return num;
     };
@@ -253,18 +247,23 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
 
     /*担保信息*/
     t.setColorBar=function(data){
-        var gNum=data.guarantee_num,
+        var gNum=data.guarantee_num | 0,
             $guarantee=$('.sing-up-guarantee');
         if(gNum){
             this.showGuaranteeBorder=true;  //显示担保边框
-            gNum=gNum | 0;
             $guarantee.show().find('.guarantee-right span').text('共'+gNum+'个担保名额');
             var $disabled=$guarantee.find('.disabled'),
                 $available=$guarantee.find('.available'),
                 aNum=data.available_num,
                 dNum;
             if(aNum==null || aNum=='' || aNum=='undefined'){
-                aNum=0;
+                aNum=gNum;
+            }
+            else{
+                aNum = aNum | 0;
+            }
+            if(aNum>gNum){
+                aNum=gNum;
             }
             $guarantee.show().find('.left-num-box span').text('剩余'+aNum+'人');
             dNum=gNum-aNum;
@@ -455,10 +454,14 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             paraData: {organization_id: this.oid,count:8},
             sCallback: function(result){
                 var newStr = that.getPicsStr(result.data,true),
-                    allStr=str+newStr;
+                    allStr=str;
+                if(''!=newStr) {
+                    newStr = '<ul class="works-preview-box">'+newStr+'</ul>';
+                }
+                allStr=str + newStr;
                 if(allStr!='') {
                     $('.pics-box').show().find('.pics-preview-box ul')
-                        .html(str + newStr);
+                        .html(allStr);
                 }
             },
             eCallback:function(txt){
@@ -481,15 +484,16 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         if(!data || data.length==0){
             return '';
         }
-        var len=data.length,str='';
+        var len=data.length,str='',
+            pic,thumb,item;
         type && $label.text(len+'照片').css('display','inline');
         for(var i=0;i<len;i++){
-            str+='<li class="li-img" data-id="'+data[i].id+'">'+
-                    '<div class="img-box">'+
-                        '<div class="img-main-box">'+
-                            '<img class="lazy-img" data-original="'+data[i].url+'">'+
-                        '</div>'+
-                    '</div>'+
+            item=data[i];
+            pic=item.picture;
+            thumb=item.thumb
+            str+='<li class="li-img" data-id="'+item.id+'">'+
+                    '<a href="'+pic.url+'" data-size="'+pic.size.width+'x'+pic.size.height+'"></a>'+
+                    '<img class="lazy-img" data-original="'+thumb.url+'">'+
                 '</li>';
         }
         return str;
@@ -509,7 +513,8 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             str='',
             item,
             style='',
-            $label=$('.pics-number label').eq(0);
+            $label=$('.pics-number label').eq(0),
+            className='';
         if(type){
             var h=$('body').width()*7/16;
             style='height:'+h+'px;';
@@ -520,6 +525,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
                 return '';
             }
             $label.text(len+'视频').show();
+            className='li-video';
         }
 
         for(var i=0;i<len;i++) {
@@ -527,7 +533,7 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
             item.video_img = item.video_img || item.img || '';
             item.video_url = item.video_url || '';
             //item.video_url = 'http://91.16.0.7/video/14/output.m3u8';
-            str+= '<li data-url="' + item.video_url + '" style='+style+'>' +
+            str+= '<li data-url="' + item.video_url + '" style="'+style+'" class="'+className+'">' +
                 '<img class="lazy-img" data-original="' + item.video_img + '">' +
                 '<span class="p-btn"><i class="icon-play"></i></span>' +
                 '</li>';
@@ -535,85 +541,17 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         return str;
     };
 
-    /*查看图片或者视频详细信息*/
+    /*播放视频详细信息*/
     t.showPicsAndVideoDetailInfo=function(e){
-        var $target=$(e.currentTarget);
-
-        //图片
-        if($target.hasClass('li-img')){
-            var index= $('.pics-preview-box .li-img').index($target);
-            var arr=t.getAllPics($target.parent());
-            $('.modal').eq(1).addClass('show').find('.pics-nav span').text(index+1+'/'+arr.length);
-            this.initPicsScroll(arr,index);
-
-        }else{
-            var url=$target.data('url'),
-                that=this;
-            if(!url){
-                this.showTips('视频暂无');
-                return;
-            }
-            this.resetVideoPlayerUrl($target.data('url'),$target.find('img').attr('src'));
+        var $target=$(e.currentTarget),
+            url=$target.data('url');
+        if(!url){
+            this.showTips('视频暂无');
+            return;
         }
+        this.resetVideoPlayerUrl($target.data('url'),$target.find('img').attr('src'));
+
         this.scrollControl(false);  //禁止滚动
-    };
-
-
-    /*得到所有图片地址*/
-    t.getAllPics=function($box){
-        var arr=[];
-        $box.find('.li-img').each(function(){
-            arr.push($(this).find('img').attr('src'));
-        });
-        return arr;
-    };
-
-    /*图片列表展示*/
-    t.initPicsScroll=function(imgArr,index){
-        if(index=='undefined'){
-            index==0;
-        }
-        var arr=this.getItemStr(imgArr),
-            $span=$('.pics-nav span'),
-            num=$span.text().split('/')[1];
-        $('#filter-img').attr('src',imgArr[index]);
-        new Myslider($('.view-pics-box'),arr,{
-                autoPlay:false,
-                showNav:false,
-                index:index,
-                changeCallback:function(type,picIndex){
-                    $span.text((picIndex+1)+'/'+num);
-                    $('#filter-img').attr('src',imgArr[picIndex]);
-            }
-        });
-
-        var btnList=document.querySelectorAll('.view-pics-box .show-origin-pic');
-        //实例化缩放
-        ImagesZoom.init({
-            elem: ".view-pics-box",  //容器dom
-            btnsList:btnList,  //查看按钮
-            initCallback:function(dom){
-                $(dom).hide().parent().find('img').hide();
-                $('.pics-nav label').hide();
-            },
-            closeCallback:function(){
-                $('.view-pics-box .now img').show();
-                $('.pics-nav label').show();
-                for(var len=btnList.length,i=0;i<len;i++) {
-                    $(btnList[i]).show();
-                }
-            }
-        });
-    };
-
-
-    t.getItemStr=function(data){
-        var len=data.length,arr=[];
-        for(var i=0;i<len;i++){
-            var item=data[i];
-            arr.push('<img  src="'+item+'"><div class="show-origin-pic">查看大图</div>');
-        }
-        return arr;
     };
 
 
@@ -722,21 +660,6 @@ define(['base','mysilder','lazyloading','scale'],function(Base,Myslider){
         var str = this.getPicsStr(result.data,false);
         $box.find('ul').html(str);
     };
-
-    /*查看图片或者视频详细信息*/
-    t.showWorksPicsDetailInfo=function(e) {
-        var $target = $(e.currentTarget);
-
-        //图片
-        if ($target.hasClass('li-img')) {
-            var index = $('.works-preview-box .li-img').index($target);
-            var arr = t.getAllPics($target.parent());
-            $('.modal').eq(1).addClass('show').find('.pics-nav span').text(index + 1 + '/' + arr.length);
-            this.scrollControl(false);  //禁止滚动
-            this.initPicsScroll(arr, index);
-        }
-    };
-
 
     /*加载群组*/
     t.loadGroupsInfo=function(){

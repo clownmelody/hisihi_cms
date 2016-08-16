@@ -125,13 +125,19 @@ class ForumPostReplyModel extends Model
         return $replyList;
     }
 
-    public function getNoCacheTeacherReplyList($map, $order, $page, $limit){
+    public function getNoCacheTeacherReplyList($map, $order, $page, $limit, $last_id=0){
         //$replyList = D('ForumPostReply')->where($map)->order($order)->select();
         $Model = M('ForumPostReply');
         $id = $map['post_id'];
-        $replyList = $Model->join('Left JOIN hisihi_auth_group_access ON hisihi_forum_post_reply.uid = hisihi_auth_group_access.uid')
-            ->where('hisihi_auth_group_access.group_id=6 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3)')
-            ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->field('hisihi_forum_post_reply.*')->select();
+        if(intval($last_id)){
+            $replyList = $Model->join('Left JOIN hisihi_auth_group_access ON hisihi_forum_post_reply.uid = hisihi_auth_group_access.uid')
+                ->where('hisihi_auth_group_access.group_id=6 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3) and hisihi_forum_post_reply.reply_to_student=0 and hisihi_forum_post_reply.id < '.$last_id)
+                ->order('hisihi_forum_post_reply.create_time desc')->limit($limit)->field('hisihi_forum_post_reply.*')->select();
+        }else{
+            $replyList = $Model->join('Left JOIN hisihi_auth_group_access ON hisihi_forum_post_reply.uid = hisihi_auth_group_access.uid')
+                ->where('hisihi_auth_group_access.group_id=6 and hisihi_forum_post_reply.post_id='.$id.' and hisihi_forum_post_reply.status in(1,3) and hisihi_forum_post_reply.reply_to_student=0')
+                ->order('hisihi_forum_post_reply.create_time desc')->page($page, $limit)->field('hisihi_forum_post_reply.*')->select();
+        }
 
         foreach ($replyList as &$reply) {
             $reply['user'] = query_user(array('avatar128', 'nickname', 'space_url', 'icons_html', 'rank_link'), $reply['uid']);
