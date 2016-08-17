@@ -860,41 +860,12 @@ GROUP BY
             unset($map_pos);
         }
 
-        //$post['content'] = op_h($post['content'], 'html');
         //解析并成立图片数据
         $post['img'] = $this->match_img($post['content']);
-        /*
-        $tmpImgArr = array();
-        preg_match_all("/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.png]))[\'|\"].*?[\/]?>/",  $post['content'], $tmpImgArr); //匹配所有的图片
-        $imgArr = $tmpImgArr[1];
-        if(!empty($imgArr)){
-            $dm = "http://$_SERVER[HTTP_HOST]" . __ROOT__; //前缀图片多余截取
-            $dmip = "http://$_SERVER[SERVER_ADDR]" . __ROOT__; //前缀图片多余截取
-            foreach($imgArr as &$v1){
-                if(strstr($v1,$dm))
-                    $v1 = mb_substr($v1, strlen($dm), strlen($v1) - strlen($dm));
-                else if(strstr($v1,$dmip)){
-                    $v1 = mb_substr($v1, strlen($dmip), strlen($v1) - strlen($dmip));
-                }
-            }
-            $post['img'] = $imgArr;
-        }
-        */
 
         $post['sound'] = $this->fetchSound($id,0);
-        /*
-        $sound = D('ForumSound')->where(array('fid' => $id,'ftype' => 0))->find();
-        if($sound) {
-            $root = C('DOWNLOAD_UPLOAD.rootPath');
-            $sound = $root.$sound['savepath'].$sound['savename'];
-            if(!is_file($sound)){
-                $sound = null;
-            }
-        }
-        $post['sound'] = $sound;
-        */
 
-        $post['content'] = op_t($post['content']);
+        //$post['content'] = $post['content'];
 
         return $post;
     }
