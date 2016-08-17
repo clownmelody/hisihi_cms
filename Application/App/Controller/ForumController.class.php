@@ -865,7 +865,12 @@ GROUP BY
 
         $post['sound'] = $this->fetchSound($id,0);
 
-        //$post['content'] = $post['content'];
+        if((float)$version<2.96){
+            $v['content'] = strip_tags($post['content'], '<user><topic>');
+            $v['content'] = trim($this->parseAtAndTopic($v['content']));
+        } else {
+            $v['content'] = trim(strip_tags($post['content'], '<user><topic>'));
+        }
 
         return $post;
     }
