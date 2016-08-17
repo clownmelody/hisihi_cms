@@ -295,11 +295,13 @@ define(['base','myPhotoSwipe'],function(Base,MyPhotoSwipe){
             return '';
         }
         var strLi='',
-            len=result.list.length;
+            len=result.list.length,
+            item;
         for(var i=0;i<len;i++){
+            item=result.list[i];
             strLi+='<li>'+
-                    '<a href="'+result.list[i].pic_url+'" data-size="1000x1000"></a>'+
-                    '<img src="'+result.list[i].pic_url+'">'+
+                    '<a href="'+item.pic_url+'" data-size="'+item.size[0]+'x'+item.size[1]+'"></a>'+
+                    '<img src="'+item.pic_url+'@80h_80w_1e">'+
                 '</li>';
         }
         //strLi+=strLi;
