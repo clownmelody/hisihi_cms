@@ -627,7 +627,7 @@ GROUP BY
      * @param int $page
      * @param int $count
      */
-    public function forumFilterByTopic($topicId = 0, $position=null, $page = 1, $count = 10)
+    public function forumFilterByTopic($topicId = 0, $position=null, $version=2.9, $page = 1, $count = 10)
     {
         $topicId = intval($topicId);
         $page = intval($page);
@@ -671,7 +671,7 @@ GROUP BY
             ->order($order)->page($page, $count)->select();
         if($list){
             $list = $this->list_sort_by($list, 'last_reply_time');
-            $list = $this->formatList($list, '2.9', null);
+            $list = $this->formatList($list, $version, null);
         } else {
             $totalCount = 0;
             $list = array();
