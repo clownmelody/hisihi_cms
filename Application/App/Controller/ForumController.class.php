@@ -264,7 +264,7 @@ GROUP BY
                 if($fttpr){
                     $topic_id = $fttpr['topic_id'];
                 }
-                $record = M('ForumTopic')->field('title, description, img_url, is_hot')->where('status=1 and id='.$topic_id)->find();
+                $record = M('ForumTopic')->field('id, title, description, img_url, is_hot')->where('status=1 and id='.$topic_id)->find();
                 $v['topic_info'] = $record;
             }
 
@@ -293,6 +293,14 @@ GROUP BY
                 $v['content'] = trim($this->parseAtAndTopic($v['content']));
             } else {
                 $v['content'] = trim(strip_tags($v['content'], '<user><topic>'));
+                $topic_id_list = $this->resolveTopicIdFromContent($v['content']);
+                foreach($v['topic_info'] as &$topic_item){
+                    foreach($topic_id_list as $topic_id) {
+                        if ($topic_item['id'] == $topic_id) {
+                            unset($topic_item);
+                        }
+                    }
+                }
             }
 
             $map_support['row'] = $v['id'];
@@ -1159,6 +1167,18 @@ GROUP BY
             $record = M('ForumTopic')->field('title, description, img_url, is_hot')->where('status=1 and id='.$topic_id)->find();
             $post['topic_info'] = $record;
         }
+
+        if((float)$version>=2.96){
+            $topic_id_list = $this->resolveTopicIdFromContent($post['content']);
+            foreach($post['topic_info'] as &$topic_item){
+                foreach($topic_id_list as $topic_id) {
+                    if ($topic_item['id'] == $topic_id) {
+                        unset($topic_item);
+                    }
+                }
+            }
+        }
+
         $extra['data'] = $post;
         $this->apiSuccess('获取帖子详情成功', null, $extra);
     }
