@@ -4595,6 +4595,9 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
             $this->apiError(-2, '已经预约过');
         }
         M('OrganizationYuyue')->add($data);
+        if($course_id!=0){
+            M('OrganizationTeachingCourse')->where('id='.$course_id)->setInc('already_registered', 1);
+        }
         $this->apiSuccess('预约报名成功!');
     }
 
