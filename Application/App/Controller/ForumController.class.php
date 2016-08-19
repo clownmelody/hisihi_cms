@@ -873,7 +873,7 @@ GROUP BY
 
         if((float)$version<2.96){
             $post['content'] = strip_tags($post['content'], '<user><topic>');
-            $post['content'] = trim($this->parseAtAndTopic($v['content']));
+            $post['content'] = trim($this->parseAtAndTopic($post['content']));
         } else {
             $post['content'] = trim(strip_tags($post['content'], '<user><topic>'));
         }
