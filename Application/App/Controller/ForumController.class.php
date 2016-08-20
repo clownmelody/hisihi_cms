@@ -1575,6 +1575,7 @@ ORDER BY a.create_time DESC');
 
         // 解析帖子内容绑定话题
         if((float)$version>=2.96){
+            $origin_content = stripslashes($origin_content);
             if(!empty($origin_content)){
                 $topic_id_list = $this->resolveTopicIdFromContent($origin_content);
                 foreach($topic_id_list as $topic_id){
