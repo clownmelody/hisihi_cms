@@ -170,21 +170,45 @@ GROUP BY
 
     private function getSameMajorUsers($major=null){
         if($major == '其他'){
-            $uids = M()->query("select distinct uid from hisihi_forum_post"
+            // 发了帖子没填专业的
+            $uids_list = M()->query("select distinct uid from hisihi_forum_post"
                 ." where status=1 and uid != 0 and uid not in"
                 ." (select distinct uid from hisihi_field where field_id=37)");
+            $uids = array();
+            foreach($uids_list as $item){
+                $uids[] = $item['uid'];
+            }
+            $major_list = M('RecomendMajors')->where('status=1')->field('name')->select();
+            $except_uids = array();
+            $map['field_id'] = 37;
+            foreach($major_list as $item){
+                $m = $item['name'];
+                if($m!='其他'&&$m!='其它'){
+                    $map['field_data'] = array('like', '%'.$m.'%');
+                    $ids_list = M('Field')->where($map)->field('uid')->select();
+                    foreach ($ids_list as $item) {
+                        $except_uids[] = $item['uid'];
+                    }
+                }
+            }
+
             $map['field_id'] = 37;
             $map['field_data'] = '其他';
-            $second_uids = M('Field')->where($map)->field('uid')->select();
-            array_push($uids, $second_uids);
+            $map['uid'] = array('not in', $except_uids);
+            $second_uids_list = M('Field')->where($map)->field('uid')->select();
+            foreach($second_uids_list as $item){
+                $uids[] = $item['uid'];
+            }
         }else{
             $major_array = explode("#", $major);
             $map['field_id'] = 37;
             $uids = array();
             foreach($major_array as $item){
                 $map['field_data'] = array('like', '%'.$item.'%');
-                $ids = M('Field')->where($map)->field('uid')->select();
-                array_push($uids, $ids);
+                $ids_list = M('Field')->where($map)->field('uid')->select();
+                foreach ($ids_list as $item) {
+                    $uids[] = $item['uid'];
+                }
             }
         }
         return $uids;
@@ -513,11 +537,7 @@ GROUP BY
         if((float)$version>=2.96){
             if(!empty($major)){
                 $ids = $this->getSameMajorUsers($major);
-                $post_ids = array();
-                foreach($ids[0] as &$post_id){
-                    $post_ids[] = $post_id['uid'];
-                }
-                $map['uid'] = array('in', $post_ids);
+                $map['uid'] = array('in', $ids);
             }
         }
 
