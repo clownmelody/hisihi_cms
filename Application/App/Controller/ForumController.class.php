@@ -182,7 +182,7 @@ GROUP BY
             $map['field_id'] = 37;
             $uids = array();
             foreach($major_array as $item){
-                $map['field_data'] = array('like', '%'.$major_array.'%');
+                $map['field_data'] = array('like', '%'.$item.'%');
                 $ids = M('Field')->where($map)->field('uid')->select();
                 array_push($uids, $ids);
             }
@@ -514,7 +514,7 @@ GROUP BY
             if(!empty($major)){
                 $ids = $this->getSameMajorUsers($major);
                 $post_ids = array();
-                foreach($ids as &$post_id){
+                foreach($ids[0] as &$post_id){
                     $post_ids[] = $post_id['uid'];
                 }
                 $map['uid'] = array('in', $post_ids);
