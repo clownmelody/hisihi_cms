@@ -180,7 +180,7 @@ GROUP BY
         }else{
             $major_array = explode("#", $major);
             $map['field_id'] = 37;
-            $map['field_data'] = array('in', $major_array);
+            $map['field_data'] = array('like', '%'.$major_array.'%');
             $uids = M('Field')->where($map)->field('uid')->select();
         }
         return $uids;
@@ -441,6 +441,8 @@ GROUP BY
      * @param null $version 版本号
      * @param null $position 地理位置
      * @param null $grade 年级
+     * @param null $major
+     * @param bool|false $no_read_cache
      */
     public function forumFilter($field_type = -1, $page = 1, $count = 10, $order = 'reply',
                                 $show_adv=false, $post_type=1, $version=null, $circle_type=null,
