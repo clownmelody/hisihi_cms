@@ -180,8 +180,12 @@ GROUP BY
         }else{
             $major_array = explode("#", $major);
             $map['field_id'] = 37;
-            $map['field_data'] = array('like', '%'.$major_array.'%');
-            $uids = M('Field')->where($map)->field('uid')->select();
+            $uids = array();
+            foreach($major_array as $item){
+                $map['field_data'] = array('like', '%'.$major_array.'%');
+                $ids = M('Field')->where($map)->field('uid')->select();
+                array_push($uids, $ids);
+            }
         }
         return $uids;
     }
