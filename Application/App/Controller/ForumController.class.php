@@ -602,10 +602,10 @@ GROUP BY
                     $ids = $this->getForumsFromRandTeachers($uid);
                     if(!empty($major)){
                         if(!$hasFollowsWithMajor){//该专业下没有关注的人
-                            $extra['is_recommend'] =1;
+                            $extra['is_recommend'] =3;
                         }else{
                             if(!$has_major_follow){//该专业下有关注的人但没有帖子
-                                $extra['is_recommend'] = 3;
+                                $extra['is_recommend'] = 1;
                             }
                         }
                     }else{
