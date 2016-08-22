@@ -233,6 +233,18 @@ GROUP BY
         return $ids;
     }
 
+    private function hasFollowsWithMajor($uid=null, $map=null){
+        $uids = $map[1];
+        $uid_str = implode(',', $uids);
+        $model = new \Think\Model();
+        $ids = $model->query("select distinct follow_who from hisihi_follow where follow_who in (".$uid_str.") and who_follow=".$uid);
+        if($ids){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     //获取非关注人发帖
     private function getPostsFromUnFollowers($uid=null){
         $model = new \Think\Model();
@@ -574,8 +586,10 @@ GROUP BY
                 $ids = $this->getForumsFromFollowsAndMajor($uid, $map['uid']);
                 $has_major_follow = true;
                 if(empty($ids)){
-                    $has_major_follow = false;//该专业下没有关注的人
+                    $has_major_follow = false;//该专业下没有关注的人发帖
                 }
+                //判断改专业下是否有关注的人
+                $hasFollowsWithMajor = $this->hasFollowsWithMajor($uid, $map['uid']);
             }else{
                 $ids = $this->getForumsFromFollows($uid);
             }
@@ -586,13 +600,20 @@ GROUP BY
                 unset($map['uid']);
                 if(floatval($version) >= 2.96){
                     $ids = $this->getForumsFromRandTeachers($uid);
-                    $extra['is_recommend'] =1;
-                    $has_follow = M('Follow')->where('who_follow='.$uid)->find();
-                    if(empty($has_follow)){
-                        $extra['is_recommend'] = 0;
-                    }
-                    if(!$has_major_follow){
-                        $extra['is_recommend'] = 3;
+                    if(!empty($major)){
+                        if(!$hasFollowsWithMajor){//该专业下没有关注的人
+                            $extra['is_recommend'] =1;
+                        }else{
+                            if(!$has_major_follow){//该专业下有关注的人但没有帖子
+                                $extra['is_recommend'] = 3;
+                            }
+                        }
+                    }else{
+                        $extra['is_recommend'] =1;
+                        $has_follow = M('Follow')->where('who_follow='.$uid)->find();
+                        if(empty($has_follow)){
+                            $extra['is_recommend'] = 0;
+                        }
                     }
                 }else{
                     $this->apiSuccess("你还没有关注的朋友", null, array('total_count' =>'0', 'forumList'=>array()));
