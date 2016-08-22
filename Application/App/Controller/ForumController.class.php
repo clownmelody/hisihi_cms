@@ -169,8 +169,8 @@ GROUP BY
     }
 
     private function getSameMajorUsers($major=null){
-        if($major == '其他'){
-            // 发了帖子没填专业的
+        if($major == '其他'||$major == '其它'){
+            // 发了帖子没填专业的用户id
             $uids_list = M()->query("select distinct uid from hisihi_forum_post"
                 ." where status=1 and uid != 0 and uid not in"
                 ." (select distinct uid from hisihi_field where field_id=37)");
@@ -192,10 +192,10 @@ GROUP BY
                 }
             }
 
-            $map['field_id'] = 37;
-            $map['field_data'] = '其他';
-            $map['uid'] = array('not in', $except_uids);
-            $second_uids_list = M('Field')->where($map)->field('uid')->select();
+            $temp_map['field_id'] = 37;
+            //$map['field_data'] = '其他';
+            $temp_map['uid'] = array('not in', $except_uids);
+            $second_uids_list = M('Field')->where($temp_map)->field('uid')->select();
             foreach($second_uids_list as $item){
                 $uids[] = $item['uid'];
             }
