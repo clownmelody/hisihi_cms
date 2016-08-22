@@ -600,7 +600,6 @@ GROUP BY
                 unset($map['uid']);
                 if(floatval($version) >= 2.96){
                     $ids = $this->getForumsFromRandTeachers($uid);
-                    $extra['is_recommend'] =1;
                     if(!empty($major)){
                         if(!$hasFollowsWithMajor){//该专业下没有关注的人
                             $extra['is_recommend'] =1;
@@ -610,6 +609,7 @@ GROUP BY
                             }
                         }
                     }else{
+                        $extra['is_recommend'] =1;
                         $has_follow = M('Follow')->where('who_follow='.$uid)->find();
                         if(empty($has_follow)){
                             $extra['is_recommend'] = 0;
