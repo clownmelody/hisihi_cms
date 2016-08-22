@@ -223,6 +223,16 @@ GROUP BY
         return $ids;
     }
 
+    private function getForumsFromFollowsAndMajor($uid=null, $map=null){
+        $uids = $map[1];
+        $uid_str = implode(',', $uids);
+        $model = new \Think\Model();
+        $ids = $model->query("select id from hisihi_forum_post"
+            ." where status=1 and uid != 0 and uid in"
+            ." (select distinct follow_who from hisihi_follow where follow_who in (".$uid_str.") and who_follow=".$uid.")");
+        return $ids;
+    }
+
     //获取非关注人发帖
     private function getPostsFromUnFollowers($uid=null){
         $model = new \Think\Model();
@@ -560,11 +570,16 @@ GROUP BY
         }
         if($circle_type == 3){//朋友圈
             $uid = $this->getUid();//session_id
-            $ids = $this->getForumsFromFollows($uid);
+            if(floatval($version) >= 2.96 && !empty($map['uid'])){
+                $ids = $this->getForumsFromFollowsAndMajor($uid, $map['uid']);
+            }else{
+                $ids = $this->getForumsFromFollows($uid);
+            }
             if(floatval($version) >= 2.96){
                 $extra['is_recommend'] = 2;
             }
             if(empty($ids)){
+                unset($map['uid']);
                 if(floatval($version) >= 2.96){
                     $ids = $this->getForumsFromRandTeachers($uid);
                     $extra['is_recommend'] =1;
