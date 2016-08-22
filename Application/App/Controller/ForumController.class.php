@@ -169,8 +169,8 @@ GROUP BY
     }
 
     private function getSameMajorUsers($major=null){
-        if($major == '其他'){
-            // 发了帖子没填专业的
+        if($major == '其他'||$major == '其它'){
+            // 发了帖子没填专业的用户id
             $uids_list = M()->query("select distinct uid from hisihi_forum_post"
                 ." where status=1 and uid != 0 and uid not in"
                 ." (select distinct uid from hisihi_field where field_id=37)");
@@ -192,10 +192,10 @@ GROUP BY
                 }
             }
 
-            $map['field_id'] = 37;
-            $map['field_data'] = '其他';
-            $map['uid'] = array('not in', $except_uids);
-            $second_uids_list = M('Field')->where($map)->field('uid')->select();
+            $temp_map['field_id'] = 37;
+            //$map['field_data'] = '其他';
+            $temp_map['uid'] = array('not in', $except_uids);
+            $second_uids_list = M('Field')->where($temp_map)->field('uid')->select();
             foreach($second_uids_list as $item){
                 $uids[] = $item['uid'];
             }
@@ -220,6 +220,16 @@ GROUP BY
         $ids = $model->query("select id from hisihi_forum_post"
             ." where status=1 and uid != 0 and uid in"
             ." (select distinct follow_who from hisihi_follow where who_follow=".$uid.")");
+        return $ids;
+    }
+
+    private function getForumsFromFollowsAndMajor($uid=null, $map=null){
+        $uids = $map[1];
+        $uid_str = implode(',', $uids);
+        $model = new \Think\Model();
+        $ids = $model->query("select id from hisihi_forum_post"
+            ." where status=1 and uid != 0 and uid in"
+            ." (select distinct follow_who from hisihi_follow where follow_who in (".$uid_str.") and who_follow=".$uid.")");
         return $ids;
     }
 
@@ -560,11 +570,16 @@ GROUP BY
         }
         if($circle_type == 3){//朋友圈
             $uid = $this->getUid();//session_id
-            $ids = $this->getForumsFromFollows($uid);
+            if(floatval($version) >= 2.96 && !empty($map['uid'])){
+                $ids = $this->getForumsFromFollowsAndMajor($uid, $map['uid']);
+            }else{
+                $ids = $this->getForumsFromFollows($uid);
+            }
             if(floatval($version) >= 2.96){
                 $extra['is_recommend'] = 2;
             }
             if(empty($ids)){
+                unset($map['uid']);
                 if(floatval($version) >= 2.96){
                     $ids = $this->getForumsFromRandTeachers($uid);
                     $extra['is_recommend'] =1;
