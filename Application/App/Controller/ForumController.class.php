@@ -95,20 +95,32 @@ class ForumController extends AppController
     }
 
     //获取学生发帖
-    private function getForumsFromStudents(){
+    public function getForumsFromStudents(){
         $model = new \Think\Model();
-        $ids = $model->query("select id from hisihi_forum_post"
-                             ." where status=1 and uid != 0 and uid in"
-                             ." (select distinct uid from hisihi_auth_group_access where group_id=5)");
+        $uids_list = $model->query('select distinct uid from hisihi_auth_group_access where group_id=5');
+        $uids = array();
+        foreach($uids_list as $uid_info){
+            $uids[] = $uid_info['uid'];
+        }
+        $where_array['status'] = 1;
+        $where_array['uid'] = array('neq', 0);
+        $where_array['uid'] = array('in', $uids);
+        $ids = M('ForumPost')->field('id')->where($where_array)->select();
         return $ids;
     }
 
     //获取老师发帖
     private function getForumsFromTeachers(){
         $model = new \Think\Model();
-        $ids = $model->query("select id from hisihi_forum_post"
-            ." where status=1 and uid != 0 and uid in"
-            ." (select distinct uid from hisihi_auth_group_access where group_id=6)");
+        $uids_list = $model->query('select distinct uid from hisihi_auth_group_access where group_id=6');
+        $uids = array();
+        foreach($uids_list as $uid_info){
+            $uids[] = $uid_info['uid'];
+        }
+        $where_array['status'] = 1;
+        $where_array['uid'] = array('neq', 0);
+        $where_array['uid'] = array('in', $uids);
+        $ids = M('ForumPost')->field('id')->where($where_array)->select();
         return $ids;
     }
 
