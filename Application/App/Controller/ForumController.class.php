@@ -2141,7 +2141,8 @@ ORDER BY a.create_time DESC');
             if (D('Support')->where($support)->add($support)) {
                 $this->clearCache($support);
                 $user = query_user(array('username'));
-                if($type == 'reply'){
+
+                if($type == 'reply') {
                     M('ForumPostReply')->where(array('id' => intval($id)))->setInc('support_count');
                 }
                 // 发送推送通知
@@ -2212,9 +2213,11 @@ ORDER BY a.create_time DESC');
 
         if (D('Support')->where($support)->count()) {
             if (D('Support')->where($support)->delete()) {
+
                 if($type == 'reply'){
                     M('ForumPostReply')->where(array('id' => intval($id)))->setDec('support_count');
                 }
+
                 $this->clearCache($support);
                 $user = query_user(array('username'));
                 //取消点赞不需要消息
@@ -3646,13 +3649,11 @@ LIMIT 1');
                 unset($reply['id']);
 
                 $reply['userInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['uid']);
-
                 if(intval($reply['to_uid']) > 0){
                     $reply['toUserInfo'] = query_user(array('uid','avatar256', 'avatar128','group', 'nickname'), $reply['to_uid']);
                 }else{
                     $reply['toUserInfo'] = null;
                 }
-
                 unset($reply['uid']);
 
                 unset($pos);
