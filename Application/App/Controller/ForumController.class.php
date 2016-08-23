@@ -2130,7 +2130,7 @@ ORDER BY a.create_time DESC');
                 $this->clearCache($support);
                 $user = query_user(array('username'));
 
-                M('ForumPostReply')->where(array('id' => intval($id), 'status' => 1))->setInc('support_count');
+                M('ForumPostReply')->where(array('id' => intval($id), 'status' => array('gt'=>0)))->setInc('support_count');
                 // 发送推送通知
                 if($type == 'post'){
                     $source_id = $id;
