@@ -2,7 +2,7 @@ html,body {
     font-size: 14px;
     font-family: "微软雅黑", Helvetica, Tahoma, Arial, sans-serif;
     color: #000;
-    background-color: #30333F;
+    background-color: RGB(234,230,190);
     margin: 0;
     padding: 0;
 }
@@ -35,6 +35,9 @@ img {
     margin-bottom: 10px;
     height: 448px;
 }
+#login-page {
+    padding: 0 0 0 0;
+}
 .login-body .pr {
     position: relative;
     height: 448px;
@@ -59,7 +62,7 @@ img {
 }
 .login-logo {
     display: inline-block;
-    margin-right: 12px;
+    /*margin-right: 12px;*/
     width: 120px;
     height: 60px;
     vertical-align: top;
