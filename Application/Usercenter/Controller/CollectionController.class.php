@@ -13,7 +13,7 @@ namespace Usercenter\Controller;
 class CollectionController extends BaseController{
     public function index($type='forum',$page=1)
     {
-        $this->requireLogin();
+        /*$this->requireLogin();
         $type=op_t($type);
         $totalCount=0;
         $list=$this->_getList($type,$totalCount,$page);
@@ -24,7 +24,7 @@ class CollectionController extends BaseController{
         $this->defaultTabHash('collection');
         $this->assign('type', $type);
         $this->setTitle('我的收藏');
-        $this->display($type);
+        $this->display($type);*/
     }
 
     public function _getList($type='forum',&$totalCount=0,$page=1,$r=15)

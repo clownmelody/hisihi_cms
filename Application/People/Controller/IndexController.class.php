@@ -18,9 +18,7 @@ class IndexController extends Controller
 
     public function index($page = 1)
     {
-
-
-        $peoples = D('Member')->where('status=1 and last_login_time!=0')->field('uid', 'reg_time', 'last_login_time')->order('last_login_time desc')->findPage(18);
+        /*$peoples = D('Member')->where('status=1 and last_login_time!=0')->field('uid', 'reg_time', 'last_login_time')->order('last_login_time desc')->findPage(18);
         foreach ($peoples['data'] as &$v) {
             $v['user'] = query_user(array('avatar128', 'space_url', 'username', 'fans', 'following', 'signature', 'nickname'), $v['uid']);
         }
@@ -28,12 +26,12 @@ class IndexController extends Controller
 
         $this->assign('lists', $peoples);
 
-        $this->display();
+        $this->display();*/
     }
 
     public function find($page = 1, $keywords = '')
     {
-        $nickname = op_t($keywords);
+        /*$nickname = op_t($keywords);
         if ($nickname != '') {
             $map['nickname'] = array('like','%'.$nickname.'%');
         }
@@ -45,7 +43,7 @@ class IndexController extends Controller
 
         $this->assign('lists', $list);
         $this->assign('nickname',$nickname);
-        $this->display();
+        $this->display();*/
     }
 
     /**签到排行榜
@@ -55,7 +53,7 @@ class IndexController extends Controller
      */
     public function ranking($page = 1, $limit = 50)
     {
-        $model = D('CheckInfo');
+        /*$model = D('CheckInfo');
         $modelMember=D('Member');
         if(is_login()){
             //获取用户信息
@@ -105,6 +103,6 @@ class IndexController extends Controller
         unset($val, $key);
         $this->assign('user_list', $user_list);
         $this->assign('totalCount', $totalCount);
-        $this->display();
+        $this->display();*/
     }
 }

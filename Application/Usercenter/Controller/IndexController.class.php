@@ -28,7 +28,7 @@ class IndexController extends BaseController
 
     public function index($uid = null, $page = 1, $count = 10)
     {
-        $appArr = $this->_tab_menu();
+        /*$appArr = $this->_tab_menu();
         if (!$appArr) {
             $this->redirect('Usercenter/Index/information', array('uid' => $uid));
         }
@@ -56,7 +56,7 @@ class IndexController extends BaseController
         $this->setKeywords($str . "，个人主页，Think OX，个人" . $str_app);
         $this->setDescription($str . "的个人" . $str_app . "页");
         //四处一词 seo end
-        $this->display();
+        $this->display();*/
     }
 
     private function userInfo($uid = null)
@@ -66,7 +66,7 @@ class IndexController extends BaseController
         return $user_info;
     }
 
-    public function information($uid = null, $info_type = "base_info")
+    /*public function information($uid = null, $info_type = "base_info")
     {
         $info_type = op_t($info_type);
         if ($info_type == "base_info") {
@@ -95,7 +95,7 @@ class IndexController extends BaseController
 
         $this->assign('info_type', $info_type);
         $this->display();
-    }
+    }*/
 
     /**获取用户扩展信息
      * @param null $uid
@@ -188,7 +188,7 @@ class IndexController extends BaseController
         return $result;
     }
 
-    public function appList($uid = null, $page = 1, $count = 10, $tab = null)
+    /*public function appList($uid = null, $page = 1, $count = 10, $tab = null)
     {
 
         $appArr = $this->_tab_menu();
@@ -217,7 +217,7 @@ class IndexController extends BaseController
         //四处一词 seo end
 
         $this->display('index');
-    }
+    }*/
 
     /**
      * 个人主页标签导航
@@ -283,7 +283,7 @@ class IndexController extends BaseController
 
     public function fans($uid = null, $page = 1)
     {
-        $uid = isset($uid) ? $uid : is_login();
+        /*$uid = isset($uid) ? $uid : is_login();
         //调用API获取基本信息
         $this->userInfo($uid);
         $this->_tab_menu();
@@ -301,12 +301,12 @@ class IndexController extends BaseController
         $this->setDescription($str . "的个人粉丝页");
         //四处一词 seo end
 
-        $this->display();
+        $this->display();*/
     }
 
     public function following($uid = null, $page = 1)
     {
-        $uid = isset($uid) ? $uid : is_login();
+        /*$uid = isset($uid) ? $uid : is_login();
         //调用API获取基本信息
         $this->userInfo($uid);
         $this->_tab_menu();
@@ -323,12 +323,12 @@ class IndexController extends BaseController
         $this->setDescription($str . "的个人关注页");
         //四处一词 seo end
 
-        $this->display();
+        $this->display();*/
     }
 
     public function rank($uid = null)
     {
-        $uid = isset($uid) ? $uid : is_login();
+        /*$uid = isset($uid) ? $uid : is_login();
         //调用API获取基本信息
         $this->userInfo($uid);
         $this->_tab_menu();
@@ -350,12 +350,12 @@ class IndexController extends BaseController
         $this->setDescription($str . "的头衔列表页");
         //四处一词 seo end
 
-        $this->display('rank');
+        $this->display('rank');*/
     }
 
     public function rankVerifyFailure()
     {
-        $uid = isset($uid) ? $uid : is_login();
+        /*$uid = isset($uid) ? $uid : is_login();
         //调用API获取基本信息
         $this->userInfo($uid);
         $this->_tab_menu();
@@ -377,12 +377,12 @@ class IndexController extends BaseController
         $this->setDescription($str . "的被驳回头衔申请列表页");
         //四处一词 seo end
 
-        $this->display('rank');
+        $this->display('rank');*/
     }
 
     public function rankVerifyWait()
     {
-        $uid = isset($uid) ? $uid : is_login();
+        /*$uid = isset($uid) ? $uid : is_login();
         //调用API获取基本信息
         $this->userInfo($uid);
         $this->_tab_menu();
@@ -404,7 +404,7 @@ class IndexController extends BaseController
         $this->setDescription($str . "的待审核头衔申请列表页");
         //四处一词 seo end
 
-        $this->display('rank');
+        $this->display('rank');*/
     }
 
     public function rankVerifyCancel($rank_id = null)
@@ -426,7 +426,7 @@ class IndexController extends BaseController
 
     public function rankVerify($rank_user_id = null)
     {
-        $uid = isset($uid) ? $uid : is_login();
+        /*$uid = isset($uid) ? $uid : is_login();
         //调用API获取基本信息
         $this->userInfo($uid);
         $this->_tab_menu();
@@ -461,7 +461,7 @@ class IndexController extends BaseController
         $this->setDescription($str . "的头衔申请页");
         //四处一词 seo end
 
-        $this->display('rank_verify');
+        $this->display('rank_verify');*/
     }
 
     public function verify($rank_id = null, $reason = null, $rank_user_id = 0)

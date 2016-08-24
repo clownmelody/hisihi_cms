@@ -42,31 +42,31 @@ class ManageController extends GroupController
     }
     public function index($group_id)
     {
-        $group_id=intval($group_id);
+        /*$group_id=intval($group_id);
         $this->group_detail($group_id);
 
         $this->getGroupTypes();
         $this->setTitle('群组管理--编辑群组');
-        $this->display();
+        $this->display();*/
         //redirect(U('group', array('page' => $page)));
     }
 
     public function category($group_id)
     {
-        $group_id=intval($group_id);
+        /*$group_id=intval($group_id);
         $this->group_detail($group_id);
         $this->getGroupTypes();
         $this->setTitle('群组管理--帖子分类管理');
         $cate = D('GroupPostCategory')->where(array('group_id'=>$group_id,'status'=>1))->field()->select();
         $this->assign('cate',$cate);
 
-        $this->display();
+        $this->display();*/
 
     }
 
 
     public function member($group_id,$status=1){
-        $group_id=intval($group_id);
+        /*$group_id=intval($group_id);
         $status=intval($status);
 
         $this->group_detail($group_id);
@@ -80,10 +80,10 @@ class ManageController extends GroupController
         $this->assign('sh_count',D('GroupMember')->where(array('group_id'=>$group_id,'status'=>1))->count());
         $this->assign('wsh_count',D('GroupMember')->where(array('group_id'=>$group_id,'status'=>0))->count());
         $this->setTitle('群组管理--群组成员');
-        $this->display();
+        $this->display();*/
     }
     public function notice($group_id , $notice = ''){
-        $group_id=intval($group_id);
+        /*$group_id=intval($group_id);
         $notice=op_h($notice);
 
          $this->group_detail($group_id);
@@ -105,7 +105,7 @@ class ManageController extends GroupController
             $this->assign('group_id',$group_id);
             $this->setTitle('群组管理--公告');
             $this->display();
-        }
+        }*/
     }
 
 

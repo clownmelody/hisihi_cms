@@ -147,7 +147,7 @@ class IndexController extends Controller
      */
     public function detail($id, $page = 1, $sr = null, $sp = 1)
     {
-        $id = intval($id);
+        /*$id = intval($id);
         $page = intval($page);
         $sr = intval($sr);
         $sp = intval($sp);
@@ -199,7 +199,7 @@ class IndexController extends Controller
         $this->assign('replyList', $replyList);
         $this->assign('replyTotalCount', $replyTotalCount);
         $this->assign('showMainPost', $showMainPost);
-        $this->display();
+        $this->display();*/
     }
 
     public function delPostReply($id)

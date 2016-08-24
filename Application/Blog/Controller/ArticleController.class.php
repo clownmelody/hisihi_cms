@@ -32,61 +32,61 @@ class ArticleController extends BlogController
     }
 
     /* 文档模型列表页 */
-    public function lists($page = 1)
-    {
-        /* 分类信息 */
-        $category = $this->category();
-
-        /* 获取当前分类列表 */
-        $Document = D('Document');
-        $Category = D('Blog/Category');
-
-        $children = $Category->getChildrenId($category['id']);
-        if ($children == '') {
-            //获取当前分类下的文章
-            $list = $Document->page($page, $category['list_row'])->lists($category['id']);
-            $is_top_category = ($category['pid'] == 0);
-            if (!$is_top_category) {//判断是否是顶级分类，如果是顶级，就算没有子分类，也不获取同级
-                //如果是不是顶级分类
-                $children = $Category->getSameLevel($category['id']);
-                $this->setCurrent($category['pid']);
-                $this->assign('children_cates', $children);
-            } else {
-                //如果是顶级分类
-                $this->setCurrent($category['id']);
-            }
-
-
-        } else {
-            //如果还有子分类
-            //分割分类
-            $children = explode(',', $children);
-            //将当前分类的文章和子分类的文章混合到一起
-            $cates = $children;
-            array_push($cates, $category['id']);
-            $list = $Document->page($page, $category['list_row'])->lists(implode(',', $cates));
-            //dump($children);exit;
-            //得到子分类的目录
-            foreach ($children as &$child) {
-                $child = $Category->info($child);
-            }
-            unset($child);
-            $this->setCurrent($category['id']);
-            $this->assign('children_cates', $children);
-        }
-
-
-        if (false === $list) {
-            $this->error('获取列表数据失败！');
-        }
-
-
-        /* 模板赋值并渲染模板 */
-        $this->assign('category', $category);
-        $this->setTitle('{$category.title|op_t}');
-        $this->assign('list', $list);
-        $this->display($category['template_lists']);
-    }
+//    public function lists($page = 1)
+//    {
+//        /* 分类信息 */
+//        $category = $this->category();
+//
+//        /* 获取当前分类列表 */
+//        $Document = D('Document');
+//        $Category = D('Blog/Category');
+//
+//        $children = $Category->getChildrenId($category['id']);
+//        if ($children == '') {
+//            //获取当前分类下的文章
+//            $list = $Document->page($page, $category['list_row'])->lists($category['id']);
+//            $is_top_category = ($category['pid'] == 0);
+//            if (!$is_top_category) {//判断是否是顶级分类，如果是顶级，就算没有子分类，也不获取同级
+//                //如果是不是顶级分类
+//                $children = $Category->getSameLevel($category['id']);
+//                $this->setCurrent($category['pid']);
+//                $this->assign('children_cates', $children);
+//            } else {
+//                //如果是顶级分类
+//                $this->setCurrent($category['id']);
+//            }
+//
+//
+//        } else {
+//            //如果还有子分类
+//            //分割分类
+//            $children = explode(',', $children);
+//            //将当前分类的文章和子分类的文章混合到一起
+//            $cates = $children;
+//            array_push($cates, $category['id']);
+//            $list = $Document->page($page, $category['list_row'])->lists(implode(',', $cates));
+//            //dump($children);exit;
+//            //得到子分类的目录
+//            foreach ($children as &$child) {
+//                $child = $Category->info($child);
+//            }
+//            unset($child);
+//            $this->setCurrent($category['id']);
+//            $this->assign('children_cates', $children);
+//        }
+//
+//
+//        if (false === $list) {
+//            $this->error('获取列表数据失败！');
+//        }
+//
+//
+//        /* 模板赋值并渲染模板 */
+//        $this->assign('category', $category);
+//        $this->setTitle('{$category.title|op_t}');
+//        $this->assign('list', $list);
+//        $this->display($category['template_lists']);
+//    }
 
     /* 文档模型详情页 */
     public function detail($id = 0, $p = 1)

@@ -21,8 +21,7 @@ class TopicController extends Controller
 
     public function index($topk = '', $uid = 0, $lastId = 0)
     {
-
-        $aTopic = urldecode(I('topk', '', 'op_t'));
+        /*$aTopic = urldecode(I('topk', '', 'op_t'));
         $aPage = I('page', 1, 'intval');
         $aUid = I('uid', 0, 'intval');
         $topicModel = D("Topic");
@@ -63,7 +62,7 @@ class TopicController extends Controller
 
         $this->assignSelf();
         $this->setTitle('{$topic.name|op_t} —— 话题');
-        $this->display();
+        $this->display();*/
     }
     private function assignSelf()
     {
@@ -72,7 +71,7 @@ class TopicController extends Controller
     }
     public function loadWeibo($topk = '', $page = 1, $uid = 0, $loadCount = 1, $lastId = 0)
     {
-        $count = 30;
+        /*$count = 30;
         $aTopic = I('get.', '', 'op_t');
         //获取微博列表
         if ($aTopic!='') {
@@ -94,7 +93,7 @@ class TopicController extends Controller
         //返回html代码用于ajax显示
         $this->assign('list', $result['list']);
         $this->assign('lastId', $result['lastId']);
-        $this->display();
+        $this->display();*/
     }
 
     protected function getUserStructure($uid)

@@ -73,7 +73,7 @@
                 <!-- 子导航 -->
                 <notempty name="sub_menu">
                     <notempty name="key"><h3><i class="icon icon-unfold"></i>{$key}</h3></notempty>
-                    <ul class="side-sub-menu">
+                    <ul class="side-sub-menu" style="display: none">
                         <volist name="sub_menu" id="menu">
                             <li>
                                 <a class="item" href="{$menu.url|U}">{$menu.title}</a>
@@ -119,9 +119,8 @@
     </div>
     <div class="cont-ft">
         <div class="copyright">
-            <div class="fl">©2015 <a href="#">武汉迅牛科技有限公司</a>&nbsp;&nbsp;&nbsp;|</div>
-            <div class="fr"><a href="mailto:ryfx@163.com">联系作者RFly</a></div>
-            <div class="fl">&nbsp;&nbsp;&nbsp;Created by RFly</div>
+            <div class="fl">&copy;2015-2016 版权所有 <a href="#">武汉迅牛科技有限公司</a>&nbsp;&nbsp;&nbsp;|</div>
+            <div class="fl">&nbsp;&nbsp;&nbsp;Created by 嘿设汇产品技术部</div>
             <div class="fr"></div>
         </div>
     </div>
@@ -153,6 +152,8 @@
         url = url.replace(/(\/(p)\/\d+)|(&p=\d+)|(\/(id)\/\d+)|(&id=\d+)|(\/(group)\/\d+)|(&group=\d+)/, "");
         $subnav.find("a[href='" + url + "']").parent().addClass("current");
 
+        $subnav.find("a[href='" + url + "']").parent().parent().css("display", "block");
+
         /* 左边菜单显示收起 */
         $("#subnav").on("click", "h3", function () {
             var $this = $(this);
@@ -171,24 +172,24 @@
             userMenu.removeClass("hidden");
             clearTimeout(userMenu.data("timeout"));
         }).mouseleave(function () {
-                    var userMenu = $(this).children(".user-menu");
-                    userMenu.data("timeout") && clearTimeout(userMenu.data("timeout"));
-                    userMenu.data("timeout", setTimeout(function () {
-                        userMenu.addClass("hidden")
-                    }, 100));
-                });
+            var userMenu = $(this).children(".user-menu");
+            userMenu.data("timeout") && clearTimeout(userMenu.data("timeout"));
+            userMenu.data("timeout", setTimeout(function () {
+                userMenu.addClass("hidden")
+            }, 100));
+        });
 
         /* 表单获取焦点变色 */
         $("form").on("focus", "input",function () {
             $(this).addClass('focus');
         }).on("blur", "input", function () {
-                    $(this).removeClass('focus');
-                });
+            $(this).removeClass('focus');
+        });
         $("form").on("focus", "textarea",function () {
             $(this).closest('label').addClass('focus');
         }).on("blur", "textarea", function () {
-                    $(this).closest('label').removeClass('focus');
-                });
+            $(this).closest('label').removeClass('focus');
+        });
 
         // 导航栏超出窗口高度后的模拟滚动条
         var sHeight = $(".sidebar").height();
@@ -215,11 +216,11 @@
 
         $(window).keydown(function(event){
             switch(event.keyCode) {
-                    // ...
-                    // 不同的按键可以做不同的事情
-                    // 不同的浏览器的keycode不同
-                    // 更多详细信息:     http://unixpapa.com/js/key.html
-                    // 常用keyCode： 空格 32   Enter 13   ESC 27
+                // ...
+                // 不同的按键可以做不同的事情
+                // 不同的浏览器的keycode不同
+                // 更多详细信息:     http://unixpapa.com/js/key.html
+                // 常用keyCode： 空格 32   Enter 13   ESC 27
 
             }
             if(event.keyCode == 13){

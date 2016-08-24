@@ -20,7 +20,7 @@ class IndexController extends Controller
      */
     public function _initialize()
     {
-        $tree = D('shopCategory')->getTree();
+        /*$tree = D('shopCategory')->getTree();
         $this->assign('tree', $tree);
         if (is_login()) {
             $this->assign('my_tox_money', getMyToxMoney());
@@ -54,7 +54,7 @@ class IndexController extends Controller
 
         $this->assign('sub_menu', $menu_list);
         $this->assign('current', 'home');
-        $this->setTitle('商城');
+        $this->setTitle('商城');*/
     }
 
     /**
@@ -73,7 +73,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $this->_goods_initialize();
+        /*$this->_goods_initialize();
         //新品上架
         $map['is_new'] = 1;
         $map['status'] = 1;
@@ -86,7 +86,7 @@ class IndexController extends Controller
         $map_hot['status'] = 1;
         $goods_list_hot = D('shop')->where($map_hot)->order('sell_num desc')->limit(8)->field($this->goods_info)->select();
         $this->assign('contents_hot', $goods_list_hot);
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -97,7 +97,7 @@ class IndexController extends Controller
      */
     public function goods($page = 1, $category_id = 0)
     {
-        $this->_goods_initialize();
+        /*$this->_goods_initialize();
         $category_id = intval($category_id);
         $goods_category = D('shopCategory')->find($category_id);
         if ($category_id != 0) {
@@ -136,9 +136,7 @@ class IndexController extends Controller
         }else{
             $this->assign('current', 'category_'.$top_category_id);
         }
-       // dump( 'category_'.intval($category_id));exit;
-
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -148,7 +146,7 @@ class IndexController extends Controller
      */
     public function goodsDetail($id = 0)
     {
-        $this->_goods_initialize();
+        /*$this->_goods_initialize();
         $goods = D('shop')->find($id);
         if (!$goods) {
             $this->error('404 not found');
@@ -197,7 +195,7 @@ class IndexController extends Controller
 
         $this->setTitle('{$content.goods_name|op_t}' . ' 商城');
         $this->setKeywords('{$content.goods_name|op_t}' . ', 商城');
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -208,7 +206,7 @@ class IndexController extends Controller
      */
     public function goodsBuy($id = 0, $name = '', $address = '', $zipcode = '', $phone = '', $address_id = '')
     {
-        $address = op_t($address);
+        /*$address = op_t($address);
         $address_id = intval($address_id);
         $num = 1;
         if (!is_login()) {
@@ -291,7 +289,7 @@ class IndexController extends Controller
             }
         } else {
             $this->error('请选择要购买的商品');
-        }
+        }*/
     }
 
     /**
@@ -302,7 +300,7 @@ class IndexController extends Controller
      */
     public function myGoods($page = 1, $status = 0)
     {
-        if (!is_login()) {
+        /*if (!is_login()) {
             $this->error('你还没有登录，请先登录');
         }
         $map['status'] = $status;
@@ -318,7 +316,7 @@ class IndexController extends Controller
         $this->assign('totalPageCount', $totalCount);
         $this->assign('status', $status);
         $this->assign('current', 'orders');
-        $this->display();
+        $this->display();*/
 
     }
 }

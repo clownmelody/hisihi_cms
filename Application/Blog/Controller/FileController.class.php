@@ -43,7 +43,7 @@ class FileController extends BlogController
     }
 
     /* 下载文件 */
-    public function download($id = null)
+    /*public function download($id = null)
     {
         if (empty($id) || !is_numeric($id)) {
             $this->error('参数错误！');
@@ -54,7 +54,7 @@ class FileController extends BlogController
             $this->error($logic->getError());
         }
 
-    }
+    }*/
 
 
     /**

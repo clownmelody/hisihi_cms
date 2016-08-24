@@ -12,7 +12,7 @@ use Think\Controller;
 class ForumController extends BaseController {
     public function myTopic($page=1,$uid=0) {
         //默认获取自己的主题列表
-        if(!$uid) {
+        /*if(!$uid) {
             $uid = is_login();
             $this->requireLogin();
         }
@@ -32,12 +32,12 @@ class ForumController extends BaseController {
         $this->assign('totalCount',$totalCount);
         $this->assign('list',$list);
         $this->assign('call',$call);
-        $this->display();
+        $this->display();*/
     }
 
     public function myTakePartIn($page=1,$uid=0) {
         //默认获取自己的主题列表
-        if(!$uid) {
+        /*if(!$uid) {
             $uid = is_login();
             $this->requireLogin();
         }
@@ -61,12 +61,12 @@ class ForumController extends BaseController {
         $this->assign('totalCount', $totalCount);
         $this->assign('list', $list);
         $this->assign('call', $call);
-        $this->display();
+        $this->display();*/
     }
 
     public function myBookmark($page=1) {
         //要求已经登录
-        $this->requireLogin();
+        /*$this->requireLogin();
 
         //获取自己的UID
         $uid = is_login();
@@ -87,6 +87,6 @@ class ForumController extends BaseController {
         $this->assign('totalCount', $totalCount);
         $this->assign('list', $list);
         $this->assign('call', $this->getCall($uid));
-        $this->display();
+        $this->display();*/
     }
 }
