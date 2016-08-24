@@ -50,7 +50,7 @@ class IndexController extends Controller
 
     public function doPost($id = 0, $cover_id = 0, $title = '', $content = '', $issue_id = 0, $url = '')
     {
-        if (!check_auth('addIssueContent')) {
+        /*if (!check_auth('addIssueContent')) {
             $this->error('抱歉，您不具备投稿权限。');
         }
         $issue_id = intval($issue_id);
@@ -109,7 +109,7 @@ class IndexController extends Controller
             } else {
                 $this->success('投稿失败。', '');
             }
-        }
+        }*/
 
 
     }
@@ -134,8 +134,8 @@ class IndexController extends Controller
 
     public function selectDropdown($pid)
     {
-        $issues = D('Issue')->where(array('pid' => $pid, 'status' => 1))->limit(999)->select();
-        exit(json_encode($issues));
+        /*$issues = D('Issue')->where(array('pid' => $pid, 'status' => 1))->limit(999)->select();
+        exit(json_encode($issues));*/
 
 
     }
