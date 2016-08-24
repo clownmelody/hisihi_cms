@@ -670,7 +670,7 @@ body {
   height: 100%;
 }
 .content-box .location-box {
-  max-width: 17%;
+  display: inline-block;
   height: 28px;
   background-color: #E2E2E2;
   color: #767676;
