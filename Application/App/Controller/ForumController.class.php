@@ -2141,6 +2141,7 @@ ORDER BY a.create_time DESC');
             if (D('Support')->where($support)->add($support)) {
                 $this->clearCache($support);
                 $user = query_user(array('username'));
+
                 if($type == 'reply') {
                     M('ForumPostReply')->where(array('id' => intval($id)))->setInc('support_count');
                 }
@@ -2212,7 +2213,8 @@ ORDER BY a.create_time DESC');
 
         if (D('Support')->where($support)->count()) {
             if (D('Support')->where($support)->delete()) {
-                if($type == 'reply') {
+
+                if($type == 'reply'){
                     M('ForumPostReply')->where(array('id' => intval($id)))->setDec('support_count');
                 }
 
