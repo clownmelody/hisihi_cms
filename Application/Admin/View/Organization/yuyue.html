@@ -1,0 +1,66 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <!-- 标题栏 -->
+    <div class="main-title">
+        <h2>机构或课程预约报名</h2>
+    </div>
+    <div class="cf">
+    </div>
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+        <table class="">
+            <thead>
+            <tr>
+                <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                <th class="">ID</th>
+                <th class="">姓名</th>
+                <th class="">手机</th>
+                <th class="">机构名称</th>
+                <th class="">课程名称</th>
+                <th class="">大学名称</th>
+                <th class="">创建时间</th>
+                <th class="">状态</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="_list">
+                <volist name="_list" id="vo">
+                    <tr>
+                        <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.username}</td>
+                        <td>{$vo.mobile}</td>
+                        <td>{$vo.organization_name}</td>
+                        <td>{$vo.course_name}</td>
+                        <td>{$vo.university_name}</td>
+                        <td><span>{$vo.create_time|time_format}</span></td>
+                        <td><if condition="($vo.status eq 1) "> 正常
+                            <else /> 已处理
+                            </if>
+                        </td>
+                        <td>
+                            <a href="{:U('Organization/yuyue_delete?id='.$vo['id'])}" class="ajax-get confirm">设为处理</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <div class="page">
+        {$_page}
+    </div>
+</block>
+
+<block name="script">
+    <script src="__STATIC__/thinkbox/jquery.thinkbox.js"></script>
+
+    <script type="text/javascript">
+        //导航高亮
+        highlight_subnav("{:U('Organization/yuyue')}");
+    </script>
+</block>

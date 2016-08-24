@@ -1,1 +1,0 @@
-ALTER TABLE  `opensns_check_info` ADD  `total_score` INT( 11 ) NOT NULL DEFAULT  '0'
