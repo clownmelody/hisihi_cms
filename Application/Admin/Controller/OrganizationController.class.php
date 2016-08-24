@@ -3553,6 +3553,35 @@ class OrganizationController extends AdminController
         $this->display('teachingcourseenroll');
     }
 
+    /**
+     * 机构或课程预约
+     */
+    public function yuyue(){
+        $model = M('OrganizationYuyue');
+        $courseModel = M('OrganizationTeachingCourse');
+        $orgModel = M('Organization');
+        $universityModel = M('AbroadUniversity');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, C('LIST_ROWS'));
+        $show = $Page->show();
+        $list = $model->where('status=1')->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$enroll){
+            $course = $courseModel->field('organization_id, course_name')->where('id='.$enroll['course_id'])->find();
+            $org = $orgModel->field('name')->where('id='.$enroll['organization_id'])->find();
+            $university = $universityModel->field('name')->where('id='.$enroll['university_id'])->find();
+            $enroll['course_name'] = $course['course_name'];
+            $enroll['organization_id'] = $course['organization_id'];
+            $enroll['organization_name'] = $org['name'];
+            $enroll['university_name'] = $university['name'];
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "机构或课程预约报名");
+        $this->display('yuyue');
+    }
+
     public function teachingcourseenroll_delete($id=0){
         if(!empty($id)){
             $model = M('OrganizationTeachingCourseEnroll');
@@ -3567,6 +3596,25 @@ class OrganizationController extends AdminController
                 $model->where('id='.$id)->save($data);
             }
             $this->success('处理成功','index.php?s=/admin/organization/teachingcourseenroll');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    public function yuyue_delete($id=0){
+        if(!empty($id)){
+            $model = M('OrganizationYuyue');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/organization/yuyue');
         } else {
             $this->error('未选择要处理的数据');
         }
