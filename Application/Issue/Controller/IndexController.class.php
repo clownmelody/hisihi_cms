@@ -18,7 +18,7 @@ class IndexController extends Controller
         $this->assign('tree', $tree);
     }
 
-    public function index($page = 1, $issue_id = 0)
+    /*public function index($page = 1, $issue_id = 0)
     {
         $issue_id = intval($issue_id);
         $issue = D('Issue')->find($issue_id);
@@ -46,7 +46,7 @@ class IndexController extends Controller
         $this->assign('issue_id', $issue_id);
         $this->setTitle('专辑');
         $this->display();
-    }
+    }*/
 
     public function doPost($id = 0, $cover_id = 0, $title = '', $content = '', $issue_id = 0, $url = '')
     {
@@ -116,9 +116,7 @@ class IndexController extends Controller
 
     public function issueContentDetail($id = 0)
     {
-
-
-        $issue_content = D('IssueContent')->find($id);
+        /*$issue_content = D('IssueContent')->find($id);
         if (!$issue_content) {
             $this->error('404 not found');
         }
@@ -131,7 +129,7 @@ class IndexController extends Controller
         $this->assign('content', $issue_content);
         $this->setTitle('{$content.title|op_t}' . '——专辑');
         $this->setKeywords($issue_content['title']);
-        $this->display();
+        $this->display();*/
     }
 
     public function selectDropdown($pid)
@@ -144,7 +142,7 @@ class IndexController extends Controller
 
     public function edit($id)
     {
-        if (!check_auth('addIssueContent') && !check_auth('editIssueContent')) {
+        /*if (!check_auth('addIssueContent') && !check_auth('editIssueContent')) {
             $this->error('抱歉，您不具备投稿权限。');
         }
         $issue_content = D('IssueContent')->find($id);
@@ -163,6 +161,6 @@ class IndexController extends Controller
         $this->assign('issue_id', $issue['id']);
         $issue_content['user'] = query_user(array('id', 'nickname', 'space_url', 'space_link', 'avatar64', 'rank_html', 'signature'), $issue_content['uid']);
         $this->assign('content', $issue_content);
-        $this->display();
+        $this->display();*/
     }
 }

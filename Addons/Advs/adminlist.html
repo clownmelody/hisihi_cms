@@ -47,4 +47,10 @@
 </table>
 <block name="script">
 <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+<script type="text/javascript" src="__JS__/common.js"></script>
+<script type="text/javascript">
+	highlight_subnav('/index.php?s=/admin/addons/adminlist/name/Advs.html');
+	$subnav = $("#subnav");
+	$subnav.find("a[href='/index.php?s=/admin/addons/adminlist/name/Advs.html']").parent().parent().css("display", "block");
+</script>
 </block>

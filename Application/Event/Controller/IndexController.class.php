@@ -38,7 +38,7 @@ class IndexController extends Controller
      */
     public function index($page = 1, $type_id = 0, $norh = 'new')
     {
-        $type_id = intval($type_id);
+        /*$type_id = intval($type_id);
         if ($type_id != 0) {
             $map['type_id'] = $type_id;
         }
@@ -61,7 +61,7 @@ class IndexController extends Controller
         $this->getRecommend();
         $this->setTitle('活动首页');
         $this->setKeywords('活动');
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -93,7 +93,7 @@ class IndexController extends Controller
     public function myevent($page = 1, $type_id = 0, $lora = '')
     {
 
-        $type_id = intval($type_id);
+        /*$type_id = intval($type_id);
         if ($type_id != 0) {
             $map['type_id'] = $type_id;
         }
@@ -126,7 +126,7 @@ class IndexController extends Controller
         $this->getRecommend();
         $this->setTitle('我的活动——活动');
         $this->assign('current', 'myevent');
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -245,7 +245,7 @@ class IndexController extends Controller
     public function detail($id = 0)
     {
 
-        $check_isSign = D('event_attend')->where(array('uid' => is_login(), 'event_id' => $id))->select();
+        /*$check_isSign = D('event_attend')->where(array('uid' => is_login(), 'event_id' => $id))->select();
 
         $this->assign('check_isSign', $check_isSign);
 
@@ -269,7 +269,7 @@ class IndexController extends Controller
         $this->setTitle('{$content.title|op_t}' . '——活动');
         $this->setKeywords('{$content.title|op_t}' . ',活动');
         $this->getRecommend();
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -280,7 +280,7 @@ class IndexController extends Controller
      */
     public function member($id = 0, $tip = 'all')
     {
-        if ($tip == 'sign') {
+        /*if ($tip == 'sign') {
             $map['status'] = 0;
         }
         if ($tip == 'attend') {
@@ -311,7 +311,7 @@ class IndexController extends Controller
         $this->assign('tip', $tip);
         $this->setTitle('{$content.title|op_t}' . '——活动');
         $this->setKeywords('{$content.title|op_t}' . ',活动');
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -321,7 +321,7 @@ class IndexController extends Controller
      */
     public function edit($id)
     {
-        $event_content = D('Event')->where(array('status' => 1, 'id' => $id))->find();
+        /*$event_content = D('Event')->where(array('status' => 1, 'id' => $id))->find();
         if (!$event_content) {
             $this->error('404 not found');
         }
@@ -334,14 +334,14 @@ class IndexController extends Controller
         $this->assign('content', $event_content);
         $this->setTitle('编辑活动' . '——活动');
         $this->setKeywords('编辑' . ',活动');
-        $this->display();
+        $this->display();*/
     }
 
     public function add()
     {
-        $this->setTitle('添加活动' . '——活动');
+        /*$this->setTitle('添加活动' . '——活动');
         $this->setKeywords('添加' . ',活动');
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -467,7 +467,7 @@ class IndexController extends Controller
     public function ajax_sign($event_id)
     {
 
-        $event_content = D('Event')->where(array('status' => 1, 'id' => $event_id))->find();
+        /*$event_content = D('Event')->where(array('status' => 1, 'id' => $event_id))->find();
         if (!$event_content) {
             $this->error('活动不存在！');
         }
@@ -483,7 +483,7 @@ class IndexController extends Controller
         }
 
         $this->assign('content', $event_content);
-        $this->display();
+        $this->display();*/
     }
 
     /**

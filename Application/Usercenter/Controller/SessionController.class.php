@@ -59,7 +59,7 @@ class SessionController extends BaseController
     public function message($page = 1, $tab = 'unread')
     {
         //从条件里面获取Tab
-        $map = $this->getMapByTab($tab, $map);
+        /*$map = $this->getMapByTab($tab, $map);
 
         $map['to_uid'] = is_login();
 
@@ -78,7 +78,7 @@ class SessionController extends BaseController
         //设置Tab
         $this->defaultTabHash('message');
         $this->assign('tab', $tab);
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -86,7 +86,7 @@ class SessionController extends BaseController
      */
     public function session()
     {
-        $this->defaultTabHash('session');
+        /*$this->defaultTabHash('session');
         $talks = D('Talk')->where('uids like' . '"%[' . is_login() . ']%"' . ' and status=1')->order('update_time desc')->select();
         foreach ($talks as $key => $v) {
             $users = array();
@@ -98,7 +98,7 @@ class SessionController extends BaseController
             $talks[$key]['last_message'] = D('Talk')->getLastMessage($talks[$key]['id']);
         }
         $this->assign('talks', $talks);
-        $this->display();
+        $this->display();*/
     }
 
     /**对话页面
@@ -109,7 +109,7 @@ class SessionController extends BaseController
     public function talk($message_id = 0, $talk_id = 0)
     {
         //获取当前聊天
-        $talk = $this->getTalk($message_id, $talk_id);
+        /*$talk = $this->getTalk($message_id, $talk_id);
         $map['talk_id'] = $talk['id'];
         $messages = D('TalkMessage')->where($map)->order('create_time desc')->limit(20)->select();
         $messages = array_reverse($messages);
@@ -125,7 +125,7 @@ class SessionController extends BaseController
         $this->assign('self', $self);
         $this->assign('mid', is_login());
         $this->defaultTabHash('session');
-        $this->display();
+        $this->display();*/
     }
 
     /**
@@ -133,7 +133,7 @@ class SessionController extends BaseController
      */
     public function doDeleteTalk($talk_id)
     {
-        $this->requireLogin();
+        /*$this->requireLogin();
 
         //确认当前用户属于聊天。
         $talk = D('Talk')->find($talk_id);
@@ -156,7 +156,7 @@ class SessionController extends BaseController
         }
 
         //返回成功结果
-        $this->success('删除成功', 'refresh');
+        $this->success('删除成功', 'refresh');*/
     }
 
     /**回复的时候调用，通过该函数，会回调应用对应的postMessage函数实现对原始内容的数据添加。

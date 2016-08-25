@@ -25,7 +25,7 @@ class IndexController extends GroupController
 
     public function index($page = 1, $r = 20)
     {
-        $page = intval($page);
+        /*$page = intval($page);
         $r = intval($r);
         $order = 'create_time desc';
         //获取列表
@@ -41,13 +41,13 @@ class IndexController extends GroupController
 
         $this->getGroupTypes();
         $this->setTitle('群组首页');
-        $this->display();
+        $this->display();*/
 
     }
 
     public function mygroup($page = 1, $r = 20)
     {
-        $page = intval($page);
+        /*$page = intval($page);
         $r = intval($r);
 
         $this->requireLogin();
@@ -63,7 +63,7 @@ class IndexController extends GroupController
         $this->assign('mygroup', $myattend);
         $this->assign('current', 'mygroup');
         $this->setTitle('我的群组');
-        $this->display();
+        $this->display();*/
 
     }
 
@@ -76,7 +76,7 @@ class IndexController extends GroupController
      */
     public function group($id = 0, $page = 1, $order = '', $type = 'new', $r = 20, $title = '', $cate = '')
     {
-        $id = intval($id);
+        /*$id = intval($id);
         $page = intval($page);
         $order = op_t($order);
         $type = op_t($type);
@@ -167,13 +167,13 @@ class IndexController extends GroupController
         $this->getPostCategory($id);
         $this->assign('r', $r);
         $this->assign('type', $type);
-        $this->display();
+        $this->display();*/
     }
 
     public function groups($order = 'create_time', $cate = 0, $page = 1, $r = 20, $keywords = '', $uid = 0)
     {
 
-        $order = op_t($order);
+        /*$order = op_t($order);
         $cate = intval($cate);
         $page = intval($page);
         $r = intval($r);
@@ -228,13 +228,13 @@ class IndexController extends GroupController
         $this->getGroupTypes();
         $this->assign('totalCount', $totalCount);
         $this->assign('r', $r);
-        $this->display();
+        $this->display();*/
     }
 
     public function posts($post_cate = 0)
     {
 
-        $post_cate = intval($post_cate);
+        /*$post_cate = intval($post_cate);
 
         if ($post_cate != 0) {
             $where['cate_id'] = $post_cate;
@@ -250,12 +250,12 @@ class IndexController extends GroupController
         $this->assign('list', $post_list);
         $this->getPostCategory();
 
-        $this->display();
+        $this->display();*/
     }
 
     public function detail($id = 0, $page = 1, $sr = null, $sp = 1)
     {
-        $id = intval($id);
+        /*$id = intval($id);
         $page = intval($page);
         $sr = intval($sr);
         $sp = intval($sp);
@@ -315,7 +315,7 @@ class IndexController extends GroupController
         $this->assign('showMainPost', $showMainPost);
         $this->assign('group', $this->getGroup($post['group_id']));
 
-        $this->display();
+        $this->display();*/
     }
 
     public function delPostReply($id)
@@ -330,7 +330,7 @@ class IndexController extends GroupController
 
     public function editReply($reply_id = 0)
     {
-        $reply_id = intval($reply_id);
+        /*$reply_id = intval($reply_id);
         if ($reply_id) {
             $reply = D('group_post_reply')->where(array('id' => $reply_id, 'status' => 1))->find();
         } else {
@@ -339,7 +339,7 @@ class IndexController extends GroupController
         $this->setTitle('编辑回复 —— 群组');
         //显示页面
         $this->assign('reply', $reply);
-        $this->display();
+        $this->display();*/
     }
 
     public function doReplyEdit($reply_id = 0, $content = '')
@@ -371,7 +371,7 @@ class IndexController extends GroupController
 
     public function edit($group_id = 0, $post_id = 0)
     {
-        $group_id = intval($group_id);
+        /*$group_id = intval($group_id);
         $post_id = intval($post_id);
         //判断是不是为编辑模式
         $isEdit = $post_id ? true : false;
@@ -398,7 +398,7 @@ class IndexController extends GroupController
         $this->assignAllowPublish();
         $this->assign('post', $post);
         $this->assign('isEdit', $isEdit);
-        $this->display();
+        $this->display();*/
     }
 
     public function doEdit($post_id = null, $group_id = 0, $title = '', $content = '', $category = 0)
@@ -532,7 +532,7 @@ class IndexController extends GroupController
 
     public function doAddGroup($group_id = null, $group_type, $title, $detail, $logo, $type, $background)
     {
-        $logo = intval($logo);
+        /*$logo = intval($logo);
         $background = intval($background);
            if ($title == '') {
             $this->error('请填写群组名称');
@@ -601,7 +601,7 @@ class IndexController extends GroupController
         //显示成功消息
         $message = $isEdit ? '编辑成功。' : '发表成功。';
         $url = $isEdit ? 'refresh' : U('group/index/group', array('id' => $group_id));
-        $this->success($message, $url);
+        $this->success($message, $url);*/
     }
 
 
@@ -686,7 +686,7 @@ class IndexController extends GroupController
 
     public function search($page = 1, $uid = 0)
     {
-        $_REQUEST['keywords'] = op_t($_REQUEST['keywords']);
+        /*$_REQUEST['keywords'] = op_t($_REQUEST['keywords']);
 
         if ($uid != 0) {
             $where['uid'] = $uid;
@@ -713,7 +713,7 @@ class IndexController extends GroupController
         //显示页面
         $this->assign('list', $list);
         $this->assign('totalCount', $totalCount);
-        $this->display();
+        $this->display();*/
     }
 
 
@@ -908,7 +908,7 @@ class IndexController extends GroupController
     }
 
     public function group_invite($group_id=0){
-        if(IS_POST){
+        /*if(IS_POST){
             $uids = I('post.uids');
             $group_id = I('post.group_id');
             $group = $this->getGroup($group_id);
@@ -930,7 +930,7 @@ class IndexController extends GroupController
             $this->assign('friends',$friends);
             $this->assign('group_id',$group_id);
             $this->display();
-        }
+        }*/
 
     }
 

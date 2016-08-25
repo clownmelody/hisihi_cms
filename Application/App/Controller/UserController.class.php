@@ -1602,13 +1602,12 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
 
     /**
      * 荣誉学员和讲师
-     * @param int $group  5为学生  6为老师
+     * @param int $group
+     * @param null $version
      */
     public function honorUsers($group = 5, $version=null){
         $model = M();
         if($group==5){  // 学生
-            ///$list = $model->query("SELECT p.uid FROM hisihi_forum_post as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=5 and status=1 group by uid order by count(*) desc limit 0,4");
-            //$list = $model->query("select uid from hisihi_member where uid in(277, 278, 279, 280)");
             /* ---------  简化获取相应用户的sql ------------ */
             $post_list = $model->query("select uid, count(*) as number from hisihi_forum_post group by uid order by number desc");
             $uid_list = array();
@@ -1631,9 +1630,6 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
             }
             /* ------------------- */
         } else {        // 老师
-            #$list = $model->query("SELECT p.uid FROM hisihi_forum_post_reply as p, hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by uid order by count(*) desc limit 1,4");
-            ///$list = $model->query("select p.uid, count(*) as count from hisihi_forum_post_reply as p,  hisihi_auth_group_access as a where a.uid=p.uid and a.group_id=6 and status=1 group by p.uid order by count desc limit 1,4");
-            //$list = $model->query("select uid from hisihi_member where uid in(81, 520, 521, 535)");
             /* ---------  简化获取相应用户的sql ------------ */
             $post_list = $model->query("select uid, count(*) as number from hisihi_forum_post_reply group by uid order by number desc");
             $uid_list = array();

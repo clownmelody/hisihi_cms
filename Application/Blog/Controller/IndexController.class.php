@@ -19,30 +19,30 @@ class IndexController extends BlogController
 {
 
     //系统首页
-    public function index($page = 1)
-    {
-
-        /* 分类信息 */
-        $category = 1; //$this->category();
-
-        /* 获取当前分类列表 */
-        $Document = D('Document');
-        $list = $Document->page($page, 10)->lists($category['id']);
-        if (false === $list) {
-            $this->error('获取列表数据失败！');
-        }
-
-
-
-        /* 模板赋值并渲染模板 */
-        $this->assign('category', $category);
-        $this->assign('list', $list);
-
-        $this->assign('page', D('Document')->page); //分页
-
-
-        $this->display();
-    }
+//    public function index($page = 1)
+//    {
+//
+//        /* 分类信息 */
+//        $category = 1; //$this->category();
+//
+//        /* 获取当前分类列表 */
+//        $Document = D('Document');
+//        $list = $Document->page($page, 10)->lists($category['id']);
+//        if (false === $list) {
+//            $this->error('获取列表数据失败！');
+//        }
+//
+//
+//
+//        /* 模板赋值并渲染模板 */
+//        $this->assign('category', $category);
+//        $this->assign('list', $list);
+//
+//        $this->assign('page', D('Document')->page); //分页
+//
+//
+//        $this->display();
+//    }
 
     /* 文档分类检测 */
     private function category($id = 0)
