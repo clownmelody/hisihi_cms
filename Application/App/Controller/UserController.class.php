@@ -1084,7 +1084,8 @@ class UserController extends AppController
             $isfollowing = $isfollowing ? 2:0;
             $isfans = $isfans ? 1:0;
             $result['relationship'] = $isfollowing | $isfans;
-            $result['info'] = query_user(array('avatar256', 'avatar128', 'username','group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $uid);
+            $result['info'] = query_user(array('avatar256', 'avatar128', 'username', 'sex', 'group','extinfo', 'fans', 'following', 'signature', 'nickname','weibocount','replycount'), $uid);
+            $result['info']['sex'] = $this->encodeSex($result['info']['sex']);
             if((float)$version > 2.2){
                 $result['info']['postcount'] = $this->getPostCount($uid);
                 $result['info']['groupcount'] = $this->getGroupCount($uid);
