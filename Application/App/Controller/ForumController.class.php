@@ -25,6 +25,8 @@ class ForumController extends AppController
     protected $forum_list;
     protected $forum_type;
     private static $adv_index = 1;
+    private $recommend_uids;
+    private $recommend_uid_arr;
 
     public function _initialize()
     {
@@ -41,6 +43,12 @@ class ForumController extends AppController
         //$this->assign('myInfo', $myInfo);
         //赋予论坛列表
         //$this->assign('forum_list', $this->forum_list);
+        $uids = M('Member')->where('status = 4')->field('uid')->select();
+        foreach ($uids as $id){
+            $uid_arr[] = $id['uid'];
+        }
+        $this->recommend_uid_arr = $uid_arr;
+        $this->recommend_uids = implode(',', $uid_arr);
     }
 
     //分类列表
@@ -127,6 +135,7 @@ class ForumController extends AppController
     //获取老师发帖
     private function getForumsFromRandTeachers($uid=null){
         $model = new \Think\Model();
+        $time1 = time();
         $uids = $model->query("SELECT DISTINCT
 	uid
 FROM
@@ -149,8 +158,11 @@ AND uid IN (
 			AND uid = ".$uid."
 		)
 	AND uid != ".$uid."
-) order by id desc LIMIT 10");
+) order by id asc LIMIT 10");
+        $time2 = time();
+        $hs1 = $time2 - $time1;
         if(empty($uids)){
+            $time3 = time();
             $uids = $model->query("SELECT DISTINCT
 	uid
 FROM
@@ -158,13 +170,16 @@ FROM
 WHERE
 	group_id = 6
 	AND uid != ".$uid."
- order by id desc LIMIT 10");
+ order by id asc LIMIT 10");
+            $time4 = time();
+            $hs2 = $time4 - $time3;
         }
         $uid_arr = array();
         foreach ($uids as $id){
             $uid_arr[] = $id['uid'];
         }
         $uid_str = implode(',', $uid_arr);
+        $time5 = time();
         $ids = $model->query("SELECT * from (SELECT
 	id,
 	uid,
@@ -177,6 +192,34 @@ AND uid != 0
 AND uid IN (".$uid_str.") ORDER BY id desc) a
 GROUP BY
 	a.uid");
+        $time6 = time();
+        $hs3 = $time6 - $time5;
+        return $ids;
+    }
+
+    //获取推荐人发帖
+    private function getForumsFromRecommendUser(){
+        $model = new \Think\Model();
+       /* $ids = $model->query("SELECT * from (SELECT
+	id,
+	uid,
+	create_time
+FROM
+	hisihi_forum_post
+WHERE
+	STATUS = 1
+AND uid != 0
+AND uid IN (".$this->recommend_uids.") ORDER BY id desc) a
+GROUP BY
+	a.uid");*/
+
+        foreach ($this->recommend_uid_arr as $uid){
+            $pid = M('ForumPost')->where('status=1 and uid='.$uid)->field('id')->limit(1)->order('id desc')->select();
+            if($pid){
+                $pids[]['id'] = $pid[0]['id'];
+            }
+        }
+        $ids = $pids;
         return $ids;
     }
 
@@ -611,7 +654,7 @@ GROUP BY
             if(empty($ids)){
                 unset($map['uid']);
                 if(floatval($version) >= 2.96){
-                    $ids = $this->getForumsFromRandTeachers($uid);
+                    $ids = $this->getForumsFromRecommendUser();
                     if(!empty($major)){
                         if(!$hasFollowsWithMajor){//该专业下没有关注的人
                             $extra['is_recommend'] =3;
