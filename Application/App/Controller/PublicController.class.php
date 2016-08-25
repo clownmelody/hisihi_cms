@@ -542,7 +542,7 @@ class PublicController extends AppController {
             if((float)$version>=2.0){
                 if((float)$version>=2.96){
                     $info['tag_pic_url'] = $this->fetchImage_other($info['tag_type_pic_id']);
-                } else if((float)$version>=2.93&&(float)$version<2.96){
+                } else if((float)$version>=2.93){
                     $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.93/type/view/id/'.$info['id'];
                     $info['comment_count'] = $this->getTopContentCommentCount($info['id']);
                 } else if((float)$version>=2.7 && (float)$version<2.93){
