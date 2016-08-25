@@ -25,6 +25,8 @@ class ForumController extends AppController
     protected $forum_list;
     protected $forum_type;
     private static $adv_index = 1;
+    private $recommend_uids;
+    private $recommend_uid_arr;
 
     public function _initialize()
     {
@@ -41,6 +43,12 @@ class ForumController extends AppController
         //$this->assign('myInfo', $myInfo);
         //赋予论坛列表
         //$this->assign('forum_list', $this->forum_list);
+        $uids = M('Member')->where('status = 4')->field('uid')->select();
+        foreach ($uids as $id){
+            $uid_arr[] = $id['uid'];
+        }
+        $this->recommend_uid_arr = $uid_arr;
+        $this->recommend_uids = implode(',', $uid_arr);
     }
 
     //分类列表
@@ -127,6 +135,7 @@ class ForumController extends AppController
     //获取老师发帖
     private function getForumsFromRandTeachers($uid=null){
         $model = new \Think\Model();
+        $time1 = time();
         $uids = $model->query("SELECT DISTINCT
 	uid
 FROM
@@ -149,8 +158,11 @@ AND uid IN (
 			AND uid = ".$uid."
 		)
 	AND uid != ".$uid."
-) order by id desc LIMIT 10");
+) order by id asc LIMIT 10");
+        $time2 = time();
+        $hs1 = $time2 - $time1;
         if(empty($uids)){
+            $time3 = time();
             $uids = $model->query("SELECT DISTINCT
 	uid
 FROM
@@ -158,13 +170,16 @@ FROM
 WHERE
 	group_id = 6
 	AND uid != ".$uid."
- order by id desc LIMIT 10");
+ order by id asc LIMIT 10");
+            $time4 = time();
+            $hs2 = $time4 - $time3;
         }
         $uid_arr = array();
         foreach ($uids as $id){
             $uid_arr[] = $id['uid'];
         }
         $uid_str = implode(',', $uid_arr);
+        $time5 = time();
         $ids = $model->query("SELECT * from (SELECT
 	id,
 	uid,
@@ -177,15 +192,49 @@ AND uid != 0
 AND uid IN (".$uid_str.") ORDER BY id desc) a
 GROUP BY
 	a.uid");
+        $time6 = time();
+        $hs3 = $time6 - $time5;
+        return $ids;
+    }
+
+    //获取推荐人发帖
+    private function getForumsFromRecommendUser(){
+        $model = new \Think\Model();
+       /* $ids = $model->query("SELECT * from (SELECT
+	id,
+	uid,
+	create_time
+FROM
+	hisihi_forum_post
+WHERE
+	STATUS = 1
+AND uid != 0
+AND uid IN (".$this->recommend_uids.") ORDER BY id desc) a
+GROUP BY
+	a.uid");*/
+
+        foreach ($this->recommend_uid_arr as $uid){
+            $pid = M('ForumPost')->where('status=1 and uid='.$uid)->field('id')->limit(1)->order('id desc')->select();
+            if($pid){
+                $pids[]['id'] = $pid[0]['id'];
+            }
+        }
+        $ids = $pids;
         return $ids;
     }
 
     private function getSameMajorUsers($major=null){
         if($major == '其他'||$major == '其它'){
+            $tem_list = M()->query('select distinct uid from hisihi_field where field_id=37');
+            $not_in_uid_list = array();
+            foreach($tem_list as $item){
+                $not_in_uid_list[] = $item['uid'];
+            }
+            $where_array['status'] = 1;
+            $where_array['uid'] = array('neq', 0);
+            $where_array['uid'] = array('not in', $not_in_uid_list);
             // 发了帖子没填专业的用户id
-            $uids_list = M()->query("select distinct uid from hisihi_forum_post"
-                ." where status=1 and uid != 0 and uid not in"
-                ." (select distinct uid from hisihi_field where field_id=37)");
+            $uids_list = M('ForumPost')->distinct(true)->field('uid')->where($where_array)->select();
             $uids = array();
             foreach($uids_list as $item){
                 $uids[] = $item['uid'];
@@ -611,7 +660,7 @@ GROUP BY
             if(empty($ids)){
                 unset($map['uid']);
                 if(floatval($version) >= 2.96){
-                    $ids = $this->getForumsFromRandTeachers($uid);
+                    $ids = $this->getForumsFromRecommendUser();
                     if(!empty($major)){
                         if(!$hasFollowsWithMajor){//该专业下没有关注的人
                             $extra['is_recommend'] =3;
@@ -3676,6 +3725,25 @@ LIMIT 1');
         $result['totalCount'] = count($teacherReplyList);
         $result['data'] = $teacherReplyList;
         return $result;
+    }
+
+    public function testForum(){
+        $t1 = time();
+        $forumPost = M('ForumPost');
+        $totalCount = 10;
+        $map['id'] = array('in', '5955,5953,5950,5948,5947,5941,5936,5933,5930,5928,5927,5921');
+        $list = $forumPost->where('id between 3000 and 5955')->order('last_reply_time desc')->page(5, 10)->select();
+        if($list){
+            $list = $this->list_sort_by($list, 'last_reply_time');
+            $list = $this->formatList($list, 2.96, null, 566);
+        } else {
+            $totalCount = 0;
+            $list = array();
+        }
+        var_dump(time()-$t1);
+        $extra['total_count'] = $totalCount;
+        $extra['forumList'] = $list;
+        $this->apiSuccess("获列表成功", null, $extra);
     }
 
 }
