@@ -90,7 +90,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
     t.fillInTopicInfo=function(data){
         var title=data.title,
             desc=data.description,
-            imgUrl=data.img_url;
+            imgUrl=data.img_url,
         title=this.substrLongStr(title,18);
         if(!imgUrl){
             imgUrl='http://pic.hisihi.com/2016-06-15/1465962987445587.png';
@@ -190,6 +190,12 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                         t.getPostImgStr(item.img)+
                         '<div style="clear: both"></div>'+
                     '</ul>'+
+                    //新增发帖定位和学校信息栏
+                    '<div class="location-box">'+
+                        //t.getLocationToProvince(item.pos)+
+                        '<div id="location-img"></div>'+
+                        '<span class="location">乌鲁木齐市</span>'+
+                    '</div>'+
                 '</div></li>';
         }
         return str;
@@ -267,7 +273,6 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                 thumb=imgList[i].thumb;
             if(!thumb){
                 thumb='http://pic.hisihi.com/2016-06-02/1464833264193150.png';
-
             }
             if(!url){
                 url='http://pic.hisihi.com/2016-06-02/1464867656861374.png';
@@ -296,7 +301,6 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         var cName='img-class1';
         switch (num){
             case 1:
-
                 break;
             case 2:
                 cName='img-class2';
@@ -309,7 +313,15 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         }
     };
 
+    /*每个帖子加上地理位置信息*/
+    //t.getLocationToProvince=function(){
+    //    if(!item.pos){
+    //        return '';
+    //    }else {
+    //
+    //    }
+    //}
 
-    return Topic;
+    return  Topic;
 });
 
