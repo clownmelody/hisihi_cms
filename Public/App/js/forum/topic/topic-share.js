@@ -194,8 +194,13 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                     '<div class="location-box">'+
                         //t.getLocationToProvince(item.pos)+
                         '<div id="location-img"></div>'+
-                        '<span class="location">乌鲁木齐市</span>'+
+                        '<span class="location">武汉市</span>'+
                     '</div>'+
+                    '<ul class="btn-box">'+
+                        '<li><div id="btn-good"></div></li>'+
+                        '<li><div id="btn-discuss"></div></li>'+
+                        '<li><div id="btn-share"></div></li>'+
+                    '</ul>'+
                 '</div></li>';
         }
         return str;
