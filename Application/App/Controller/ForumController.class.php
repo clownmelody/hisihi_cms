@@ -225,10 +225,16 @@ GROUP BY
 
     private function getSameMajorUsers($major=null){
         if($major == '其他'||$major == '其它'){
+            $tem_list = M()->query('select distinct uid from hisihi_field where field_id=37');
+            $not_in_uid_list = array();
+            foreach($tem_list as $item){
+                $not_in_uid_list[] = $item['uid'];
+            }
+            $where_array['status'] = 1;
+            $where_array['uid'] = array('neq', 0);
+            $where_array['uid'] = array('not in', $not_in_uid_list);
             // 发了帖子没填专业的用户id
-            $uids_list = M()->query("select distinct uid from hisihi_forum_post"
-                ." where status=1 and uid != 0 and uid not in"
-                ." (select distinct uid from hisihi_field where field_id=37)");
+            $uids_list = M('ForumPost')->distinct(true)->field('uid')->where($where_array)->select();
             $uids = array();
             foreach($uids_list as $item){
                 $uids[] = $item['uid'];
