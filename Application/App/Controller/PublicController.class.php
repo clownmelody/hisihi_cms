@@ -480,7 +480,8 @@ class PublicController extends AppController {
         $Article = D('Blog/Article', 'Logic');
 
         //获取当前分类下的文章
-        $info = $Document->field('id,title,description,view,create_time,update_time,cover_id')->find($id);
+        $info = $Document->field('id,title,description,view,create_time,update_time,cover_id,
+        tag_type_pic_id,text_color_type,text_tag')->find($id);
         if(empty($info)){
             $this->apiError(-1, "id不存在");
         }
@@ -539,7 +540,9 @@ class PublicController extends AppController {
         } else {
             $info['img'] = $this->fetchImage($info['cover_id']);
             if((float)$version>=2.0){
-                if((float)$version>=2.93){
+                if((float)$version>=2.96){
+                    $info['tag_pic_url'] = $this->fetchImage_other($info['tag_type_pic_id']);
+                } else if((float)$version>=2.93&&(float)$version<2.96){
                     $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/2.93/type/view/id/'.$info['id'];
                     $info['comment_count'] = $this->getTopContentCommentCount($info['id']);
                 } else if((float)$version>=2.7 && (float)$version<2.93){
@@ -588,6 +591,7 @@ class PublicController extends AppController {
             unset($info['extend']);
             unset($info['level']);
             unset($info['status']);
+            unset($info['tag_type_pic_id']);
             $this->apiSuccess("获取首页顶部列表成功", null, array('TopContent' => $info));
         }
     }
@@ -658,6 +662,7 @@ class PublicController extends AppController {
         $pic_small = $pathArray[0].'.jpg';
         return $pic_small;
     }
+
     //获取hisihi-other中的图片
     private function fetchImage_other($pic_id)
     {
