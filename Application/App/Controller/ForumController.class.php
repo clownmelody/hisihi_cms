@@ -3678,4 +3678,23 @@ LIMIT 1');
         return $result;
     }
 
+    public function testForum(){
+        $t1 = time();
+        $forumPost = M('ForumPost');
+        $totalCount = 10;
+        $map['id'] = array('in', '5955,5953,5950,5948,5947,5941,5936,5933,5930,5928,5927,5921');
+        $list = $forumPost->where('id between 3000 and 5955')->order('last_reply_time desc')->page(5, 10)->select();
+        if($list){
+            $list = $this->list_sort_by($list, 'last_reply_time');
+            $list = $this->formatList($list, 2.96, null, 566);
+        } else {
+            $totalCount = 0;
+            $list = array();
+        }
+        var_dump(time()-$t1);
+        $extra['total_count'] = $totalCount;
+        $extra['forumList'] = $list;
+        $this->apiSuccess("获列表成功", null, $extra);
+    }
+
 }
