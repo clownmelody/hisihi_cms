@@ -30,8 +30,6 @@ abstract class AppController extends RestController {
         }
         //定义API
         $this->api = new UserApi();
-
-        $this->$isInternalCall = false;
     }
 
     public function setInternalCallApi($value=true) {
