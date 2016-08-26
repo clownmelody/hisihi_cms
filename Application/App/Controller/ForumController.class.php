@@ -3575,10 +3575,10 @@ AND b.group_id=6
 ORDER BY
 	a.create_time DESC
 LIMIT 1');
-        $teacher_name = M('Member')->where('uid='.$teacher[0]['uid'])->getField('nickname');
-        if($teacher_name){
+        if(!empty($teacher)){
+            $teacher_name = M('Member')->where('uid='.$teacher[0]['uid'])->getField('nickname');
             return $teacher_name;
-        }else{
+        } else {
             return null;
         }
     }
