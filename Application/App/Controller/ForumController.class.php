@@ -39,10 +39,6 @@ class ForumController extends AppController
         }
         unset($e);
         C('SHOW_PAGE_TRACE', false);
-        //$myInfo = query_user(array('avatar128', 'avatar64', 'nickname', 'uid', 'space_url', 'icons_html'), is_login());
-        //$this->assign('myInfo', $myInfo);
-        //赋予论坛列表
-        //$this->assign('forum_list', $this->forum_list);
         $uids = M('Member')->where('status = 4')->field('uid')->select();
         foreach ($uids as $id){
             $uid_arr[] = $id['uid'];
@@ -333,11 +329,6 @@ GROUP BY
     {
         $map_support['appname'] = 'Forum';
         $map_support['table'] = 'post';
-
-        $forum_key_value = array();
-        foreach ($this->forum_list as $f) {
-            $forum_key_value[$f['id']] = $f;
-        }
 
         foreach ($list as &$v) {
             $v['post_id'] = $v['id'];
@@ -3575,10 +3566,10 @@ AND b.group_id=6
 ORDER BY
 	a.create_time DESC
 LIMIT 1');
-        $teacher_name = M('Member')->where('uid='.$teacher[0]['uid'])->getField('nickname');
-        if($teacher_name){
+        if(!empty($teacher)){
+            $teacher_name = M('Member')->where('uid='.$teacher[0]['uid'])->getField('nickname');
             return $teacher_name;
-        }else{
+        } else {
             return null;
         }
     }
