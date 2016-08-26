@@ -668,10 +668,11 @@ body {
   height: 100%;
 }
 .content-box .location-box {
+  position: relative;
   display: inline-block;
   height: 20px;
-  background-color: #E2E2E2;
-  color: #767676;
+  background-color: #E5E5E5;
+  color: #A9A9A9;
   border-radius: 5px;
   margin-bottom: 15px;
   font-size: 12px;
@@ -696,32 +697,33 @@ body {
   padding-right: 7px;
 }
 .content-box .btn-box {
+  float: right;
   display: inline-block;
 }
-.content-box .btn-box > li {
+.content-box .btn-box li {
   float: left;
-  padding-right: 25px;
+  padding-right: 45px;
 }
-.content-box .btn-box > li:last-child {
+.content-box .btn-box li:last-child {
   padding-right: 0px;
 }
 .content-box .btn-box #btn-good {
   background: url("../../images/forum/btn_good.png") no-repeat;
-  background-size: 19.2px 19.2px;
-  height: 20px;
-  width: 20px;
+  background-size: 14.4px 14.4px;
+  height: 15px;
+  width: 15px;
 }
 .content-box .btn-box #btn-discuss {
   background: url("../../images/forum/discuss.png") no-repeat;
-  background-size: 19.2px 19.2px;
-  height: 20px;
-  width: 20px;
+  background-size: 14.4px 14.4px;
+  height: 15px;
+  width: 15px;
 }
 .content-box .btn-box #btn-share {
-  background: url("../../images/forum/share.png");
-  background-size: 19.2px 19.2px;
-  height: 20px;
-  width: 20px;
+  background: url("../../images/forum/share.png") no-repeat;
+  background-size: 14.4px 14.4px;
+  height: 15px;
+  width: 15px;
 }
 #downloadCon {
   position: fixed;

@@ -166,6 +166,15 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
             }else{
                 title = item.topic_info.title;
             }
+            var posStr='';
+            //判断定位信息是否存在
+            if(item.pos){
+                posStr='<div class="location-box">'+
+                    //t.getLocationToProvince(item.pos)+
+                '<div id="location-img"></div>'+
+                '<span class="location">'+item.pos+'</span>'+
+                '</div>';
+            }
             str+='<li><div class="li-main">'+
                     '<div class="user-info">'+
                         '<div class="left">'+
@@ -191,11 +200,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                         '<div style="clear: both"></div>'+
                     '</ul>'+
                     //新增发帖定位和学校信息栏
-                    '<div class="location-box">'+
-                        //t.getLocationToProvince(item.pos)+
-                        '<div id="location-img"></div>'+
-                        '<span class="location">武汉市</span>'+
-                    '</div>'+
+                        posStr+
                     '<ul class="btn-box">'+
                         '<li><div id="btn-good"></div></li>'+
                         '<li><div id="btn-discuss"></div></li>'+
@@ -318,14 +323,8 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         }
     };
 
-    /*每个帖子加上地理位置信息*/
-    //t.getLocationToProvince=function(){
-    //    if(!item.pos){
-    //        return '';
-    //    }else {
-    //
-    //    }
-    //}
+    /*点击分享按钮跳转图片*/
+    $('#btn-share').on('click')
 
     return  Topic;
 });

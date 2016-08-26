@@ -179,12 +179,12 @@ body{
       }
     }
   }
-  //��ַ��ʽ
   .location-box {
+    position: relative;
     display: inline-block;
     height: 20px;
-    background-color: #E2E2E2;
-    color: #767676;
+    background-color: #E5E5E5;
+    color: #A9A9A9;
     border-radius: 5px;
     margin-bottom: 15px;
     font-size: 12px;
@@ -209,31 +209,33 @@ body{
     }
   }
   .btn-box {
+    float: right;
+    //vertical-align: 14px;
     display: inline-block;
-    > li {
+    li {
       float: left;
-      padding-right: 25px;
+      padding-right: 45px;
       &:last-child {
         padding-right: 0px;
       }
     }
     #btn-good {
       background: url("../../images/forum/btn_good.png") no-repeat;
-      background-size: 48px*0.4 48px*0.4;
-      height: 20px;
-      width: 20px;
+      background-size: 48px*0.3 48px*0.3;
+      height: 15px;
+      width: 15px;
     }
     #btn-discuss {
       background: url("../../images/forum/discuss.png") no-repeat;
-      background-size: 48px*0.4 48px*0.4;
-      height: 20px;
-      width: 20px;
+      background-size: 48px*0.3 48px*0.3;
+      height: 15px;
+      width: 15px;
     }
     #btn-share {
-      background: url("../../images/forum/share.png");
-      background-size: 48px*0.4 48px*0.4;
-      height: 20px;
-      width: 20px;
+      background: url("../../images/forum/share.png") no-repeat;
+      background-size: 48px*0.3 48px*0.3;
+      height: 15px;
+      width: 15px;
     }
   }
 }
