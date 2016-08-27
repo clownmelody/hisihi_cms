@@ -548,8 +548,9 @@ ul li {
 .header .nav-tabs-bar .nav-bar {
   width: 100%;
   height: 40px;
-  background-color: #212121;
-  color: white;
+  background-color: #fff;
+  color: #303030;
+  border-bottom: 1px solid #E5E5E5;
 }
 .header .nav-tabs-bar .nav-bar > div {
   float: left;
