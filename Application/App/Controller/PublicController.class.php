@@ -7,7 +7,6 @@
  */
 
 namespace App\Controller;
-//use Addons\ResetByEmail\ResetByEmailAddon;
 use Addons\Avatar\AvatarAddon;
 use Think\Controller;
 use Think\Hook;
