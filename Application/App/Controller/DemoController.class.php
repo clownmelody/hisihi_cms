@@ -18,19 +18,36 @@ class DemoController extends BaseController
         $this->log = new ApiInfoLog('DemoController');
     }
 
-    Public function index() {
+    /**
+     * @Before
+     */
+    public function index() {
         switch ($this->_method){
             case 'get':
-                $this->log->record('test log');
+                G('startSqlTime');
+                $model = D('Forum/Forum');
+                $model->getForumList();
+                G('endSqlTime');
+                var_dump($model->getLastSql());
+                var_dump(G('startSqlTime','endSqlTime', 6));
                 $this->response_json('get data');
                 break;
             case 'put':
+                $t = new DemoController();
+                $t->test();
                 $this->response_json('put data');
                 break;
             case 'post':
                 $this->response_json('post data');
                 break;
+            default:
+                $this->response_json('not support this method!');
+                break;
         }
+    }
+
+    public function test(){
+        var_dump('222');
     }
 
 }

@@ -93,7 +93,13 @@ if(!IS_CLI) {
 // 加载核心Think类
 require CORE_PATH.'Think'.EXT;
 
-include THINK_PATH.'../vendor/autoload.php';
+include THINK_PATH . '../vendor/autoload.php';
+/*include_once THINK_PATH . '../Application/common/Lib/ApplicationAspectKernel.class.php';
+$applicationAspectKernel = \ApplicationAspectKernel::getInstance();
+$applicationAspectKernel->init(array(
+    'debug' => true,
+    'cacheDir'  => __DIR__ . '/../api_log/aop_cache'
+));*/
 
 // 应用初始化 
 Think\Think::start();

@@ -10,3 +10,4 @@
 /Application/App/Controller/TestDataController.class.php
 ThinkPHP/Conf/convention.php
 /Application/App/Conf/config.php
+/api_log
