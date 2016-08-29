@@ -23,11 +23,12 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         });
 
         //点赞和评论弹出下载引导页
-         $(document).on(eventsName,'.choseArea', $.proxy(this,'openMask'));
-        //$(document).on(eventsName,'.btn-good', $.proxy(this,'openMask'));
-        //$(document).on(eventsName,'.btn-discuss', $.proxy(this,'openMask'));
-        //$(document).on(eventsName,'.btn-share', $.proxy(this,'openMask'));
+        // $(document).on(eventsName,'.choseArea', $.proxy(this,'openMask'));
+        $(document).on(eventsName,'.btn-good', $.proxy(this,'openMask'));
+        $(document).on(eventsName,'.btn-discuss', $.proxy(this,'openMask'));
+        $(document).on(eventsName,'.btn-share', $.proxy(this,'openShareMask'));
         $(document).on(eventsName,'.mask', $.proxy(this,'hideMask'));
+        $(document).on(eventsName,'.topic-share', $.proxy(this,'hideShareMask'));
     };
 
 
@@ -343,7 +344,27 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
 
     /*下载引导页的显示和隐藏*/
     t.controlMaskModal=function(flag){
-        var $target=$('.mask');
+        var $target=$('.download');
+        if(flag==true){
+            $target.show();
+        }
+        else{
+            $target.hide();
+        }
+    };
+
+    /*点赞和评论操作*/
+    t.openShareMask=function(){
+        this.controlMask(true);
+    };
+
+    t.hideShareMask=function(){
+        this.controlMask(false);
+    };
+
+    /*分享页的显示和隐藏*/
+    t.controlMask=function(flag){
+        var $target=$('.topic-share');
         if(flag==true){
             $target.show();
         }
