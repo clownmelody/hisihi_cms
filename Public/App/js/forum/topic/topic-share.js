@@ -21,6 +21,14 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         new MyPhotoSwipe('.post-img-box',{
             bgFilter:true,
         });
+
+        //点赞和评论弹出下载引导页
+        // $(document).on(eventsName,'.choseArea', $.proxy(this,'openMask'));
+        $(document).on(eventsName,'.btn-good', $.proxy(this,'openMask'));
+        $(document).on(eventsName,'.btn-discuss', $.proxy(this,'openMask'));
+        $(document).on(eventsName,'.btn-share', $.proxy(this,'openShareMask'));
+        $(document).on(eventsName,'.mask', $.proxy(this,'hideMask'));
+        $(document).on(eventsName,'.topic-share', $.proxy(this,'hideShareMask'));
     };
 
 
@@ -202,9 +210,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                     //新增发帖定位和学校信息栏
                         posStr+
                     '<ul class="btn-box">'+
-                        '<li><div id="btn-good"></div></li>'+
-                        '<li><div id="btn-discuss"></div></li>'+
-                        '<li><div id="btn-share"></div></li>'+
+                        '<li><div class="choseArea btn-good"><div id="btn-good"></div></div></li>'+
+                        '<li><div class="choseArea btn-discuss"><div id="btn-discuss"></div></div></li>'+
+                        '<li><div class="choseArea btn-share"><div id="btn-share"></div></div></li>'+
                     '</ul>'+
                 '</div></li>';
         }
@@ -323,8 +331,47 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         }
     };
 
-    /*点击分享按钮跳转图片*/
-    $('#btn-share').on('click')
+
+
+    /*点赞和评论操作*/
+    t.openMask=function(){
+        this.controlMaskModal(true);
+    };
+
+    t.hideMask=function(){
+        this.controlMaskModal(false);
+    };
+
+    /*下载引导页的显示和隐藏*/
+    t.controlMaskModal=function(flag){
+        var $target=$('.download');
+        if(flag==true){
+            $target.show();
+        }
+        else{
+            $target.hide();
+        }
+    };
+
+    /*点赞和评论操作*/
+    t.openShareMask=function(){
+        this.controlMask(true);
+    };
+
+    t.hideShareMask=function(){
+        this.controlMask(false);
+    };
+
+    /*分享页的显示和隐藏*/
+    t.controlMask=function(flag){
+        var $target=$('.topic-share');
+        if(flag==true){
+            $target.show();
+        }
+        else{
+            $target.hide();
+        }
+    };
 
     return  Topic;
 });

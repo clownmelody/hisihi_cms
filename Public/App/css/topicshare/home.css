@@ -675,6 +675,7 @@ body {
   color: #A9A9A9;
   border-radius: 5px;
   margin-bottom: 15px;
+  margin-top: 10px;
   font-size: 12px;
 }
 .content-box .location-box img {
@@ -700,26 +701,33 @@ body {
   float: right;
   display: inline-block;
 }
+.content-box .btn-box .choseArea {
+  height: 35px;
+  width: 40px;
+}
 .content-box .btn-box li {
   float: left;
-  padding-right: 45px;
+  padding-right: 15px;
 }
 .content-box .btn-box li:last-child {
   padding-right: 0px;
 }
 .content-box .btn-box #btn-good {
+  margin: 10px auto 10px auto;
   background: url("../../images/forum/btn_good.png") no-repeat;
   background-size: 14.4px 14.4px;
   height: 15px;
   width: 15px;
 }
 .content-box .btn-box #btn-discuss {
+  margin: 10px auto 10px auto;
   background: url("../../images/forum/discuss.png") no-repeat;
   background-size: 14.4px 14.4px;
   height: 15px;
   width: 15px;
 }
 .content-box .btn-box #btn-share {
+  margin: 10px auto 10px auto;
   background: url("../../images/forum/share.png") no-repeat;
   background-size: 14.4px 14.4px;
   height: 15px;
@@ -748,6 +756,23 @@ body {
   font-size: 15px;
   border-radius: 2px;
   line-height: 32px;
+}
+.mask {
+  display: none;
+  opacity: 0.9;
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+}
+.mask > img {
+  max-width: 80%;
+  position: absolute;
+  bottom: 65px;
+  left: 10%;
 }
 @media screen and (max-width: 320px) {
   .banner-box .desc-box .vertical .topic-basic-info p {
