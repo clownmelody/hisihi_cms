@@ -1,6 +1,5 @@
 {
     "require": {
-        "monolog/monolog": "^1.21",
-        "goaop/framework": "^1.1"
+        "monolog/monolog": "^1.21"
     }
 }

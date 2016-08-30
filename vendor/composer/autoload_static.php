@@ -11,10 +11,6 @@ class ComposerStaticInitc21ce45bfe57fa8d6c16fd1523b4fe07
         array (
             'Monolog\\' => 8,
         ),
-        'G' => 
-        array (
-            'Go\\' => 3,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -22,40 +18,14 @@ class ComposerStaticInitc21ce45bfe57fa8d6c16fd1523b4fe07
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'Go\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/goaop/framework/src',
-        ),
     );
 
     public static $prefixesPsr0 = array (
-        'T' => 
-        array (
-            'TokenReflection' => 
-            array (
-                0 => __DIR__ . '/..' . '/andrewsville/php-token-reflection',
-            ),
-        ),
         'P' => 
         array (
             'Psr\\Log\\' => 
             array (
                 0 => __DIR__ . '/..' . '/psr/log',
-            ),
-        ),
-        'D' => 
-        array (
-            'Doctrine\\Common\\Lexer\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
-            ),
-            'Doctrine\\Common\\Annotations\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/annotations/lib',
-            ),
-            'Dissect' => 
-            array (
-                0 => __DIR__ . '/..' . '/jakubledl/dissect/src',
             ),
         ),
     );

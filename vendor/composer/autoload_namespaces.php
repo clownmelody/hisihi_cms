@@ -6,9 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'TokenReflection' => array($vendorDir . '/andrewsville/php-token-reflection'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
-    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
-    'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib'),
-    'Dissect' => array($vendorDir . '/jakubledl/dissect/src'),
 );

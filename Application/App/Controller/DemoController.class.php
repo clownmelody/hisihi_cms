@@ -2,7 +2,6 @@
 namespace App\Controller;
 use Common\Controller\BaseController;
 use log\ApiInfoLog;
-
 /**
  * Created by PhpStorm.
  * User: yangchujie
@@ -33,8 +32,6 @@ class DemoController extends BaseController
                 $this->response_json('get data');
                 break;
             case 'put':
-                $t = new DemoController();
-                $t->test();
                 $this->response_json('put data');
                 break;
             case 'post':
