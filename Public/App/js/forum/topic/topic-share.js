@@ -22,8 +22,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
             bgFilter:true,
         });
 
-        //点赞和评论弹出下载引导页
-        // $(document).on(eventsName,'.choseArea', $.proxy(this,'openMask'));
+        //点赞评论和分享弹出下载引导页
         $(document).on(eventsName,'.btn-good', $.proxy(this,'openMask'));
         $(document).on(eventsName,'.btn-discuss', $.proxy(this,'openMask'));
         $(document).on(eventsName,'.btn-share', $.proxy(this,'openShareMask'));
@@ -177,7 +176,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
             var posStr='';
             //判断定位信息是否存在
             if(item.pos){
-                posStr='<div class="location-box">'+
+                posStr= '<div class="location-box">'+
                     //t.getLocationToProvince(item.pos)+
                 '<div id="location-img"></div>'+
                 '<span class="location">'+item.pos+'</span>'+
@@ -208,12 +207,16 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                         '<div style="clear: both"></div>'+
                     '</ul>'+
                     //新增发帖定位和学校信息栏
-                        posStr+
-                    '<ul class="btn-box">'+
-                        '<li><div class="choseArea btn-good"><div id="btn-good"></div></div></li>'+
-                        '<li><div class="choseArea btn-discuss"><div id="btn-discuss"></div></div></li>'+
-                        '<li><div class="choseArea btn-share"><div id="btn-share"></div></div></li>'+
-                    '</ul>'+
+                    '<div class="foot-box">'+
+                            '<div>'+
+                                posStr+
+                            '</div>'+
+                        '<div class="btn-box">'+
+                            '<span class="choseArea btn-good"><div id="btn-good"></div></span>'+
+                            '<span class="choseArea btn-discuss"><div id="btn-discuss"></div></span>'+
+                            '<span class="choseArea btn-share"><div id="btn-share"></div></span>'+
+                        '</div>'+
+                    '</div>'+
                 '</div></li>';
         }
         return str;
@@ -353,7 +356,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
         }
     };
 
-    /*点赞和评论操作*/
+    /*分享操作*/
     t.openShareMask=function(){
         this.controlMask(true);
     };
@@ -372,6 +375,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
             $target.hide();
         }
     };
+
+    /*话题标题最多显示两行，超过部分省略*/
+    //t.
 
     return  Topic;
 });
