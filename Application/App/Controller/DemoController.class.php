@@ -23,16 +23,16 @@ class DemoController extends BaseController
     public function index() {
         switch ($this->_method){
             case 'get':
-                G('startSqlTime');
+                /*G('startSqlTime');
                 $model = D('Forum/Forum');
                 $model->getForumList();
                 G('endSqlTime');
                 var_dump($model->getLastSql());
-                var_dump(G('startSqlTime','endSqlTime', 6));
+                var_dump(G('startSqlTime','endSqlTime', 6));*/
                 $this->response_json('get data');
                 break;
             case 'put':
-                $this->response_json('put data');
+                $this->response_json(array('data'=>'put data'));
                 break;
             case 'post':
                 $this->response_json('post data');
@@ -41,10 +41,6 @@ class DemoController extends BaseController
                 $this->response_json('not support this method!');
                 break;
         }
-    }
-
-    public function test(){
-        var_dump('222');
     }
 
 }
