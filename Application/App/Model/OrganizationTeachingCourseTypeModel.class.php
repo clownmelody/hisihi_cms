@@ -17,4 +17,8 @@ class OrganizationTeachingCourseTypeModel extends Model
         array('status', '1'),  // 新增的时候把status字段设置为1
     );
 
+    public function updateType($i, $data){
+        $this->where('id='.$i)->save($data);
+    }
+
 }

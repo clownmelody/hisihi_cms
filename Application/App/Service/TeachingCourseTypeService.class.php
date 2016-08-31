@@ -16,7 +16,7 @@ class TeachingCourseTypeService extends Model
         $list = D('App/OrganizationTeachingCourseType', 'Model')
             ->field('id, name, pic_url, special_type, sort')
             ->where($where_array)
-            ->page($page, $count)
+            //->page($page, $count)
             ->order('sort desc')
             ->select();
         return $list;
