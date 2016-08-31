@@ -586,13 +586,14 @@ body {
   top: 4px;
 }
 .content-box .user-info .left .left-img img {
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
   background-clip: padding-box;
+  margin-top: 8px;
 }
 .content-box .user-info .left .right-txt {
-  margin-left: 70px;
+  margin-left: 50px;
 }
 .content-box .user-info .left .right-txt p {
   margin: 8px auto;
@@ -667,21 +668,28 @@ body {
   width: 100%;
   height: 100%;
 }
-.content-box .location-box {
+.content-box .foot-box {
+  height: 50px;
+}
+.content-box .foot-box > * {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+}
+.content-box .foot-box .location-box {
   position: relative;
   display: inline-block;
   height: 20px;
   background-color: #E5E5E5;
   color: #A9A9A9;
   border-radius: 5px;
-  margin-bottom: 15px;
   margin-top: 10px;
   font-size: 12px;
 }
-.content-box .location-box img {
+.content-box .foot-box .location-box img {
   border: 0;
 }
-.content-box .location-box #location-img {
+.content-box .foot-box .location-box #location-img {
   float: left;
   border: none;
   background: url("../../images/forum/location.png") no-repeat;
@@ -691,52 +699,45 @@ body {
   margin-left: 5px;
   margin-top: 3px;
 }
-.content-box .location-box .location {
+.content-box .foot-box .location-box .location {
   float: left;
   line-height: 20px;
   padding-left: 5px;
   padding-right: 7px;
 }
-.content-box .btn-box {
-  float: right;
-  display: inline-block;
+.content-box .foot-box .btn-box {
+  text-align: right;
 }
-.content-box .btn-box .choseArea {
+.content-box .foot-box .btn-box .choseArea {
   height: 35px;
   width: 40px;
-}
-.content-box .btn-box li {
-  float: left;
   padding-right: 15px;
+  display: inline-block;
 }
-.content-box .btn-box li:last-child {
+.content-box .foot-box .btn-box .choseArea:last-child {
   padding-right: 0px;
 }
-.content-box .btn-box #btn-good {
-  margin: 10px auto 10px auto;
-  background: url("../../images/forum/btn_good.png") no-repeat;
-  background-size: 14.4px 14.4px;
+.content-box .foot-box .btn-box .choseArea > div {
+  display: inline-block;
   height: 15px;
   width: 15px;
+  margin: 10px;
+  background-size: 14.4px 14.4px;
+  background-repeat: no-repeat;
 }
-.content-box .btn-box #btn-discuss {
-  margin: 10px auto 10px auto;
-  background: url("../../images/forum/discuss.png") no-repeat;
-  background-size: 14.4px 14.4px;
-  height: 15px;
-  width: 15px;
+.content-box .foot-box .btn-box #btn-good {
+  background-image: url("../../images/forum/btn_good.png");
 }
-.content-box .btn-box #btn-share {
-  margin: 10px auto 10px auto;
-  background: url("../../images/forum/share.png") no-repeat;
-  background-size: 14.4px 14.4px;
-  height: 15px;
-  width: 15px;
+.content-box .foot-box .btn-box #btn-discuss {
+  background-image: url("../../images/forum/discuss.png");
+}
+.content-box .foot-box .btn-box #btn-share {
+  background-image: url("../../images/forum/share.png");
 }
 #downloadCon {
   position: fixed;
   bottom: 0;
-  z-index: 999;
+  z-index: 990;
 }
 #downloadCon img {
   max-width: 100%;
@@ -766,13 +767,21 @@ body {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 999;
+  z-index: 998;
 }
 .mask > img {
   max-width: 80%;
   position: absolute;
   bottom: 65px;
   left: 10%;
+}
+.topic-share {
+  display: none;
+  position: fixed;
+  z-index: 999;
+}
+.topic-share img {
+  max-width: 100%;
 }
 @media screen and (max-width: 320px) {
   .banner-box .desc-box .vertical .topic-basic-info p {

@@ -95,13 +95,14 @@ body{
     .left{
       float: left;
       position: relative;
-      @w:60px;
+      @w:40px;
       .left-img{
         position: absolute;
         top: 4px;
         img {
           .size(@w, @w);
           .border-radius(@w/2);
+          margin-top: 8px;
         }
       }
       .right-txt{
@@ -179,70 +180,71 @@ body{
       }
     }
   }
-  .location-box {
-    position: relative;
-    display: inline-block;
-    height: 20px;
-    background-color: #E5E5E5;
-    color: #A9A9A9;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    margin-top: 10px;
-    font-size: 12px;
-    img {
-      border: 0;
+  .foot-box {
+    height: 50px;
+    >*{
+      display: inline-block;
+      width: 50%;
+      vertical-align: top;
     }
-    #location-img {
-      float: left;
-      border: none;
-      background: url("../../images/forum/location.png") no-repeat;
-      background-size: 36px*0.3 48px*0.3;
-      height: 15px;
-      width: 11px;
-      margin-left: 5px;
-      margin-top: 3px;
-    }
-    .location {
-      float: left;
-      line-height: 20px;
-      padding-left: 5px;
-      padding-right: 7px;
-    }
-  }
-  .btn-box {
-    float: right;
-    display: inline-block;
-    .choseArea {
-      height: 35px;
-      width: 40px;
-  }
-    li {
-      float: left;
-      padding-right: 15px;
-      &:last-child {
-        padding-right: 0px;
+    .location-box {
+      position: relative;
+      display: inline-block;
+      height: 20px;
+      background-color: #E5E5E5;
+      color: #A9A9A9;
+      border-radius: 5px;
+      //margin-bottom: 15px;
+      margin-top: 10px;
+      font-size: 12px;
+      img {
+        border: 0;
+      }
+      #location-img {
+        float: left;
+        border: none;
+        background: url("../../images/forum/location.png") no-repeat;
+        background-size: 36px*0.3 48px*0.3;
+        height: 15px;
+        width: 11px;
+        margin-left: 5px;
+        margin-top: 3px;
+      }
+      .location {
+        float: left;
+        line-height: 20px;
+        padding-left: 5px;
+        padding-right: 7px;
       }
     }
-    #btn-good {
-      margin: 10px auto 10px auto;
-      background: url("../../images/forum/btn_good.png") no-repeat;
-      background-size: 48px*0.3 48px*0.3;
-      height: 15px;
-      width: 15px;
-    }
-    #btn-discuss {
-      margin: 10px auto 10px auto;
-      background: url("../../images/forum/discuss.png") no-repeat;
-      background-size: 48px*0.3 48px*0.3;
-      height: 15px;
-      width: 15px;
-    }
-    #btn-share {
-      margin: 10px auto 10px auto;
-      background: url("../../images/forum/share.png") no-repeat;
-      background-size: 48px*0.3 48px*0.3;
-      height: 15px;
-      width: 15px;
+    .btn-box {
+      text-align: right;
+      .choseArea {
+        height: 35px;
+        width: 40px;
+        padding-right: 15px;
+        display: inline-block;
+        &:last-child {
+          padding-right: 0px;
+        }
+        >div{
+          display: inline-block;
+          height: 15px;
+          width: 15px;
+          margin: 10px;
+          background-size: 48px*0.3 48px*0.3;
+          background-repeat: no-repeat;
+        }
+      }
+      #btn-good {
+        background-image: url("../../images/forum/btn_good.png");
+      }
+      #btn-discuss {
+        background-image: url("../../images/forum/discuss.png");
+      }
+      #btn-share {
+        background-image: url("../../images/forum/share.png");
+      }
     }
   }
 }
@@ -250,7 +252,7 @@ body{
 #downloadCon{
   position: fixed;
   bottom: 0;
-  z-index: 999;
+  z-index: 990;
   img{
     max-width: 100%;
   }
@@ -270,7 +272,6 @@ body{
     line-height: 32px;
   }
 }
-
 .mask {
   display: none;
   opacity: 0.9;
@@ -280,12 +281,20 @@ body{
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 999;
+  z-index: 998;
     >img {
     max-width: 80%;
     position: absolute;
     bottom: 65px;
     left: 10%;
+  }
+}
+.topic-share {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  img {
+    max-width: 100%;
   }
 }
 
