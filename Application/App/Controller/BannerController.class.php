@@ -18,7 +18,7 @@ class BannerController extends BaseController
     }
 
     /**
-     * 获取3.0.1首页banner
+     * 获取3.0.1 首页banner
      */
     public function index() {
         switch ($this->_method){
@@ -27,6 +27,23 @@ class BannerController extends BaseController
                 $extra['data'] = $list;
                 $extra['totalCount'] = count($list);
                 $this->apiSuccess('获取app首页banner成功', null, $extra);
+                break;
+            default:
+                $this->response_json('not support this method!');
+                break;
+        }
+    }
+
+    /**
+     * 获取3.0.1 首页广告位
+     */
+    public function adv() {
+        switch ($this->_method){
+            case 'get':
+                $list = D('App/Banner','Service')->getIndexAdvBanner();
+                $extra['data'] = $list;
+                $extra['totalCount'] = count($list);
+                $this->apiSuccess('获取app首页广告成功', null, $extra);
                 break;
             default:
                 $this->response_json('not support this method!');

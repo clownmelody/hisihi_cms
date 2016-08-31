@@ -17,6 +17,19 @@ class BannerService extends Model
         $list = D('App/InformationFlowBanner', 'Model')
             ->field('pic_url, url, jump_type, organization_id, sort')
             ->where($where_array)
+            ->order('sort desc')
+            ->select();
+        return $list;
+    }
+
+    public function getIndexAdvBanner(){
+        $where_array['status'] = 1;
+        $where_array['show_pos'] = -6;  // App 首頁广告
+        $list = D('App/InformationFlowBanner', 'Model')
+            ->field('pic_url, url, jump_type, organization_id, sort')
+            ->where($where_array)
+            ->order('create_time desc')
+            ->limit(1)
             ->select();
         return $list;
     }
