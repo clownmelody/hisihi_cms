@@ -1,0 +1,80 @@
+<extend name="Public/base"/>
+<block name="body">
+    <!-- 标题 -->
+    <div class="main-title">
+        <h2>
+            培训课程类型管理
+        </h2>
+    </div>
+
+    <!-- 按钮工具栏 -->
+    <div class="cf">
+        <div class="fl">
+            <div class="btn-group">
+                <button class="btn document_add" url="{:U('add')}">新 增</button>
+                <button class="btn ajax-post confirm" target-form="ids" url='{:U("delete",array("status"=>-1))}'>删 除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+        <table class="">
+            <thead>
+            <tr>
+                <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                <th class="">ID</th>
+                <th class="">名称</th>
+                <th class="">类型</th>
+                <th class="">排序</th>
+                <th class="">创建时间</th>
+                <th class="">状态</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="_list">
+                <volist name="_list" id="vo">
+                    <tr>
+                        <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.special_type}</td>
+                        <td>{$vo.sort}</td>
+                        <td><span>{$vo.create_time|time_format}</span></td>
+                        <td><if condition="($vo.status eq 1) "> 正常
+                            <else /> 已删除
+                        </if>
+                        </td>
+                        <td>
+                            <a href="{:U('edit?id='.$vo['id'])}" >编辑</a>
+                            <a href="{:U('delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <div class="page">
+        {$_page}
+    </div>
+
+</block>
+<block name="script">
+    <script type="text/javascript">
+        //导航高亮
+        highlight_subnav("{:U('TeachingCourseType/index')}");
+        $(function(){
+            //只有一个模型时，点击新增
+            $('.document_add').click(function(){
+                var url = $(this).attr('url');
+                if(url != undefined && url != ''){
+                    window.location.href = url;
+                }
+            });
+        })
+    </script>
+</block>
