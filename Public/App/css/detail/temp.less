@@ -3,15 +3,23 @@ body{
   padding: 0;
   margin: 0;
 }
+p{
+  margin: 0px;
+}
+img {
+  border: 0px;
+}
 .clear {
   clear: both;
 }
 .user-info {
   width: 100%;
-  height: 80px;
+  height: 50px;
+  padding-top: 14px;
+  padding-bottom: 14px;
   .user-img {
-    padding:14px 10px;
     float: left;
+    padding-right: 10px;
     >img {
       .size(50px,50px);
       border-radius: 50px;
@@ -19,13 +27,18 @@ body{
   }
   .user-txt {
     float: left;
+    padding-top: 8px;
     .name {
       color: #212121;
       font-size: 14px;
+      padding-bottom: 2px;
     }
     .type {
       color: #808080;
       font-size: 10px;
+      .time {
+        padding-right: 6px;
+      }
     }
   }
 }
@@ -38,50 +51,49 @@ body{
   overflow-x: hidden;
   opacity: 1;
   .content {
-    padding: 10px 13px 0 10px;
+    padding: 10px 14px 0 14px;
+
     //帖子详情
     .info-post {
-      margin-top: 2px;
+      //margin-top: 2px;
       color: #212121;
       font-size: 14px;
       .post-txt {
-        margin: 0px;
+        padding-bottom: 10px;
         .topic-name {
           color: #4A90E2;
         }
       }
     }
+
     //帖子图片
     .post-img {
       margin-bottom: 2%;
+      //img标签图片有默认高宽，需要清除默认样式
       .img {
         display: inline-block;
         float: left;
         overflow: hidden;
         max-width: 40%;
-        margin-right: 10px;
-        margin-top: 10px;
-        margin-bottom: 0;
+        margin-right: 4px;
+        margin-top: 4px;
         > img {
           width: 100%;
           height: 100%;
         }
       }
-
     }
+
     //定位
     .location-box {
       position: relative;
       display: inline-block;
       height: 20px;
+      margin-bottom: 7px;
       background-color: #E5E5E5;
       color: #808080;
       border-radius: 5px;
-      margin-top: 14px;
       font-size: 10px;
-      img {
-        border: 0;
-      }
       #location-img {
         float: left;
         border: none;
@@ -99,18 +111,113 @@ body{
         padding-right: 7px;
       }
     }
+
     //点赞区
     .footer {
-      //float: left;
-      .like-people {
-
+      height: 60px;
+      width: 100%;
+      padding-bottom: 14px;
+      .footer-triangle {
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 15px solid #e5e5e5;
+        margin-left: 20px;
       }
-      .like-num {
-
+      .footer-info {
+        height: 44px;
+        width: 100%;
+        background-color: #e5e5e5;
+        float: left;
+        .circle {
+          float: left;
+          margin: 7px 5px;
+          .size(30px,30px);
+          border-radius: 30px;
+          background-color: #D8D8D8;
+        }
+        .like-people {
+          .like-img {
+            .size(30px,30px);
+            border-radius: 30px;
+            background-color: #D8D8D8;
+          }
+        }
+        .like-num {
+          line-height: 30px;
+        }
+        .like-btn {
+          .size(50px,44px);
+          background-color: #D8D8D8;
+          float: right;
+          line-height: 50px;
+          margin-left: 10px;
+          .like-btn-img {
+            display: inline-block;
+            margin-left: 12px;
+            background: url("../../images/forum/detail/sprite.png") no-repeat;
+            .size(26px,23px);
+            background-size: 180px*0.5 72px*0.5;
+            background-position: -43px -7px;
+          }
+        }
       }
-      .like-btn {
+
+    }
+
+    //讨论区
+    .discuss {
+      width: 100%;
+      .discuss-header {
+        color: #808080;
+        font-size: 13px;
+        .discuss-img {
+          float: left;
+          display: inline-block;
+          .size(23px,22px);
+          padding-right: 10px;
+          background: url("../../images/forum/detail/sprite.png") no-repeat;
+          background-size: 180px*0.5 72px*0.5;
+          background-position: -7px -7px;
+        }
+        .discuss-title {
+          float: left;
+        }
+      }
+      .teacher {
+        .user-left {
+
+        }
+      }
+      .student {
 
       }
     }
+  }
+}
+
+
+#downloadCon{
+  position: fixed;
+  bottom: 0;
+  z-index: 990;
+  img{
+    max-width: 100%;
+  }
+  a {
+    .size(80px,32px);
+    position: absolute;
+    top:50%;
+    margin-top: -16px;
+    right: 12px;
+    display:block;
+    text-decoration: none;
+    background-color: #FF5A00;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    line-height: 32px;
   }
 }
