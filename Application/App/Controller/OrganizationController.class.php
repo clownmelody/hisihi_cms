@@ -389,7 +389,8 @@ class OrganizationController extends AppController
         $model=M("Organization");
         if(floatval($version) >= 2.95){
             $result = $model->where(array('id'=>$organization_id,'status'=>1))
-                ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,available_num,light_authentication,location_img, type, is_listen_preview')->find();
+                ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,available_num,light_authentication,location_img, type, is_listen_preview, listen_preview_text')
+                ->find();
         } else {
             $result = $model->where(array('id'=>$organization_id,'status'=>1))
                 ->field('name,slogan,location,logo,introduce,advantage,view_count,guarantee_num,available_num,light_authentication,location_img, type')->find();
@@ -434,9 +435,6 @@ class OrganizationController extends AppController
                 $result['relationship'] = 0;
             }
             $advantage = $result['advantage'];
-            /*$enroll_ = M('OrganizationEnroll')->distinct(true)->field('student_uid')->where(array('organization_id'=>$organization_id,'status'=>array('gt',0)))->select();
-            $enroll_count = count($enroll_);
-            $result['available_num'] = $result['guarantee_num'] - $enroll_count;*/
             $result['advantage']=$advantage;
             $relationModel = M('OrganizationRelation');
             $isExist = $relationModel->where('status=1 and organization_id='.$organization_id.' and uid='.$uid)->find();
@@ -1776,6 +1774,7 @@ class OrganizationController extends AppController
      * @param null $name
      * @param int $page
      * @param int $count
+     * @param int $version
      */
     public function localOrganizationList($uid=0, $city=null, $type=null, $name=null, $page=1, $count=10, $version=0){
         if($uid==0){
@@ -1805,12 +1804,17 @@ class OrganizationController extends AppController
         if(!empty($name)){
             $select_where = $select_where . " and name like '%".$name."%'";
         }
-        $org_list = $model->field('id, name, slogan, city,type, view_count, logo, light_authentication,sort')->order("sort asc")
+        $org_list = $model->field('id, name, slogan, city,type, view_count, logo, light_authentication,sort, advantage, is_listen_preview, listen_preview_text')->order("sort asc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
 
         foreach($org_list as &$org){
             $org_id = $org['id'];
+            if((float)$version<3.01){
+                unset($org['advantage']);
+                unset($org['is_listen_preview']);
+                unset($org['listen_preview_text']);
+            }
             if((float)$version>=2.95){
                 $org['authenticationInfo'] = $this->getAuthenticationInfo_v2_9_5($org_id);
             } else {
@@ -1827,7 +1831,6 @@ class OrganizationController extends AppController
             }else{
                 unset($org['type_tag']);
             }
-            //$user['info'] = query_user(array('avatar256', 'avatar128', 'group', 'extinfo', 'nickname'), $uid);
             $follow_other = D('Follow')->where(array('who_follow'=>$uid,'follow_who'=>$org_id, 'type'=>2))->find();
             $be_follow = D('Follow')->where(array('who_follow'=>$org_id,'follow_who'=>$uid, 'type'=>2))->find();
             if($follow_other&&$be_follow){
