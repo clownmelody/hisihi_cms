@@ -182,6 +182,16 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                 '<span class="location">'+item.pos+'</span>'+
                 '</div>';
             }
+            //判断专业信息是否存在
+            var majorStr='';
+            if(item.userInfo.extinfo[1].field_content){
+                majorStr='<span>'+item.userInfo.extinfo[1].field_content+'</span>';
+            }
+            //判断用户是否为老师，是老师则红名显示
+            var teacherClassName='';
+            if(item.userInfo.group==6){
+                teacherClassName='teacher-name';
+            }
             str+='<li><div class="li-main">'+
                     '<div class="user-info">'+
                         '<div class="left">'+
@@ -189,14 +199,15 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                                 '<img src="'+pic+'">'+
                             '</div>'+
                             '<div class="right-txt">'+
-                                '<p class="name">'+name+'</p>'+
+                                '<p class="name '+teacherClassName+'">'+name+'</p>'+
                                 '<p class="type">'+
                                     '<span>'+this.getDiffTime(item.create_time)+'</span>'+
-                                    '<span>'+item.forumTitle+'</span>'+
+                                    majorStr+
                                 '</p>'+
                             '</div>'+
                         '</div>'+
-                        '<div class="right">'+orgStr+'</div>'+
+                        //删除发帖人所属机构名称
+                        //'<div class="right">'+orgStr+'</div>'+
                         '<div style="clear: both;"></div>'+
                     '</div>'+
                     '<p class="post-word">'+
@@ -377,7 +388,6 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
     };
 
     /*话题标题最多显示两行，超过部分省略*/
-    //t.
 
     return  Topic;
 });

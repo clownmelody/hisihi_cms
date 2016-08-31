@@ -494,6 +494,33 @@ body {
   padding: 0;
   margin: 0;
 }
+.clear {
+  clear: both;
+}
+.user-info {
+  width: 100%;
+  height: 80px;
+}
+.user-info .user-img {
+  padding: 14px 10px;
+  float: left;
+}
+.user-info .user-img > img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+}
+.user-info .user-txt {
+  float: left;
+}
+.user-info .user-txt .name {
+  color: #212121;
+  font-size: 14px;
+}
+.user-info .user-txt .type {
+  color: #808080;
+  font-size: 10px;
+}
 .wrapper {
   position: absolute;
   top: 0;
@@ -506,34 +533,59 @@ body {
 .wrapper .content {
   padding: 10px 13px 0 10px;
 }
-.wrapper .content .user-info {
-  width: 100%;
-  height: 80px;
-}
-.wrapper .content .user-info .user-img {
-  padding: 14px 10px;
-  float: left;
-}
-.wrapper .content .user-info .user-img > img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50px;
-}
-.wrapper .content .user-info .user-txt {
-  float: left;
-}
-.wrapper .content .user-info .user-txt .name {
+.wrapper .content .info-post {
+  margin-top: 2px;
   color: #212121;
   font-size: 14px;
 }
-.wrapper .content .user-info .user-txt .type {
+.wrapper .content .info-post .post-txt {
+  margin: 0px;
+}
+.wrapper .content .info-post .post-txt .topic-name {
+  color: #4A90E2;
+}
+.wrapper .content .post-img {
+  margin-bottom: 2%;
+}
+.wrapper .content .post-img .img {
+  display: inline-block;
+  float: left;
+  overflow: hidden;
+  max-width: 40%;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.wrapper .content .post-img .img > img {
+  width: 100%;
+  height: 100%;
+}
+.wrapper .content .location-box {
+  position: relative;
+  display: inline-block;
+  height: 20px;
+  background-color: #E5E5E5;
   color: #808080;
+  border-radius: 5px;
+  margin-top: 14px;
   font-size: 10px;
 }
-.wrapper .content .info-post {
-  color: #212121;
-  font-size: 14px;
+.wrapper .content .location-box img {
+  border: 0;
 }
-.wrapper .content .info-post .topic-name {
-  color: #4A90E2;
+.wrapper .content .location-box #location-img {
+  float: left;
+  border: none;
+  background: url("../../images/forum/location.png") no-repeat;
+  background-size: 10.8px 14.4px;
+  height: 15px;
+  width: 11px;
+  margin-left: 5px;
+  margin-top: 3px;
+}
+.wrapper .content .location-box .location {
+  float: left;
+  line-height: 20px;
+  padding-left: 5px;
+  padding-right: 7px;
 }
