@@ -377,7 +377,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
     };
 
     /*话题标题最多显示两行，超过部分省略*/
-    t.get
+    //t.
 
     return  Topic;
 });
