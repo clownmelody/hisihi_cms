@@ -416,7 +416,7 @@ GROUP BY
             $map_pos['post_id'] = (int)$v['id'];
             $pos = $this->getForumPos($map_pos);
             $v['pos'] = $pos['pos'];
-            $v['shareUrl'] = 'app.php/forum/detail/type/view/post_id/'.$v['id'];
+            $v['shareUrl'] = 'app.php/forum/detail/type/view/post_id/'.$v['id'].'/version/'.$version;
 
             unset($pos);
             unset($v['id']);
@@ -1195,7 +1195,11 @@ GROUP BY
             $this->assign('post_img', $post['img']);
             $this->assign('replyList',$replyList);
             $this->setTitle('{$post.title|op_t} — 嘿设汇');
-            $this->display();
+            if((float)$version<2.97){
+                $this->display();
+            } else {
+                $this->display('detail_2_9_7');
+            }
         }
         else
             $this->apiSuccess("获取提问内容成功", null, array('isBookmark' => $isBookmark, 'replyTotalCount' =>  $replyTotalCount, 'post' => $post, 'replyList' => $replyList, 'showMainPost' => $showMainPost));
@@ -1818,7 +1822,7 @@ ORDER BY a.create_time DESC');
         //显示成功消息
         $message = $isEdit ? '编辑成功。' : '提问成功。' . getScoreTip($before, $after) . getToxMoneyTip($tox_money_before, $tox_money_after);
         $extra['post_id'] = $post_id;
-        $extra['shareUrl'] = 'app.php/forum/detail/type/view/post_id/'.$post_id;
+        $extra['shareUrl'] = 'app.php/forum/detail/type/view/post_id/'.$post_id.'/version/'.$version;
         $uid = $this->getUid();
         if($this->checkUserDoPostCache($uid)){
             if(increaseScore($uid, 3)){
