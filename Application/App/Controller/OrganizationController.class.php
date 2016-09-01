@@ -1776,7 +1776,9 @@ class OrganizationController extends AppController
      * @param int $count
      * @param int $version
      */
-    public function localOrganizationList($uid=0, $city=null, $type=null, $name=null, $page=1, $count=10, $version=0){
+    public function localOrganizationList($uid=0, $city=null, $type=null,
+                                          $name=null, $page=1, $count=10,
+                                          $version=0){
         if($uid==0){
             $uid = is_login();
         }
@@ -2881,7 +2883,7 @@ class OrganizationController extends AppController
      * 获取机构的认证信息v2.9.5  需要对“嘿设汇认证”做特殊标记
      * @param $organization_id
      */
-    private function getAuthenticationInfo_v2_9_5($organization_id=0){
+    public function getAuthenticationInfo_v2_9_5($organization_id=0){
         $model = M('OrganizationAuthenticationConfig');
         $authModel = M('OrganizationAuthentication');
         $config_list = $model->field('id, name, pic_url, disable_pic_url, tag_pic_url, content, default_display')->where('status=1 and flag=0')->select();
