@@ -3221,10 +3221,9 @@ class OrganizationController extends AdminController
         }
     }
 
-
     /**
-     * 机构参与活动
      * @param $organization_id
+     * @param $id
      */
     public function add_promotion($organization_id, $id){
         $promotion = M('Promotion')->where('status=1')->order('id')->select();
@@ -3232,6 +3231,37 @@ class OrganizationController extends AdminController
         $this->assign('organization_id', $organization_id);
         $this->assign('tid', $id);
         $this->display();
+    }
+
+    /**
+     * @param $organization_id
+     * @param $id
+     */
+    public function setTeachingCourseType($organization_id, $id){
+        $where_array['special_type'] = 0;
+        $list = D('App/OrganizationTeachingCourseType', 'Model')
+            ->field('id, name')
+            ->where($where_array)
+            ->select();
+        $this->assign('_list', $list);
+        $this->assign('organization_id', $organization_id);
+        $this->assign('tid', $id);
+        $this->display('setteachingcoursetype');
+    }
+
+    public function update_teaching_course_type(){
+        if (IS_POST) {
+            $post_data['type_id'] = $_POST["type_id"];
+            $post_data['teaching_course_id'] = $_POST['teaching_course_id'];
+
+            M('OrganizationTeachingCourse')
+                ->where('id='.$post_data['teaching_course_id'])
+                ->save(array('type_id'=>$post_data['type_id']));
+
+            $this->success('设置类型成功', 'index.php?s=/admin/organization/teachingcourse');
+        } else {
+            $this->display('setteachingcoursetype');
+        }
     }
 
     /**
