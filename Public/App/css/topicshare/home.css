@@ -531,6 +531,8 @@ body {
   display: table;
   color: white;
   height: 100%;
+  width: 100%;
+  text-align: center;
   background-color: rgba(0, 0, 0, 0.4);
 }
 .banner-box .desc-box .vertical .vertical-main {
@@ -605,6 +607,9 @@ body {
 .content-box .user-info .left .right-txt p.name {
   color: #303030;
   font-size: 16px;
+}
+.content-box .user-info .left .right-txt p.name.teacher-name {
+  color: #FF5A00;
 }
 .content-box .user-info .left .right-txt p.type {
   color: #808080;
@@ -810,11 +815,6 @@ body {
   }
   .content-box .user-info .left .right-txt p.type {
     font-size: 12px;
-  }
-  .content-box .user-info .right {
-    font-size: 12px;
-    max-width: 62px;
-    margin-top: 4px;
   }
 }
 @media screen and (min-width: 750px) {
