@@ -3285,15 +3285,17 @@ class OrganizationController extends AppController
 
     /**
      * 用户找机构请求
+     * @param null $username
      * @param null $city_name
      * @param null $phone_num
      * @param string $content
      */
-    public function findOrganizationRequest($city_name=null, $phone_num=null, $content=""){
+    public function findOrganizationRequest($username=null, $city_name=null, $phone_num=null, $content=""){
         if($city_name==null||$phone_num==null){
             $this->apiError(-1, "城市和电话不能为空");
         }
         $model = M('UserFindOrgRequest');
+        $data['city_name'] = $username;
         $data['city_name'] = $city_name;
         $data['phone_num'] = $phone_num;
         $data['content'] = $content;

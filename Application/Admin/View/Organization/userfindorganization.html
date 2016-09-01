@@ -14,6 +14,7 @@
             <tr>
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">ID</th>
+                <th class="">姓名</th>
                 <th class="">电话</th>
                 <th class="">城市</th>
                 <th class="">需求内容</th>
@@ -28,6 +29,7 @@
                     <tr>
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
                         <td>{$vo.id}</td>
+                        <td>{$vo.username}</td>
                         <td>{$vo.phone_num}</td>
                         <td>{$vo.city_name}</td>
                         <td>{$vo.content}</td>
