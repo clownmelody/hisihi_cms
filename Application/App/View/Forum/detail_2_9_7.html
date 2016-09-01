@@ -29,8 +29,8 @@
                 <div class="user-txt">
                     <p class="name">小野妹子爱哲学</p>
                     <p class="type">
-                        <span>06-17 17:06</span>
-                        <span>新生入口/学生专栏</span>
+                        <span class="time">06-17 17:06</span>
+                        <span class="major">母猪产后护理饲养专业</span>
                     </p>
                 </div>
             </div>
@@ -38,43 +38,68 @@
 
             <!--帖子信息-->
             <div class="info-post">
-                <p><span class="topic-name">#你帅你先说#</span>最常见的实现中，JIT编译器是不会把编译结果保存下来、等下次运行的时候直接拿来用的。每次重新JIT编译是最直观最容易实现的做法。
-                    当然，也存在JIT编译器可以可选地把编译结果保存下来。例如说IBM J9的dynamic AOT功能。
-                    dynamic AOT涉及的一些挑战：不但实现可能会比直接JIT编译直接用要复杂一些，而且生成的代码的速度通常会比直接JIT编译生成出来的要慢。
-                    实际的JavaScript引擎里的JIT编译器里实现也会做类似的事情的：检测函数体有没有可能捕获其binding信息，
-                    如果不可能的话就最大限度优化局部变量（例如说把它们放寄存器里之类），如果有可能被捕获则乖乖的放在某种Context / Scope / Binding对象里。
+                <p class="post-txt"><span class="topic-name">#你帅你先说#</span>最常见的实现中，JIT编译器是不会把编译结果保存下来、等下次运行的时候直接拿来用的。每次重新JIT编译是最直观最容易实现的做法。
+                    当然，也存在JIT编译器可以可选地把编译结果保存下来。例如说IBM J9的dynamic AOT功能。涉及的一些挑战：不但实现可能会比直接JIT编译直接用要复杂一些，而且生成的代码的速度通常会比直接JIT编译生成出来的要慢。
                     我知道有这样的实现，所以觉得在Babel里做这个事情应该也能做到。</p>
             </div>
+            <ul class="post-img">
+                <!--<li class="img"><img class="img-img" src="__IMG__/forum/detail/ico.jpg"></li>-->
+                <!--<li class="img"><img class="img-img" src="__IMG__/forum/detail/ico.jpg"></li>-->
+                <!--<li class="img"><img class="img-img" src="__IMG__/forum/detail/ico.jpg"></li>-->
+                <!--<li class="img"><img class="img-img" src="__IMG__/forum/detail/ico.jpg"></li>-->
+                <!--<li class="img"><img class="img-img" src="__IMG__/forum/detail/ico.jpg"></li>-->
+                <div class="clear"></div>
+            </ul>
+
 
             <div class="location-box">
                 <div id="location-img"></div>
-                <span class="location"></span>
+                <span class="location">阿拉善地区</span>
             </div>
 
-            <ul class="footer">
-                <li class="like-people"></li>
-                <li class="like-num"></li>
-                <li class="like-btn"></li>
-            </ul>
+            <div class="footer">
+                <div class="footer-triangle"></div>
+                <ul class="footer-info">
+                    <li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>
+                    <li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>
+                    <li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>
+                    <li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>
+                    <li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>
+                    <li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>
+                    <li class="circle like-num"><span class="number">999</span></li>
+                    <li class="like-btn"><div class="like-btn-img"></div></li>
+                </ul>
+            </div>
+
 
             <div class="discuss">
                 <div class="teacher">
-                    <div class="user-left">
+                    <div class="discuss-header">
+                        <span class="discuss-img"></span>
+                        <p class="discuss-title"><span>名师</span><span>（32）</span></p>
+                    </div>
+                    <div class="user-info">
                         <div class="user-img">
+                            <img src="__IMG__/forum/detail/ico.jpg">
                         </div>
                         <div class="user-txt">
                             <p class="name">小野妹子爱哲学</p>
                             <p class="type">
-                                <span>06-17 17:06</span>
+                                <span class="time">06-17 17:06</span>
+                                <span class="major">母猪产后护理饲养专业</span>
                             </p>
                         </div>
                     </div>
                     <div class="user-right"></div>
                 </div>
                 <div class="student">
+                    <div class="discuss-header">
+                        <span class="discuss-img"></span>
+                        <p class="discuss-title"><span>讨论</span><span>（6666）</span></p>
+                        <div class="clear"></div>
+                    </div>
                     <div class="user-left">
-                        <div class="user-img">
-                        </div>
+                        <div class="user-img"></div>
                         <div class="user-txt">
                             <p class="name">小野妹子爱哲学</p>
                             <p class="type">
