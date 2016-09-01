@@ -656,6 +656,8 @@ img {
 .wrapper .content .discuss .discuss-header {
   color: #808080;
   font-size: 13px;
+  height: 36px;
+  border-bottom: 1px solid #e5e5e5;
 }
 .wrapper .content .discuss .discuss-header .discuss-img {
   float: left;
@@ -669,6 +671,7 @@ img {
 }
 .wrapper .content .discuss .discuss-header .discuss-title {
   float: left;
+  widht: 90%;
 }
 #downloadCon {
   position: fixed;

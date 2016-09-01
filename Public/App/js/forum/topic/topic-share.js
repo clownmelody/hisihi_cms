@@ -201,7 +201,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
                             '<div class="right-txt">'+
                                 '<p class="name '+teacherClassName+'">'+name+'</p>'+
                                 '<p class="type">'+
-                                    '<span>'+this.getDiffTime(item.create_time)+'</span>'+
+                                    '<span>'+this.getDiffTime(item.last_reply_time)+'</span>'+
                                     majorStr+
                                 '</p>'+
                             '</div>'+
