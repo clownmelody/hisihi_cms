@@ -41,9 +41,11 @@
                         <label class="item-label">机构地址</label>
                         <div class="controls">
                             <input type="text" class="text input-large" name="location" value="{$organization.location}">
-<!--                            <input type="hidden" id="longitude" class="text input-large" name="longitude" value="{$organization.longitude}">
-                            <input type="hidden" id="latitude" class="text input-large" name="latitude" value="{$organization.latitude}">
-                            <button class="btn" style="margin-left: 20px;" onclick="javascript:locationSearch();return false;">查  找</button>
+                            <label class="item-label">经度</label>
+                            <input type="text" id="longitude" class="text input-large" name="longitude" value="{$organization.longitude}">
+                            <label class="item-label">纬度</label>
+                            <input type="text" id="latitude" class="text input-large" name="latitude" value="{$organization.latitude}">
+                            <!--<button class="btn" style="margin-left: 20px;" onclick="javascript:locationSearch();return false;">查  找</button>
                             <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
                             <div id="allmap"></div>-->
                         </div>

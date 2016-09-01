@@ -18,8 +18,13 @@
                     <div class="controls">
                         <notempty name="_list">
                             <select class="text input-large" name="type_id" style="height: 30px;width: 400px;">
+                                <option value="" disabled>--以下为软件专业--</option>
                                 <volist name="_list" id="vo">
                                     <option value="{$vo.id}" >{$vo.name}</option>
+                                </volist>
+                                <option value="" disabled>--以下为手绘专业--</option>
+                                <volist name="_shouhui_major_list" id="item">
+                                    <option value="{$item['id']+10000}" >{$item.value}</option>
                                 </volist>
                             </select>
                             <else/>

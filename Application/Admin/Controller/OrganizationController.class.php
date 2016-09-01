@@ -208,8 +208,8 @@ class OrganizationController extends AdminController
             $data["slogan"] = $_POST["slogan"];
             $data["location"] = $_POST["location"];
             $data["city"] = $_POST["city"];
-//            $data["latitude"] = $_POST["latitude"];
-//            $data["longitude"] = $_POST["longitude"];
+            $data["latitude"] = $_POST["latitude"];
+            $data["longitude"] = $_POST["longitude"];
             $data["phone_num"] = $_POST["phone_num"];
             $data["type"] = $_POST["type"];
             $data["advantage"] = $_POST["advantage"];
@@ -3243,7 +3243,13 @@ class OrganizationController extends AdminController
             ->field('id, name')
             ->where($where_array)
             ->select();
+
+        $shouhui_major_list = M('OrganizationTag')
+            ->field('id, value')
+            ->where('type=8 and status>0')
+            ->select();
         $this->assign('_list', $list);
+        $this->assign('_shouhui_major_list', $shouhui_major_list);
         $this->assign('organization_id', $organization_id);
         $this->assign('tid', $id);
         $this->display('setteachingcoursetype');

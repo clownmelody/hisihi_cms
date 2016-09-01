@@ -19,10 +19,26 @@ class OrganizationTeachingCourseModel extends Model
 
     public function getByOrgAndType($org_id, $type_id){
         $where_array['organization_id'] = $org_id;
-        $where_array['type_id'] = $type_id;
+        if(!empty($type_id)){
+            $where_array['type_id'] = $type_id;
+        }
         $info = $this->field('id, organization_id,
         course_name, price')
             ->where($where_array)
+            ->order('create_time desc')
+            ->select();
+        return $info;
+    }
+
+    public function getShouHuiByOrgAndType($org_id, $type_id){
+        $where_array['organization_id'] = $org_id;
+        if(!empty($type_id)){
+            $where_array['type_id'] = $type_id + 10000;
+        }
+        $info = $this->field('id, organization_id,
+        course_name, price')
+            ->where($where_array)
+            ->order('create_time desc')
             ->select();
         return $info;
     }
