@@ -40,8 +40,8 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     t.loadData = function () {
         this.loadDetailInfo();
         this.loadTeacherInfo();
+        this.loadStudentInfo();
     };
-
 
     /*获取话题帖基本详情帖*/
     t.loadDetailInfo = function () {
@@ -71,7 +71,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     t.loadTeacherInfo = function(){
         var that=this,
         tpara={
-            url:this.baseUrl+'?s=/forum/teacherReplyList/version/2.97/post_id/'+ this.tid,
+            url:this.baseUrl+'?s=/forum/teacherReplyList/version/2.96/post_id/'+ this.tid,
         sCallback: function (result) {
             //预加载遮罩
             if (result.replyList) {
@@ -96,6 +96,27 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         this.getPostInfo(data);
     }
 
+    /*获取学生回复详情*/
+    t.loadStudentInfo = function(){
+        var that=this,
+            spara={
+                url:this.baseUrl+'?s=/forum/studentReplyList/version/2.96/post_id/'+ this.tid,
+                sCallback: function (result) {
+                    //预加载遮罩
+                    if (result.replyList) {
+                        that.getStudentPostInfo(result);
+                        $('.wrapper').css('opacity', '1');
+                    } else {
+                        that.showTips('讨论加载失败');
+                    }
+                },
+                eCallback: function () {
+                    that.showTips('讨论加载失败');
+                }
+            }
+        this.getDataAsyncPy(spara);
+    };
+
     /*填充帖子内容*/
     t.getPostInfo=function(data) {
         var len = data.length;
@@ -106,7 +127,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         this.getPostBasicInfo(data);
     };
 
-    //贴子基本信息
+    /*贴子基本信息*/
     t.getPostBasicInfo=function(data){
         var str ='';
         //判断定位信息是否存在
@@ -181,7 +202,22 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             return '';
         }
         this.loadTeacherPos(result,result.replyList);
-        //this.getTeacherDiscussInfo(replyList);
+    };
+
+    /*判断帖子是否有老师回复*/
+    t.loadTeacherPos=function(result,replyList) {
+        var teaPosStr =  '<div class="discuss">' +
+            '<div class="teacher">' +
+            '<div class="discuss-header">' +
+            '<span class="discuss-img"></span>' +
+            '<p class="discuss-title"><span>名师</span><span class="pos-num">('+result.replyTotalCount+')</span></p>' +
+            '</div>' +
+            '<ul>' +
+            t.getTeacherDiscussInfo(replyList)+
+            '</ul>' +
+            '</div>' +
+            '</div>' ;
+        $('.t-discuss-info-box').html(teaPosStr);
     };
 
     //老师回复基本信息
@@ -211,24 +247,57 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         return str;
     };
 
-    /*判断帖子是否有老师回复*/
-    t.loadTeacherPos=function(result,replyList) {
-        var teaPosStr =  '<div class="discuss">' +
-                '<div class="teacher">' +
-                '<div class="discuss-header">' +
-                '<span class="discuss-img"></span>' +
-                '<p class="discuss-title"><span>名师</span><span class="pos-num">('+result.replyTotalCount+')</span></p>' +
-                '</div>' +
-                '<ul>' +
-                t.getTeacherDiscussInfo(replyList)+
-                '</ul>' +
-                '</div>' +
-                '</div>' ;
-        $('.t-discuss-info-box').html(teaPosStr);
+    /*填充学生回复内容*/
+    t.getStudentPostInfo=function(result){
+        var len = result.replyList.length;
+        if (len == 0) {
+            $('.nodata').show();
+            return '';
+        }
+        this.loadStudentPos(result,result.replyList);
     };
 
-    /*填充学生回复内容*/
-    t.
+    /*学生回复基本信息,判断学生回复是否存在*/
+    t.loadStudentPos=function(result,replyList){
+        var Str =  '<div class="discuss">' +
+            '<div class="teacher">' +
+            '<div class="discuss-header">' +
+            '<span class="discuss-img"></span>' +
+            '<p class="discuss-title"><span>讨论</span><span class="pos-num">('+result.replyTotalCount+')</span></p>' +
+            '</div>' +
+            '<ul>' +
+                t.getStudentDiscussInfo(replyList)+
+            '</ul>' +
+            '</div>' +
+            '</div>' ;
+        $('.s-discuss-info-box').html(Str);
+    };
+
+    t.getStudentDiscussInfo=function(result){
+        var len=result.length,
+            str='';
+        for(var i=0;i<len;i++) {
+            var item=result[i];
+            str += '<li class="discuss-li">' +
+                '<div class="discuss-user-img">' +
+                '<img src="' +item.userInfo.avatar128+ '">' +
+                '</div>' +
+                '<div class="user-info">' +
+                '<div class="discuss-user-info">' +
+                '<div class="user-txt">' +
+                '<p class="name">' + item.userInfo.nickname + '</p>' +
+                '<p class="type">' +
+                '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
+                '</p>' +
+                '</div>' +
+                '<div class="discuss-btn"></div>' +
+                '</div>' +
+                '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
+                '</div>' +
+                '</li>' ;
+        }
+        return str;
+    };
 
     /*得到帖子的图片信息*/
     t.getPostImgStr=function(imgList){

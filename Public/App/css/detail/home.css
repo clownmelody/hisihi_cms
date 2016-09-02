@@ -604,6 +604,9 @@ img {
   font-size: 13px;
   padding-left: 16%;
 }
+.s-discuss-info-box {
+  margin-top: 20px;
+}
 .wrapper {
   position: absolute;
   top: 0;
