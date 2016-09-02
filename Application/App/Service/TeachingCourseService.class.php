@@ -11,10 +11,11 @@ use Think\Model;
 
 class TeachingCourseService extends Model
 {
-    public function getNearbyOrgByCourseType($type_id, $longitude=null, $latitude=null){
+    public function getNearbyOrgByCourseType($type_id, $longitude=null, $latitude=null, $page, $count){
         $model = M();
+        $start = ($page-1)*$count;
         if(!empty($longitude)&&!empty($latitude)){
-            $sql = "select o.id as org_id,
+            $sql = "select distinct(o.id) as org_id,
                 ROUND(
                     6378.138*2*ASIN(
                         SQRT(
@@ -32,17 +33,20 @@ class TeachingCourseService extends Model
                 ) AS distance
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
-                where o.id=c.organization_id and o.type=30 and c.type_id=".$type_id." order by distance asc
-                ";
+                where o.id=c.organization_id and o.type=30 and o.status=1 and c.status=1 and c.type_id=".$type_id." order by distance asc limit ".$start.",".$count;
         } else {
-            $sql = "select o.id as org_id
+            $sql = "select distinct(o.id) as org_id
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
-                where o.id=c.organization_id and o.type=30 and c.type_id=".$type_id." order by sort desc
-                ";
+                where o.id=c.organization_id and o.type=30 and o.status=1 and c.status=1 and c.type_id=".$type_id." order by sort desc limit ".$start.",".$count;
         }
+        $total_count_sql = "select count(distinct(o.id)) as totalCount
+                from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=30 and o.status=1 and c.status=1 and c.type_id=".$type_id;
         $list = $model->query($sql);
-        return $list;
+        $total_count = $model->query($total_count_sql);
+        return array('list'=>$list, 'totalCount'=>$total_count[0]['totalCount']);
     }
 
     /**
@@ -50,10 +54,14 @@ class TeachingCourseService extends Model
      * @param $major_id
      * @param null $longitude
      * @param null $latitude
+     * @param $page
+     * @param $count
+     * @return array
      */
-    public function getNearbyShouHuiOrgByCourseType($major_id, $longitude=null, $latitude=null){
+    public function getNearbyShouHuiOrgByCourseType($major_id, $longitude=null, $latitude=null, $page, $count){
         $major_id += 10000;
         $model = M();
+        $start = ($page-1)*$count;
         if(!empty($longitude)&&!empty($latitude)){
             if(empty($major_id)){
                 $sql = "select distinct(o.id) as org_id,
@@ -74,8 +82,7 @@ class TeachingCourseService extends Model
                 ) AS distance
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
-                where o.id=c.organization_id and o.type=32 order by distance asc
-                ";
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 order by distance asc limit ".$start.",".$count;
             } else {
                 $sql = "select o.id as org_id,
                 ROUND(
@@ -95,26 +102,33 @@ class TeachingCourseService extends Model
                 ) AS distance
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
-                where o.id=c.organization_id and o.type=32 and c.type_id=".$major_id." order by distance asc
-                ";
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id=".$major_id." order by distance asc limit ".$start.",".$count;
             }
         } else {
             if(empty($major_id)){
                 $sql = "select distinct(o.id) as org_id
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
-                where o.id=c.organization_id and o.type=32 order by sort desc
-                ";
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 order by sort desc limit ".$start.",".$count;
             } else {
                 $sql = "select o.id as org_id
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
-                where o.id=c.organization_id and o.type=32 and c.type_id=".$major_id." order by sort desc
-                ";
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id=".$major_id." order by sort desc limit ".$start.",".$count;
             }
         }
+        if(empty($major_id)){
+            $total_count_sql = "select count(distinct(o.id)) as totalCount from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1";
+        } else {
+            $total_count_sql = "select count(distinct(o.id)) as totalCount from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id=".$major_id;
+        }
         $list = $model->query($sql);
-        return $list;
+        $total_count = $model->query($total_count_sql);
+        return array('list'=>$list, 'totalCount'=>$total_count[0]['totalCount']);
     }
 
     public function getTeachingCourseListByOrgIdAndTypeId($org_id, $type_id){
