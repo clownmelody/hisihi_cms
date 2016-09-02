@@ -1866,6 +1866,7 @@ ORDER BY a.create_time DESC');
     public function topicPostListView($topicId=0){
         $this->assign("topicId", $topicId);
         $this->display("topicshare");
+        exit;
     }
 
     /**
