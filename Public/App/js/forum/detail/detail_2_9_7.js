@@ -1,7 +1,7 @@
 /**
  * Created by hisihi on 2016/8/31.
  */
-define(['base','myPhotoSwipe'],function(Base,myPhotoSwipe) {
+define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     var Detail = function (id) {
         this.tid = id;
         this.baseUrl = window.hisihiUrlObj.link_url;
@@ -13,6 +13,7 @@ define(['base','myPhotoSwipe'],function(Base,myPhotoSwipe) {
 
         //提问详情 detail
         //请求地址    http://115.29.44.35/api.php?s=/forum/getPostDetail
+        //评论详情
 
         //获取数据
         this.loadData();
@@ -38,6 +39,7 @@ define(['base','myPhotoSwipe'],function(Base,myPhotoSwipe) {
     /*加载数据信息*/
     t.loadData = function () {
         this.loadDetailInfo();
+        this.loadTeacherInfo();
     };
 
 
@@ -61,15 +63,36 @@ define(['base','myPhotoSwipe'],function(Base,myPhotoSwipe) {
                 }
             }
         this.getDataAsyncPy(para);
+    };
+
+    /*获取帖子点赞详情*/
+
+    /*获取老师回复详情*/
+    t.loadTeacherInfo = function(){
+        var that=this,
+        tpara={
+            url:this.baseUrl+'?s=/forum/teacherReplyList/version/2.97/post_id/'+ this.tid,
+        sCallback: function (result) {
+            //预加载遮罩
+            if (result.replyList) {
+                that.getTeacherPostInfo(result);
+                $('.wrapper').css('opacity', '1');
+            } else {
+                that.showTips('老师回复加载失败');
+            }
+        },
+        eCallback: function () {
+            that.showTips('老师回复加载失败');
+        }
     }
+        this.getDataAsyncPy(tpara);
+    };
 
     t.fillDetailInfo = function (data) {
         var title = data.title,
             desc = data.description,
-        //imgUrl=data.img_url,
             title = this.substrLongStr(title, 18);
         $('title').text(title);
-        //$('.info-post p').text(desc);
         this.getPostInfo(data);
     }
 
@@ -81,118 +104,131 @@ define(['base','myPhotoSwipe'],function(Base,myPhotoSwipe) {
             return '';
         }
         this.getPostBasicInfo(data);
-        this.getDiscussInfo(data);
-        };
-        
+    };
+
     //贴子基本信息
     t.getPostBasicInfo=function(data){
         var str ='';
-        for(var i=0;i<len;i++) {
-            item = data[i];
-            pic=item.userInfo.avatar128;
-            name = item.userInfo.nickname;
-            major = item.userInfo.extinfo[1].field_content;
-            location = item.pos;
-            type = item.userInfo.group;
-            title = item.topic_info.title;
-            //if(!pic){
-            //    pic='http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/hisihiOrgLogo.png';
-            //}
-            //if(!item.topic_info || !item.topic_info.title) {
-            //    title =$('.topic-real-name').text();
-            //}else{
-            //    title = item.topic_info.title;
-            //}
-            ////判断定位信息是否存在
-            //var posStr='';
-            //if(item.pos){
-            //    posStr= '<div class="location-box">'+
-            //            '<div id="location-img"></div>'+
-            //                '<span class="location">'+item.pos+'</span>'+
-            //            '</div>';
-            //}
-            ////判断专业信息是否存在
-            //var majorStr='';
-            //if(item.userInfo.extinfo[1].field_content){
-            //    majorStr='<span>'+item.userInfo.extinfo[1].field_content+'</span>';
-            //}
-            ////判断用户是否为老师，是老师则红名显示
-            //var teacherClassName='';
-            //if(item.userInfo.group==6){
-            //    teacherClassName='teacher-name';
-            //}
-            str = '<div class="user-info">' +
-                '<div class="user-img">' +
-                '<img src="' + pic + '">' +
-                '</div>' +
-                '<div class="user-txt">' +
-                '<p class="name ' + teacherClassName + '">' + item.userInfo.nickname + '</p>' +
-                '<p class="type">' +
-                '<span>' + this.getDiffTime(item.create_time) + '</span>' +
-                majorStr +
-                '</p>' +
-                '</div>' +
-                '</div>' +
-
-                '<div class="info-post">' +
-                '<p class="post-txt">' +
-                '<span class="topic-name">#' + title + '#</span>' + item.content +
-                '</p>' +
-                '</div>' +
-                '<ul class="post-img">' +
-                t.getPostImgStr(item.img) +
-                '<div class="clear"></div>' +
-                '</ul>' +
-                posStr +
-                '<div class="footer">' +
-                '<div class="footer-triangle"></div>' +
-                '<ul class="footer-info">' +
-                '<li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>' +
-                '<li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>' +
-                '<li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>' +
-                '<li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>' +
-                '<li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>' +
-                '<li class="circle like-people"><img class="like-img" src="__IMG__/forum/detail/ico.jpg"></li>' +
-                '<li class="circle like-num"><span class="number">999</span></li>' +
-                '<li class="like-btn"><div class="like-btn-img"></div></li>' +
-                '</ul>' +
+        //判断定位信息是否存在
+        var posStr='';
+        if(data.pos){
+            posStr= '<div class="location-box">'+
+                '<div id="location-img"></div>'+
+                '<span class="location">'+data.pos+'</span>'+
                 '</div>';
         }
+        //判断专业信息是否存在
+        var majorStr='';
+        if(data.userInfo.extinfo[1].field_content){
+            majorStr='<span id="major">'+data.userInfo.extinfo[1].field_content+'</span>';
+        }
+        //判断用户是否为老师，是老师则红名显示
+        var teacherClassName='';
+        if(data.userInfo.group==6){
+            teacherClassName='teacher-name';
+        }
+        //帖子话题
+        var topicInfo='';
+        if(data.topic_info) {
+            topicInfo=  '<span class="topic-name">#' + data.topic_info + '#</span>' ;
+        }
+        str = '<div class="user-info">' +
+            '<div class="user-img">' +
+            '<img src="' +data.userInfo.avatar128+ '">' +
+            '</div>' +
+            '<div class="user-txt">' +
+            '<p class="name ' + teacherClassName + '">' + data.userInfo.nickname + '</p>' +
+            '<p class="type">' +
+            '<span>' + this.getDiffTime(data.create_time) + '</span>' +
+            majorStr +
+            '</p>' +
+            '</div>' +
+            '</div>' +
+            '<div class="info-post">' +
+            '<p class="post-txt">' +
+            topicInfo + data.content +
+            '</p>' +
+            '</div>' +
+            '<ul class="post-img">' +
+            t.getPostImgStr(data.img) +
+            '<div class="clear"></div>' +
+            '</ul>' +
+            posStr +
+            '<div class="footer">' +
+            '<div class="footer-triangle"></div>' +
+            '<ul class="footer-info">' +
+                //'<li class="circle like-people"><img class="like-img" src="../../images/forum/detail/ico.jpg"></li>' +
+                //    t.getLikeStr(data.img) +
+            '<li class="circle like-num">'+'<span class="number">'+data.supportCount+'</span>'+'</li>' +
+            '<li class="like-btn"><div class="like-btn-img"></div></li>' +
+            '</ul>' +
+            '</div>';
+
+
         $('.user-info-box').html(str);
+        //惰性加载
+        $('.post-img img').picLazyLoad($('.wrapper'),{
+            settings:10,
+            placeholder:'http://pic.hisihi.com/2016-06-15/1465987988057181.png'
+        });
     };
 
-    t.getDiscussInfo=function(data){
-        var str='<div class="discuss">'+
-            '<div class="teacher">'+
-            '<div class="discuss-header">'+
-            '<span class="discuss-img"></span>'+
-            '<p class="discuss-title"><span>名师</span><span>（32）</span></p>'+
-        '</div>'+
-        '<ul>'+
-        '<li class="discuss-li">'+
-            '<div class="discuss-user-img">'+
-            '<img src="__IMG__/forum/detail/ico.jpg">'+
-            '</div>'+
-            '<div class="user-info">'+
-            '<div class="discuss-user-info">'+
-            '<div class="user-txt">'+
-            '<p class="name">小野妹子爱哲学</p>'+
-            '<p class="type">'+
-            '<span class="time">06-17 17:06</span>'+
-        '<span class="major">母猪产后护理饲养专业</span>'+
-            '</p>'+
-            '</div>'+
-            '<div class="discuss-btn"></div>'+
-            '</div>'+
-            '<div class="discuss-user-txt"><p>The hard part isn’t making the decision. It’s living with it.Everything is going on, but dont give up trying.</p></div>'+
-        '</div>'+
-        '</li>'+
-        '</ul>'+
-        '</div>'+
-        '</div>';
-        $('.t-discuss-info-box').html(str);
+    /*填充老师回复内容*/
+    t.getTeacherPostInfo=function(result) {
+        var len = result.replyList.length;
+        if (len == 0) {
+            $('.nodata').show();
+            return '';
+        }
+        this.loadTeacherPos(result,result.replyList);
+        //this.getTeacherDiscussInfo(replyList);
     };
 
+    //老师回复基本信息
+    t.getTeacherDiscussInfo=function(result){
+        var len=result.length,
+            str='';
+        for(var i=0;i<len;i++) {
+            var item=result[i];
+            str += '<li class="discuss-li">' +
+                    '<div class="discuss-user-img">' +
+                        '<img src="' +item.userInfo.avatar128+ '">' +
+                    '</div>' +
+                    '<div class="user-info">' +
+                        '<div class="discuss-user-info">' +
+                            '<div class="user-txt">' +
+                                '<p class="name">' + item.userInfo.nickname + '</p>' +
+                                '<p class="type">' +
+                                    '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
+                                '</p>' +
+                            '</div>' +
+                        '<div class="discuss-btn"></div>' +
+                    '</div>' +
+                    '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
+                '</div>' +
+                '</li>' ;
+            }
+        return str;
+    };
+
+    /*判断帖子是否有老师回复*/
+    t.loadTeacherPos=function(result,replyList) {
+        var teaPosStr =  '<div class="discuss">' +
+                '<div class="teacher">' +
+                '<div class="discuss-header">' +
+                '<span class="discuss-img"></span>' +
+                '<p class="discuss-title"><span>名师</span><span class="pos-num">('+result.replyTotalCount+')</span></p>' +
+                '</div>' +
+                '<ul>' +
+                t.getTeacherDiscussInfo(replyList)+
+                '</ul>' +
+                '</div>' +
+                '</div>' ;
+        $('.t-discuss-info-box').html(teaPosStr);
+    };
+
+    /*填充学生回复内容*/
+    t.
 
     /*得到帖子的图片信息*/
     t.getPostImgStr=function(imgList){
@@ -213,12 +249,12 @@ define(['base','myPhotoSwipe'],function(Base,myPhotoSwipe) {
         }
         else if(len==2 || len==4){
             cName='img-size2';
-            h=this.getImgWidthByNums(2);
+            h=this.getImgWidthByNum(2);
             style='width:'+h+';height:'+h;
         }
         else{
             cName='img-size3';
-            h=this.getImgWidthByNums(3);
+            h=this.getImgWidthByNum(3);
             style='width:'+h+';height:'+h;
         }
         for(var i=0;i<len;i++){
@@ -239,7 +275,7 @@ define(['base','myPhotoSwipe'],function(Base,myPhotoSwipe) {
         return str;
     };
 
-    t.getImgWidthByNums=function(num){
+    t.getImgWidthByNum=function(num){
         var radio = 0.3;
         if(num==2) {
             radio=0.4;
@@ -267,16 +303,16 @@ define(['base','myPhotoSwipe'],function(Base,myPhotoSwipe) {
     };
 
     /*设置循环数组，展示全部点赞头像*/
-    t.getLikeStr=function(like){
-        var like='';
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var url=item.img;
-            like +='<li class="circle like-people">'+
-                    '<img class="like-img" src="'+url+'">'+
-                '</li>';
-        }
-    };
+    //t.getLikeStr=function(like){
+    //    var like='',
+    //        len = data.length;
+    //    for (var i = 0; i < len; i++) {
+    //        var url=item.img;
+    //        like +='<li class="circle like-people">'+
+    //                '<img class="like-img" src="'+url+'">'+
+    //                '</li>';
+    //    }
+    //};
 
     return Detail;
 

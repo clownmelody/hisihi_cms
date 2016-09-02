@@ -31,10 +31,16 @@ img {
       color: #212121;
       font-size: 14px;
       padding-bottom: 2px;
+      &.teacher-name {
+        color:#FF5A00;
+      }
     }
     .type {
       color: #808080;
       font-size: 10px;
+      #major {
+        padding-left: 6px;
+      }
       .time {
         padding-right: 6px;
       }
@@ -58,6 +64,9 @@ img {
   .discuss-title {
     float: left;
     widht:90%;
+    .pos-num {
+      padding-left: 6px;
+    }
   }
 }
 .discuss-li {
@@ -129,17 +138,36 @@ img {
     //帖子图片
     .post-img {
       margin-bottom: 2%;
-      //img标签图片有默认高宽，需要清除默认样式
-      .img {
+      li{
         display: inline-block;
         float: left;
+        @s:10px;
         overflow: hidden;
-        max-width: 40%;
-        margin-right: 4px;
-        margin-top: 4px;
-        > img {
-          width: 100%;
-          height: 100%;
+        margin-top: 2%;
+        margin-bottom: 0;
+        >img{
+          max-width:100%;
+        }
+        &.img-size1{
+          max-width: 60%;
+        }
+        &.img-size2{
+          max-width: 40%;
+          margin-right: @s;
+          margin-top: @s;
+          img{
+            .size(100%,100%);
+          }
+        }
+        &.img-size3{
+          width: 30%;
+          &:nth-child(3n-1) {
+            margin-left:2.5%;
+            margin-right:2.5%;
+          }
+          img{
+            .size(100%,100%);
+          }
         }
       }
     }
