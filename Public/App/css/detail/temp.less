@@ -15,8 +15,7 @@ img {
 .user-info {
   width: 100%;
   height: 50px;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-bottom: 5px;
   .user-img {
     float: left;
     padding-right: 10px;
@@ -32,13 +31,81 @@ img {
       color: #212121;
       font-size: 14px;
       padding-bottom: 2px;
+      &.teacher-name {
+        color:#FF5A00;
+      }
     }
     .type {
       color: #808080;
       font-size: 10px;
+      #major {
+        padding-left: 6px;
+      }
       .time {
         padding-right: 6px;
       }
+    }
+  }
+}
+.discuss-header {
+  color: #808080;
+  font-size: 13px;
+  height: 36px;
+  border-bottom: 1px solid #e5e5e5;
+  .discuss-img {
+    float: left;
+    display: inline-block;
+    .size(23px,22px);
+    padding-right: 10px;
+    background: url("../../images/forum/detail/sprite.png") no-repeat;
+    background-size: 180px*0.5 72px*0.5;
+    background-position: -7px -7px;
+  }
+  .discuss-title {
+    float: left;
+    widht:90%;
+    .pos-num {
+      padding-left: 6px;
+    }
+  }
+}
+.discuss-li {
+  border-bottom: 1px solid #e5e5e5;
+  .discuss-user-img {
+    float: left;
+    width: 14%;
+    padding-top: 10px;
+    padding-right: 10px;
+    > img {
+      .size(44px,44px);
+      border-radius: 44px;
+    }
+  }
+  .user-info {
+    width: 100%;
+    height: 100%;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    .discuss-user-info {
+      width: 83%;
+      height: 50px;
+      float: left;
+      .user-txt {
+        padding-top: 0px !important;
+      }
+      .discuss-btn {
+        background: url("../../images/forum/detail/sprite.png") no-repeat;
+        .size(26px,23px);
+        background-size: 180px*0.5 72px*0.5;
+        background-position: -43px -7px;
+        display: inline-block;
+        float: right;
+      }
+    }
+    .discuss-user-txt {
+      color: #212121;
+      font-size: 13px;
+      padding-left: 16%;
     }
   }
 }
@@ -50,9 +117,11 @@ img {
   right: 0;
   overflow-x: hidden;
   opacity: 1;
+  background-color: #e5e5e5;
+  margin-top: 56px;
   .content {
     padding: 10px 14px 0 14px;
-
+    background-color: #ffffff;
     //帖子详情
     .info-post {
       //margin-top: 2px;
@@ -69,17 +138,36 @@ img {
     //帖子图片
     .post-img {
       margin-bottom: 2%;
-      //img标签图片有默认高宽，需要清除默认样式
-      .img {
+      li{
         display: inline-block;
         float: left;
+        @s:10px;
         overflow: hidden;
-        max-width: 40%;
-        margin-right: 4px;
-        margin-top: 4px;
-        > img {
-          width: 100%;
-          height: 100%;
+        margin-top: 2%;
+        margin-bottom: 0;
+        >img{
+          max-width:100%;
+        }
+        &.img-size1{
+          max-width: 60%;
+        }
+        &.img-size2{
+          max-width: 40%;
+          margin-right: @s;
+          margin-top: @s;
+          img{
+            .size(100%,100%);
+          }
+        }
+        &.img-size3{
+          width: 30%;
+          &:nth-child(3n-1) {
+            margin-left:2.5%;
+            margin-right:2.5%;
+          }
+          img{
+            .size(100%,100%);
+          }
         }
       }
     }
@@ -145,7 +233,10 @@ img {
           }
         }
         .like-num {
+          color: #808080;
+          font-size: 10px;
           line-height: 30px;
+          text-align: center;
         }
         .like-btn {
           .size(50px,44px);
@@ -163,64 +254,18 @@ img {
           }
         }
       }
-
     }
 
     //讨论区
     .discuss {
       width: 100%;
-      .discuss-header {
-        color: #808080;
-        font-size: 13px;
-        height: 36px;
-        border-bottom: 1px solid #e5e5e5;
-        .discuss-img {
-          float: left;
-          display: inline-block;
-          .size(23px,22px);
-          padding-right: 10px;
-          background: url("../../images/forum/detail/sprite.png") no-repeat;
-          background-size: 180px*0.5 72px*0.5;
-          background-position: -7px -7px;
-        }
-        .discuss-title {
-          float: left;
-          widht:90%;
-        }
-      }
-      .teacher {
-        .user-left {
-
-        }
-      }
-      .student {
-
-      }
+      background-color: #ffffff;
     }
   }
-}
 
-
-#downloadCon{
-  position: fixed;
-  bottom: 0;
-  z-index: 990;
-  img{
-    max-width: 100%;
-  }
-  a {
-    .size(80px,32px);
-    position: absolute;
-    top:50%;
-    margin-top: -16px;
-    right: 12px;
-    display:block;
-    text-decoration: none;
-    background-color: #FF5A00;
-    text-align: center;
-    color: white;
-    font-size: 15px;
-    border-radius: 2px;
-    line-height: 32px;
+  .student {
+    padding: 10px 14px 0 14px;
+    background-color: #ffffff;
+    margin-top: 20px;
   }
 }

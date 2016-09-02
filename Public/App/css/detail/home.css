@@ -506,8 +506,7 @@ img {
 .user-info {
   width: 100%;
   height: 50px;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-bottom: 5px;
 }
 .user-info .user-img {
   float: left;
@@ -527,12 +526,83 @@ img {
   font-size: 14px;
   padding-bottom: 2px;
 }
+.user-info .user-txt .name.teacher-name {
+  color: #FF5A00;
+}
 .user-info .user-txt .type {
   color: #808080;
   font-size: 10px;
 }
+.user-info .user-txt .type #major {
+  padding-left: 6px;
+}
 .user-info .user-txt .type .time {
   padding-right: 6px;
+}
+.discuss-header {
+  color: #808080;
+  font-size: 13px;
+  height: 36px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.discuss-header .discuss-img {
+  float: left;
+  display: inline-block;
+  width: 23px;
+  height: 22px;
+  padding-right: 10px;
+  background: url("../../images/forum/detail/sprite.png") no-repeat;
+  background-size: 90px 36px;
+  background-position: -7px -7px;
+}
+.discuss-header .discuss-title {
+  float: left;
+  widht: 90%;
+}
+.discuss-header .discuss-title .pos-num {
+  padding-left: 6px;
+}
+.discuss-li {
+  border-bottom: 1px solid #e5e5e5;
+}
+.discuss-li .discuss-user-img {
+  float: left;
+  width: 14%;
+  padding-top: 10px;
+  padding-right: 10px;
+}
+.discuss-li .discuss-user-img > img {
+  width: 44px;
+  height: 44px;
+  border-radius: 44px;
+}
+.discuss-li .user-info {
+  width: 100%;
+  height: 100%;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.discuss-li .user-info .discuss-user-info {
+  width: 83%;
+  height: 50px;
+  float: left;
+}
+.discuss-li .user-info .discuss-user-info .user-txt {
+  padding-top: 0px !important;
+}
+.discuss-li .user-info .discuss-user-info .discuss-btn {
+  background: url("../../images/forum/detail/sprite.png") no-repeat;
+  width: 26px;
+  height: 23px;
+  background-size: 90px 36px;
+  background-position: -43px -7px;
+  display: inline-block;
+  float: right;
+}
+.discuss-li .user-info .discuss-user-txt {
+  color: #212121;
+  font-size: 13px;
+  padding-left: 16%;
 }
 .wrapper {
   position: absolute;
@@ -542,9 +612,12 @@ img {
   right: 0;
   overflow-x: hidden;
   opacity: 1;
+  background-color: #e5e5e5;
+  margin-top: 56px;
 }
 .wrapper .content {
   padding: 10px 14px 0 14px;
+  background-color: #ffffff;
 }
 .wrapper .content .info-post {
   color: #212121;
@@ -559,15 +632,36 @@ img {
 .wrapper .content .post-img {
   margin-bottom: 2%;
 }
-.wrapper .content .post-img .img {
+.wrapper .content .post-img li {
   display: inline-block;
   float: left;
   overflow: hidden;
-  max-width: 40%;
-  margin-right: 4px;
-  margin-top: 4px;
+  margin-top: 2%;
+  margin-bottom: 0;
 }
-.wrapper .content .post-img .img > img {
+.wrapper .content .post-img li > img {
+  max-width: 100%;
+}
+.wrapper .content .post-img li.img-size1 {
+  max-width: 60%;
+}
+.wrapper .content .post-img li.img-size2 {
+  max-width: 40%;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+.wrapper .content .post-img li.img-size2 img {
+  width: 100%;
+  height: 100%;
+}
+.wrapper .content .post-img li.img-size3 {
+  width: 30%;
+}
+.wrapper .content .post-img li.img-size3:nth-child(3n-1) {
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+}
+.wrapper .content .post-img li.img-size3 img {
   width: 100%;
   height: 100%;
 }
@@ -631,7 +725,10 @@ img {
   background-color: #D8D8D8;
 }
 .wrapper .content .footer .footer-info .like-num {
+  color: #808080;
+  font-size: 10px;
   line-height: 30px;
+  text-align: center;
 }
 .wrapper .content .footer .footer-info .like-btn {
   width: 50px;
@@ -652,48 +749,10 @@ img {
 }
 .wrapper .content .discuss {
   width: 100%;
+  background-color: #ffffff;
 }
-.wrapper .content .discuss .discuss-header {
-  color: #808080;
-  font-size: 13px;
-  height: 36px;
-  border-bottom: 1px solid #e5e5e5;
-}
-.wrapper .content .discuss .discuss-header .discuss-img {
-  float: left;
-  display: inline-block;
-  width: 23px;
-  height: 22px;
-  padding-right: 10px;
-  background: url("../../images/forum/detail/sprite.png") no-repeat;
-  background-size: 90px 36px;
-  background-position: -7px -7px;
-}
-.wrapper .content .discuss .discuss-header .discuss-title {
-  float: left;
-  widht: 90%;
-}
-#downloadCon {
-  position: fixed;
-  bottom: 0;
-  z-index: 990;
-}
-#downloadCon img {
-  max-width: 100%;
-}
-#downloadCon a {
-  width: 80px;
-  height: 32px;
-  position: absolute;
-  top: 50%;
-  margin-top: -16px;
-  right: 12px;
-  display: block;
-  text-decoration: none;
-  background-color: #FF5A00;
-  text-align: center;
-  color: white;
-  font-size: 15px;
-  border-radius: 2px;
-  line-height: 32px;
+.wrapper .student {
+  padding: 10px 14px 0 14px;
+  background-color: #ffffff;
+  margin-top: 20px;
 }
