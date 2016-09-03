@@ -1280,7 +1280,11 @@ GROUP BY
         $post['teacherReplyTotalCount'] = $teacherReplyTotalCount;
         $post['studentReplyTotalCount'] = $studentReplyTotalCount;
         $post['reply_count'] = $teacherReplyTotalCount + $studentReplyTotalCount;
-        $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$post_id;
+        if((float)$version>=2.97){
+            $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$post_id;
+        } else {
+            $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/detail/version/2.97/post_id/'.$post_id;
+        }
         if((float)$version>=2.6){
             $post['post_detail_adv'] = $this->getOneForumPostDetailAdv($community);
             if(!$post['post_detail_adv']){
