@@ -109,12 +109,13 @@ img {
     }
   }
 }
-.s-discuss-info-box {
-  margin-top: 20px;
+.discuss {
+  width: 100%;
+  background-color: #ffffff;
 }
 .wrapper {
   position: absolute;
-  top:0;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
@@ -122,7 +123,8 @@ img {
   opacity: 1;
   background-color: #e5e5e5;
   margin-top: 56px;
-  .content {
+
+  .user-info-box {
     padding: 10px 14px 0 14px;
     background-color: #ffffff;
     //帖子详情
@@ -140,35 +142,35 @@ img {
     //帖子图片
     .post-img {
       margin-bottom: 2%;
-      li{
+      li {
         display: inline-block;
         float: left;
-        @s:10px;
+        @s: 10px;
         overflow: hidden;
         margin-top: 2%;
         margin-bottom: 0;
-        >img{
-          max-width:100%;
+        > img {
+          max-width: 100%;
         }
-        &.img-size1{
+        &.img-size1 {
           max-width: 60%;
         }
-        &.img-size2{
+        &.img-size2 {
           max-width: 40%;
           margin-right: @s;
           margin-top: @s;
-          img{
-            .size(100%,100%);
+          img {
+            .size(100%, 100%);
           }
         }
-        &.img-size3{
+        &.img-size3 {
           width: 30%;
           &:nth-child(3n-1) {
-            margin-left:2.5%;
-            margin-right:2.5%;
+            margin-left: 2.5%;
+            margin-right: 2.5%;
           }
-          img{
-            .size(100%,100%);
+          img {
+            .size(100%, 100%);
           }
         }
       }
@@ -223,13 +225,13 @@ img {
         .circle {
           float: left;
           margin: 7px 5px;
-          .size(30px,30px);
+          .size(30px, 30px);
           border-radius: 30px;
           background-color: #D8D8D8;
         }
         .like-people {
           .like-img {
-            .size(30px,30px);
+            .size(30px, 30px);
             border-radius: 30px;
             background-color: #D8D8D8;
           }
@@ -241,7 +243,7 @@ img {
           text-align: center;
         }
         .like-btn {
-          .size(50px,44px);
+          .size(50px, 44px);
           background-color: #D8D8D8;
           float: right;
           line-height: 50px;
@@ -250,24 +252,29 @@ img {
             display: inline-block;
             margin-left: 12px;
             background: url("../../images/forum/detail/sprite.png") no-repeat;
-            .size(26px,23px);
+            .size(26px, 23px);
             background-size: 180px*0.5 72px*0.5;
             background-position: -43px -7px;
           }
         }
       }
     }
+  }
 
-    //讨论区
-    .discuss {
-      width: 100%;
+  .t-discuss-info-box{
+    padding: 10px 14px 0 14px;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+  }
+
+  .s-discuss-info-box {
+    padding: 10px 14px 0 14px;
+    background-color: #ffffff;
+    .student {
+      padding: 10px 14px 0 14px;
       background-color: #ffffff;
+      margin-top: 20px;
     }
   }
 
-  .student {
-    padding: 10px 14px 0 14px;
-    background-color: #ffffff;
-    margin-top: 20px;
-  }
 }

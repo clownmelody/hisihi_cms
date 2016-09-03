@@ -194,7 +194,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         });
     };
 
-    /*填充老师回复内容*/
+    /*判断帖子是否有老师回复*/
     t.getTeacherPostInfo=function(result) {
         var len = result.replyList.length;
         if (len == 0) {
@@ -204,7 +204,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         this.loadTeacherPos(result,result.replyList);
     };
 
-    /*判断帖子是否有老师回复*/
+    /*填充老师回复内容*/
     t.loadTeacherPos=function(result,replyList) {
         var teaPosStr =  '<div class="discuss">' +
             '<div class="teacher">' +
@@ -220,34 +220,37 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         $('.t-discuss-info-box').html(teaPosStr);
     };
 
-    //老师回复基本信息
+    /*老师回复基本信息,判断回复信息是否为语音*/
     t.getTeacherDiscussInfo=function(result){
         var len=result.length,
             str='';
         for(var i=0;i<len;i++) {
             var item=result[i];
-            str += '<li class="discuss-li">' +
+            if (!item.content) {
+                item.content = '语音回复请下载app查看';
+            }
+                str += '<li class="discuss-li">' +
                     '<div class="discuss-user-img">' +
-                        '<img src="' +item.userInfo.avatar128+ '">' +
+                    '<img src="' +item.userInfo.avatar128+ '">' +
                     '</div>' +
                     '<div class="user-info">' +
-                        '<div class="discuss-user-info">' +
-                            '<div class="user-txt">' +
-                                '<p class="name">' + item.userInfo.nickname + '</p>' +
-                                '<p class="type">' +
-                                    '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
-                                '</p>' +
-                            '</div>' +
-                        '<div class="discuss-btn"></div>' +
+                    '<div class="discuss-user-info">' +
+                    '<div class="user-txt">' +
+                    '<p class="name">' + item.userInfo.nickname + '</p>' +
+                    '<p class="type">' +
+                    '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
+                    '</p>' +
+                    '</div>' +
+                    '<div class="discuss-btn"></div>' +
                     '</div>' +
                     '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
-                '</div>' +
-                '</li>' ;
-            }
+                    '</div>' +
+                    '</li>' ;
+        }
         return str;
     };
 
-    /*填充学生回复内容*/
+    /*学生回复基本信息,判断学生回复是否存在*/
     t.getStudentPostInfo=function(result){
         var len = result.replyList.length;
         if (len == 0) {
@@ -257,7 +260,8 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         this.loadStudentPos(result,result.replyList);
     };
 
-    /*学生回复基本信息,判断学生回复是否存在*/
+
+    /*填充学生回复内容*/
     t.loadStudentPos=function(result,replyList){
         var Str =  '<div class="discuss">' +
             '<div class="teacher">' +
@@ -278,9 +282,12 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             str='';
         for(var i=0;i<len;i++) {
             var item=result[i];
+            if (!item.content) {
+                item.content = '语音回复请下载app查看';
+            }
             str += '<li class="discuss-li">' +
                 '<div class="discuss-user-img">' +
-                '<img src="' +item.userInfo.avatar128+ '">' +
+                '<img src="' + item.userInfo.avatar128 + '">' +
                 '</div>' +
                 '<div class="user-info">' +
                 '<div class="discuss-user-info">' +
@@ -292,9 +299,10 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
                 '</div>' +
                 '<div class="discuss-btn"></div>' +
                 '</div>' +
-                '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
+                '<div class="discuss-user-txt"><p>' + item.content + '</p></div>' +
                 '</div>' +
-                '</li>' ;
+                '</li>';
+
         }
         return str;
     };
@@ -382,6 +390,11 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     //                '</li>';
     //    }
     //};
+
+
+
+
+
 
     return Detail;
 

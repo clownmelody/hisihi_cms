@@ -604,8 +604,9 @@ img {
   font-size: 13px;
   padding-left: 16%;
 }
-.s-discuss-info-box {
-  margin-top: 20px;
+.discuss {
+  width: 100%;
+  background-color: #ffffff;
 }
 .wrapper {
   position: absolute;
@@ -618,57 +619,57 @@ img {
   background-color: #e5e5e5;
   margin-top: 56px;
 }
-.wrapper .content {
+.wrapper .user-info-box {
   padding: 10px 14px 0 14px;
   background-color: #ffffff;
 }
-.wrapper .content .info-post {
+.wrapper .user-info-box .info-post {
   color: #212121;
   font-size: 14px;
 }
-.wrapper .content .info-post .post-txt {
+.wrapper .user-info-box .info-post .post-txt {
   padding-bottom: 10px;
 }
-.wrapper .content .info-post .post-txt .topic-name {
+.wrapper .user-info-box .info-post .post-txt .topic-name {
   color: #4A90E2;
 }
-.wrapper .content .post-img {
+.wrapper .user-info-box .post-img {
   margin-bottom: 2%;
 }
-.wrapper .content .post-img li {
+.wrapper .user-info-box .post-img li {
   display: inline-block;
   float: left;
   overflow: hidden;
   margin-top: 2%;
   margin-bottom: 0;
 }
-.wrapper .content .post-img li > img {
+.wrapper .user-info-box .post-img li > img {
   max-width: 100%;
 }
-.wrapper .content .post-img li.img-size1 {
+.wrapper .user-info-box .post-img li.img-size1 {
   max-width: 60%;
 }
-.wrapper .content .post-img li.img-size2 {
+.wrapper .user-info-box .post-img li.img-size2 {
   max-width: 40%;
   margin-right: 10px;
   margin-top: 10px;
 }
-.wrapper .content .post-img li.img-size2 img {
+.wrapper .user-info-box .post-img li.img-size2 img {
   width: 100%;
   height: 100%;
 }
-.wrapper .content .post-img li.img-size3 {
+.wrapper .user-info-box .post-img li.img-size3 {
   width: 30%;
 }
-.wrapper .content .post-img li.img-size3:nth-child(3n-1) {
+.wrapper .user-info-box .post-img li.img-size3:nth-child(3n-1) {
   margin-left: 2.5%;
   margin-right: 2.5%;
 }
-.wrapper .content .post-img li.img-size3 img {
+.wrapper .user-info-box .post-img li.img-size3 img {
   width: 100%;
   height: 100%;
 }
-.wrapper .content .location-box {
+.wrapper .user-info-box .location-box {
   position: relative;
   display: inline-block;
   height: 20px;
@@ -678,7 +679,7 @@ img {
   border-radius: 5px;
   font-size: 10px;
 }
-.wrapper .content .location-box #location-img {
+.wrapper .user-info-box .location-box #location-img {
   float: left;
   border: none;
   background: url("../../images/forum/location.png") no-repeat;
@@ -688,18 +689,18 @@ img {
   margin-left: 5px;
   margin-top: 3px;
 }
-.wrapper .content .location-box .location {
+.wrapper .user-info-box .location-box .location {
   float: left;
   line-height: 20px;
   padding-left: 5px;
   padding-right: 7px;
 }
-.wrapper .content .footer {
+.wrapper .user-info-box .footer {
   height: 60px;
   width: 100%;
   padding-bottom: 14px;
 }
-.wrapper .content .footer .footer-triangle {
+.wrapper .user-info-box .footer .footer-triangle {
   width: 0;
   height: 0;
   border-left: 10px solid transparent;
@@ -707,13 +708,13 @@ img {
   border-bottom: 15px solid #e5e5e5;
   margin-left: 20px;
 }
-.wrapper .content .footer .footer-info {
+.wrapper .user-info-box .footer .footer-info {
   height: 44px;
   width: 100%;
   background-color: #e5e5e5;
   float: left;
 }
-.wrapper .content .footer .footer-info .circle {
+.wrapper .user-info-box .footer .footer-info .circle {
   float: left;
   margin: 7px 5px;
   width: 30px;
@@ -721,19 +722,19 @@ img {
   border-radius: 30px;
   background-color: #D8D8D8;
 }
-.wrapper .content .footer .footer-info .like-people .like-img {
+.wrapper .user-info-box .footer .footer-info .like-people .like-img {
   width: 30px;
   height: 30px;
   border-radius: 30px;
   background-color: #D8D8D8;
 }
-.wrapper .content .footer .footer-info .like-num {
+.wrapper .user-info-box .footer .footer-info .like-num {
   color: #808080;
   font-size: 10px;
   line-height: 30px;
   text-align: center;
 }
-.wrapper .content .footer .footer-info .like-btn {
+.wrapper .user-info-box .footer .footer-info .like-btn {
   width: 50px;
   height: 44px;
   background-color: #D8D8D8;
@@ -741,7 +742,7 @@ img {
   line-height: 50px;
   margin-left: 10px;
 }
-.wrapper .content .footer .footer-info .like-btn .like-btn-img {
+.wrapper .user-info-box .footer .footer-info .like-btn .like-btn-img {
   display: inline-block;
   margin-left: 12px;
   background: url("../../images/forum/detail/sprite.png") no-repeat;
@@ -750,11 +751,16 @@ img {
   background-size: 90px 36px;
   background-position: -43px -7px;
 }
-.wrapper .content .discuss {
-  width: 100%;
+.wrapper .t-discuss-info-box {
+  padding: 10px 14px 0 14px;
+  background-color: #ffffff;
+  margin-bottom: 20px;
+}
+.wrapper .s-discuss-info-box {
+  padding: 10px 14px 0 14px;
   background-color: #ffffff;
 }
-.wrapper .student {
+.wrapper .s-discuss-info-box .student {
   padding: 10px 14px 0 14px;
   background-color: #ffffff;
   margin-top: 20px;
