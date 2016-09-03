@@ -3295,7 +3295,7 @@ class OrganizationController extends AppController
             $this->apiError(-1, "城市和电话不能为空");
         }
         $model = M('UserFindOrgRequest');
-        $data['city_name'] = $username;
+        $data['user_name'] = $username;
         $data['city_name'] = $city_name;
         $data['phone_num'] = $phone_num;
         $data['content'] = $content;
