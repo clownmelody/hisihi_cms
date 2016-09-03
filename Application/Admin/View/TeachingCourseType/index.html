@@ -1,4 +1,5 @@
 <extend name="Public/base"/>
+
 <block name="body">
     <!-- 标题 -->
     <div class="main-title">
@@ -71,7 +72,7 @@
 <block name="script">
     <script type="text/javascript">
         //导航高亮
-        highlight_subnav("{:U('TeachingCourseType/index')}");
+        highlight_subnav('{:U('teaching_course_type/index')}');
         $(function(){
             //只有一个模型时，点击新增
             $('.document_add').click(function(){
