@@ -1093,7 +1093,13 @@ GROUP BY
     //提问详情
     public function detail($post_id, $page = 1, $count = 10, $type = '', $version=1)
     {
-        //$this->requireLogin();
+        //$this->requireLogin();\
+        if($type == 'view') {
+            if((float)$version>=2.97){
+                $this->display('detail_2_9_7');
+                exit;
+            }
+        }
 
         $id = intval($post_id);
         $page = intval($page);
@@ -1860,6 +1866,7 @@ ORDER BY a.create_time DESC');
     public function topicPostListView($topicId=0){
         $this->assign("topicId", $topicId);
         $this->display("topicshare");
+        exit;
     }
 
     /**

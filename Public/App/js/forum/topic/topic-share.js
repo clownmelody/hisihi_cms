@@ -89,7 +89,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
             },
             eCallback:function(){
                 that.showTips('话题基本信息加载失败');
-            }
+            },
         }
         this.getDataAsyncPy(para);
     };
@@ -173,8 +173,8 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
             }else{
                 title = item.topic_info.title;
             }
-            var posStr='';
             //判断定位信息是否存在
+            var posStr='';
             if(item.pos){
                 posStr= '<div class="location-box">'+
                     //t.getLocationToProvince(item.pos)+

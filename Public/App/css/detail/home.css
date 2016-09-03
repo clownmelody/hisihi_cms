@@ -506,8 +506,7 @@ img {
 .user-info {
   width: 100%;
   height: 50px;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-bottom: 5px;
 }
 .user-info .user-img {
   float: left;
@@ -521,18 +520,116 @@ img {
 .user-info .user-txt {
   float: left;
   padding-top: 8px;
+  max-width: 70%;
 }
 .user-info .user-txt .name {
   color: #212121;
   font-size: 14px;
   padding-bottom: 2px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.user-info .user-txt .name.teacher-name {
+  color: #FF5A00;
 }
 .user-info .user-txt .type {
   color: #808080;
   font-size: 10px;
 }
+.user-info .user-txt .type #major {
+  padding-left: 6px;
+}
 .user-info .user-txt .type .time {
   padding-right: 6px;
+}
+.discuss-header {
+  color: #808080;
+  font-size: 13px;
+  height: 38px;
+  padding: 10px 14px 0 14px;
+}
+.discuss-header .discuss-img {
+  float: left;
+  display: inline-block;
+  width: 23px;
+  height: 22px;
+  margin-top: 5px;
+  padding-right: 10px;
+  background: url("../../images/forum/detail/sprite.png") no-repeat;
+  background-size: 90px 36px;
+  background-position: -7px -7px;
+}
+.discuss-header .discuss-title {
+  float: left;
+  widht: 90%;
+  margin-top: 6px;
+}
+.discuss-header .discuss-title .pos-num {
+  padding-left: 6px;
+}
+.underline {
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+}
+.discuss-li {
+  border-bottom: 1px solid #e5e5e5;
+  margin-left: 14px;
+}
+.discuss-li .discuss-user-img {
+  float: left;
+  padding-top: 10px;
+  padding-right: 10px;
+}
+.discuss-li .discuss-user-img > img {
+  width: 44px;
+  height: 44px;
+  border-radius: 44px;
+}
+.discuss-li .user-info {
+  width: 100%;
+  height: 100%;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.discuss-li .user-info .discuss-user-info {
+  width: 100%;
+  height: 50px;
+}
+.discuss-li .user-info .discuss-user-info .user-txt {
+  padding-top: 0px !important;
+}
+.discuss-li .user-info .discuss-user-info .discuss-btn {
+  background: url("../../images/forum/detail/sprite.png") no-repeat;
+  width: 26px;
+  height: 23px;
+  background-size: 90px 36px;
+  background-position: -43px -7px;
+  display: inline-block;
+  float: right;
+  margin-right: 14px;
+}
+.discuss-li .user-info .discuss-user-txt {
+  color: #212121;
+  font-size: 13px;
+  padding-left: 16%;
+}
+.discuss-li .user-info .discuss-user-txt > p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  padding-right: 18px;
+}
+.discuss-li:last-child {
+  border: none;
+}
+.discuss {
+  width: 100%;
+  background-color: #ffffff;
 }
 .wrapper {
   position: absolute;
@@ -542,46 +639,70 @@ img {
   right: 0;
   overflow-x: hidden;
   opacity: 1;
+  background-color: #F0F0F0;
+  margin-bottom: 56px;
 }
-.wrapper .content {
+.wrapper .user-info-box {
   padding: 10px 14px 0 14px;
+  background-color: #ffffff;
 }
-.wrapper .content .info-post {
+.wrapper .user-info-box .info-post {
   color: #212121;
   font-size: 14px;
 }
-.wrapper .content .info-post .post-txt {
+.wrapper .user-info-box .info-post .post-txt {
   padding-bottom: 10px;
 }
-.wrapper .content .info-post .post-txt .topic-name {
+.wrapper .user-info-box .info-post .post-txt .topic-name {
   color: #4A90E2;
 }
-.wrapper .content .post-img {
+.wrapper .user-info-box .post-img {
   margin-bottom: 2%;
 }
-.wrapper .content .post-img .img {
+.wrapper .user-info-box .post-img li {
   display: inline-block;
   float: left;
   overflow: hidden;
-  max-width: 40%;
-  margin-right: 4px;
-  margin-top: 4px;
+  margin-top: 2%;
+  margin-bottom: 0;
 }
-.wrapper .content .post-img .img > img {
+.wrapper .user-info-box .post-img li > img {
+  max-width: 100%;
+}
+.wrapper .user-info-box .post-img li.img-size1 {
+  max-width: 60%;
+}
+.wrapper .user-info-box .post-img li.img-size2 {
+  max-width: 40%;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+.wrapper .user-info-box .post-img li.img-size2 img {
   width: 100%;
   height: 100%;
 }
-.wrapper .content .location-box {
+.wrapper .user-info-box .post-img li.img-size3 {
+  width: 30%;
+}
+.wrapper .user-info-box .post-img li.img-size3:nth-child(3n-1) {
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+}
+.wrapper .user-info-box .post-img li.img-size3 img {
+  width: 100%;
+  height: 100%;
+}
+.wrapper .user-info-box .location-box {
   position: relative;
   display: inline-block;
   height: 20px;
   margin-bottom: 7px;
   background-color: #E5E5E5;
   color: #808080;
-  border-radius: 5px;
+  border-radius: 3px;
   font-size: 10px;
 }
-.wrapper .content .location-box #location-img {
+.wrapper .user-info-box .location-box #location-img {
   float: left;
   border: none;
   background: url("../../images/forum/location.png") no-repeat;
@@ -591,109 +712,21 @@ img {
   margin-left: 5px;
   margin-top: 3px;
 }
-.wrapper .content .location-box .location {
+.wrapper .user-info-box .location-box .location {
   float: left;
   line-height: 20px;
   padding-left: 5px;
   padding-right: 7px;
 }
-.wrapper .content .footer {
-  height: 60px;
-  width: 100%;
-  padding-bottom: 14px;
+.wrapper .t-discuss-info-box {
+  background-color: #ffffff;
+  margin-bottom: 10px;
 }
-.wrapper .content .footer .footer-triangle {
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 15px solid #e5e5e5;
-  margin-left: 20px;
+.wrapper .s-discuss-info-box {
+  background-color: #ffffff;
 }
-.wrapper .content .footer .footer-info {
-  height: 44px;
-  width: 100%;
-  background-color: #e5e5e5;
-  float: left;
-}
-.wrapper .content .footer .footer-info .circle {
-  float: left;
-  margin: 7px 5px;
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
-  background-color: #D8D8D8;
-}
-.wrapper .content .footer .footer-info .like-people .like-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
-  background-color: #D8D8D8;
-}
-.wrapper .content .footer .footer-info .like-num {
-  line-height: 30px;
-}
-.wrapper .content .footer .footer-info .like-btn {
-  width: 50px;
-  height: 44px;
-  background-color: #D8D8D8;
-  float: right;
-  line-height: 50px;
-  margin-left: 10px;
-}
-.wrapper .content .footer .footer-info .like-btn .like-btn-img {
-  display: inline-block;
-  margin-left: 12px;
-  background: url("../../images/forum/detail/sprite.png") no-repeat;
-  width: 26px;
-  height: 23px;
-  background-size: 90px 36px;
-  background-position: -43px -7px;
-}
-.wrapper .content .discuss {
-  width: 100%;
-}
-.wrapper .content .discuss .discuss-header {
-  color: #808080;
-  font-size: 13px;
-  height: 36px;
-  border-bottom: 1px solid #e5e5e5;
-}
-.wrapper .content .discuss .discuss-header .discuss-img {
-  float: left;
-  display: inline-block;
-  width: 23px;
-  height: 22px;
-  padding-right: 10px;
-  background: url("../../images/forum/detail/sprite.png") no-repeat;
-  background-size: 90px 36px;
-  background-position: -7px -7px;
-}
-.wrapper .content .discuss .discuss-header .discuss-title {
-  float: left;
-  widht: 90%;
-}
-#downloadCon {
-  position: fixed;
-  bottom: 0;
-  z-index: 990;
-}
-#downloadCon img {
-  max-width: 100%;
-}
-#downloadCon a {
-  width: 80px;
-  height: 32px;
-  position: absolute;
-  top: 50%;
-  margin-top: -16px;
-  right: 12px;
-  display: block;
-  text-decoration: none;
-  background-color: #FF5A00;
-  text-align: center;
-  color: white;
-  font-size: 15px;
-  border-radius: 2px;
-  line-height: 32px;
+.wrapper .s-discuss-info-box .student {
+  padding: 10px 14px 0 14px;
+  background-color: #ffffff;
+  margin-top: 20px;
 }
