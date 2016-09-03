@@ -520,11 +520,17 @@ img {
 .user-info .user-txt {
   float: left;
   padding-top: 8px;
+  max-width: 70%;
 }
 .user-info .user-txt .name {
   color: #212121;
   font-size: 14px;
   padding-bottom: 2px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 .user-info .user-txt .name.teacher-name {
   color: #FF5A00;
@@ -542,14 +548,15 @@ img {
 .discuss-header {
   color: #808080;
   font-size: 13px;
-  height: 36px;
-  border-bottom: 1px solid #e5e5e5;
+  height: 38px;
+  padding: 10px 14px 0 14px;
 }
 .discuss-header .discuss-img {
   float: left;
   display: inline-block;
   width: 23px;
   height: 22px;
+  margin-top: 5px;
   padding-right: 10px;
   background: url("../../images/forum/detail/sprite.png") no-repeat;
   background-size: 90px 36px;
@@ -558,16 +565,21 @@ img {
 .discuss-header .discuss-title {
   float: left;
   widht: 90%;
+  margin-top: 6px;
 }
 .discuss-header .discuss-title .pos-num {
   padding-left: 6px;
 }
+.underline {
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+}
 .discuss-li {
   border-bottom: 1px solid #e5e5e5;
+  margin-left: 14px;
 }
 .discuss-li .discuss-user-img {
   float: left;
-  width: 14%;
   padding-top: 10px;
   padding-right: 10px;
 }
@@ -583,9 +595,8 @@ img {
   padding-bottom: 14px;
 }
 .discuss-li .user-info .discuss-user-info {
-  width: 83%;
+  width: 100%;
   height: 50px;
-  float: left;
 }
 .discuss-li .user-info .discuss-user-info .user-txt {
   padding-top: 0px !important;
@@ -598,11 +609,23 @@ img {
   background-position: -43px -7px;
   display: inline-block;
   float: right;
+  margin-right: 14px;
 }
 .discuss-li .user-info .discuss-user-txt {
   color: #212121;
   font-size: 13px;
   padding-left: 16%;
+}
+.discuss-li .user-info .discuss-user-txt > p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  padding-right: 18px;
+}
+.discuss-li:last-child {
+  border: none;
 }
 .discuss {
   width: 100%;
@@ -616,8 +639,8 @@ img {
   right: 0;
   overflow-x: hidden;
   opacity: 1;
-  background-color: #e5e5e5;
-  margin-top: 56px;
+  background-color: #F0F0F0;
+  margin-bottom: 56px;
 }
 .wrapper .user-info-box {
   padding: 10px 14px 0 14px;
@@ -676,7 +699,7 @@ img {
   margin-bottom: 7px;
   background-color: #E5E5E5;
   color: #808080;
-  border-radius: 5px;
+  border-radius: 3px;
   font-size: 10px;
 }
 .wrapper .user-info-box .location-box #location-img {
@@ -695,69 +718,11 @@ img {
   padding-left: 5px;
   padding-right: 7px;
 }
-.wrapper .user-info-box .footer {
-  height: 60px;
-  width: 100%;
-  padding-bottom: 14px;
-}
-.wrapper .user-info-box .footer .footer-triangle {
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 15px solid #e5e5e5;
-  margin-left: 20px;
-}
-.wrapper .user-info-box .footer .footer-info {
-  height: 44px;
-  width: 100%;
-  background-color: #e5e5e5;
-  float: left;
-}
-.wrapper .user-info-box .footer .footer-info .circle {
-  float: left;
-  margin: 7px 5px;
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
-  background-color: #D8D8D8;
-}
-.wrapper .user-info-box .footer .footer-info .like-people .like-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
-  background-color: #D8D8D8;
-}
-.wrapper .user-info-box .footer .footer-info .like-num {
-  color: #808080;
-  font-size: 10px;
-  line-height: 30px;
-  text-align: center;
-}
-.wrapper .user-info-box .footer .footer-info .like-btn {
-  width: 50px;
-  height: 44px;
-  background-color: #D8D8D8;
-  float: right;
-  line-height: 50px;
-  margin-left: 10px;
-}
-.wrapper .user-info-box .footer .footer-info .like-btn .like-btn-img {
-  display: inline-block;
-  margin-left: 12px;
-  background: url("../../images/forum/detail/sprite.png") no-repeat;
-  width: 26px;
-  height: 23px;
-  background-size: 90px 36px;
-  background-position: -43px -7px;
-}
 .wrapper .t-discuss-info-box {
-  padding: 10px 14px 0 14px;
   background-color: #ffffff;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .wrapper .s-discuss-info-box {
-  padding: 10px 14px 0 14px;
   background-color: #ffffff;
 }
 .wrapper .s-discuss-info-box .student {

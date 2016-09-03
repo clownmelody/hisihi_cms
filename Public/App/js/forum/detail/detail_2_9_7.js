@@ -28,7 +28,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     var config = {
         downloadBar: {
             show: true,
-            pos: 0
+            pos: 1
         }
     };
 
@@ -174,17 +174,17 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             t.getPostImgStr(data.img) +
             '<div class="clear"></div>' +
             '</ul>' +
-            posStr +
-            '<div class="footer">' +
-            '<div class="footer-triangle"></div>' +
-            '<ul class="footer-info">' +
-                //'<li class="circle like-people"><img class="like-img" src="../../images/forum/detail/ico.jpg"></li>' +
-                //    t.getLikeStr(data.img) +
-            '<li class="circle like-num">'+'<span class="number">'+data.supportCount+'</span>'+'</li>' +
-            '<li class="like-btn"><div class="like-btn-img"></div></li>' +
-            '</ul>' +
-            '</div>';
-
+            posStr ;
+            //注释全部底部点赞区域代码
+            //'<div class="footer">' +
+            //'<div class="footer-triangle"></div>' +
+            //'<ul class="footer-info">' +
+            //    //'<li class="circle like-people"><img class="like-img" src="../../images/forum/detail/ico.jpg"></li>' +
+            //    //    t.getLikeStr(data.img) +
+            ////'<li class="circle like-num">'+'<span class="number">'+data.supportCount+'</span>'+'</li>' +
+            ////'<li class="like-btn"><div class="like-btn-img"></div></li>' +
+            //'</ul>' +
+            //'</div>';
 
         $('.user-info-box').html(str);
         //惰性加载
@@ -212,6 +212,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             '<span class="discuss-img"></span>' +
             '<p class="discuss-title"><span>名师</span><span class="pos-num">('+result.replyTotalCount+')</span></p>' +
             '</div>' +
+            '<div class="underline"></div>'+
             '<ul>' +
             t.getTeacherDiscussInfo(replyList)+
             '</ul>' +
@@ -269,6 +270,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             '<span class="discuss-img"></span>' +
             '<p class="discuss-title"><span>讨论</span><span class="pos-num">('+result.replyTotalCount+')</span></p>' +
             '</div>' +
+            '<div class="underline"></div>'+
             '<ul>' +
                 t.getStudentDiscussInfo(replyList)+
             '</ul>' +
