@@ -14,7 +14,7 @@ class TeachingCourseTypeService extends Model
     public function getTypeList($page, $count){
         $where_array['status'] = 1;
         $list = D('App/OrganizationTeachingCourseType', 'Model')
-            ->field('id, name, pic_url, special_type, sort')
+            ->field('id, name as value, pic_url, special_type, sort')
             ->where($where_array)
             //->page($page, $count)
             ->order('sort desc')
