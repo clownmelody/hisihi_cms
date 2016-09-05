@@ -730,3 +730,17 @@ img {
   background-color: #ffffff;
   margin-top: 20px;
 }
+.nopos {
+  position: relative;
+  max-height: 108px;
+}
+.nopos #nopos-img {
+  position: absolute;
+  width: 108px;
+  height: 108px;
+  background: url("../../images/forum/detail/nopos.png") no-repeat;
+  background-size: 108px 108px;
+}
+.nopos > p {
+  color: #F0F0F0;
+}
