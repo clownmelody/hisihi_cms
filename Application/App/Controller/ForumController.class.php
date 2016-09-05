@@ -1095,7 +1095,7 @@ GROUP BY
     {
         //$this->requireLogin();\
         if($type == 'view') {
-            if((float)$version>=2.97){
+            if((float)$version>=2.96){
                 $this->display('detail_2_9_7');
                 exit;
             }
@@ -1201,7 +1201,7 @@ GROUP BY
             $this->assign('post_img', $post['img']);
             $this->assign('replyList',$replyList);
             $this->setTitle('{$post.title|op_t} — 嘿设汇');
-            if((float)$version<2.97){
+            if((float)$version<2.96){
                 $this->display();
             } else {
                 $this->display('detail_2_9_7');
@@ -1280,7 +1280,7 @@ GROUP BY
         $post['teacherReplyTotalCount'] = $teacherReplyTotalCount;
         $post['studentReplyTotalCount'] = $studentReplyTotalCount;
         $post['reply_count'] = $teacherReplyTotalCount + $studentReplyTotalCount;
-        if((float)$version>=2.97){
+        if((float)$version<2.96){
             $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/toppostdetailv2/post_id/'.$post_id;
         } else {
             $post['shareUrl'] = C('HOST_NAME_PREFIX').'app.php/forum/detail/version/2.97/post_id/'.$post_id;
