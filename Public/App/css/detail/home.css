@@ -731,8 +731,10 @@ img {
   margin-top: 20px;
 }
 .nopos {
+  display: none;
   position: relative;
   max-height: 108px;
+  width: 100%;
 }
 .nopos #nopos-img {
   position: absolute;
