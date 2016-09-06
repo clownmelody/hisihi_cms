@@ -15,6 +15,7 @@ img {
 .user-info {
   width: 100%;
   height: 50px;
+  height: 50px;
   padding-bottom: 5px;
   .user-img {
     float: left;
@@ -27,10 +28,12 @@ img {
   .user-txt {
     float: left;
     padding-top: 8px;
+    max-width: 70%;
     .name {
       color: #212121;
       font-size: 14px;
       padding-bottom: 2px;
+      .txt-ellipsis-p(1);
       &.teacher-name {
         color:#FF5A00;
       }
@@ -50,12 +53,13 @@ img {
 .discuss-header {
   color: #808080;
   font-size: 13px;
-  height: 36px;
-  border-bottom: 1px solid #e5e5e5;
+  height: 38px;
+  padding: 10px 14px 0 14px;
   .discuss-img {
     float: left;
     display: inline-block;
     .size(23px,22px);
+    margin-top: 5px;
     padding-right: 10px;
     background: url("../../images/forum/detail/sprite.png") no-repeat;
     background-size: 180px*0.5 72px*0.5;
@@ -64,16 +68,21 @@ img {
   .discuss-title {
     float: left;
     widht:90%;
+    margin-top: 6px;
     .pos-num {
       padding-left: 6px;
     }
   }
 }
+.underline {
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+}
 .discuss-li {
   border-bottom: 1px solid #e5e5e5;
+  margin-left: 14px;
   .discuss-user-img {
     float: left;
-    width: 14%;
     padding-top: 10px;
     padding-right: 10px;
     > img {
@@ -87,9 +96,8 @@ img {
     padding-top: 14px;
     padding-bottom: 14px;
     .discuss-user-info {
-      width: 83%;
+      width: 100%;
       height: 50px;
-      float: left;
       .user-txt {
         padding-top: 0px !important;
       }
@@ -100,13 +108,21 @@ img {
         background-position: -43px -7px;
         display: inline-block;
         float: right;
+        margin-right: 14px;
       }
     }
     .discuss-user-txt {
       color: #212121;
       font-size: 13px;
       padding-left: 16%;
+      > p {
+        .txt-ellipsis-p(7);
+        padding-right: 18px;
+      }
     }
+  }
+  &:last-child {
+    border: none;
   }
 }
 .discuss {
@@ -121,9 +137,8 @@ img {
   right: 0;
   overflow-x: hidden;
   opacity: 1;
-  background-color: #e5e5e5;
-  margin-top: 56px;
-
+  background-color: #F0F0F0;
+  margin-bottom: 56px;
   .user-info-box {
     padding: 10px 14px 0 14px;
     background-color: #ffffff;
@@ -184,7 +199,7 @@ img {
       margin-bottom: 7px;
       background-color: #E5E5E5;
       color: #808080;
-      border-radius: 5px;
+      border-radius: 3px;
       font-size: 10px;
       #location-img {
         float: left;
@@ -205,70 +220,70 @@ img {
     }
 
     //点赞区
-    .footer {
-      height: 60px;
-      width: 100%;
-      padding-bottom: 14px;
-      .footer-triangle {
-        width: 0;
-        height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 15px solid #e5e5e5;
-        margin-left: 20px;
-      }
-      .footer-info {
-        height: 44px;
-        width: 100%;
-        background-color: #e5e5e5;
-        float: left;
-        .circle {
-          float: left;
-          margin: 7px 5px;
-          .size(30px, 30px);
-          border-radius: 30px;
-          background-color: #D8D8D8;
-        }
-        .like-people {
-          .like-img {
-            .size(30px, 30px);
-            border-radius: 30px;
-            background-color: #D8D8D8;
-          }
-        }
-        .like-num {
-          color: #808080;
-          font-size: 10px;
-          line-height: 30px;
-          text-align: center;
-        }
-        .like-btn {
-          .size(50px, 44px);
-          background-color: #D8D8D8;
-          float: right;
-          line-height: 50px;
-          margin-left: 10px;
-          .like-btn-img {
-            display: inline-block;
-            margin-left: 12px;
-            background: url("../../images/forum/detail/sprite.png") no-repeat;
-            .size(26px, 23px);
-            background-size: 180px*0.5 72px*0.5;
-            background-position: -43px -7px;
-          }
-        }
-      }
-    }
+    //.footer {
+    //  height: 60px;
+    //  width: 100%;
+    //  padding-bottom: 14px;
+    //  .footer-triangle {
+    //    width: 0;
+    //    height: 0;
+    //    border-left: 10px solid transparent;
+    //    border-right: 10px solid transparent;
+    //    border-bottom: 15px solid #F0F0F0;
+    //    margin-left: 20px;
+    //  }
+    //  .footer-info {
+    //    height: 44px;
+    //    width: 100%;
+    //    background-color: #F0F0F0;
+    //    float: left;
+    //    .circle {
+    //      float: left;
+    //      margin: 7px 5px;
+    //      .size(30px, 30px);
+    //      border-radius: 30px;
+    //      background-color: #D8D8D8;
+    //    }
+    //    .like-people {
+    //      .like-img {
+    //        .size(30px, 30px);
+    //        border-radius: 30px;
+    //        background-color: #D8D8D8;
+    //      }
+    //    }
+    //    .like-num {
+    //      color: #808080;
+    //      font-size: 10px;
+    //      line-height: 30px;
+    //      text-align: center;
+    //    }
+    //    .like-btn {
+    //      .size(50px, 44px);
+    //      background-color: #D8D8D8;
+    //      float: right;
+    //      line-height: 50px;
+    //      margin-left: 10px;
+    //      .like-btn-img {
+    //        display: inline-block;
+    //        margin-left: 12px;
+    //        background: url("../../images/forum/detail/sprite.png") no-repeat;
+    //        .size(26px, 23px);
+    //        background-size: 180px*0.5 72px*0.5;
+    //        background-position: -43px -7px;
+    //      }
+    //    }
+    //  }
+    //}
   }
 
   .t-discuss-info-box{
-    padding: 10px 14px 0 14px;
+    //padding: 10px 14px 0 14px;
     background-color: #ffffff;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   .s-discuss-info-box {
-    padding: 10px 14px 0 14px;
+    //padding: 10px 14px 0 14px;
     background-color: #ffffff;
     .student {
       padding: 10px 14px 0 14px;
@@ -276,5 +291,18 @@ img {
       margin-top: 20px;
     }
   }
-
 }
+
+.nopos {
+  position: relative;
+  max-height: 360px*0.3;
+  #nopos-img {
+    position: absolute;
+    .size (360px*0.3,360px*0.3);
+    background: url("../../images/forum/detail/nopos.png") no-repeat;
+    background-size: 360px*0.3 360px*0.3;
+    }
+  > p {
+    color: #F0F0F0;
+    }
+  }

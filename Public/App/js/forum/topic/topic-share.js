@@ -346,7 +346,6 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
     };
 
 
-
     /*点赞和评论操作*/
     t.openMask=function(){
         this.controlMaskModal(true);
