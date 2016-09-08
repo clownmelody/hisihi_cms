@@ -79,17 +79,38 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,MyPhotoSwipe){
     var t=OrgBasicInfo.prototype;
 
     t.initData=function(){
-        this.loadBasicInfoData();
-        this.loadTopAnnouncement();
-        this.loadSignUpInfo();
-        this.loadCouponInfo();
-        this.loadVideo();
-        this.loadMyTeachersInfo();
-        this.loadTeachingVideoInfo();
-        this.loadWorksInfo();
-        this.loadGroupsInfo();
-        this.loadMyCompresAsseinfo();
-        this.loadDetailCommentInfo(1);
+        var that=this;
+        async.series([
+            function(callback) {
+                console.log("Series function Run");
+                that.loadBasicInfoData(function(error,data) {
+
+                })
+            },
+            function(callback) {
+                console.log("Series function Run");
+                that.loadTopAnnouncement(function(error,data) {})
+            },
+            function(callback) {
+                console.log("Series function Run");
+                that.loadSignUpInfo(function(error,data) {})
+            },
+            function(callback) {
+                console.log("Series function Run");
+                that.loadCouponInfo(function(error,data) {})
+            }
+        ]);
+        //this.loadBasicInfoData();
+        //this.loadTopAnnouncement();
+        //this.loadSignUpInfo();
+        //this.loadCouponInfo();
+        //this.loadVideo();
+        //this.loadMyTeachersInfo();
+        //this.loadTeachingVideoInfo();
+        //this.loadWorksInfo();
+        //this.loadGroupsInfo();
+        //this.loadMyCompresAsseinfo();
+        //this.loadDetailCommentInfo(1);
 
         $('#wrapper,#footer').show();
         this.controlLoadingBox(false);

@@ -4,16 +4,17 @@
 requirejs.config({
     baseUrl: window.hisihiUrlObj.js,
     paths: {
-        $:'../sharecommon/zepto.min',
-        fx:'../sharecommon/fx_v1.1',
-        prefixfree:'../sharecommon/prefixfree.min',
-        base:'../sharecommon/base-1.1',
-        fastclick:'../sharecommon/fastclick',
-        lazyloading:'../sharecommon/lazyloading',
-        photoswipe:'../sharecommon/photoswipe/photoswipe.min',
-        photoswipeui:'../sharecommon/photoswipe/photoswipe-ui-default.min',
-        myPhotoSwipe:'../sharecommon/photoswipe/myphotoswipe',
-        home:'2.9.5/orgbasicinfo',
+        $:'zepto.min',
+        fx:'fx_v1.1',
+        prefixfree:'prefixfree.min',
+        base:'base-1.1',
+        fastclick:'fastclick',
+        lazyloading:'lazyloading',
+        photoswipe:'photoswipe/photoswipe.min',
+        photoswipeui:'photoswipe/photoswipe-ui-default.min',
+        myPhotoSwipe:'photoswipe/myphotoswipe',
+        home:'../orgbasicinfo/2.9.5/orgbasicinfo',
+        async:'async',
     },
     shim: {
         $:{
