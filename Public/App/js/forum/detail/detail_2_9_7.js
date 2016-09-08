@@ -14,6 +14,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         //提问详情 detail
         //请求地址    http://115.29.44.35/api.php?s=/forum/getPostDetail
 
+        //同步/异步加载数据
+        this.async=true;
+
         //获取数据
         this.loadData();
 
@@ -21,6 +24,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         new myPhotoSwipe('.post-img', {
             bgFilter: true,
         });
+
+        $(document).on(eventName,'.discuss-btn', $.proxy(this,'openMask'));
+        $(document).on(eventName,'.mask', $.proxy(this,'hideMask'));
     };
 
     //下载条，1在底部，0在顶部
@@ -37,9 +43,11 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
 
     /*加载数据信息*/
     t.loadData = function () {
+        this.controlLoadingBox(true);
         this.loadDetailInfo();
-        this.loadTeacherInfo();
-        this.loadStudentInfo();
+        //this.loadTeacherInfo();
+        //this.loadStudentInfo();
+        //this.controlLoadingBox(false);
     };
 
     /*重新加载*/
@@ -54,11 +62,13 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             para = {
                 url: this.baseUrl + '?s=/forum/getPostDetail/version/2.9.7/post_id/' + this.tid,
                 type: 'get',
+                async:this.async,
                 sCallback: function (result) {
                     //预加载遮罩
                     if (result.data) {
                         that.fillDetailInfo(result.data);
-                        $('.wrapper').css('opacity', '1');
+                        that.loadTeacherInfo();
+                        //$('.wrapper').css('opacity', '1');
                     } else {
                         that.showTips('帖子基本信息加载失败');
                     }
@@ -77,19 +87,21 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         var that=this,
         tpara={
             url:this.baseUrl+'?s=/forum/teacherReplyList/version/2.96/post_id/'+ this.tid,
-        sCallback: function (result) {
-            //预加载遮罩
-            if (result.replyList) {
-                that.getTeacherPostInfo(result);
-                $('.wrapper').css('opacity', '1');
-            } else {
+            async:this.async,
+            sCallback: function (result) {
+                //预加载遮罩
+                if (result.replyList) {
+                    that.getTeacherPostInfo(result);
+                    that.loadStudentInfo();
+                    //$('.wrapper').css('opacity', '1');
+                } else {
+                    that.showTips('老师回复加载失败');
+                }
+            },
+            eCallback: function () {
                 that.showTips('老师回复加载失败');
             }
-        },
-        eCallback: function () {
-            that.showTips('老师回复加载失败');
         }
-    }
         this.getDataAsyncPy(tpara);
     };
 
@@ -106,10 +118,12 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         var that=this,
             spara={
                 url:this.baseUrl+'?s=/forum/studentReplyList/version/2.96/post_id/'+ this.tid,
+                async:this.async,
                 sCallback: function (result) {
                     //预加载遮罩
                     if (result.replyList) {
                         that.getStudentPostInfo(result);
+                        that.controlLoadingBox(false);
                         $('.wrapper').css('opacity', '1');
                     } else {
                         that.showTips('讨论加载失败');
@@ -164,14 +178,18 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             //}
             //var len = data.topic_info.title.length;
             var str=data.content;
-            str=str.match(/#.*#/g)[0];
-            str=str.replace(/##/g,'#');
-            var arr=str.split('#'),
-                len=arr.length;
-            for(var i=0;i<len;i++){
-                if(arr[i]){
-                    topicInfo += '<span class="topic-name">#' + arr[i]+ '#</span>' ;
+            str=str.match(/#.*#/g);
+            if(str) {
+                str = str[0].replace(/##/g, '#');
+                var arr = str.split('#'),
+                    len = arr.length;
+                for (var i = 0; i < len; i++) {
+                    if (arr[i]) {
+                        topicInfo += '<span class="topic-name">#' + arr[i] + '#</span>';
+                    }
                 }
+            }else{
+                topicInfo='';
             }
         }
         str = '<div class="user-info">' +
@@ -218,7 +236,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     t.getTeacherPostInfo=function(result) {
         var len = result.replyList.length;
         if (len == 0) {
-            $('.nopos').show();
+            //$('.nodata').show();
             return '';
         }
         this.loadTeacherPos(result,result.replyList);
@@ -262,7 +280,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
                     '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
                     '</p>' +
                     '</div>' +
+                    '<div class="chose-area">'+
                     '<div class="discuss-btn"></div>' +
+                    '</div>'+
                     '</div>' +
                     '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
                     '</div>' +
@@ -275,7 +295,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     t.getStudentPostInfo=function(result){
         var len = result.replyList.length;
         if (len == 0) {
-            $('.nopos').show();
+            //$('.nodata').show();
             return '';
         }
         this.loadStudentPos(result,result.replyList);
@@ -411,6 +431,25 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     //    }
     //};
 
+    /*点赞操作*/
+    t.openMask=function(){
+        this.controlMaskModal(true);
+    };
+
+    t.hideMask=function(){
+        this.controlMaskModal(false);
+    };
+
+    /*下载引导页的显示和隐藏*/
+    t.controlMaskModal=function(flag){
+        var $target=$('.download');
+        if(flag==true){
+            $target.show();
+        }
+        else{
+            $target.hide();
+        }
+    };
 
     return Detail
 });
