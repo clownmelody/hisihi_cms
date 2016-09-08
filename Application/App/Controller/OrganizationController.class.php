@@ -1812,7 +1812,7 @@ class OrganizationController extends AppController
 
         foreach($org_list as &$org){
             $org_id = $org['id'];
-            if((float)$version<3.01){
+            if((float)$version<3.0){
                 unset($org['advantage']);
                 unset($org['is_listen_preview']);
                 unset($org['listen_preview_text']);
@@ -3664,7 +3664,7 @@ class OrganizationController extends AppController
                 $select_where['well_chosen'] = 1;
             }
         }
-        $org_list = $model->field('id, name, slogan, city, type, view_count, logo, light_authentication, sort')
+        $org_list = $model->field('id, name, slogan, city, type, advantage, view_count, logo, light_authentication, sort')
             ->order("sort asc, create_time desc")
             ->where($select_where)->page($page, $count)->select();
         $totalCount = $model->where($select_where)->count();
@@ -3735,6 +3735,10 @@ class OrganizationController extends AppController
                     }
                 }
                 $org['promotion_list'] = $uni_promotion_list;
+            }
+
+            if(floatval($version) < 3.0){
+                unset($org['advantage']);
             }
         }
 /*        //机构列表按报名数排序
