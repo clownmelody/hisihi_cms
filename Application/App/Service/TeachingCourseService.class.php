@@ -82,7 +82,9 @@ class TeachingCourseService extends Model
      */
     public function getNearbyShouHuiOrgByCourseType($major_id, $longitude=null, $latitude=null,
                                                     $city=null, $page, $count){
-        $major_id += 10000;
+        if(!empty($major_id)){
+            $major_id += 10000;
+        }
         $model = M();
         $start = ($page-1)*$count;
         if(!empty($longitude)&&!empty($latitude)){
