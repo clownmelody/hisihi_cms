@@ -617,7 +617,7 @@ img {
 .discuss-li .user-info .discuss-user-txt {
   color: #212121;
   font-size: 13px;
-  padding-left: 16%;
+  padding-left: 14%;
 }
 .discuss-li .user-info .discuss-user-txt > p {
   text-overflow: ellipsis;
