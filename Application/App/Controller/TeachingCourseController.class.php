@@ -26,7 +26,7 @@ class TeachingCourseController extends BaseController
      * @param int $page
      * @param int $count
      */
-    public function data($type_id, $longitude=null, $latitude=null, $city=null, $page=1, $count=10) {
+    public function data($type_id=null, $longitude=null, $latitude=null, $city=null, $page=1, $count=10) {
         switch ($this->_method){
             case 'get':
                 $org_list = array();
@@ -59,7 +59,7 @@ class TeachingCourseController extends BaseController
      * @param int $page
      * @param int $count
      */
-    public function shouhui($type_id, $longitude=null, $latitude=null, $city=null, $page=1, $count=10) {
+    public function shouhui($type_id=null, $longitude=null, $latitude=null, $city=null, $page=1, $count=10) {
         switch ($this->_method){
             case 'get':
                 $org_list = array();
