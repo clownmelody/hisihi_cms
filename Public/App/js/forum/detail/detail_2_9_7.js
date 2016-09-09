@@ -1,7 +1,7 @@
 /**
  * Created by hisihi on 2016/8/31.
  */
-define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
+define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,async) {
     var Detail = function (id) {
         this.tid = id;
         this.baseUrl = window.hisihiUrlObj.link_url;
@@ -41,13 +41,51 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     Detail.constructor = Detail;
     var t = Detail.prototype;
 
-    /*加载数据信息*/
+    /*加载数据信息
+    * 通过回调方法
+    * 获取到接口信息
+    * 全部数据加载完毕后停止加载动画，显示数据内容*/
     t.loadData = function () {
         this.controlLoadingBox(true);
-        this.loadDetailInfo();
-        //this.loadTeacherInfo();
-        //this.loadStudentInfo();
-        //this.controlLoadingBox(false);
+        var that = this;
+        async.series({
+            basic: function (callback) {
+                that.loadDetailInfo(function (result) {
+                    callback(null, result);
+                });
+            },
+            teacher: function (callback) {
+                that.loadTeacherInfo(function (result) {
+                    callback(null, result);
+                });
+            },
+            student:function(callback) {
+                that.loadStudentInfo(function (result) {
+                    callback(null,result);
+                });
+            }
+        }, function (err, results) {
+            var val;
+            for(var item in results){
+                val=results[item]
+                switch (item) {
+                    case 'basic':
+                        that.fillDetailInfo(val);
+                        break;
+                    case 'teacher':
+                        that.getTeacherPostInfo(val);
+                        break;
+                    case 'student':
+                        that.getStudentPostInfo(val);
+                        break;
+                }
+            }
+            $('.wrapper').css('opacity', '1');
+            that.controlLoadingBox(false);
+            $('.lazy-img').picLazyLoad($(window),{
+                threshold:100
+            });
+        });
     };
 
     /*重新加载*/
@@ -57,7 +95,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     t.loadMoreWorksListInfo=function(){};
 
     /*获取话题帖基本详情帖*/
-    t.loadDetailInfo = function () {
+    t.loadDetailInfo = function (callback) {
         var that = this,
             para = {
                 url: this.baseUrl + '?s=/forum/getPostDetail/version/2.9.7/post_id/' + this.tid,
@@ -66,10 +104,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
                 sCallback: function (result) {
                     //预加载遮罩
                     if (result.data) {
-                        that.fillDetailInfo(result.data);
-                        that.loadTeacherInfo();
-                        //$('.wrapper').css('opacity', '1');
+                        callback(result.data);
                     } else {
+                        callback(null);
                         that.showTips('帖子基本信息加载失败');
                     }
                 },
@@ -80,10 +117,19 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         this.getDataAsyncPy(para);
     };
 
+    /*填充帖子信息*/
+    t.fillDetailInfo = function (data) {
+        var title = data.title,
+            desc = data.description,
+            title = this.substrLongStr(title, 18);
+        $('title').text(title);
+        this.getPostInfo(data);
+    }
+
     /*获取帖子点赞详情*/
 
     /*获取老师回复详情*/
-    t.loadTeacherInfo = function(){
+    t.loadTeacherInfo = function(callback){
         var that=this,
         tpara={
             url:this.baseUrl+'?s=/forum/teacherReplyList/version/2.96/post_id/'+ this.tid,
@@ -91,10 +137,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             sCallback: function (result) {
                 //预加载遮罩
                 if (result.replyList) {
-                    that.getTeacherPostInfo(result);
-                    that.loadStudentInfo();
-                    //$('.wrapper').css('opacity', '1');
+                    callback(result);
                 } else {
+                    callback(result);
                     that.showTips('老师回复加载失败');
                 }
             },
@@ -105,16 +150,8 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         this.getDataAsyncPy(tpara);
     };
 
-    t.fillDetailInfo = function (data) {
-        var title = data.title,
-            desc = data.description,
-            title = this.substrLongStr(title, 18);
-        $('title').text(title);
-        this.getPostInfo(data);
-    }
-
     /*获取学生回复详情*/
-    t.loadStudentInfo = function(){
+    t.loadStudentInfo = function(callback){
         var that=this,
             spara={
                 url:this.baseUrl+'?s=/forum/studentReplyList/version/2.96/post_id/'+ this.tid,
@@ -122,9 +159,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
                 sCallback: function (result) {
                     //预加载遮罩
                     if (result.replyList) {
-                        that.getStudentPostInfo(result);
-                        that.controlLoadingBox(false);
-                        $('.wrapper').css('opacity', '1');
+                        callback(result);
                     } else {
                         that.showTips('讨论加载失败');
                     }
@@ -171,27 +206,31 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         //帖子话题,多个话题帖分享同显示标题蓝色
         var topicInfo='';
         if(data.content) {
+
             //var reg=/#.*/g;
             //var ss=data.content.match(reg);
             //if(ss.length>0){
             //    alert(1);
             //}
             //var len = data.topic_info.title.length;
-            var str=data.content;
-            str=str.match(/#.*#/g);
-            if(str) {
-                str = str[0].replace(/##/g, '#');
-                var arr = str.split('#'),
-                    len = arr.length;
-                for (var i = 0; i < len; i++) {
-                    if (arr[i]) {
-                        topicInfo += '<span class="topic-name">#' + arr[i] + '#</span>';
-                    }
-                }
-            }else{
-                topicInfo='';
-            }
+
+            //正则表达式提取话题内容
+            //var str=data.content;
+            //str=str.match(/#.*#/g);
+            //if(str) {
+            //    str = str[0].replace(/##/g, '#');
+            //    var arr = str.split('#'),
+            //        len = arr.length;
+            //    for (var i = 0; i < len; i++) {
+            //        if (arr[i]) {
+            //            topicInfo += '<span class="topic-name">#' + arr[i] + '#</span>';
+            //        }
+            //    }
+            //}else{
+            //    topicInfo='';
+            //}
         }
+
         str = '<div class="user-info">' +
             '<div class="user-img">' +
             '<img src="' +data.userInfo.avatar128+ '">' +
@@ -206,7 +245,8 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             '</div>' +
             '<div class="info-post">' +
             '<p class="post-txt">' +
-            topicInfo + data.content +
+            topicInfo +
+            data.content +
             '</p>' +
             '</div>' +
             '<ul class="post-img">' +
@@ -224,6 +264,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             ////'<li class="like-btn"><div class="like-btn-img"></div></li>' +
             //'</ul>' +
             //'</div>';
+
         $('.user-info-box').html(str);
         //惰性加载
         $('.post-img img').picLazyLoad($('.wrapper'),{

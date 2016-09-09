@@ -13,7 +13,8 @@ requirejs.config({
         photoswipeui:'sharecommon/photoswipe/photoswipe-ui-default.min',
         myPhotoSwipe:'sharecommon/photoswipe/myphotoswipe',
         home:'forum/detail/detail_2_9_7',
-        base:'sharecommon/base-1.1'
+        base:'sharecommon/base-1.1',
+        async:'sharecommon/async',
     },
     shim: {
         $:{
