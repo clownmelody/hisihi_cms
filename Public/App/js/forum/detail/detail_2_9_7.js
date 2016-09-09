@@ -13,7 +13,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
 
         //提问详情 detail
         //请求地址    http://115.29.44.35/api.php?s=/forum/getPostDetail
-        //评论详情
+
+        //同步/异步加载数据
+        this.async=true;
 
         //获取数据
         this.loadData();
@@ -22,9 +24,12 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         new myPhotoSwipe('.post-img', {
             bgFilter: true,
         });
+
+        $(document).on(eventName,'.discuss-btn', $.proxy(this,'openMask'));
+        $(document).on(eventName,'.mask', $.proxy(this,'hideMask'));
     };
 
-    //下载条
+    //下载条，1在底部，0在顶部
     var config = {
         downloadBar: {
             show: true,
@@ -38,22 +43,32 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
 
     /*加载数据信息*/
     t.loadData = function () {
+        this.controlLoadingBox(true);
         this.loadDetailInfo();
-        this.loadTeacherInfo();
-        this.loadStudentInfo();
+        //this.loadTeacherInfo();
+        //this.loadStudentInfo();
+        //this.controlLoadingBox(false);
     };
+
+    /*重新加载*/
+    t.reloadWorksListInfo=function(){};
+
+    /*加载更新帖子*/
+    t.loadMoreWorksListInfo=function(){};
 
     /*获取话题帖基本详情帖*/
     t.loadDetailInfo = function () {
         var that = this,
             para = {
-                url: this.baseUrl + '?s=/forum/getPostDetail/version/2.97/post_id/' + this.tid,
+                url: this.baseUrl + '?s=/forum/getPostDetail/version/2.9.7/post_id/' + this.tid,
                 type: 'get',
+                async:this.async,
                 sCallback: function (result) {
                     //预加载遮罩
                     if (result.data) {
                         that.fillDetailInfo(result.data);
-                        $('.wrapper').css('opacity', '1');
+                        that.loadTeacherInfo();
+                        //$('.wrapper').css('opacity', '1');
                     } else {
                         that.showTips('帖子基本信息加载失败');
                     }
@@ -72,19 +87,21 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         var that=this,
         tpara={
             url:this.baseUrl+'?s=/forum/teacherReplyList/version/2.96/post_id/'+ this.tid,
-        sCallback: function (result) {
-            //预加载遮罩
-            if (result.replyList) {
-                that.getTeacherPostInfo(result);
-                $('.wrapper').css('opacity', '1');
-            } else {
+            async:this.async,
+            sCallback: function (result) {
+                //预加载遮罩
+                if (result.replyList) {
+                    that.getTeacherPostInfo(result);
+                    that.loadStudentInfo();
+                    //$('.wrapper').css('opacity', '1');
+                } else {
+                    that.showTips('老师回复加载失败');
+                }
+            },
+            eCallback: function () {
                 that.showTips('老师回复加载失败');
             }
-        },
-        eCallback: function () {
-            that.showTips('老师回复加载失败');
         }
-    }
         this.getDataAsyncPy(tpara);
     };
 
@@ -101,10 +118,12 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         var that=this,
             spara={
                 url:this.baseUrl+'?s=/forum/studentReplyList/version/2.96/post_id/'+ this.tid,
+                async:this.async,
                 sCallback: function (result) {
                     //预加载遮罩
                     if (result.replyList) {
                         that.getStudentPostInfo(result);
+                        that.controlLoadingBox(false);
                         $('.wrapper').css('opacity', '1');
                     } else {
                         that.showTips('讨论加载失败');
@@ -148,10 +167,30 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         if(data.userInfo.group==6){
             teacherClassName='teacher-name';
         }
-        //帖子话题
+
+        //帖子话题,多个话题帖分享同显示标题蓝色
         var topicInfo='';
-        if(data.topic_info) {
-            topicInfo=  '<span class="topic-name">#' + data.topic_info + '#</span>' ;
+        if(data.content) {
+            //var reg=/#.*/g;
+            //var ss=data.content.match(reg);
+            //if(ss.length>0){
+            //    alert(1);
+            //}
+            //var len = data.topic_info.title.length;
+            var str=data.content;
+            str=str.match(/#.*#/g);
+            if(str) {
+                str = str[0].replace(/##/g, '#');
+                var arr = str.split('#'),
+                    len = arr.length;
+                for (var i = 0; i < len; i++) {
+                    if (arr[i]) {
+                        topicInfo += '<span class="topic-name">#' + arr[i] + '#</span>';
+                    }
+                }
+            }else{
+                topicInfo='';
+            }
         }
         str = '<div class="user-info">' +
             '<div class="user-img">' +
@@ -161,7 +200,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             '<p class="name ' + teacherClassName + '">' + data.userInfo.nickname + '</p>' +
             '<p class="type">' +
             '<span>' + this.getDiffTime(data.create_time) + '</span>' +
-            majorStr +
+                majorStr +
             '</p>' +
             '</div>' +
             '</div>' +
@@ -185,7 +224,6 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
             ////'<li class="like-btn"><div class="like-btn-img"></div></li>' +
             //'</ul>' +
             //'</div>';
-
         $('.user-info-box').html(str);
         //惰性加载
         $('.post-img img').picLazyLoad($('.wrapper'),{
@@ -198,7 +236,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     t.getTeacherPostInfo=function(result) {
         var len = result.replyList.length;
         if (len == 0) {
-            $('.nodata').show();
+            //$('.nodata').show();
             return '';
         }
         this.loadTeacherPos(result,result.replyList);
@@ -228,7 +266,7 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
         for(var i=0;i<len;i++) {
             var item=result[i];
             if (!item.content) {
-                item.content = '语音回复请下载app查看';
+                item.content = '语音回复请下载嘿设汇app查看';
             }
                 str += '<li class="discuss-li">' +
                     '<div class="discuss-user-img">' +
@@ -242,7 +280,9 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
                     '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
                     '</p>' +
                     '</div>' +
+                    '<div class="chose-area">'+
                     '<div class="discuss-btn"></div>' +
+                    '</div>'+
                     '</div>' +
                     '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
                     '</div>' +
@@ -255,12 +295,11 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     t.getStudentPostInfo=function(result){
         var len = result.replyList.length;
         if (len == 0) {
-            $('.nodata').show();
+            //$('.nodata').show();
             return '';
         }
         this.loadStudentPos(result,result.replyList);
     };
-
 
     /*填充学生回复内容*/
     t.loadStudentPos=function(result,replyList){
@@ -304,7 +343,6 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
                 '<div class="discuss-user-txt"><p>' + item.content + '</p></div>' +
                 '</div>' +
                 '</li>';
-
         }
         return str;
     };
@@ -393,11 +431,25 @@ define(['base','myPhotoSwipe','lazyloading'],function(Base,myPhotoSwipe) {
     //    }
     //};
 
+    /*点赞操作*/
+    t.openMask=function(){
+        this.controlMaskModal(true);
+    };
 
+    t.hideMask=function(){
+        this.controlMaskModal(false);
+    };
 
+    /*下载引导页的显示和隐藏*/
+    t.controlMaskModal=function(flag){
+        var $target=$('.download');
+        if(flag==true){
+            $target.show();
+        }
+        else{
+            $target.hide();
+        }
+    };
 
-
-
-    return Detail;
-
+    return Detail
 });
