@@ -11,7 +11,8 @@ use Think\Model;
 
 class TeachingCourseService extends Model
 {
-    public function getNearbyOrgByCourseType($type_id, $longitude=null, $latitude=null, $page, $count){
+    public function getNearbyOrgByCourseType($type_id, $longitude=null, $latitude=null,
+                                             $city=null, $page, $count){
         $model = M();
         $start = ($page-1)*$count;
         if(!empty($longitude)&&!empty($latitude)){
@@ -35,15 +36,31 @@ class TeachingCourseService extends Model
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=30 and o.status=1 and c.status=1 and c.type_id=".$type_id." order by distance asc limit ".$start.",".$count;
         } else {
-            $sql = "select distinct(o.id) as org_id
+            if(empty($city)){
+                $sql = "select distinct(o.id) as org_id
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=30 and o.status=1 and c.status=1 and c.type_id=".$type_id." order by sort desc limit ".$start.",".$count;
+            } else {
+                $city_filter = " and o.city like '%" .$city . "%'";
+                $sql = "select distinct(o.id) as org_id
+                from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=30 and o.status=1 and c.status=1 and c.type_id=".$type_id . $city_filter . " order by sort desc limit ".$start.",".$count;
+            }
         }
-        $total_count_sql = "select count(distinct(o.id)) as totalCount
+        if(empty($city)){
+            $total_count_sql = "select count(distinct(o.id)) as totalCount
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=30 and o.status=1 and c.status=1 and c.type_id=".$type_id;
+        } else {
+            $city_filter = " and o.city like '%" .$city . "%'";
+            $total_count_sql = "select count(distinct(o.id)) as totalCount
+                from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=30 and o.status=1 and c.status=1 and c.type_id=".$type_id . $city_filter;
+        }
         $list = $model->query($sql);
         $total_count = $model->query($total_count_sql);
         return array('list'=>$list, 'totalCount'=>$total_count[0]['totalCount']);
@@ -54,11 +71,13 @@ class TeachingCourseService extends Model
      * @param $major_id
      * @param null $longitude
      * @param null $latitude
+     * @param null $city
      * @param $page
      * @param $count
      * @return array
      */
-    public function getNearbyShouHuiOrgByCourseType($major_id, $longitude=null, $latitude=null, $page, $count){
+    public function getNearbyShouHuiOrgByCourseType($major_id, $longitude=null, $latitude=null,
+                                                    $city=null, $page, $count){
         $major_id += 10000;
         $model = M();
         $start = ($page-1)*$count;
@@ -105,26 +124,54 @@ class TeachingCourseService extends Model
                 where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id=".$major_id." order by distance asc limit ".$start.",".$count;
             }
         } else {
-            if(empty($major_id)){
-                $sql = "select distinct(o.id) as org_id
+            if(empty($city)){
+                if(empty($major_id)){
+                    $sql = "select distinct(o.id) as org_id
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 order by sort desc limit ".$start.",".$count;
-            } else {
-                $sql = "select o.id as org_id
+                } else {
+                    $sql = "select o.id as org_id
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id=".$major_id." order by sort desc limit ".$start.",".$count;
+                }
+            } else {
+                $city_filter = " and o.city like '%" .$city . "%'";
+                if(empty($major_id)){
+                    $sql = "select distinct(o.id) as org_id
+                from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1".$city_filter." order by sort desc limit ".$start.",".$count;
+                } else {
+                    $sql = "select o.id as org_id
+                from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id=".$major_id. $city_filter ." order by sort desc limit ".$start.",".$count;
+                }
             }
         }
-        if(empty($major_id)){
-            $total_count_sql = "select count(distinct(o.id)) as totalCount from
+        if(empty($city)){
+            if(empty($major_id)){
+                $total_count_sql = "select count(distinct(o.id)) as totalCount from
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1";
-        } else {
-            $total_count_sql = "select count(distinct(o.id)) as totalCount from
+            } else {
+                $total_count_sql = "select count(distinct(o.id)) as totalCount from
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id=".$major_id;
+            }
+        } else {
+            $city_filter = " and o.city like '%" .$city . "%'";
+            if(empty($major_id)){
+                $total_count_sql = "select count(distinct(o.id)) as totalCount from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1".$city_filter;
+            } else {
+                $total_count_sql = "select count(distinct(o.id)) as totalCount from
+                hisihi_organization o, hisihi_organization_teaching_course c
+                where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id=".$major_id.$city_filter;
+            }
         }
         $list = $model->query($sql);
         $total_count = $model->query($total_count_sql);

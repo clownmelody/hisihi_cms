@@ -22,14 +22,15 @@ class TeachingCourseController extends BaseController
      * @param $type_id
      * @param null $longitude
      * @param null $latitude
+     * @param null $city
      * @param int $page
      * @param int $count
      */
-    public function data($type_id, $longitude=null, $latitude=null, $page=1, $count=10) {
+    public function data($type_id, $longitude=null, $latitude=null, $city=null, $page=1, $count=10) {
         switch ($this->_method){
             case 'get':
                 $org_list = array();
-                $org_list_array = D('App/TeachingCourse','Service')->getNearbyOrgByCourseType($type_id, $longitude, $latitude, $page, $count);
+                $org_list_array = D('App/TeachingCourse','Service')->getNearbyOrgByCourseType($type_id, $longitude, $latitude, $city, $page, $count);
                 foreach ($org_list_array['list'] as &$org) {
                     $org_info = D('App/Organization', 'Service')->getBaseInfoById($org['org_id']);
                     $org_info['id'] = $org['org_id'];
@@ -54,14 +55,15 @@ class TeachingCourseController extends BaseController
      * @param $type_id
      * @param null $longitude
      * @param null $latitude
+     * @param null $city
      * @param int $page
      * @param int $count
      */
-    public function shouhui($type_id, $longitude=null, $latitude=null, $page=1, $count=10) {
+    public function shouhui($type_id, $longitude=null, $latitude=null, $city=null, $page=1, $count=10) {
         switch ($this->_method){
             case 'get':
                 $org_list = array();
-                $org_list_array = D('App/TeachingCourse','Service')->getNearbyShouHuiOrgByCourseType($type_id, $longitude, $latitude, $page, $count);
+                $org_list_array = D('App/TeachingCourse','Service')->getNearbyShouHuiOrgByCourseType($type_id, $longitude, $latitude, $city, $page, $count);
                 foreach ($org_list_array['list'] as &$org) {
                     $org_info = D('App/Organization', 'Service')->getBaseInfoById($org['org_id']);
                     $org_info['id'] = $org['org_id'];
