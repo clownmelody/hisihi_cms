@@ -42,13 +42,13 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
     var t = Detail.prototype;
 
     /*加载数据信息
-    * 通过回调方法
-    * 获取到接口信息
-    * 全部数据加载完毕后停止加载动画，显示数据内容*/
+     * 通过回调方法
+     * 获取到接口信息
+     * 全部数据加载完毕后停止加载动画，显示数据内容*/
     t.loadData = function () {
         this.controlLoadingBox(true);
         var that = this;
-        async.series({
+        var asynca =  async.parallel({
             basic: function (callback) {
                 that.loadDetailInfo(function (result) {
                     callback(null, result);
@@ -67,7 +67,10 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
         }, function (err, results) {
             var val;
             for(var item in results){
-                val=results[item]
+                val=results[item];
+                if(!val){
+                    break;
+                }
                 switch (item) {
                     case 'basic':
                         that.fillDetailInfo(val);
@@ -111,6 +114,7 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
                     }
                 },
                 eCallback: function () {
+                    callback(null);
                     that.showTips('帖子基本信息加载失败');
                 }
             }
@@ -131,22 +135,23 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
     /*获取老师回复详情*/
     t.loadTeacherInfo = function(callback){
         var that=this,
-        tpara={
-            url:this.baseUrl+'?s=/forum/teacherReplyList/version/2.96/post_id/'+ this.tid,
-            async:this.async,
-            sCallback: function (result) {
-                //预加载遮罩
-                if (result.replyList) {
-                    callback(result);
-                } else {
-                    callback(result);
+            tpara={
+                url:this.baseUrl+'?s=/forum/teacherReplyList/version/2.96/post_id/'+ this.tid,
+                async:this.async,
+                sCallback: function (result) {
+                    //预加载遮罩
+                    if (result.replyList) {
+                        callback(result);
+                    } else {
+                        callback(null);
+                        that.showTips('老师回复加载失败');
+                    }
+                },
+                eCallback: function () {
+                    callback(null);
                     that.showTips('老师回复加载失败');
                 }
-            },
-            eCallback: function () {
-                that.showTips('老师回复加载失败');
             }
-        }
         this.getDataAsyncPy(tpara);
     };
 
@@ -161,10 +166,12 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
                     if (result.replyList) {
                         callback(result);
                     } else {
+                        callback(null);
                         that.showTips('讨论加载失败');
                     }
                 },
                 eCallback: function () {
+                    callback(null);
                     that.showTips('讨论加载失败');
                 }
             }
@@ -204,31 +211,12 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
         }
 
         //帖子话题,多个话题帖分享同显示标题蓝色
-        var topicInfo='';
+        var contentInfo='',
+            topicTitleInfo='';
         if(data.content) {
-
-            //var reg=/#.*/g;
-            //var ss=data.content.match(reg);
-            //if(ss.length>0){
-            //    alert(1);
-            //}
-            //var len = data.topic_info.title.length;
-
-            //正则表达式提取话题内容
-            //var str=data.content;
-            //str=str.match(/#.*#/g);
-            //if(str) {
-            //    str = str[0].replace(/##/g, '#');
-            //    var arr = str.split('#'),
-            //        len = arr.length;
-            //    for (var i = 0; i < len; i++) {
-            //        if (arr[i]) {
-            //            topicInfo += '<span class="topic-name">#' + arr[i] + '#</span>';
-            //        }
-            //    }
-            //}else{
-            //    topicInfo='';
-            //}
+           var obj = this.getTopicTitleAndContent(data.content);
+            contentInfo=obj.content;
+            topicTitleInfo=obj.topicInfo;
         }
 
         str = '<div class="user-info">' +
@@ -239,14 +227,14 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
             '<p class="name ' + teacherClassName + '">' + data.userInfo.nickname + '</p>' +
             '<p class="type">' +
             '<span>' + this.getDiffTime(data.create_time) + '</span>' +
-                majorStr +
+            majorStr +
             '</p>' +
             '</div>' +
             '</div>' +
             '<div class="info-post">' +
             '<p class="post-txt">' +
-            topicInfo +
-            data.content +
+            topicTitleInfo +
+            contentInfo+
             '</p>' +
             '</div>' +
             '<ul class="post-img">' +
@@ -254,16 +242,16 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
             '<div class="clear"></div>' +
             '</ul>' +
             posStr ;
-            //注释全部底部点赞区域代码
-            //'<div class="footer">' +
-            //'<div class="footer-triangle"></div>' +
-            //'<ul class="footer-info">' +
-            //    //'<li class="circle like-people"><img class="like-img" src="../../images/forum/detail/ico.jpg"></li>' +
-            //    //    t.getLikeStr(data.img) +
-            ////'<li class="circle like-num">'+'<span class="number">'+data.supportCount+'</span>'+'</li>' +
-            ////'<li class="like-btn"><div class="like-btn-img"></div></li>' +
-            //'</ul>' +
-            //'</div>';
+        //注释全部底部点赞区域代码
+        //'<div class="footer">' +
+        //'<div class="footer-triangle"></div>' +
+        //'<ul class="footer-info">' +
+        //    //'<li class="circle like-people"><img class="like-img" src="../../images/forum/detail/ico.jpg"></li>' +
+        //    //    t.getLikeStr(data.img) +
+        ////'<li class="circle like-num">'+'<span class="number">'+data.supportCount+'</span>'+'</li>' +
+        ////'<li class="like-btn"><div class="like-btn-img"></div></li>' +
+        //'</ul>' +
+        //'</div>';
 
         $('.user-info-box').html(str);
         //惰性加载
@@ -272,6 +260,55 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
             placeholder:'http://pic.hisihi.com/2016-06-15/1465987988057181.png'
         });
     };
+
+    /*
+    * 正则表达式提取话题内容
+    * paras:
+    * str - {str} 话题和内容 混合 在一起的 令人蛋疼 的 东西 形如 ：
+    * str = "多个话题发帖测试"; 或者
+    * str="#请于废柴的我谈恋爱##小鸡炖蘑菇##读一本烂书是什么体验？##小鸡炖蘑菇##有哪个作品的细节你一开始没看懂，后来恍然大悟？#多个话题发帖测试"; 或者
+    * str="#请于废柴的我谈恋爱##小鸡炖蘑菇##读一本烂书是什么体验？##小鸡炖蘑菇##有哪个作品的细节你一开始没看懂，后来恍然大悟？#"
+    * return
+    * obj - {obj} 话题和内容对象
+    */
+    t.getTopicTitleAndContent=function(str){
+        var obj={
+                topicInfo: '',
+                content:''
+            };
+
+        str = "多个话题发帖测试";
+
+        //str="#请于废柴的我谈恋爱##小鸡炖蘑菇##读一本烂书是什么体验？##小鸡炖蘑菇##有哪个作品的细节你一开始没看懂，后来恍然大悟？#多个话题发帖测试";
+        //str="#请于废柴的我谈恋爱##小鸡炖蘑菇##读一本烂书是什么体验？##小鸡炖蘑菇##有哪个作品的细节你一开始没看懂，后来恍然大悟？#";
+
+        if(str.indexOf('#')<0){
+            obj.topicInfo='';
+            obj.content = str;
+            return obj;
+        }
+        var arr = str.match(/#[^#]*#/g),
+            arr1 = (str + 'PANXIAODASB').match(/#[^#]*PANXIAODASB/g),
+            tempTopicInfo='';
+        if (arr) {
+            var len = arr.length;
+            if (len > 0) {
+                for (var i = 0; i < len; i++) {
+                    if (arr[i]) {
+                        tempTopicInfo += '<span class="topic-name">' + arr[i] + '</span>';
+                    }
+                }
+                obj.topicInfo=tempTopicInfo;
+            }
+        }
+        if (arr1) {
+            var len1 = arr1.length;
+            if (len1 > 0) {
+                obj.content = arr1[0].replace(/[#,PANXIAODASB]/g, '');
+            }
+        }
+        return obj;
+    }
 
     /*判断帖子是否有老师回复*/
     t.getTeacherPostInfo=function(result) {
@@ -309,25 +346,25 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
             if (!item.content) {
                 item.content = '语音回复请下载嘿设汇app查看';
             }
-                str += '<li class="discuss-li">' +
-                    '<div class="discuss-user-img">' +
-                    '<img src="' +item.userInfo.avatar128+ '">' +
-                    '</div>' +
-                    '<div class="user-info">' +
-                    '<div class="discuss-user-info">' +
-                    '<div class="user-txt">' +
-                    '<p class="name">' + item.userInfo.nickname + '</p>' +
-                    '<p class="type">' +
-                    '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
-                    '</p>' +
-                    '</div>' +
-                    '<div class="chose-area">'+
-                    '<div class="discuss-btn"></div>' +
-                    '</div>'+
-                    '</div>' +
-                    '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
-                    '</div>' +
-                    '</li>' ;
+            str += '<li class="discuss-li">' +
+                '<div class="discuss-user-img">' +
+                '<img src="' +item.userInfo.avatar128+ '">' +
+                '</div>' +
+                '<div class="user-info">' +
+                '<div class="discuss-user-info">' +
+                '<div class="user-txt">' +
+                '<p class="name">' + item.userInfo.nickname + '</p>' +
+                '<p class="type">' +
+                '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
+                '</p>' +
+                '</div>' +
+                '<div class="chose-area">'+
+                '<div class="discuss-btn"></div>' +
+                '</div>'+
+                '</div>' +
+                '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
+                '</div>' +
+                '</li>' ;
         }
         return str;
     };
@@ -352,7 +389,7 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
             '</div>' +
             '<div class="underline"></div>'+
             '<ul>' +
-                t.getStudentDiscussInfo(replyList)+
+            t.getStudentDiscussInfo(replyList)+
             '</ul>' +
             '</div>' +
             '</div>' ;
