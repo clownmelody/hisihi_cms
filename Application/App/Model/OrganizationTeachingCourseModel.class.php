@@ -19,6 +19,7 @@ class OrganizationTeachingCourseModel extends Model
 
     public function getByOrgAndType($org_id, $type_id){
         $where_array['organization_id'] = $org_id;
+        $where_array['status'] = 1;
         if(!empty($type_id)){
             $where_array['type_id'] = $type_id;
         }
@@ -32,6 +33,7 @@ class OrganizationTeachingCourseModel extends Model
 
     public function getShouHuiByOrgAndType($org_id, $type_id){
         $where_array['organization_id'] = $org_id;
+        $where_array['status'] = 1;
         if(!empty($type_id)){
             $where_array['type_id'] = $type_id + 10000;
         }
