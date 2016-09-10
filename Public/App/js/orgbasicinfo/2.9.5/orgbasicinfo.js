@@ -80,7 +80,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
 
     t.initData=function() {
         var that = this;
-        async.series({
+        async.parallel({
             basic: function (callback) {
                 that.loadBasicInfoData(function (result) {
                     if(!result){
@@ -145,7 +145,12 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
                 that.loadDetailCommentInfo(1,function(result){
                     callback(null,result)
                 });
-            }
+            },
+            appointment:function(callback) {
+                that.getAppointmentTxt(function (result) {
+                    callback(null, result)
+                });
+        }
         }, function (err, results) {
             var val;
             for(var item in results){
@@ -828,7 +833,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         });
     };
 
-        /*填充我的评分信息*/
+    /*填充我的评分信息*/
     t.fillMyCompresAsseInfo=function(result){
         var data=result.data;
         if(!data || data.length==0){
@@ -880,7 +885,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         });
     };
 
-        /*填充我的评论信息*/
+    /*填充我的评论信息*/
     t.fillDetailCommentInfo=function(result){
         var data=result.data,
             str='';
@@ -1051,6 +1056,21 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         this.scrollControl(true);  //恢复滚动
     };
 
+    //获取预约礼包文字，判断是否支持试听，超出长度部分滚动显示
+    t.getAppointmentTxt=function(result){
+        var data=result.data;
+            //str='';
+        if(!data || data.length==0){
+            $('.appointment').hide();
+            return;
+        }
+        var str= '<div class="left-item"></div>'+
+            '<p class="middle-item">'+
+                listen_preview_text+
+            '</p>'+
+            '<div class="right-item"></div>';
+            $('.appointment').html(str);
+    }
 
     return OrgBasicInfo;
 });
