@@ -20,6 +20,7 @@ class TeachingCourseService extends Model
             $select_type_id = " and c.type_id=".$type_id;
         }
         if(!empty($longitude)&&!empty($latitude)){
+            $city = null;
             if(empty($type_id)){
                 $sql = "select distinct(o.id) as org_id,
                 ROUND(
@@ -138,6 +139,7 @@ class TeachingCourseService extends Model
         $model = M();
         $start = ($page-1)*$count;
         if(!empty($longitude)&&!empty($latitude)){
+            $city = null;
             if(empty($major_id)){
                 $sql = "select distinct(o.id) as org_id,
                 ROUND(
