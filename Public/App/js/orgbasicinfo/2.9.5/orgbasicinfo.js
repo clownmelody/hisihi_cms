@@ -146,11 +146,11 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
                     callback(null,result)
                 });
             },
-            appointment:function(callback) {
-                that.getAppointmentTxt(function (result) {
-                    callback(null, result)
-                });
-        }
+        //    appointment:function(callback) {
+        //        that.getAppointmentTxt(function (result) {
+        //            callback(null, result)
+        //        });
+        //}
         }, function (err, results) {
             var val;
             for(var item in results){
@@ -180,7 +180,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
                         fn = that.fillMyTeachersInfo;  /*填充老师信息*/
                         break;
                     case 'teachingVideo':
-                        fn=that.fillInTeachingVideo;
+                        that.fillInTeachingVideo(val,results['basic']);
                         break;
                     case 'works':
                         fn=that.fillWorksInfo;
@@ -258,52 +258,53 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
 
 
     /*显示具体信息*/
-    t.fillInBasicInfoData=function(result){
+    t.fillInBasicInfoData=function(result) {
         $('.logo-box').show();
-        var data=result.data, url=data.logo;
-        if(this.deviceType.android){
-            url=window.hisihiUrlObj.image+'/orgbasicinfo/blur.jpg';
+        var data = result.data, url = data.logo;
+        if (this.deviceType.android) {
+            url = window.hisihiUrlObj.image + '/orgbasicinfo/blur.jpg';
         }
-        var name=data.name;
-        if(name.length>10){
-            name=name.substr(0,9)+' …';
+        var name = data.name;
+        if (name.length > 10) {
+            name = name.substr(0, 9) + ' …';
         }
-        var $box=$('.logo-box');
+        var $box = $('.logo-box');
         //logo
-        $box.find('#filter-logo').attr('src',url);
-        $box.find('#logo').attr('src',data.logo);
+        $box.find('#filter-logo').attr('src', url);
+        $box.find('#logo').attr('src', data.logo);
 
         // 视频、名称、认证
         $box.find('.name-main-box .org-name').text(data.name);
         this.setCertInfo(data.authenticationInfo);
 
         // 粉丝和观看人数
-        var $people=$box.find('.user-number-box label')
+        var $people = $box.find('.user-number-box label')
         $people.eq(0).text(this.translationCount(data.view_count));
         $people.eq(1).text(this.translationCount(data.followCount));
 
         //基本信息
-        if(data.introduce){
+        if (data.introduce) {
             $('.my-introduce').text(data.introduce).parent().show();
         }
-        if(data.location){
+        if (data.location) {
             $('.my-location').text(data.location).parent().show();
         }
         /*优势标签*/
-        if(data.advantage) {
-            var arr=data.advantage.split('#'),
-                str='';
-            for(var i=0;i<arr.length;i++){
-                str+='<li>'+arr[i]+'</li>';
+        if (data.advantage) {
+            var arr = data.advantage.split('#'),
+                str = '';
+            for (var i = 0; i < arr.length; i++) {
+                str += '<li>' + arr[i] + '</li>';
             }
             $('.my-tags').html(str).parent().show();
         }
 
         //电话号码
-        $('.contact a').attr('href','tel:'+data.phone_num);
+        $('.contact a').attr('href', 'tel:' + data.phone_num);
 
         //担保信息
         this.setColorBar(data);
+
 
     };
 
@@ -739,7 +740,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         });
     };
 
-    t.fillInTeachingVideo=function(data){
+    t.fillInTeachingVideo=function(data,basicData){
         if(!data || data.coursesList.length==0){
             return;
         }
@@ -747,6 +748,19 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         var str = this.getVideoStr(data.coursesList,true);
         $box.find('.basic-header span').html('('+data.coursesList.length+')');
         $box.find('ul').html(str);
+
+
+        //预约礼,判断是否支持试听，超出长度部分滚动显示
+        if (basicData.data.is_listen_preview) {
+            var str = '<div class="left-item"></div>' +
+                '<div class="middle-item">' +
+                    '<p>'+
+                         basicData.data.listen_preview_text +
+                    '</p>'+
+                '</div>' +
+                '<div class="right-item"></div>';
+            $('.appointment').show().html(str).css('height','44px');
+        }
     };
 
 
@@ -1055,22 +1069,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         $('.sing-in-modal').removeClass('show');
         this.scrollControl(true);  //恢复滚动
     };
-
-    //获取预约礼包文字，判断是否支持试听，超出长度部分滚动显示
-    t.getAppointmentTxt=function(result){
-        var data=result.data;
-            //str='';
-        if(!data || data.length==0){
-            $('.appointment').hide();
-            return;
-        }
-        var str= '<div class="left-item"></div>'+
-            '<p class="middle-item">'+
-                listen_preview_text+
-            '</p>'+
-            '<div class="right-item"></div>';
-            $('.appointment').html(str);
-    }
 
     return OrgBasicInfo;
 });

@@ -848,7 +848,7 @@ body {
 .appointment {
   font-size: 13px;
   color: #FF5A00;
-  height: 44px;
+  height: 0px;
   background-color: #fff;
   margin: 12px 8px;
   border-radius: 4px;
@@ -857,20 +857,24 @@ body {
   display: box;
 }
 .appointment .left-item {
-  display: block;
+  display: inline-block;
   text-align: left;
   background: url("../../images/orgbasicinfo/2.9.5/appointment.png") no-repeat;
   background-size: 84px, 33.6px;
-  width: 68px;
+  width: 84px;
   height: 33.6px;
   margin: 5px 0px;
   box-flex: 1;
 }
 .appointment .middle-item {
-  width: 60%;
   margin-left: 5px;
+  margin-right: 10px;
   line-height: 15px;
   box-flex: 2;
+  overflow-x: auto;
+}
+.appointment .middle-item p {
+  white-space: nowrap;
 }
 .appointment .right-item {
   display: inline-block;
@@ -880,7 +884,8 @@ body {
   background: url("../../images/orgbasicinfo/2.9.5/bottom-right.png") no-repeat;
   background-size: 12.6px 22.4px;
   box-flex: 2;
-  margin-top: 10px;
+  margin-top: 11px;
+  transform: scale(0.8);
 }
 .location {
   background-color: #fff;
