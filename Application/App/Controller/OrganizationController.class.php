@@ -3635,10 +3635,13 @@ class OrganizationController extends AppController
      * @param string $type
      * @param null $city
      * @param null $version
+     * @param bool|false $is_prelisten
+     * @param bool|false $has_coupon
      * @param int $page
      * @param int $count
      */
-    public function getIntegrityOrganization($well_chosen=false, $type='软件', $city=null, $version=null, $page=1, $count=10){
+    public function getIntegrityOrganization($well_chosen=false, $type='软件', $city=null, $version=null,
+                                             $is_prelisten=null, $has_coupon=null, $page=1, $count=10){
         $uid = is_login();
         $model = M('Organization');
         if($type != '软件' && $type != '留学' && $type != '手绘'){
@@ -3662,6 +3665,19 @@ class OrganizationController extends AppController
                 $select_where['is_hot'] = 1;
             }else{
                 $select_where['well_chosen'] = 1;
+            }
+        }
+        if((float)$version>=3.00){
+            if($is_prelisten!=null){
+                $select_where['is_listen_preview'] = $is_prelisten;
+            }
+            if($has_coupon==1){
+                $ids_list = D('App/TeachingCourse','Service')->getHasCouponOrganizationIdList();
+                $select_where['id'] = array('in', $ids_list);
+            }
+            if($has_coupon==0){
+                $ids_list = D('App/TeachingCourse','Service')->getHasCouponOrganizationIdList();
+                $select_where['id'] = array('not in', $ids_list);
             }
         }
         $org_list = $model->field('id, name, slogan, city, type, advantage, view_count, logo, light_authentication, sort')
