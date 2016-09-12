@@ -406,7 +406,7 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
             }
             str += '<li class="discuss-li">' +
                 '<div class="discuss-user-img">' +
-                '<img src="' + item.userInfo.avatar128 + '">' +
+                '<img src="' +item.userInfo.avatar128+ '">' +
                 '</div>' +
                 '<div class="user-info">' +
                 '<div class="discuss-user-info">' +
@@ -416,11 +416,13 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
                 '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
                 '</p>' +
                 '</div>' +
+                '<div class="chose-area">'+
                 '<div class="discuss-btn"></div>' +
+                '</div>'+
                 '</div>' +
-                '<div class="discuss-user-txt"><p>' + item.content + '</p></div>' +
+                '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
                 '</div>' +
-                '</li>';
+                '</li>' ;
         }
         return str;
     };
