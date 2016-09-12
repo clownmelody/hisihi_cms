@@ -228,7 +228,7 @@ class TeachingCourseService extends Model
                 hisihi_organization o
                 where o.type=32 and o.status=1".$select_prelisten.$select_has_coupon." order by sort desc limit ".$start.",".$count;
                 } else {
-                    $sql = "select o.id as org_id
+                    $sql = "select distinct(o.id) as org_id
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id="
@@ -243,7 +243,7 @@ class TeachingCourseService extends Model
                 where o.type=32 and o.status=1"
                         . $city_filter . $select_prelisten . $select_has_coupon." order by sort desc limit ".$start.",".$count;
                 } else {
-                    $sql = "select o.id as org_id
+                    $sql = "select distinct(o.id) as org_id
                 from
                 hisihi_organization o, hisihi_organization_teaching_course c
                 where o.id=c.organization_id and o.type=32 and o.status=1 and c.status=1 and c.type_id="
