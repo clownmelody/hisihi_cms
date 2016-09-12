@@ -146,11 +146,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
                     callback(null,result)
                 });
             },
-        //    appointment:function(callback) {
-        //        that.getAppointmentTxt(function (result) {
-        //            callback(null, result)
-        //        });
-        //}
         }, function (err, results) {
             var val;
             for(var item in results){
@@ -305,6 +300,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         //担保信息
         this.setColorBar(data);
 
+        this.fillAppointmentInfo(result);
 
     };
 
@@ -749,20 +745,24 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         $box.find('.basic-header span').html('('+data.coursesList.length+')');
         $box.find('ul').html(str);
 
+    };
 
-        //预约礼,判断是否支持试听，超出长度部分滚动显示
-        if (basicData.data.is_listen_preview) {
+    //预约礼,判断是否支持试听，超出长度部分滚动显示
+    t.fillAppointmentInfo=function(basicData){
+        // false 0 null undefined
+        var flag= parseInt(basicData.data.is_listen_preview) && basicData.data.listen_preview_text.length!=0;
+        if (flag) {
+
             var str = '<div class="left-item"></div>' +
                 '<div class="middle-item">' +
-                    '<p>'+
-                         basicData.data.listen_preview_text +
-                    '</p>'+
+                '<p>'+
+                basicData.data.listen_preview_text +
+                '</p>'+
                 '</div>' +
                 '<div class="right-item"></div>';
             $('.appointment').show().html(str).css('height','44px');
         }
     };
-
 
     /*播放教学视频*/
     t.showTeachingVideo=function(e){
