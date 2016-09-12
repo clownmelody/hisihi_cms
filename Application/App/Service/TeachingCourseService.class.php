@@ -29,7 +29,7 @@ class TeachingCourseService extends Model
             $comma_separated = implode(",", $ids_list);
             $select_has_coupon = " and o.id in (".$comma_separated.")";
         }
-        if($has_coupon==0){
+        if($has_coupon==0&&$has_coupon!=null){
             $ids_list = $this->getHasCouponOrganizationIdList();
             $comma_separated = implode(",", $ids_list);
             $select_has_coupon = " and o.id not in (".$comma_separated.")";
@@ -171,7 +171,7 @@ class TeachingCourseService extends Model
             $comma_separated = implode(",", $ids_list);
             $select_has_coupon = " and o.id in (".$comma_separated.")";
         }
-        if($has_coupon==0){
+        if($has_coupon==0&&$has_coupon!=null){
             $ids_list = $this->getHasCouponOrganizationIdList();
             $comma_separated = implode(",", $ids_list);
             $select_has_coupon = " and o.id not in (".$comma_separated.")";
@@ -294,12 +294,12 @@ class TeachingCourseService extends Model
                 from
                 hisihi_organization o,
                 hisihi_teaching_course_coupon_relation ccr,
-                hisihi_organization_teaching_course c,
+                hisihi_organization_teaching_course course,
                 hisihi_coupon coupon
-                where o.id=c.organization_id and c.id=ccr.teaching_course_id
+                where o.id=course.organization_id and course.id=ccr.teaching_course_id
                 and ccr.coupon_id=coupon.id
                 and o.status=1
-                and c.status=1 and ccr.status=1
+                and course.status=1 and ccr.status=1
                 and coupon.status=1";
         $list = $model->query($sql);
         $result = array();
