@@ -6,6 +6,11 @@ use Think\Exception;
 
 class TeachingCourseTypeController extends AdminController {
 
+    public function _initialize()
+    {
+        parent::_initialize();
+    }
+
     public function index(){
         $model = D('App/OrganizationTeachingCourseType', 'Model');
         $list = $model->where('status=1')->select();
