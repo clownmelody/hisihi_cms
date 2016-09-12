@@ -101,7 +101,7 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
     t.loadDetailInfo = function (callback) {
         var that = this,
             para = {
-                url: this.baseUrl + '?s=/forum/getPostDetail/version/2.9.7/post_id/' + this.tid,
+                url: this.baseUrl + '?s=/forum/getPostDetail/version/2.96/post_id/' + this.tid,
                 type: 'get',
                 async:this.async,
                 sCallback: function (result) {
@@ -211,12 +211,15 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
         }
 
         //帖子话题,多个话题帖分享同显示标题蓝色
-        var contentInfo='',
-            topicTitleInfo='';
-        if(data.content) {
-           var obj = this.getTopicTitleAndContent(data.content);
-            contentInfo=obj.content;
-            topicTitleInfo=obj.topicInfo;
+        var tempstrHtml='',
+            content=data.content;
+        if(content) {
+            var reg=/<.*\/>/g;
+            if(reg.test(content)){
+                tempstrHtml = this.getTopicTitleAndContent(content);
+            }else {
+                tempstrHtml = this.getTopicTitleAndContent1(content);
+            }
         }
 
         str = '<div class="user-info">' +
@@ -233,8 +236,7 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
             '</div>' +
             '<div class="info-post">' +
             '<p class="post-txt">' +
-            topicTitleInfo +
-            contentInfo+
+            tempstrHtml+
             '</p>' +
             '</div>' +
             '<ul class="post-img">' +
@@ -262,52 +264,38 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
     };
 
     /*
-    * 正则表达式提取话题内容
-    * paras:
-    * str - {str} 话题和内容 混合 在一起的 令人蛋疼 的 东西 形如 ：
-    * str = "多个话题发帖测试"; 或者
-    * str="#请于废柴的我谈恋爱##小鸡炖蘑菇##读一本烂书是什么体验？##小鸡炖蘑菇##有哪个作品的细节你一开始没看懂，后来恍然大悟？#多个话题发帖测试"; 或者
-    * str="#请于废柴的我谈恋爱##小鸡炖蘑菇##读一本烂书是什么体验？##小鸡炖蘑菇##有哪个作品的细节你一开始没看懂，后来恍然大悟？#"
-    * return
-    * obj - {obj} 话题和内容对象
+    * 正则表达式提取话题内容,将<topic id=""/>进行替换  新版本数据
     */
     t.getTopicTitleAndContent=function(str){
-        var obj={
-                topicInfo: '',
-                content:''
-            };
+       // <topic id='17' title='请于废柴的我谈恋爱'/><topic id='17' title='请于废柴的我谈恋爱'/><topic id='17' title='请于废柴的我谈恋爱'/><topic id='6' title='如何提高自己的写作水平？'/>"
+        str=str.replace(/<topic id='[0-9]*[1-9][0-9]*' title='/g,'<span class="topic-name">');
+        str=str.replace(/<user id='[0-9]*[1-9][0-9]*' nickname='/g,'<span class="user-name">');
+        str=str.replace(/'\/>/g,'</span>');
+        return str;
+    }
 
-        //str = "多个话题发帖测试";
-
-        //str="#请于废柴的我谈恋爱##小鸡炖蘑菇##读一本烂书是什么体验？##小鸡炖蘑菇##有哪个作品的细节你一开始没看懂，后来恍然大悟？#多个话题发帖测试";
-        //str="#请于废柴的我谈恋爱##小鸡炖蘑菇##读一本烂书是什么体验？##小鸡炖蘑菇##有哪个作品的细节你一开始没看懂，后来恍然大悟？#";
-
-        if(str.indexOf('#')<0){
-            obj.topicInfo='';
-            obj.content = str;
-            return obj;
-        }
-        var arr = str.match(/#[^#]*#/g),
-            arr1 = (str + 'PANXIAODASB').match(/#[^#]*PANXIAODASB/g),
-            tempTopicInfo='';
-        if (arr) {
-            var len = arr.length;
-            if (len > 0) {
-                for (var i = 0; i < len; i++) {
-                    if (arr[i]) {
-                        tempTopicInfo += '<span class="topic-name">' + arr[i] + '</span>';
-                    }
+    /*
+    *老版本数据
+     */
+    t.getTopicTitleAndContent1=function(str){
+        var strHtml='';
+        var arr=str.split(''),
+            len=arr.length,
+            j=0;
+        for(var i=0;i<len;i++){
+            var tempWord=arr[i];
+            if(tempWord=='#'){
+                if(j%2==0) {
+                    tempWord = '<span class="topic-name">';
+                    j=1;
+                }else{
+                    tempWord = '</span>';
+                    j=0;
                 }
-                obj.topicInfo=tempTopicInfo;
             }
+            strHtml+=tempWord;
         }
-        if (arr1) {
-            var len1 = arr1.length;
-            if (len1 > 0) {
-                obj.content = arr1[0].replace(/[#,PANXIAODASB]/g, '');
-            }
-        }
-        return obj;
+        return strHtml;
     }
 
     /*判断帖子是否有老师回复*/
@@ -406,7 +394,7 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
             }
             str += '<li class="discuss-li">' +
                 '<div class="discuss-user-img">' +
-                '<img src="' + item.userInfo.avatar128 + '">' +
+                '<img src="' +item.userInfo.avatar128+ '">' +
                 '</div>' +
                 '<div class="user-info">' +
                 '<div class="discuss-user-info">' +
@@ -416,11 +404,13 @@ define(['base','myPhotoSwipe','async','lazyloading'],function(Base,myPhotoSwipe,
                 '<span class="time">' + this.getDiffTime(item.create_time) + '</span>' +
                 '</p>' +
                 '</div>' +
+                '<div class="chose-area">'+
                 '<div class="discuss-btn"></div>' +
+                '</div>'+
                 '</div>' +
-                '<div class="discuss-user-txt"><p>' + item.content + '</p></div>' +
+                '<div class="discuss-user-txt"><p>'+item.content+'</p></div>' +
                 '</div>' +
-                '</li>';
+                '</li>' ;
         }
         return str;
     };
