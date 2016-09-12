@@ -55,10 +55,11 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         //显示预约报名框
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
         //预约
-        $(document).on(eventName,'.sing-in', $.proxy(this,'showSingInModal'));
+        $(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
 
         //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
+
 
         //photoswipe   //学生作品信息查看  相册、视频信息查看
         new MyPhotoSwipe('.works-preview-box',{
