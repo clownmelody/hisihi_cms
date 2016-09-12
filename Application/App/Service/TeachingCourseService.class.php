@@ -148,6 +148,8 @@ class TeachingCourseService extends Model
      * @param null $longitude
      * @param null $latitude
      * @param null $city
+     * @param $is_prelisten
+     * @param $has_coupon
      * @param $page
      * @param $count
      * @return array
