@@ -359,6 +359,49 @@ body{
   }
 }
 
+/*三联布局*/
+.appointment {
+  font-size: 13px;
+  color: #FF5A00;
+  height: 0px;
+  background-color: #fff;
+  margin:12px 8px;
+  border-radius:4px;
+  padding-left:8px;
+  padding-right: 8px;
+  display: box;
+  .left-item {
+    display: inline-block;
+    text-align: left;
+    background: url("../../images/orgbasicinfo/2.9.5/appointment.png") no-repeat;
+    background-size: 210px*0.4,84px*0.4;
+    .size(210px*0.4,84px*0.4);
+    margin: 5px 0px;
+    box-flex:1;
+  }
+  .middle-item{
+    //width: 60%;
+    margin-left: 5px;
+    margin-right: 10px;
+    line-height: 15px;
+    box-flex:2;
+    overflow-x: auto;
+    p {
+      white-space: nowrap;
+    }
+  }
+  .right-item {
+    display: inline-block;
+    text-align: right;
+    .size(12px,32px*0.7);
+    background: url("../../images/orgbasicinfo/2.9.5/bottom-right.png") no-repeat;
+    background-size: 18px*0.7 32px*0.7;
+    box-flex:2;
+    margin-top: 11px;
+    transform: scale(0.8);
+  }
+}
+
 .location {
   background-color: #fff;
   margin:12px 8px;
