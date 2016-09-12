@@ -19,18 +19,23 @@ class TeachingCourseController extends BaseController
 
     /**
      * 获取3.0.1 软件类机构按专业筛选课程
-     * @param $type_id
+     * @param null $type_id
      * @param null $longitude
      * @param null $latitude
      * @param null $city
+     * @param bool|false $is_prelisten
+     * @param bool|false $has_coupon
      * @param int $page
      * @param int $count
      */
-    public function data($type_id=null, $longitude=null, $latitude=null, $city=null, $page=1, $count=10) {
+    public function data($type_id=null, $longitude=null, $latitude=null, $city=null,
+                         $is_prelisten=null, $has_coupon=null, $page=1, $count=10) {
         switch ($this->_method){
             case 'get':
                 $org_list = array();
-                $org_list_array = D('App/TeachingCourse','Service')->getNearbyOrgByCourseType($type_id, $longitude, $latitude, $city, $page, $count);
+                $org_list_array = D('App/TeachingCourse','Service')
+                    ->getNearbyOrgByCourseType($type_id, $longitude, $latitude, $city,
+                                                $is_prelisten, $has_coupon, $page, $count);
                 foreach ($org_list_array['list'] as &$org) {
                     $org_info = D('App/Organization', 'Service')->getBaseInfoById($org['org_id']);
                     $org_info['id'] = $org['org_id'];
@@ -52,18 +57,23 @@ class TeachingCourseController extends BaseController
 
     /**
      * 获取3.0.1 手绘类机构按专业筛选课程
-     * @param $type_id
+     * @param null $type_id
      * @param null $longitude
      * @param null $latitude
      * @param null $city
+     * @param bool|false $is_prelisten
+     * @param bool|false $has_coupon
      * @param int $page
      * @param int $count
      */
-    public function shouhui($type_id=null, $longitude=null, $latitude=null, $city=null, $page=1, $count=10) {
+    public function shouhui($type_id=null, $longitude=null, $latitude=null, $city=null,
+                            $is_prelisten=null, $has_coupon=null, $page=1, $count=10) {
         switch ($this->_method){
             case 'get':
                 $org_list = array();
-                $org_list_array = D('App/TeachingCourse','Service')->getNearbyShouHuiOrgByCourseType($type_id, $longitude, $latitude, $city, $page, $count);
+                $org_list_array = D('App/TeachingCourse','Service')
+                    ->getNearbyShouHuiOrgByCourseType($type_id, $longitude, $latitude, $city,
+                        $is_prelisten, $has_coupon, $page, $count);
                 foreach ($org_list_array['list'] as &$org) {
                     $org_info = D('App/Organization', 'Service')->getBaseInfoById($org['org_id']);
                     $org_info['id'] = $org['org_id'];

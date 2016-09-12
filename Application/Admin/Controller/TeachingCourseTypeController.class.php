@@ -6,6 +6,11 @@ use Think\Exception;
 
 class TeachingCourseTypeController extends AdminController {
 
+    public function _initialize()
+    {
+        parent::_initialize();
+    }
+
     public function index(){
         $model = D('App/OrganizationTeachingCourseType', 'Model');
         $list = $model->where('status=1')->select();
@@ -43,10 +48,10 @@ class TeachingCourseTypeController extends AdminController {
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/teachingcoursetype/index');
+                $this->success('添加成功', 'index.php?s=/admin/teaching_course_type/index');
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/teachingcoursetype/index');
+                $this->success('更新成功', 'index.php?s=/admin/teaching_course_type/index');
             }
         } else {
             $this->display('add');
@@ -66,7 +71,7 @@ class TeachingCourseTypeController extends AdminController {
                 $id = intval($id);
                 $model->updateType($id, $data);
             }
-            $this->success('删除成功','index.php?s=/admin/teachingcoursetype/index');
+            $this->success('删除成功','index.php?s=/admin/teaching_course_type/index');
         } else {
             $this->error('未选择要删除的数据');
         }
