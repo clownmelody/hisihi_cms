@@ -400,7 +400,7 @@ define(['$','fastclick'],function() {
                    return recordTime.format(formate);
                }
                else if (dayC == 1 ||(hourC <24 && recordTime.getDate()!=now.getDate())) {
-                   result = '昨天'+ recordTime.getHours() + ':'+recordTime.getMinutes();
+                   result = '昨天'+recordTime.format('hh:mm');
                    return result;
                }
                else if (dayC > 1) {
