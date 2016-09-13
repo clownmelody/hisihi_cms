@@ -24,7 +24,7 @@ class TeachingCourseService extends Model
             $select_prelisten = " and o.is_listen_preview=".$is_prelisten;
         }
         $select_has_coupon = '';
-        if($has_coupon==1){
+        /*if($has_coupon==1){
             $ids_list = $this->getHasCouponOrganizationIdList();
             $comma_separated = implode(",", $ids_list);
             $select_has_coupon = " and o.id in (".$comma_separated.")";
@@ -33,7 +33,7 @@ class TeachingCourseService extends Model
             $ids_list = $this->getHasCouponOrganizationIdList();
             $comma_separated = implode(",", $ids_list);
             $select_has_coupon = " and o.id not in (".$comma_separated.")";
-        }
+        }*/
         if(!empty($longitude)&&!empty($latitude)){
             $city = null;
             if(empty($type_id)){
@@ -166,7 +166,7 @@ class TeachingCourseService extends Model
             $select_prelisten = " and o.is_listen_preview=".$is_prelisten;
         }
         $select_has_coupon = '';
-        if($has_coupon==1){
+        /*if($has_coupon==1){
             $ids_list = $this->getHasCouponOrganizationIdList();
             $comma_separated = implode(",", $ids_list);
             $select_has_coupon = " and o.id in (".$comma_separated.")";
@@ -175,7 +175,7 @@ class TeachingCourseService extends Model
             $ids_list = $this->getHasCouponOrganizationIdList();
             $comma_separated = implode(",", $ids_list);
             $select_has_coupon = " and o.id not in (".$comma_separated.")";
-        }
+        }*/
         if(!empty($longitude)&&!empty($latitude)){
             $city = null;
             if(empty($major_id)){
