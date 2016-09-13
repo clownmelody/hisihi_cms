@@ -16,6 +16,14 @@
                 <a class="btn" href="{:U('Organization/teachingcourse',array('is_hot'=>1))}">显示热门课程</a>
             </div>
         </div>
+
+        <!-- 高级搜索 -->
+        <div class="search-form fr cf">
+            <div class="sleft">
+                <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入课程名称">
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('organization/teachingcourse')}"><i class="btn-search"></i></a>
+            </div>
+        </div>
     </div>
     <!-- 数据列表 -->
     <div class="data-table table-striped">
@@ -83,5 +91,21 @@
     <script type="text/javascript">
         //导航高亮
         highlight_subnav("{:U('Organization/teachingcourse')}");
+
+        $(function(){
+            //搜索功能
+            $("#search").click(function(){
+                var url = $(this).attr('url');
+                var query  = $('.search-form').find('input').serialize();
+                query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+                query = query.replace(/^&/g,'');
+                if( url.indexOf('?')>0 ){
+                    url += '&' + query;
+                }else{
+                    url += '?' + query;
+                }
+                window.location.href = url;
+            });
+        })
     </script>
 </block>

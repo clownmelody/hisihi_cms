@@ -3664,6 +3664,11 @@ class OrganizationController extends AdminController
      * @param int $is_hot
      */
     public function teachingcourse($organization_id=0, $is_hot=0){
+        //用于公司名称搜索
+        $name = $_GET["title"];
+        if(!empty($name)){
+            $map['course_name'] = array('like','%'.$name.'%');
+        }
         $model = M('OrganizationTeachingCourse');
         $map['status']=array('egt',0);
         if($is_hot==1){
