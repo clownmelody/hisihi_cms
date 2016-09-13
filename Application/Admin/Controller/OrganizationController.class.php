@@ -3239,6 +3239,7 @@ class OrganizationController extends AdminController
      */
     public function setTeachingCourseType($organization_id, $id){
         $where_array['special_type'] = 0;
+        $where_array['status'] = 1;
         $list = D('App/OrganizationTeachingCourseType', 'Model')
             ->field('id, name')
             ->where($where_array)
