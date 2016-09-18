@@ -176,6 +176,31 @@ class PromotionController extends AdminController
         $this->display();
     }
 
+    public function teaching_course_to_rebate(){
+        $model = M('TeachingCourseRebateRelation');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, C('LIST_ROWS'));
+        $show = $Page->show();
+        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$info){
+            $pro = M('OrganizationTeachingCourse')->field('course_name')->where('id='.$info['teaching_course_id'])->find();
+            $info['teaching_course_name'] = $pro['course_name'];
+            $rebate = M('Rebate')->field('name')->where('id='.$info['rebate_id'])->find();
+            $info['rebate_name'] = $rebate['name'];
+            $gift = M('OrganizationGiftPackage')->field('introduce')->where('id='.$info['gift_package_id'])->find();
+            if($gift){
+                $info['gift_package'] = $gift['introduce'];
+            }else{
+                $info['gift_package'] = '无';
+            }
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","课程抵扣券列表");
+        $this->display();
+    }
+
     public function set_org_promotion_status($id, $status=-1){
         if(!empty($id)){
             $model = M('TeachingCourseOrganizationPromotionRelation');
@@ -207,6 +232,24 @@ class PromotionController extends AdminController
                 $model->where('id='.$id)->save($data);
             }
             $this->success('处理成功','index.php?s=/admin/promotion/teaching_course_to_coupon');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    public function set_teaching_course_rebate_status($id, $status=-1){
+        if(!empty($id)){
+            $model = M('TeachingCourseRebateRelation');
+            $data['status'] = $status;
+            if(is_array($id)){
+                foreach ($id as $i){
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/promotion/teaching_course_to_rebate');
         } else {
             $this->error('未选择要处理的数据');
         }

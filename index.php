@@ -41,7 +41,7 @@ if (get_magic_quotes_gpc()) {
  * 系统调试设置
  * 项目正式部署后请设置为false
  */
-define ('APP_DEBUG', false);
+define ('APP_DEBUG', true);
 
 /**
  * 应用目录设置

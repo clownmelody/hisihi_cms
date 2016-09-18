@@ -344,6 +344,22 @@
                             <input type="hidden" class="text input-large" name="major" id="major" value="{$organization.major}">
                         </div>
                     </div>
+                    <!--培训课程标签-->
+                    <div class="form-item cf">
+                        <label class="item-label">课程标签</label>
+                        <div class="controls">
+                            <notempty name="course_tag">
+                                <ul class="dowebok" id="course_tag_ul">
+                                    <volist name="course_tag" id="vo">
+                                        <li><input type="checkbox" id="{$vo.id}" <in name="vo['ischecked']" value="1">checked</in> data-labelauty="{$vo.value}" value="{$vo.value}"></li>&nbsp;
+                                    </volist>
+                                </ul>
+                                <else/>
+                                <div  class="text-center"> aOh! 暂时还没有内容!</div>
+                            </notempty>
+                            <input type="hidden" class="text input-large" name="course_tag" id="course_tag" value="{$organization.course_tag}">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 按钮 -->
@@ -437,6 +453,21 @@
             });
             var type_str = major.substring(0,major.length - 1);
             $("#major").val(type_str);
+
+            var course_tag = "";
+            $.each($("#course_tag_ul li"),function(i,n){
+                var li = $(this);
+                var span = li.find("span:visible");
+                var input = li.find("input");
+                var classattr = span.attr("class");
+                var id = input.attr("id");
+                var value = input.val();
+                if(classattr == "labelauty-checked-image"){
+                    course_tag += (input.attr("id") + "#");
+                }
+            });
+            var type_str = course_tag.substring(0,course_tag.length - 1);
+            $("#course_tag").val(type_str);
 
             /*if($("#longitude").val() == "" || $("#latitude").val() == "" ){
                 locationSearch();

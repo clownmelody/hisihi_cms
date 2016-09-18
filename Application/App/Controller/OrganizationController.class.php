@@ -1844,7 +1844,7 @@ class OrganizationController extends AppController
             } else {
                 $org['relationship'] = 0;
             }
-            if((float)$version>=2.9){
+            if((float)$version>=2.9&&(float)$version<3.02){
                 $course_promotion_model = new Model();
                 $org_promotion_list = $course_promotion_model->query('
                 SELECT DISTINCT (promotion_id), teaching_course_id from hisihi_teaching_course_organization_promotion_relation
@@ -1888,7 +1888,22 @@ class OrganizationController extends AppController
                 }
                 $org['promotion_list'] = $uni_promotion_list;
             }
+            // 抵扣券信息
+            if((float)$version>=3.02){
+                $course_rebate_model = new Model();
+                $course_rebate_list = $course_rebate_model->query(
+                                        "SELECT rebate.id, rebate.name, rebate.value,
+                    rebate.rebate_value FROM
+                    hisihi_organization_teaching_course course,
+                    hisihi_teaching_course_rebate_relation crr,
+                    hisihi_rebate rebate
+                    where course.organization_id=".$org_id." and crr.teaching_course_id=course.id
+                    and crr.rebate_id=rebate.id and course.status=1
+                    and crr.status=1 and rebate.status=1 order by rebate.rebate_value desc");
+                $org['rebate_list'] = $course_rebate_list;
+            }
         }
+
         //机构列表按报名数排序
         $sort = array(
             'direction'=>'SORT_DESC',

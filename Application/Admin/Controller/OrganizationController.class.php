@@ -172,7 +172,35 @@ class OrganizationController extends AdminController
             $data['major'] = substr($major_str,0,strlen($major_str)-1);
         }
 
+        // 培训课程的标签
+        $org_course_tag_list = M('OrganizationTagRelation')->where('tag_type=9 and status>0 and organization_id='.$id)->select();
+        $course_tag = M('OrganizationTag')->field('id, value')->where('type=9 and status>0')->select();
+        foreach($course_tag as $all_major){
+            $is_exist = false;
+            foreach($org_course_tag_list as $major_tag){
+                if($all_major['id'] == $major_tag['tag_id']){
+                    $is_exist = true;
+                }
+            }
+            if(!$is_exist){
+                $all_major['ischecked'] = 0;
+                $course_tag_list[] = $all_major;
+            }else{
+                $all_major['ischecked'] = 1;
+                $course_tag_list[] = $all_major;
+            }
+        }
+        foreach($org_course_tag_list as $major_tag){
+            $course_tag_str = $major_tag['tag_id'].'#'.$major_str;
+        }
+        if(empty($course_tag_str)){
+            $data['course_tag'] = $course_tag_str;
+        }else{
+            $data['course_tag'] = substr($course_tag_str,0,strlen($course_tag_str)-1);
+        }
+
         $this->assign('major', $major_list);
+        $this->assign('course_tag', $course_tag_list);
         $this->assign('_type', $type_array);
         $this->assign('type_array', $_type_array);
         $this->assign('_marks', $all_marks);
@@ -323,6 +351,29 @@ class OrganizationController extends AdminController
                         $major_data['organization_id'] = $cid;
                         $major_data['tag_id'] = $item;
                         $major_data['tag_type'] = 8;
+                        $major_data['create_time'] = time();
+                        $major_data['status'] = 1;
+                        M('OrganizationTagRelation')->add($major_data);
+                    }
+                }
+                /*修改机构课程的标签*/
+                $course_tag = $_POST["course_tag"];
+                $course_tag_list = explode("#",$course_tag);
+                if(count($course_tag_list)>5){
+                    $this->error('最多添加5个课程标签');
+                }
+                M('OrganizationTagRelation')->where('tag_type=9 and organization_id='.$cid)
+                    ->save(array('status'=>-1));
+                foreach($course_tag_list as $item){
+                    $result = M('OrganizationTagRelation')->where('tag_type=9 and organization_id='.$cid.' and tag_id='.$item)
+                        ->find();
+                    if($result){
+                        M('OrganizationTagRelation')->where('tag_type=9 and organization_id='.$cid.' and tag_id='.$item)
+                            ->save(array('status'=>1));
+                    }else{
+                        $major_data['organization_id'] = $cid;
+                        $major_data['tag_id'] = $item;
+                        $major_data['tag_type'] = 9;
                         $major_data['create_time'] = time();
                         $major_data['status'] = 1;
                         M('OrganizationTagRelation')->add($major_data);
@@ -2727,6 +2778,7 @@ class OrganizationController extends AdminController
             $cid = $_POST["cid"];
             $data["type"] = $_POST["type"];
             $data["value"] = $_POST["value"];
+            $data["extra"] = $_POST["extra"];
             $pic_id = $_POST["picture"];
             if(is_numeric($pic_id)){
                 $this->uploadLogoPicToOSS($pic_id);
@@ -2755,7 +2807,8 @@ class OrganizationController extends AdminController
         }
     }
 
-    /**编辑公用配置
+    /**
+     * 编辑公用配置
      * @param $id
      */
     public function tag_edit($id){
@@ -3369,6 +3422,46 @@ class OrganizationController extends AdminController
         }
     }
 
+    /**
+     * 机构培训课程添加抵扣券
+     * @param $organization_id
+     * @param $id
+     */
+    public function add_rebate($organization_id, $id){
+        $rebate_list = M('Rebate')->where('status=1')->order('id')->select();
+        $gift = M('OrganizationGiftPackage')->where('status=1')->order('id')->select();
+        $this->assign('_gift', $gift);
+        $this->assign('_rebate', $rebate_list);
+        $this->assign('organization_id', $organization_id);
+        $this->assign('tid', $id);
+        $this->display();
+    }
+
+    /**
+     * 绑定抵扣券和课程的关系
+     */
+    public function update_add_rebate(){
+        if (IS_POST) {
+            $post_data['gift_package_id'] = $_POST["gift_package_id"];
+            $post_data['rebate_id'] = $_POST["rebate_id"];
+            $post_data['teaching_course_id'] = $_POST['teaching_course_id'];
+            $post_data['status'] = 1;
+            if(M('TeachingCourseRebateRelation')->where($post_data)->find()){
+                $this->success('已经添加该抵扣券', 'index.php?s=/admin/promotion/teaching_course_to_rebate');
+            }
+
+            // 移除该课程之前添加的优惠券
+            $where_data['teaching_course_id'] = $_POST['teaching_course_id'];
+            $save_data['status'] = -1;
+            M('TeachingCourseRebateRelation')->where($where_data)->save($save_data);
+
+            $post_data['create_time'] = time();
+            M('TeachingCourseRebateRelation')->add($post_data);
+            $this->success('添加优惠券成功', 'index.php?s=/admin/promotion/teaching_course_to_rebate');
+        } else {
+            $this->display('add_rebate');
+        }
+    }
 
     /**
      * @param $url
