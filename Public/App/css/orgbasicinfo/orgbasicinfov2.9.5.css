@@ -806,45 +806,19 @@ body {
   line-height: 44px;
   color: #212121;
 }
-.coupon-box {
-  margin: 12px 8px 0 8px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: none;
+/*优惠课程*/
+.coupon {
+  font-size: 13px;
+  background-color: #fff;
+  margin: 12px 8px;
+  border-radius: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
-.coupon-box ul {
-  white-space: nowrap;
+.coupon .basic-header {
+  border-bottom: 1px solid #F3F3F3;
 }
-.coupon-box ul li {
-  background: url(../../images/orgbasicinfo/2.9.5/sprite.png);
-  background-size: 306px 65px;
-  width: 95px;
-  height: 70px;
-  display: inline-block;
-  margin-right: 5px;
-  color: #fff;
-  padding: 0 8px;
-  vertical-align: top;
-}
-.coupon-box ul li .coupon-header {
-  height: 30px;
-  line-height: 30px;
-  font-size: 15px;
-}
-.coupon-box ul li .coupon-bottom {
-  height: 40px;
-}
-.coupon-box ul li .coupon-bottom p {
-  font-size: 12px;
-  margin: 2px 0;
-  white-space: normal;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-/*三联布局*/
+/*三联布局,预约有礼*/
 .appointment {
   font-size: 13px;
   color: #FF5A00;
