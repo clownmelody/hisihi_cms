@@ -1891,13 +1891,15 @@ class OrganizationController extends AppController
             // 抵扣券信息
             if((float)$version>=3.02){
                 $course_rebate_model = new Model();
+                $time = time();
                 $course_rebate_list = $course_rebate_model->query(
                                         "SELECT rebate.id, rebate.name, rebate.value,
                     rebate.rebate_value FROM
                     hisihi_organization_teaching_course course,
                     hisihi_teaching_course_rebate_relation crr,
                     hisihi_rebate rebate
-                    where course.organization_id=".$org_id." and crr.teaching_course_id=course.id
+                    where course.organization_id=".$org_id." and rebate.buy_end_time > ".$time."
+                    and crr.teaching_course_id=course.id
                     and crr.rebate_id=rebate.id and course.status=1
                     and crr.status=1 and rebate.status=1 order by rebate.rebate_value desc");
                 $org['rebate_list'] = $course_rebate_list;
@@ -4433,6 +4435,17 @@ GROUP BY
         $this->assign('course_id', $course_id);
         $this->assign('organization_id', $info['organization_id']);
         $this->display('teaching_course_main_page_v2.9');
+    }
+
+    /**
+     * @param int $course_id
+     */
+    public function teaching_course_main_page_v3_02($course_id=0){
+        $model = M('OrganizationTeachingCourse');
+        $info = $model->field('organization_id')->where('id='.$course_id)->find();
+        $this->assign('course_id', $course_id);
+        $this->assign('organization_id', $info['organization_id']);
+        $this->display('teaching_course_main_page_v3.02');
     }
 
     private function isCouponOutOfDate($end_time){
