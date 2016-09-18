@@ -2,7 +2,7 @@
  * Created by jimmy on 2016/5/10.
  */
 
-define(['base','fastclick'],function(Base){
+define(['base','async','fastclick'],function(Base,Async){
     FastClick.attach(document.body);
     var Course=function(id,oid,url){
         this.cid = id;
@@ -14,6 +14,7 @@ define(['base','fastclick'],function(Base){
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.controlLoadingBox(true);
+
         window.setTimeout(function(){
             that.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
             that.getBasicInfo.call(that,function(result){
@@ -37,6 +38,7 @@ define(['base','fastclick'],function(Base){
     Course.prototype=new Base();
     Course.constructor=Course;
     var t=Course.prototype;
+
 
 
     //获得当前课程的详细信息

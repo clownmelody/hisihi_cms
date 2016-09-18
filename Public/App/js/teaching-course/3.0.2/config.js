@@ -10,6 +10,7 @@ requirejs.config({
         fastclick:'fastclick',
         base:'base-1.1',
         home:'../teaching-course/3.0.2/home',
+        async:'async',
     },
     shim: {
         $:{
