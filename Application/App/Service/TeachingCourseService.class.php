@@ -12,7 +12,8 @@ use Think\Model;
 class TeachingCourseService extends Model
 {
     public function getNearbyOrgByCourseType($type_id, $longitude=null, $latitude=null,
-                                             $city=null, $is_prelisten=null, $has_coupon=null, $page, $count){
+                                             $city=null, $is_prelisten=null, $has_coupon=null,
+                                             $page, $count, $version=null){
         $model = M();
         $start = ($page-1)*$count;
         $select_type_id = '';
@@ -24,16 +25,18 @@ class TeachingCourseService extends Model
             $select_prelisten = " and o.is_listen_preview=".$is_prelisten;
         }
         $select_has_coupon = '';
-        /*if($has_coupon==1){
-            $ids_list = $this->getHasCouponOrganizationIdList();
-            $comma_separated = implode(",", $ids_list);
-            $select_has_coupon = " and o.id in (".$comma_separated.")";
+        if((float)$version>=3.02){
+            if($has_coupon==1){
+               $ids_list = $this->getHasRebateOrganizationIdList();
+               $comma_separated = implode(",", $ids_list);
+               $select_has_coupon = " and o.id in (".$comma_separated.")";
+           }
+           if($has_coupon==0&&$has_coupon!=null){
+               $ids_list = $this->getHasRebateOrganizationIdList();
+               $comma_separated = implode(",", $ids_list);
+               $select_has_coupon = " and o.id not in (".$comma_separated.")";
+           }
         }
-        if($has_coupon==0&&$has_coupon!=null){
-            $ids_list = $this->getHasCouponOrganizationIdList();
-            $comma_separated = implode(",", $ids_list);
-            $select_has_coupon = " and o.id not in (".$comma_separated.")";
-        }*/
         if(!empty($longitude)&&!empty($latitude)){
             $city = null;
             if(empty($type_id)){
@@ -152,10 +155,12 @@ class TeachingCourseService extends Model
      * @param $has_coupon
      * @param $page
      * @param $count
+     * @param null $version
      * @return array
      */
     public function getNearbyShouHuiOrgByCourseType($major_id, $longitude=null, $latitude=null,
-                                                    $city=null, $is_prelisten, $has_coupon, $page, $count){
+                                                    $city=null, $is_prelisten, $has_coupon,
+                                                    $page, $count, $version=null){
         if(!empty($major_id)){
             $major_id += 10000;
         }
@@ -166,16 +171,18 @@ class TeachingCourseService extends Model
             $select_prelisten = " and o.is_listen_preview=".$is_prelisten;
         }
         $select_has_coupon = '';
-        /*if($has_coupon==1){
-            $ids_list = $this->getHasCouponOrganizationIdList();
-            $comma_separated = implode(",", $ids_list);
-            $select_has_coupon = " and o.id in (".$comma_separated.")";
+        if((float)$version>=3.02){
+            if($has_coupon==1){
+                $ids_list = $this->getHasRebateOrganizationIdList();
+                $comma_separated = implode(",", $ids_list);
+                $select_has_coupon = " and o.id in (".$comma_separated.")";
+            }
+            if($has_coupon==0&&$has_coupon!=null){
+                $ids_list = $this->getHasRebateOrganizationIdList();
+                $comma_separated = implode(",", $ids_list);
+                $select_has_coupon = " and o.id not in (".$comma_separated.")";
+            }
         }
-        if($has_coupon==0&&$has_coupon!=null){
-            $ids_list = $this->getHasCouponOrganizationIdList();
-            $comma_separated = implode(",", $ids_list);
-            $select_has_coupon = " and o.id not in (".$comma_separated.")";
-        }*/
         if(!empty($longitude)&&!empty($latitude)){
             $city = null;
             if(empty($major_id)){
@@ -278,29 +285,48 @@ class TeachingCourseService extends Model
         return array('list'=>$list, 'totalCount'=>$total_count[0]['totalCount']);
     }
 
-    public function getTeachingCourseListByOrgIdAndTypeId($org_id, $type_id){
+    public function getTeachingCourseListByOrgIdAndTypeId($org_id, $type_id, $version){
         $list = D('App/OrganizationTeachingCourse', 'Model')->getByOrgAndType($org_id, $type_id);
+        if((float)$version>=3.02){
+            foreach($list as &$item){
+                $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+            }
+        }
         return $list;
     }
 
-    public function getShouHuiTeachingCourseListByOrgIdAndTypeId($org_id, $type_id){
+    public function getShouHuiTeachingCourseListByOrgIdAndTypeId($org_id, $type_id, $version){
         $list = D('App/OrganizationTeachingCourse', 'Model')->getShouHuiByOrgAndType($org_id, $type_id);
+        if((float)$version>=3.02){
+            foreach($list as &$item){
+                $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+            }
+        }
         return $list;
     }
 
-    public function getHasCouponOrganizationIdList(){
+    private function getRebateInfoByCourseId($course_id){
+        $course_rebate_model = M('TeachingCourseRebateRelation');
+        $rebate_model = M('Rebate');
+        $rebate = $course_rebate_model->field('rebate_id')->where('status=1 and teaching_course_id='.$course_id)->find();
+        $rebate_info = $rebate_model->field('id, name, value, rebate_value')
+            ->where('status=1 and id='.$rebate['rebate_id'])->find();
+        return $rebate_info;
+    }
+
+    public function getHasRebateOrganizationIdList(){
         $model = M();
         $sql = "select distinct(o.id) as org_id
                 from
                 hisihi_organization o,
-                hisihi_teaching_course_coupon_relation ccr,
+                hisihi_teaching_course_rebate_relation ccr,
                 hisihi_organization_teaching_course course,
-                hisihi_coupon coupon
+                hisihi_rebate rebate
                 where o.id=course.organization_id and course.id=ccr.teaching_course_id
-                and ccr.coupon_id=coupon.id
+                and ccr.rebate_id=rebate.id
                 and o.status=1
                 and course.status=1 and ccr.status=1
-                and coupon.status=1";
+                and rebate.status=1";
         $list = $model->query($sql);
         $result = array();
         foreach($list as $item){
