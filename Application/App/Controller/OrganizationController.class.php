@@ -443,6 +443,20 @@ class OrganizationController extends AppController
             }else{
                 $result['isStudent']=true;
             }
+            if((float)$version>=3.02){
+                $model = M();
+                $sql = "select t.id, t.value, t.extra
+                from
+                hisihi_organization_tag_relation r,
+                hisihi_organization_tag t
+                where t.id=r.tag_id
+                and t.type=9
+                and t.status=1
+                and r.status=1
+                and r.organization_id=".$organization_id;
+                $course_tag_list = $model->query($sql);
+                $result['teaching_course_tag_list'] = $course_tag_list;
+            }
             if($type=="view"){
                 return $result;
             }else{
