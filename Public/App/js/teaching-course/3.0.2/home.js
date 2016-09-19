@@ -39,33 +39,37 @@ define(['base','async','fastclick'],function(Base,Async){
     Course.constructor=Course;
     var t=Course.prototype;
 
-
-
-    //获得当前课程的详细信息
-    t.getBasicInfo=function(callback){
-        var that = this,
-            para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/detail',
-                type: 'get',
-                async:false,
-                paraData: null,
-                needToken:true,
-                sCallback: function (resutl) {
-                    callback && callback(resutl);
-                },
-                eCallback: function (data) {
-                    var txt=data.txt;
-                    if(data.code=404){
-                        txt='信息加载失败';
+    /*同步请求数据
+    * 多层嵌套
+    * async.js方法
+    * */
+    t.initData=function(){
+        var that=this;
+        async.parallel({
+            basic: function (callback) {
+                that.getOrgBasicInfo(function (result,callback){
+                    if(!result) {
+                        that.showTips.call(that,'信息加载失败');
+                        that.controlLoadingBox(false);
+                        return;
                     }
-                    that.controlLoadingBox(false);
-                    that.showTips.call(that,txt);
-                    $('#current-info .nodata').show();
-                    callback && callback();
-                },
-            };
-        this.getDataAsyncPy(para);
+                    callback(null,result);
+                });
+            },
+            class: function(callback) {
+                that.getBasicInfo(function (result){
+                    callback(null,result);
+                });
+            },
+            coupon: function(callback) {
+                that.getPromotionsInfo(function (result1,resultOrg,callback){
+                    callback(null,result);
+                });
+            },
+
+        })
     };
+
 
     //获得当前机构的基本信息
     t.getOrgBasicInfo=function(result,callback){
@@ -105,10 +109,34 @@ define(['base','async','fastclick'],function(Base,Async){
                 },
                 type:'get',
                 async:false
-
             };
         this.getDataAsync(queryPara);
+    };
 
+    //获得当前课程的详细信息
+    t.getBasicInfo=function(callback){
+        var that = this,
+            para = {
+                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/detail',
+                type: 'get',
+                async:false,
+                paraData: null,
+                needToken:true,
+                sCallback: function (resutl) {
+                    callback && callback(resutl);
+                },
+                eCallback: function (data) {
+                    var txt=data.txt;
+                    if(data.code=404){
+                        txt='信息加载失败';
+                    }
+                    that.controlLoadingBox(false);
+                    that.showTips.call(that,txt);
+                    $('#current-info .nodata').show();
+                    callback && callback();
+                },
+            };
+        this.getDataAsyncPy(para);
     };
 
     //获得当前课程的优惠券详细信息
