@@ -95,5 +95,18 @@ class TeachingCourseController extends BaseController
         }
     }
 
+    public function rebateAndTagInfo($teaching_course_id=null) {
+        switch ($this->_method){
+            case 'get':
+                $info = D('App/TeachingCourse','Service')
+                    ->getRebateAndTagInfoByCourseId($teaching_course_id);
+                $extra['data'] = $info;
+                $this->apiSuccess('根据课程抵扣券和标签信息成功', null, $extra);
+                break;
+            default:
+                $this->response_json('not support this method!');
+                break;
+        }
+    }
 
 }
