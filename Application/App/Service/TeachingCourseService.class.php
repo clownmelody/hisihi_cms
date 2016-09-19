@@ -314,6 +314,21 @@ class TeachingCourseService extends Model
         return $rebate_info;
     }
 
+    public function getRebateAndTagInfoByCourseId($course_id){
+        $course_rebate_model = M('TeachingCourseRebateRelation');
+        $org_course_model = M('OrganizationTeachingCourse');
+        $rebate_model = M('Rebate');
+        $rebate = $course_rebate_model->field('rebate_id, gift_package_id')->where('status=1 and teaching_course_id='.$course_id)->find();
+        $rebate_info = $rebate_model->field('id, name, value, rebate_value,
+                          use_start_time, use_end_time, buy_end_time, use_condition, use_method, use_instruction')
+            ->where('status=1 and id='.$rebate['rebate_id'])->find();
+        $result['rebate_info'] = $rebate_info;
+        $result['gift_package_id'] = $rebate['gift_package_id'];
+        $org_info = $org_course_model->field('organization_id')->where('id='.$course_id)->find();
+        $result['course_tag_list'] = A('Organization')->getOrgCourseTagListByOrgId($org_info['organization_id']);
+        return $result;
+    }
+
     public function getHasRebateOrganizationIdList(){
         $model = M();
         $sql = "select distinct(o.id) as org_id

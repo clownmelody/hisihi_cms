@@ -443,6 +443,10 @@ class OrganizationController extends AppController
             }else{
                 $result['isStudent']=true;
             }
+            if((float)$version>=3.02){
+                $course_tag_list = $this->getOrgCourseTagListByOrgId($organization_id);
+                $result['teaching_course_tag_list'] = $course_tag_list;
+            }
             if($type=="view"){
                 return $result;
             }else{
@@ -453,6 +457,21 @@ class OrganizationController extends AppController
         }else{
             $this->apiError(-1,"获取机构信息失败");
         }
+    }
+
+    public function getOrgCourseTagListByOrgId($organization_id){
+        $model = M();
+        $sql = "select t.id, t.value, t.extra
+                from
+                hisihi_organization_tag_relation r,
+                hisihi_organization_tag t
+                where t.id=r.tag_id
+                and t.type=9
+                and t.status=1
+                and r.status=1
+                and r.organization_id=".$organization_id." order by t.create_time desc";
+        $course_tag_list = $model->query($sql);
+        return $course_tag_list;
     }
 
     /**
