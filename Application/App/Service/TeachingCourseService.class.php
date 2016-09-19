@@ -288,8 +288,14 @@ class TeachingCourseService extends Model
     public function getTeachingCourseListByOrgIdAndTypeId($org_id, $type_id, $version){
         $list = D('App/OrganizationTeachingCourse', 'Model')->getByOrgAndType($org_id, $type_id);
         if((float)$version>=3.02){
+            $model = M('TeachingCourseRebateRelation');
             foreach($list as &$item){
-                $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+                $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
+                if($count>0){
+                    $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+                } else {
+                    unset($item);
+                }
             }
         }
         return $list;
@@ -298,8 +304,14 @@ class TeachingCourseService extends Model
     public function getShouHuiTeachingCourseListByOrgIdAndTypeId($org_id, $type_id, $version){
         $list = D('App/OrganizationTeachingCourse', 'Model')->getShouHuiByOrgAndType($org_id, $type_id);
         if((float)$version>=3.02){
+            $model = M('TeachingCourseRebateRelation');
             foreach($list as &$item){
-                $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+                $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
+                if($count>0){
+                    $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+                } else {
+                    unset($item);
+                }
             }
         }
         return $list;
