@@ -1,0 +1,101 @@
+<extend name="Public/base"/>
+
+<block name="body">
+    <!-- 标题栏 -->
+    <div class="main-title">
+        <h2>第三方评论列表</h2>
+    </div>
+    <div class="cf">
+        <div class="fl">
+            <div class="btn-group">
+                <button class="btn document_add" url="{:U('add')}">新 增</button>
+            </div>
+        </div>
+    </div>
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+        <table class="">
+            <thead>
+            <tr>
+                <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                <th class="">ID</th>
+                <th class="">用户名</th>
+                <th class="">评论内容</th>
+                <th class="">评论出处</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="_list">
+                <volist name="_list" id="vo">
+                    <tr>
+                        <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.content}</td>
+                        <td>{$vo.from}</td>
+                        <td>
+                            <a href="{:U('othercomment/edit?id='.$vo['id'])}">编辑</a>
+                            <a href="{:U('othercomment/set_status?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <div class="page">
+        {$_page}
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            //搜索功能
+            $("#search").click(function(){
+                var url = $(this).attr('url');
+                var status = $("#sch-sort-txt").attr("data");
+                var query  = $('.search-form').find('input').serialize();
+                query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+                query = query.replace(/^&/g,'');
+                if(status != ''){
+                    query += 'status=' + status + "&" + query;
+                }
+                if( url.indexOf('?')>0 ){
+                    url += '&' + query;
+                }else{
+                    url += '?' + query;
+                }
+                window.location.href = url;
+            });
+
+            /* 状态搜索子菜单 */
+            $(".search-form").find(".drop-down").hover(function(){
+                $("#sub-sch-menu").removeClass("hidden");
+            },function(){
+                $("#sub-sch-menu").addClass("hidden");
+            });
+            $("#sub-sch-menu li").find("a").each(function(){
+                $(this).click(function(){
+                    var text = $(this).text();
+                    $("#sch-sort-txt").text(text).attr("data",$(this).attr("value"));
+                    $("#sub-sch-menu").addClass("hidden");
+                })
+            });
+
+            //只有一个模型时，点击新增
+            $('.document_add').click(function(){
+                var url = $(this).attr('url');
+                if(url != undefined && url != ''){
+                    window.location.href = url;
+                }
+            });
+
+        })
+        //导航高亮
+        highlight_subnav("{:U('othercomment/index')}");
+    </script>
+</block>

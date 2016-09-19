@@ -84,12 +84,13 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
     OrgBasicInfo.constructor=OrgBasicInfo;
     var t=OrgBasicInfo.prototype;
 
+    /*请求数据，多层嵌套，同步请求*/
     t.initData=function() {
         var that = this;
         async.parallel({
             basic: function (callback) {
                 that.loadBasicInfoData(function (result) {
-                    if(!result){
+                        if(!result){
                         that.showTips('机构不存在');
                         that.controlLoadingBox(false);
                         return;
