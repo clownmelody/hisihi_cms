@@ -102,11 +102,19 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
                     callback(null,result)
                 });
             },
-            coupon:function(callback) {
-                that.loadCouponInfo(function(result){
-                    callback(null,result)
-                });
-            },
+
+            ////课程
+            //course:function(callback){
+            //    //that.loadTeachingCourse(function(result){
+            //    //    callback(null,result);
+            //    //});
+            //},
+            ////抵扣券
+            //coupon:function(callback) {
+            //    //that.loadCouponInfo(function(result){
+            //    //    callback(null,result)
+            //    //});
+            //},
             pics:function(callback){
                 that.loadPics(function(result){
                     callback(null,result)
@@ -164,6 +172,10 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
                         break;
                     case 'coupon':
                         fn=that.fillInCouponInfo;
+                        break;
+                    case 'course':
+                        //fn=that.fillInCouponInfo;
+                        var aaaa='';
                         break;
                     case 'pics':
                         that.fillInPicsAndVideo([results['video']],val);
@@ -233,7 +245,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
             $target=that.$wrapper.find('.logoAndCertInfo'),
             queryPara={
                 url:this.baseUrl+'appGetBaseInfo',
-                paraData:{organization_id:this.oid,version:2.95},
+                paraData:{organization_id:this.oid,version:3.02},
                 sCallback:function(restult){
                     //that.fillInBasicInfoData(restult);
                     callback && callback(restult);
@@ -302,6 +314,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         this.setColorBar(data);
 
         this.fillAppointmentInfo(result);
+
+        // 抵扣券 标签
+        this.fillInDeductionTags(result);
 
     };
 
@@ -383,11 +398,11 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         }
     };
 
-    //优惠券信息
+    //抵扣券信息
     t.loadCouponInfo=function(callback){
         var that=this;
         this.getDataAsync({
-            url: this.baseUrl + 'getPromotionCouponList',
+            url: this.baseUrl + '/v1/org/41/teaching_course',
             paraData: {organization_id: this.oid, version: 2.95},
             sCallback: function(result){
                 //that.fillInCouponInfo(result);
@@ -538,6 +553,79 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
             this.scrollSingInInfo();
         }
     };
+
+    /*获得抵扣券使用流程信息*/
+    t.fillInDeductionTags=function(result){
+        var tipsArr=result.data.teaching_course_tag_list;
+        if(!tipsArr){
+            return;
+        }
+        var len=tipsArr.length,
+            str='',
+            item;
+        for(var i=0;i<len;i++){
+            item=tipsArr[i];
+            str+='<li>'+
+                    '<i></i>'+
+                    '<span>'+item.value+'</span>'+
+                '</li>'
+        }
+        $('.coupon-tip-left').html(str);
+
+    };
+
+    /*课程信息*/
+    t.loadTeachingCourse=function(callback){
+        var that=this;
+        this.getDataAsync({
+            url: window.hisihiUrlObj.apiUrlPy+'/v1/org/'+this.oid+'/teaching_course',
+            paraData: {
+                version :'3.02',
+                page:1,
+                per_page:100000,
+                except_id:''
+            },
+            sCallback: function(result){
+                //that.fillInSignUpInfo(result.data);  /*填充报名信息*/
+                callback && callback(result.data);
+            },
+            eCallback:function(txt){
+                //$target.css('opacity',1);
+                //$target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
+            },
+            type:'get',
+            async:this.async
+        });
+    },
+
+    /*填充抵扣券信息*/
+    t.fillCourseInfo=function(result){
+        if(!result) {
+            return;
+        }
+        var len=result.len;
+        if(len==0){
+            return;
+        }
+        var str='',item;
+        for(var i=0;i<len;i++){
+            item=result[i];
+            var rebeatInfo=item.rebate_info;
+            if(rebeatInfo){
+                str+='<li>'+
+                        '<div class="coupon-img"></div>'+
+                        '<div class="coupon-title">'+
+                        '<span>高端UI设计精英班</span>'+
+                        '<span class="price">￥19800</span>'+
+                        '</div>'+
+                        '<div class="coupon-num">'+
+                        '<div class="top-price">￥500</div>'+
+                        '<div class="under-price">抵￥3000</div>'+
+                        '</div>'+
+                    '</li>';
+            }
+        }
+    },
 
     /*加载视频*/
     t.loadVideo=function(callback){
