@@ -60,6 +60,11 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
 
+        //查看抵扣券 全部信息
+        $(document).on(eventName,'.coupon-tip-left', $.proxy(this,'showDeductionTags'));
+
+        //$(document).on(eventName,'.coupon-tip-right', $.proxy(this,'showDeductionTagsTips'));
+
 
         //photoswipe   //学生作品信息查看  相册、视频信息查看
         new MyPhotoSwipe('.works-preview-box',{
@@ -557,6 +562,35 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
     /*获得抵扣券使用流程信息*/
     t.fillInDeductionTags=function(result){
         var tipsArr=result.data.teaching_course_tag_list;
+        tipsArr=[{
+            "id": "40",
+            "value": "七天包退",
+            "extra": "其实不会退的,hahah"
+        },{
+            "id": "41",
+            "value": "七天",
+            "extra": "其实不会退的,hahah"
+        },{
+            "id": "42",
+            "value": "包退",
+            "extra": "其实不会退的,hahah"
+        },{
+            "id": "43",
+            "value": "七天包退七天包退",
+            "extra": "其实不会退的,hahah"
+        },{
+            "id": "44",
+            "value": "七天包退",
+            "extra": "其实不会退的,hahah"
+        },{
+            "id": "45",
+            "value": "七天包退七天包退",
+            "extra": "其实不会退的,hahah"
+        },{
+            "id": "46",
+            "value": "七天包退七天包退七天包退七天包退",
+            "extra": "其实不会退的,hahah"
+        }];
         if(!tipsArr){
             return;
         }
@@ -566,7 +600,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         for(var i=0;i<len;i++){
             item=tipsArr[i];
             str+='<li>'+
-                    '<i></i>'+
+                    '<img src="'+window.hisihiUrlObj.image+'/orgbasicinfo/3.0.2/ic_lable@2x.png"/>'+
                     '<span>'+item.value+'</span>'+
                 '</li>'
         }
@@ -1157,6 +1191,18 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
     t.closeSingInBox=function(){
         $('.sing-in-modal').removeClass('show');
         this.scrollControl(true);  //恢复滚动
+    };
+
+    //显示所有的 抵扣券信息
+    t.showDeductionTags=function(e){
+        var $target=$(e.currentTarget).closest('ul'),
+            $parent=$target.parent(),
+            height=$parent.height();
+        if(!$parent.hasClass('show')){
+            $parent.css('height',$target.height()).addClass('show');
+        }else{
+            $parent.css('height','25px').removeClass('show')
+        }
     };
 
     return OrgBasicInfo;
