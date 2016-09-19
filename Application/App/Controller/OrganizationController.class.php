@@ -3708,11 +3708,11 @@ class OrganizationController extends AppController
                 $select_where['is_listen_preview'] = $is_prelisten;
             }
             if($has_coupon==1){
-                $ids_list = D('App/TeachingCourse','Service')->getHasCouponOrganizationIdList();
+                $ids_list = D('App/TeachingCourse','Service')->getHasRebateOrganizationIdList();
                 $select_where['id'] = array('in', $ids_list);
             }
             if($has_coupon==0){
-                $ids_list = D('App/TeachingCourse','Service')->getHasCouponOrganizationIdList();
+                $ids_list = D('App/TeachingCourse','Service')->getHasRebateOrganizationIdList();
                 $select_where['id'] = array('not in', $ids_list);
             }
         }
