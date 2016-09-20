@@ -42,7 +42,7 @@ class TeachingCourseController extends BaseController
                     $org_info['id'] = $org['org_id'];
                     $org_info['distance'] = $org['distance'];
                     $course_list = D('App/TeachingCourse','Service')
-                        ->getTeachingCourseListByOrgIdAndTypeId($org['org_id'], $type_id, $version);
+                        ->getTeachingCourseListByOrgIdAndTypeId($org['org_id'], $type_id, $has_coupon, $version);
                     $org_info['teaching_course_list'] = $course_list;
                     $org_list[] = $org_info;
                 }
@@ -81,7 +81,8 @@ class TeachingCourseController extends BaseController
                     $org_info['id'] = $org['org_id'];
                     $org_info['distance'] = $org['distance'];
                     $course_list = D('App/TeachingCourse','Service')
-                        ->getShouHuiTeachingCourseListByOrgIdAndTypeId($org['org_id'], $type_id, $version);
+                        ->getShouHuiTeachingCourseListByOrgIdAndTypeId($org['org_id'], $type_id,
+                            $has_coupon, $version);
                     $org_info['teaching_course_list'] = $course_list;
                     $org_list[] = $org_info;
                 }
