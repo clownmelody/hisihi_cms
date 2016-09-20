@@ -285,16 +285,25 @@ class TeachingCourseService extends Model
         return array('list'=>$list, 'totalCount'=>$total_count[0]['totalCount']);
     }
 
-    public function getTeachingCourseListByOrgIdAndTypeId($org_id, $type_id, $version){
+    public function getTeachingCourseListByOrgIdAndTypeId($org_id, $type_id, $has_coupon, $version){
         $list = D('App/OrganizationTeachingCourse', 'Model')->getByOrgAndType($org_id, $type_id);
         if((float)$version>=3.02){
             $result = array();
             $model = M('TeachingCourseRebateRelation');
-            foreach($list as &$item){
-                $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
-                if($count>0){
-                    $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
-                    $result[] = $item;
+            if($has_coupon){
+                foreach($list as &$item){
+                    $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
+                    if($count>0){
+                        $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+                        $result[] = $item;
+                    }
+                }
+            } else {
+                foreach($list as &$item){
+                    $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
+                    if($count==0){
+                        $result[] = $item;
+                    }
                 }
             }
             return $result;
@@ -302,16 +311,25 @@ class TeachingCourseService extends Model
         return $list;
     }
 
-    public function getShouHuiTeachingCourseListByOrgIdAndTypeId($org_id, $type_id, $version){
+    public function getShouHuiTeachingCourseListByOrgIdAndTypeId($org_id, $type_id, $has_coupon, $version){
         $list = D('App/OrganizationTeachingCourse', 'Model')->getShouHuiByOrgAndType($org_id, $type_id);
         if((float)$version>=3.02){
-            $list = array();
+            $result = array();
             $model = M('TeachingCourseRebateRelation');
-            foreach($list as &$item){
-                $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
-                if($count>0){
-                    $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
-                    $result[] = $item;
+            if($has_coupon){
+                foreach($list as &$item){
+                    $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
+                    if($count>0){
+                        $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+                        $result[] = $item;
+                    }
+                }
+            } else {
+                foreach($list as &$item){
+                    $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
+                    if($count==0){
+                        $result[] = $item;
+                    }
                 }
             }
             return $result;
