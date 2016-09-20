@@ -67,7 +67,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         new MyPhotoSwipe('.works-preview-box',{
             bgFilter:true,
         });
-
     }
 
     //下载条
@@ -77,6 +76,8 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             pos:0
         }
     };
+
+
     OrgBasicInfo.prototype=new Base(config);
     OrgBasicInfo.constructor=OrgBasicInfo;
     var t=OrgBasicInfo.prototype;

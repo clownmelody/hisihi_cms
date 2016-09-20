@@ -2,7 +2,7 @@
  * Created by hisihi on 2016/9/19.
  */
 
-define(['base','async','fastclick'],function(Base,async){
+define(['base','async','lazyloading','fastclick'],function(Base,async){
     FastClick.attach(document.body);
     var Course=function(id,oid,url){
         this.cid = id;
@@ -24,6 +24,7 @@ define(['base','async','fastclick'],function(Base,async){
         //    });
         //    that.getMoreCourseInfo();
         //},100);
+        this.async=true;  //同步加载所有的数据
         //加载页面数据
         window.setTimeout(function(){
             that.initData();
@@ -71,11 +72,11 @@ define(['base','async','fastclick'],function(Base,async){
                 });
             },
             moreCourse: function(callback) {
-                that.getMoreCourseInfo(function (){
-                    callback(null.result);
+                that.getMoreCourseInfo(function (result){
+                    callback(null,result);
                 });
             },
-        },function (results) {
+        },function (err,results) {
             var val;
             for(var item in results) {
                 var fn=null;
@@ -85,22 +86,31 @@ define(['base','async','fastclick'],function(Base,async){
                         fn=that.getOrgInfoStr;
                         break;
                     case 'orgBasic':
-                        fn=that.getBasicIntroduceInfo;
+                        fn=that.fillInCourseInfo;
                         break;
                     case 'promotions':
-                        fn=that.fillInCourseInfo;
+                        fn=that.getCoupon;
                         break;
                     case 'moreCourse':
                         fn=that.fillInMoreCourseInfo;
                         break;
-                };
-            };
+                    default :
+                        fn=that.fillDetailCommentInfo;
+                        break;
+                }
+                fn && fn.call(that,val);
+            }
+            $('#wrapper,#footer').show();
+            that.controlLoadingBox(false);
+            $('.lazy-img').picLazyLoad($(window),{
+                threshold:150
+            });
         });
     };
 
 
     //获得当前机构的基本信息
-    t.getOrgBasicInfo=function(result,callback){
+    t.getOrgBasicInfo=function(callback){
         //var that = this,
         //    para = {
         //        url: window.hisihiUrlObj.api_url + 'v1/org/'+this.oid+'/base',
@@ -168,7 +178,7 @@ define(['base','async','fastclick'],function(Base,async){
     };
 
     //获得当前课程的优惠券详细信息
-    t.getPromotionsInfo=function(result1,resultOrg,callback){
+    t.getPromotionsInfo=function(callback){
         this.controlLoadingBox(true);
         var token=this.userInfo.token;
         if(!token){
@@ -186,7 +196,7 @@ define(['base','async','fastclick'],function(Base,async){
                 token:token,
                 sCallback: function (resutlPro) {
                     that.controlLoadingBox(false);
-                    that.fillInCourseInfo(result1,resultOrg,resutlPro);
+                    that.fillInCourseInfo(resutlPro);
                     callback && callback(resutlPro);
                 },
                 eCallback: function (data) {
@@ -206,6 +216,7 @@ define(['base','async','fastclick'],function(Base,async){
     //获得更多课程的详细信息
     t.getMoreCourseInfo=function(callback){
         var paraData={
+            version: '3.02',
             except_id: this.cid | 0,
             page: 1,
             per_page: 100000
@@ -216,9 +227,9 @@ define(['base','async','fastclick'],function(Base,async){
                 type: 'get',
                 paraData: paraData,
                 sCallback: function (resutl) {
-                    that.controlLoadingBox(false);
-                    that.fillInMoreCourseInfo(resutl);
-                    callback && callback(data);
+                    //that.controlLoadingBox(false);
+                    //that.fillInMoreCourseInfo(resutl);
+                    callback && callback(resutl);
                 },
                 eCallback: function (data) {
                     //var txt=data.txt,
@@ -598,6 +609,24 @@ define(['base','async','fastclick'],function(Base,async){
         }
     };
 
+
+    //预约礼,判断是否支持试听，超出长度部分滚动显示
+    t.fillAppointmentInfo=function(basicData){
+        // false 0 null undefined
+        var flag= parseInt(basicData.data.is_listen_preview) && basicData.data.listen_preview_text.length!=0;
+        if (flag) {
+            var str = '<div class="left-item"></div>' +
+                '<div class="middle-item">' +
+                '<p>'+
+                basicData.data.listen_preview_text +
+                '</p>'+
+                '</div>' +
+                '<div class="right-item"></div>';
+            $('.appointment').show().html(str).css('height','44px');
+        }
+    };
+
+
     /*判断字段信息是否为空*/
     t.judgeInfoNullInfo=function(info){
         var str=info;
@@ -638,8 +667,6 @@ define(['base','async','fastclick'],function(Base,async){
         }
 
     };
-
-
 
     //更多
     t.getMoreStr=function(result){
