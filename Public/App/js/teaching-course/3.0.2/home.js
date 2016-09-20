@@ -1,8 +1,8 @@
 /**
- * Created by jimmy on 2016/5/10.
+ * Created by hisihi on 2016/9/19.
  */
 
-define(['base','async','fastclick'],function(Base,Async){
+define(['base','async','fastclick'],function(Base,async){
     FastClick.attach(document.body);
     var Course=function(id,oid,url){
         this.cid = id;
@@ -15,23 +15,26 @@ define(['base','async','fastclick'],function(Base,Async){
         }
         this.controlLoadingBox(true);
 
+        //window.setTimeout(function(){
+        //    that.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
+        //    that.getBasicInfo.call(that,function(result){
+        //        that.getOrgBasicInfo.call(that,result,function(resultOrg){
+        //            that.getPromotionsInfo.call(that,result,resultOrg);
+        //        });
+        //    });
+        //    that.getMoreCourseInfo();
+        //},100);
+        //加载页面数据
         window.setTimeout(function(){
-            that.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
-            that.getBasicInfo.call(that,function(result){
-                that.getOrgBasicInfo.call(that,result,function(resultOrg){
-                    that.getPromotionsInfo.call(that,result,resultOrg);
-                });
-            });
-            that.geMoreCourseInfo();
+            that.initData();
         },100);
-        
+
         //领取优惠券
         $(document).on(eventName,'.coupon-right .coupon-status', $.proxy(this,'operateCoupon'));
 
         /*模态窗口操作*/
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
-
 
     };
 
@@ -40,32 +43,61 @@ define(['base','async','fastclick'],function(Base,Async){
     var t=Course.prototype;
 
 
-
-    //获得当前课程的详细信息
-    t.getBasicInfo=function(callback){
-        var that = this,
-            para = {
-                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/detail',
-                type: 'get',
-                async:false,
-                paraData: null,
-                needToken:true,
-                sCallback: function (resutl) {
-                    callback && callback(resutl);
-                },
-                eCallback: function (data) {
-                    var txt=data.txt;
-                    if(data.code=404){
-                        txt='信息加载失败';
+    /*同步请求数据
+    * 多层嵌套
+    * async.js方法
+    * */
+    t.initData=function(){
+        var that=this;
+        async.parallel({
+            basic: function (callback) {
+                that.getBasicInfo(function (result){
+                    if(!result) {
+                        that.showTips.call(that,'信息加载失败');
+                        that.controlLoadingBox(false);
+                        return;
                     }
-                    that.controlLoadingBox(false);
-                    that.showTips.call(that,txt);
-                    $('#current-info .nodata').show();
-                    callback && callback();
-                },
+                    callback(null,result);
+                });
+            },
+            orgBasic: function(callback) {
+                that.getOrgBasicInfo(function (result){
+                    callback(null,result);
+                });
+            },
+            promotions: function(callback) {
+                that.getPromotionsInfo(function (result){
+                    callback(null,result);
+                });
+            },
+            moreCourse: function(callback) {
+                that.getMoreCourseInfo(function (){
+                    callback(null.result);
+                });
+            },
+        },function (results) {
+            var val;
+            for(var item in results) {
+                var fn=null;
+                val=results[item]
+                switch (item){
+                    case 'basic':
+                        fn=that.getOrgInfoStr;
+                        break;
+                    case 'orgBasic':
+                        fn=that.getBasicIntroduceInfo;
+                        break;
+                    case 'promotions':
+                        fn=that.fillInCourseInfo;
+                        break;
+                    case 'moreCourse':
+                        fn=that.fillInMoreCourseInfo;
+                        break;
+                };
             };
-        this.getDataAsyncPy(para);
+        });
     };
+
 
     //获得当前机构的基本信息
     t.getOrgBasicInfo=function(result,callback){
@@ -105,10 +137,34 @@ define(['base','async','fastclick'],function(Base,Async){
                 },
                 type:'get',
                 async:false
-
             };
         this.getDataAsync(queryPara);
+    };
 
+    //获得当前课程的详细信息
+    t.getBasicInfo=function(callback){
+        var that = this,
+            para = {
+                url: window.hisihiUrlObj.api_url + 'v1/org/teaching_course/'+this.cid+'/detail',
+                type: 'get',
+                async:false,
+                paraData: null,
+                needToken:true,
+                sCallback: function (resutl) {
+                    callback && callback(resutl);
+                },
+                eCallback: function (data) {
+                    var txt=data.txt;
+                    if(data.code=404){
+                        txt='信息加载失败';
+                    }
+                    that.controlLoadingBox(false);
+                    that.showTips.call(that,txt);
+                    $('#current-info .nodata').show();
+                    callback && callback();
+                },
+            };
+        this.getDataAsyncPy(para);
     };
 
     //获得当前课程的优惠券详细信息
@@ -147,9 +203,8 @@ define(['base','async','fastclick'],function(Base,Async){
         this.getDataAsyncPy(para);
     };
 
-
     //获得更多课程的详细信息
-    t.geMoreCourseInfo=function(callback){
+    t.getMoreCourseInfo=function(callback){
         var paraData={
             except_id: this.cid | 0,
             page: 1,
@@ -203,8 +258,6 @@ define(['base','async','fastclick'],function(Base,Async){
         $('#more-info .lessons-more').show().find('ul').html(str);
         this.drawArrowColorBlock();
     };
-
-
 
     //课程简介
     t.getBasicIntroduceInfo=function(result){
@@ -268,7 +321,6 @@ define(['base','async','fastclick'],function(Base,Async){
                     '</div>'+
                 '</a>';
         $('.org-basic-info').html(str).show();
-
     };
 
     //认证信息
