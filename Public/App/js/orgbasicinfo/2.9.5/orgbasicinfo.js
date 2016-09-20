@@ -2,7 +2,7 @@
  * Created by jimmy on 2015/12/28.
  */
 
-define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhotoSwipe){
+define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,Async,MyPhotoSwipe,Deduction){
 
     function OrgBasicInfo($wrapper,oid,url) {
         this.$wrapper = $wrapper;
@@ -11,7 +11,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         this.oid=oid;
         var eventName='click',that=this;
         if(this.isLocal){
-            //eventName='touchend';
+            eventName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
 
@@ -60,12 +60,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
 
-        //查看抵扣券 全部信息
-        $(document).on(eventName,'.coupon-tip-left', $.proxy(this,'showDeductionTags'));
-
-        //$(document).on(eventName,'.coupon-tip-right', $.proxy(this,'showDeductionTagsTips'));
-
-
         //photoswipe   //学生作品信息查看  相册、视频信息查看
         new MyPhotoSwipe('.works-preview-box',{
             bgFilter:true,
@@ -87,7 +81,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
     /*请求数据，多层嵌套，同步请求*/
     t.initData=function() {
         var that = this;
-        async.parallel({
+        Async.parallel({
             basic: function (callback) {
                 that.loadBasicInfoData(function (result) {
                         if(!result){
@@ -562,50 +556,11 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
 
     /*获得抵扣券使用流程信息*/
     t.fillInDeductionTags=function(result){
-        var tipsArr=result.data.teaching_course_tag_list;
-        tipsArr=[{
-            "id": "40",
-            "value": "七天包退",
-            "extra": "其实不会退的,hahah"
-        },{
-            "id": "41",
-            "value": "七天",
-            "extra": "其实不会退的,hahah"
-        },{
-            "id": "42",
-            "value": "包退",
-            "extra": "其实不会退的,hahah"
-        },{
-            "id": "43",
-            "value": "七天包退七天包退",
-            "extra": "其实不会退的,hahah"
-        },{
-            "id": "44",
-            "value": "七天包退",
-            "extra": "其实不会退的,hahah"
-        },{
-            "id": "45",
-            "value": "七天包退七天包退",
-            "extra": "其实不会退的,hahah"
-        },{
-            "id": "46",
-            "value": "七天包退七天包退七天包退七天包退",
-            "extra": "其实不会退的,hahah"
-        }];
-        if(!tipsArr){
+        if(!result || !result.data){
             return;
         }
-        var len=tipsArr.length,
-            str='',
-            item;
-        for(var i=0;i<len;i++){
-            item=tipsArr[i];
-            str+='<li>'+
-                    '<img src="'+window.hisihiUrlObj.image+'/orgbasicinfo/3.0.2/ic_lable@2x.png"/>'+
-                    '<span>'+item.value+'</span>'+
-                '</li>'
-        }
-        $('.coupon-tip-left').html(str);
+        var tipsArr=result.data.teaching_course_tag_list;
+        new Deduction(tipsArr,$('.deduction-tip'));
 
     };
 
@@ -1200,7 +1155,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
             $parent=$target.parent(),
             height=$parent.height();
         if(!$parent.hasClass('show')){
-            $parent.css('height',$target.height()).addClass('show');
+            $parent.css('height',$target.height()-4).addClass('show');
         }else{
             $parent.css('height','25px').removeClass('show')
         }
