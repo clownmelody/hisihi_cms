@@ -60,6 +60,9 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
 
+        //显示所有的优惠课程
+        $(document).on(eventName,'.show-more-course', $.proxy(this,'showAllLesson'));
+
         //photoswipe   //学生作品信息查看  相册、视频信息查看
         new MyPhotoSwipe('.works-preview-box',{
             bgFilter:true,
@@ -103,12 +106,12 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 });
             },
 
-            ////课程
-            //course:function(callback){
-            //    //that.loadTeachingCourse(function(result){
-            //    //    callback(null,result);
-            //    //});
-            //},
+            //课程
+            course:function(callback){
+                that.loadTeachingCourse(function(result){
+                    callback(null,result);
+                });
+            },
             ////抵扣券
             //coupon:function(callback) {
             //    //that.loadCouponInfo(function(result){
@@ -174,7 +177,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                         fn=that.fillInCouponInfo;
                         break;
                     case 'course':
-                        //fn=that.fillInCouponInfo;
+                        fn=that.fillInCourseInfo;
                         var aaaa='';
                         break;
                     case 'pics':
@@ -440,6 +443,100 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         $('.coupon-box').show().find('ul').html(str);
     };
 
+    /*课程列表*/
+    t.fillInCourseInfo=function(data){
+        if(!data || !data.courses || data.courses.length==0){
+            return;
+        }
+        var list = data.courses,
+            len = list.length,
+            str = '',
+            rightStr = '',
+            item,
+            marginRight='80px';
+
+
+
+        for(var i=0;i<len;i++){
+            item=list[i];
+            //if(!item.rebate_info){
+            //    continue;
+            //}
+            var money=this.judgeInfoNullInfo(item.price);
+            if(money!=''){
+                money='￥'+money;
+            }else{
+                money='<label class="noprice">暂无报价</label>';
+            }
+            stime=this.judgeInfoNullInfo(item.start_course_time);
+            if(stime!=''){
+                stime+='开课';
+            }
+            str+='<li data-course-id="'+item.id+'">'+
+                    '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                        '<div class="item-main">'+
+                            '<div class="main-content">'+
+                                '<div class="middle" style="margin-right:'+marginRight+'">'+
+                                    '<p class="title-info hasCoupon">'+item.course_name+'</p>'+
+                                    '<p class="money-info">'+money+'</p>'+
+                                    '<p class="time-info">'+stime+'</p>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="left">'+
+                                '<div class="img-box">'+
+                                    '<img class="lazy-img" data-original="'+item.cover_pic+'">'+
+                                '</div>'+
+                            '</div>'+
+                            rightStr+
+                            '</div>'+
+                        '</a>'+
+                '</li>';
+        }
+        if(str) {
+            $('.deduction-detail').find('ul').html(str);
+            $('.coupon').show();
+            var diff=data.total_count-2;
+            if(diff>0){
+                $('.show-more-course').show().find('span').eq(0).text('查看其他'+ diff +'个优惠课程');
+            }else{
+                $('.deduction-detail').css('height',180);
+            }
+        }
+    };
+
+    /*判断字段信息是否为空*/
+    t.judgeInfoNullInfo=function(info){
+        var str=info;
+        if(typeof info=='string'){
+            str=str.trim();
+        }
+        if(!info || info==''||info==0){
+            str='';
+        }
+        return str;
+    };
+
+
+    /*得到优惠券右边的信息*/
+    t.getRightStrAndMarginInfo=function(coupon){
+        var couponStatue=this.getCouponStatus(coupon),
+            str='';
+        if(couponStatue.type) {
+            str ='<div class="right btn coupon '+couponStatue.type+'">' +
+                '<div class="coupon-money">' +
+                '<div class="money"><span>￥</span><span>' + coupon.money + '</span></div>' +
+                '<div class="postmark"></div>'+
+                '</div>' +
+                '<div class="seperation"></div>' +
+                '<div class="coupon-state">' +
+                '<p>点击领取</p>' +
+                '<p><span>去使用</span></p>' +
+                '<p>已使用</p>' +
+                '</div>' +
+                '</div>';
+        }
+        return str;
+    };
 
     /*加载头条信息*/
     t.loadTopAnnouncement=function(callback){
@@ -567,7 +664,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     /*课程信息*/
     t.loadTeachingCourse=function(callback){
         var that=this;
-        this.getDataAsync({
+        this.getDataAsyncPy({
             url: window.hisihiUrlObj.apiUrlPy+'/v1/org/'+this.oid+'/teaching_course',
             paraData: {
                 version :'3.02',
@@ -576,12 +673,10 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 except_id:''
             },
             sCallback: function(result){
-                //that.fillInSignUpInfo(result.data);  /*填充报名信息*/
-                callback && callback(result.data);
+              callback && callback(result);
             },
-            eCallback:function(txt){
-                //$target.css('opacity',1);
-                //$target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
+            eCallback:function(){
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -1150,15 +1245,22 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     };
 
     //显示所有的 抵扣券信息
-    t.showDeductionTags=function(e){
-        var $target=$(e.currentTarget).closest('ul'),
+    t.showAllLesson=function(e){
+        var $target=$(e.currentTarget),
+            $span=$target.find('span'),
+            $i=$target.find('i'),
             $parent=$target.parent(),
-            height=$parent.height();
+            height=$parent.find('ul').height(),
+            i=1;
         if(!$parent.hasClass('show')){
-            $parent.css('height',$target.height()-4).addClass('show');
+            $parent.css('height',height+35).addClass('show');
+            $i.addClass('up');
         }else{
-            $parent.css('height','25px').removeClass('show')
+            $parent.css('height','222px').removeClass('show');
+            $i.removeClass('up');
+            i=0;
         }
+        $span.eq(i).addClass('show').siblings().removeClass('show');
     };
 
     return OrgBasicInfo;

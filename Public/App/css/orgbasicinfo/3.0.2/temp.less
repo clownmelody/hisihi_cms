@@ -332,6 +332,8 @@ body{
   margin:12px 8px;
   border-radius:4px;
   padding:0;
+  display: none;
+  @padding-l:14px;
   >div{
     padding-left:8px;
     padding-right: 8px;
@@ -361,6 +363,7 @@ body{
           font-size: 12px;
           color: #808080;
         }
+
       }
     }
     .deduction-tip-right {
@@ -370,6 +373,217 @@ body{
       .size(50px,50px);
       background: url(../../../images/orgbasicinfo/3.0.2/btn_details@2x.png);
       transform: scale(0.6);
+    }
+  }
+  .deduction-detail {
+    position: relative;
+    height:222px;
+    overflow: hidden;
+    padding: 0;
+    transition:height 0.2s linear;
+    .list {
+      li {
+        @w-l: 66px;
+        @w-r: 80px;
+        .size(auto, 90px);
+        &:last-child {
+          .item-main {
+            border: none;
+          }
+        }
+        .item-main {
+          height: 100%;
+          margin: 0px 0 0 @padding-l;
+          padding-right: @padding-l;
+          border-bottom: 1px solid #F2F2F2;
+          > div {
+            float: left;
+            height: 100%;
+          }
+          .main-content {
+            width: 100%;
+            height: 100%;
+            .middle {
+              height: 100%;
+              margin: 0 @w-r 0 @w-l+14;
+              padding-top: 12px;
+              box-sizing: border-box;
+              p {
+                margin: 0;
+              }
+              .title-info {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                font-size: 14px;
+                color: #212121;
+                &.hasCoupon {
+                  margin-right: @padding-l;
+                }
+              }
+              .money-info {
+                color: #FA4535;
+                font-size: 20px;
+                font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+                margin: 2px 0;
+                .noprice {
+                  font-size: 16px;
+                }
+              }
+              .time-info {
+                color: #8E8E8E;
+                font-size: 11px;
+              }
+            }
+          }
+          .left {
+            width: @w-l + 10px;
+            margin-left: -100%;
+            .img-box {
+              .size(100%);
+              margin: 0 auto;
+              padding: 12px 10px 0 0;
+              img {
+                .size(@w-l, @w-l);
+              }
+            }
+          }
+          .right {
+            position: relative;
+            width: @w-r;
+            @post-h: 33px;
+            margin-left: -@w-r;
+            .coupon-money, .coupon-state {
+              .size(100%, @post-h);
+              background-color: #F9A825;
+              color: white;
+              text-align: center;
+              line-height: @post-h;
+              position: relative;
+            }
+            .coupon-money {
+              margin-top: 9px;
+              span {
+                font-size: 20px;
+                &:first-child {
+                  font-size: 12px;
+                }
+              }
+            }
+            .coupon-state {
+              font-size: 14px;
+              p {
+                text-align: center;
+                margin: 0;
+
+                //&:last-child {
+                display: none;
+                //}
+              }
+            }
+            .seperation {
+              background: url(../../images/promotion/sprite.png);
+              height: 6px;
+              background-position: -20px 0;
+            }
+            .postmark {
+              position: absolute;
+              .size(42px, @post-h);
+              left: 50%;
+              top: 0;
+              margin-left: -21px;
+              background: url("../../images/teaching-course/sprite3.png");
+              background-size: 258px 68px;
+              background-position: -217px 0;
+              display: none;
+            }
+            &.un-take-in {
+              .coupon-state {
+                p {
+                  &:first-child {
+                    display: block;
+                  }
+                }
+              }
+            }
+            &.unused {
+              .coupon-money, .coupon-state {
+                background-color: #F9A825;
+              }
+              .postmark {
+                display: block;
+              }
+              .coupon-state {
+                p {
+                  &:nth-child(2) {
+                    display: block;
+                    span {
+                      background-color: #FA4535;
+                      .border-radius(15px);
+                      color: white;
+                      .size(75%, 23px);
+                      line-height: 23px;
+                      text-align: center;
+                      margin: 4px 10px;
+                      font-size: 12px;
+                      float: left;
+                    }
+                  }
+                }
+              }
+              .seperation {
+                //background-position: -20px 0;
+              }
+            }
+
+            &.used {
+              .coupon-money, .coupon-state {
+                background-color: #cccccc;
+              }
+
+              .coupon-state {
+                p {
+                  &:last-child {
+                    display: block;
+                  }
+                }
+              }
+              .seperation {
+                background-position: -96px 0;
+              }
+            }
+          }
+        }
+      }
+    }
+    .show-more-course{
+      background-color:#fff;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      height:35px;
+      line-height: 35px;
+      display: none;
+      span{
+        color: #587eab;
+        font-size: 12px;
+        display: none;
+        &.show{
+          display: inline;
+        }
+      }
+      i{
+        margin-left: 5px;
+        display: inline-block;
+        vertical-align: -2px;
+        .size(15px,12px);
+        .sprite-bg;
+        background-position: -533px -181px;
+        &.up{
+          transform: rotate(180deg);
+        }
+      }
     }
   }
 }
