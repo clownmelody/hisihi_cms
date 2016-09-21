@@ -54,6 +54,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
 
         //显示预约报名框
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+
         //预约
         $(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
 

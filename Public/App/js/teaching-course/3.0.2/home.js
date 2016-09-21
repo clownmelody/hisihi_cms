@@ -16,6 +16,10 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
         }
         this.controlLoadingBox(true);
 
+        //判断是否是app内打开，app内打开就不显示
+        if(this.isFromApp){
+            $('#banner').hide();
+        }
         //window.setTimeout(function(){
         //    that.getUserInfo(null,1);  //0，表示不要令牌，1表示 基础令牌，其他表示普通用户令牌
         //    that.getBasicInfo.call(that,function(result){
@@ -33,6 +37,17 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
 
         //领取优惠券
         $(document).on(eventName,'.coupon-right .coupon-status', $.proxy(this,'operateCoupon'));
+
+        $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
+
+        /*预约礼显示预约报名框*/
+        $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+
+        //预约
+        $(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
+
+        //关闭预约
+        $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
 
         /*模态窗口操作*/
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
@@ -236,7 +251,10 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
         }else{
             money='<label class="noprice">暂无报价</label>';
         }
-        var str = '<div class="center-content">'+
+        var str ='<div id="banner">'+
+                    '<img class="banner-img" src="'+result.cover_pic+'">'+
+                    '</div>'+
+                    '<div class="center-content">'+
                     '<div id="current-title">'+
                         result.course_name+
                     '</div>'+
@@ -289,6 +307,8 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
                     '</div>'+
                 '</a>';
         $('.org-basic-info').html(str).show();
+
+        this.fillAppointmentInfo(result);
     };
 
     //认证信息
@@ -460,6 +480,26 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
         }
         else{
             $target.hide();
+        }
+    };
+
+    t.showSingInModal=function(){
+        $('.sing-in-modal').addClass('show');
+        if($('.sing-in-item input').eq(0).val()){
+            $('.sing-in-btn').addClass('active');
+        }
+        this.scrollControl(false);  //禁止滚动
+    };
+
+    t.singInBtnControl=function(e){
+        var $target=$('.sing-in-item input'),
+            txt1=$target.eq(0).val().trim(),
+            $btn=$('.sing-in-btn'),
+            nc='active';
+        if(txt1){
+            $btn.addClass(nc);
+        }else{
+            $btn.removeClass(nc);
         }
     };
 
