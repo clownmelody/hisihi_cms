@@ -813,48 +813,239 @@ body {
   margin: 12px 8px;
   border-radius: 4px;
   padding: 0;
+  display: none;
 }
 .coupon > div {
   padding-left: 8px;
   padding-right: 8px;
 }
-.coupon .coupon-tip {
+.coupon .deduction-tip {
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 5px 8px;
   position: relative;
   overflow-y: hidden;
   transition: height 0.2s linear;
-  height: 25px;
+  height: 22px;
   background-color: #f7f7f7;
 }
-.coupon .coupon-tip .coupon-tip-left {
+.coupon .deduction-tip .deduction-tip-left {
   padding-top: 4px;
   margin-right: 40px;
 }
-.coupon .coupon-tip .coupon-tip-left li {
+.coupon .deduction-tip .deduction-tip-left li {
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 8px;
 }
-.coupon .coupon-tip .coupon-tip-left li img {
+.coupon .deduction-tip .deduction-tip-left li img {
   width: 15px;
   height: 15px;
   vertical-align: -3px;
   margin-right: 2px;
 }
-.coupon .coupon-tip .coupon-tip-left li span {
+.coupon .deduction-tip .deduction-tip-left li span {
   font-size: 12px;
   color: #808080;
 }
-.coupon .coupon-tip .coupon-tip-right {
+.coupon .deduction-tip .deduction-tip-right {
   position: absolute;
-  top: -12px;
+  top: -7px;
   right: -6px;
   width: 50px;
   height: 50px;
   background: url(../../../images/orgbasicinfo/3.0.2/btn_details@2x.png);
   transform: scale(0.6);
+}
+.coupon .deduction-detail {
+  position: relative;
+  height: 222px;
+  overflow: hidden;
+  padding: 0;
+  transition: height 0.2s linear;
+}
+.coupon .deduction-detail .list li {
+  width: auto;
+  height: 90px;
+}
+.coupon .deduction-detail .list li:last-child .item-main {
+  border: none;
+}
+.coupon .deduction-detail .list li .item-main {
+  height: 100%;
+  margin: 0px 0 0 14px;
+  padding-right: 14px;
+  border-bottom: 1px solid #F2F2F2;
+}
+.coupon .deduction-detail .list li .item-main > div {
+  float: left;
+  height: 100%;
+}
+.coupon .deduction-detail .list li .item-main .main-content {
+  width: 100%;
+  height: 100%;
+}
+.coupon .deduction-detail .list li .item-main .main-content .middle {
+  height: 100%;
+  margin: 0 80px 0 80px;
+  padding-top: 12px;
+  box-sizing: border-box;
+}
+.coupon .deduction-detail .list li .item-main .main-content .middle p {
+  margin: 0;
+}
+.coupon .deduction-detail .list li .item-main .main-content .middle .title-info {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 14px;
+  color: #212121;
+}
+.coupon .deduction-detail .list li .item-main .main-content .middle .title-info.hasCoupon {
+  margin-right: 14px;
+}
+.coupon .deduction-detail .list li .item-main .main-content .middle .money-info {
+  color: #FA4535;
+  font-size: 20px;
+  font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  margin: 2px 0;
+}
+.coupon .deduction-detail .list li .item-main .main-content .middle .money-info .noprice {
+  font-size: 16px;
+}
+.coupon .deduction-detail .list li .item-main .main-content .middle .time-info {
+  color: #8E8E8E;
+  font-size: 11px;
+}
+.coupon .deduction-detail .list li .item-main .left {
+  width: 76px;
+  margin-left: -100%;
+}
+.coupon .deduction-detail .list li .item-main .left .img-box {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 12px 10px 0 0;
+}
+.coupon .deduction-detail .list li .item-main .left .img-box img {
+  width: 66px;
+  height: 66px;
+}
+.coupon .deduction-detail .list li .item-main .right {
+  position: relative;
+  width: 80px;
+  margin-left: -80px;
+}
+.coupon .deduction-detail .list li .item-main .right .coupon-money,
+.coupon .deduction-detail .list li .item-main .right .coupon-state {
+  width: 100%;
+  height: 33px;
+  background-color: #F9A825;
+  color: white;
+  text-align: center;
+  line-height: 33px;
+  position: relative;
+}
+.coupon .deduction-detail .list li .item-main .right .coupon-money {
+  margin-top: 9px;
+}
+.coupon .deduction-detail .list li .item-main .right .coupon-money span {
+  font-size: 20px;
+}
+.coupon .deduction-detail .list li .item-main .right .coupon-money span:first-child {
+  font-size: 12px;
+}
+.coupon .deduction-detail .list li .item-main .right .coupon-state {
+  font-size: 14px;
+}
+.coupon .deduction-detail .list li .item-main .right .coupon-state p {
+  text-align: center;
+  margin: 0;
+  display: none;
+}
+.coupon .deduction-detail .list li .item-main .right .seperation {
+  background: url(../../images/promotion/sprite.png);
+  height: 6px;
+  background-position: -20px 0;
+}
+.coupon .deduction-detail .list li .item-main .right .postmark {
+  position: absolute;
+  width: 42px;
+  height: 33px;
+  left: 50%;
+  top: 0;
+  margin-left: -21px;
+  background: url("../../images/teaching-course/sprite3.png");
+  background-size: 258px 68px;
+  background-position: -217px 0;
+  display: none;
+}
+.coupon .deduction-detail .list li .item-main .right.un-take-in .coupon-state p:first-child {
+  display: block;
+}
+.coupon .deduction-detail .list li .item-main .right.unused .coupon-money,
+.coupon .deduction-detail .list li .item-main .right.unused .coupon-state {
+  background-color: #F9A825;
+}
+.coupon .deduction-detail .list li .item-main .right.unused .postmark {
+  display: block;
+}
+.coupon .deduction-detail .list li .item-main .right.unused .coupon-state p:nth-child(2) {
+  display: block;
+}
+.coupon .deduction-detail .list li .item-main .right.unused .coupon-state p:nth-child(2) span {
+  background-color: #FA4535;
+  border-radius: 15px;
+  background-clip: padding-box;
+  color: white;
+  width: 75%;
+  height: 23px;
+  line-height: 23px;
+  text-align: center;
+  margin: 4px 10px;
+  font-size: 12px;
+  float: left;
+}
+.coupon .deduction-detail .list li .item-main .right.used .coupon-money,
+.coupon .deduction-detail .list li .item-main .right.used .coupon-state {
+  background-color: #cccccc;
+}
+.coupon .deduction-detail .list li .item-main .right.used .coupon-state p:last-child {
+  display: block;
+}
+.coupon .deduction-detail .list li .item-main .right.used .seperation {
+  background-position: -96px 0;
+}
+.coupon .deduction-detail .show-more-course {
+  background-color: #fff;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  height: 35px;
+  line-height: 35px;
+  display: none;
+}
+.coupon .deduction-detail .show-more-course span {
+  color: #587eab;
+  font-size: 12px;
+  display: none;
+}
+.coupon .deduction-detail .show-more-course span.show {
+  display: inline;
+}
+.coupon .deduction-detail .show-more-course i {
+  margin-left: 5px;
+  display: inline-block;
+  vertical-align: -2px;
+  width: 15px;
+  height: 12px;
+  background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
+  background-size: 306px 65px;
+  background-position: -533px -181px;
+}
+.coupon .deduction-detail .show-more-course i.up {
+  transform: rotate(180deg);
 }
 /*三联布局,预约有礼*/
 .appointment {
@@ -1595,6 +1786,126 @@ body {
   position: absolute;
   top: 50%;
   box-shadow: 0 2px 5px rgba(33, 33, 33, 0.35);
+}
+.deduction-modal {
+  position: fixed;
+  z-index: 8889;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  display: none;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.deduction-modal.show {
+  animation: showmap 200ms linear;
+  animation-fill-mode: forwards;
+  display: block;
+}
+.deduction-modal.hide {
+  display: none;
+}
+.deduction-modal .deduction-main {
+  position: absolute;
+  top: 65px;
+  bottom: 65px;
+  left: 40px;
+  right: 40px;
+  background-color: #fff;
+  box-shadow: 0 0 15px #b2b2b2;
+  border-radius: 5px;
+}
+.deduction-modal .deduction-main .deduction-head {
+  width: 100%;
+  height: 50px;
+  background-color: #212121;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #fff;
+  line-height: 50px;
+  text-align: center;
+}
+.deduction-modal .deduction-main .deduction-content {
+  position: absolute;
+  top: 50px;
+  bottom: 60px;
+  width: 100%;
+  overflow-y: auto;
+}
+.deduction-modal .deduction-main .deduction-content .deduction-ul {
+  padding: 0 14px;
+}
+.deduction-modal .deduction-main .deduction-content .deduction-ul li {
+  margin: 14px 0;
+  position: relative;
+}
+.deduction-modal .deduction-main .deduction-content .deduction-ul li .li-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15px;
+  height: auto;
+}
+.deduction-modal .deduction-main .deduction-content .deduction-ul li .li-left > img {
+  width: 15px;
+  height: 15px;
+  vertical-align: -3px;
+}
+.deduction-modal .deduction-main .deduction-content .deduction-ul li .li-right {
+  margin-left: 20px;
+}
+.deduction-modal .deduction-main .deduction-content .deduction-ul li .li-right span {
+  color: #212121;
+  font-size: 14px;
+}
+.deduction-modal .deduction-main .deduction-content .deduction-ul li .li-right p {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #808080;
+  line-height: 27px;
+}
+.deduction-modal .deduction-main .deduction-footer {
+  height: 60px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  line-height: 50px;
+  text-align: center;
+}
+.deduction-modal .deduction-main .deduction-footer > div {
+  width: 90px;
+  height: 30px;
+  margin: 14px auto;
+  border: 1px solid #ff5a00;
+  border-radius: 5px;
+  background-clip: padding-box;
+  color: #ff5a00;
+  line-height: 30px;
+  text-align: center;
+}
+@keyframes showmap {
+  0% {
+    opacity: 1;
+    transform: scale(0.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.deduction-modal .close-map {
+  width: 32px;
+  height: 32px;
+  padding: 15px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  z-index: 100;
+  background: url(http://pic.hisihi.com/2016-07-21/1469098248282877.png) 50% 50% no-repeat;
+  background-size: 32px 32px;
 }
 /*��Ӧʽ��ʽ*/
 @media screen and (min-width: 750px) {

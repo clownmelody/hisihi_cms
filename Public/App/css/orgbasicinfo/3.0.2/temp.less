@@ -332,20 +332,22 @@ body{
   margin:12px 8px;
   border-radius:4px;
   padding:0;
+  display: none;
+  @padding-l:14px;
   >div{
     padding-left:8px;
     padding-right: 8px;
   }
-  .coupon-tip {
+  .deduction-tip {
     margin-top: 10px;
     margin-bottom: 10px;
     padding:5px 8px;
     position: relative;
     overflow-y: hidden;
     transition:height 0.2s linear;
-    height: 25px;
+    height: 22px;
     background-color: #f7f7f7;
-    .coupon-tip-left {
+    .deduction-tip-left {
       padding-top:4px;
       margin-right: 40px;
       li{
@@ -361,15 +363,227 @@ body{
           font-size: 12px;
           color: #808080;
         }
+
       }
     }
-    .coupon-tip-right {
+    .deduction-tip-right {
       position: absolute;
-      top:-12px;
+      top:-7px;
       right: -6px;
       .size(50px,50px);
       background: url(../../../images/orgbasicinfo/3.0.2/btn_details@2x.png);
       transform: scale(0.6);
+    }
+  }
+  .deduction-detail {
+    position: relative;
+    height:222px;
+    overflow: hidden;
+    padding: 0;
+    transition:height 0.2s linear;
+    .list {
+      li {
+        @w-l: 66px;
+        @w-r: 80px;
+        .size(auto, 90px);
+        &:last-child {
+          .item-main {
+            border: none;
+          }
+        }
+        .item-main {
+          height: 100%;
+          margin: 0px 0 0 @padding-l;
+          padding-right: @padding-l;
+          border-bottom: 1px solid #F2F2F2;
+          > div {
+            float: left;
+            height: 100%;
+          }
+          .main-content {
+            width: 100%;
+            height: 100%;
+            .middle {
+              height: 100%;
+              margin: 0 @w-r 0 @w-l+14;
+              padding-top: 12px;
+              box-sizing: border-box;
+              p {
+                margin: 0;
+              }
+              .title-info {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                font-size: 14px;
+                color: #212121;
+                &.hasCoupon {
+                  margin-right: @padding-l;
+                }
+              }
+              .money-info {
+                color: #FA4535;
+                font-size: 20px;
+                font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+                margin: 2px 0;
+                .noprice {
+                  font-size: 16px;
+                }
+              }
+              .time-info {
+                color: #8E8E8E;
+                font-size: 11px;
+              }
+            }
+          }
+          .left {
+            width: @w-l + 10px;
+            margin-left: -100%;
+            .img-box {
+              .size(100%);
+              margin: 0 auto;
+              padding: 12px 10px 0 0;
+              img {
+                .size(@w-l, @w-l);
+              }
+            }
+          }
+          .right {
+            position: relative;
+            width: @w-r;
+            @post-h: 33px;
+            margin-left: -@w-r;
+            .coupon-money, .coupon-state {
+              .size(100%, @post-h);
+              background-color: #F9A825;
+              color: white;
+              text-align: center;
+              line-height: @post-h;
+              position: relative;
+            }
+            .coupon-money {
+              margin-top: 9px;
+              span {
+                font-size: 20px;
+                &:first-child {
+                  font-size: 12px;
+                }
+              }
+            }
+            .coupon-state {
+              font-size: 14px;
+              p {
+                text-align: center;
+                margin: 0;
+
+                //&:last-child {
+                display: none;
+                //}
+              }
+            }
+            .seperation {
+              background: url(../../images/promotion/sprite.png);
+              height: 6px;
+              background-position: -20px 0;
+            }
+            .postmark {
+              position: absolute;
+              .size(42px, @post-h);
+              left: 50%;
+              top: 0;
+              margin-left: -21px;
+              background: url("../../images/teaching-course/sprite3.png");
+              background-size: 258px 68px;
+              background-position: -217px 0;
+              display: none;
+            }
+            &.un-take-in {
+              .coupon-state {
+                p {
+                  &:first-child {
+                    display: block;
+                  }
+                }
+              }
+            }
+            &.unused {
+              .coupon-money, .coupon-state {
+                background-color: #F9A825;
+              }
+              .postmark {
+                display: block;
+              }
+              .coupon-state {
+                p {
+                  &:nth-child(2) {
+                    display: block;
+                    span {
+                      background-color: #FA4535;
+                      .border-radius(15px);
+                      color: white;
+                      .size(75%, 23px);
+                      line-height: 23px;
+                      text-align: center;
+                      margin: 4px 10px;
+                      font-size: 12px;
+                      float: left;
+                    }
+                  }
+                }
+              }
+              .seperation {
+                //background-position: -20px 0;
+              }
+            }
+
+            &.used {
+              .coupon-money, .coupon-state {
+                background-color: #cccccc;
+              }
+
+              .coupon-state {
+                p {
+                  &:last-child {
+                    display: block;
+                  }
+                }
+              }
+              .seperation {
+                background-position: -96px 0;
+              }
+            }
+          }
+        }
+      }
+    }
+    .show-more-course{
+      background-color:#fff;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      height:35px;
+      line-height: 35px;
+      display: none;
+      span{
+        color: #587eab;
+        font-size: 12px;
+        display: none;
+        &.show{
+          display: inline;
+        }
+      }
+      i{
+        margin-left: 5px;
+        display: inline-block;
+        vertical-align: -2px;
+        .size(15px,12px);
+        .sprite-bg;
+        background-position: -533px -181px;
+        &.up{
+          transform: rotate(180deg);
+        }
+      }
     }
   }
 }
@@ -1069,6 +1283,123 @@ body{
       top: 50%;
       box-shadow: 0 2px 5px rgba(33,33,33,.35);
     }
+  }
+}
+
+.deduction-modal{
+  position: fixed;
+  z-index: 8889;
+  top:0;
+  left:0;
+  bottom:0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  display: none;
+  opacity: 0;
+  background-color: rgba(0,0,0,0.4);
+  &.show{
+    animation: showmap 200ms linear;
+    animation-fill-mode: forwards;
+    display: block;
+  }
+  &.hide{
+    display: none;
+  }
+  .deduction-main {
+    position: absolute;
+    top: 65px;
+    bottom: 65px;
+    left: 40px;
+    right: 40px;
+    background-color: #fff;
+    box-shadow: 0 0 15px #b2b2b2;
+    border-radius: 5px;
+    .deduction-head {
+      .size(100%, 50px);
+      background-color: #212121;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      color: #fff;
+      line-height: 50px;
+      text-align: center;
+    }
+
+    .deduction-content {
+      position: absolute;
+      top:50px;
+      bottom: 60px;
+      width: 100%;
+      overflow-y: auto;
+        .deduction-ul {
+          padding: 0 14px;
+          li {
+            @w:15px;
+            margin: 14px 0;
+            position: relative;
+            .li-left{
+              position: absolute;
+              top:0;
+              left: 0;
+              .size(@w,auto);
+              >img{
+                .size(@w,@w);
+                vertical-align: -3px;
+              }
+            }
+            .li-right{
+              margin-left:@w + 5;
+              span{
+                color:#212121;
+                font-size: 14px;
+              }
+              p{
+                margin-top: 5px;
+                font-size: 12px;
+                color: #808080;
+                line-height: 27px;
+              }
+            }
+          }
+        }
+    }
+    .deduction-footer {
+      height: 60px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      line-height: 50px;
+      text-align: center;
+      >div{
+        .size(90px,30px);
+        margin: 14px auto;
+        border: 1px solid #ff5a00;
+        .border-radius(5px);
+        color: #ff5a00;
+        line-height: 30px;
+        text-align: center;
+      }
+    }
+  }
+  @keyframes showmap {
+    0%{
+      opacity: 1;
+      transform: scale(.1);
+    }
+    100%{
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .close-map{
+    .size(32px,32px);
+    padding: 15px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    z-index: 100;
+    background: url(http://pic.hisihi.com/2016-07-21/1469098248282877.png) 50% 50% no-repeat;
+    background-size: 32px 32px;
   }
 }
 
