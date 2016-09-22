@@ -38,9 +38,7 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
         //领取优惠券
         $(document).on(eventName,'.coupon-right .coupon-status', $.proxy(this,'operateCoupon'));
 
-        $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
-
-        /*预约礼显示预约报名框*/
+        //点击预约礼显示预约报名框
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
 
         //预约
@@ -48,6 +46,8 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
 
         //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
+
+        $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
 
         /*模态窗口操作*/
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
@@ -126,7 +126,6 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
 
     //获得当前机构的基本信息
     t.getOrgBasicInfo=function(callback){
-
         var that=this,
             queryPara={
                 url:this.baseUrl+'appGetBaseInfo',
@@ -227,8 +226,6 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
         this.getDataAsyncPy(para);
     };
 
-
-
     //更多课程信息列表显示
     t.fillInMoreCourseInfo=function(result){
         var str=this.getMoreStr(result);
@@ -308,6 +305,8 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
                 '</a>';
         $('.org-basic-info').html(str).show();
 
+
+        //展示预约报名信息
         this.fillAppointmentInfo(result);
     };
 
@@ -503,6 +502,48 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
         }
     };
 
+    //预约报名
+    t.singIn=function() {
+        var $input =$('.sing-in-item input'),
+            that=this,
+            number = $input.eq(0).val().trim(),
+            name = $input.eq(1).val().trim(),
+            reg=/^1\d{10}$/;
+        if (!reg.test(number)) {
+            this.showTips('请正确输入手机号码');
+            return;
+        }
+        this.controlLoadingBox(true);
+        this.getDataAsync({
+            url: this.baseUrl + 'yuyue/organization_id/'+this.oid+'/mobile/'+number+'/username/'+name,
+            sCallback: function(result){
+                that.controlLoadingBox(false);
+                if(result.success){
+                    $('.sing-in-modal .tips').css('opacity', '1');
+                    that.showTips('预约成功');
+                }else{
+                    that.showTips('预约失败');
+                }
+
+            },
+            eCallback:function(resutl){
+                that.controlLoadingBox(false);
+                var txt='预约失败';
+                if(resutl.code==-2){
+                    txt='不能重复预约';
+                }
+                that.showTips(txt);
+            },
+            type:'get'
+        });
+    };
+
+    //取消预约
+    t.closeSingInBox=function(){
+        $('.sing-in-modal').removeClass('show');
+        this.scrollControl(true);
+    };
+
     /*
     * 领取优惠券
     * @para：
@@ -565,7 +606,7 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
     };
 
 
-    ///*得到认证的图片*/
+    /*得到认证的图片*/
     t.getCerImg=function(data){
         var str='<div class="img-box">',len=data.length;
         for(var i=0;i<len;i++){
@@ -795,7 +836,6 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
         obj.getUserInfo(null,1);
     };
 
-
     /**查看数和关注数人数超过一万的时候
      * 截取前一位，加上W单位
      * 参数说明：
@@ -828,7 +868,6 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
 
         return s;
     }
-
 
     /*报名标签
     * 如果报名人数为0，则右侧的报名人数不显示*/
