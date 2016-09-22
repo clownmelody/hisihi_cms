@@ -220,9 +220,14 @@ define(['$','fastclick'],function() {
                 timeout: 50000,
                 contentType: 'application/json',
                 beforeSend: function (xhr) {
-                    //将token加入到请求的头信息中
-                    if (paras.needToken) {
-                        xhr.setRequestHeader('Authorization', paras.token);  //设置头消息
+                    //自定义 头信息
+                    if(paras.beforeSend){
+                        paras.beforeSend(xhr);
+                    }else {
+                        //将token加入到请求的头信息中
+                        if (paras.needToken) {
+                            xhr.setRequestHeader('Authorization', paras.token);  //设置头消息
+                        }
                     }
                 },
                 complete: function (xmlRequest, status) {
@@ -253,6 +258,7 @@ define(['$','fastclick'],function() {
                     }
                 }
             });
+
         },
 
         /*获得令牌*/
