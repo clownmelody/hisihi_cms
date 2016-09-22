@@ -197,7 +197,7 @@ class OverseasController extends AdminController
             $list = $model->table('hisihi.hisihi_abroad_university university, hisihi.hisihi_abroad_country country')
                 ->where($map)
                 ->field('distinct(university.id), university.logo_url, university.country_id, university.name, university.is_hot, university.status')
-                ->order('university.create_time desc' )
+                ->order('university.is_hot desc, university.create_time desc' )
                 ->select();
             $count = $model->table('hisihi_abroad_university university, hisihi_abroad_country country')
                 ->where($map)
@@ -206,7 +206,7 @@ class OverseasController extends AdminController
         }else{
             $count = $model->where('status=1')->count();
             $Page = new Page($count, C('LIST_ROWS'));
-            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+            $list = $model->where('status=1')->order('is_hot desc,create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         }
         foreach($list as &$university){
             $country_id = $university['country_id'];

@@ -1,6 +1,7 @@
 .sprite-bg{
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
 }
 @fcolor:rgb(33,33,33);
 
@@ -377,10 +378,17 @@ body{
   }
   .deduction-detail {
     position: relative;
-    height:222px;
     overflow: hidden;
     padding: 0;
-    transition:height 0.2s linear;
+    &.slow {
+       transition: height 0.2s linear;
+    }
+    &.normal{
+       transition: height 0.1s linear;
+    }
+    &.fast{
+      transition: height 0.03s linear;
+    }
     .list {
       li {
         @w-l: 66px;
@@ -393,19 +401,16 @@ body{
         }
         .item-main {
           height: 100%;
-          margin: 0px 0 0 @padding-l;
           padding-right: @padding-l;
+          margin-left: @padding-l;
           border-bottom: 1px solid #F2F2F2;
-          > div {
-            float: left;
-            height: 100%;
-          }
-          .main-content {
-            width: 100%;
-            height: 100%;
-            .middle {
+          display: box;
+          display:-moz-box;
+          display:-webkit-box;
+          .middle {
               height: 100%;
-              margin: 0 @w-r 0 @w-l+14;
+              -webkit-box-flex: 3;
+              flex: 3;
               padding-top: 12px;
               box-sizing: border-box;
               p {
@@ -435,12 +440,10 @@ body{
                 font-size: 11px;
               }
             }
-          }
           .left {
-            width: @w-l + 10px;
-            margin-left: -100%;
+            flex: 1;
             .img-box {
-              .size(100%);
+              .size(66px,auto);
               margin: 0 auto;
               padding: 12px 10px 0 0;
               img {
@@ -450,106 +453,23 @@ body{
           }
           .right {
             position: relative;
-            width: @w-r;
+            width: 65px;
             @post-h: 33px;
-            margin-left: -@w-r;
-            .coupon-money, .coupon-state {
-              .size(100%, @post-h);
-              background-color: #F9A825;
-              color: white;
+            .right-main {
+              margin-top: 15px;
+              .size(67px, 61px);
+              .sprite-bg;
               text-align: center;
-              line-height: @post-h;
-              position: relative;
-            }
-            .coupon-money {
-              margin-top: 9px;
-              span {
-                font-size: 20px;
-                &:first-child {
-                  font-size: 12px;
-                }
+              line-height: 30px;
+              .money {
+                height: 30px;
+                color: #f97825;
+                font-size: 15px;
               }
-            }
-            .coupon-state {
-              font-size: 14px;
-              p {
-                text-align: center;
-                margin: 0;
-
-                //&:last-child {
-                display: none;
-                //}
-              }
-            }
-            .seperation {
-              background: url(../../images/promotion/sprite.png);
-              height: 6px;
-              background-position: -20px 0;
-            }
-            .postmark {
-              position: absolute;
-              .size(42px, @post-h);
-              left: 50%;
-              top: 0;
-              margin-left: -21px;
-              background: url("../../images/teaching-course/sprite3.png");
-              background-size: 258px 68px;
-              background-position: -217px 0;
-              display: none;
-            }
-            &.un-take-in {
-              .coupon-state {
-                p {
-                  &:first-child {
-                    display: block;
-                  }
-                }
-              }
-            }
-            &.unused {
-              .coupon-money, .coupon-state {
-                background-color: #F9A825;
-              }
-              .postmark {
-                display: block;
-              }
-              .coupon-state {
-                p {
-                  &:nth-child(2) {
-                    display: block;
-                    span {
-                      background-color: #FA4535;
-                      .border-radius(15px);
-                      color: white;
-                      .size(75%, 23px);
-                      line-height: 23px;
-                      text-align: center;
-                      margin: 4px 10px;
-                      font-size: 12px;
-                      float: left;
-                    }
-                  }
-                }
-              }
-              .seperation {
-                //background-position: -20px 0;
-              }
-            }
-
-            &.used {
-              .coupon-money, .coupon-state {
-                background-color: #cccccc;
-              }
-
-              .coupon-state {
-                p {
-                  &:last-child {
-                    display: block;
-                  }
-                }
-              }
-              .seperation {
-                background-position: -96px 0;
+              .deduction-money {
+                height: 30px;
+                font-size: 10px;
+                color: #fff;
               }
             }
           }
@@ -565,6 +485,7 @@ body{
       height:35px;
       line-height: 35px;
       display: none;
+      .border-radius(4px);
       span{
         color: #587eab;
         font-size: 12px;
@@ -576,10 +497,10 @@ body{
       i{
         margin-left: 5px;
         display: inline-block;
-        vertical-align: -2px;
-        .size(15px,12px);
+        vertical-align: -1px;
+        .size(15px,10px);
         .sprite-bg;
-        background-position: -533px -181px;
+        background-position: -227px -53px;
         &.up{
           transform: rotate(180deg);
         }

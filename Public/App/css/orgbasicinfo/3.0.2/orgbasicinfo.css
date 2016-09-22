@@ -492,6 +492,7 @@ ul li {
 .sprite-bg {
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
 }
 body {
   padding: 0;
@@ -505,6 +506,7 @@ body {
 .play-btn {
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
   width: 34px;
   height: 33px;
   display: inline-block;
@@ -664,6 +666,7 @@ body {
   left: 8px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
   background-position: -243px 0;
 }
 .news-box .left-item p {
@@ -724,6 +727,7 @@ body {
   height: 22px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
   background-position: -117px -2px;
   vertical-align: -3px;
   margin-left: 1px;
@@ -859,10 +863,17 @@ body {
 }
 .coupon .deduction-detail {
   position: relative;
-  height: 222px;
   overflow: hidden;
   padding: 0;
+}
+.coupon .deduction-detail.slow {
   transition: height 0.2s linear;
+}
+.coupon .deduction-detail.normal {
+  transition: height 0.1s linear;
+}
+.coupon .deduction-detail.fast {
+  transition: height 0.03s linear;
 }
 .coupon .deduction-detail .list li {
   width: auto;
@@ -873,57 +884,52 @@ body {
 }
 .coupon .deduction-detail .list li .item-main {
   height: 100%;
-  margin: 0px 0 0 14px;
   padding-right: 14px;
+  margin-left: 14px;
   border-bottom: 1px solid #F2F2F2;
+  display: box;
+  display: -moz-box;
+  display: -webkit-box;
 }
-.coupon .deduction-detail .list li .item-main > div {
-  float: left;
+.coupon .deduction-detail .list li .item-main .middle {
   height: 100%;
-}
-.coupon .deduction-detail .list li .item-main .main-content {
-  width: 100%;
-  height: 100%;
-}
-.coupon .deduction-detail .list li .item-main .main-content .middle {
-  height: 100%;
-  margin: 0 80px 0 80px;
+  -webkit-box-flex: 3;
+  flex: 3;
   padding-top: 12px;
   box-sizing: border-box;
 }
-.coupon .deduction-detail .list li .item-main .main-content .middle p {
+.coupon .deduction-detail .list li .item-main .middle p {
   margin: 0;
 }
-.coupon .deduction-detail .list li .item-main .main-content .middle .title-info {
+.coupon .deduction-detail .list li .item-main .middle .title-info {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   font-size: 14px;
   color: #212121;
 }
-.coupon .deduction-detail .list li .item-main .main-content .middle .title-info.hasCoupon {
+.coupon .deduction-detail .list li .item-main .middle .title-info.hasCoupon {
   margin-right: 14px;
 }
-.coupon .deduction-detail .list li .item-main .main-content .middle .money-info {
+.coupon .deduction-detail .list li .item-main .middle .money-info {
   color: #FA4535;
   font-size: 20px;
   font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   margin: 2px 0;
 }
-.coupon .deduction-detail .list li .item-main .main-content .middle .money-info .noprice {
+.coupon .deduction-detail .list li .item-main .middle .money-info .noprice {
   font-size: 16px;
 }
-.coupon .deduction-detail .list li .item-main .main-content .middle .time-info {
+.coupon .deduction-detail .list li .item-main .middle .time-info {
   color: #8E8E8E;
   font-size: 11px;
 }
 .coupon .deduction-detail .list li .item-main .left {
-  width: 76px;
-  margin-left: -100%;
+  flex: 1;
 }
 .coupon .deduction-detail .list li .item-main .left .img-box {
-  width: 100%;
-  height: 100%;
+  width: 66px;
+  height: auto;
   margin: 0 auto;
   padding: 12px 10px 0 0;
 }
@@ -933,88 +939,27 @@ body {
 }
 .coupon .deduction-detail .list li .item-main .right {
   position: relative;
-  width: 80px;
-  margin-left: -80px;
+  width: 65px;
 }
-.coupon .deduction-detail .list li .item-main .right .coupon-money,
-.coupon .deduction-detail .list li .item-main .right .coupon-state {
-  width: 100%;
-  height: 33px;
-  background-color: #F9A825;
-  color: white;
+.coupon .deduction-detail .list li .item-main .right .right-main {
+  margin-top: 15px;
+  width: 67px;
+  height: 61px;
+  background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
+  background-size: 306px 65px;
+  background-repeat: no-repeat;
   text-align: center;
-  line-height: 33px;
-  position: relative;
+  line-height: 30px;
 }
-.coupon .deduction-detail .list li .item-main .right .coupon-money {
-  margin-top: 9px;
+.coupon .deduction-detail .list li .item-main .right .right-main .money {
+  height: 30px;
+  color: #f97825;
+  font-size: 15px;
 }
-.coupon .deduction-detail .list li .item-main .right .coupon-money span {
-  font-size: 20px;
-}
-.coupon .deduction-detail .list li .item-main .right .coupon-money span:first-child {
-  font-size: 12px;
-}
-.coupon .deduction-detail .list li .item-main .right .coupon-state {
-  font-size: 14px;
-}
-.coupon .deduction-detail .list li .item-main .right .coupon-state p {
-  text-align: center;
-  margin: 0;
-  display: none;
-}
-.coupon .deduction-detail .list li .item-main .right .seperation {
-  background: url(../../images/promotion/sprite.png);
-  height: 6px;
-  background-position: -20px 0;
-}
-.coupon .deduction-detail .list li .item-main .right .postmark {
-  position: absolute;
-  width: 42px;
-  height: 33px;
-  left: 50%;
-  top: 0;
-  margin-left: -21px;
-  background: url("../../images/teaching-course/sprite3.png");
-  background-size: 258px 68px;
-  background-position: -217px 0;
-  display: none;
-}
-.coupon .deduction-detail .list li .item-main .right.un-take-in .coupon-state p:first-child {
-  display: block;
-}
-.coupon .deduction-detail .list li .item-main .right.unused .coupon-money,
-.coupon .deduction-detail .list li .item-main .right.unused .coupon-state {
-  background-color: #F9A825;
-}
-.coupon .deduction-detail .list li .item-main .right.unused .postmark {
-  display: block;
-}
-.coupon .deduction-detail .list li .item-main .right.unused .coupon-state p:nth-child(2) {
-  display: block;
-}
-.coupon .deduction-detail .list li .item-main .right.unused .coupon-state p:nth-child(2) span {
-  background-color: #FA4535;
-  border-radius: 15px;
-  background-clip: padding-box;
-  color: white;
-  width: 75%;
-  height: 23px;
-  line-height: 23px;
-  text-align: center;
-  margin: 4px 10px;
-  font-size: 12px;
-  float: left;
-}
-.coupon .deduction-detail .list li .item-main .right.used .coupon-money,
-.coupon .deduction-detail .list li .item-main .right.used .coupon-state {
-  background-color: #cccccc;
-}
-.coupon .deduction-detail .list li .item-main .right.used .coupon-state p:last-child {
-  display: block;
-}
-.coupon .deduction-detail .list li .item-main .right.used .seperation {
-  background-position: -96px 0;
+.coupon .deduction-detail .list li .item-main .right .right-main .deduction-money {
+  height: 30px;
+  font-size: 10px;
+  color: #fff;
 }
 .coupon .deduction-detail .show-more-course {
   background-color: #fff;
@@ -1025,6 +970,8 @@ body {
   height: 35px;
   line-height: 35px;
   display: none;
+  border-radius: 4px;
+  background-clip: padding-box;
 }
 .coupon .deduction-detail .show-more-course span {
   color: #587eab;
@@ -1037,12 +984,13 @@ body {
 .coupon .deduction-detail .show-more-course i {
   margin-left: 5px;
   display: inline-block;
-  vertical-align: -2px;
+  vertical-align: -1px;
   width: 15px;
-  height: 12px;
+  height: 10px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
-  background-position: -533px -181px;
+  background-repeat: no-repeat;
+  background-position: -227px -53px;
 }
 .coupon .deduction-detail .show-more-course i.up {
   transform: rotate(180deg);
@@ -1323,6 +1271,7 @@ body {
   margin-right: 2px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
   background-position: -203px -8px;
 }
 .comments-box .star-item.half {
@@ -1351,6 +1300,7 @@ body {
   margin-right: 2px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
   background-position: -203px -8px;
 }
 .comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i.half {
@@ -1386,6 +1336,7 @@ body {
   height: 12px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
   background-position: -203px -8px;
   margin-right: 2px;
 }
@@ -1453,6 +1404,7 @@ body {
   margin-right: 2px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
   background-position: -203px -8px;
 }
 .comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i.half {
@@ -1510,6 +1462,7 @@ body {
   display: inline-block;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
+  background-repeat: no-repeat;
   width: 23px;
   height: 23px;
 }
