@@ -38,8 +38,9 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
         //领取优惠券
         $(document).on(eventName,'.coupon-right .coupon-status', $.proxy(this,'operateCoupon'));
 
-        //点击预约礼显示预约报名框
-        $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+
+
+        //$(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
 
         //预约
         $(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
@@ -260,8 +261,8 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
                     '</div>'+
                 '</div>';
         $('.basic-info').html(str).show();
-        this.getIntroduceStr(result);
-        this.getSingInStr(result);
+        //this.getIntroduceStr(result);
+        //this.getSingInStr(result);
     };
 
     //机构信息
@@ -483,7 +484,8 @@ define(['base','async','lazyloading','fastclick'],function(Base,async){
     };
 
     t.showSingInModal=function(){
-        $('.sing-in-modal').addClass('show');
+        //$('.sing-in-modal').addClass('show');
+        $('.sing-in-modal').show();
         if($('.sing-in-item input').eq(0).val()){
             $('.sing-in-btn').addClass('active');
         }
