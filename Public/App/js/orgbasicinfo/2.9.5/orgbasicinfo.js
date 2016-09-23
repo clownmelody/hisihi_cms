@@ -2,7 +2,7 @@
  * Created by jimmy on 2015/12/28.
  */
 
-define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhotoSwipe){
+define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,Async,MyPhotoSwipe,Deduction){
 
     function OrgBasicInfo($wrapper,oid,url) {
         this.$wrapper = $wrapper;
@@ -54,18 +54,20 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
 
         //显示预约报名框
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+
         //预约
         $(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
 
         //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
 
+        //显示所有的优惠课程
+        $(document).on(eventName,'.show-more-course', $.proxy(this,'showAllLesson'));
 
         //photoswipe   //学生作品信息查看  相册、视频信息查看
         new MyPhotoSwipe('.works-preview-box',{
             bgFilter:true,
         });
-
     }
 
     //下载条
@@ -75,16 +77,19 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
             pos:0
         }
     };
+
+
     OrgBasicInfo.prototype=new Base(config);
     OrgBasicInfo.constructor=OrgBasicInfo;
     var t=OrgBasicInfo.prototype;
 
+    /*请求数据，多层嵌套，同步请求*/
     t.initData=function() {
         var that = this;
-        async.parallel({
+        Async.parallel({
             basic: function (callback) {
                 that.loadBasicInfoData(function (result) {
-                    if(!result){
+                        if(!result){
                         that.showTips('机构不存在');
                         that.controlLoadingBox(false);
                         return;
@@ -102,11 +107,25 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
                     callback(null,result)
                 });
             },
-            coupon:function(callback) {
-                that.loadCouponInfo(function(result){
-                    callback(null,result)
+
+            //token:function(callback){
+            //    that.getUserInfo(function(result){
+            //        callback(null,result);
+            //    },1);
+            //},
+
+            //课程
+            course:function(callback){
+                that.loadTeachingCourse(function(result){
+                    callback(null,result);
                 });
             },
+            ////抵扣券
+            //coupon:function(callback) {
+            //    //that.loadCouponInfo(function(result){
+            //    //    callback(null,result)
+            //    //});
+            //},
             pics:function(callback){
                 that.loadPics(function(result){
                     callback(null,result)
@@ -164,6 +183,10 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
                         break;
                     case 'coupon':
                         fn=that.fillInCouponInfo;
+                        break;
+                    case 'course':
+                        fn=that.fillInCourseInfo;
+                        var aaaa='';
                         break;
                     case 'pics':
                         that.fillInPicsAndVideo([results['video']],val);
@@ -233,16 +256,14 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
             $target=that.$wrapper.find('.logoAndCertInfo'),
             queryPara={
                 url:this.baseUrl+'appGetBaseInfo',
-                paraData:{organization_id:this.oid,version:2.95},
+                paraData:{organization_id:this.oid,version:3.02},
                 sCallback:function(restult){
-                    //that.fillInBasicInfoData(restult);
                     callback && callback(restult);
-                    //$.proxy(this,'fillInBasicInfoData'),
                 },
                 eCallback:function(){
                     //电话号码
                     $('.contact a').attr('href','javacript:void(0)').css('opacity','0.3');
-                    callback && callback();
+                    callback && callback(null);
                 },
                 type:'get',
                 async:this.async
@@ -303,20 +324,28 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
 
         this.fillAppointmentInfo(result);
 
+        // 抵扣券 标签
+        this.fillInDeductionTags(result);
+
     };
 
     /*数值大于9999时，转换成万*/
-    t.translationCount=function(num){
+    t.translationCount=function(num,maxNum){
         num=parseInt(num);
-        if(num>9999){
+        if(!maxNum){
+            maxNum=10000;
+        }
+        if(num>maxNum){
             num= (num/10000);
             if(num%10000!=0){
                 num=num.toString();
                 var index=num.indexOf('.');
-                num=num.substr(0,index+2);
-                var arr=num.split('.');
-                if(arr[1]==0){
-                    num=arr[0];
+                if(index>=0) {
+                    num = num.substr(0, index + 2);
+                    var arr = num.split('.');
+                    if (arr[1] == 0) {
+                        num = arr[0];
+                    }
                 }
             }
             num+='万';
@@ -383,19 +412,17 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         }
     };
 
-    //优惠券信息
+    //抵扣券信息
     t.loadCouponInfo=function(callback){
         var that=this;
         this.getDataAsync({
-            url: this.baseUrl + 'getPromotionCouponList',
+            url: this.baseUrl + '/v1/org/41/teaching_course',
             paraData: {organization_id: this.oid, version: 2.95},
             sCallback: function(result){
-                //that.fillInCouponInfo(result);
                 callback && callback(result);
             },
             eCallback:function(txt){
-                //$target.css('opacity',1);
-                //$target.find('.loadErrorCon').show().find('a').text('获取头条信息失败，点击重新加载').show();
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -425,6 +452,106 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         $('.coupon-box').show().find('ul').html(str);
     };
 
+    /*课程列表*/
+    t.fillInCourseInfo=function(data){
+        if(!data || !data.courses || data.courses.length==0){
+            return;
+        }
+        var list = data.courses,
+            len = list.length,
+            str = '',
+            rightStr = '',
+            count= 0,
+            item;
+
+
+
+        for(var i=0;i<len;i++){
+            item=list[i];
+            //if(!item.rebate_info){
+            //    continue;
+            //}
+            rightStr=this.getRightStrAndMarginInfo(item.rebate_info);  //抵扣券信息
+
+            count++;
+            var money=this.judgeInfoNullInfo(item.price);
+            if(money!=''){
+                money='￥'+money;
+            }else{
+                money='<label class="noprice">暂无报价</label>';
+            }
+            stime=this.judgeInfoNullInfo(item.start_course_time);
+            if(stime!=''){
+                stime+='开课';
+            }
+            str+='<li data-course-id="'+item.id+'">'+
+                    '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                        '<div class="item-main">'+
+
+                            '<div class="left">'+
+                                '<div class="img-box">'+
+                                    '<img class="lazy-img" data-original="'+item.cover_pic+'">'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="middle">'+
+                                '<p class="title-info hasCoupon">'+item.course_name+'</p>'+
+                                '<p class="money-info">'+money+'</p>'+
+                                '<p class="time-info">'+stime+'</p>'+
+                            '</div>'+
+                            rightStr+
+                        '</div>'+
+                    '</a>'+
+                '</li>';
+        }
+        if(str) {
+            $('.deduction-detail').find('ul').html(str);
+            $('.coupon').show();
+            var diff=count- 2,
+                height=90 + 15,
+                $detail=$('.deduction-detail');
+            if(diff>0){
+                height=2 * 90 + 35;
+                var className='slow';
+                if(diff>8){
+                    className='fast';
+                }
+                if(diff>3 && diff<=8){
+                    className='normal';
+                }
+                $('.show-more-course').show().find('span').eq(0).text('查看其他'+ diff +'个优惠课程');
+            }
+            $detail.addClass(className).css('height',height).attr({'data-height':height,'data-diff':diff});
+        }
+    };
+
+    /*判断字段信息是否为空*/
+    t.judgeInfoNullInfo=function(info){
+        var str=info;
+        if(typeof info=='string'){
+            str=str.trim();
+        }
+        if(!info || info==''||info==0){
+            str='';
+        }
+        return str;
+    };
+
+
+    /*得到优惠券右边的信息*/
+    t.getRightStrAndMarginInfo=function(deduction){
+        var str='';
+        if(deduction) {
+            var rValue=this.translationCount(deduction.rebate_value),
+                val=this.translationCount(deduction.value);
+                str ='<div class="right">' +
+                        '<div class="right-main">'+
+                            '<div class="money">￥' + val +'</div>' +
+                            '<div class="deduction-money">抵￥'+ rValue +'</div>' +
+                        '</div>' +
+                    '</div>';
+        }
+        return str;
+    };
 
     /*加载头条信息*/
     t.loadTopAnnouncement=function(callback){
@@ -432,12 +559,10 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         this.getDataAsyncPy({
             url:window.hisihiUrlObj.apiUrlPy+'v1/org/' +this.oid +'/news',
             sCallback: function(result){
-                //that.fillInTopAnnouncement(result);
                 callback && callback(result);
             },
             eCallback:function(txt){
-                //$target.css('opacity',1);
-                //$target.find('.loadErrorCon').show().find('a').text('获取头条信息失败，点击重新加载').show();
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -498,12 +623,10 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
             url:this.baseUrl + 'enrollList',
             paraData: {organization_id: this.oid,type:'all'},
             sCallback: function(result){
-                //that.fillInSignUpInfo(result.data);  /*填充报名信息*/
                 callback && callback(result.data);
             },
             eCallback:function(txt){
-                //$target.css('opacity',1);
-                //$target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -539,6 +662,71 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         }
     };
 
+    /*获得抵扣券使用流程信息*/
+    t.fillInDeductionTags=function(result){
+        if(!result || !result.data){
+            return;
+        }
+        var tipsArr=result.data.teaching_course_tag_list;
+        new Deduction(tipsArr,$('.deduction-tip'));
+
+    };
+
+    /*课程信息*/
+    t.loadTeachingCourse=function(callback){
+        var that=this;
+        this.getDataAsyncPy({
+            url: window.hisihiUrlObj.apiUrlPy+'/v1/org/'+this.oid+'/teaching_course',
+            paraData: {
+                page:1,
+                per_page:100000,
+                except_id:''
+            },
+            versionHeader:{
+                version :'3.02',
+            },
+            sCallback: function(result){
+              callback && callback(result);
+            },
+            eCallback:function(){
+                callback && callback(null);
+            },
+            type:'get',
+            beforeSend:function(xhr){
+                xhr.setRequestHeader('version','3.02');  //设置头消息
+            }
+        });
+    },
+
+    /*填充抵扣券信息*/
+    t.fillCourseInfo=function(result){
+        if(!result) {
+            return;
+        }
+        var len=result.len;
+        if(len==0){
+            return;
+        }
+        var str='',item;
+        for(var i=0;i<len;i++){
+            item=result[i];
+            var rebeatInfo=item.rebate_info;
+            if(rebeatInfo){
+                str+='<li>'+
+                        '<div class="coupon-img"></div>'+
+                        '<div class="coupon-title">'+
+                        '<span>高端UI设计精英班</span>'+
+                        '<span class="price">￥19800</span>'+
+                        '</div>'+
+                        '<div class="coupon-num">'+
+                        '<div class="top-price">￥500</div>'+
+                        '<div class="under-price">抵￥3000</div>'+
+                        '</div>'+
+                    '</li>';
+            }
+        }
+    },
+
     /*加载视频*/
     t.loadVideo=function(callback){
         var that=this;
@@ -546,12 +734,10 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
             url:this.baseUrl + 'getPropagandaVideo',
             paraData: {organization_id: this.oid,count:8},
             sCallback: function(result){
-                //loadPics
                 callback && callback([result.data]);
             },
             eCallback:function(txt){
-                //$target.css('opacity',1);
-                //$target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -565,21 +751,10 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
             url:this.baseUrl + 'appGetOrganizationEnvironment',
             paraData: {organization_id: this.oid,count:8},
             sCallback: function(result){
-                //var newStr = that.getPicsStr(result.data,true),
-                //    allStr=str;
-                //if(''!=newStr) {
-                //    newStr = '<ul class="works-preview-box">'+newStr+'</ul>';
-                //}
-                //allStr=str + newStr;
-                //if(allStr!='') {
-                //    $('.pics-box').show().find('.pics-preview-box ul')
-                //        .html(allStr);
-                //}
                 callback && callback(result);
             },
             eCallback:function(txt){
-                //$target.css('opacity',1);
-                //$target.find('.loadErrorCon').show().find('a').text('获取报名信息失败，点击重新加载').show();
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -1070,6 +1245,47 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,async,MyPhoto
         $('.sing-in-modal').removeClass('show');
         this.scrollControl(true);  //恢复滚动
     };
+
+    //显示所有的 抵扣券信息
+    t.showAllLesson=function(e){
+        var $target=$(e.currentTarget),
+            $span=$target.find('span'),
+            $i=$target.find('i'),
+            $parent=$target.parent(),
+            height=$parent.find('ul').height(),
+            i=1;
+        if(!$parent.hasClass('show')){
+            $parent.css('height',height+35).addClass('show');
+            $i.addClass('up');
+            this.lesssonScrollTop = $('body').scrollTop();
+        }else{
+            var h=$parent.data('height'),
+                diff=$parent.data('diff');
+            if(diff>8) {
+                this.initTimer();
+            }
+            $parent.css('height',h).removeClass('show');
+            $i.removeClass('up');
+            i=0;
+        }
+        $span.eq(i).addClass('show').siblings().removeClass('show');
+    };
+
+    t.initTimer=function(){
+        this.timer=setInterval($.proxy(this,'runToPos'),0.05);
+    }
+    t.runToPos=function(){
+        var currentPosition=$('body').scrollTop();
+        currentPosition-=20;
+        if(currentPosition>this.lesssonScrollTop)
+        {
+            window.scrollTo(0,currentPosition);
+        }
+        else
+        {
+            clearInterval(this.timer);
+        }
+    }
 
     return OrgBasicInfo;
 });

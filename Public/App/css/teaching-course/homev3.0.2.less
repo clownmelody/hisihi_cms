@@ -1,0 +1,789 @@
+@color:#212121;
+//@g-color:#bdbdbd;
+@g-color:#807E7E;
+@width-p:90%;
+.border-bottom(@c:#F3F3F3){
+  border-bottom:1px solid @c;
+}
+body{
+  margin: 0;
+  background: #F2F2F2;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.font-icon{
+  display: inline-block;
+}
+.bg-sprite {
+  background: url("../../images/teaching-course/sprite.png");
+  background-size: 239px 32px;
+}
+.bg-sprite-middle {
+  .bg-sprite;
+  background-size: 191px 26px;
+}
+
+.bg-sprite-small{
+  .bg-sprite;
+  background-size: 180px 24px;
+}
+
+.bg-sprite-half{
+  .bg-sprite;
+  background-size: 120px 16px;
+}
+body {
+  overflow-x: hidden;
+}
+.nodata{
+  position: absolute;
+  @w:65px;
+  @h:30px;
+  .size(2*@w,2*@h);
+  top: 50%;
+  left: 50%;
+  margin-top: -@h;
+  margin-left: -@w;
+  display: none;
+  p{
+    font-size: 16px;
+    color: #757070;
+    text-align: center;
+  }
+}
+#current-info{
+  position: relative;
+}
+
+.main-item{
+  margin: 0 auto 12px auto;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  display: none;
+  .center-content {
+    margin: 0 14px;
+  }
+  .head-txt{
+    font-size: 14px;
+    color:#444;
+    @h:40px;
+    .size(100%,@h);
+    line-height: @h;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap;
+  }
+  .border-bottom{
+    .border-bottom();
+    width: 110%;
+  }
+  .price{
+    color: #ff6531;
+    font-size: 20px;
+    .noprice{
+      font-size: 16px;
+    }
+  }
+
+  /*基本信息*/
+  &.basic-info{
+    #banner {
+      width: 100%;
+      text-align: center;
+      .banner-img {
+        max-width: 100%;
+      }
+    }
+    .center-content{
+      height: 100%;
+      padding-top:14px;
+      padding-bottom:14px;
+    }
+    #current-title{
+      font-size: 16px;
+      color: #000;
+      height: auto;
+    }
+  }
+
+  &.org-basic-info{
+    position: relative;
+    height: 78px;
+    width: 100%;
+    @h:50px;
+    @p:14px;
+
+    a{
+      display: block;
+      .size(100%,100%);
+    }
+    .center-content{
+      height: 100%;
+    }
+    .left{
+      position: absolute;
+      .size(@h+@p,100%);
+      .group-logo {
+        position: absolute;
+        top:50%;
+        left: 0;
+        margin-top: -@h/2;
+        border-radius: 20%;
+        .size(@h,@h);
+      }
+      .v-cert {
+        position: absolute;
+        bottom: 9px;
+        right: 6px;
+        display: inline-block;
+        .size(18px,18px);
+        display: none;
+      }
+
+    }
+    .right{
+      margin-left:@h + @p + 4;
+      display: table;
+      height: 100%;
+      box-sizing: border-box;
+      .name-cerbox {
+        display: table-cell;
+        vertical-align: middle;
+        .org-name {
+          color: RGB(33, 33, 33);
+          display: inline-block;
+          vertical-align: top;
+          margin-right: 10px;
+          .name {
+            font-size: 14px;
+            display: inline-block;
+            vertical-align: middle;
+            .txt-ellipsis-p(1);
+          }
+        }
+        .cert-box {
+          vertical-align: top;
+          img {
+            //vertical-align: middle;
+            .size(15px, 15px);
+            margin-right: 2px;
+          }
+        }
+      }
+      .nums-info{
+        li{
+          display: inline-block;
+          color: #808080;
+          margin-right: 10px;
+          font-size: 12px;
+          span{
+            &:first-child{
+              margin-right: 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /*三联布局,预约有礼*/
+  &.appointment {
+    font-size: 13px;
+    color: #FF5A00;
+    height: 0px;
+    background-color: #fff;
+    margin:12px 8px;
+    border-radius:4px;
+    padding-left:8px;
+    padding-right: 8px;
+    display: box;
+    .left-item {
+      display: inline-block;
+      text-align: left;
+      background: url("../../images/teaching-course/appointment.png") no-repeat;
+      background-size: 210px*0.4,84px*0.4;
+      .size(210px*0.4,84px*0.4);
+      margin: 5px 0px;
+      box-flex:1;
+    }
+    .middle-item{
+      //width: 60%;
+      margin-left: 5px;
+      margin-right: 10px;
+      line-height: 15px;
+      box-flex:2;
+      overflow-x: auto;
+      p {
+        white-space: nowrap;
+      }
+    }
+    .right-item {
+      display: inline-block;
+      text-align: right;
+      .size(12px,32px*0.7);
+      background: url("../../images/teaching-course/bottom-right.png") no-repeat;
+      background-size: 18px*0.7 32px*0.7;
+      box-flex:2;
+      margin-top: 11px;
+      transform: scale(0.8);
+    }
+  }
+
+  .word-info{
+    color: #212121;
+    font-size: 14px;
+    padding-top: 10px;
+    p{
+      line-height: 22px;
+      margin: 0;
+      padding-bottom: 10px;
+      .no-result-data{
+        color: #757070;
+      }
+    }
+  }
+
+  &.lessons-detail{
+    .head-txt{
+      .border-bottom();
+    }
+    .content-txt{
+      .word-info;
+    }
+  }
+
+  &.lessons-plan{
+    .head-txt{
+      .border-bottom();
+    }
+    .content-txt{
+      .word-info;
+    }
+  }
+
+  &.lessons-singin{
+    .head-txt{
+      .border-bottom();
+    }
+    ul{
+      white-space:nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      margin: 15px auto;
+      li{
+        display:inline-block;
+        margin-right: 12px;
+        margin-bottom: 10px;
+        a {
+          @w: 50px;
+          display: block;
+          .border-radius(@w);
+          .size(@w+2px, @w+2px);
+          text-align: center;
+          img {
+            .size(@w, @w);
+            //box-shadow: 0 0 1px #000;
+            .border-radius(@w);
+            border: 1px solid @g-color;
+          }
+        }
+      }
+    }
+  }
+
+  &.lessons-more{
+    margin-bottom: 0;
+    padding-bottom:0 ;
+    .head-txt{
+      .border-bottom();
+      i{
+        .bg-sprite-small;
+        background-position: -131px 0;
+        display: inline-block;
+        float: right;
+        .size(15px,19px);
+        margin-top: 15px;
+      }
+    }
+    ul{
+      margin-top: 10px;
+      background-color: #f2f2f2;
+      li{
+        position: relative;
+        &.normal{
+          min-height: 94px;
+          border-radius: 6px;
+          background-color: #fff;
+        }
+        &.seperation {
+          height: 15px;
+          background-color: #F2F2F2;
+          border: none;
+          margin: 0;
+        }
+
+        &:last-child{
+          height: 0;
+        }
+        a {
+          display: block;
+          height: 100%;
+          margin: 0 14px;
+        }
+        .main-content {
+          @w: 66px;
+          height: @w + 14 * 2;
+          margin:0 auto;
+          padding: 14px 0;
+          box-sizing: border-box;
+          display: block;
+          .left {
+            .size(@w, auto);
+            position: absolute;
+            img {
+              .size(@w, @w);
+            }
+          }
+          .right {
+            margin-left: @w+10px;
+            .lesson-name {
+              color: #212121;
+              font-size: 14px;
+              margin-right: 32px;
+              .txt-ellipsis;
+            }
+            .lesson-view-info {
+              color: #808080;
+              font-size: 11px;
+              margin: 2px 0 1px 0;
+              //.txt-ellipsis-p(2);
+              span {
+                padding-right: 3px;
+                margin-right: 5px;
+                display: inline-block;
+                border-right: 1px solid @g-color;
+                height: 13px;
+                line-height: 13px;
+                &:last-child {
+                  border: none;
+                }
+              }
+            }
+            .teacher-info {
+              color: @g-color;
+              font-size: 13px;
+              .left-item {
+                display: inline-block;
+                width: 50%;
+                text-align: left;
+                .txt-ellipsis;
+              }
+            }
+          }
+          .singin-limit-nums {
+            position: absolute;
+            @h: 16px;
+            .size(40px, @h);
+            top: 14px;
+            right: 0;
+            text-align: center;
+            color: white;
+            line-height: @h;
+            font-size: 9px;
+            padding-left: 2px;
+            canvas{
+              height: 35px;
+              width: 100px;
+            }
+            span{
+              display: block;
+              position: absolute;
+              top:0;
+              left: 0;
+              text-align: center;
+              padding-left: 15px;
+              line-height: 16px;
+              height: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.coupon-basic-info{
+    @left:53px;
+    @right:73px;
+    @tooth-w:5px;
+    @color1:#F9A825;
+    @color2:#ccc;
+    @color3:#BDBDBD;
+    height: 72px;
+    .center-content{
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .bg-sprite-c{
+      background: url("../../images/teaching-course/sprite3.png");
+    }
+    .bg-sprite-c-middle{
+      .bg-sprite-c;
+      background-size: 275px 73px;
+    }
+    .center-content {
+      height: 100%;
+      >div {
+        //height: 100%;
+        float: left;
+        background-color: white;
+      }
+    }
+    .coupon-left{
+      width: @left;
+      margin-left: -100%;
+      position: relative;
+      height: 60px !important;
+      #coupon-icon {
+        max-width: 100%;
+        display: block;
+        margin:0px;
+      }
+    }
+    .new-coupon-bg{
+      background: url(../../images/teaching-course/sprite_coupon.png) 0 0 no-repeat;
+      background-size:324px*0.5 242px*0.5;
+    }
+    .coupon-right{
+      width: @right;
+      height: 58px;
+      margin-left: -@right - 3px;
+
+      position: relative;
+      .coupon-status{
+        .new-coupon-bg;
+        .size(100%,100%);
+        position: absolute;
+        top:-1px;
+        left: -2px;
+        z-index: 100;
+        &.un-take-in {
+          background-position: -180*0.5px 0;
+        }
+        &.unused {
+          background-position: -2px -130*0.5px;
+        }
+        &.used {
+          background-position: -180*0.5px -130px * 0.5;
+        }
+      }
+
+      //辣么可爱  writed by panxiao @2016.07.22
+    }
+    .coupon-middle{
+      width: 100%;
+      height: @left;
+      .coupon-middle-all{
+        height: 100%;
+        margin: 0 @right 0 @left + 6px;
+        @mw:8px;
+        >div{
+          height: 100%;
+          float: left;
+        }
+        .coupon-box {
+          width: 100%;
+          .coupon-all-box{
+            border: 1px solid @color1;
+            border-right: 0;
+            color: @color1;
+            &.used{
+              border: 1px solid @color3;
+              color: @color3;
+            }
+            height: 100%;
+            margin: 0 0 0 @tooth-w;
+            .coupon-main-top{
+              height: 60%;
+              //padding-top: 7px;
+              span{
+                &:first-child{
+                  font-size: 24px;
+                }
+                &:last-child{
+                  font-size: 26px;
+                }
+              }
+            }
+            .coupon-main-bottom{
+              font-size: 12px;
+              padding-left: 5px;
+            }
+          }
+        }
+        //删除锯齿边距
+        //.sawtooth-left{
+        //  .size(@tooth-w,100%);
+        //  .bg-sprite-c;
+        //  background-position: 0 0;
+        //  margin-left: -100%;
+        //  &.used{
+        //    background-position: -188px 0;
+        //  }
+        //}
+        //.sawtooth-right{
+        //  .size(@mw,100%);
+        //  .bg-sprite-c;
+        //  background-position: -93px 0;
+        //  margin-left: -@mw;
+        //  &.used{
+        //    background-position: -277px 0;
+        //  }
+        //}
+      }
+    }
+  }
+
+}
+
+#more-info{
+  min-height: 200px;
+  position: relative;
+  display: none;
+  .head-txt{
+    span{
+      margin-left: 14px;
+      color: #212121;
+      font-size: 14px;
+    }
+  }
+}
+/*模态窗口*/
+.model-box{
+  background-color:rgba(0,0,0,.1);
+  position: fixed;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  z-index: 1000;
+  .btns-main{
+    @hh:43px;
+    height: @hh;
+    >div{
+      width: 50%;
+      box-sizing: border-box;
+      float: left;
+      color: #007AFF;
+      text-align: center;
+      line-height:@hh;
+      &:nth-child(1){
+        border-right:1px solid #ccc;
+        div{
+          display: block;
+          .size(100%,100%);
+        }
+      }
+    }
+  }
+  .login-tips-box{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    @h:47px;
+    @w:140px;
+    margin-top: -@h;
+    margin-left: -@w;
+    .size(2*@w,2*@h);
+    background-color: white;
+    .border-radius(9px);
+    *{
+      font-size: 16px;
+    }
+    .login-header{
+      height: 50px;
+      border-bottom:1px solid #ccc;
+      text-align: center;
+      line-height: 50px;
+      color: #000;
+    }
+  }
+
+}
+
+
+/*预约试听*/
+.modal {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  display: none;
+  opacity: 0;
+  background: rgba(255, 255, 255, 1);
+  .sing-in-modal {
+    .sing-in-box {
+      width: 100%;
+      height: 350px;
+      background-color: #fff;
+      display: block;
+      .sing-in-header {
+        position: relative;
+        .size(100%, 50px);
+        color: #212121;
+        font-size: 18px;
+        line-height: 50px;
+        text-align: center;
+        .close-sing-in {
+          position: absolute;
+          right: 0;
+          top: -10px;
+          padding: 8px;
+          font-size: 25px;
+          .size(40px, 50px);
+        }
+      }
+      .sing-in-item {
+        height: 50px;
+        margin: 7px 12px;
+        input {
+          .size(100%, 40px);
+          border: 1px solid rgba(204, 204, 204, .5);
+          border-radius: 4px;
+          color: #212121;
+          font-size: 14px;
+          padding: 4px 10px;
+          box-sizing: border-box;
+        }
+      }
+      .tips {
+        margin: 0 0 8px;
+        text-align: center;
+        color: #808080;
+        font-size: 12px;
+        opacity: 0;
+      }
+      .sing-in-btn {
+        .sing-in-item;
+        color: #fff;
+        background-color: #212121;
+        border-radius: 4px;
+        font-size: 14px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        opacity: 0.5;
+        &.active {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width:320px) {
+  .main-item{
+    /*基本信息*/
+    &.basic-info {
+      .center-content {
+
+        .otherinfo {
+          margin-top: 8px;
+          li {
+            margin-right: 4px;
+            i{
+              margin-right: 3px;
+              margin-top: 2px;
+              .bg-sprite-small;
+              .size(18px,18px);
+              &.cer{
+                background-position:-112px 0;
+                width: 18px;
+              }
+              &.nums{
+                background-position:-146px 0;
+                .size(18px,18px);
+              }
+              &.comment{
+                .bg-sprite-middle;
+                background-position:-175px 0;
+                .size(16px,17px);
+              }
+            }
+          }
+        }
+      }
+    }
+    &.lessons-more {
+
+      ul {
+        li {
+          .main-content {
+            .right {
+              .lesson-name {
+                font-size: 12px;
+              }
+              .lesson-view-info {
+                margin: 3px auto 0px auto;
+              }
+              .teacher-info {
+                .left-item {
+
+                  span {
+                    font-size: 12px;
+                  }
+                  .price{
+                    font-size: 14px !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    &.coupon-basic-info {
+      .coupon-middle {
+        .coupon-middle-all {
+          margin-left: 60px;
+          .coupon-box {
+            .coupon-all-box {
+              .coupon-main-top {
+                height: 18px;
+                span{
+                  &:first-child{
+                    font-size: 15px;
+
+                  }
+                  &:last-child{
+                    font-size: 18px;
+                  }
+                }
+              }
+              .coupon-main-bottom{
+                span{
+                  display: block;
+                  font-size: 11px;
+                  margin-top: 2px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and(min-width: 750px) {
+  #current-info,#more-info{
+    width: 700px;
+    margin: 0 auto;
+  }
+}

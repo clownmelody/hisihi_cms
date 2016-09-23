@@ -12,13 +12,15 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <link type="text/css" href="__CSS__/teaching-course/homev2.9.css" rel="stylesheet">
+    <link type="text/css" href="__CSS__/teaching-course/homev3.0.2.css" rel="stylesheet">
     <title>课程主页</title>
 </head>
 <body data-oid="{$organization_id}">
     <div id="current-info">
         <div class="main-item basic-info"></div>
         <div class="main-item org-basic-info"></div>
+        <!--预约有礼-->
+        <div class="main-item appointment"></div>
         <div class="main-item coupon-basic-info"></div>
         <div class="main-item lessons-detail"></div>
         <div class="main-item lessons-plan"></div>
@@ -44,6 +46,20 @@
                 </div>
                 <div class="btn" id="do-login">去登录</div>
             </div>
+        </div>
+    </div>
+    <!--预约试听-->
+    <div class="modal sing-in-modal">
+        <div class="sing-in-box">
+            <div class="sing-in-header"><label>预约试听</label><div class="close-sing-in">×</div></div>
+            <div class="sing-in-item">
+                <input type="text" placeholder="输入手机号码" id="phone-num">
+            </div>
+            <div class="sing-in-item">
+                <input type="text" placeholder="输入姓名" id="user-name">
+            </div>
+            <p class="tips">课程顾问将在15分钟之内联系您</p>
+            <div class="sing-in-btn">确定预约</div>
         </div>
     </div>
 </body>
