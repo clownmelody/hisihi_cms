@@ -14,7 +14,7 @@ requirejs.config({
         photoswipeui:'photoswipe/photoswipe-ui-default.min',
         myPhotoSwipe:'photoswipe/myphotoswipe',
         home:'../orgbasicinfo/2.9.5/orgbasicinfo',
-        deduction:'../orgbasicinfo/2.9.5/decucitontags',
+        deduction:'../orgbasicinfo/2.9.5/deduction',
         async:'async',
     },
     shim: {
