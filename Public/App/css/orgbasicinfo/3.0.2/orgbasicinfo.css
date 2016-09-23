@@ -832,6 +832,7 @@ body {
   transition: height 0.2s linear;
   height: 22px;
   background-color: #f7f7f7;
+  display: none;
 }
 .coupon .deduction-tip .deduction-tip-left {
   padding-top: 4px;

@@ -520,6 +520,9 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 }
                 $('.show-more-course').show().find('span').eq(0).text('查看其他'+ diff +'个优惠课程');
             }
+            if(diff==0){
+                height=2 * 90 + 15;
+            }
             $detail.addClass(className).css('height',height).attr({'data-height':height,'data-diff':diff});
         }
     };
@@ -668,7 +671,10 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             return;
         }
         var tipsArr=result.data.teaching_course_tag_list;
-        new Deduction(tipsArr,$('.deduction-tip'));
+        if(tipsArr.length>0) {
+            var $target=$('.deduction-tip').show();
+            new Deduction(tipsArr, $target);
+        }
 
     };
 
@@ -696,35 +702,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 xhr.setRequestHeader('version','3.02');  //设置头消息
             }
         });
-    },
-
-    /*填充抵扣券信息*/
-    t.fillCourseInfo=function(result){
-        if(!result) {
-            return;
-        }
-        var len=result.len;
-        if(len==0){
-            return;
-        }
-        var str='',item;
-        for(var i=0;i<len;i++){
-            item=result[i];
-            var rebeatInfo=item.rebate_info;
-            if(rebeatInfo){
-                str+='<li>'+
-                        '<div class="coupon-img"></div>'+
-                        '<div class="coupon-title">'+
-                        '<span>高端UI设计精英班</span>'+
-                        '<span class="price">￥19800</span>'+
-                        '</div>'+
-                        '<div class="coupon-num">'+
-                        '<div class="top-price">￥500</div>'+
-                        '<div class="under-price">抵￥3000</div>'+
-                        '</div>'+
-                    '</li>';
-            }
-        }
     },
 
     /*加载视频*/
