@@ -538,21 +538,12 @@ body {
 #current-info {
   position: relative;
 }
-#banner {
-  width: 100%;
-  text-align: center;
-  display: none;
-}
-#banner .banner-img {
-  max-width: 100%;
-}
 .main-item {
   margin: 0 auto 12px auto;
   background-color: #FFFFFF;
   box-sizing: border-box;
   display: none;
-  /*������Ϣ*/
-  /*��������,ԤԼ����*/
+  /*基本信息*/
 }
 .main-item .center-content {
   margin: 0 14px;
@@ -587,26 +578,6 @@ body {
   font-size: 16px;
   color: #000;
   height: auto;
-}
-.main-item.basic-info .deduction-head-tips-box {
-  margin-top: 5px;
-  font-size: 12px;
-  color: #212121;
-  line-height: 21px;
-}
-.main-item.basic-info .deduction-head-tips-box::before {
-  display: inline-block;
-  content: '!';
-  text-align: center;
-  line-height: 14px;
-  width: 14px;
-  height: 14px;
-  font-size: 10px;
-  background-color: #000;
-  color: #fff;
-  border-radius: 7px;
-  background-clip: padding-box;
-  margin-right: 4px;
 }
 .main-item.org-basic-info {
   position: relative;
@@ -686,48 +657,6 @@ body {
 }
 .main-item.org-basic-info .right .nums-info li span:first-child {
   margin-right: 2px;
-}
-.main-item.appointment {
-  font-size: 13px;
-  color: #FF5A00;
-  height: 0px;
-  background-color: #fff;
-  margin: 12px 8px;
-  border-radius: 4px;
-  padding-left: 8px;
-  padding-right: 8px;
-  display: box;
-}
-.main-item.appointment .left-item {
-  display: inline-block;
-  text-align: left;
-  background: url("../../images/teaching-course/appointment.png") no-repeat;
-  background-size: 84px, 33.6px;
-  width: 84px;
-  height: 33.6px;
-  margin: 5px 0px;
-  box-flex: 1;
-}
-.main-item.appointment .middle-item {
-  margin-left: 5px;
-  margin-right: 10px;
-  line-height: 15px;
-  box-flex: 2;
-  overflow-x: auto;
-}
-.main-item.appointment .middle-item p {
-  white-space: nowrap;
-}
-.main-item.appointment .right-item {
-  display: inline-block;
-  text-align: right;
-  width: 12px;
-  height: 22.4px;
-  background: url("../../images/teaching-course/bottom-right.png") no-repeat;
-  background-size: 12.6px 22.4px;
-  box-flex: 2;
-  margin-top: 11px;
-  transform: scale(0.8);
 }
 .main-item .word-info {
   color: #212121;
@@ -932,129 +861,105 @@ body {
   line-height: 16px;
   height: 16px;
 }
-.main-item.deduction-basic-info > div {
-  padding: 0 14px;
+.main-item.coupon-basic-info {
+  height: 72px;
 }
-.main-item.deduction-basic-info .deduction-main-info {
-  position: relative;
-  padding-top: 20px;
-  padding-bottom: 14px;
+.main-item.coupon-basic-info .center-content {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
-.main-item.deduction-basic-info .deduction-main-info .left-item {
+.main-item.coupon-basic-info .bg-sprite-c {
+  background: url("../../images/teaching-course/sprite3.png");
+}
+.main-item.coupon-basic-info .bg-sprite-c-middle {
+  background: url("../../images/teaching-course/sprite3.png");
+  background-size: 275px 73px;
+}
+.main-item.coupon-basic-info .center-content {
   height: 100%;
-  margin-right: 80px;
 }
-.main-item.deduction-basic-info .deduction-main-info .left-item .val span {
-  font-size: 12px;
+.main-item.coupon-basic-info .center-content > div {
+  float: left;
+  background-color: white;
 }
-.main-item.deduction-basic-info .deduction-main-info .left-item .val span:first-child {
-  color: #212121;
-}
-.main-item.deduction-basic-info .deduction-main-info .left-item .val span:nth-child(2) {
-  color: #FF5A00;
-  margin-right: 2px;
-}
-.main-item.deduction-basic-info .deduction-main-info .left-item .val span:nth-child(3) {
-  color: #FF5A00;
-  font-size: 18px;
-  margin-right: 10px;
-}
-.main-item.deduction-basic-info .deduction-main-info .left-item .val span:last-child {
-  color: #BDBDBD;
-  text-decoration: line-through;
-}
-.main-item.deduction-basic-info .deduction-main-info .left-item > span {
-  display: block;
-  font-size: 12px;
-  color: #BDBDBD;
-  margin-top: 8px;
-}
-.main-item.deduction-basic-info .deduction-main-info .right-item {
-  position: absolute;
-  width: 80px;
-  height: 50px;
-  top: 20px;
-  right: 14px;
-}
-.main-item.deduction-basic-info .deduction-main-info .right-item .btn {
-  width: 75px;
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
-  background-color: #F9A825;
-  color: #fff ;
-  font-size: 14px;
-  border-radius: 3px;
-  background-clip: padding-box;
-}
-.main-item.deduction-basic-info .deduction-main-info .right-item > span {
-  display: block;
-  margin-top: 4px;
-  font-size: 10px;
-  color: #F9A825;
-  text-align: right;
-  white-space: nowrap;
-}
-.main-item.deduction-basic-info .deduction-tip {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 5px 14px;
+.main-item.coupon-basic-info .coupon-left {
+  width: 53px;
+  margin-left: -100%;
   position: relative;
-  overflow-y: hidden;
-  transition: height 0.2s linear;
-  height: 22px;
-  background-color: #f7f7f7;
-  display: none;
+  height: 60px !important;
 }
-.main-item.deduction-basic-info .deduction-tip .deduction-tip-left {
-  padding-top: 4px;
-  margin-right: 40px;
+.main-item.coupon-basic-info .coupon-left #coupon-icon {
+  max-width: 100%;
+  display: block;
+  margin: 0px;
 }
-.main-item.deduction-basic-info .deduction-tip .deduction-tip-left li {
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 8px;
+.main-item.coupon-basic-info .new-coupon-bg {
+  background: url(../../images/teaching-course/sprite_coupon.png) 0 0 no-repeat;
+  background-size: 162px 121px;
 }
-.main-item.deduction-basic-info .deduction-tip .deduction-tip-left li img {
-  width: 15px;
-  height: 15px;
-  vertical-align: -3px;
-  margin-right: 2px;
+.main-item.coupon-basic-info .coupon-right {
+  width: 73px;
+  height: 58px;
+  margin-left: -76px;
+  position: relative;
 }
-.main-item.deduction-basic-info .deduction-tip .deduction-tip-left li span {
-  font-size: 12px;
-  color: #808080;
-}
-.main-item.deduction-basic-info .deduction-tip .deduction-tip-right {
+.main-item.coupon-basic-info .coupon-right .coupon-status {
+  background: url(../../images/teaching-course/sprite_coupon.png) 0 0 no-repeat;
+  background-size: 162px 121px;
+  width: 100%;
+  height: 100%;
   position: absolute;
-  top: -7px;
-  right: -6px;
-  width: 50px;
-  height: 50px;
-  transform: scale(0.6);
+  top: -1px;
+  left: -2px;
+  z-index: 100;
 }
-.main-item.deduction-basic-info .buy-note {
-  padding: 14px;
+.main-item.coupon-basic-info .coupon-right .coupon-status.un-take-in {
+  background-position: -90px 0;
 }
-.main-item.deduction-basic-info .buy-note .head-txt {
-  border-bottom: 1px solid #f3f3f3;
-  width: 110%;
-  color: #212121;
+.main-item.coupon-basic-info .coupon-right .coupon-status.unused {
+  background-position: -2px -65px;
 }
-.main-item.deduction-basic-info .buy-note .buy-note-item {
-  display: none;
-  margin: 5px 0;
-  font-size: 13px;
-  line-height: 22px;
-  color: #808080;
+.main-item.coupon-basic-info .coupon-right .coupon-status.used {
+  background-position: -90px -65px;
 }
-.main-item.deduction-basic-info .buy-note .buy-note-item > span:first-child {
-  font-size: 14px;
-  color: #212121;
-  margin-right: 10px;
+.main-item.coupon-basic-info .coupon-middle {
+  width: 100%;
+  height: 53px;
 }
-.main-item.deduction-basic-info .buy-note .buy-note-item p {
-  margin: 6px 0;
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all {
+  height: 100%;
+  margin: 0 73px 0 59px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all > div {
+  height: 100%;
+  float: left;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box {
+  width: 100%;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box {
+  border: 1px solid #f9a825;
+  border-right: 0;
+  color: #f9a825;
+  height: 100%;
+  margin: 0 0 0 5px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box.used {
+  border: 1px solid #bdbdbd;
+  color: #bdbdbd;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top {
+  height: 60%;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top span:first-child {
+  font-size: 24px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-top span:last-child {
+  font-size: 26px;
+}
+.main-item.coupon-basic-info .coupon-middle .coupon-middle-all .coupon-box .coupon-all-box .coupon-main-bottom {
+  font-size: 12px;
+  padding-left: 5px;
 }
 #more-info {
   min-height: 200px;
@@ -1066,7 +971,7 @@ body {
   color: #212121;
   font-size: 14px;
 }
-/*ģ̬����*/
+/*模态窗口*/
 .model-box {
   background-color: rgba(0, 0, 0, 0.1);
   position: fixed;
@@ -1118,93 +1023,9 @@ body {
   line-height: 50px;
   color: #000;
 }
-/*ԤԼ����*/
-.modal {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  display: none;
-  opacity: 0;
-  background: #ffffff;
-}
-.modal .sing-in-modal .sing-in-box {
-  width: 100%;
-  height: 350px;
-  background-color: #fff;
-  display: block;
-}
-.modal .sing-in-modal .sing-in-box .sing-in-header {
-  position: relative;
-  width: 100%;
-  height: 50px;
-  color: #212121;
-  font-size: 18px;
-  line-height: 50px;
-  text-align: center;
-}
-.modal .sing-in-modal .sing-in-box .sing-in-header .close-sing-in {
-  position: absolute;
-  right: 0;
-  top: -10px;
-  padding: 8px;
-  font-size: 25px;
-  width: 40px;
-  height: 50px;
-}
-.modal .sing-in-modal .sing-in-box .sing-in-item {
-  height: 50px;
-  margin: 7px 12px;
-}
-.modal .sing-in-modal .sing-in-box .sing-in-item input {
-  width: 100%;
-  height: 40px;
-  border: 1px solid rgba(204, 204, 204, 0.5);
-  border-radius: 4px;
-  color: #212121;
-  font-size: 14px;
-  padding: 4px 10px;
-  box-sizing: border-box;
-}
-.modal .sing-in-modal .sing-in-box .tips {
-  margin: 0 0 8px;
-  text-align: center;
-  color: #808080;
-  font-size: 12px;
-  opacity: 0;
-}
-.modal .sing-in-modal .sing-in-box .sing-in-btn {
-  height: 50px;
-  margin: 7px 12px;
-  color: #fff;
-  background-color: #212121;
-  border-radius: 4px;
-  font-size: 14px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  opacity: 0.5;
-}
-.modal .sing-in-modal .sing-in-box .sing-in-btn input {
-  width: 100%;
-  height: 40px;
-  border: 1px solid rgba(204, 204, 204, 0.5);
-  border-radius: 4px;
-  color: #212121;
-  font-size: 14px;
-  padding: 4px 10px;
-  box-sizing: border-box;
-}
-.modal .sing-in-modal .sing-in-box .sing-in-btn.active {
-  opacity: 1;
-}
 @media screen and (max-width: 320px) {
   .main-item {
-    /*������Ϣ*/
+    /*基本信息*/
   }
   .main-item.basic-info .center-content .otherinfo {
     margin-top: 8px;

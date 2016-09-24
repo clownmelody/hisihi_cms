@@ -31,8 +31,11 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
 
 
         /*优惠券点击*/
-        $(document).on(eventName,'.coupon-box li, .t-video-box li,.name-main-box img',function(){
-            window.location.href='http://www.hisihi.com/download.php';
+        $(document).on(eventName,'.coupon-box li, .t-video-box li,.name-main-box img, .collection',function(){
+            that.showTips('<p>请下载嘿设汇App</p>',3000);
+            window.setTimeout(function(){
+                window.location.href='http://www.hisihi.com/download.php';
+            },3000);
         });
 
 
@@ -218,7 +221,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             }
             $('#wrapper,#footer').show();
             that.controlLoadingBox(false);
-            that.initVideoPlayer();
+            //that.initVideoPlayer();
             $('.lazy-img').picLazyLoad($(window),{
                 threshold:150
             });
@@ -587,7 +590,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         for (var i = 0; i < len; i++) {
             if(i<2) {
                 item = data[i];
-                str += '<a href="' + item.detail_url + '"><p>' + item.title + '</p></a>';
+                str += '<a href="' + item.url + '"><p>' + item.title + '</p></a>';
             }
         }
         $target.find('.right-item div').html(str);

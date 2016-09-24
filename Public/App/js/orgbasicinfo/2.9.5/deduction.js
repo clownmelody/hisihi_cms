@@ -44,11 +44,11 @@ define(['base'],function(Base){
         for(var i=0;i<len;i++){
             item=this.data[i];
             str+='<li>'+
-                    '<img src="'+window.hisihiUrlObj.image+'/orgbasicinfo/3.0.2/ic_lable@2x.png"/>'+
+                    '<img src="http://pic.hisihi.com/2016-09-24/1474707998563641.png@"/>'+
                     '<span>'+item.value+'</span>'+
                 '</li>'
         }
-        str+='</ul><div class="deduction-tip-right"></div>';
+        str+='</ul><div class="deduction-tip-right" style="background: url(http://pic.hisihi.com/2016-09-24/1474708134912749.png);"></div>';
         $target.html(str);
     };
 
