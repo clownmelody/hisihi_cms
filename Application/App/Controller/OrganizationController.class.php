@@ -2170,10 +2170,12 @@ class OrganizationController extends AppController
      * @param int $organization_id
      * @param int $uid
      * @param int $comprehensiveScore
+     * @param int $order_id
      * @param null $content
      * @param null $strScoreList
      */
-    public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null, $strScoreList=null){
+    public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null, $strScoreList=null,
+                              $order_id=0 ){
         if(empty($content)||empty($strScoreList)||$organization_id==0){
             $this->apiError(-1, '传入参数不能为空');
         }
@@ -2189,6 +2191,7 @@ class OrganizationController extends AppController
         $data['comprehensive_score'] = $comprehensiveScore;
         $data['comment'] = $content;
         $data['create_time'] = time();
+        $data['order_id'] = $order_id;
         $res = $commentModel->add($data);
         if($res){
             unset($data['comprehensive_score']);
