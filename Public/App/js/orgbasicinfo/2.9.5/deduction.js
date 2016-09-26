@@ -3,7 +3,7 @@
  * Created by jimmy-jiang on 2016/9/20.
  */
 define(['base'],function(Base){
-    var Deduction=function(data,$target){
+    var Deduction=function(data,$target,options){
         if(!data || !(data instanceof Array)){
             this.showTips('请正确传入数据内容');
             return;
@@ -13,6 +13,8 @@ define(['base'],function(Base){
             return;
         }
         this.data=data;
+        this.extentSetting(options);
+
         this.initData($target);
         var eventName='click',that=this;
         if(this.isLocal) {
@@ -27,11 +29,28 @@ define(['base'],function(Base){
         $(document).on(eventName,'.deduction-footer',function(){
             that.controlDeductionTagsTips(false);
         });
+
     };
 
     Deduction.prototype=new Base();
     Deduction.constructor=Deduction;
     var t=Deduction.prototype;
+
+    /*默认参数设置*/
+    t.extentSetting=function(config){
+        this.config=defaultConfig;
+        if(!config){
+            return;
+        }
+        for(var item in defaultConfig){
+            var val=config[item];
+            if(val!='undefined'){
+                    this.config[item] = val;
+            }
+
+        }
+    };
+
 
     t.initData=function($target){
         this.fillInTags($target);
@@ -44,12 +63,12 @@ define(['base'],function(Base){
         for(var i=0;i<len;i++){
             item=this.data[i];
             str+='<li>'+
-                    '<img src="http://pic.hisihi.com/2016-09-24/1474707998563641.png@"/>'+
+                    '<img src="http://pic.hisihi.com/2016-09-24/1474707998563641.png"/>'+
                     '<span>'+item.value+'</span>'+
                 '</li>'
         }
         str+='</ul><div class="deduction-tip-right" style="background: url(http://pic.hisihi.com/2016-09-24/1474708134912749.png);"></div>';
-        $target.html(str);
+        $target.html(str).css('height','35px');
     };
 
     //显示所有的 抵扣券信息
@@ -60,7 +79,7 @@ define(['base'],function(Base){
         if(!$parent.hasClass('show')){
             $parent.css('height',$target.height()-4).addClass('show');
         }else{
-            $parent.css('height','22px').removeClass('show');
+            $parent.css('height','35px').removeClass('show');
         }
     };
 
@@ -82,7 +101,7 @@ define(['base'],function(Base){
                 item = this.data[i];
                 str += '<li>' +
                             '<div class="li-left">'+
-                                '<img src="' + window.hisihiUrlObj.image + '/orgbasicinfo/3.0.2/ic_lable@2x.png"/>' +
+                                '<img src="http://pic.hisihi.com/2016-09-24/1474707998563641.png"/>' +
                             '</div>'+
                             '<div class="li-right">'+
                                 '<span>' + item.value + '</span>' +
@@ -100,6 +119,10 @@ define(['base'],function(Base){
 
     //显示 使用说明 页面
     t.controlDeductionTagsTips=function(flag){
+        if(this.config.showDeductionTagsCallBack){
+            this.config.showDeductionTagsCallBack.call();
+            return;
+        }
         var $target=$('.deduction-modal');
         if(flag) {
             $target.removeClass('hide').addClass('show');
@@ -108,6 +131,10 @@ define(['base'],function(Base){
             $target.removeClass('show').addClass('hide');
             this.scrollControl(true);  //禁止滚动
         }
+    };
+
+    var defaultConfig={
+        showDeductionTagsCallBack:null
     };
 
     return Deduction;

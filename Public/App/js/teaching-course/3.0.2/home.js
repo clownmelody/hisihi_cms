@@ -3,7 +3,6 @@
  */
 
 define(['base','async','deduction','lazyloading','fastclick'],function(Base,async,Deduction){
-    FastClick.attach(document.body);
     var Course=function(id,oid,url){
         this.cid = id;
         this.oid=oid;
@@ -15,31 +14,27 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
         this.controlLoadingBox(true);
-
-        this.async=true;  //同步加载所有的数据
         //加载页面数据
-        //window.setTimeout(function(){
+        window.setTimeout(function(){
             that.initData();
-        //},100);
+        },1000);
 
-        //领取优惠券
-        $(document).on(eventName,'.coupon-right .coupon-status', $.proxy(this,'operateCoupon'));
-
-
-
-        //$(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
-
-        //预约
+        //
+        $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+        //
+        ////预约
         $(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
-
-        //关闭预约
+        //
+        ////关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
-
+        //
         $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
-
+        //
         /*模态窗口操作*/
         $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
+
+        $(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
 
     };
 
@@ -54,6 +49,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     * */
     t.initData=function(){
         var that=this;
+
         async.parallel({
             basic: function (callback) {
                 that.getBasicInfo(function (result){
@@ -131,7 +127,8 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 },
                 eCallback:function(){
                     ////电话号码
-                    //$('.contact a').attr('href','javacript:void(0)').css('opacity','0.3');
+                    $('.contact a').attr('href','javacript:void(0)').css('opacity','0.3');
+                    callback && callback(null);
                 },
                 type:'get',
             };
@@ -211,8 +208,6 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 type: 'get',
                 paraData: paraData,
                 sCallback: function (resutl) {
-                    //that.controlLoadingBox(false);
-                    //that.fillInMoreCourseInfo(resutl);
                     callback && callback(resutl);
                 },
                 eCallback: function (data) {
@@ -412,18 +407,14 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         }
 
         // 标签
-        var tipsArr=data.course_tag_list;
-        tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
-        if(tipsArr && tipsArr.length>0){
-            var $target=$('.deduction-tip').show();
-            new Deduction(tipsArr, $target);
-        }
+        this.initTagsForDeduction(data);
 
         // 使用须知
         var $buyItem=$('.buy-note-item'),
             timeInfo=this.getStimeAndEtime(data.start_course_time,data.end_course_time),
-            useCondition=data.use_condition,
-            useMethon=data.use_method;
+            ducutionInfo=data.rebate_info,
+            useCondition=ducutionInfo.use_condition,
+            useMethon=ducutionInfo.use_method;
         if(timeInfo!='') {
             $buyItem.eq(0).show().find('span').eq(0).text(timeInfo);
         }
@@ -434,6 +425,37 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             $buyItem.eq(2).show().find('p').text(useMethon);
         }
 
+    };
+
+    //抵扣券标签
+    t.initTagsForDeduction=function(data){
+        var tipsArr=data.course_tag_list;
+        tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
+
+        if(tipsArr && tipsArr.length>0){
+            var $target=$('.deduction-tip').show(),
+                options={
+                    showDeductionTagsCallBack:null
+                };
+
+            if(this.isFromApp){
+                if(this.deviceType.android){
+                    //如果方法存在
+                    if (typeof AppFunction != "undefined" && typeof AppFunction.showRebateInfoModal !='undefined') {
+                        options.showDeductionTagsCallBack =function(){
+                            AppFunction.showRebateInfoModal(JSON.stringify(tipsArr));
+                        }
+                    }
+                }
+                if(this.deviceType.ios && typeof  showRebateInfoModal !='undefined'){
+                    options.showDeductionTagsCallBack = showRebateInfoModal();
+                }
+
+            }else{
+                options=null;
+            }
+            new Deduction(tipsArr, $target,options);
+        }
     };
 
     /*控制模态窗口的显示和隐藏*/
@@ -451,6 +473,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         //$('.sing-in-modal').addClass('show');
         $('.sing-in-modal').show();
         if($('.sing-in-item input').eq(0).val()){
+
             $('.sing-in-btn').addClass('active');
         }
         this.scrollControl(false);  //禁止滚动
@@ -852,6 +875,23 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             str='';
         }
         return str;
+    };
+
+    //立即抢购
+    t.buyNow=function(){
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction !='undefined' &&  typeof AppFunction.buyRebate !='undefined') {
+                    AppFunction.buyRebate(this.cid); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof buyRebate != "undefined") {
+                    buyRebate();//调用app的方法，得到用户的基体信息
+                }
+            }
+        }
     };
 
     return Course;
