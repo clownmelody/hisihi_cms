@@ -31,10 +31,13 @@ requirejs.config({
 
 
 require(['home','prefixfree'],function(course){
-    var userAgent = window.location.href,
-        reg = /course_id\/[1-9][0-9]*/g,
-        id = userAgent.match(reg)[0].toString().replace(/course_id\//g,'');
-    var oid=$('body').attr('data-oid'),
+    var url = window.location.href;
+    if(url.indexOf('%2F')>0){
+        url=url.replace(/\%2F/g,'\/');
+    }
+    var reg = /course_id\/[1-9][0-9]*/g,
+        id = url.match(reg)[0].toString().replace(/course_id\//g,''),
+        oid=$('body').attr('data-oid'),
         url=window.hisihiUrlObj.link_url+'api.php?s=/Organization/';
     window.course = new course(id,oid,url);
 });

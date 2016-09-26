@@ -496,9 +496,11 @@ define(['$','fastclick'],function() {
             var $target=$('#loading-data'),
                 $img=$target.find('img');
             if(flag) {
-                $target.addClass('active').show();
+                //$target.addClass('active').show();
+                $target.show();
             }else{
-                $target.removeClass('active').hide();
+                //$target.hide();
+                //$target.removeClass('active').hide();
             }
         },
 

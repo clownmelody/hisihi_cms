@@ -4,37 +4,38 @@
 
 define(['base','async','deduction','lazyloading','fastclick'],function(Base,async,Deduction){
     var Course=function(id,oid,url){
-        this.cid = id;
-        this.oid=oid;
-        var eventName='click',that=this;
-        this.baseUrl = url;
-        //判断是否是外链还是app内打开链接
-        if(this.isLocal){
-            //eventName='touchend';
-            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
-        }
+        //this.cid = id;
+        //this.oid=oid;
+        //var eventName='click',that=this;
+        //this.baseUrl = url;
+        ////判断是否是外链还是app内打开链接
+        //if(this.isLocal){
+        //    //eventName='touchend';
+        //    this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
+        //}
         this.controlLoadingBox(true);
         //加载页面数据
         window.setTimeout(function(){
-            that.initData();
+            alert($('#loading-data').css('display'));
+            //that.initData();
         },1000);
 
+        ////
+        //$(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+        ////
+        //////预约
+        //$(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
+        ////
+        //////关闭预约
+        //$(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
+        ////
+        //$(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
+        ////
+        ///*模态窗口操作*/
+        //$(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
+        //$(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
         //
-        $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
-        //
-        ////预约
-        $(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
-        //
-        ////关闭预约
-        $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
-        //
-        $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
-        //
-        /*模态窗口操作*/
-        $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
-        $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
-
-        $(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
+        //$(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
 
     };
 
@@ -377,61 +378,130 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         if(!result || !result.data){
             return;
         }
+
         var data = result.data,
-            deduction=data.rebate_info,
+            ducutionInfo=data.rebate_info,
             packageId=data.gift_package_id;
+
+        if(!ducutionInfo || !ducutionInfo.id || ducutionInfo.id=='') {
+            return;
+        }
+
+        var  val= 0,rVal=0;
+        if(ducutionInfo.value) {
+            val = this.translationCount(ducutionInfo.value | 0 );
+        }if(ducutionInfo.rebate_value) {
+            rVal = this.translationCount(ducutionInfo.rebate_value | 0);
+        }
 
         //如果有抵扣券信息，则在课程的 标题下 显示：线上支付xxx定金，抵扣xxxx元学费
         //如果有礼包信息，则显示：报名成功再送超值大礼包！
-        var deductionTipsStr='',
-            val= 0,rVal=0;
-        if(deduction.value) {
-            val = this.translationCount(deduction.value |0 );
-        }if(deduction.rebate_value) {
-            rVal = this.translationCount(deduction.rebate_value | 0);
-        }
-        if(deduction){
-            deductionTipsStr+='线上支付'+val+'元定金，抵扣'+rVal+'元学费。';
-            $('.deduction-basic-info').show();
-            $('.deduction-main-info .diff-tips').text('学费直减'+rVal+'元');
-        }
+        var deductionTipsStr = '<p>线上支付'+val+'元定金，抵扣'+rVal+'元学费。';
         if(packageId && packageId!="0"){
             deductionTipsStr+='报名成功再送超级大礼包！';
         }
+        deductionTipsStr+='</p>';
         $('.deduction-head-tips-box').html(deductionTipsStr).show();
 
-        if(deduction.id) {
-            var deducitonStr = '';
-            var $span=$('.deduction-main-info .val span');
-            $span.eq(2).text(val).next().text(rVal);
-        }
 
-        // 标签
-        this.initTagsForDeduction(data);
+        //抵扣券具体信息部分
+        var $span=$('.deduction-main-info .val span');
+        $span.eq(2).text(val).next().text(rVal);
+
+        $('.deduction-basic-info').show();
+        $('.deduction-main-info .diff-tips').text('学费直减'+rVal+'元');
+
+        //换购按钮和时间倒计时
+        this.getDiffTimeForBuy(ducutionInfo.buy_end_time);
+
 
         // 使用须知
         var $buyItem=$('.buy-note-item'),
             timeInfo=this.getStimeAndEtime(data.start_course_time,data.end_course_time),
-            ducutionInfo=data.rebate_info,
             useCondition=ducutionInfo.use_condition,
             useMethon=ducutionInfo.use_method;
+
+        // 标签
+        this.initTagsForDeduction(data);
+
+        //有效期
         if(timeInfo!='') {
             $buyItem.eq(0).show().find('span').eq(0).text(timeInfo);
         }
+        //使用条件
         if(useCondition!='') {
             $buyItem.eq(1).show().find('p').text(useCondition);
         }
+        //使用方法
         if(useMethon!='') {
             $buyItem.eq(2).show().find('p').text(useMethon);
         }
 
     };
 
+    t.getDiffTimeForBuy=function(endTime){
+        endTime=this.getTimeFromTimestamp(endTime);
+        console.log(endTime);
+        endTime=new Date(endTime);
+
+
+        var $right = $('.deduction-main-info .right-item'),
+            $btn= $right.find('.btn'),
+            $span= $right.find('span'),
+            that=this;
+        this.setTime(endTime,$btn,$span);
+        this.myTime=window.setInterval(function(){
+            that.setTime(endTime,$btn,$span);
+        },1000);
+    };
+
+    //如果数字小于10 在前面添加 0
+    t.addZeroToBefore=function(num){
+        if(typeof num =='string'){
+            num =num |0;
+        }
+        if(num<10){
+            num='0'+num;
+        }
+        return num;
+    };
+
+    //倒数计时器
+    t.setTime=function(eTime,$btn,$span){
+
+        var now=new Date(),
+            diff=eTime - now;
+
+        //已经过期
+        if(diff<0){
+            window.clearInterval(this.myTime);
+            $btn.addClass('disabled').text('抢购结束');
+            $span.html('');
+            return;
+        }
+        var minutes=60*1000,
+            hours=60*minutes,
+            days=24*hours,
+            diffDay=diff/(days) | 0,  //天
+            diffDay1=diff%(days),
+
+            diffHours=diffDay1/hours | 0,
+            diffHours1=diffDay1%hours,
+
+            diffMinuetes=diffHours1/minutes | 0,
+            diffMinuetes1=diffHours1%minutes,
+
+            diffSeconds = diffMinuetes1/1000 | 0;
+
+        var str='<span>'+diffDay + '天</span>'+
+            '<span>'+this.addZeroToBefore(diffHours)+':'+this.addZeroToBefore(diffMinuetes)+':'+this.addZeroToBefore(diffSeconds)+'</span>';
+        $span.html(str);
+    };
+
     //抵扣券标签
     t.initTagsForDeduction=function(data){
         var tipsArr=data.course_tag_list;
         tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
-
         if(tipsArr && tipsArr.length>0){
             var $target=$('.deduction-tip').show(),
                 options={
@@ -448,7 +518,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                     }
                 }
                 if(this.deviceType.ios && typeof  showRebateInfoModal !='undefined'){
-                    options.showDeductionTagsCallBack = showRebateInfoModal();
+                    options.showDeductionTagsCallBack = showRebateInfoModal;
                 }
 
             }else{

@@ -71,6 +71,7 @@ ul li {
   margin: 10px 0;
 }
 #loading-data {
+  background-color: #000000;
   position: fixed;
   width: 100px;
   height: 100px;
@@ -78,7 +79,7 @@ ul li {
   margin-top: -50px;
   top: 50%;
   left: 50%;
-  z-index: 5555;
+  z-index: 5555555;
   text-align: center;
   display: none;
 }
@@ -86,7 +87,8 @@ ul li {
   display: block;
 }
 #loading-data.active .loding-img {
-  animation: turning 1s linear infinite;
+  -webkit-animation: turning 1s linear infinite;
+  -moz-animation: turning 1s linear infinite;
 }
 #loading-data .loding-img {
   width: 40px;
@@ -96,6 +98,16 @@ ul li {
 @keyframes turning {
   to {
     transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes turning {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes turning {
+  to {
+    -moz-transform: rotate(360deg);
   }
 }
 .nodata {
@@ -594,20 +606,20 @@ body {
   color: #212121;
   line-height: 21px;
 }
-.main-item.basic-info .deduction-head-tips-box::before {
+.main-item.basic-info .deduction-head-tips-box p::before {
   display: inline-block;
   content: '!';
   text-align: center;
   line-height: 14px;
   width: 14px;
   height: 14px;
-  font-size: 10px;
+  font-size: 12px;
   background-color: #000;
   color: #fff;
   border-radius: 7px;
   background-clip: padding-box;
   margin-right: 4px;
-  vertical-align: 2px;
+  vertical-align: 1px;
 }
 .main-item.org-basic-info {
   position: relative;
@@ -693,7 +705,7 @@ body {
   color: #FF5A00;
   height: 0px;
   background-color: #fff;
-  margin: 12px 8px;
+  margin: 12px 0;
   border-radius: 4px;
   padding-left: 8px;
   padding-right: 8px;
@@ -972,7 +984,6 @@ body {
 }
 .main-item.deduction-basic-info .deduction-main-info .right-item {
   position: absolute;
-  width: 80px;
   height: 50px;
   top: 20px;
   right: 14px;
@@ -983,16 +994,22 @@ body {
   line-height: 30px;
   text-align: center;
   background-color: #F9A825;
-  color: #fff ;
+  color: #fff;
   font-size: 14px;
   border-radius: 3px;
   background-clip: padding-box;
+}
+.main-item.deduction-basic-info .deduction-main-info .right-item .btn.disabled {
+  pointer-events: none;
+  background-color: #ccc;
+  color: #1f1e1e;
 }
 .main-item.deduction-basic-info .deduction-main-info .right-item > span {
   display: block;
   margin-top: 4px;
   font-size: 10px;
   color: #F9A825;
+  text-align: right;
   white-space: nowrap;
 }
 .main-item.deduction-basic-info .deduction-tip {
