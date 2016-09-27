@@ -21,7 +21,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
         //预约
-        $(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
+        //$(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
         //关闭预约
         $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
         //
@@ -395,7 +395,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         //如果有礼包信息，则显示：报名成功再送超值大礼包！
         var deductionTipsStr = '<p>线上支付'+val+'元定金，抵扣'+rVal+'元学费。';
         if(packageId && packageId!="0"){
-            deductionTipsStr+='报名成功再送超级大礼包！';
+            deductionTipsStr+='报名成功再送超值大礼包！';
         }
         deductionTipsStr+='</p>';
         $('.deduction-head-tips-box').html(deductionTipsStr).show();
@@ -414,7 +414,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         // 使用须知
         var $buyItem=$('.buy-note-item'),
-            timeInfo=this.getStimeAndEtime(data.start_course_time,data.end_course_time),
+            timeInfo=this.getStimeAndEtime(ducutionInfo.use_start_time,ducutionInfo.use_end_time),
             useCondition=ducutionInfo.use_condition,
             useMethon=ducutionInfo.use_method;
 
@@ -423,7 +423,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         //有效期
         if(timeInfo!='') {
-            $buyItem.eq(0).show().find('span').eq(0).text(timeInfo);
+            $buyItem.eq(0).show().find('span').eq(1).text(timeInfo);
         }
         //使用条件
         if(useCondition!='') {
@@ -717,6 +717,8 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
 
     t.getStimeAndEtime=function(sTime,eTime){
+        sTime=this.getTimeFromTimestamp(sTime);
+        eTime=this.getTimeFromTimestamp(eTime);
        var sTime1= this.judgeInfoNullInfo(sTime),
            sTime2= this.judgeInfoNullInfo(eTime);
         sTime=sTime1+'——'+sTime2;
