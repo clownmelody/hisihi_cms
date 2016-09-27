@@ -12,8 +12,6 @@ requirejs.config({
         home:'../teaching-course/3.0.2/home',
         async:'async',
         lazyloading:'lazyloading',
-        photoswipe:'photoswipe/photoswipe.min',
-        myPhotoSwipe:'photoswipe/myphotoswipe',
         deduction:'../orgbasicinfo/2.9.5/deduction',
     },
     shim: {

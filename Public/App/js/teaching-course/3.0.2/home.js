@@ -17,7 +17,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         //加载页面数据
         window.setTimeout(function(){
             that.initData();
-        },1000);
+        },100);
 
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
         //预约
@@ -32,7 +32,6 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
         $(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
-
     };
 
     Course.prototype=new Base();
@@ -520,7 +519,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 }
 
             }else{
-                options=null;
+                options.showDeductionTagsCallBack=null;
             }
             new Deduction(tipsArr, $target,options);
         }

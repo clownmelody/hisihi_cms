@@ -10,6 +10,7 @@ body{
   background: #F2F2F2;
   max-width: 100%;
   overflow: auto;
+  min-height: 560px;
 }
 
 .font-icon{
@@ -78,7 +79,7 @@ body {
   }
   .head-txt{
     font-size: 14px;
-    color:#444;
+    color:#212121;
     @h:40px;
     .size(100%,@h);
     line-height: @h;
@@ -118,6 +119,7 @@ body {
       color:#212121;
       line-height:21px;
       p {
+        margin: 0;
         &::before {
           display: inline-block;
           content: '!';
@@ -137,14 +139,15 @@ body {
 
   &.org-basic-info{
     position: relative;
-    height: 78px;
+    height: 84px;
     width: 100%;
+    padding-top: 3px;
     @h:50px;
     @p:14px;
 
     a{
       display: block;
-      .size(100%,100%);
+      height: 78px;
     }
     .center-content{
       height: 100%;
@@ -248,7 +251,7 @@ body {
     }
     .right-item {
       display: inline-block;
-      text-align: right;
+      text-align: center;
       .size(12px,32px*0.7);
       background: url("../../images/teaching-course/bottom-right.png") no-repeat;
       background-size: 18px*0.7 32px*0.7;
@@ -356,7 +359,6 @@ body {
         a {
           display: block;
           height: 100%;
-          margin: 0 14px;
         }
         @padding-l:14px;
         @w-l: 66px;
@@ -365,7 +367,6 @@ body {
           height: 100%;
           padding-right: @padding-l;
           margin-left: @padding-l;
-          border-bottom: 1px solid #F2F2F2;
           display: box;
           display:-moz-box;
           display:-webkit-box;
@@ -373,7 +374,7 @@ body {
             height: 100%;
             -webkit-box-flex: 3;
             flex: 3;
-            padding-top: 12px;
+            padding-top: 20px;
             box-sizing: border-box;
             p {
               margin: 0;
@@ -503,15 +504,15 @@ body {
           margin-top: 4px;
           font-size: 10px;
           color: #F9A825;
-          text-align: right;
+          text-align: center;
           white-space:nowrap;
         }
       }
     }
     .deduction-tip {
       margin-top: 10px;
-      margin-bottom: 10px;
-      padding:0 8px;
+      //margin-bottom: 10px;
+      padding:0 14px;
       position: relative;
       overflow-y: hidden;
       transition:height 0.2s linear;
@@ -519,7 +520,7 @@ body {
       //background-color: red;
       display: none;
       .deduction-tip-left {
-        padding-top:8px;
+        padding-top:5px;
         margin-right: 40px;
         position: absolute;
         z-index: 0;
@@ -551,7 +552,7 @@ body {
     .buy-note{
       position: relative;
       z-index: 1;
-      padding: 14px;
+      padding:0 14px 14px 14px;
       background-color: #fff;
       .head-txt {
         border-bottom:1px solid #f3f3f3;

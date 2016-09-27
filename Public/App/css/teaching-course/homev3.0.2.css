@@ -78,10 +78,8 @@ ul li {
   margin-top: -50px;
   top: 50%;
   left: 50%;
-  z-index: 5555555;
+  z-index: 55555;
   text-align: center;
-}
-#loading-data.active {
   display: block;
 }
 #loading-data.active .loding-img {
@@ -504,6 +502,7 @@ body {
   background: #F2F2F2;
   max-width: 100%;
   overflow: auto;
+  min-height: 560px;
 }
 .font-icon {
   display: inline-block;
@@ -574,7 +573,7 @@ body {
 }
 .main-item .head-txt {
   font-size: 14px;
-  color: #444;
+  color: #212121;
   width: 100%;
   height: 40px;
   line-height: 40px;
@@ -609,6 +608,9 @@ body {
   color: #212121;
   line-height: 21px;
 }
+.main-item.basic-info .deduction-head-tips-box p {
+  margin: 0;
+}
 .main-item.basic-info .deduction-head-tips-box p::before {
   display: inline-block;
   content: '!';
@@ -626,13 +628,13 @@ body {
 }
 .main-item.org-basic-info {
   position: relative;
-  height: 78px;
+  height: 84px;
   width: 100%;
+  padding-top: 3px;
 }
 .main-item.org-basic-info a {
   display: block;
-  width: 100%;
-  height: 100%;
+  height: 78px;
 }
 .main-item.org-basic-info .center-content {
   height: 100%;
@@ -736,7 +738,7 @@ body {
 }
 .main-item.appointment .right-item {
   display: inline-block;
-  text-align: right;
+  text-align: center;
   width: 12px;
   height: 22.4px;
   background: url("../../images/teaching-course/bottom-right.png") no-repeat;
@@ -864,13 +866,11 @@ body {
 .main-item.lessons-more ul li a {
   display: block;
   height: 100%;
-  margin: 0 14px;
 }
 .main-item.lessons-more ul li .item-main {
   height: 100%;
   padding-right: 14px;
   margin-left: 14px;
-  border-bottom: 1px solid #F2F2F2;
   display: box;
   display: -moz-box;
   display: -webkit-box;
@@ -879,7 +879,7 @@ body {
   height: 100%;
   -webkit-box-flex: 3;
   flex: 3;
-  padding-top: 12px;
+  padding-top: 20px;
   box-sizing: border-box;
 }
 .main-item.lessons-more ul li .item-main .middle p {
@@ -1008,13 +1008,12 @@ body {
   margin-top: 4px;
   font-size: 10px;
   color: #F9A825;
-  text-align: right;
+  text-align: center;
   white-space: nowrap;
 }
 .main-item.deduction-basic-info .deduction-tip {
   margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 0 8px;
+  padding: 0 14px;
   position: relative;
   overflow-y: hidden;
   transition: height 0.2s linear;
@@ -1022,7 +1021,7 @@ body {
   display: none;
 }
 .main-item.deduction-basic-info .deduction-tip .deduction-tip-left {
-  padding-top: 8px;
+  padding-top: 5px;
   margin-right: 40px;
   position: absolute;
   z-index: 0;
@@ -1053,7 +1052,7 @@ body {
 .main-item.deduction-basic-info .buy-note {
   position: relative;
   z-index: 1;
-  padding: 14px;
+  padding: 0 14px 14px 14px;
   background-color: #fff;
 }
 .main-item.deduction-basic-info .buy-note .head-txt {
