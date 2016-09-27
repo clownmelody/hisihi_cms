@@ -14,6 +14,7 @@ requirejs.config({
         lazyloading:'lazyloading',
         photoswipe:'photoswipe/photoswipe.min',
         myPhotoSwipe:'photoswipe/myphotoswipe',
+        deduction:'../orgbasicinfo/2.9.5/deduction',
     },
     shim: {
         $:{

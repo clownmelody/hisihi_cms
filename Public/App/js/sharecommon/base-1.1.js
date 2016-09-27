@@ -680,6 +680,30 @@ define(['$','fastclick'],function() {
             }
         },
 
+        /*数值大于9999时，转换成万*/
+        translationCount:function(num,maxNum){
+            num=parseInt(num);
+            if(!maxNum){
+                maxNum=10000;
+            }
+            if(num>maxNum){
+                num= (num/10000);
+                if(num%10000!=0){
+                    num=num.toString();
+                    var index=num.indexOf('.');
+                    if(index>=0) {
+                        num = num.substr(0, index + 2);
+                        var arr = num.split('.');
+                        if (arr[1] == 0) {
+                            num = arr[0];
+                        }
+                    }
+                }
+                num+='万';
+            }
+            return num;
+        },
+
     };
 
     var defaultConfig={

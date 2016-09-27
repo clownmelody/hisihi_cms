@@ -14,7 +14,7 @@ requirejs.config({
         photoswipeui:'photoswipe/photoswipe-ui-default.min',
         myPhotoSwipe:'photoswipe/myphotoswipe',
         home:'../orgbasicinfo/2.9.5/orgbasicinfo',
-        deduction:'../orgbasicinfo/2.9.5/decucitontags',
+        deduction:'../orgbasicinfo/2.9.5/deduction',
         async:'async',
     },
     shim: {
@@ -32,7 +32,6 @@ requirejs.config({
 
 
 require(['home','prefixfree'],function(orgBasicInfo){
-
     var url = window.location.href;
     if(url.indexOf('%2F')>0){
         url=url.replace(/\%2F/g,'\/');
