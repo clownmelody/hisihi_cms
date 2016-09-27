@@ -354,11 +354,17 @@ class TeachingCourseService extends Model
         $rebate_info = $rebate_model->field('id, name, value, rebate_value,
                           use_start_time, use_end_time, buy_end_time, use_condition, use_method, use_instruction')
             ->where('status=1 and id='.$rebate['rebate_id'])->find();
-        $result['gift_package_id'] = $rebate['gift_package_id'];
+
         $org_info = $org_course_model->field('course_name, cover_pic, organization_id')->where('id='.$course_id)->find();
-        $rebate_info['courses_id'] = $course_id;
-        $rebate_info['courses_name'] = $org_info['course_name'];
-        $rebate_info['courses_pic'] = $org_info['cover_pic'];
+        if(!empty($rebate_info)){
+            $rebate_info['courses_id'] = $course_id;
+            $rebate_info['courses_name'] = $org_info['course_name'];
+            $rebate_info['courses_pic'] = $org_info['cover_pic'];
+            $result['gift_package_id'] = $rebate['gift_package_id'];
+        }else{
+            $result['gift_package_id'] = 0;
+            $rebate_info = null;
+        }
         $result['rebate_info'] = $rebate_info;
         $result['course_tag_list'] = A('Organization')->getOrgCourseTagListByOrgId($org_info['organization_id']);
         return $result;
