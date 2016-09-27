@@ -79,9 +79,10 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             }
         },function (err,results) {
             var val;
+            var str='';
             for(var item in results) {
                 var fn=null;
-                val=results[item]
+                val=results[item];
                 switch (item){
                     case 'basic':
                         fn=that.getBasicIntroduceInfo;
@@ -406,7 +407,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         $span.eq(2).text(val).next().text(rVal);
 
         $('.deduction-basic-info').show();
-        $('.deduction-main-info .diff-tips').text('学费直减'+rVal+'元');
+        $('.deduction-main-info .diff-tips').text('学费直减'+rVal+'元！');
 
         //换购按钮和时间倒计时
         this.getDiffTimeForBuy(ducutionInfo.buy_end_time);
@@ -498,7 +499,6 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     //抵扣券标签
     t.initTagsForDeduction=function(data){
         var tipsArr=data.course_tag_list;
-        //tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
         if(tipsArr && tipsArr.length>0){
             var $target=$('.deduction-tip').show(),
                 options={
@@ -717,8 +717,8 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
 
     t.getStimeAndEtime=function(sTime,eTime){
-        sTime=this.getTimeFromTimestamp(sTime);
-        eTime=this.getTimeFromTimestamp(eTime);
+        sTime=this.getTimeFromTimestamp(sTime,'yyyy.MM.dd');
+        eTime=this.getTimeFromTimestamp(eTime,'yyyy.MM.dd');
        var sTime1= this.judgeInfoNullInfo(sTime),
            sTime2= this.judgeInfoNullInfo(eTime);
         sTime=sTime1+'——'+sTime2;
@@ -772,53 +772,6 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         }
     };
 
-    //更多
-    t.getMoreStr1=function(result){
-        if(!result || !result.courses || result.courses.length == 0) {
-            return '';
-        }
-        var courses=result.courses,
-            len = courses.length,
-            str='';
-
-        for(var i=0;i<len;i++) {
-            var item, courseName='', money='';
-            item=courses[i];
-            courseName=item.course_name;
-            money=this.judgeInfoNullInfo(item.price);
-            if(money){
-                money='￥'+money;
-            }else{
-                money='<label class="noprice">暂无报价</label>';
-            }
-            var limitStr='';
-            if(item.student_num!=0){
-                limitStr ='<div class="singin-limit-nums">' +
-                                '<div><canvas></canvas></div>'+
-                                '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
-                            '</div>';
-            }
-            str += '<li class="normal">' +
-                        '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
-                            '<div class="main-content">'+
-                                '<div class="left">' +
-                                    '<img src="'+item.cover_pic+'">' +
-                                '</div>' +
-                                '<div class="right">' +
-                                    '<div class="lesson-name">'+courseName+'</div>' +
-                                    '<div class="right-item price">'+money+'</div>' +
-                                    '<div class="lesson-view-info">' +
-                                        this.getMiddleItemStr(item)+
-                                    '</div>' +
-                                '</div>' +
-                                limitStr +
-                            '</div>'+
-                        '</a>'+
-                    '</li>' +
-                    '<li class="seperation"></li>';
-        }
-        return str;
-    };
 
     /*课程列表*/
     t.getMoreStr=function(data){
@@ -836,9 +789,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         for(var i=0;i<len;i++){
             item=list[i];
-            //if(!item.rebate_info){
-            //    continue;
-            //}
+            if(!item.rebate_info){
+                continue;
+            }
             rightStr=this.getRightStrAndMarginInfo(item.rebate_info);  //抵扣券信息
 
             count++;
