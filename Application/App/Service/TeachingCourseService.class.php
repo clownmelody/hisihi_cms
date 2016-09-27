@@ -340,9 +340,14 @@ class TeachingCourseService extends Model
     private function getRebateInfoByCourseId($course_id){
         $course_rebate_model = M('TeachingCourseRebateRelation');
         $rebate_model = M('Rebate');
-        $rebate = $course_rebate_model->field('rebate_id')->where('status=1 and teaching_course_id='.$course_id)->find();
+        $rebate = $course_rebate_model->field('rebate_id')
+            ->where('status=1 and teaching_course_id='.$course_id)
+            ->find();
+        $where_array['status'] = 1;
+        $where_array['id'] = $rebate['rebate_id'];
+        $where_array['buy_end_time'] = array('EGT', time());
         $rebate_info = $rebate_model->field('id, name, value, rebate_value')
-            ->where('status=1 and id='.$rebate['rebate_id'])->find();
+            ->where($where_array)->find();
         return $rebate_info;
     }
 
