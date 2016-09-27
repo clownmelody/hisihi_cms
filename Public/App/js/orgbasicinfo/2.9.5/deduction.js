@@ -2,14 +2,14 @@
  * 抵扣券使用说明
  * Created by jimmy-jiang on 2016/9/20.
  */
-define(['base'],function(Base){
+define(function(){
     var Deduction=function(data,$target,options){
         if(!data || !(data instanceof Array)){
-            this.showTips('请正确传入数据内容');
+            alert('请正确传入数据内容');
             return;
         }
         if(!$target || $target.length==0){
-            this.showTips('数据容器为空');
+            alert('数据容器为空');
             return;
         }
         this.data=data;
@@ -33,8 +33,6 @@ define(['base'],function(Base){
 
     };
 
-    Deduction.prototype=new Base();
-    Deduction.constructor=Deduction;
     var t=Deduction.prototype;
 
     /*默认参数设置*/

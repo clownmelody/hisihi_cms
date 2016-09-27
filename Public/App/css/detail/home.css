@@ -71,7 +71,6 @@ ul li {
   margin: 10px 0;
 }
 #loading-data {
-  background-color: #000000;
   position: fixed;
   width: 100px;
   height: 100px;
@@ -81,7 +80,6 @@ ul li {
   left: 50%;
   z-index: 5555555;
   text-align: center;
-  display: none;
 }
 #loading-data.active {
   display: block;

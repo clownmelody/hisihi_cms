@@ -111,11 +111,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 });
             },
 
-            //token:function(callback){
-            //    that.getUserInfo(function(result){
-            //        callback(null,result);
-            //    },1);
-            //},
 
             //课程
             course:function(callback){
@@ -123,12 +118,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                     callback(null,result);
                 });
             },
-            ////抵扣券
-            //coupon:function(callback) {
-            //    //that.loadCouponInfo(function(result){
-            //    //    callback(null,result)
-            //    //});
-            //},
             pics:function(callback){
                 that.loadPics(function(result){
                     callback(null,result)
@@ -483,10 +472,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             }else{
                 money='<label class="noprice">暂无报价</label>';
             }
-            stime=this.judgeInfoNullInfo(item.start_course_time);
-            if(stime!=''){
-                stime+='开课';
-            }
             str+='<li data-course-id="'+item.id+'">'+
                     '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
                         '<div class="item-main">'+
@@ -499,7 +484,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                             '<div class="middle">'+
                                 '<p class="title-info hasCoupon">'+item.course_name+'</p>'+
                                 '<p class="money-info">'+money+'</p>'+
-                                '<p class="time-info">'+stime+'</p>'+
                             '</div>'+
                             rightStr+
                         '</div>'+
@@ -690,9 +674,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 page:1,
                 per_page:100000,
                 except_id:''
-            },
-            versionHeader:{
-                version :'3.02',
             },
             sCallback: function(result){
               callback && callback(result);
