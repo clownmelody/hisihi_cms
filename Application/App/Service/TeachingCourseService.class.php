@@ -290,7 +290,13 @@ class TeachingCourseService extends Model
         if((float)$version>=3.02){
             $result = array();
             $model = M('TeachingCourseRebateRelation');
-            if($has_coupon){
+            foreach($list as &$item){
+                $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
+                if($count>0){
+                    $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+                }
+            }
+            /*if($has_coupon){
                 foreach($list as &$item){
                     $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
                     if($count>0){
@@ -306,7 +312,7 @@ class TeachingCourseService extends Model
                     }
                 }
             }
-            return $result;
+            return $result;*/
         }
         return $list;
     }
@@ -340,9 +346,14 @@ class TeachingCourseService extends Model
     private function getRebateInfoByCourseId($course_id){
         $course_rebate_model = M('TeachingCourseRebateRelation');
         $rebate_model = M('Rebate');
-        $rebate = $course_rebate_model->field('rebate_id')->where('status=1 and teaching_course_id='.$course_id)->find();
+        $rebate = $course_rebate_model->field('rebate_id')
+            ->where('status=1 and teaching_course_id='.$course_id)
+            ->find();
+        $where_array['status'] = 1;
+        $where_array['id'] = $rebate['rebate_id'];
+        $where_array['buy_end_time'] = array('EGT', time());
         $rebate_info = $rebate_model->field('id, name, value, rebate_value')
-            ->where('status=1 and id='.$rebate['rebate_id'])->find();
+            ->where($where_array)->find();
         return $rebate_info;
     }
 
@@ -351,9 +362,12 @@ class TeachingCourseService extends Model
         $org_course_model = M('OrganizationTeachingCourse');
         $rebate_model = M('Rebate');
         $rebate = $course_rebate_model->field('rebate_id, gift_package_id')->where('status=1 and teaching_course_id='.$course_id)->find();
+        $where_array['status'] = 1;
+        $where_array['id'] = $rebate['rebate_id'];
+        $where_array['buy_end_time'] = array('EGT', time());
         $rebate_info = $rebate_model->field('id, name, value, rebate_value,
                           use_start_time, use_end_time, buy_end_time, use_condition, use_method, use_instruction')
-            ->where('status=1 and id='.$rebate['rebate_id'])->find();
+            ->where($where_array)->find();
 
         $org_info = $org_course_model->field('course_name, cover_pic, organization_id')->where('id='.$course_id)->find();
         if(!empty($rebate_info)){
