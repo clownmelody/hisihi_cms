@@ -499,7 +499,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     //抵扣券标签
     t.initTagsForDeduction=function(data){
         var tipsArr=data.course_tag_list;
-        tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
+        //tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
         if(tipsArr && tipsArr.length>0){
             var $target=$('.deduction-tip').show(),
                 options={
