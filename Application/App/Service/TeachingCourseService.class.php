@@ -290,7 +290,13 @@ class TeachingCourseService extends Model
         if((float)$version>=3.02){
             $result = array();
             $model = M('TeachingCourseRebateRelation');
-            if($has_coupon){
+            foreach($list as &$item){
+                $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
+                if($count>0){
+                    $item['rebate_info'] = $this->getRebateInfoByCourseId($item['id']);
+                }
+            }
+            /*if($has_coupon){
                 foreach($list as &$item){
                     $count = $model->where('status=1 and teaching_course_id='.$item['id'])->count();
                     if($count>0){
@@ -306,7 +312,7 @@ class TeachingCourseService extends Model
                     }
                 }
             }
-            return $result;
+            return $result;*/
         }
         return $list;
     }
