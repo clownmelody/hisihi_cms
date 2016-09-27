@@ -19,6 +19,11 @@ body{
   background: url("../../images/teaching-course/sprite.png");
   background-size: 239px 32px;
 }
+.bg-sprite-deduciton{
+  background: url("../../images/orgbasicinfo/3.0.2/sprite.png");
+  background-size: 306px 65px;
+  background-repeat: no-repeat;
+}
 .bg-sprite-middle {
   .bg-sprite;
   background-size: 191px 26px;
@@ -112,18 +117,20 @@ body {
       font-size: 12px;
       color:#212121;
       line-height:21px;
-      &::before{
-        display: inline-block;
-        content: '!';
-        text-align: center;
-        line-height: 14px;
-        .size(14px,14px);
-        font-size: 10px;
-        background-color: #000;
-        color: #fff;
-        .border-radius(7px);
-        margin-right:4px;
-        vertical-align: 2px;
+      p {
+        &::before {
+          display: inline-block;
+          content: '!';
+          text-align: center;
+          line-height: 14px;
+          .size(14px, 14px);
+          font-size: 12px;
+          background-color: #000;
+          color: #fff;
+          .border-radius(7px);
+          margin-right: 4px;
+          vertical-align: 1px;
+        }
       }
     }
   }
@@ -214,7 +221,7 @@ body {
     color: #FF5A00;
     height: 0px;
     background-color: #fff;
-    margin:12px 8px;
+    margin:12px 0;
     border-radius:4px;
     padding-left:8px;
     padding-right: 8px;
@@ -334,7 +341,6 @@ body {
         position: relative;
         &.normal{
           min-height: 94px;
-          border-radius: 6px;
           background-color: #fff;
         }
         &.seperation {
@@ -352,80 +358,81 @@ body {
           height: 100%;
           margin: 0 14px;
         }
-        .main-content {
-          @w: 66px;
-          height: @w + 14 * 2;
-          margin:0 auto;
-          padding: 14px 0;
-          box-sizing: border-box;
-          display: block;
+        @padding-l:14px;
+        @w-l: 66px;
+        @w-r: 80px;
+        .item-main {
+          height: 100%;
+          padding-right: @padding-l;
+          margin-left: @padding-l;
+          border-bottom: 1px solid #F2F2F2;
+          display: box;
+          display:-moz-box;
+          display:-webkit-box;
+          .middle {
+            height: 100%;
+            -webkit-box-flex: 3;
+            flex: 3;
+            padding-top: 12px;
+            box-sizing: border-box;
+            p {
+              margin: 0;
+            }
+            .title-info {
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              font-size: 14px;
+              color: #212121;
+              &.hasCoupon {
+                margin-right: @padding-l;
+              }
+            }
+            .money-info {
+              color: #FA4535;
+              font-size: 20px;
+              font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+              margin: 2px 0;
+              .noprice {
+                font-size: 16px;
+              }
+            }
+            .time-info {
+              color: #8E8E8E;
+              font-size: 11px;
+            }
+          }
           .left {
-            .size(@w, auto);
-            position: absolute;
-            img {
-              .size(@w, @w);
+            flex: 1;
+            .img-box {
+              .size(66px,auto);
+              margin: 0 auto;
+              padding: 12px 10px 0 0;
+              img {
+                .size(@w-l, @w-l);
+              }
             }
           }
           .right {
-            margin-left: @w+10px;
-            .lesson-name {
-              color: #212121;
-              font-size: 14px;
-              margin-right: 32px;
-              .txt-ellipsis;
-            }
-            .lesson-view-info {
-              color: #808080;
-              font-size: 11px;
-              margin: 2px 0 1px 0;
-              //.txt-ellipsis-p(2);
-              span {
-                padding-right: 3px;
-                margin-right: 5px;
-                display: inline-block;
-                border-right: 1px solid @g-color;
-                height: 13px;
-                line-height: 13px;
-                &:last-child {
-                  border: none;
-                }
-              }
-            }
-            .teacher-info {
-              color: @g-color;
-              font-size: 13px;
-              .left-item {
-                display: inline-block;
-                width: 50%;
-                text-align: left;
-                .txt-ellipsis;
-              }
-            }
-          }
-          .singin-limit-nums {
-            position: absolute;
-            @h: 16px;
-            .size(40px, @h);
-            top: 14px;
-            right: 0;
-            text-align: center;
-            color: white;
-            line-height: @h;
-            font-size: 9px;
-            padding-left: 2px;
-            canvas{
-              height: 35px;
-              width: 100px;
-            }
-            span{
-              display: block;
-              position: absolute;
-              top:0;
-              left: 0;
+            position: relative;
+            width: 65px;
+            @post-h: 33px;
+            .right-main {
+              margin-top: 15px;
+              .size(67px, 61px);
+              .bg-sprite-deduciton;
               text-align: center;
-              padding-left: 15px;
-              line-height: 16px;
-              height: 16px;
+              line-height: 30px;
+              .money {
+                height: 30px;
+                color: #f97825;
+                font-size: 15px;
+              }
+              .deduction-money {
+                height: 30px;
+                font-size: 10px;
+                color: #fff;
+              }
             }
           }
         }
@@ -441,7 +448,6 @@ body {
     .deduction-main-info{
       position: relative;
       padding-top: 20px;
-      padding-bottom: 14px;
       .left-item {
         height: 100%;
         margin-right:80px;
@@ -475,7 +481,7 @@ body {
       }
       .right-item{
         position: absolute;
-        .size(80px,50px);
+        height: 50px;
         top:20px;
         right: 14px;
         .btn{
@@ -483,16 +489,21 @@ body {
           line-height: 30px;
           text-align: center;
           background-color:#F9A825;
-          color:#fff ;
+          color:#fff;
           font-size: 14px;
           .border-radius(3px);
+          &.disabled{
+            pointer-events: none;
+            background-color: #ccc;
+            color: #1f1e1e;
+          }
         }
         >span{
           display: block;
           margin-top: 4px;
           font-size: 10px;
           color: #F9A825;
-          //text-align: right;
+          text-align: right;
           white-space:nowrap;
         }
       }
@@ -500,16 +511,18 @@ body {
     .deduction-tip {
       margin-top: 10px;
       margin-bottom: 10px;
-      padding:2px 14px;
+      padding:0 8px;
       position: relative;
       overflow-y: hidden;
       transition:height 0.2s linear;
-      height: 22px;
       background-color: #f7f7f7;
+      //background-color: red;
       display: none;
       .deduction-tip-left {
-        padding-top:4px;
+        padding-top:8px;
         margin-right: 40px;
+        position: absolute;
+        z-index: 0;
         li{
           display: inline-block;
           margin-right: 10px;
@@ -531,11 +544,15 @@ body {
         top:-7px;
         right: -6px;
         .size(50px,50px);
+
         transform: scale(0.6);
       }
     }
     .buy-note{
+      position: relative;
+      z-index: 1;
       padding: 14px;
+      background-color: #fff;
       .head-txt {
         border-bottom:1px solid #f3f3f3;
         width: 110%;
@@ -847,34 +864,6 @@ body {
                 .bg-sprite-middle;
                 background-position:-175px 0;
                 .size(16px,17px);
-              }
-            }
-          }
-        }
-      }
-    }
-    &.lessons-more {
-
-      ul {
-        li {
-          .main-content {
-            .right {
-              .lesson-name {
-                font-size: 12px;
-              }
-              .lesson-view-info {
-                margin: 3px auto 0px auto;
-              }
-              .teacher-info {
-                .left-item {
-
-                  span {
-                    font-size: 12px;
-                  }
-                  .price{
-                    font-size: 14px !important;
-                  }
-                }
               }
             }
           }

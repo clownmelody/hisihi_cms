@@ -78,15 +78,15 @@ ul li {
   margin-top: -50px;
   top: 50%;
   left: 50%;
-  z-index: 5555;
+  z-index: 5555555;
   text-align: center;
-  display: none;
 }
 #loading-data.active {
   display: block;
 }
 #loading-data.active .loding-img {
-  animation: turning 1s linear infinite;
+  -webkit-animation: turning 1s linear infinite;
+  -moz-animation: turning 1s linear infinite;
 }
 #loading-data .loding-img {
   width: 40px;
@@ -96,6 +96,16 @@ ul li {
 @keyframes turning {
   to {
     transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes turning {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes turning {
+  to {
+    -moz-transform: rotate(360deg);
   }
 }
 .nodata {

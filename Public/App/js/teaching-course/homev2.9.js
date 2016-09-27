@@ -617,7 +617,7 @@ define(['base','fastclick'],function(Base){
                                 '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
                             '</div>';
             }
-            str += '<li class="normal">' +
+            str += '<li showteachingcoursemainpage_v2_9>' +
                         '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
                             '<div class="main-content">'+
                                 '<div class="left">' +

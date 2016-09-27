@@ -483,7 +483,7 @@ define(['$','fastclick'],function() {
             if($('#loading-data').length>0){
                 return;
             }
-           var str = '<div id="loading-data" style="display: none;"><img class="loding-img"  src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
+           var str = '<div id="loading-data"><img class="loding-img"  src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
             $('body').append(str);
         },
 

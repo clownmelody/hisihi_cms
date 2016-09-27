@@ -2,17 +2,18 @@
  * 抵扣券使用说明
  * Created by jimmy-jiang on 2016/9/20.
  */
-define(['base'],function(Base){
+define(function(){
     var Deduction=function(data,$target,options){
         if(!data || !(data instanceof Array)){
-            this.showTips('请正确传入数据内容');
+            alert('请正确传入数据内容');
             return;
         }
         if(!$target || $target.length==0){
-            this.showTips('数据容器为空');
+            alert('数据容器为空');
             return;
         }
         this.data=data;
+        this.minHeight='30px';
         this.extentSetting(options);
 
         this.initData($target);
@@ -32,8 +33,6 @@ define(['base'],function(Base){
 
     };
 
-    Deduction.prototype=new Base();
-    Deduction.constructor=Deduction;
     var t=Deduction.prototype;
 
     /*默认参数设置*/
@@ -45,7 +44,7 @@ define(['base'],function(Base){
         for(var item in defaultConfig){
             var val=config[item];
             if(val!='undefined'){
-                    this.config[item] = val;
+                this.config[item] = val;
             }
 
         }
@@ -68,7 +67,7 @@ define(['base'],function(Base){
                 '</li>'
         }
         str+='</ul><div class="deduction-tip-right" style="background: url(http://pic.hisihi.com/2016-09-24/1474708134912749.png);"></div>';
-        $target.html(str).css('height','35px');
+        $target.html(str).css('height',this.minHeight);
     };
 
     //显示所有的 抵扣券信息
@@ -79,7 +78,7 @@ define(['base'],function(Base){
         if(!$parent.hasClass('show')){
             $parent.css('height',$target.height()-4).addClass('show');
         }else{
-            $parent.css('height','35px').removeClass('show');
+            $parent.css('height',this.minHeight).removeClass('show');
         }
     };
 

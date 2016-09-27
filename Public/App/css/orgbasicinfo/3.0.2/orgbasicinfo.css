@@ -78,15 +78,15 @@ ul li {
   margin-top: -50px;
   top: 50%;
   left: 50%;
-  z-index: 5555;
+  z-index: 5555555;
   text-align: center;
-  display: none;
 }
 #loading-data.active {
   display: block;
 }
 #loading-data.active .loding-img {
-  animation: turning 1s linear infinite;
+  -webkit-animation: turning 1s linear infinite;
+  -moz-animation: turning 1s linear infinite;
 }
 #loading-data .loding-img {
   width: 40px;
@@ -96,6 +96,16 @@ ul li {
 @keyframes turning {
   to {
     transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes turning {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes turning {
+  to {
+    -moz-transform: rotate(360deg);
   }
 }
 .nodata {
@@ -826,7 +836,7 @@ body {
 .coupon .deduction-tip {
   margin-top: 10px;
   margin-bottom: 10px;
-  padding: 5px 8px;
+  padding: 0 8px;
   position: relative;
   overflow-y: hidden;
   transition: height 0.2s linear;
@@ -835,7 +845,7 @@ body {
   display: none;
 }
 .coupon .deduction-tip .deduction-tip-left {
-  padding-top: 4px;
+  padding-top: 8px;
   margin-right: 40px;
 }
 .coupon .deduction-tip .deduction-tip-left li {
