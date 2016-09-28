@@ -439,7 +439,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         // 使用须知
         var $buyItem=$('.buy-note-item'),
-            timeInfo=this.getStimeAndEtime(ducutionInfo.use_start_time,ducutionInfo.use_end_time),
+            timeInfo=this.getStimeAndEtime(ducutionInfo.use_start_time,ducutionInfo.use_end_time,true),
             useCondition=ducutionInfo.use_condition,
             useMethon=ducutionInfo.use_method;
 
@@ -740,12 +740,14 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     };
 
 
-    t.getStimeAndEtime=function(sTime,eTime){
-        if(sTime) {
-            sTime = this.getTimeFromTimestamp(sTime, 'yyyy.MM.dd');
-        }
-        if(eTime) {
-            eTime = this.getTimeFromTimestamp(eTime, 'yyyy.MM.dd');
+    t.getStimeAndEtime=function(sTime,eTime,flag){
+        if(flag==true) {
+            if (sTime) {
+                sTime = this.getTimeFromTimestamp(sTime, 'yyyy.MM.dd');
+            }
+            if (eTime) {
+                eTime = this.getTimeFromTimestamp(eTime, 'yyyy.MM.dd');
+            }
         }
        var sTime1= this.judgeInfoNullInfo(sTime),
            sTime2= this.judgeInfoNullInfo(eTime);
@@ -804,7 +806,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     /*课程列表*/
     t.getMoreStr=function(data){
         if(!data || !data.courses || data.courses.length==0){
-            return;
+            return '';
         }
         var list = data.courses,
             len = list.length,
