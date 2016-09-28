@@ -2191,9 +2191,13 @@ class OrganizationController extends AppController
         $data['comprehensive_score'] = $comprehensiveScore;
         $data['comment'] = $content;
         $data['create_time'] = time();
-        $data['order_id'] = $order_id;
+        $data['order_id'] = intval($order_id);
         $res = $commentModel->add($data);
         if($res){
+            if(intval($order_id) > 0){
+                $order_status['order_status'] = 3;
+                M('Order')->where('id='.$order_id)->save($order_status);
+            }
             unset($data['comprehensive_score']);
             unset($data['comment']);
             $strScoreList = stripslashes($strScoreList);
