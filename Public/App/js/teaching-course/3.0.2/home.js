@@ -32,9 +32,24 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
         $(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
+
+        $(document).on(eventName,'.download-app-modal', $.proxy(this,'cotrolDownloadAppModalStatus'));
     };
 
-    Course.prototype=new Base();
+    var tempFlag =window.location.href.indexOf('hisihi-app') < 0,  //是否来源于app
+        config=null;
+
+    if(tempFlag) {
+        //下载条
+        config = {
+            downloadBar: {
+                show: true,
+                pos: 1
+            }
+        };
+    }
+
+    Course.prototype=new Base(config);
     Course.constructor=Course;
     var t=Course.prototype;
 
@@ -79,13 +94,20 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             }
         },function (err,results) {
             var val;
+
+            //此处做了两次循环，目的是确保basic的方法在deduction之前执行。因为basic异步方法执行时间最长，
+            //在网速比较慢的情况下，会在deduction之后才执行，导致价格下的标签说明没有办法加载
             for(var item in results) {
-                var fn=null;
-                val=results[item]
+                if ('basic'==item) {
+                    that.getBasicIntroduceInfo(results[item]);
+                    break;
+                }
+            }
+
+            for(var item in results) {
+                var fn = null;
+                val = results[item];
                 switch (item){
-                    case 'basic':
-                        fn=that.getBasicIntroduceInfo;
-                        break;
                     case 'orgBasic':
                         fn=that.getOrgInfoStr;
                         break;
@@ -233,7 +255,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         }
         var money=result.price;
         if(money){
-            money='￥'+money;
+            money='<span>￥</span><span>'+money+'</span>';
         }else{
             money='<label class="noprice">暂无报价</label>';
         }
@@ -251,8 +273,11 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         //app 内不显示 banner
         if(!this.isFromApp) {
-            var $banner=$('#banner').show();
-            $banner.find('img').attr('src', result.cover_pic);
+            var $banner=$('#banner').show(),
+                width=$banner.width(),
+                height= parseInt(width*7/16),
+                url =result.cover_pic+'@'+width+'w';
+            $banner.css('max-height',height).find('img').attr('src',url);
         }
     };
 
@@ -406,7 +431,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         $span.eq(2).text(val).next().text(rVal);
 
         $('.deduction-basic-info').show();
-        $('.deduction-main-info .diff-tips').text('学费直减'+rVal+'元');
+        $('.deduction-main-info .diff-tips').text('学费直减'+rVal+'元！');
 
         //换购按钮和时间倒计时
         this.getDiffTimeForBuy(ducutionInfo.buy_end_time);
@@ -414,7 +439,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         // 使用须知
         var $buyItem=$('.buy-note-item'),
-            timeInfo=this.getStimeAndEtime(ducutionInfo.use_start_time,ducutionInfo.use_end_time),
+            timeInfo=this.getStimeAndEtime(ducutionInfo.use_start_time,ducutionInfo.use_end_time,true),
             useCondition=ducutionInfo.use_condition,
             useMethon=ducutionInfo.use_method;
 
@@ -498,7 +523,6 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     //抵扣券标签
     t.initTagsForDeduction=function(data){
         var tipsArr=data.course_tag_list;
-        //tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
         if(tipsArr && tipsArr.length>0){
             var $target=$('.deduction-tip').show(),
                 options={
@@ -716,9 +740,15 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     };
 
 
-    t.getStimeAndEtime=function(sTime,eTime){
-        sTime=this.getTimeFromTimestamp(sTime);
-        eTime=this.getTimeFromTimestamp(eTime);
+    t.getStimeAndEtime=function(sTime,eTime,flag){
+        if(flag==true) {
+            if (sTime) {
+                sTime = this.getTimeFromTimestamp(sTime, 'yyyy.MM.dd');
+            }
+            if (eTime) {
+                eTime = this.getTimeFromTimestamp(eTime, 'yyyy.MM.dd');
+            }
+        }
        var sTime1= this.judgeInfoNullInfo(sTime),
            sTime2= this.judgeInfoNullInfo(eTime);
         sTime=sTime1+'——'+sTime2;
@@ -772,58 +802,11 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         }
     };
 
-    //更多
-    t.getMoreStr1=function(result){
-        if(!result || !result.courses || result.courses.length == 0) {
-            return '';
-        }
-        var courses=result.courses,
-            len = courses.length,
-            str='';
-
-        for(var i=0;i<len;i++) {
-            var item, courseName='', money='';
-            item=courses[i];
-            courseName=item.course_name;
-            money=this.judgeInfoNullInfo(item.price);
-            if(money){
-                money='￥'+money;
-            }else{
-                money='<label class="noprice">暂无报价</label>';
-            }
-            var limitStr='';
-            if(item.student_num!=0){
-                limitStr ='<div class="singin-limit-nums">' +
-                                '<div><canvas></canvas></div>'+
-                                '<span>'+item.already_registered+'/'+item.student_num+'</span>' +
-                            '</div>';
-            }
-            str += '<li class="normal">' +
-                        '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
-                            '<div class="main-content">'+
-                                '<div class="left">' +
-                                    '<img src="'+item.cover_pic+'">' +
-                                '</div>' +
-                                '<div class="right">' +
-                                    '<div class="lesson-name">'+courseName+'</div>' +
-                                    '<div class="right-item price">'+money+'</div>' +
-                                    '<div class="lesson-view-info">' +
-                                        this.getMiddleItemStr(item)+
-                                    '</div>' +
-                                '</div>' +
-                                limitStr +
-                            '</div>'+
-                        '</a>'+
-                    '</li>' +
-                    '<li class="seperation"></li>';
-        }
-        return str;
-    };
 
     /*课程列表*/
     t.getMoreStr=function(data){
         if(!data || !data.courses || data.courses.length==0){
-            return;
+            return '';
         }
         var list = data.courses,
             len = list.length,
@@ -836,9 +819,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         for(var i=0;i<len;i++){
             item=list[i];
-            //if(!item.rebate_info){
-            //    continue;
-            //}
+            if(!item.rebate_info){
+                continue;
+            }
             rightStr=this.getRightStrAndMarginInfo(item.rebate_info);  //抵扣券信息
 
             count++;
@@ -848,20 +831,23 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             }else{
                 money='<label class="noprice">暂无报价</label>';
             }
+            var url='hisihi://techcourse/detailinfo?id='+item.id;
+            if(!this.isFromApp){
+                url=this.baseUrl + 'teaching_course_main_page_v3_02/course_id/' + item.id
+            }
             str+='<li data-course-id="'+item.id+'" class="normal">'+
-                    '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                    '<a href="'+url+'">' +
                     '<div class="item-main">'+
-
-                    '<div class="left">'+
-                    '<div class="img-box">'+
-                    '<img class="lazy-img" data-original="'+item.cover_pic+'">'+
-                    '</div>'+
-                    '</div>'+
-                    '<div class="middle">'+
-                    '<p class="title-info hasCoupon">'+item.course_name+'</p>'+
-                    '<p class="money-info">'+money+'</p>'+
-                    '</div>'+
-                    rightStr+
+                        '<div class="left">'+
+                        '<div class="img-box">'+
+                        '<img class="lazy-img" data-original="'+item.cover_pic+'@66h_66w_2e">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="middle">'+
+                        '<p class="title-info hasCoupon">'+item.course_name+'</p>'+
+                        '<p class="money-info">'+money+'</p>'+
+                        '</div>'+
+                        rightStr+
                     '</div>'+
                     '</a>'+
                 '</li>'+
@@ -1022,6 +1008,17 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                     buyRebate();//调用app的方法，得到用户的基体信息
                 }
             }
+        }else{
+            this.cotrolDownloadAppModalStatus(true);
+        }
+    };
+
+    t.cotrolDownloadAppModalStatus=function(flag){
+        var $target=$('.download-app-modal');
+        if(flag===true){
+            $target.show();
+        }else{
+            $target.hide();
         }
     };
 

@@ -65,6 +65,7 @@ body {
   width: 100%;
   text-align: center;
   display: none;
+  overflow: hidden;
   .banner-img {
     max-width: 100%;
   }
@@ -93,7 +94,7 @@ body {
   }
   .price{
     color: #ff6531;
-    font-size: 20px;
+    font-size: 25px;
     .noprice{
       font-size: 16px;
     }
@@ -106,6 +107,13 @@ body {
       height: 100%;
       padding-top:14px;
       padding-bottom:14px;
+      #price{
+        span{
+          &:first-child{
+            font-size: 13px;
+          }
+        }
+      }
     }
     #current-title{
       font-size: 16px;
@@ -460,11 +468,12 @@ body {
             }
             &:nth-child(2){
               color: #FF5A00;
-              margin-right: 2px;
+              font-size: 13px;
             }
             &:nth-child(3){
               color: #FF5A00;
-              font-size: 18px;
+              font-size: 25px;
+              font-weight: bold;
               margin-right: 10px;
             }
             &:last-child{
@@ -838,6 +847,23 @@ body {
   }
 }
 
+.download-app-modal{
+  background-color:rgba(0,0,0,.6);
+  position: fixed;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  z-index: 10000;
+  img{
+    max-width: 80%;
+    position: absolute;
+    bottom: 57px;
+    left: 10%;
+  }
+}
+
 @media screen and (max-width:320px) {
   .main-item{
     /*������Ϣ*/
@@ -905,7 +931,7 @@ body {
 }
 
 @media screen and(min-width: 750px) {
-  #current-info,#more-info{
+  #current-info,#more-info,#banner,.download-app-modal{
     width: 700px;
     margin: 0 auto;
   }

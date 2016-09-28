@@ -556,6 +556,7 @@ body {
   width: 100%;
   text-align: center;
   display: none;
+  overflow: hidden;
 }
 #banner .banner-img {
   max-width: 100%;
@@ -587,7 +588,7 @@ body {
 }
 .main-item .price {
   color: #ff6531;
-  font-size: 20px;
+  font-size: 25px;
 }
 .main-item .price .noprice {
   font-size: 16px;
@@ -596,6 +597,9 @@ body {
   height: 100%;
   padding-top: 14px;
   padding-bottom: 14px;
+}
+.main-item.basic-info .center-content #price span:first-child {
+  font-size: 13px;
 }
 .main-item.basic-info #current-title {
   font-size: 16px;
@@ -964,11 +968,12 @@ body {
 }
 .main-item.deduction-basic-info .deduction-main-info .left-item .val span:nth-child(2) {
   color: #FF5A00;
-  margin-right: 2px;
+  font-size: 13px;
 }
 .main-item.deduction-basic-info .deduction-main-info .left-item .val span:nth-child(3) {
   color: #FF5A00;
-  font-size: 18px;
+  font-size: 25px;
+  font-weight: bold;
   margin-right: 10px;
 }
 .main-item.deduction-basic-info .deduction-main-info .left-item .val span:last-child {
@@ -1341,6 +1346,22 @@ body {
   background: url(http://pic.hisihi.com/2016-07-21/1469098248282877.png) 50% 50% no-repeat;
   background-size: 32px 32px;
 }
+.download-app-modal {
+  background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  z-index: 10000;
+}
+.download-app-modal img {
+  max-width: 80%;
+  position: absolute;
+  bottom: 57px;
+  left: 10%;
+}
 @media screen and (max-width: 320px) {
   .main-item {
     /*������Ϣ*/
@@ -1397,7 +1418,9 @@ body {
 }
 @media screen and (min-width: 750px) {
   #current-info,
-  #more-info {
+  #more-info,
+  #banner,
+  .download-app-modal {
     width: 700px;
     margin: 0 auto;
   }
