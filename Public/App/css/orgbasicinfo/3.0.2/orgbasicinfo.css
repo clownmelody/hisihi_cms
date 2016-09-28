@@ -71,7 +71,6 @@ ul li {
   margin: 10px 0;
 }
 #loading-data {
-  background-color: #000000;
   position: fixed;
   width: 100px;
   height: 100px;
@@ -79,11 +78,8 @@ ul li {
   margin-top: -50px;
   top: 50%;
   left: 50%;
-  z-index: 5555555;
+  z-index: 55555;
   text-align: center;
-  display: none;
-}
-#loading-data.active {
   display: block;
 }
 #loading-data.active .loding-img {
@@ -838,7 +834,7 @@ body {
 .coupon .deduction-tip {
   margin-top: 10px;
   margin-bottom: 10px;
-  padding: 5px 8px;
+  padding: 0 8px;
   position: relative;
   overflow-y: hidden;
   transition: height 0.2s linear;
@@ -847,7 +843,7 @@ body {
   display: none;
 }
 .coupon .deduction-tip .deduction-tip-left {
-  padding-top: 4px;
+  padding-top: 8px;
   margin-right: 40px;
 }
 .coupon .deduction-tip .deduction-tip-left li {

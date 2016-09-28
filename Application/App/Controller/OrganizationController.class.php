@@ -1912,7 +1912,7 @@ class OrganizationController extends AppController
                 $course_rebate_model = new Model();
                 $time = time();
                 $course_rebate_list = $course_rebate_model->query(
-                                        "SELECT rebate.id, rebate.name, rebate.value,
+                                        "SELECT distinct(rebate.id), rebate.name, rebate.value,
                     rebate.rebate_value FROM
                     hisihi_organization_teaching_course course,
                     hisihi_teaching_course_rebate_relation crr,

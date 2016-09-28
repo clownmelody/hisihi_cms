@@ -5,11 +5,11 @@
 define(['base'],function(Base){
     var Deduction=function(data,$target,options){
         if(!data || !(data instanceof Array)){
-            this.showTips('请正确传入数据内容');
+            alert('请正确传入数据内容');
             return;
         }
         if(!$target || $target.length==0){
-            this.showTips('数据容器为空');
+            alert('数据容器为空');
             return;
         }
         this.data=data;

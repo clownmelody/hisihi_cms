@@ -4,39 +4,34 @@
 
 define(['base','async','deduction','lazyloading','fastclick'],function(Base,async,Deduction){
     var Course=function(id,oid,url){
-        //this.cid = id;
-        //this.oid=oid;
-        //var eventName='click',that=this;
-        //this.baseUrl = url;
-        ////判断是否是外链还是app内打开链接
-        //if(this.isLocal){
-        //    //eventName='touchend';
-        //    this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
-        //}
+        this.cid = id;
+        this.oid=oid;
+        var eventName='click',that=this;
+        this.baseUrl = url;
+        //判断是否是外链还是app内打开链接
+        if(this.isLocal){
+            //eventName='touchend';
+            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
+        }
         this.controlLoadingBox(true);
         //加载页面数据
         window.setTimeout(function(){
-            alert($('#loading-data').css('display'));
-            //that.initData();
-        },1000);
+            that.initData();
+        },100);
 
-        ////
-        //$(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
-        ////
-        //////预约
+        $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
+        //预约
         //$(document).on(eventName,'.sing-in,.appointment', $.proxy(this,'showSingInModal'));
-        ////
-        //////关闭预约
-        //$(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
-        ////
-        //$(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
-        ////
-        ///*模态窗口操作*/
-        //$(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
-        //$(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
+        //关闭预约
+        $(document).on(eventName,'.close-sing-in', $.proxy(this,'closeSingInBox'));
         //
-        //$(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
+        $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
 
+        /*模态窗口操作*/
+        $(document).on(eventName,'#do-login', $.proxy(this,'doLogin'));
+        $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
+
+        $(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
     };
 
     Course.prototype=new Base();
@@ -198,7 +193,6 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     //获得更多课程的详细信息
     t.getMoreCourseInfo=function(callback){
         var paraData={
-            version: '3.02',
             except_id: this.cid | 0,
             page: 1,
             per_page: 100000
@@ -214,6 +208,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 eCallback: function (data) {
                     callback && callback(null);
                 },
+                beforeSend:function(xhr){
+                    xhr.setRequestHeader('version','3.02');  //设置头消息
+                }
             };
         this.getDataAsyncPy(para);
     };
@@ -398,7 +395,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         //如果有礼包信息，则显示：报名成功再送超值大礼包！
         var deductionTipsStr = '<p>线上支付'+val+'元定金，抵扣'+rVal+'元学费。';
         if(packageId && packageId!="0"){
-            deductionTipsStr+='报名成功再送超级大礼包！';
+            deductionTipsStr+='报名成功再送超值大礼包！';
         }
         deductionTipsStr+='</p>';
         $('.deduction-head-tips-box').html(deductionTipsStr).show();
@@ -417,7 +414,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         // 使用须知
         var $buyItem=$('.buy-note-item'),
-            timeInfo=this.getStimeAndEtime(data.start_course_time,data.end_course_time),
+            timeInfo=this.getStimeAndEtime(ducutionInfo.use_start_time,ducutionInfo.use_end_time),
             useCondition=ducutionInfo.use_condition,
             useMethon=ducutionInfo.use_method;
 
@@ -426,7 +423,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         //有效期
         if(timeInfo!='') {
-            $buyItem.eq(0).show().find('span').eq(0).text(timeInfo);
+            $buyItem.eq(0).show().find('span').eq(1).text(timeInfo);
         }
         //使用条件
         if(useCondition!='') {
@@ -501,7 +498,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     //抵扣券标签
     t.initTagsForDeduction=function(data){
         var tipsArr=data.course_tag_list;
-        tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
+        //tipsArr=[{id: "44", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "24", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"},{id: "34", value: "顺丰包邮送一百万 腊肉腊肉腊肉腊肉", extra: "按时发嘎嘎傻大个"}];
         if(tipsArr && tipsArr.length>0){
             var $target=$('.deduction-tip').show(),
                 options={
@@ -522,7 +519,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 }
 
             }else{
-                options=null;
+                options.showDeductionTagsCallBack=null;
             }
             new Deduction(tipsArr, $target,options);
         }
@@ -720,6 +717,8 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
 
     t.getStimeAndEtime=function(sTime,eTime){
+        sTime=this.getTimeFromTimestamp(sTime);
+        eTime=this.getTimeFromTimestamp(eTime);
        var sTime1= this.judgeInfoNullInfo(sTime),
            sTime2= this.judgeInfoNullInfo(eTime);
         sTime=sTime1+'——'+sTime2;
@@ -774,7 +773,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     };
 
     //更多
-    t.getMoreStr=function(result){
+    t.getMoreStr1=function(result){
         if(!result || !result.courses || result.courses.length == 0) {
             return '';
         }
@@ -783,13 +782,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             str='';
 
         for(var i=0;i<len;i++) {
-            var item, courseName='', teacher='', sTeacher='', money='';
+            var item, courseName='', money='';
             item=courses[i];
             courseName=item.course_name;
-            //teacher=this.judgeInfoNullInfo(item.lecture_name);
-            //if(teacher!=''){
-            //    sTeacher='<span>老师：'+teacher+'</span>';
-            //}
             money=this.judgeInfoNullInfo(item.price);
             if(money){
                 money='￥'+money;
@@ -821,6 +816,72 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                         '</a>'+
                     '</li>' +
                     '<li class="seperation"></li>';
+        }
+        return str;
+    };
+
+    /*课程列表*/
+    t.getMoreStr=function(data){
+        if(!data || !data.courses || data.courses.length==0){
+            return;
+        }
+        var list = data.courses,
+            len = list.length,
+            str = '',
+            rightStr = '',
+            count= 0,
+            item;
+
+
+
+        for(var i=0;i<len;i++){
+            item=list[i];
+            //if(!item.rebate_info){
+            //    continue;
+            //}
+            rightStr=this.getRightStrAndMarginInfo(item.rebate_info);  //抵扣券信息
+
+            count++;
+            var money=this.judgeInfoNullInfo(item.price);
+            if(money!=''){
+                money='￥'+money;
+            }else{
+                money='<label class="noprice">暂无报价</label>';
+            }
+            str+='<li data-course-id="'+item.id+'" class="normal">'+
+                    '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                    '<div class="item-main">'+
+
+                    '<div class="left">'+
+                    '<div class="img-box">'+
+                    '<img class="lazy-img" data-original="'+item.cover_pic+'">'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="middle">'+
+                    '<p class="title-info hasCoupon">'+item.course_name+'</p>'+
+                    '<p class="money-info">'+money+'</p>'+
+                    '</div>'+
+                    rightStr+
+                    '</div>'+
+                    '</a>'+
+                '</li>'+
+                '<li class="seperation"></li>';
+        }
+        return str;
+    };
+
+    /*得到优惠券右边的信息*/
+    t.getRightStrAndMarginInfo=function(deduction){
+        var str='';
+        if(deduction) {
+            var rValue=this.translationCount(deduction.rebate_value),
+                val=this.translationCount(deduction.value);
+            str ='<div class="right">' +
+                '<div class="right-main">'+
+                '<div class="money">￥' + val +'</div>' +
+                '<div class="deduction-money">抵￥'+ rValue +'</div>' +
+                '</div>' +
+                '</div>';
         }
         return str;
     };

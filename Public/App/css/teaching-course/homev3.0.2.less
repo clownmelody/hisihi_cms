@@ -10,6 +10,7 @@ body{
   background: #F2F2F2;
   max-width: 100%;
   overflow: auto;
+  min-height: 560px;
 }
 
 .font-icon{
@@ -18,6 +19,11 @@ body{
 .bg-sprite {
   background: url("../../images/teaching-course/sprite.png");
   background-size: 239px 32px;
+}
+.bg-sprite-deduciton{
+  background: url("../../images/orgbasicinfo/3.0.2/sprite.png");
+  background-size: 306px 65px;
+  background-repeat: no-repeat;
 }
 .bg-sprite-middle {
   .bg-sprite;
@@ -73,7 +79,7 @@ body {
   }
   .head-txt{
     font-size: 14px;
-    color:#444;
+    color:#212121;
     @h:40px;
     .size(100%,@h);
     line-height: @h;
@@ -113,6 +119,7 @@ body {
       color:#212121;
       line-height:21px;
       p {
+        margin: 0;
         &::before {
           display: inline-block;
           content: '!';
@@ -132,14 +139,15 @@ body {
 
   &.org-basic-info{
     position: relative;
-    height: 78px;
+    height: 84px;
     width: 100%;
+    padding-top: 3px;
     @h:50px;
     @p:14px;
 
     a{
       display: block;
-      .size(100%,100%);
+      height: 78px;
     }
     .center-content{
       height: 100%;
@@ -243,7 +251,7 @@ body {
     }
     .right-item {
       display: inline-block;
-      text-align: right;
+      text-align: center;
       .size(12px,32px*0.7);
       background: url("../../images/teaching-course/bottom-right.png") no-repeat;
       background-size: 18px*0.7 32px*0.7;
@@ -336,7 +344,6 @@ body {
         position: relative;
         &.normal{
           min-height: 94px;
-          border-radius: 6px;
           background-color: #fff;
         }
         &.seperation {
@@ -352,82 +359,81 @@ body {
         a {
           display: block;
           height: 100%;
-          margin: 0 14px;
         }
-        .main-content {
-          @w: 66px;
-          height: @w + 14 * 2;
-          margin:0 auto;
-          padding: 14px 0;
-          box-sizing: border-box;
-          display: block;
+        @padding-l:14px;
+        @w-l: 66px;
+        @w-r: 80px;
+        .item-main {
+          height: 100%;
+          padding-right: @padding-l;
+          margin-left: @padding-l;
+          display: box;
+          display:-moz-box;
+          display:-webkit-box;
+          .middle {
+            height: 100%;
+            -webkit-box-flex: 3;
+            flex: 3;
+            padding-top: 20px;
+            box-sizing: border-box;
+            p {
+              margin: 0;
+            }
+            .title-info {
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              font-size: 14px;
+              color: #212121;
+              &.hasCoupon {
+                margin-right: @padding-l;
+              }
+            }
+            .money-info {
+              color: #FA4535;
+              font-size: 20px;
+              font-family: Arial, Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+              margin: 2px 0;
+              .noprice {
+                font-size: 16px;
+              }
+            }
+            .time-info {
+              color: #8E8E8E;
+              font-size: 11px;
+            }
+          }
           .left {
-            .size(@w, auto);
-            position: absolute;
-            img {
-              .size(@w, @w);
+            flex: 1;
+            .img-box {
+              .size(66px,auto);
+              margin: 0 auto;
+              padding: 12px 10px 0 0;
+              img {
+                .size(@w-l, @w-l);
+              }
             }
           }
           .right {
-            margin-left: @w+10px;
-            .lesson-name {
-              color: #212121;
-              font-size: 14px;
-              margin-right: 32px;
-              .txt-ellipsis;
-            }
-            .lesson-view-info {
-              color: #808080;
-              font-size: 11px;
-              margin: 2px 0 1px 0;
-              //.txt-ellipsis-p(2);
-              span {
-                padding-right: 3px;
-                margin-right: 5px;
-                display: inline-block;
-                border-right: 1px solid @g-color;
-                height: 13px;
-                line-height: 13px;
-                &:last-child {
-                  border: none;
-                }
-              }
-            }
-            .teacher-info {
-              color: @g-color;
-              font-size: 13px;
-              .left-item {
-                display: inline-block;
-                width: 50%;
-                text-align: left;
-                .txt-ellipsis;
-              }
-            }
-          }
-          .singin-limit-nums {
-            position: absolute;
-            @h: 16px;
-            .size(40px, @h);
-            top: 14px;
-            right: 0;
-            text-align: center;
-            color: white;
-            line-height: @h;
-            font-size: 9px;
-            padding-left: 2px;
-            canvas{
-              height: 35px;
-              width: 100px;
-            }
-            span{
-              display: block;
-              position: absolute;
-              top:0;
-              left: 0;
+            position: relative;
+            width: 65px;
+            @post-h: 33px;
+            .right-main {
+              margin-top: 15px;
+              .size(67px, 61px);
+              .bg-sprite-deduciton;
               text-align: center;
-              padding-left: 15px;
-              line-height: 16px;
-              height: 16px;
+              line-height: 30px;
+              .money {
+                height: 30px;
+                color: #f97825;
+                font-size: 15px;
+              }
+              .deduction-money {
+                height: 30px;
+                font-size: 10px;
+                color: #fff;
+              }
             }
           }
         }
@@ -443,7 +449,6 @@ body {
     .deduction-main-info{
       position: relative;
       padding-top: 20px;
-      padding-bottom: 14px;
       .left-item {
         height: 100%;
         margin-right:80px;
@@ -499,24 +504,26 @@ body {
           margin-top: 4px;
           font-size: 10px;
           color: #F9A825;
-          text-align: right;
+          text-align: center;
           white-space:nowrap;
         }
       }
     }
     .deduction-tip {
       margin-top: 10px;
-      margin-bottom: 10px;
-      padding:2px 14px;
+      //margin-bottom: 10px;
+      padding:0 14px;
       position: relative;
       overflow-y: hidden;
       transition:height 0.2s linear;
-      height: 22px;
       background-color: #f7f7f7;
+      //background-color: red;
       display: none;
       .deduction-tip-left {
-        padding-top:4px;
+        padding-top:5px;
         margin-right: 40px;
+        position: absolute;
+        z-index: 0;
         li{
           display: inline-block;
           margin-right: 10px;
@@ -538,11 +545,15 @@ body {
         top:-7px;
         right: -6px;
         .size(50px,50px);
+
         transform: scale(0.6);
       }
     }
     .buy-note{
-      padding: 14px;
+      position: relative;
+      z-index: 1;
+      padding:0 14px 14px 14px;
+      background-color: #fff;
       .head-txt {
         border-bottom:1px solid #f3f3f3;
         width: 110%;
@@ -854,34 +865,6 @@ body {
                 .bg-sprite-middle;
                 background-position:-175px 0;
                 .size(16px,17px);
-              }
-            }
-          }
-        }
-      }
-    }
-    &.lessons-more {
-
-      ul {
-        li {
-          .main-content {
-            .right {
-              .lesson-name {
-                font-size: 12px;
-              }
-              .lesson-view-info {
-                margin: 3px auto 0px auto;
-              }
-              .teacher-info {
-                .left-item {
-
-                  span {
-                    font-size: 12px;
-                  }
-                  .price{
-                    font-size: 14px !important;
-                  }
-                }
               }
             }
           }

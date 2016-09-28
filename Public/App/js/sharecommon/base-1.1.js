@@ -483,7 +483,9 @@ define(['$','fastclick'],function() {
             if($('#loading-data').length>0){
                 return;
             }
-           var str = '<div id="loading-data" style="display: none;"><img class="loding-img"  src="http://pic.hisihi.com/2016-05-11/1462946331132960.png"></div>';
+           var str = '<div id="loading-data">'+
+                        '<img class="loding-img"  src="http://pic.hisihi.com/2016-05-11/1462946331132960.png">'+
+                    '</div>';
             $('body').append(str);
         },
 
@@ -493,14 +495,11 @@ define(['$','fastclick'],function() {
          * flag - {bool} 默认隐藏
          */
         controlLoadingBox:function(flag){
-            var $target=$('#loading-data'),
-                $img=$target.find('img');
+            var $target=$('#loading-data');
             if(flag) {
-                //$target.addClass('active').show();
-                $target.show();
+                $target.addClass('active').show();
             }else{
-                //$target.hide();
-                //$target.removeClass('active').hide();
+                $target.removeClass('active').hide();
             }
         },
 
