@@ -831,16 +831,21 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             }else{
                 money='<label class="noprice">暂无报价</label>';
             }
-            var url='hisihi://techcourse/detailinfo?id='+item.id;
+            var url='hisihi://techcourse/detailinfo?id='+item.id,
+                attrType='data-original';
             if(!this.isFromApp){
                 url=this.baseUrl + 'teaching_course_main_page_v3_02/course_id/' + item.id
+            }
+            //安卓滚动机制不一样，导致图片 懒惰加载有问题
+            if(this.deviceType.android){
+                attrType='src';
             }
             str+='<li data-course-id="'+item.id+'" class="normal">'+
                     '<a href="'+url+'">' +
                     '<div class="item-main">'+
                         '<div class="left">'+
                         '<div class="img-box">'+
-                        '<img class="lazy-img" data-original="'+item.cover_pic+'@66h_66w_2e">'+
+                        '<img class="lazy-img" '+ attrType +'="'+item.cover_pic+'@66h_66w_2e">'+
                         '</div>'+
                         '</div>'+
                         '<div class="middle">'+
