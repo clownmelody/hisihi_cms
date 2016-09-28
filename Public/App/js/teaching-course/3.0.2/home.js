@@ -277,7 +277,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 width=$banner.width(),
                 height= parseInt(width*7/16),
                 url =result.cover_pic+'@'+width+'w';
-            $banner.css('height',height).find('img').attr('src',url);
+            $banner.css('max-height',height).find('img').attr('src',url);
         }
     };
 
