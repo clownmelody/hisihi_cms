@@ -478,7 +478,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                         '<div class="item-main">'+
                             '<div class="left">'+
                                 '<div class="img-box">'+
-                                    '<img class="lazy-img" data-original="'+item.cover_pic+'">'+
+                                    '<img class="lazy-img" data-original="'+item.cover_pic+'@66h_66w_2e">'+
                                 '</div>'+
                             '</div>'+
                             '<div class="middle">'+

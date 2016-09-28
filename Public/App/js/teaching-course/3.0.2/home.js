@@ -255,7 +255,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         }
         var money=result.price;
         if(money){
-            money='￥'+money;
+            money='<span>￥</span><span>'+money+'</span>';
         }else{
             money='<label class="noprice">暂无报价</label>';
         }
@@ -273,8 +273,11 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         //app 内不显示 banner
         if(!this.isFromApp) {
-            var $banner=$('#banner').show();
-            $banner.find('img').attr('src', result.cover_pic);
+            var $banner=$('#banner').show(),
+                width=$banner.width(),
+                height= parseInt(width*7/16),
+                url =result.cover_pic+'@'+width+'w';
+            $banner.css('height',height).find('img').attr('src',url);
         }
     };
 
@@ -835,7 +838,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                     '<div class="item-main">'+
                         '<div class="left">'+
                         '<div class="img-box">'+
-                        '<img class="lazy-img" data-original="'+item.cover_pic+'">'+
+                        '<img class="lazy-img" data-original="'+item.cover_pic+'@66h_66w_2e">'+
                         '</div>'+
                         '</div>'+
                         '<div class="middle">'+
