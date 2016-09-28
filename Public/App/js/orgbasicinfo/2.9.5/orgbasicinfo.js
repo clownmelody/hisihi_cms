@@ -473,9 +473,9 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 money='<label class="noprice">暂无报价</label>';
             }
             str+='<li data-course-id="'+item.id+'">'+
-                    '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                    //'<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                    '<a href="' + this.baseUrl + 'teaching_course_main_page_v3_02/course_id/' + item.id + '">'+
                         '<div class="item-main">'+
-
                             '<div class="left">'+
                                 '<div class="img-box">'+
                                     '<img class="lazy-img" data-original="'+item.cover_pic+'">'+

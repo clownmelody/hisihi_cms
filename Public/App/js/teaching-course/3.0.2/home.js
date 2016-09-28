@@ -32,9 +32,24 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         $(document).on(eventName,'#cancle-login', $.proxy(this,'hideLoginTipBox'));
 
         $(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
+
+        $(document).on(eventName,'.download-app-modal', $.proxy(this,'cotrolDownloadAppModalStatus'));
     };
 
-    Course.prototype=new Base();
+    var tempFlag =window.location.href.indexOf('hisihi-app') < 0,  //是否来源于app
+        config=null;
+
+    if(tempFlag) {
+        //下载条
+        config = {
+            downloadBar: {
+                show: true,
+                pos: 1
+            }
+        };
+    }
+
+    Course.prototype=new Base(config);
     Course.constructor=Course;
     var t=Course.prototype;
 
@@ -79,14 +94,20 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             }
         },function (err,results) {
             var val;
-            var str='';
+
+            //此处做了两次循环，目的是确保basic的方法在deduction之前执行。因为basic异步方法执行时间最长，
+            //在网速比较慢的情况下，会在deduction之后才执行，导致价格下的标签说明没有办法加载
             for(var item in results) {
-                var fn=null;
-                val=results[item];
+                if ('basic'==item) {
+                    that.getBasicIntroduceInfo(results[item]);
+                    break;
+                }
+            }
+
+            for(var item in results) {
+                var fn = null;
+                val = results[item];
                 switch (item){
-                    case 'basic':
-                        fn=that.getBasicIntroduceInfo;
-                        break;
                     case 'orgBasic':
                         fn=that.getOrgInfoStr;
                         break;
@@ -717,8 +738,12 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
 
     t.getStimeAndEtime=function(sTime,eTime){
-        sTime=this.getTimeFromTimestamp(sTime,'yyyy.MM.dd');
-        eTime=this.getTimeFromTimestamp(eTime,'yyyy.MM.dd');
+        if(sTime) {
+            sTime = this.getTimeFromTimestamp(sTime, 'yyyy.MM.dd');
+        }
+        if(eTime) {
+            eTime = this.getTimeFromTimestamp(eTime, 'yyyy.MM.dd');
+        }
        var sTime1= this.judgeInfoNullInfo(sTime),
            sTime2= this.judgeInfoNullInfo(eTime);
         sTime=sTime1+'——'+sTime2;
@@ -801,20 +826,23 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             }else{
                 money='<label class="noprice">暂无报价</label>';
             }
+            var url='hisihi://techcourse/detailinfo?id='+item.id;
+            if(!this.isFromApp){
+                url=this.baseUrl + 'teaching_course_main_page_v3_02/course_id/' + item.id
+            }
             str+='<li data-course-id="'+item.id+'" class="normal">'+
-                    '<a href="hisihi://techcourse/detailinfo?id='+item.id+'">' +
+                    '<a href="'+url+'">' +
                     '<div class="item-main">'+
-
-                    '<div class="left">'+
-                    '<div class="img-box">'+
-                    '<img class="lazy-img" data-original="'+item.cover_pic+'">'+
-                    '</div>'+
-                    '</div>'+
-                    '<div class="middle">'+
-                    '<p class="title-info hasCoupon">'+item.course_name+'</p>'+
-                    '<p class="money-info">'+money+'</p>'+
-                    '</div>'+
-                    rightStr+
+                        '<div class="left">'+
+                        '<div class="img-box">'+
+                        '<img class="lazy-img" data-original="'+item.cover_pic+'">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="middle">'+
+                        '<p class="title-info hasCoupon">'+item.course_name+'</p>'+
+                        '<p class="money-info">'+money+'</p>'+
+                        '</div>'+
+                        rightStr+
                     '</div>'+
                     '</a>'+
                 '</li>'+
@@ -975,6 +1003,17 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                     buyRebate();//调用app的方法，得到用户的基体信息
                 }
             }
+        }else{
+            this.cotrolDownloadAppModalStatus(true);
+        }
+    };
+
+    t.cotrolDownloadAppModalStatus=function(flag){
+        var $target=$('.download-app-modal');
+        if(flag===true){
+            $target.show();
+        }else{
+            $target.hide();
         }
     };
 

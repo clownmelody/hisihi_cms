@@ -1341,6 +1341,22 @@ body {
   background: url(http://pic.hisihi.com/2016-07-21/1469098248282877.png) 50% 50% no-repeat;
   background-size: 32px 32px;
 }
+.download-app-modal {
+  background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  z-index: 10000;
+}
+.download-app-modal img {
+  max-width: 80%;
+  position: absolute;
+  bottom: 57px;
+  left: 10%;
+}
 @media screen and (max-width: 320px) {
   .main-item {
     /*������Ϣ*/
