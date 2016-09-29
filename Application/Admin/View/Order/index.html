@@ -26,7 +26,8 @@
                 <th class="">应付金额</th>
                 <th class="">抵扣金额</th>
                 <th class="">订单状态</th>
-                <th class="">状态</th>
+                <th class="">报名状态</th>
+                <th class="">礼包状态</th>
                 <th class="">下单时间</th>
                 <th class="">操作</th>
             </tr>
@@ -50,12 +51,21 @@
                             <else /> 未知状态
                             </if>
                         </td>
-                        <td>{$vo.status}</td>
+                        <td><if condition="($vo.enroll_status eq 0) "> 未报名
+                            <elseif condition="($vo.enroll_status eq 1) "/> 已报名
+                            <else /> 未知状态
+                        </if>
+                        </td>
+                        <td><if condition="($vo.gift_package_status eq 0) "> 未领取
+                            <elseif condition="($vo.gift_package_status eq 1) "/> 已领取
+                            <else /> 未知状态
+                        </if>
+                        </td>
                         <td><span>{$vo.create_time|time_format}</span></td>
                         <td>
                             <a href="{:U('Order/detail?id='.$vo['id'])}">订单详情</a>
-                            <a href="{:U('Order/confirm_enroll?id='.$vo['id'])}">确认报名</a>
-                            <a href="{:U('Order/confirm_gift_package?id='.$vo['id'])}">确认礼包</a>
+                            <a href="{:U('Order/confirm_enroll?id='.$vo['id'])}" class="ajax-get confirm">确认报名</a>
+                            <a href="{:U('Order/confirm_gift_package?id='.$vo['id'])}" class="ajax-get confirm">确认礼包</a>
                             <a href="{:U('Order/set_status?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
