@@ -2194,8 +2194,8 @@ class OrganizationController extends AppController
         $data['order_id'] = intval($order_id);
         $res = $commentModel->add($data);
         if($res){
-            $order_status = M('Order')->where('id='.$order_id)->getField('order_status');
-            if(intval($order_id) > 0 && intval($order_status) == 2){
+            $order_status = M('Order')->where('id='.$order_id)->field('order_status')->find();
+            if(intval($order_id) > 0 && intval($order_status['order_status']) == 2){
                 $order_status['order_status'] = 3;
                 M('Order')->where('id='.$order_id)->save($order_status);
             }
