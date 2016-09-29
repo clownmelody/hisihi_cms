@@ -948,6 +948,7 @@ body {
 .coupon .deduction-detail .list li .item-main .right {
   position: relative;
   width: 65px;
+  border: 1px solid transparent;
 }
 .coupon .deduction-detail .list li .item-main .right .right-main {
   margin-top: 15px;
