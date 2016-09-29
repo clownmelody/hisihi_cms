@@ -928,6 +928,7 @@ body {
 .main-item.lessons-more ul li .item-main .right {
   position: relative;
   width: 65px;
+  border: 1px solid transparent;
 }
 .main-item.lessons-more ul li .item-main .right .right-main {
   margin-top: 15px;
