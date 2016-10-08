@@ -4827,4 +4827,15 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         }
     }
 
+    public function autoTrackOrgNullLatitude(){
+        $org_list = M('Organization')->field('id, longitude, latitude')->select();
+        foreach($org_list as $org){
+            if(empty($org['longitude'])||empty($org['latitude'])){
+                $data['longitude'] = 122.833686;
+                $data['latitude'] = 53.265906;
+                M('Organization')->where('id='.$org['id'])->save($data);
+            }
+        }
+    }
+
 }

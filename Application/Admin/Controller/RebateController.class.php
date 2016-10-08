@@ -62,10 +62,6 @@ class RebateController extends AdminController
                 $this->success('添加成功', 'index.php?s=/admin/rebate/index');
             } else {
                 $model->where('id='.$cid)->save($data);
-                /*$updateData['service_condition'] = $data['service_condition'];
-                $updateData['using_method'] = $data['using_method'];
-                $updateData['instructions_for_use'] = $data['instructions_for_use'];
-                M('TeachingCourseCouponRelation')->where('status=1 and coupon_id='.$cid)->save($updateData);*/
                 $this->success('更新成功', 'index.php?s=/admin/rebate/index');
             }
         } else {
@@ -83,26 +79,58 @@ class RebateController extends AdminController
             $this->error($Model->getError());
         }
         $this->assign('rebate', $data);
-        $this->meta_title = '编辑抵扣券';
+        $this->assign("meta_title","编辑抵扣券");
         $this->display();
     }
 
     public function set_status($id, $status=-1){
         if(!empty($id)){
             $model = M('Rebate');
-            /*$tccr_model = M('TeachingCourseCouponRelation');*/
             $data['status'] = $status;
             if(is_array($id)){
                 foreach ($id as $i){
                     $model->where('id='.$i)->save($data);
-                    /*$tccr_model->where('coupon_id='.$i)->save(array('status'=>-1));*/
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
-                /*$tccr_model->where('coupon_id='.$id)->save(array('status'=>-1));*/
             }
             $this->success('处理成功','index.php?s=/admin/rebate/index');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    public function refresh(){
+        $model = M('Rebate');
+        $now = time();
+        $jiange_time = $now + 259200;
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, C('LIST_ROWS'));
+        $show = $Page->show();
+        $where_array['status'] = 1;
+        $where_array['buy_end_time'] = array(array('egt', $now),array('elt', $jiange_time), 'and');
+        $list = $model->where($where_array)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title","抵扣券下线提醒列表");
+        $this->display();
+    }
+
+    public function refresh_buy_end_time($id, $day=3){
+        if(!empty($id)){
+            $model = M('Rebate');
+            $data['buy_end_time'] = time() + $day*86400;
+            if(is_array($id)){
+                foreach ($id as $i){
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/rebate/refresh');
         } else {
             $this->error('未选择要处理的数据');
         }
