@@ -33,8 +33,10 @@ class TeachingCourseService extends Model
            }
            if($has_coupon==0&&$has_coupon!=null){
                $ids_list = $this->getHasRebateOrganizationIdList();
-               $comma_separated = implode(",", $ids_list);
-               $select_has_coupon = " and o.id not in (".$comma_separated.")";
+               if(count($ids_list)>0){
+                   $comma_separated = implode(",", $ids_list);
+                   $select_has_coupon = " and o.id not in (".$comma_separated.")";
+               }
            }
         }
         if(!empty($longitude)&&!empty($latitude)){
@@ -179,8 +181,10 @@ class TeachingCourseService extends Model
             }
             if($has_coupon==0&&$has_coupon!=null){
                 $ids_list = $this->getHasRebateOrganizationIdList();
-                $comma_separated = implode(",", $ids_list);
-                $select_has_coupon = " and o.id not in (".$comma_separated.")";
+                if(count($ids_list)>0){
+                    $comma_separated = implode(",", $ids_list);
+                    $select_has_coupon = " and o.id not in (".$comma_separated.")";
+                }
             }
         }
         if(!empty($longitude)&&!empty($latitude)){
