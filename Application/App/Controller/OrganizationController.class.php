@@ -4801,4 +4801,30 @@ hisihi_teaching_course_coupon_relation t2, hisihi_coupon t3 where t1.teaching_co
         return false;
     }
 
+    public function autoTrackOrgCourseTag(){
+        $org_list = M('Organization')->field('id, light_authentication')->select();
+        $course_tag_list = array(41, 43, 45, 46);
+        foreach($org_list as $org){
+            if($org['light_authentication']){
+                foreach($course_tag_list as $item){
+                    $result = M('OrganizationTagRelation')
+                        ->where("tag_type=9 and organization_id=".$org['id']." and tag_id=".$item)
+                        ->find();
+                    if($result){
+                        M('OrganizationTagRelation')
+                            ->where("tag_type=9 and organization_id=".$org['id']." and tag_id=".$item)
+                            ->save(array('status'=>1));
+                    }else{
+                        $major_data['organization_id'] = $org['id'];
+                        $major_data['tag_id'] = $item;
+                        $major_data['tag_type'] = 9;
+                        $major_data['create_time'] = time();
+                        $major_data['status'] = 1;
+                        M('OrganizationTagRelation')->add($major_data);
+                    }
+                }
+            }
+        }
+    }
+
 }
