@@ -2028,7 +2028,8 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
             $api = new UserApi();
             $userExist = $api->info($id, true);
             if($userExist==-1){  // 用户不存在
-                $uid = $api->register($id, $nickname, '123456', substr($id,1,3).'@'.substr($id,5,7).'.com');
+                $now = time();
+                $uid = $api->register($id, $nickname, '123456', $now.substr($id,1,3).'@'.substr($id,5,7).'.com');
                 if($uid <= 0) {
                     $message = $this->getRegisterErrorMessage($uid);
                     $code = $this->getRegisterErrorCode($uid);
@@ -2060,7 +2061,8 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
             $api = new UserApi();
             $userExist = $api->info($id, true);
             if($userExist==-1) {  // 用户不存在
-                $uid = $api->register($id, $nickname, '123456', substr($id,1,3).'@'.substr($id,5,7).'.com');
+                $now = time();
+                $uid = $api->register($id, $nickname, '123456', $now.substr($id,1,3).'@'.substr($id,5,7).'.com');
                 if($uid <= 0) {
                     $message = $this->getRegisterErrorMessage($uid);
                     $code = $this->getRegisterErrorCode($uid);
@@ -2087,7 +2089,8 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
                 $api = new UserApi();
                 $userExist = $api->info($uid, true);
                 if($userExist==-1) {  // 用户不存在
-                    $uid = $api->register($uid, $nickname, '123456', substr($uid,1,3).'@'.substr($uid,3,5).'.com');
+                    $now = time();
+                    $uid = $api->register($uid, $nickname, '123456', $now.substr($uid,1,3).'@'.substr($uid,3,5).'.com');
                     if($uid <= 0) {
                         $message = $this->getRegisterErrorMessage($uid);
                         $code = $this->getRegisterErrorCode($uid);
@@ -2116,7 +2119,7 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
                 $query = http_build_query($tokenData);
                 $content = $this->request_by_curl("https://api.weixin.qq.com/sns/userinfo", $query);
                 $user = json_decode($content, true);
-                if($user['errorcode']!=0){
+                if($user['errcode']!=0){
                     $refreshData = array(
                         'appid' => C('WeiXinPlatFormId'),
                         'grant_type' => 'refresh_token',
@@ -2141,7 +2144,8 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
                 $api = new UserApi();
                 $userExist = $api->info($uid, true);
                 if($userExist==-1) {  // 用户不存在
-                    $uid = $api->register($uid, $nickname, '123456', substr($uid,1,3).'@'.substr($uid, 3, 6).'.com');
+                    $now = time();
+                    $uid = $api->register($uid, $nickname, '123456', $now.substr($uid,1,3).'@'.substr($uid, 3, 6).'.com');
                     if($uid <= 0) {
                         $message = $this->getRegisterErrorMessage($uid);
                         $code = $this->getRegisterErrorCode($uid);
