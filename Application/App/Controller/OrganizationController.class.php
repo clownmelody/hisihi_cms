@@ -2113,21 +2113,22 @@ class OrganizationController extends AppController
                                 $comment_type=1, $page=1, $count=10){
         $model = M('OrganizationComment');
         if((float)$version<=3.0){
-            $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
-            $goodCount = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->count();
-            $mediumCount = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->count();
-            $badCount = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->count();
+            $totalCount = $model->where('status=1 and comment!=null and organization_id='.$organization_id)
+                ->count();
+            $goodCount = $model->where('comprehensive_score>3 and comment!=null and status=1 and organization_id='.$organization_id)->count();
+            $mediumCount = $model->where('comprehensive_score<4 and comment!=null and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->count();
+            $badCount = $model->where('comprehensive_score<2 and comment!=null and status=1 and organization_id='.$organization_id)->count();
             if($type == 'good'){
                 $totalCount = $goodCount;
-                $list = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+                $list = $model->where('comprehensive_score>3 and comment!=null and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
             }else if($type == 'medium'){
                 $totalCount = $mediumCount;
-                $list = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+                $list = $model->where('comprehensive_score<4 and comment!=null and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
             }else if($type == 'bad'){
                 $totalCount = $badCount;
-                $list = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+                $list = $model->where('comprehensive_score<2 and comment!=null and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
             }else{
-                $list = $model->where('status=1 and organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
+                $list = $model->where('status=1 and comment!=null and organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
             }
             foreach($list as &$comment){
                 $uid = $comment['uid'];
@@ -2154,10 +2155,77 @@ class OrganizationController extends AppController
             }
         } else {  // 3.1版本新的评论列表
             if($comment_type==1){   // 内部评论包括外部评论
-                $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
+                $totalCount = $model->where('status=1 and pid=0 and organization_id='.$organization_id)
+                    ->count();
+                $comment_list = $model->field('id, uid, comprehensive_score, comment, pic_id_list,
+                                                choose_reason, teachers_group, teaching_quality,
+                                                teaching_env, employ_service, create_time')
+                    ->where('status=1 and organization_id='.$organization_id)
+                    ->order('create_time desc')
+                    ->page($page, $count)->select();
+                foreach($comment_list as &$comment){
+                    $uid = $comment['uid'];
+                    $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
+                        $uid);
+                    $comment['childCommentCount']= $this->getChildCommentCount($comment['id']);
+                    $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+                    unset($comment['uid']);
+                    unset($comment['pic_id_list']);
+                }
+                $extra['totalCount'] = $totalCount;
+                $extra['data'] = $comment_list;
+                $this->apiSuccess('获取机构评论列表成功', null, $extra);
             } else {   // 外部评论
-
+                $otherCommentModle = M('OrganizationOtherComment');
+                $totalCount = $otherCommentModle->where('status=1 and organization_id='.$organization_id)
+                    ->count();
+                $comment_list = $otherCommentModle->field('name, content, from, create_time')
+                    ->where('status=1 and organization_id='.$organization_id)
+                    ->order('create_time desc')
+                    ->page($page, $count)
+                    ->select();
+                $extra['totalCount'] = $totalCount;
+                $extra['data'] = $comment_list;
+                $this->apiSuccess('获取机构评论列表成功', null, $extra);
             }
+        }
+    }
+
+    /**
+     * 获取子评论的数量
+     * @param $comment_id
+     */
+    private function getChildCommentCount($comment_id){
+        $model = M('OrganizationComment');
+        $totalCount = $model->where('status=1 and pid='.$comment_id)->count();
+        return $totalCount;
+    }
+
+    private function resolvePicListToURL($pic_id_list){
+        $pic_info_list = array();
+        if(empty($pic_id_list)){
+            return null;
+        } else {
+            $pid_list = explode("#", $pic_id_list);
+            $picModle = M('Picture');
+            foreach($pid_list as $pid){
+                $picDetail = $picModle->field('path')->where('id='.$pid)->find();
+                if($picDetail){
+                    if(strpos($picDetail['path'], "Picture")) {
+                        $src = substr($picDetail['path'], 16);
+                        $img['src'] = "http://".C('OSS_FORUM_PIC').C('OSS_ENDPOINT').$src;
+                        $oss_img_src = "http://".C('OSS_FORUM_PIC').C('IMG_OSS_ENDPOINT').$src.'@info';
+                        $origin_img_info = getOssImgSizeInfo($oss_img_src);
+                        $img_info = json_decode($origin_img_info);
+                        $src_size = array();
+                        $src_size[] = $img_info->width; // width
+                        $src_size[] = $img_info->height; // height
+                        $img['src_size'] = $src_size;
+                        $pic_info_list[] = $img;
+                    }
+                }
+            }
+            return $pic_info_list;
         }
     }
 
