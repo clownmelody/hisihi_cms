@@ -18,21 +18,53 @@
 </head>
 <body data-id="{$topicId}">
 <div class="wrapper">
-    <div class="content">
-        <div class="user-info-box"></div>
-
-        <div class="t-discuss-info-box"></div>
-
-        <div class="s-discuss-info-box"></div>
+    <!--老师详情-->
+    <div class="content-box info">
+        <div class="info-left"></div>
+        <div class="info-right">
+            <p id="name">徐领导</p>
+            <p id="title">平面设计师，高级讲师</p>
+        </div>
+    </div>
+    <!--老师标签-->
+    <div class="content-box tag">
+        <div class="tag-left"></div>
+        <div class="tag-right"></div>
+    </div>
+    <!--老师数字-->
+    <div class="content-box number">
+        <ul>
+            <li id="student"></li>
+            <li id="year"></li>
+            <li id="job"></li>
+        </ul>
+    </div>
+    <!--简介-->
+    <div class="content-box  introduction">
+        <div class="head">
+            <p>简介</p>
+        </div>
+        <p class="detail"></p>
+    </div>
+    <!--学生作品-->
+    <div class="content-box picture">
+        <div class="head">
+            <p>学生作品</p>
+            <span class="right-arrow"></span>
+        </div>
+    </div>
+    <!--学生就业信息-->
+    <div class="content-box employee">
+        <div class="head">
+            <p>学生就业信息</p>
+        </div>
+        <div class=""
     </div>
 </div>
+<!--结束-->
 <div class="nodata">
-    <p>暂无信息</p>
+    <p>暂无老师信息</p>
 </div>
-<!--蒙版-->
-<!--<div class="mask download">-->
-    <!--<img src="__IMG__/forum/1.png">-->
-<!--</div>-->
 </body>
 <script>
     window.hisihiUrlObj={
