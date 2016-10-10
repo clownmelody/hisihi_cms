@@ -1442,7 +1442,7 @@ class OrganizationController extends AppController
      * 定位到城市
      */
     public function location(){
-        $ip = get_client_ip();
+        $ip = get_client_ip(0, true);
         //$ip = '14.17.34.189';
         $ch = curl_init();
 //        $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;

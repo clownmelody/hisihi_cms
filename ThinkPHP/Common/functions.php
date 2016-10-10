@@ -1468,7 +1468,9 @@ function get_client_ip($type = 0,$adv=false) {
     static $ip  =   NULL;
     if ($ip !== NULL) return $ip[$type];
     if($adv){
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        if($_SERVER['HTTP_X_REAL_IP']){//nginx 代理模式下，获取客户端真实IP
+            $ip=$_SERVER['HTTP_X_REAL_IP'];
+        }elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $arr    =   explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
             $pos    =   array_search('unknown',$arr);
             if(false !== $pos) unset($arr[$pos]);
