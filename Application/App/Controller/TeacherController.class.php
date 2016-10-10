@@ -8,6 +8,9 @@ class TeacherController extends BaseController
         parent::__construct();
     }
 
+    public function _initialize(){
+        C('SHOW_PAGE_TRACE', false);
+    }
 
     public function teacherv3_1(){
         $this->display('teacherv3_1');
