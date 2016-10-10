@@ -21,8 +21,9 @@ class OtherCommentController extends AdminController
         $this->display();
     }
 
-    public function othercomment_add(){
-        $this->display('othercomment_add');
+    public function add($organization_id=0){
+        $this->assign('organization_id', $organization_id);
+        $this->display('add');
     }
 
     public function update(){
@@ -33,6 +34,7 @@ class OtherCommentController extends AdminController
             $data['content'] = $_POST["content"];
             $data['from'] = $_POST["from"];
             if(empty($cid)){
+                $data['organization_id'] = $_POST["organization_id"];
                 $data["create_time"] = time();
                 try {
                     $model->add($data);
@@ -45,7 +47,7 @@ class OtherCommentController extends AdminController
                 $this->success('更新成功', 'index.php?s=/admin/othercomment/index');
             }
         } else {
-            $this->display('othercomment_add');
+            $this->display('add');
         }
     }
 
