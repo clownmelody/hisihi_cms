@@ -1442,11 +1442,10 @@ class OrganizationController extends AppController
      * 定位到城市
      */
     public function location(){
-        $ip = get_client_ip(0, true);
-        //$ip = '14.17.34.189';
+        $ip = get_client_ip();
         $ch = curl_init();
-//        $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
-        $url = 'http://apis.baidu.com/bdyunfenxi/intelligence/ip?ip='.$ip;
+        $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
+//        $url = 'http://apis.baidu.com/bdyunfenxi/intelligence/ip?ip='.$ip;
         $header = array(
             'apikey: e1edb99789e6a40950685b5e3f0ee282',
         );
@@ -1455,7 +1454,18 @@ class OrganizationController extends AppController
         curl_setopt($ch , CURLOPT_URL , $url);
         $res = curl_exec($ch);
         $res = json_decode($res);
-        if($res->Status==0){
+        if($res->errNum==0){
+            $data['city'] = $res->retData->content->address_detail->city;
+            $data['city'] = mb_substr($data['city'], 0, mb_strlen($data['city'], "UTF-8")-1, "UTF-8");
+            if(empty($data['city'])){
+                $data['city'] = '武汉';
+            }
+            $this->apiSuccess('获取位置成功', null, $data);
+        } else {
+            $data['city'] = '武汉';
+            $this->apiSuccess('定位失败，返回默认城市', null, $data);
+        }
+        /*if($res->Status==0){
             $data['city'] = $res->Base_info->city;
 //            $data['city'] = mb_substr($data['city'], 0, mb_strlen($data['city'], "UTF-8")-1, "UTF-8");
             if(empty($data['city'])){
@@ -1465,7 +1475,7 @@ class OrganizationController extends AppController
         } else {
             $data['city'] = '武汉';
             $this->apiSuccess('定位失败，返回默认城市', null, $data);
-        }
+        }*/
     }
 
     /**
