@@ -2148,7 +2148,11 @@ class OrganizationController extends AppController
                 $this->apiSuccess('获取机构评论列表成功', null, $extra);
             }
         } else {  // 3.1版本新的评论列表
+            if($comment_type==1){   // 内部评论包括外部评论
+                $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
+            } else {   // 外部评论
 
+            }
         }
     }
 
@@ -2505,6 +2509,17 @@ class OrganizationController extends AppController
         $organization_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');
         $this->assign("organization_name", $organization_name);
         $this->display('orgbasicinfo_v2_9_5');
+    }
+
+    /**
+     * 机构web详情页 v3.1
+     * @param int $organization_id
+     */
+    public function OrganizationBasicInfo_v3_1($organization_id=0){
+        $this->assign("organization_id", $organization_id);
+        $organization_name = M('Organization')->where(array('id'=>$organization_id))->getField('name');
+        $this->assign("organization_name", $organization_name);
+        $this->display('orgbasicinfo_v3_1');
     }
 
     /**
@@ -4510,6 +4525,17 @@ GROUP BY
         $this->assign('course_id', $course_id);
         $this->assign('organization_id', $info['organization_id']);
         $this->display('teaching_course_main_page_v3.02');
+    }
+
+    /**
+     * @param int $course_id
+     */
+    public function teaching_course_main_page_v3_1($course_id=0){
+        $model = M('OrganizationTeachingCourse');
+        $info = $model->field('organization_id')->where('id='.$course_id)->find();
+        $this->assign('course_id', $course_id);
+        $this->assign('organization_id', $info['organization_id']);
+        $this->display('teaching_course_main_page_v3.1');
     }
 
     private function isCouponOutOfDate($end_time){
