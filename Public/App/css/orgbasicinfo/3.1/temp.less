@@ -271,59 +271,6 @@ body{
       }
     }
   }
-  .sing-up-guarantee{
-    width: 110%;
-    position: relative;
-    &.border{
-      border-top: 1px solid #f3f3f3;
-    }
-    .guarantee-left{
-      position: absolute;
-      .size(100px,100%);
-      .color-bar-box{
-        border-radius: 3px;
-        text-align: center;
-        position: relative;
-        .size(100%,22px);
-        margin: 11px 0;
-        @c:#fdbe0d;
-        border:1px solid @c;
-        font-size:0;
-        .color-item {
-          display: inline-block;
-          height: 100%;
-          &.disabled {
-            background-color: @c;
-            width: 60%;
-          }
-          &.available {
-            width: 40%;
-            background-color: #fff;
-          }
-        }
-        .left-num-box {
-          position: absolute;
-          top:0;
-          left:0;
-          .size(100%,100%);
-          text-align: center;
-          span {
-            font-size: 12px;
-            color: #212121;
-            line-height: 22px;
-          }
-        }
-      }
-    }
-    .guarantee-right{
-      padding-right: 10%;
-      margin-left: 100px;
-      text-align: right;
-      font-size: 13px;
-      line-height: 44px;
-      color: #212121;
-    }
-  }
 }
 
 /*优惠课程*/
@@ -784,7 +731,7 @@ body{
   .star-item {
     display: inline-block;
     .size(12px, 12px);
-    margin-right: 2px;
+    margin-right: 5px;
     .sprite-bg;
     background-position: -203px -8px;
     &.half {
@@ -798,52 +745,14 @@ body{
     }
   }
 
-  .comment-box-stars {
-    .basic-header {
-      .left-item {
-        float: left;
-        .red-word{
-          color: #FF5A00;
-        }
-        &#starsConForCompress {
-          margin-left: 6px;
-          color: #FF5A00;
-          i {
-            .star-item;
-          }
-        }
-      }
-      .right-item {
-        float: right;
-        color: #808080;
-        font-size: 14px;
-      }
-    }
-    .assessmentDetail {
-      li {
-        display: inline-block;
-        width: 33.3%;
-        margin-right: -4px;
-        text-align: center;
-        .title {
-          font-size: 12px;
-          color: #808080;
-        }
-        .stars-block {
-          margin: 8px 0 10px 0;
-          i {
-            .star-item;
-            margin-right: 2px;
-          }
-        }
-      }
-    }
-
-  }
   .comment-box-words{
     .basic-header{
       border-top: 1px solid #f3f3f3;
-      width: 110%;
+      .right-item{
+        float: right;
+        color: #808080;
+        font-size: 12px;
+      }
     }
     .input-box{
         display: block;
@@ -858,54 +767,116 @@ body{
         padding:4px 8px;
     }
     .studentCommentDetail{
-      margin-top: 13px;
+      margin-top: 14px;
       .nodata{
         p{
           font-size: 12px;
         }
       }
-      li{
+      >li{
         min-height: 40px;
         position: relative;
-        padding: 0 0 12px 0;
+        padding: 0 0 14px 0;
+        .comment-box-head{
+          display:-webkit-box;
+          height: 50px;
+          .user-img-box{
+            .size(50px,50px);
+            margin-right: 10px;
+            .border-radius(25px);
+            overflow: hidden;
+            img{
+              .size(100%,100%);
+            }
+          }
+          .user-name-box{
+            -webkit-box-flex: 1;
+            flex: 1;
+            padding-top: 8px;
+            .commentNickname {
+              color: #212121;
+              font-size: 14px;
+            }
+            .publicTime {
+              margin-top: 1px;
+              color: #808080;
+              font-size: 12px;
+            }
 
-        .imgCon {
-          position: absolute;
-          width: 45px;
-          height: 45px;
-          box-sizing: border-box;
-          img{
-            .size(100%,100%);
+          }
+          .user-star-box{
+            //width:80px;
+            text-align: right;
+            .total-comment-count{
+              margin-top: 3px;
+              color: #808080;
+              font-size: 12px;
+            }
+            .rightItem {
+              i{
+                .star-item;
+              }
+            }
           }
         }
         .commentCon {
           padding-top: 3px;
-          margin-left: 53px;
-          .commentNickname {
-            color: #212121;
-            font-size: 14px;
-          }
-          .rightItem {
-            float: right;
-            i{
-              .star-item;
-            }
-          }
+
           .content {
-            .txt-ellipsis-p(20);
+            .txt-ellipsis-p(5);
             padding: 2px 0px 2px 0;
             font-size: 13px;
             color: #212121;
             margin: 0;
-            line-height: 22px;
+            line-height: 25px;
           }
-          .publicTime {
-            height: 20px;
-            color: #bdbdbd;
+
+        }
+        .border-box{
+          margin-top: 14px;
+          width: 110%;
+          border-bottom: 1px solid #E5E5E5;
+        }
+        .comment-img-list{
+          margin-top: 10px;
+          li{
+            .li-preview-img(30%,auto,6px);
+          }
+          &:last-child{
+            margin-right: 0;
+          }
+        }
+        .comment-reason-box{
+          padding: 10px 0;
+          .comment-reason-item{
+            position: relative;
             font-size: 12px;
-            margin-bottom: 6px;
-            border-bottom: 1px solid #F3F3F3;
-            width: 104%;
+            @w:70px;
+            .size(100%,20px);
+            padding: 8px 0;
+            .field-name{
+              position: absolute;
+              left:0;
+              top:0;
+              .size(@w,auto);
+              border:1px solid #587EAB;
+              background-color: #BCCBDD;
+              color: #fff;
+              text-align: center;
+              .border-radius(4px);
+              line-height: 27px;
+            }
+            .field-val{
+              padding-left: @w + 8px;
+              color: #212121;
+              .txt-ellipsis-p(1);
+            }
+          }
+        }
+
+        &:last-child{
+          .border-box{
+            border-bottom: 0;
           }
         }
       }
