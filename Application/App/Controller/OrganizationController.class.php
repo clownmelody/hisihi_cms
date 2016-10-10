@@ -1443,7 +1443,6 @@ class OrganizationController extends AppController
      */
     public function location(){
         $ip = get_client_ip();
-        //$ip = '14.17.34.189';
         $ch = curl_init();
         $url = 'http://apis.baidu.com/apistore/lbswebapi/iplocation?ip='.$ip;
 //        $url = 'http://apis.baidu.com/bdyunfenxi/intelligence/ip?ip='.$ip;
