@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Resource-type" content="Document">
+    <!--禁止缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--禁止数字识别为手机号-->
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="stylesheet" href="__CSS__/teacher/home.css" rel="stylesheet" type="text/css">
+    <link href="__CSS__/photoswipe/default-skin/photoswipeunion.min.css" rel="stylesheet" type="text/css">
+    <title>老师详情</title>
+</head>
+<body data-id="{$topicId}">
+<div class="wrapper">
+    <div class="content">
+        <div class="user-info-box"></div>
+
+        <div class="t-discuss-info-box"></div>
+
+        <div class="s-discuss-info-box"></div>
+    </div>
+</div>
+<div class="nodata">
+    <p>暂无信息</p>
+</div>
+<!--蒙版-->
+<!--<div class="mask download">-->
+    <!--<img src="__IMG__/forum/1.png">-->
+<!--</div>-->
+</body>
+<script>
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/api.php',
+        img_url:'__IMG__',
+        js: "__JS__",
+        api_url:'__API_URL__'
+    };
+</script>
+<script type="application/javascript" src="__JS__/sharecommon/require.js" data-main="__JS__/teacher/config"></script>
+<!--<script type="application/javascript" src="__JS__/sharecommon/require.js" data-main="__JS__/forum/detail/detail-2.9.7.min"></script>-->
+</html>

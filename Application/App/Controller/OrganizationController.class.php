@@ -2098,50 +2098,57 @@ class OrganizationController extends AppController
      * 获取机构的评论列表
      * @param int $organization_id
      * @param null $type
+     * @param float $version
+     * @param int $comment_type
      * @param int $page
      * @param int $count
      * @return array
      */
-    public function commentList($organization_id=0,$type=null, $page=1, $count=10){
+    public function commentList($organization_id=0, $type=null, $version=3.0,
+                                $comment_type=1, $page=1, $count=10){
         $model = M('OrganizationComment');
-        $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
-        $goodCount = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->count();
-        $mediumCount = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->count();
-        $badCount = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->count();
-        if($type == 'good'){
-            $totalCount = $goodCount;
-            $list = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
-        }else if($type == 'medium'){
-            $totalCount = $mediumCount;
-            $list = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
-        }else if($type == 'bad'){
-            $totalCount = $badCount;
-            $list = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
-        }else{
-            $list = $model->where('status=1 and organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
-        }
-        foreach($list as &$comment){
-            $uid = $comment['uid'];
-            $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
-            $comment['userInfo']['nickname'] = "嘿设汇用户";
-            $comment['userInfo']['avatar128'] = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/default_avatar.png";
-            $comment['userInfo']['avatar256'] = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/default_avatar.png";
-            unset($comment['organization_id']);
-            unset($comment['uid']);
-            unset($comment['status']);
-        }
-        if($type=="view"){
-            return array(
-                'totalCount'=>$totalCount,
-                'data'=>$list
-            );
-        }else{
-            $extra['totalCount'] = $totalCount;
-            $extra['goodCount'] = $goodCount;
-            $extra['mediumCount'] = $mediumCount;
-            $extra['badCount'] = $badCount;
-            $extra['data'] = $list;
-            $this->apiSuccess('获取机构评论列表成功', null, $extra);
+        if((float)$version<=3.0){
+            $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
+            $goodCount = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->count();
+            $mediumCount = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->count();
+            $badCount = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->count();
+            if($type == 'good'){
+                $totalCount = $goodCount;
+                $list = $model->where('comprehensive_score>3 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+            }else if($type == 'medium'){
+                $totalCount = $mediumCount;
+                $list = $model->where('comprehensive_score<4 and comprehensive_score>1 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+            }else if($type == 'bad'){
+                $totalCount = $badCount;
+                $list = $model->where('comprehensive_score<2 and status=1 and organization_id='.$organization_id)->page($page, $count)->order('create_time desc')->select();
+            }else{
+                $list = $model->where('status=1 and organization_id='.$organization_id)->order('create_time desc')->page($page, $count)->select();
+            }
+            foreach($list as &$comment){
+                $uid = $comment['uid'];
+                $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'), $uid);
+                $comment['userInfo']['nickname'] = "嘿设汇用户";
+                $comment['userInfo']['avatar128'] = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/default_avatar.png";
+                $comment['userInfo']['avatar256'] = "http://hisihi-other.oss-cn-qingdao.aliyuncs.com/hotkeys/default_avatar.png";
+                unset($comment['organization_id']);
+                unset($comment['uid']);
+                unset($comment['status']);
+            }
+            if($type=="view"){
+                return array(
+                    'totalCount'=>$totalCount,
+                    'data'=>$list
+                );
+            }else{
+                $extra['totalCount'] = $totalCount;
+                $extra['goodCount'] = $goodCount;
+                $extra['mediumCount'] = $mediumCount;
+                $extra['badCount'] = $badCount;
+                $extra['data'] = $list;
+                $this->apiSuccess('获取机构评论列表成功', null, $extra);
+            }
+        } else {  // 3.1版本新的评论列表
+
         }
     }
 
@@ -2170,12 +2177,20 @@ class OrganizationController extends AppController
      * @param int $organization_id
      * @param int $uid
      * @param int $comprehensiveScore
-     * @param int $order_id
      * @param null $content
      * @param null $strScoreList
+     * @param int $order_id
+     * @param float $version
+     * @param null $pic_id_list
+     * @param null $choose_reason
+     * @param null $teachers_group
+     * @param null $teaching_env
+     * @param null $employ_service
      */
-    public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null, $strScoreList=null,
-                              $order_id=0 ){
+    public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null,
+                              $strScoreList=null, $order_id=0, $version=3.0,
+                              $pic_id_list=null, $choose_reason=null, $teachers_group=null,
+                              $teaching_env=null, $employ_service=null){
         if(empty($content)||empty($strScoreList)||$organization_id==0){
             $this->apiError(-1, '传入参数不能为空');
         }
@@ -2184,37 +2199,59 @@ class OrganizationController extends AppController
             $uid = $this->getUid();
         }
 
-        $commentModel = M('OrganizationComment');
-        $commentStarModel = M('OrganizationCommentStar');
-        $data['organization_id'] = $organization_id;
-        $data['uid'] = $uid;
-        $data['comprehensive_score'] = $comprehensiveScore;
-        $data['comment'] = $content;
-        $data['create_time'] = time();
-        $data['order_id'] = intval($order_id);
-        $res = $commentModel->add($data);
-        if($res){
-            $order_status = M('Order')->where('id='.$order_id)->field('order_status')->find();
-            if(intval($order_id) > 0 && intval($order_status['order_status']) == 2){
-                $order_status['order_status'] = 3;
-                M('Order')->where('id='.$order_id)->save($order_status);
+        if((float)$version<3.1){
+            $commentModel = M('OrganizationComment');
+            $commentStarModel = M('OrganizationCommentStar');
+            $data['organization_id'] = $organization_id;
+            $data['uid'] = $uid;
+            $data['comprehensive_score'] = $comprehensiveScore;
+            $data['comment'] = $content;
+            $data['create_time'] = time();
+            $data['order_id'] = intval($order_id);
+            $res = $commentModel->add($data);
+            if($res){
+                $order_status = M('Order')->where('id='.$order_id)->field('order_status')->find();
+                if(intval($order_id) > 0 && intval($order_status['order_status']) == 2){
+                    $order_status['order_status'] = 3;
+                    M('Order')->where('id='.$order_id)->save($order_status);
+                }
+                unset($data['comprehensive_score']);
+                unset($data['comment']);
+                $strScoreList = stripslashes($strScoreList);
+                $scoreList = json_decode($strScoreList, true);
+                foreach($scoreList as $score){
+                    $id = $score['id'];
+                    $score = $score['score'];
+                    $data['comment_type'] = $id;
+                    $data['star'] = $score;
+                    $commentStarModel->add($data);
+                }
+            } else {
+                $this->apiError(-1, '评论失败');
             }
-            unset($data['comprehensive_score']);
-            unset($data['comment']);
-            $strScoreList = stripslashes($strScoreList);
-            $scoreList = json_decode($strScoreList, true);
-            foreach($scoreList as $score){
-                $id = $score['id'];
-                $score = $score['score'];
-                $data['comment_type'] = $id;
-                $data['star'] = $score;
-                $commentStarModel->add($data);
+            $extra['comment_id'] = $res;
+            $this->apiSuccess('评论成功',null,$extra);
+        } else {  // 3.1 版本的逻辑
+            $commentModel = M('OrganizationComment');
+            $data['organization_id'] = $organization_id;
+            $data['uid'] = $uid;
+            $data['comprehensive_score'] = $comprehensiveScore;
+            $data['comment'] = $content;
+            $data['create_time'] = time();
+            $data['order_id'] = intval($order_id);
+            $data['pic_id_list'] = $pic_id_list;
+            $data['choose_reason'] = $choose_reason;
+            $data['teachers_group'] = $teachers_group;
+            $data['teaching_env'] = $teaching_env;
+            $data['employ_service'] = $employ_service;
+            $res = $commentModel->add($data);
+            if(!$res){
+                $this->apiError(-1, '评论失败');
+            } else {
+                $extra['comment_id'] = $res;
+                $this->apiSuccess('评论成功',null,$extra);
             }
-        } else {
-            $this->apiError(-1, '评论失败');
         }
-        $extra['comment_id'] = $res;
-        $this->apiSuccess('评论成功',null,$extra);
     }
 
     /**
