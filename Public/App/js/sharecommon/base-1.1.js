@@ -160,14 +160,20 @@ define(['$','fastclick'],function() {
                 return;
             }
             var that = this;
-            var loginXhr = $.ajax({
+            var xhr = $.ajax({
                 url: paras.url,
                 async:paras.async,
                 type: paras.type,
                 data: paras.paraData,
                 //timeout: 2000,
-                timeout: 100000,
+                timeout: 10000,
                 contentType: 'application/json',
+                beforeSend: function (myXhr) {
+                    //自定义 头信息
+                    if(paras.beforeSend){
+                        paras.beforeSend(myXhr);
+                    }
+                },
                 complete: function (xmlRequest, status) {
                     if (status == 'success') {
                         var rTxt = xmlRequest.responseText,
@@ -191,12 +197,12 @@ define(['$','fastclick'],function() {
                     }
                     //超时
                     else if (status == 'timeout') {
-                        loginXhr.abort();
+                        xhr.abort();
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {
                         paras.eCallback && paras.eCallback({code:'404',txt:'no found'});
-                        loginXhr.abort();
+                        xhr.abort();
                     }
                 }
             });
@@ -211,7 +217,7 @@ define(['$','fastclick'],function() {
                 paras.async = true;
             }
             var that = this;
-            var loginXhr = $.ajax({
+            var xhr = $.ajax({
                 async:paras.async,
                 url: paras.url,
                 type: paras.type,
@@ -219,14 +225,14 @@ define(['$','fastclick'],function() {
                 //timeout: 20000,
                 timeout: 50000,
                 contentType: 'application/json',
-                beforeSend: function (xhr) {
+                beforeSend: function (myXhr) {
                     //自定义 头信息
                     if(paras.beforeSend){
-                        paras.beforeSend(xhr);
+                        paras.beforeSend(myXhr);
                     }else {
                         //将token加入到请求的头信息中
                         if (paras.needToken) {
-                            xhr.setRequestHeader('Authorization', paras.token);  //设置头消息
+                            myXhr.setRequestHeader('Authorization', paras.token);  //设置头消息
                         }
                     }
                 },
@@ -247,7 +253,7 @@ define(['$','fastclick'],function() {
                     }
                     //超时
                     else if (status == 'timeout') {
-                        loginXhr.abort();
+                        xhr.abort();
                         paras.eCallback && paras.eCallback({code:'408',txt:'超时'});
                     }
                     else {

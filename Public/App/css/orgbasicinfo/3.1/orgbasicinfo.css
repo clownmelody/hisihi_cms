@@ -763,61 +763,6 @@ body {
   color: #FF5A00;
   margin-right: 5px;
 }
-.sing-up-box .sing-up-guarantee {
-  width: 110%;
-  position: relative;
-}
-.sing-up-box .sing-up-guarantee.border {
-  border-top: 1px solid #f3f3f3;
-}
-.sing-up-box .sing-up-guarantee .guarantee-left {
-  position: absolute;
-  width: 100px;
-  height: 100%;
-}
-.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box {
-  border-radius: 3px;
-  text-align: center;
-  position: relative;
-  width: 100%;
-  height: 22px;
-  margin: 11px 0;
-  border: 1px solid #fdbe0d;
-  font-size: 0;
-}
-.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .color-item {
-  display: inline-block;
-  height: 100%;
-}
-.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .color-item.disabled {
-  background-color: #fdbe0d;
-  width: 60%;
-}
-.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .color-item.available {
-  width: 40%;
-  background-color: #fff;
-}
-.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .left-num-box {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-}
-.sing-up-box .sing-up-guarantee .guarantee-left .color-bar-box .left-num-box span {
-  font-size: 12px;
-  color: #212121;
-  line-height: 22px;
-}
-.sing-up-box .sing-up-guarantee .guarantee-right {
-  padding-right: 10%;
-  margin-left: 100px;
-  text-align: right;
-  font-size: 13px;
-  line-height: 44px;
-  color: #212121;
-}
 /*优惠课程*/
 .coupon {
   font-size: 13px;
@@ -1277,7 +1222,7 @@ body {
   display: inline-block;
   width: 12px;
   height: 12px;
-  margin-right: 2px;
+  margin-right: 5px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
   background-repeat: no-repeat;
@@ -1292,75 +1237,13 @@ body {
 .comments-box .star-item:last-child {
   margin-right: 0;
 }
-.comments-box .comment-box-stars .basic-header .left-item {
-  float: left;
-}
-.comments-box .comment-box-stars .basic-header .left-item .red-word {
-  color: #FF5A00;
-}
-.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress {
-  margin-left: 6px;
-  color: #FF5A00;
-}
-.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin-right: 2px;
-  background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
-  background-size: 306px 65px;
-  background-repeat: no-repeat;
-  background-position: -203px -8px;
-}
-.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i.half {
-  background-position: -203px -31px;
-}
-.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i.none {
-  background-position: -203px -50px;
-}
-.comments-box .comment-box-stars .basic-header .left-item#starsConForCompress i:last-child {
-  margin-right: 0;
-}
-.comments-box .comment-box-stars .basic-header .right-item {
-  float: right;
-  color: #808080;
-  font-size: 14px;
-}
-.comments-box .comment-box-stars .assessmentDetail li {
-  display: inline-block;
-  width: 33.3%;
-  margin-right: -4px;
-  text-align: center;
-}
-.comments-box .comment-box-stars .assessmentDetail li .title {
-  font-size: 12px;
-  color: #808080;
-}
-.comments-box .comment-box-stars .assessmentDetail li .stars-block {
-  margin: 8px 0 10px 0;
-}
-.comments-box .comment-box-stars .assessmentDetail li .stars-block i {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
-  background-size: 306px 65px;
-  background-repeat: no-repeat;
-  background-position: -203px -8px;
-  margin-right: 2px;
-}
-.comments-box .comment-box-stars .assessmentDetail li .stars-block i.half {
-  background-position: -203px -31px;
-}
-.comments-box .comment-box-stars .assessmentDetail li .stars-block i.none {
-  background-position: -203px -50px;
-}
-.comments-box .comment-box-stars .assessmentDetail li .stars-block i:last-child {
-  margin-right: 0;
-}
 .comments-box .comment-box-words .basic-header {
   border-top: 1px solid #f3f3f3;
-  width: 110%;
+}
+.comments-box .comment-box-words .basic-header .right-item {
+  float: right;
+  color: #808080;
+  font-size: 12px;
 }
 .comments-box .comment-box-words .input-box {
   display: block;
@@ -1375,75 +1258,145 @@ body {
   padding: 4px 8px;
 }
 .comments-box .comment-box-words .studentCommentDetail {
-  margin-top: 13px;
+  margin-top: 14px;
 }
 .comments-box .comment-box-words .studentCommentDetail .nodata p {
   font-size: 12px;
 }
-.comments-box .comment-box-words .studentCommentDetail li {
+.comments-box .comment-box-words .studentCommentDetail > li {
   min-height: 40px;
   position: relative;
-  padding: 0 0 12px 0;
+  padding: 0 0 14px 0;
 }
-.comments-box .comment-box-words .studentCommentDetail li .imgCon {
-  position: absolute;
-  width: 45px;
-  height: 45px;
-  box-sizing: border-box;
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head {
+  display: -webkit-box;
+  height: 50px;
 }
-.comments-box .comment-box-words .studentCommentDetail li .imgCon img {
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-img-box {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  border-radius: 25px;
+  background-clip: padding-box;
+  overflow: hidden;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-img-box img {
   width: 100%;
   height: 100%;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon {
-  padding-top: 3px;
-  margin-left: 53px;
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-name-box {
+  -webkit-box-flex: 1;
+  flex: 1;
+  padding-top: 8px;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon .commentNickname {
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-name-box .commentNickname {
   color: #212121;
   font-size: 14px;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem {
-  float: right;
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-name-box .publicTime {
+  margin-top: 1px;
+  color: #808080;
+  font-size: 12px;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i {
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-star-box {
+  text-align: right;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-star-box .total-comment-count {
+  margin-top: 3px;
+  color: #808080;
+  font-size: 12px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-star-box .rightItem i {
   display: inline-block;
   width: 12px;
   height: 12px;
-  margin-right: 2px;
+  margin-right: 5px;
   background: url(../../../images/orgbasicinfo/3.0.2/sprite.png);
   background-size: 306px 65px;
   background-repeat: no-repeat;
   background-position: -203px -8px;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i.half {
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-star-box .rightItem i.half {
   background-position: -203px -31px;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i.none {
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-star-box .rightItem i.none {
   background-position: -203px -50px;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon .rightItem i:last-child {
+.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-star-box .rightItem i:last-child {
   margin-right: 0;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon .content {
+.comments-box .comment-box-words .studentCommentDetail > li .commentCon {
+  padding-top: 3px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .commentCon .content {
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 20;
+  -webkit-line-clamp: 5;
   padding: 2px 0px 2px 0;
   font-size: 13px;
   color: #212121;
   margin: 0;
-  line-height: 22px;
+  line-height: 25px;
 }
-.comments-box .comment-box-words .studentCommentDetail li .commentCon .publicTime {
-  height: 20px;
-  color: #bdbdbd;
+.comments-box .comment-box-words .studentCommentDetail > li .border-box {
+  margin-top: 14px;
+  width: 110%;
+  border-bottom: 1px solid #E5E5E5;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list {
+  margin-top: 10px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li {
+  width: 30%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 6px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li img {
+  width: 100%;
+  height: 100%;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list:last-child {
+  margin-right: 0;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box {
+  padding: 10px 0;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item {
+  position: relative;
   font-size: 12px;
-  margin-bottom: 6px;
-  border-bottom: 1px solid #F3F3F3;
-  width: 104%;
+  width: 100%;
+  height: 20px;
+  padding: 8px 0;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item .field-name {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 70px;
+  height: auto;
+  border: 1px solid #587EAB;
+  background-color: #BCCBDD;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  background-clip: padding-box;
+  line-height: 27px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item .field-val {
+  padding-left: 78px;
+  color: #212121;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.comments-box .comment-box-words .studentCommentDetail > li:last-child .border-box {
+  border-bottom: 0;
 }
 #footer {
   display: none;
