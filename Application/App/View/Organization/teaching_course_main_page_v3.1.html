@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html  style="overflow-x: hidden;">
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="嘿设汇——课程主页" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="Description" content="嘿设汇——课程主页">
+    <meta name="Keywords" content="嘿设汇——课程主页">
+    <link type="text/css" href="__CSS__/teaching-course/homev3.0.2.css" rel="stylesheet">
+    <title>课程主页</title>
+</head>
+<body data-oid="{$organization_id}">
+    <div id="banner">
+        <img src="" class="banner-img">
+    </div>
+    <div id="current-info">
+        <div class="main-item basic-info"></div>
+        <div class="main-item org-basic-info"></div>
+        <!--预约有礼-->
+        <div class="main-item appointment"></div>
+
+        <!--抵扣券-->
+        <div class="main-item deduction-basic-info">
+            <div class="deduction-main-info">
+                <div class="left-item">
+                    <div class="val">
+                        <span>抵扣券：</span>
+                        <span>￥</span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span class="diff-tips"></span>
+                </div>
+                <div class="right-item">
+                    <div class="btn">立即抢购</div>
+                    <span></span>
+                </div>
+            </div>
+            <div class="deduction-tip"></div>
+            <div class="buy-note">
+                <div class="head-txt">购买须知</div>
+                <div class="buy-note-item">
+                    <span>有效期</span>
+                    <span>2016.12.31--2020.12.31</span>
+                </div>
+                <div class="buy-note-item">
+                    <span>使用条件</span>
+                    <p></p>
+                </div>
+                <div class="buy-note-item">
+                    <span>使用方法</span>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-item lessons-detail"></div>
+        <div class="main-item lessons-plan"></div>
+        <div class="main-item lessons-sing-in"></div>
+    </div>
+    <div id="more-info">
+        <div class="head-txt">
+            <span>机构其他套餐</span>
+        </div>
+        <div class="main-item lessons-more">
+            <ul></ul>
+        </div>
+    </div>
+    <!--模态窗口-->
+    <div class="model-box">
+        <div class="model-box-item login-tips-box">
+            <div class="login-header">
+                请先登录再进行操作
+            </div>
+            <div class="btns-main">
+                <div id="cancle-login">
+                    <div class="btn">取消</div>
+                </div>
+                <div class="btn" id="do-login">去登录</div>
+            </div>
+        </div>
+    </div>
+    <div class="download-app-modal">
+        <img src="http://pic.hisihi.com/2016-09-28/1475030717565800.png">
+    </div>
+
+</body>
+<script type="application/javascript">
+    window.hisihiUrlObj={
+        link_url:'http://{$Think.server.HTTP_HOST}/',
+        img_url:'__IMG__',
+        js: "__JS__",
+        api_url:'__API_URL__',
+        statis_url:'__STATIS_URL__'
+    };
+    window.onload=function() {
+        document.documentElement.style.webkitTouchCallout = 'none'; //禁止长按事件
+    };
+</script>
+<!--<script type="text/javascript" data-main="__JS__/teaching-course/3.0.2/config"  src="__JS__/sharecommon/require.js" ></script>-->
+<script type="text/javascript" data-main="__JS__/teaching-course/3.0.2/teachingcourse-3.0.2.min"  src="__JS__/sharecommon/require.js" ></script>
+</html>
