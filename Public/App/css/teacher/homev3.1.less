@@ -32,7 +32,6 @@ body{
     margin: 14px 14px 0 14px;
     background-color: #FFFFFF;
     box-sizing: border-box;
-    border-radius: 4px;
     overflow: hidden;
   }
   .info{
@@ -40,11 +39,15 @@ body{
     height: @l;
     .info-left {
       .size(@l,@l);
-      background: url("../../images/teacher/LL.jpg") no-repeat;
-      background-size: 138px*0.5 119px*0.5;
-      border-radius: @l;
       display: inline-block;
       margin-right: 10px;
+      > span {
+        max-width: 60px;
+        height: 60px;
+        background: url("../../images/teacher/LL.jpg") no-repeat;
+        background-size: 138px*0.5 119px*0.5;
+        border-radius: @l;
+      }
     }
     .info-right {
       display: inline-block;
@@ -63,11 +66,15 @@ body{
   .tag {
     max-height: 90px;
     .tag-left{
-      .size(60px,60px);
+      .size(35px,38px);
       background: url("../../images/teacher/sprite.png") no-repeat;
+      background-size: 252px*0.5 75px*0.5;
       background-position: 0px 0px;
       display: inline-block;
       margin-right: 10px;
+    }
+    .tag-right {
+
     }
   }
 }
