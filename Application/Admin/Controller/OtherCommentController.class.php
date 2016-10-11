@@ -62,7 +62,7 @@ class OtherCommentController extends AdminController
             $this->error($Model->getError());
         }
         $this->assign('comment', $data);
-        $this->meta_title = '编辑评论';
+        $this->assign('meta_title', '编辑评论');
         $this->display();
     }
 
