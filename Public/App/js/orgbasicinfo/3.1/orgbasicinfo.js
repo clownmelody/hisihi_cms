@@ -51,8 +51,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             }
         });
 
-        $(window).on('scroll',$.proxy(this,'scrollContainer'));
-
         $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
 
         //显示预约报名框
@@ -90,34 +88,33 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     t.initData=function() {
         var that = this;
         Async.parallel({
-            //basic: function (callback) {
-            //    that.loadBasicInfoData(function (result) {
-            //            if(!result){
-            //            that.showTips('机构不存在');
-            //            that.controlLoadingBox(false);
-            //            return;
-            //        }
-            //        callback(null, result);
-            //    });
-            //},
-            //announcement: function (callback) {
-            //    that.loadTopAnnouncement(function (result) {
-            //        callback(null, result);
-            //    });
-            //},
-            //signUp:function(callback) {
-            //    that.loadSignUpInfo(function(result){
-            //        callback(null,result)
-            //    });
-            //},
-            //
-            //
-            ////课程
-            //course:function(callback){
-            //    that.loadTeachingCourse(function(result){
-            //        callback(null,result);
-            //    });
-            //},
+            basic: function (callback) {
+                that.loadBasicInfoData(function (result) {
+                        if(!result){
+                        that.showTips('机构不存在');
+                        that.controlLoadingBox(false);
+                        return;
+                    }
+                    callback(null, result);
+                });
+            },
+            announcement: function (callback) {
+                that.loadTopAnnouncement(function (result) {
+                    callback(null, result);
+                });
+            },
+            signUp:function(callback) {
+                that.loadSignUpInfo(function(result){
+                    callback(null,result)
+                });
+            },
+
+            //课程
+            course:function(callback){
+                that.loadTeachingCourse(function(result){
+                    callback(null,result);
+                });
+            },
             pics:function(callback){
                 that.loadPics(function(result){
                     callback(null,result)
@@ -128,31 +125,36 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                     callback(null,result)
                 });
             },
-            //teacher:function(callback) {
-            //    that.loadMyTeachersInfo(function(result){
-            //        callback(null,result)
-            //    });
-            //},
-            //teachingVideo:function(callback) {
-            //    that.loadTeachingVideoInfo(function(result){
-            //        callback(null,result)
-            //    });
-            //},
-            //works:function(callback) {
-            //    that.loadWorksInfo(function(result){
-            //        callback(null,result)
-            //    });
-            //},
-            //groups:function(callback) {
-            //    that.loadGroupsInfo(function (result) {
-            //        callback(null, result)
-            //    });
-            //},
+            teacher:function(callback) {
+                that.loadMyTeachersInfo(function(result){
+                    callback(null,result)
+                });
+            },
+            teachingVideo:function(callback) {
+                that.loadTeachingVideoInfo(function(result){
+                    callback(null,result)
+                });
+            },
+            works:function(callback) {
+                that.loadWorksInfo(function(result){
+                    callback(null,result)
+                });
+            },
+            groups:function(callback) {
+                that.loadGroupsInfo(function (result) {
+                    callback(null, result)
+                });
+            },
             detailComment:function(callback) {
                 that.loadDetailCommentInfo(1,function(result){
                     callback(null,result)
                 });
             },
+            //otherDetailComment:function(callback) {
+            //    that.loadDetailCommentInfo(2,function(result){
+            //        callback(null,result)
+            //    },4);
+            //},
         }, function (err, results) {
             var val;
             for(var item in results){
@@ -194,8 +196,11 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                     case 'groups':
                         fn=that.filInGroupsInfo;
                         break;
+                    case 'detailComment':
+                        that.fillDetailCommentInfo(val);
+                        break;
                     default :
-                        fn=that.fillDetailCommentInfo;
+
                         break;
                 }
                 fn && fn.call(that,val);
@@ -785,7 +790,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 itemInfo = data[i].info;
-                str+='<li><img src="'+itemInfo.avatar128+'"><p>' + itemInfo.nickname + '</p></li>';
+                str+='<li><a target="_blank" href="'+this.baseUrl.replace('Organization','Teacher')+'teacherv3_1/uid/'+data[i].uid+'"><img src="'+itemInfo.avatar128+'"><p>' + itemInfo.nickname + '</p></a></li>';
             }
         }
         $('.teachers-box').show();
@@ -909,14 +914,15 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
 
 
     /*加载我的评论信息*/
-    t.loadDetailCommentInfo=function(pageIndex,callback){
+    t.loadDetailCommentInfo=function(type,callback,perCount){
+        if(!perCount){
+            perCount=this.perPageSize;
+        }
         var that=this;
         this.getDataAsync({
             url: this.baseUrl + 'commentList',
-            paraData: {organization_id: this.oid,page:pageIndex,count:that.perPageSize,version:'3.1'},
+            paraData: {organization_id: this.oid,page:1,count:perCount,comment_type:type,version:'3.1'},
             sCallback: function(result){
-                that.pageSize=Math.ceil((result.totalCount|0)/that.perPageSize);
-                $('#commentNum').text(result.totalCount);
                 callback&&callback.call(that,result);
             },
             eCallback:function(txt){},
@@ -925,26 +931,38 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         });
     };
 
-    /*填充我的评论信息*/
+    /*填充评论信息,包括app评论、网络评论*/
     t.fillDetailCommentInfo=function(result){
-        var data=result.data,
-            str='';
-        if(!data || data.length==0){
+        var totalCount = (result.totalCount | 0) + (result.totalCount | 0);
+        $('#commentNum').text(totalCount);
+        if(totalCount==0){
             $('.studentCommentDetail .nodata').show();
             return;
         }
+        var data=result.data,
 
-        /*具体的评论信息*/
-        var len = data.length,
+            str='',
+            len = data == null ? 0 : data.length,
             item,
             userInfo,
-            dateTime;
+            dateTime,
+            chooseReasonObj=null,
+            commentPicsObj=null,
+            commentTxt='';
+
+        //app用户评论
         for (var i = 0; i < len; i++) {
             item = data[i];
             userInfo = item.userInfo;
             dateTime = this.getDiffTime(item.create_time,true);   //得到发表时间距现在的时间差
             if(dateTime.indexOf('-')>=0){
                 dateTime=dateTime.split(' ')[0];
+            }
+            chooseReasonObj=this.getChooseReaons(item);  //选择理由
+            commentPicsObj=this.getCommentPics(item.pic_info);  //评论图片
+            commentTxt=item.comment;
+            if(chooseReasonObj.flag && (commentPicsObj.flag || commentTxt!=='')){
+                chooseReasonObj.str=chooseReasonObj.str.replace(/no-border/,'border-box');
             }
             str += '<li>' +
                     '<div class="comment-box-head">'+
@@ -963,17 +981,24 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                         '</div>' +
                     '</div>'+
                     '<div class="commentCon">' +
-                        this.getChooseReaons(item)+
-                        '<p class="content">' + item.comment + '</p>' +
-                        this.getCommentPics(item.pic_info)+
+                        chooseReasonObj.str+
+                        '<p class="content">' + commentTxt + '</p>' +
+                        commentPicsObj.str+
                     '</div>' +
                     '<div class="border-box"></div>'+
                     '</li>';
         }
+
         $('.studentCommentDetail').append(str);
+
+        //var netStr = this.getNetComment(result2);
+        //if(netStr!='') {
+        //    $('.net-comment-box').show();
+        //    $('.net-comment-box-detail').append(netStr);
+        //}
     };
 
-    //子评论条数
+    //子评论条数，超过万则用万作单位
     t.getChildrenCommentCounts=function(num){
         num =num | 0;
         if(num>0){
@@ -983,49 +1008,58 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         return '';
     };
 
-    /*评论选择原因，老师质量等*/
+    /*
+    * 评论选择原因，老师质量等
+    * para:
+    * data - {obj} 信息对象
+    * return
+    * flag- {bool} 表示 选择原来 和教学质量等信息是否为空
+    * str - {string} 内容字符串
+    */
     t.getChooseReaons=function(data){
-        data.choose_reason='还行吧，自适应布局webkit-box的用法 « 前端左右自适应布局webkit-box的用法 « 前端左右自适应布局webkit-box的用法 « 前端左右';
-        data.teaching_group='前端左右自适应布局webkit-box的用法 « 前端左右';
-        data.teaching_group='前端左右自适应布局webkit-box的用法 « 前端左右';
-        data.teaching_quality='前端左右自webkit-box的用法 « 前端左右';
-        data.teaching_env='前端左右自适应x的用法 « 前端左右';
-        data.employ_service='左右';
         var tempArr=[
-            {key:'选择原因',val:data.choose_reason},
-            {key:'教学师资',val:data.teaching_group},
-            {key:'教学质量',val:data.teaching_quality},
-            {key:'教学环境',val:data.teaching_env},
-            {key:'就业服务',val:data.employ_service},
-            ],str='',item;
+                {key:'选择原因',val:data.choose_reason},
+                {key:'教学师资',val:data.teaching_group},
+                {key:'教学质量',val:data.teaching_quality},
+                {key:'教学环境',val:data.teaching_env},
+                {key:'就业服务',val:data.employ_service},
+            ],
+            str='',
+            flag=false,
+            item;
         for(var i in tempArr){
             item=tempArr[i];
             if(item.val){
+                flag=true;
                 str+='<div class="comment-reason-item"><span class="field-name">'+item.key+'</span><span class="field-val">'+item.val+'</span></div>'
             }
         }
-        return '<div class="comment-reason-box">'+str+'</div>'
+        return {
+            flag:flag,
+            str:'<div class="comment-reason-box">'+str+'<div class="no-border"></div></div>'
+        }
     };
 
-    /*评论图片*/
+    /*
+    * 评论图片
+    * para:
+    * picInfo - {obj} 信息对象
+    * return
+    * flag- {bool} 表示 picInfo信息是否为空
+    * str - {string} 内容字符串
+    */
     t.getCommentPics=function(picInfo){
-        var str='';
-        picInfo=[{
-            "src": "http://forum-pic.oss-cn-qingdao.aliyuncs.com//2016-10-10/57fb0ee97f080.jpg",
-            "src_size": [1152, 2048]
-        }, {
-            "src": "http://forum-pic.oss-cn-qingdao.aliyuncs.com//2016-10-10/57fb0ee97f080.jpg",
-            "src_size": [1152, 2048]
-        }, {
-            "src": "http://pic.hisihi.com/2016-09-06/1473146902944494.jpg",
-            "src_size": [1152, 2048]
-        }];
+        var str='',
+            flag=false;
         if(picInfo){
             var item,
                 len=picInfo.length,
                 src,
-                w=$('body').width() * 0.28 + 'px',
-                style='width:'+ w +';height:'+w;
+                w=($('body').width() * 0.33) | 0 + 'px',
+                style='height:'+w;
+            if(len>0){
+                flag=true;
+            }
             for(var i=0;i<len;i++){
                 item = picInfo[i];
                 src = item.src;
@@ -1036,30 +1070,51 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             }
             str ='<ul class="comment-img-list works-preview-box">' + str +'</ul>';
         }
-        return str;
+        return{
+            str:str,
+            flag:flag
+        };
     };
 
     /*
-     *滚动加载更多的数据
-     * 通过滚动条是否在底部来确定
-     * 同时通过 loadingData 类 来防止连续快速滚动导致的重复加载
+     * 互联网评论
+     * para:
+     * result - {obj} 信息对象
+     * return
+     * str - {string} 内容字符串
      */
-    t.scrollContainer=function(){
-        var $target= $('body'),
-            height = $target[0].scrollHeight -$(window).height(),
-            scrollTop=$target.scrollTop();
-        //加载更加多评论内容
-        if (scrollTop >= height -320 && !$target.hasClass('loading')) {  //滚动到底部
-            var tempIndex=this.pageIndex+1;
-            if(tempIndex>this.pageSize){
-                return;
+    t.getNetComment=function(result){
+        var data=result.data,
+            len = data == null ? 0:data.length,
+            item,
+            userInfo,
+            dateTime,
+            str='';
+
+        //网络评论
+        for (var i = 0; i < len; i++) {
+            item = data[i];
+            userInfo = item.userInfo;
+            dateTime = this.getDiffTime(item.create_time,true);   //得到发表时间距现在的时间差
+            if(dateTime.indexOf('-')>=0){
+                dateTime=dateTime.split(' ')[0];
             }
-            $target.addClass('loading');
-            this.loadDetailCommentInfo(tempIndex,function(){
-                $target.removeClass('loading');
-                this.pageIndex++;
-            });
+            str += '<li>' +
+                    '<div class="comment-box-head">' +
+                        '<div class="commentNickname">'+item.name + '</div>' +
+                    '</div>'+
+                    '<div class="commentCon">' +
+                        '<p class="content">' + item.content + '</p>' +
+
+                    '</div>' +
+                    '<div class="comment-box-bottom">'+
+                        '<div class="publicTime">' + dateTime + '</div>' +
+                        '<div class="public-location">' + item.from + '</div>' +
+                    '</div>'+
+                    '<div class="border-box"></div>'+
+                '</li>';
         }
+        return str;
     };
 
     /*根据分数情况，得到星星的信息*/

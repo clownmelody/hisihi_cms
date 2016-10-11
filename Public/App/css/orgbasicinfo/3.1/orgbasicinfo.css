@@ -520,6 +520,45 @@ body {
   display: inline-block;
   background-position: -118px -32px;
 }
+.conmment-li {
+  min-height: 40px;
+  position: relative;
+  padding: 0 0 14px 0;
+}
+.conmment-li .border-box {
+  margin-top: 9px;
+  width: 110%;
+  border-bottom: 1px solid #E5E5E5;
+}
+.conmment-li .content {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  padding: 2px 0px 2px 0;
+  font-size: 13px;
+  color: #212121;
+  margin: 0;
+  line-height: 25px;
+}
+.conmment-li .commentNickname {
+  color: #212121;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.conmment-li .publicTime {
+  margin-top: 1px;
+  color: #808080;
+  font-size: 12px;
+}
+.conmment-li:last-child .border-box {
+  border-bottom: 0;
+}
 .filter {
   position: absolute;
   z-index: -1;
@@ -640,6 +679,7 @@ body {
   border-radius: 4px;
   padding-left: 8px;
   padding-right: 8px;
+  overflow: hidden;
 }
 .main-item .basic-header {
   height: 40px;
@@ -1216,7 +1256,6 @@ body {
 }
 .comments-box {
   overflow-x: hidden;
-  margin-bottom: 56px;
 }
 .comments-box .star-item {
   display: inline-block;
@@ -1268,6 +1307,40 @@ body {
   position: relative;
   padding: 0 0 14px 0;
 }
+.comments-box .comment-box-words .studentCommentDetail > li .border-box {
+  margin-top: 9px;
+  width: 110%;
+  border-bottom: 1px solid #E5E5E5;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .content {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  padding: 2px 0px 2px 0;
+  font-size: 13px;
+  color: #212121;
+  margin: 0;
+  line-height: 25px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .commentNickname {
+  color: #212121;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .publicTime {
+  margin-top: 1px;
+  color: #808080;
+  font-size: 12px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li:last-child .border-box {
+  border-bottom: 0;
+}
 .comments-box .comment-box-words .studentCommentDetail > li .comment-box-head {
   display: -webkit-box;
   height: 50px;
@@ -1288,15 +1361,6 @@ body {
   -webkit-box-flex: 1;
   flex: 1;
   padding-top: 8px;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-name-box .commentNickname {
-  color: #212121;
-  font-size: 14px;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-name-box .publicTime {
-  margin-top: 1px;
-  color: #808080;
-  font-size: 12px;
 }
 .comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-star-box {
   text-align: right;
@@ -1328,7 +1392,107 @@ body {
 .comments-box .comment-box-words .studentCommentDetail > li .commentCon {
   padding-top: 3px;
 }
-.comments-box .comment-box-words .studentCommentDetail > li .commentCon .content {
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list {
+  max-height: 200px;
+  white-space: nowrap;
+  margin-top: 10px;
+  overflow: hidden;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li {
+  padding-right: 6px;
+  width: 32%;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 0px;
+  opacity: 0;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li img {
+  width: 100%;
+  height: 100%;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li:nth-of-type(1) {
+  opacity: 1;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li:nth-of-type(2) {
+  opacity: 1;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li:nth-of-type(3) {
+  opacity: 1;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item {
+  position: relative;
+  font-size: 14px;
+  width: 100%;
+  height: auto;
+  padding: 8px 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item .field-name {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 75px;
+  height: 27px;
+  border: 1px solid #587EAB;
+  background-color: #BCCBDD;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  background-clip: padding-box;
+  line-height: 27px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item .field-val {
+  padding-left: 83px;
+  color: #212121;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.net-comment-box {
+  display: none;
+}
+.net-comment-box .net-comment-box-header {
+  width: 100%;
+  height: 60px;
+  display: -webkit-box;
+}
+.net-comment-box .net-comment-box-header .middle-border {
+  width: 77px;
+  height: 100%;
+  border-bottom: 1px solid #F3F3F3;
+  position: relative;
+  top: -30px;
+}
+.net-comment-box .net-comment-box-header .middle-border:first-child {
+  left: -8px;
+}
+.net-comment-box .net-comment-box-header .middle-border:last-child {
+  right: -8px;
+}
+.net-comment-box .net-comment-box-header .middle-word {
+  color: #587eab;
+  font-size: 11px;
+  -webkit-box-flex: 1;
+  flex: 1;
+  text-align: center;
+  height: 100%;
+  line-height: 60px;
+}
+.net-comment-box .net-comment-box-detail li {
+  min-height: 40px;
+  position: relative;
+  padding: 0 0 14px 0;
+}
+.net-comment-box .net-comment-box-detail li .border-box {
+  margin-top: 9px;
+  width: 110%;
+  border-bottom: 1px solid #E5E5E5;
+}
+.net-comment-box .net-comment-box-detail li .content {
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
@@ -1340,63 +1504,66 @@ body {
   margin: 0;
   line-height: 25px;
 }
-.comments-box .comment-box-words .studentCommentDetail > li .border-box {
-  margin-top: 14px;
-  width: 110%;
-  border-bottom: 1px solid #E5E5E5;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list {
-  margin-top: 10px;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li {
-  width: 30%;
-  height: auto;
-  display: inline-block;
-  vertical-align: top;
-  margin-right: 6px;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list li img {
-  width: 100%;
-  height: 100%;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-img-list:last-child {
-  margin-right: 0;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box {
-  padding: 10px 0;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item {
-  position: relative;
-  font-size: 12px;
-  width: 100%;
-  height: 20px;
-  padding: 8px 0;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item .field-name {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 70px;
-  height: auto;
-  border: 1px solid #587EAB;
-  background-color: #BCCBDD;
-  color: #fff;
-  text-align: center;
-  border-radius: 4px;
-  background-clip: padding-box;
-  line-height: 27px;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item .field-val {
-  padding-left: 78px;
+.net-comment-box .net-comment-box-detail li .commentNickname {
   color: #212121;
+  font-size: 14px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
-.comments-box .comment-box-words .studentCommentDetail > li:last-child .border-box {
+.net-comment-box .net-comment-box-detail li .publicTime {
+  margin-top: 1px;
+  color: #808080;
+  font-size: 12px;
+}
+.net-comment-box .net-comment-box-detail li:last-child .border-box {
   border-bottom: 0;
+}
+.net-comment-box .net-comment-box-detail li .comment-box-head {
+  position: relative;
+  padding-left: 8px;
+  font-size: 14px;
+  color: #212121;
+}
+.net-comment-box .net-comment-box-detail li .comment-box-head::before {
+  position: absolute;
+  content: '';
+  width: 2px;
+  height: 19px;
+  background-color: #FF5A00;
+  top: 0;
+  left: 0;
+}
+.net-comment-box .net-comment-box-detail li .commentCon {
+  margin: 4px 0;
+}
+.net-comment-box .net-comment-box-detail li .comment-box-bottom {
+  display: -webkit-box;
+}
+.net-comment-box .net-comment-box-detail li .comment-box-bottom .publicTime {
+  width: 70px;
+  height: auto;
+}
+.net-comment-box .net-comment-box-detail li .comment-box-bottom .public-location {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  text-align: right;
+  -webkit-box-flex: 1;
+  flex: 1;
+  font-size: 11px;
+  color: #bdbdbd;
+}
+.net-comment-box .net-comment-box-detail li .comment-box-bottom .public-location::before {
+  content: '—';
+  margin-right: 10px;
+}
+.foot-item-box {
+  height: 56px;
 }
 #footer {
   display: none;
