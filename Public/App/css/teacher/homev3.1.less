@@ -1,0 +1,29 @@
+body{
+  margin: 0;
+  background: #F2F2F2;
+  max-width: 100%;
+  overflow: auto;
+}
+.content-box {
+  margin: 0 auto 12px auto;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  display: none;
+}
+.head {
+  font-size: 14px;
+  color:#444;
+  @h:40px;
+  .size(100%,@h);
+  line-height: @h;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space:nowrap;
+  >p {
+    padding-top: 14px;
+    padding-bottom: 8px;
+    color: #212121;
+  }
+}
+.wrapper {
+}
