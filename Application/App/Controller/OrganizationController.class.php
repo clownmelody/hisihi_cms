@@ -2202,9 +2202,56 @@ class OrganizationController extends AppController
         }
     }
 
-    public function commentDetail($organization_id=0, $comment_id=0){
+    /**
+     * 获取培训课程的评论列表
+     * @param int $organization_id
+     * @param int $teaching_course_id
+     * @param int $comment_type
+     * @param int $page
+     * @param int $count
+     */
+    public function teachingCourseCommentList($organization_id=0, $teaching_course_id=0,
+                                              $comment_type=1, $page=1, $count=10){
         $model = M('OrganizationComment');
-        $comment = $model->field('id, uid, comprehensive_score, comment, pic_id_list,
+        if($comment_type==1){   // 内部评论包括外部评论
+            $totalCount = $model->where('status=1 and pid=0 and teaching_course_id='.$teaching_course_id)
+                ->count();
+            $comment_list = $model->field('id, uid, comprehensive_score, comment, pic_id_list,
+                                                choose_reason, teachers_group, teaching_quality,
+                                                teaching_env, employ_service, create_time')
+                ->where('status=1 and pid=0 and teaching_course_id='.$teaching_course_id)
+                ->order('create_time desc')
+                ->page($page, $count)->select();
+            foreach($comment_list as &$comment){
+                $uid = $comment['uid'];
+                $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
+                    $uid);
+                $comment['childCommentCount']= $this->getChildCommentCount($comment['id']);
+                $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+                unset($comment['uid']);
+                unset($comment['pic_id_list']);
+            }
+            $extra['totalCount'] = $totalCount;
+            $extra['data'] = $comment_list;
+            $this->apiSuccess('获取机构评论列表成功', null, $extra);
+        } else {   // 外部评论
+            $otherCommentModle = M('OrganizationOtherComment');
+            $totalCount = $otherCommentModle->where('status=1 and organization_id='.$organization_id)
+                ->count();
+            $comment_list = $otherCommentModle->field('name, content, from, create_time')
+                ->where('status=1 and organization_id='.$organization_id)
+                ->order('create_time desc')
+                ->page($page, $count)
+                ->select();
+            $extra['totalCount'] = $totalCount;
+            $extra['data'] = $comment_list;
+            $this->apiSuccess('获取培训课程评论列表成功', null, $extra);
+        }
+    }
+
+    public function commentDetail($comment_id=0){
+        $model = M('OrganizationComment');
+        $comment = $model->field('id, uid, comprehensive_score, comment, pic_id_list, organization_id,
                                                 choose_reason, teachers_group, teaching_quality,
                                                 teaching_env, employ_service, create_time')
             ->where('id='.$comment_id)->find();
@@ -2213,10 +2260,11 @@ class OrganizationController extends AppController
             $uid);
         $comment['childCommentCount'] = $this->getChildCommentCount($comment['id']);
         $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
-        $comment['pre_comment_id'] = $this->getPreCommentId($organization_id, $comment_id);
-        $comment['next_comment_id'] = $this->getNextCommentId($organization_id, $comment_id);
+        $comment['pre_comment_id'] = $this->getPreCommentId($comment['organization_id'], $comment_id);
+        $comment['next_comment_id'] = $this->getNextCommentId($comment['organization_id'], $comment_id);
         unset($comment['uid']);
         unset($comment['pic_id_list']);
+        unset($comment['organization_id']);
         $extra['data'] = $comment;
         $this->apiSuccess('获取机构评论详情成功', null, $extra);
     }
@@ -2350,6 +2398,8 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
      * @param null $strScoreList
      * @param int $order_id
      * @param float $version
+     * @param int $pid
+     * @param int $teaching_course_id
      * @param null $pic_id_list
      * @param null $choose_reason
      * @param null $teachers_group
@@ -2357,10 +2407,10 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
      * @param null $employ_service
      */
     public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null,
-                              $strScoreList=null, $order_id=0, $version=3.0, $pid=0,
-                              $pic_id_list=null, $choose_reason=null, $teachers_group=null,
+                              $strScoreList=null, $order_id=0, $version=3.0, $pid=0, $teaching_course_id=0,
+                              $pic_id_list=null, $choose_reason=null, $teachers_group=null, $teaching_quality=null,
                               $teaching_env=null, $employ_service=null){
-        if(empty($content)||empty($strScoreList)||$organization_id==0){
+        if(empty($content)||$organization_id==0){
             $this->apiError(-1, '传入参数不能为空');
         }
         if(!$uid){
@@ -2402,9 +2452,16 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
             $this->apiSuccess('评论成功',null,$extra);
         } else {  // 3.1 版本的逻辑
             $commentModel = M('OrganizationComment');
+            if($pid!=0){
+                $pidInfo = $commentModel->field('organization_id, teaching_course_id')
+                    ->where('id='.$pid)->find();
+                $organization_id = $pidInfo['organization_id'];
+                $teaching_course_id = $pidInfo['teaching_course_id'];
+            }
             $data['organization_id'] = $organization_id;
             $data['uid'] = $uid;
             $data['pid'] = $pid;
+            $data['teaching_course_id'] = $teaching_course_id;
             $data['comprehensive_score'] = $comprehensiveScore;
             $data['comment'] = $content;
             $data['create_time'] = time();
@@ -2414,6 +2471,7 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
             $data['teachers_group'] = $teachers_group;
             $data['teaching_env'] = $teaching_env;
             $data['employ_service'] = $employ_service;
+            $data['teaching_quality'] = $teaching_quality;
             $res = $commentModel->add($data);
             if(!$res){
                 $this->apiError(-1, '评论失败');
@@ -2472,7 +2530,8 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
      * @param null $version
      * @return mixed
      */
-    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10, $type=null, $version=null){
+    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10,
+                                      $type=null, $version=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
