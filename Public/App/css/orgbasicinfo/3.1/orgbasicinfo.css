@@ -520,6 +520,31 @@ body {
   display: inline-block;
   background-position: -118px -32px;
 }
+.conmment-li {
+  min-height: 40px;
+  position: relative;
+  padding: 0 0 14px 0;
+}
+.conmment-li .border-box {
+  margin-top: 9px;
+  width: 110%;
+  border-bottom: 1px solid #E5E5E5;
+}
+.conmment-li .content {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  padding: 2px 0px 2px 0;
+  font-size: 13px;
+  color: #212121;
+  margin: 0;
+  line-height: 25px;
+}
+.conmment-li:last-child .border-box {
+  border-bottom: 0;
+}
 .filter {
   position: absolute;
   z-index: -1;
@@ -640,6 +665,9 @@ body {
   border-radius: 4px;
   padding-left: 8px;
   padding-right: 8px;
+}
+.main-item:last-child {
+  margin-bottom: 56px;
 }
 .main-item .basic-header {
   height: 40px;
@@ -1216,7 +1244,6 @@ body {
 }
 .comments-box {
   overflow-x: hidden;
-  margin-bottom: 56px;
 }
 .comments-box .star-item {
   display: inline-block;
@@ -1268,6 +1295,26 @@ body {
   position: relative;
   padding: 0 0 14px 0;
 }
+.comments-box .comment-box-words .studentCommentDetail > li .border-box {
+  margin-top: 9px;
+  width: 110%;
+  border-bottom: 1px solid #E5E5E5;
+}
+.comments-box .comment-box-words .studentCommentDetail > li .content {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  padding: 2px 0px 2px 0;
+  font-size: 13px;
+  color: #212121;
+  margin: 0;
+  line-height: 25px;
+}
+.comments-box .comment-box-words .studentCommentDetail > li:last-child .border-box {
+  border-bottom: 0;
+}
 .comments-box .comment-box-words .studentCommentDetail > li .comment-box-head {
   display: -webkit-box;
   height: 50px;
@@ -1292,6 +1339,11 @@ body {
 .comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-name-box .commentNickname {
   color: #212121;
   font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 .comments-box .comment-box-words .studentCommentDetail > li .comment-box-head .user-name-box .publicTime {
   margin-top: 1px;
@@ -1328,23 +1380,6 @@ body {
 .comments-box .comment-box-words .studentCommentDetail > li .commentCon {
   padding-top: 3px;
 }
-.comments-box .comment-box-words .studentCommentDetail > li .commentCon .content {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  padding: 2px 0px 2px 0;
-  font-size: 13px;
-  color: #212121;
-  margin: 0;
-  line-height: 25px;
-}
-.comments-box .comment-box-words .studentCommentDetail > li .border-box {
-  margin-top: 14px;
-  width: 110%;
-  border-bottom: 1px solid #E5E5E5;
-}
 .comments-box .comment-box-words .studentCommentDetail > li .comment-img-list {
   margin-top: 10px;
 }
@@ -1362,22 +1397,21 @@ body {
 .comments-box .comment-box-words .studentCommentDetail > li .comment-img-list:last-child {
   margin-right: 0;
 }
-.comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box {
-  padding: 10px 0;
-}
 .comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item {
   position: relative;
-  font-size: 12px;
+  font-size: 14px;
   width: 100%;
-  height: 20px;
+  height: auto;
   padding: 8px 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 .comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item .field-name {
   position: absolute;
   left: 0;
-  top: 0;
-  width: 70px;
-  height: auto;
+  top: 3px;
+  width: 75px;
+  height: 27px;
   border: 1px solid #587EAB;
   background-color: #BCCBDD;
   color: #fff;
@@ -1387,7 +1421,7 @@ body {
   line-height: 27px;
 }
 .comments-box .comment-box-words .studentCommentDetail > li .comment-reason-box .comment-reason-item .field-val {
-  padding-left: 78px;
+  padding-left: 83px;
   color: #212121;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -1395,8 +1429,32 @@ body {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
-.comments-box .comment-box-words .studentCommentDetail > li:last-child .border-box {
-  border-bottom: 0;
+.net-comment-box .net-comment-box-header {
+  width: 100%;
+  height: 40px;
+  display: -webkit-box;
+}
+.net-comment-box .net-comment-box-header .middle-border {
+  width: 77px;
+  height: 100%;
+  border-bottom: 1px solid #F3F3F3;
+  position: relative;
+  top: -20px;
+}
+.net-comment-box .net-comment-box-header .middle-border:first-child {
+  left: -8px;
+}
+.net-comment-box .net-comment-box-header .middle-border:last-child {
+  right: -8px;
+}
+.net-comment-box .net-comment-box-header .middle-word {
+  color: #587eab;
+  font-size: 11px;
+  -webkit-box-flex: 1;
+  flex: 1;
+  text-align: center;
+  height: 100%;
+  line-height: 40px;
 }
 #footer {
   display: none;
