@@ -88,34 +88,33 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     t.initData=function() {
         var that = this;
         Async.parallel({
-            //basic: function (callback) {
-            //    that.loadBasicInfoData(function (result) {
-            //            if(!result){
-            //            that.showTips('机构不存在');
-            //            that.controlLoadingBox(false);
-            //            return;
-            //        }
-            //        callback(null, result);
-            //    });
-            //},
-            //announcement: function (callback) {
-            //    that.loadTopAnnouncement(function (result) {
-            //        callback(null, result);
-            //    });
-            //},
-            //signUp:function(callback) {
-            //    that.loadSignUpInfo(function(result){
-            //        callback(null,result)
-            //    });
-            //},
-            //
-            //
-            ////课程
-            //course:function(callback){
-            //    that.loadTeachingCourse(function(result){
-            //        callback(null,result);
-            //    });
-            //},
+            basic: function (callback) {
+                that.loadBasicInfoData(function (result) {
+                        if(!result){
+                        that.showTips('机构不存在');
+                        that.controlLoadingBox(false);
+                        return;
+                    }
+                    callback(null, result);
+                });
+            },
+            announcement: function (callback) {
+                that.loadTopAnnouncement(function (result) {
+                    callback(null, result);
+                });
+            },
+            signUp:function(callback) {
+                that.loadSignUpInfo(function(result){
+                    callback(null,result)
+                });
+            },
+
+            //课程
+            course:function(callback){
+                that.loadTeachingCourse(function(result){
+                    callback(null,result);
+                });
+            },
             pics:function(callback){
                 that.loadPics(function(result){
                     callback(null,result)
@@ -126,36 +125,36 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                     callback(null,result)
                 });
             },
-            //teacher:function(callback) {
-            //    that.loadMyTeachersInfo(function(result){
-            //        callback(null,result)
-            //    });
-            //},
-            //teachingVideo:function(callback) {
-            //    that.loadTeachingVideoInfo(function(result){
-            //        callback(null,result)
-            //    });
-            //},
-            //works:function(callback) {
-            //    that.loadWorksInfo(function(result){
-            //        callback(null,result)
-            //    });
-            //},
-            //groups:function(callback) {
-            //    that.loadGroupsInfo(function (result) {
-            //        callback(null, result)
-            //    });
-            //},
+            teacher:function(callback) {
+                that.loadMyTeachersInfo(function(result){
+                    callback(null,result)
+                });
+            },
+            teachingVideo:function(callback) {
+                that.loadTeachingVideoInfo(function(result){
+                    callback(null,result)
+                });
+            },
+            works:function(callback) {
+                that.loadWorksInfo(function(result){
+                    callback(null,result)
+                });
+            },
+            groups:function(callback) {
+                that.loadGroupsInfo(function (result) {
+                    callback(null, result)
+                });
+            },
             detailComment:function(callback) {
                 that.loadDetailCommentInfo(1,function(result){
                     callback(null,result)
                 });
             },
-            otherDetailComment:function(callback) {
-                that.loadDetailCommentInfo(2,function(result){
-                    callback(null,result)
-                });
-            },
+            //otherDetailComment:function(callback) {
+            //    that.loadDetailCommentInfo(2,function(result){
+            //        callback(null,result)
+            //    },4);
+            //},
         }, function (err, results) {
             var val;
             for(var item in results){
@@ -198,7 +197,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                         fn=that.filInGroupsInfo;
                         break;
                     case 'detailComment':
-                        that.fillDetailCommentInfo(val,results['otherDetailComment']);
+                        that.fillDetailCommentInfo(val);
                         break;
                     default :
 
@@ -791,7 +790,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 itemInfo = data[i].info;
-                str+='<li><img src="'+itemInfo.avatar128+'"><p>' + itemInfo.nickname + '</p></li>';
+                str+='<li><a target="_blank" href="'+this.baseUrl.replace('Organization','Teacher')+'teacherv3_1/uid/'+data[i].uid+'"><img src="'+itemInfo.avatar128+'"><p>' + itemInfo.nickname + '</p></a></li>';
             }
         }
         $('.teachers-box').show();
@@ -915,11 +914,14 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
 
 
     /*加载我的评论信息*/
-    t.loadDetailCommentInfo=function(type,callback){
+    t.loadDetailCommentInfo=function(type,callback,perCount){
+        if(!perCount){
+            perCount=this.perPageSize;
+        }
         var that=this;
         this.getDataAsync({
             url: this.baseUrl + 'commentList',
-            paraData: {organization_id: this.oid,page:1,count:that.perPageSize,comment_type:type,version:'3.1'},
+            paraData: {organization_id: this.oid,page:1,count:perCount,comment_type:type,version:'3.1'},
             sCallback: function(result){
                 callback&&callback.call(that,result);
             },
@@ -930,7 +932,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     };
 
     /*填充评论信息,包括app评论、网络评论*/
-    t.fillDetailCommentInfo=function(result,result2){
+    t.fillDetailCommentInfo=function(result){
         var totalCount = (result.totalCount | 0) + (result.totalCount | 0);
         $('#commentNum').text(totalCount);
         if(totalCount==0){
@@ -987,9 +989,13 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                     '</li>';
         }
 
-        var netStr = this.getNetComment(result2);
+        $('.studentCommentDetail').append(str);
 
-        $('.studentCommentDetail').append(str + netStr);
+        //var netStr = this.getNetComment(result2);
+        //if(netStr!='') {
+        //    $('.net-comment-box').show();
+        //    $('.net-comment-box-detail').append(netStr);
+        //}
     };
 
     //子评论条数，超过万则用万作单位
@@ -1045,22 +1051,12 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     t.getCommentPics=function(picInfo){
         var str='',
             flag=false;
-        //picInfo=[{
-        //    "src": "http://forum-pic.oss-cn-qingdao.aliyuncs.com//2016-10-10/57fb0ee97f080.jpg",
-        //    "src_size": [1152, 2048]
-        //}, {
-        //    "src": "http://forum-pic.oss-cn-qingdao.aliyuncs.com//2016-10-10/57fb0ee97f080.jpg",
-        //    "src_size": [1152, 2048]
-        //}, {
-        //    "src": "http://pic.hisihi.com/2016-09-06/1473146902944494.jpg",
-        //    "src_size": [1152, 2048]
-        //}];
         if(picInfo){
             var item,
                 len=picInfo.length,
                 src,
-                w=$('body').width() * 0.28 + 'px',
-                style='width:'+ w +';height:'+w;
+                w=($('body').width() * 0.33) | 0 + 'px',
+                style='height:'+w;
             if(len>0){
                 flag=true;
             }
@@ -1080,6 +1076,13 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         };
     };
 
+    /*
+     * 互联网评论
+     * para:
+     * result - {obj} 信息对象
+     * return
+     * str - {string} 内容字符串
+     */
     t.getNetComment=function(result){
         var data=result.data,
             len = data == null ? 0:data.length,
@@ -1087,20 +1090,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             userInfo,
             dateTime,
             str='';
-        data=[
-            {
-                "name": "习近平",
-                "content": "不错不错哦",
-                "from": "新华社",
-                "create_time": "1474254472"
-            },
-            {
-                "name": "呵呵呵",
-                "content": "都是辣鸡",
-                "from": "人民日报",
-                "create_time": "1474254168"
-            }
-        ];
 
         //网络评论
         for (var i = 0; i < len; i++) {
@@ -1111,8 +1100,8 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 dateTime=dateTime.split(' ')[0];
             }
             str += '<li>' +
-                    '<div class="comment-box-head">'+
-                            '<div class="commentNickname">' + item.name + '</div>' +
+                    '<div class="comment-box-head">' +
+                        '<div class="commentNickname">'+item.name + '</div>' +
                     '</div>'+
                     '<div class="commentCon">' +
                         '<p class="content">' + item.content + '</p>' +
