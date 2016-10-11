@@ -41,7 +41,7 @@ class TeacherController extends BaseController
     public function createTeacher($name, $avatar, $title, $tag, $introduce, $student_list=null,
                            $teach_age, $employment_rate, $student_num, $student_work_list=null){
         $model = M('OrganizationTeacher');
-        $tsrmodel = M('OrganizationTeacherStudentRelation');
+        $tsrmodel = M('TeacherStudentRelation');
         $swmodel = M('StudentWorks');
         $data['name'] = $name;
         $data['avatar'] = $avatar;
@@ -54,7 +54,7 @@ class TeacherController extends BaseController
         $data['create_time'] = time();
         $teacher_id = $model->add($data);
         if(!empty($student_list)){
-            $student_list = json_decode($student_list);
+            $student_list = json_decode($student_list, true);
             foreach($student_list as $sid){
                 $tsrdata['teacher_id'] = $teacher_id;
                 $tsrdata['student_id'] = $sid;
@@ -63,15 +63,15 @@ class TeacherController extends BaseController
             }
         }
         if(!empty($student_work_list)){
-            $student_work_list = json_decode($student_work_list);
+            $student_work_list = json_decode($student_work_list, true);
             foreach($student_work_list as $pic_url){
                 $swdata['teacher_id'] = $teacher_id;
                 $swdata['pic_url'] = $pic_url;
                 $swdata['create_time'] = time();
-                $swmodel->add($tsrdata);
+                $swmodel->add($swdata);
             }
         }
-        $this->apiSuccess('创建老师成功');
+        $this->apiSuccess('创建老师成功', null, array('id'=>$teacher_id));
     }
 
     public function createStudent($name, $avatar, $title, $company, $salary){
