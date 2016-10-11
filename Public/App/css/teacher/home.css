@@ -527,7 +527,6 @@ body {
   margin: 14px 14px 0 14px;
   background-color: #FFFFFF;
   box-sizing: border-box;
-  border-radius: 4px;
   overflow: hidden;
 }
 .wrapper .info {
@@ -536,11 +535,15 @@ body {
 .wrapper .info .info-left {
   width: 70px;
   height: 70px;
+  display: inline-block;
+  margin-right: 10px;
+}
+.wrapper .info .info-left > span {
+  max-width: 60px;
+  height: 60px;
   background: url("../../images/teacher/LL.jpg") no-repeat;
   background-size: 69px 59.5px;
   border-radius: 70px;
-  display: inline-block;
-  margin-right: 10px;
 }
 .wrapper .info .info-right {
   display: inline-block;
@@ -559,9 +562,10 @@ body {
   max-height: 90px;
 }
 .wrapper .tag .tag-left {
-  width: 60px;
-  height: 60px;
+  width: 35px;
+  height: 38px;
   background: url("../../images/teacher/sprite.png") no-repeat;
+  background-size: 126px 37.5px;
   background-position: 0px 0px;
   display: inline-block;
   margin-right: 10px;
