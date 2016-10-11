@@ -1,29 +1,73 @@
+@c: #212121;
 body{
-  margin: 0;
-  background: #F2F2F2;
-  max-width: 100%;
+  margin: 0 auto;
+  max-width: 700px;
   overflow: auto;
-}
-.content-box {
-  margin: 0 auto 12px auto;
-  background-color: #FFFFFF;
-  box-sizing: border-box;
-  display: none;
+  //下载条高度
+  padding-bottom: 50px;
+  overflow-x: hidden;
 }
 .head {
-  font-size: 14px;
-  color:#444;
-  @h:40px;
-  .size(100%,@h);
-  line-height: @h;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space:nowrap;
-  >p {
-    padding-top: 14px;
-    padding-bottom: 8px;
-    color: #212121;
+  > p {
+    font-size: 14px;
+    color: @c;
+    line-height: 40px;
+  }
+}
+.nodata{
+  position: fixed;
+  .size(108px,60px);
+  top: 50%;
+  left: 50%;
+  margin-top: -30px;
+  margin-left: -54px;
+  display: none;
+  p{
+    font-size: 16px;
+    color: #757070;
   }
 }
 .wrapper {
+  .content-box {
+    margin: 14px 14px 0 14px;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .info{
+    @l:70px;
+    height: @l;
+    .info-left {
+      .size(@l,@l);
+      background: url("../../images/teacher/LL.jpg") no-repeat;
+      background-size: 138px*0.5 119px*0.5;
+      border-radius: @l;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .info-right {
+      display: inline-block;
+      vertical-align: 14px;
+      #name {
+        color: @c;
+        font-size: 18px;
+        padding-bottom: 4px;
+      }
+      #title {
+        color: #808080;
+        font-size: 12px;
+      }
+    }
+  }
+  .tag {
+    max-height: 90px;
+    .tag-left{
+      .size(60px,60px);
+      background: url("../../images/teacher/sprite.png") no-repeat;
+      background-position: 0px 0px;
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
 }
