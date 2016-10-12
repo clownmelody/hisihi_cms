@@ -538,11 +538,9 @@ body {
   display: inline-block;
   margin-right: 10px;
 }
-.wrapper .info .info-left > span {
-  max-width: 60px;
-  height: 60px;
-  background: url("../../images/teacher/LL.jpg") no-repeat;
-  background-size: 69px 59.5px;
+.wrapper .info .info-left > img {
+  max-width: 70px;
+  height: 70px;
   border-radius: 70px;
 }
 .wrapper .info .info-right {
@@ -559,14 +557,83 @@ body {
   font-size: 12px;
 }
 .wrapper .tag {
-  max-height: 90px;
+  min-height: 82px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .wrapper .tag .tag-left {
+  float: left;
+  width: 40%;
+  height: 100%;
+  padding-left: 8%;
+}
+.wrapper .tag .tag-left .tag-img {
   width: 35px;
   height: 38px;
   background: url("../../images/teacher/sprite.png") no-repeat;
   background-size: 126px 37.5px;
   background-position: 0px 0px;
-  display: inline-block;
+}
+.wrapper .tag .tag-right {
+  color: #212121;
+  font-size: 12px;
+}
+.wrapper .tag .tag-right > ul {
+  display: table;
+  padding-top: 10px;
+}
+.wrapper .tag .tag-right > ul > li {
+  margin-bottom: 10px;
   margin-right: 10px;
+  float: left;
+  height: 22px;
+  background-color: #f2f2f2;
+}
+.wrapper .number {
+  min-height: 100px;
+  display: box;
+  text-align: center;
+  padding-top: 20px;
+  border-bottom: 1px #F2F2F2 solid;
+}
+.wrapper .number #student {
+  box-flex: 1;
+}
+.wrapper .number #year {
+  box-flex: 1;
+}
+.wrapper .number #job {
+  box-flex: 1;
+}
+.wrapper .number #student-img {
+  width: 30px;
+  height: 24px;
+  background-position: -87px 0px;
+}
+.wrapper .number #year-img {
+  width: 26px;
+  height: 24px;
+  background-position: -61px 0px;
+}
+.wrapper .number #job-img {
+  width: 27px;
+  height: 24px;
+  background-position: -34px 0px;
+}
+.wrapper .number .num-img {
+  display: inline-block;
+  background: url("../../images/teacher/sprite.png") no-repeat;
+  background-size: 126px 37.5px;
+}
+.wrapper .number .num-title > span {
+  font-size: 14px;
+  color: #212121;
+}
+.wrapper .number .num > span {
+  color: #1F1F1F;
+  font-weight: bold;
+  font-size: 15px;
 }
