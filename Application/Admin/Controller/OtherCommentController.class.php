@@ -41,10 +41,10 @@ class OtherCommentController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/othercomment/index');
+                $this->success('添加成功', 'index.php?s=/admin/otherComment/index');
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/othercomment/index');
+                $this->success('更新成功', 'index.php?s=/admin/otherComment/index');
             }
         } else {
             $this->display('add');
@@ -78,7 +78,7 @@ class OtherCommentController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('处理成功','index.php?s=/admin/othercomment/index');
+            $this->success('处理成功','index.php?s=/admin/otherComment/index');
         } else {
             $this->error('未选择要处理的数据');
         }
