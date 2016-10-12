@@ -2542,6 +2542,9 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
             $list = $model->field('id, name, avatar, title, introduce')
                 ->where('status=1 and organization_id='.$organization_id)
                 ->page($page, $count)->select();
+            foreach($list as &$item){
+                $item['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$item['id'];
+            }
             $extra['totalCount'] = $totalCount;
             $extra['teacherList'] = $list;
             $this->apiSuccess("获取机构老师列表成功", null, $extra);

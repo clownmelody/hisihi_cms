@@ -108,6 +108,7 @@ class TeacherController extends BaseController
          employment_rate, student_num')->where('id='.$teacher_id)->find();
         $orgInfo = $orgModel->field('type')->where('id='.$teacherInfo['organization_id'])->find();
         $teacherInfo['org_type'] = $orgInfo['type'];
+        $teacherInfo['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$teacher_id;
         $this->apiSuccess('获取老师基本信息成功', null, array('data'=>$teacherInfo));
     }
 
@@ -136,6 +137,66 @@ class TeacherController extends BaseController
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $stuList;
         $this->apiSuccess('获取老师下学生就业信息列表成功', null, $extra);
+    }
+
+    public function getTeacherList($organization_id=0){
+        $model = M('OrganizationTeacher');
+        $list = $model->field('id, name, avatar, title, introduce')
+            ->where('status=1 and organization_id='.$organization_id)->select();
+        foreach($list as &$item){
+            $item['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$item['id'];
+        }
+        $this->apiSuccess('获取机构下老师列表成功', null, array('data'=>$list));
+    }
+
+    public function createTeachingCourse($organization_id, $course_name, $cover_pic,
+                                         $introduction, $price, $teacher_id_list=null,
+                                         $student_work_list=null){
+        $courseModel = M('OrganizationTeachingCourse');
+        $swmodel = M('StudentWorks');
+        $data['organization_id'] = $organization_id;
+        $data['course_name'] = $course_name;
+        $data['cover_pic'] = $cover_pic;
+        $data['introduction'] = $introduction;
+        $data['price'] = $price;
+        $data['teacher_id_list'] = $teacher_id_list;
+        $data['create_time'] = time();
+        $course_id = $courseModel->add($data);
+        if(!empty($student_work_list)){
+            $student_work_list = json_decode($student_work_list, true);
+            foreach($student_work_list as $pic_url){
+                $swdata['course_id'] = $course_id;
+                $swdata['pic_url'] = $pic_url;
+                $swdata['create_time'] = time();
+                $swmodel->add($swdata);
+            }
+        }
+        $this->apiSuccess('创建课程成功', null, array('id'=>$course_id));
+    }
+
+    public function getCourseTeacherList($teaching_course_id=0){
+        $courseModel = M('OrganizationTeachingCourse');
+        $courseInfo = $courseModel->field('teacher_id_list')->where('id='.$teaching_course_id)->find();
+        $teacherList = explode('#', $courseInfo['teacher_id_list']);
+        $model = M('OrganizationTeacher');
+        $list = array();
+        foreach($teacherList as $item){
+            $info = $model->field('id, name, avatar, title, introduce')
+                ->where('id='.$item)->find();
+            $info['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$info['id'];
+            $list[] = $info;
+        }
+        $this->apiSuccess('获取课程下老师列表成功', null, array('data'=>$list));
+    }
+
+    public function getCourseStudentWorkList($teaching_course_id=0, $page=1, $count=8){
+        $model = M('StudentWorks');
+        $totalCount = $model->where('status=1 and course_id='.$teaching_course_id)->count();
+        $list = $model->field('id, pic_url')->where('status=1 and course_id='.$teaching_course_id)
+            ->page($page, $count)->select();
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取课程下学生作品成功', null, $extra);
     }
 
 }
