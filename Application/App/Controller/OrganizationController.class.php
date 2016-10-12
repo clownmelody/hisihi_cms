@@ -2403,14 +2403,15 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
      * @param null $pic_id_list
      * @param null $choose_reason
      * @param null $teachers_group
+     * @param null $teaching_quality
      * @param null $teaching_env
      * @param null $employ_service
      */
     public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null,
                               $strScoreList=null, $order_id=0, $version=3.0, $pid=0, $teaching_course_id=0,
-                              $pic_id_list=null, $choose_reason=null, $teachers_group=null, $teaching_quality=null,
-                              $teaching_env=null, $employ_service=null){
-        if(empty($content)||$organization_id==0){
+                              $pic_id_list=null, $choose_reason=null, $teachers_group=null,
+                              $teaching_quality=null, $teaching_env=null, $employ_service=null){
+        if($organization_id==0){
             $this->apiError(-1, '传入参数不能为空');
         }
         if(!$uid){
@@ -2530,13 +2531,23 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
      * @param null $version
      * @return mixed
      */
-    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10,
+    public function appGetTeacherList($organization_id=0, $page = 1, $count = 10,
                                       $type=null, $version=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
+        if((float)$version>=3.1){
+            $model = M('OrganizationTeacher');
+            $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
+            $list = $model->field('id, name, avatar, title, introduce')
+                ->where('status=1 and organization_id='.$organization_id)
+                ->page($page, $count)->select();
+            $extra['totalCount'] = $totalCount;
+            $extra['teacherList'] = $list;
+            $this->apiSuccess("获取机构老师列表成功", null, $extra);
+        }
         $Model = new \Think\Model();
-        $totalCount = $Model->query('select count(*) as count from (select distinct uid from hisihi_organization_relation where `status`=1 and `group`=6 and `organization_id`='.$organization_id.')m');
+        $totalCount = $Model->query('select count(*) as count from (select distinct uid from hisihi_organization_relation where status=1 and group=6 and organization_id='.$organization_id.')m');
         $totalCount = $totalCount[0]['count'];
         if((float)$version>=2.8){
             $teacher_ids = M('OrganizationRelation')->distinct('uid')
