@@ -2260,6 +2260,7 @@ class OrganizationController extends AppController
         $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
             $uid);
         $comment['childCommentCount'] = $this->getChildCommentCount($comment['id']);
+        $comment['otherCommentCount'] = $this->getOtherCommentCount($comment['organization_id']);
         $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
         $comment['pre_comment_id'] = $this->getPreCommentId($comment['organization_id'], $comment_id);
         $comment['next_comment_id'] = $this->getNextCommentId($comment['organization_id'], $comment_id);
@@ -2280,6 +2281,13 @@ class OrganizationController extends AppController
         } else {
             return 0;
         }
+    }
+
+    private function getOtherCommentCount($organization_id=0){
+        $otherCommentModle = M('OrganizationOtherComment');
+        $totalCount = $otherCommentModle->where('status=1 and organization_id='.$organization_id)
+            ->count();
+        return $totalCount;
     }
 
     private function getNextCommentId($organization_id, $comment_id){
