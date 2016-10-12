@@ -111,7 +111,7 @@ class TeacherController extends BaseController
         $this->apiSuccess('获取老师基本信息成功', null, array('data'=>$teacherInfo));
     }
 
-    public function getTeacherStudentWorkList($teacher_id=0, $page=1, $count=10){
+    public function getTeacherStudentWorkList($teacher_id=0, $page=1, $count=8){
         $model = M('StudentWorks');
         $totalCount = $model->where('status=1 and teacher_id='.$teacher_id)->count();
         $list = $model->field('id, pic_url')->where('status=1 and teacher_id='.$teacher_id)
@@ -121,13 +121,13 @@ class TeacherController extends BaseController
         $this->apiSuccess('获取老师下学生作品成功', null, $extra);
     }
 
-    public function getStudentEmployList($teacher_id=0, $page=1, $count=10){
+    public function getStudentEmployList($teacher_id=0){
         $model = M('TeacherStudentRelation');
         $stuModel = M('OrganizationStudent');
         $stuList = array();
         $totalCount = $model->where('status=1 and teacher_id='.$teacher_id)->count();
         $list = $model->field('student_id')->where('status=1 and teacher_id='.$teacher_id)
-            ->page($page, $count)->order('create_time desc')->select();
+            ->order('create_time desc')->select();
         foreach($list as $item){
             $info = $stuModel->field('id, name, company, title, avatar, salary')
                 ->where('id='.$item['student_id'])->find();
