@@ -74,6 +74,21 @@ class TeacherController extends BaseController
         $this->apiSuccess('创建老师成功', null, array('id'=>$teacher_id));
     }
 
+    public function deleteStudentWork($work_id=0){
+        $model = M('StudentWorks');
+        $data['id'] = $work_id;
+        $model->where($data)->save(array('status'=>-1));
+        $this->apiSuccess('删除学生作品成功');
+    }
+
+    public function deleteStudentEmployInfo($teacher_id=0, $student_id=0){
+        $model = M('TeacherStudentRelation');
+        $data['teacher_id'] = $teacher_id;
+        $data['student_id'] = $student_id;
+        $model->where($data)->save(array('status'=>-1));
+        $this->apiSuccess('删除学生就业信息成功');
+    }
+
     public function createStudent($name, $avatar, $title, $company, $salary){
         $model = M('OrganizationStudent');
         $data['name'] = $name;
@@ -84,6 +99,43 @@ class TeacherController extends BaseController
         $data['create_time'] = time();
         $id = $model->add($data);
         $this->apiSuccess('创建学生成功', null, array('id'=>$id));
+    }
+
+    public function getTeacherInfo($teacher_id=0){
+        $model = M('OrganizationTeacher');
+        $orgModel = M('Organization');
+        $teacherInfo = $model->field('id, organization_id, name, avatar, title, tag, introduce, teach_age,
+         employment_rate, student_num')->where('id='.$teacher_id)->find();
+        $orgInfo = $orgModel->field('type')->where('id='.$teacherInfo['organization_id'])->find();
+        $teacherInfo['org_type'] = $orgInfo['type'];
+        $this->apiSuccess('获取老师基本信息成功', null, array('data'=>$teacherInfo));
+    }
+
+    public function getTeacherStudentWorkList($teacher_id=0, $page=1, $count=10){
+        $model = M('StudentWorks');
+        $totalCount = $model->where('status=1 and teacher_id='.$teacher_id)->count();
+        $list = $model->field('id, pic_url')->where('status=1 and teacher_id='.$teacher_id)
+            ->page($page, $count)->select();
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取老师下学生作品成功', null, $extra);
+    }
+
+    public function getStudentEmployList($teacher_id=0, $page=1, $count=10){
+        $model = M('TeacherStudentRelation');
+        $stuModel = M('OrganizationStudent');
+        $stuList = array();
+        $totalCount = $model->where('status=1 and teacher_id='.$teacher_id)->count();
+        $list = $model->field('student_id')->where('status=1 and teacher_id='.$teacher_id)
+            ->page($page, $count)->order('create_time desc')->select();
+        foreach($list as $item){
+            $info = $stuModel->field('id, name, company, title, avatar, salary')
+                ->where('id='.$item['student_id'])->find();
+            $stuList[] = $info;
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $stuList;
+        $this->apiSuccess('获取老师下学生就业信息列表成功', null, $extra);
     }
 
 }
