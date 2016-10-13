@@ -447,6 +447,18 @@ class OrganizationController extends AppController
                 $course_tag_list = $this->getOrgCourseTagListByOrgId($organization_id);
                 $result['teaching_course_tag_list'] = $course_tag_list;
             }
+            if((float)$version>=3.1){
+                $orgCommentModel = M('OrganizationComment');
+                $otherCommentModle = M('OrganizationOtherComment');
+                $app_comment_total_count = $orgCommentModel->where('status=1 and pid=0
+                                            and organization_id='.$organization_id)
+                    ->count();
+                $other_comment_total_count = $otherCommentModle->where('status=1 and
+                                organization_id='.$organization_id)
+                    ->count();
+                $result['app_comment_total_count'] = $app_comment_total_count;
+                $result['other_comment_total_count'] = $other_comment_total_count;
+            }
             if($type=="view"){
                 return $result;
             }else{
