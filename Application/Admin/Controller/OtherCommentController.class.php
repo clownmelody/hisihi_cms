@@ -8,12 +8,16 @@ use Think\Page;
 
 class OtherCommentController extends AdminController
 {
-    public function index(){
+    public function index($organization_id=0){
         $model = M('OrganizationOtherComment');
-        $count = $model->where('status=1')->count();
+        $whereArray['status'] = 1;
+        if($organization_id!=0){
+            $whereArray['organization_id'] = $organization_id;
+        }
+        $count = $model->where($whereArray)->count();
         $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
-        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($whereArray)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
