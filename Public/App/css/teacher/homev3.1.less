@@ -6,14 +6,28 @@ body{
   //下载条高度
   padding-bottom: 50px;
   overflow-x: hidden;
+  color: @c;
+  font-size: 14px;
+}
+p {
+  margin: 0;
+  padding: 0;
 }
 .head {
   > p {
-    font-size: 14px;
-    color: @c;
     line-height: 40px;
   }
 }
+//.li-preview-img(50px,60px,@ml:5px){
+//  .size(50px,60px);
+//  display: inline-block;
+//  vertical-align: top;
+//  margin-right: @ml;
+//  img {
+//    //max-width: 100%;
+//    .size(100%,100%);
+//  }
+//}
 .nodata{
   position: fixed;
   .size(108px,60px);
@@ -51,7 +65,7 @@ body{
       display: inline-block;
       vertical-align: 14px;
       #name {
-        color: @c;
+        //color: @c;
         font-size: 18px;
         padding-bottom: 4px;
       }
@@ -68,7 +82,6 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    //position: relative;
     .tag-left{
       float: left;
       .size(40%,100%);
@@ -82,7 +95,7 @@ body{
     }
     .tag-right {
       //position: relative;
-      color: @c;
+      //color: @c;
       font-size: 12px;
       > ul {
         display: table;
@@ -98,7 +111,7 @@ body{
     }
   }
   .number {
-    min-height: 100px;
+    min-height: 88px;
     display: box;
     text-align: center;
     padding-top: 20px;
@@ -131,8 +144,6 @@ body{
     }
     .num-title {
       > span {
-        font-size: 14px;
-        color: @c;
       }
     }
     .num {
@@ -144,6 +155,111 @@ body{
     }
   }
   .introduction {
-
+    border-bottom: 1px #F2F2F2 solid;
+    .head {
+      margin: 14px 14px 0 14px;
+      text-align: left;
+      height: 19px;
+      padding-bottom: 8px;
+      > span {
+        width: 100%;
+      }
+    }
+    .detail {
+      margin: 0px 14px 0 14px;
+      font-size: 13px;
+      padding-bottom: 20px;
+      line-height: 20px;
+    }
+  }
+  .picture{
+    @m:40px;
+    border-bottom: 1px solid #f2f2f2;
+    .header {
+      margin: 14px 14px 0 14px;
+      width: 95%;
+      height: @m;
+      line-height: @m;
+      display: inline-block;
+      .pic-title {
+        height: 100%;
+      }
+      .right-arrow {
+        float: right;
+        .size(@m,@m);
+        display: inline-block;
+        text-align: center;
+       >span {
+         display: inline-block;
+         vertical-align: -5px;
+         .size (10px,19px);
+        background: url("../../images/teacher/sprite.png");
+         background-size: 252px*0.6 75px*0.6;
+        background-position: 10px 0px;
+        }
+      }
+    }
+    .preview-box{
+      margin: 0px 14px 0 14px;
+        overflow-x: auto;
+        ul{
+          margin: 0px 0 14px 0;
+          white-space: nowrap;
+          li{
+            overflow-y: hidden;
+            border:1px solid rgba(145,145,145,.2);
+            //.li-preview-img(40%,110px,5px);
+            img{
+              .size(100%,100%);
+            }
+          }
+        }
+      }
+    }
+  .employee {
+    .head {
+      padding-bottom: 8px;
+      >span {
+        color: #212121;
+      }
+    }
+    .employee-box {
+      min-height: 90px;
+      padding-top: 14px;
+      @z:44px;
+      .student-left {
+        display: inline-block;
+        min-width: @z;
+        padding-right: 14px;
+        >img {
+          .size(@z,@z);
+          border-radius: @z;
+        }
+      }
+      .student-right {
+        display: inline-block;
+        vertical-align: -32px;
+        width: 80%;
+        > ul {
+          > li {
+            width: 100%;
+            padding-bottom: 3px;
+            &:last-child {
+              padding-bottom: 14px;
+              border-bottom: 1px solid #f1f1f1;
+            }
+          }
+        }
+        .student-name {
+          font-size: 15px;
+          font-weight: bold;
+        }
+        .left {
+        }
+        .right {
+          color: #808080;
+        }
+      }
+    }
   }
 }
