@@ -199,6 +199,9 @@ class TeacherController extends BaseController
                     $outlineResData['outline_id'] = $outlineId;
                     $outlineResData['name'] = $content['name'];
                     $outlineResData['type'] = $content['type'];
+                    if($outlineResData['type']==1){
+                        $outlineResData['status'] = 0;
+                    }
                     $outlineResData['video_id'] = $content['video_id'];
                     $outlineResData['content']  = $content['content'];
                     $outlineResData['cover_pic']  = $content['cover_pic'];
@@ -248,7 +251,7 @@ class TeacherController extends BaseController
         foreach($outlineList as &$item){
             $resList = $outlineResModel->field('id, outline_id, name, type, video_id,
                                                 content, cover_pic, is_top')
-                ->where('status=1 and outline_id='.$item['id'])->select();
+                ->where('status>=0 and outline_id='.$item['id'])->select();
             $item['data'] = $resList;
         }
         $this->apiSuccess('获取课程大纲成功', null, array('data'=>$outlineList));
