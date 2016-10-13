@@ -4113,4 +4113,74 @@ class OrganizationController extends AdminController
             $this->error('未选择要处理的数据');
         }
     }
+
+    public function coursevideo(){
+        $model = M('TeachingCourseOutlineResource');
+        $outlineModel = M('TeachingCourseOutline');
+        $courseModel = M('OrganizationTeachingCourse');
+        $orgModel = M('Organization');
+        $orgVideoModel = M('OrganizationVideo');
+        $count = $model->where('status>=0 and type=1')->count();
+        $Page = new Page($count, C('LIST_ROWS'));
+        $show = $Page->show();
+        $list = $model->field('id, outline_id, name, video_id, create_time, status')
+            ->where('status>=0 and type=1')
+            ->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$item){
+            $outlineInfo = $outlineModel->field('teaching_course_id')->where('id='.$item['outline_id'])->find();
+            $courseInfo = $courseModel->field('course_name, organization_id')
+                ->where('id='.$outlineInfo['teaching_course_id'])->find();
+            $orgInfo = $orgModel->field('name')->where('id='.$courseInfo['organization_id'])->find();
+            $item['course_name'] = $courseInfo['course_name'];
+            $item['organization_name'] = $orgInfo['name'];
+            $videoInfo = $orgVideoModel->field('url, duration')->where('id='.$item['video_id'])->find();
+            $item['duration'] = time_format($videoInfo['duration'],'m分s秒');
+            $item['url'] = $videoInfo['url'];
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("total", $count);
+        $this->assign("meta_title", "课程大纲视频列表");
+        $this->display();
+    }
+
+    public function course_video_checked($id=0){
+        if(!empty($id)){
+            $model = M('TeachingCourseOutlineResource');
+            $data['status'] = 1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('审核通过','index.php?s=/admin/organization/coursevideo');
+        } else {
+            $this->error('未选择要审核的数据');
+        }
+    }
+
+    public function course_video_delete($id=0){
+        if(!empty($id)){
+            $model = M('TeachingCourseOutlineResource');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/organization/coursevideo');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
 }
