@@ -41,11 +41,9 @@ body{
       .size(@l,@l);
       display: inline-block;
       margin-right: 10px;
-      > span {
-        max-width: 60px;
-        height: 60px;
-        background: url("../../images/teacher/LL.jpg") no-repeat;
-        background-size: 138px*0.5 119px*0.5;
+      > img {
+        max-width: @l;
+        height: @l;
         border-radius: @l;
       }
     }
@@ -64,17 +62,88 @@ body{
     }
   }
   .tag {
-    max-height: 90px;
+    min-height: 82px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //position: relative;
     .tag-left{
-      .size(35px,38px);
-      background: url("../../images/teacher/sprite.png") no-repeat;
-      background-size: 252px*0.5 75px*0.5;
-      background-position: 0px 0px;
-      display: inline-block;
-      margin-right: 10px;
+      float: left;
+      .size(40%,100%);
+      padding-left: 8%;
+      .tag-img {
+        .size(35px,38px);
+        background: url("../../images/teacher/sprite.png") no-repeat;
+        background-size: 252px*0.5 75px*0.5;
+        background-position: 0px 0px;
+      }
     }
     .tag-right {
-
+      //position: relative;
+      color: @c;
+      font-size: 12px;
+      > ul {
+        display: table;
+        padding-top: 10px;
+        >li {
+          margin-bottom: 10px;
+          margin-right: 10px;
+          float: left;
+          height: 22px;
+          background-color: #f2f2f2;
+        }
+      }
     }
+  }
+  .number {
+    min-height: 100px;
+    display: box;
+    text-align: center;
+    padding-top: 20px;
+    border-bottom: 1px #F2F2F2 solid;
+    #student {
+      box-flex: 1;
+    }
+    #year {
+      box-flex: 1;
+    }
+    #job {
+      box-flex: 1;
+    }
+    #student-img {
+      .size(30px, 24px);
+      background-position: -87px 0px;
+    }
+    #year-img {
+      .size(26px, 24px);
+      background-position: -61px 0px;
+    }
+    #job-img {
+      .size(27px, 24px);
+      background-position: -34px 0px;
+    }
+    .num-img {
+      display: inline-block;
+      background: url("../../images/teacher/sprite.png") no-repeat;
+      background-size: 252px*0.5 75px*0.5;
+    }
+    .num-title {
+      > span {
+        font-size: 14px;
+        color: @c;
+      }
+    }
+    .num {
+      > span {
+        color: #1F1F1F;
+        font-weight: bold;
+        font-size: 15px;
+      }
+    }
+  }
+  .introduction {
+
   }
 }

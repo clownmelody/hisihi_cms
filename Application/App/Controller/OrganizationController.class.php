@@ -2181,7 +2181,6 @@ class OrganizationController extends AppController
                     $comment['pic_info']= json_decode($comment['pic_url_list']);
                     unset($comment['pic_url_list']);
                     unset($comment['uid']);
-                    unset($comment['pic_id_list']);
                 }
                 $extra['totalCount'] = $totalCount;
                 $extra['data'] = $comment_list;
@@ -2216,7 +2215,7 @@ class OrganizationController extends AppController
         if($comment_type==1){   // 内部评论包括外部评论
             $totalCount = $model->where('status=1 and pid=0 and teaching_course_id='.$teaching_course_id)
                 ->count();
-            $comment_list = $model->field('id, uid, comprehensive_score, comment, pic_id_list,
+            $comment_list = $model->field('id, uid, comprehensive_score, comment, pic_url_list,
                                                 choose_reason, teachers_group, teaching_quality,
                                                 teaching_env, employ_service, create_time')
                 ->where('status=1 and pid=0 and teaching_course_id='.$teaching_course_id)
@@ -2227,9 +2226,9 @@ class OrganizationController extends AppController
                 $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
                     $uid);
                 $comment['childCommentCount']= $this->getChildCommentCount($comment['id']);
-                $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+                $comment['pic_info']= json_decode($comment['pic_url_list']);
                 unset($comment['uid']);
-                unset($comment['pic_id_list']);
+                unset($comment['pic_url_list']);
             }
             $extra['totalCount'] = $totalCount;
             $extra['data'] = $comment_list;
@@ -2251,7 +2250,7 @@ class OrganizationController extends AppController
 
     public function commentDetail($comment_id=0){
         $model = M('OrganizationComment');
-        $comment = $model->field('id, uid, comprehensive_score, comment, pic_id_list, organization_id,
+        $comment = $model->field('id, uid, comprehensive_score, comment, pic_url_list, organization_id,
                                                 choose_reason, teachers_group, teaching_quality,
                                                 teaching_env, employ_service, create_time')
             ->where('id='.$comment_id)->find();
@@ -2260,11 +2259,11 @@ class OrganizationController extends AppController
             $uid);
         $comment['childCommentCount'] = $this->getChildCommentCount($comment['id']);
         $comment['otherCommentCount'] = $this->getOtherCommentCount($comment['organization_id']);
-        $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+        $comment['pic_info']= json_decode($comment['pic_url_list']);
         $comment['pre_comment_id'] = $this->getPreCommentId($comment['organization_id'], $comment_id);
         $comment['next_comment_id'] = $this->getNextCommentId($comment['organization_id'], $comment_id);
         unset($comment['uid']);
-        unset($comment['pic_id_list']);
+        unset($comment['pic_url_list']);
         unset($comment['organization_id']);
         $extra['data'] = $comment;
         $this->apiSuccess('获取机构评论详情成功', null, $extra);
@@ -2323,11 +2322,11 @@ union SELECT count(*) as count FROM hisihi.hisihi_organization_comment where sta
         foreach($count_list as $item){
             $totalCount += (int)$item['count'];
         }
-        $sql = "SELECT id, pid, uid, comprehensive_score, comment, pic_id_list,
+        $sql = "SELECT id, pid, uid, comprehensive_score, comment, pic_url_list,
                 choose_reason, teachers_group, teaching_quality, teaching_env,
                 employ_service, create_time FROM hisihi.hisihi_organization_comment where pid
 in (SELECT id FROM hisihi.hisihi_organization_comment where status=1 and pid=".$comment_id.")
-union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_reason,
+union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_reason,
  teachers_group, teaching_quality, teaching_env,
  employ_service, create_time FROM hisihi.hisihi_organization_comment where status=1 and pid=".$comment_id."
  order by create_time desc limit ".$start.",".$count;
@@ -2340,9 +2339,9 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
                 $user = $model->field('uid')->where('id='.$comment['pid'])->find();
                 $comment['to_user_info'] = query_user(array('uid', 'nickname'), $user['uid']);
             }
-            $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+            $comment['pic_info']= json_decode($comment['pic_url_list']);
             unset($comment['uid']);
-            unset($comment['pic_id_list']);
+            unset($comment['pic_url_list']);
         }
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
