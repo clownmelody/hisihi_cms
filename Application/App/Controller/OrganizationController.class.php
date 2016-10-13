@@ -2179,7 +2179,8 @@ class OrganizationController extends AppController
                     $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
                         $uid);
                     $comment['childCommentCount']= $this->getChildCommentCount($comment['id']);
-                    $comment['pic_info']= json_decode($comment['pic_url_list']);
+                    $pic_url_list = stripslashes($comment['pic_url_list']);
+                    $comment['pic_info']= json_decode($pic_url_list, true);
                     unset($comment['pic_url_list']);
                     unset($comment['uid']);
                 }
@@ -2227,7 +2228,8 @@ class OrganizationController extends AppController
                 $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
                     $uid);
                 $comment['childCommentCount']= $this->getChildCommentCount($comment['id']);
-                $comment['pic_info']= json_decode($comment['pic_url_list']);
+                $pic_url_list = stripslashes($comment['pic_url_list']);
+                $comment['pic_info']= json_decode($pic_url_list, true);
                 unset($comment['uid']);
                 unset($comment['pic_url_list']);
             }
@@ -2260,7 +2262,8 @@ class OrganizationController extends AppController
             $uid);
         $comment['childCommentCount'] = $this->getChildCommentCount($comment['id']);
         $comment['otherCommentCount'] = $this->getOtherCommentCount($comment['organization_id']);
-        $comment['pic_info']= json_decode($comment['pic_url_list']);
+        $pic_url_list = stripslashes($comment['pic_url_list']);
+        $comment['pic_info']= json_decode($pic_url_list, true);
         $comment['pre_comment_id'] = $this->getPreCommentId($comment['organization_id'], $comment_id);
         $comment['next_comment_id'] = $this->getNextCommentId($comment['organization_id'], $comment_id);
         unset($comment['uid']);
@@ -2340,7 +2343,8 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
                 $user = $model->field('uid')->where('id='.$comment['pid'])->find();
                 $comment['to_user_info'] = query_user(array('uid', 'nickname'), $user['uid']);
             }
-            $comment['pic_info']= json_decode($comment['pic_url_list']);
+            $pic_url_list = stripslashes($comment['pic_url_list']);
+            $comment['pic_info']= json_decode($pic_url_list, true);
             unset($comment['uid']);
             unset($comment['pic_url_list']);
         }
