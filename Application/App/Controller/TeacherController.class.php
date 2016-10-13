@@ -39,7 +39,7 @@ class TeacherController extends BaseController
      * @param null $student_work_list
      */
     public function createTeacher($name, $avatar, $title, $tag, $introduce, $student_list=null,
-                           $teach_age, $employment_rate, $student_num, $student_work_list=null){
+                           $teach_age, $employment_rate, $student_num, $student_work_list=null, $uid=0){
         $model = M('OrganizationTeacher');
         $tsrmodel = M('TeacherStudentRelation');
         $swmodel = M('StudentWorks');
@@ -51,6 +51,7 @@ class TeacherController extends BaseController
         $data['teach_age'] = $teach_age;
         $data['employment_rate'] = $employment_rate;
         $data['student_num'] = $student_num;
+        $data['uid'] = $uid;
         $data['create_time'] = time();
         $teacher_id = $model->add($data);
         if(!empty($student_list)){
@@ -105,7 +106,7 @@ class TeacherController extends BaseController
         $model = M('OrganizationTeacher');
         $orgModel = M('Organization');
         $teacherInfo = $model->field('id, organization_id, name, avatar, title, tag, introduce, teach_age,
-         employment_rate, student_num')->where('id='.$teacher_id)->find();
+         employment_rate, student_num, uid')->where('id='.$teacher_id)->find();
         $orgInfo = $orgModel->field('type')->where('id='.$teacherInfo['organization_id'])->find();
         $teacherInfo['org_type'] = $orgInfo['type'];
         $teacherInfo['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$teacher_id;
@@ -149,11 +150,24 @@ class TeacherController extends BaseController
         $this->apiSuccess('获取机构下老师列表成功', null, array('data'=>$list));
     }
 
-    public function createTeachingCourse($organization_id, $course_name, $cover_pic,
-                                         $introduction, $price, $teacher_id_list=null,
-                                         $student_work_list=null){
+    /**
+     * 创建培训课程
+     * @param int $organization_id
+     * @param null $course_name
+     * @param null $cover_pic
+     * @param null $introduction
+     * @param int $price
+     * @param null $teacher_id_list
+     * @param null $student_work_list
+     * @param null $outline
+     */
+    public function createTeachingCourse($organization_id=0, $course_name=null, $cover_pic=null,
+                                         $introduction=null, $price=0, $teacher_id_list=null,
+                                         $student_work_list=null, $outline=null){
         $courseModel = M('OrganizationTeachingCourse');
         $swmodel = M('StudentWorks');
+        $outlineModel = M('TeachingCourseOutline');
+        $outlineResModel = M('TeachingCourseOutlineResource');
         $data['organization_id'] = $organization_id;
         $data['course_name'] = $course_name;
         $data['cover_pic'] = $cover_pic;
@@ -171,6 +185,33 @@ class TeacherController extends BaseController
                 $swmodel->add($swdata);
             }
         }
+        if(!empty($outline)){
+            $outline = stripslashes($outline);
+            $outline = json_decode($outline, true);
+            foreach($outline as $item){
+                $first_title = $item['title'];
+                $outlineData['teaching_course_id'] = $course_id;
+                $outlineData['title'] = $first_title;
+                $outlineData['create_time'] = time();
+                $outlineId = $outlineModel->add($outlineData);
+                $contentList = $item['data'];
+                foreach($contentList as $content){
+                    $outlineResData['outline_id'] = $outlineId;
+                    $outlineResData['name'] = $content['name'];
+                    $outlineResData['type'] = $content['type'];
+                    $outlineResData['video_id'] = $content['video_id'];
+                    $outlineResData['content']  = $content['content'];
+                    $outlineResData['cover_pic']  = $content['cover_pic'];
+                    if($content['is_top']){
+                        $outlineResData['is_top'] = $content['is_top'];
+                    } else {
+                        $outlineResData['is_top'] = 0;
+                    }
+                    $outlineResData['create_time'] = time();
+                    $outlineResModel->add($outlineResData);
+                }
+            }
+        }
         $this->apiSuccess('创建课程成功', null, array('id'=>$course_id));
     }
 
@@ -181,7 +222,7 @@ class TeacherController extends BaseController
         $model = M('OrganizationTeacher');
         $list = array();
         foreach($teacherList as $item){
-            $info = $model->field('id, name, avatar, title, introduce')
+            $info = $model->field('id, name, avatar, title, introduce, uid')
                 ->where('id='.$item)->find();
             $info['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$info['id'];
             $list[] = $info;
@@ -197,6 +238,26 @@ class TeacherController extends BaseController
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取课程下学生作品成功', null, $extra);
+    }
+
+    public function getCourseOutline($teacher_course_id=0){
+        $outlineModel = M('TeachingCourseOutline');
+        $outlineResModel = M('TeachingCourseOutlineResource');
+        $outlineList = $outlineModel->field('id, title')
+            ->where('status=1 and teaching_course_id='.$teacher_course_id)->select();
+        foreach($outlineList as &$item){
+            $resList = $outlineResModel->field('id, outline_id, name, type, video_id,
+                                                content, cover_pic, is_top')
+                ->where('status=1 and outline_id='.$item['id'])->select();
+            $item['data'] = $resList;
+        }
+        $this->apiSuccess('获取课程大纲成功', null, array('data'=>$outlineList));
+    }
+
+    public function searchTeacherByMobile($mobile=null){
+        $model = M('UcenterMember');
+        $info = $model->field('id, username')->where('mobile='.$mobile)->find();
+        $this->apiSuccess('根据手机号查找用户成功', null, array('data'=>$info));
     }
 
 }

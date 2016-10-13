@@ -2551,7 +2551,7 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
         if((float)$version>=3.1){
             $model = M('OrganizationTeacher');
             $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
-            $list = $model->field('id, name, avatar, title, introduce')
+            $list = $model->field('id, name, avatar, title, introduce, uid')
                 ->where('status=1 and organization_id='.$organization_id)
                 ->page($page, $count)->select();
             foreach($list as &$item){
