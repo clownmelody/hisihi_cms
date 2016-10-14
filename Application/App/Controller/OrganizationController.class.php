@@ -2435,9 +2435,6 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
                               $strScoreList=null, $order_id=0, $version=3.0, $pid=0, $teaching_course_id=0,
                               $pic_url_list=null, $choose_reason=null, $teachers_group=null,
                               $teaching_quality=null, $teaching_env=null, $employ_service=null){
-        if($organization_id==0){
-            $this->apiError(-1, '传入参数不能为空');
-        }
         if(!$uid){
             $this->requireLogin();
             $uid = $this->getUid();
