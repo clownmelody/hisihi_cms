@@ -190,7 +190,35 @@ class TeacherController extends BaseController
         $data['salary'] = $salary;
         $data['create_time'] = time();
         $id = $model->add($data);
-        $this->apiSuccess('创建学生成功', null, array('id'=>$id));
+        $this->apiSuccess('创建学生就业信息成功', null, array('id'=>$id));
+    }
+
+    public function updateStudent($id, $name=null, $avatar=null, $title=null, $company=null, $salary=null){
+        $model = M('OrganizationStudent');
+        if(!empty($name)){
+            $data['name'] = $name;
+        }
+        if(!empty($avatar)){
+            $data['avatar'] = $avatar;
+        }
+        if(!empty($title)){
+            $data['title'] = $title;
+        }
+        if(!empty($company)){
+            $data['company'] = $company;
+        }
+        if(!empty($salary)){
+            $data['salary'] = $salary;
+        }
+        $model->where('id='.$id)->save($data);
+        $this->apiSuccess('修改学生就业信息成功');
+    }
+
+    public function deleteStudent($id){
+        $model = M('OrganizationStudent');
+        $data['status'] = 1;
+        $model->where('id='.$id)->save($data);
+        $this->apiSuccess('删除学生就业信息成功');
     }
 
     public function getTeacherInfo($teacher_id=0){
