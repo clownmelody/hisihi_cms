@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html  style="overflow-x: hidden;">
+<head>
+    <title>课程大纲</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="__CSS__/app.min.css">
+    <style>
+        .bottomspace {
+            display: none;
+            height: 55px;
+        }
+        .info-title {
+            height: 40px;
+        }
+        img {
+            max-width:100%;height:auto;
+        }
+    </style>
+</head>
+
+<body>
+<div class="app-page" data-page="home">
+
+    <div id="test-agent" style="display:none">user-agent</div>
+    <div class="app-content" style="-webkit-box-shadow: none;">
+        <div class="app-section" style="margin: 10px 10px 10px 10px">
+            <div class="info-title">
+                <div style="float:left;margin-top:-10px;width:100%">
+                    <h2>{$info.name}</h2>
+                </div>
+            </div>
+            <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
+            </div>
+            <div>
+                <p>
+                    {$info.content}
+                </p>
+            </div>
+        </div>
+        <div class="bottomspace"></div>
+    </div>
+
+</div>
+
+</body>
+</html>
