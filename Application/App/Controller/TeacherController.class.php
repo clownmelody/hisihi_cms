@@ -27,6 +27,7 @@ class TeacherController extends BaseController
 
     /**
      * 创建老师
+     * @param $organization_id
      * @param $name
      * @param $avatar
      * @param $title
@@ -37,12 +38,14 @@ class TeacherController extends BaseController
      * @param $employment_rate
      * @param $student_num
      * @param null $student_work_list
+     * @param int $uid
      */
-    public function createTeacher($name, $avatar, $title, $tag, $introduce, $student_list=null,
+    public function createTeacher($organization_id, $name, $avatar, $title, $tag, $introduce, $student_list=null,
                            $teach_age, $employment_rate, $student_num, $student_work_list=null, $uid=0){
         $model = M('OrganizationTeacher');
         $tsrmodel = M('TeacherStudentRelation');
         $swmodel = M('StudentWorks');
+        $data['organization_id'] = $organization_id;
         $data['name'] = $name;
         $data['avatar'] = $avatar;
         $data['title'] = $title;
@@ -75,6 +78,94 @@ class TeacherController extends BaseController
         $this->apiSuccess('创建老师成功', null, array('id'=>$teacher_id));
     }
 
+    /**
+     * @param $id
+     * @param $name
+     * @param $avatar
+     * @param $title
+     * @param $tag
+     * @param $introduce
+     * @param null $student_list
+     * @param $teach_age
+     * @param $employment_rate
+     * @param $student_num
+     * @param null $student_work_list
+     * @param int $uid
+     */
+    public function updateTeacher($id, $name=null, $avatar=null, $title=null, $tag=null, $introduce=null,
+                                  $student_list=null, $teach_age=null, $employment_rate=null,
+                                  $student_num=null, $student_work_list=null, $uid=0){
+        $model = M('OrganizationTeacher');
+        $tsrmodel = M('TeacherStudentRelation');
+        $swmodel = M('StudentWorks');
+        if(!empty($name)){
+            $data['name'] = $name;
+        }
+        if(!empty($avatar)){
+            $data['avatar'] = $avatar;
+        }
+        if(!empty($title)){
+            $data['title'] = $title;
+        }
+        if(!empty($tag)){
+            $data['tag'] = $tag;
+        }
+        if(!empty($introduce)){
+            $data['introduce'] = $introduce;
+        }
+        if(!empty($teach_age)){
+            $data['teach_age'] = $teach_age;
+        }
+        if(!empty($employment_rate)){
+            $data['employment_rate'] = $employment_rate;
+        }
+        if(!empty($student_num)){
+            $data['student_num'] = $student_num;
+        }
+        if(!empty($uid)){
+            $data['uid'] = $uid;
+        }
+        $model->where('id='.$id)->save($data);
+        if(!empty($student_list)){
+            $student_list = json_decode($student_list, true);
+            foreach($student_list as $sid){
+                $sel_where['teacher_id'] = $id;
+                $sel_where['student_id'] = $sid;
+                $sel_where['status'] = 1;
+                $count = $tsrmodel->where($sel_where)->count();
+                if(!$count){
+                    $tsrdata['teacher_id'] = $id;
+                    $tsrdata['student_id'] = $sid;
+                    $tsrdata['create_time'] = time();
+                    $tsrmodel->add($tsrdata);
+                }
+            }
+        }
+        if(!empty($student_work_list)){
+            $student_work_list = json_decode($student_work_list, true);
+            foreach($student_work_list as $pic_url){
+                $sel_where['teacher_id'] = $id;
+                $sel_where['pic_url'] = $pic_url;
+                $sel_where['status'] = 1;
+                $count = $swmodel->where($sel_where)->count();
+                if(!$count){
+                    $swdata['teacher_id'] = $id;
+                    $swdata['pic_url'] = $pic_url;
+                    $swdata['create_time'] = time();
+                    $swmodel->add($swdata);
+                }
+            }
+        }
+        $this->apiSuccess('更新老师成功', null, array('id'=>$id));
+    }
+
+    public function deleteTeacher($id){
+        $model = M('OrganizationTeacher');
+        $data['status'] = -1;
+        $model->where('id='.$id)->save($data);
+        $this->apiSuccess('删除老师成功');
+    }
+
     public function deleteStudentWork($work_id=0){
         $model = M('StudentWorks');
         $data['id'] = $work_id;
@@ -99,7 +190,35 @@ class TeacherController extends BaseController
         $data['salary'] = $salary;
         $data['create_time'] = time();
         $id = $model->add($data);
-        $this->apiSuccess('创建学生成功', null, array('id'=>$id));
+        $this->apiSuccess('创建学生就业信息成功', null, array('id'=>$id));
+    }
+
+    public function updateStudent($id, $name=null, $avatar=null, $title=null, $company=null, $salary=null){
+        $model = M('OrganizationStudent');
+        if(!empty($name)){
+            $data['name'] = $name;
+        }
+        if(!empty($avatar)){
+            $data['avatar'] = $avatar;
+        }
+        if(!empty($title)){
+            $data['title'] = $title;
+        }
+        if(!empty($company)){
+            $data['company'] = $company;
+        }
+        if(!empty($salary)){
+            $data['salary'] = $salary;
+        }
+        $model->where('id='.$id)->save($data);
+        $this->apiSuccess('修改学生就业信息成功');
+    }
+
+    public function deleteStudent($id){
+        $model = M('OrganizationStudent');
+        $data['status'] = 1;
+        $model->where('id='.$id)->save($data);
+        $this->apiSuccess('删除学生就业信息成功');
     }
 
     public function getTeacherInfo($teacher_id=0){
@@ -252,6 +371,11 @@ class TeacherController extends BaseController
             $resList = $outlineResModel->field('id, outline_id, name, type, video_id,
                                                 content, cover_pic, is_top')
                 ->where('status>=0 and outline_id='.$item['id'])->select();
+            foreach($resList as &$res){
+                if($res['type']==2){
+                    $res['content'] = C('HOST_NAME_PREFIX')."api.php?s=TeachingCourse/outLineLongTextPage/id/".$res['id'];
+                }
+            }
             $item['data'] = $resList;
         }
         $this->apiSuccess('获取课程大纲成功', null, array('data'=>$outlineList));
