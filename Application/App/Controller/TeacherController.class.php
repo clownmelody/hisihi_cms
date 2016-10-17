@@ -252,6 +252,11 @@ class TeacherController extends BaseController
             $resList = $outlineResModel->field('id, outline_id, name, type, video_id,
                                                 content, cover_pic, is_top')
                 ->where('status>=0 and outline_id='.$item['id'])->select();
+            foreach($resList as &$res){
+                if($res['type']==2){
+                    $res['content'] = C('HOST_NAME_PREFIX')."api.php?s=TeachingCourse/outLineLongTextPage/id/".$res['id'];
+                }
+            }
             $item['data'] = $resList;
         }
         $this->apiSuccess('获取课程大纲成功', null, array('data'=>$outlineList));

@@ -24,11 +24,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             that.initData();
         },100);
 
-
-        //视频信息查看
-        $(document).on(eventName,'.pics-preview-box .li-video',$.proxy(this,'showPicsAndVideoDetailInfo'));
-
-
         $(document).on('input','#user-name, #phone-num', $.proxy(this,'singInBtnControl'));
 
         //photoswipe   //学生作品信息查看  相册、视频信息查看
@@ -42,13 +37,13 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         downloadBar:{
             show:true,
             pos:0
+            //0和1的区别在于是上面显示还是下面显示
         }
     };
 
-
-    OrgBasicInfo.prototype=new Base(config);
-    OrgBasicInfo.constructor=OrgBasicInfo;
-    var t=OrgBasicInfo.prototype;
+    Teacher.prototype=new Base(config);
+    Teacher.constructor=Teacher;
+    var t=Teacher.prototype;
 
     /*请求数据，多层嵌套，同步请求*/
     t.initData=function() {
@@ -57,7 +52,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             basic: function (callback) {
                 that.loadBasicInfoData(function (result) {
                     if(!result){
-                        that.showTips('机构不存在');
+                        that.showTips('老师不存在');
                         that.controlLoadingBox(false);
                         return;
                     }
@@ -74,7 +69,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                     callback(null,result)
                 });
             },
-
             //课程
             course:function(callback){
                 that.loadTeachingCourse(function(result){
@@ -86,41 +80,11 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                     callback(null,result)
                 });
             },
-            video:function(callback) {
-                that.loadVideo(function(result){
-                    callback(null,result)
-                });
-            },
             teacher:function(callback) {
                 that.loadMyTeachersInfo(function(result){
                     callback(null,result)
                 });
             },
-            teachingVideo:function(callback) {
-                that.loadTeachingVideoInfo(function(result){
-                    callback(null,result)
-                });
-            },
-            works:function(callback) {
-                that.loadWorksInfo(function(result){
-                    callback(null,result)
-                });
-            },
-            groups:function(callback) {
-                that.loadGroupsInfo(function (result) {
-                    callback(null, result)
-                });
-            },
-            detailComment:function(callback) {
-                that.loadDetailCommentInfo(1,function(result){
-                    callback(null,result)
-                });
-            },
-            //otherDetailComment:function(callback) {
-            //    that.loadDetailCommentInfo(2,function(result){
-            //        callback(null,result)
-            //    },4);
-            //},
         }, function (err, results) {
             var val;
             for(var item in results){
@@ -141,32 +105,14 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                         break;
                     case 'course':
                         fn=that.fillInCourseInfo;
-                        var aaaa='';
                         break;
                     case 'pics':
                         that.fillInPicsAndVideo([results['video']],val);
                         break;
-                    case 'video':
-                        //var str = that.getVideoStr([val]);  /*填充报名信息*/
-                        //that.loadPics(str);
-                        break;
                     case 'teacher':
                         fn = that.fillMyTeachersInfo;  /*填充老师信息*/
                         break;
-                    case 'teachingVideo':
-                        that.fillInTeachingVideo(val,results['basic']);
-                        break;
-                    case 'works':
-                        fn=that.fillWorksInfo;
-                        break;
-                    case 'groups':
-                        fn=that.filInGroupsInfo;
-                        break;
-                    case 'detailComment':
-                        that.fillDetailCommentInfo(val);
-                        break;
                     default :
-
                         break;
                 }
                 fn && fn.call(that,val);
@@ -180,30 +126,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         });
     };
 
-    /*播放器控制*/
-    t.initVideoPlayer=function(){
-        var that=this;
-        videojs("video-player").ready(function() {
-            that.myPlayer = this;
-        });
-    };
-
-    /*
-     *播放器地址控制
-     * url -{string} 视频地址，类似 http://91.16.0.7/video/14/output.m3u8
-     *
-     * */
-    t.resetVideoPlayerUrl=function(url,poster){
-        if(!this.myPlayer){
-            this.initVideoPlayer();
-        }
-        this.myPlayer.src({type: 'application/x-mpegURL',src:url});
-        if(!poster){
-            poster='http://pic.hisihi.com/hisihi_home_pic/video_cover.png';
-        }
-        this.myPlayer.poster(poster);
-        $('.modal').eq(0).addClass('show');
-    };
 
     /*加载基本信息*/
     t.loadBasicInfoData=function(callback) {
@@ -211,7 +133,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             $target=that.$wrapper.find('.logoAndCertInfo'),
             queryPara={
                 url:this.baseUrl+'appGetBaseInfo',
-                paraData:{organization_id:this.oid,version:3.02},
+                paraData:{teacher_id:this.oid,version:3.02},
                 sCallback:function(restult){
                     callback && callback(restult);
                 },
@@ -261,16 +183,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         if (data.location) {
             $('.my-location').text(data.location).parent().show();
         }
-        /*优势标签*/
-        if (data.advantage) {
-            var arr = data.advantage.split('#'),
-                str = '';
-            for (var i = 0; i < arr.length; i++) {
-                str += '<li>' + arr[i] + '</li>';
-            }
-            $('.my-tags').html(str).parent().show();
-        }
-
         //电话号码
         $('.contact a').attr('href', 'tel:' + data.phone_num);
 
@@ -280,37 +192,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         // 抵扣券 标签
         this.fillInDeductionTags(result);
 
-    };
-
-
-    //认证信息
-    t.setCertInfo=function(authen){
-        if(!authen || authen.length==0){
-            return;
-        }
-        var str='',
-            url='',
-            len=authen.length,
-            item;
-        for(var i=0;i<len;i++){
-            item=authen[i];
-            if(item.default_display=='1') {
-                //显示加v
-                if (item.hisihi_add_v && item.hisihi_add_v == true) {
-                    $('.v-cert').show();
-                    continue;
-                }
-                else {
-                    //if (item.status) {
-                    url = item.tag_pic_url
-                    //} else {
-                    //    url = item.disable_pic_url;
-                    //}
-                    str += '<img src="' + url + '">';
-                }
-            }
-        }
-        $('.cert-box').html(str);
     };
 
 
@@ -370,9 +251,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
 
         for(var i=0;i<len;i++){
             item=list[i];
-            //if(!item.rebate_info){
-            //    continue;
-            //}
             rightStr=this.getRightStrAndMarginInfo(item.rebate_info);  //抵扣券信息
 
             count++;
@@ -457,6 +335,8 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     t.loadTopAnnouncement=function(callback){
         var that=this;
         this.getDataAsyncPy({
+            //http://dev.hisihi.com/api.php?s=/teacher/teacherv3_1/uid/7"
+            //http://localhost/api.php?s=/teacher/getTeacherInfo
             url:window.hisihiUrlObj.apiUrlPy+'v1/org/' +this.oid +'/news',
             sCallback: function(result){
                 callback && callback(result);
@@ -565,7 +445,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     /*获得抵扣券使用流程信息*/
     t.fillInDeductionTags=function(result){
         if(!result || !result.data){
-            return;
+            return;2
         }
         var tipsArr=result.data.teaching_course_tag_list;
         if(tipsArr.length>0) {
@@ -576,7 +456,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     };
 
     /*课程信息*/
-    t.loadTeachingCourse=function(callback){
+    t.loadTeachingCourse=function(callback){1
         var that=this;
         this.getDataAsyncPy({
             url: window.hisihiUrlObj.apiUrlPy+'/v1/org/'+this.oid+'/teaching_course',
