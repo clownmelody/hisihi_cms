@@ -78,6 +78,87 @@ class TeacherController extends BaseController
         $this->apiSuccess('创建老师成功', null, array('id'=>$teacher_id));
     }
 
+    /**
+     * @param $id
+     * @param $name
+     * @param $avatar
+     * @param $title
+     * @param $tag
+     * @param $introduce
+     * @param null $student_list
+     * @param $teach_age
+     * @param $employment_rate
+     * @param $student_num
+     * @param null $student_work_list
+     * @param int $uid
+     */
+    public function updateTeacher($id, $name=null, $avatar=null, $title=null, $tag=null, $introduce=null,
+                                  $student_list=null, $teach_age=null, $employment_rate=null,
+                                  $student_num=null, $student_work_list=null, $uid=0){
+        $model = M('OrganizationTeacher');
+        $tsrmodel = M('TeacherStudentRelation');
+        $swmodel = M('StudentWorks');
+        if(!empty($name)){
+            $data['name'] = $name;
+        }
+        if(!empty($avatar)){
+            $data['avatar'] = $avatar;
+        }
+        if(!empty($title)){
+            $data['title'] = $title;
+        }
+        if(!empty($tag)){
+            $data['tag'] = $tag;
+        }
+        if(!empty($introduce)){
+            $data['introduce'] = $introduce;
+        }
+        if(!empty($teach_age)){
+            $data['teach_age'] = $teach_age;
+        }
+        if(!empty($employment_rate)){
+            $data['employment_rate'] = $employment_rate;
+        }
+        if(!empty($student_num)){
+            $data['student_num'] = $student_num;
+        }
+        if(!empty($uid)){
+            $data['uid'] = $uid;
+        }
+        $model->where('id='.$id)->save($data);
+        if(!empty($student_list)){
+            $student_list = json_decode($student_list, true);
+            foreach($student_list as $sid){
+                $sel_where['teacher_id'] = $id;
+                $sel_where['student_id'] = $sid;
+                $sel_where['status'] = 1;
+                $count = $tsrmodel->where($sel_where)->count();
+                if(!$count){
+                    $tsrdata['teacher_id'] = $id;
+                    $tsrdata['student_id'] = $sid;
+                    $tsrdata['create_time'] = time();
+                    $tsrmodel->add($tsrdata);
+                }
+            }
+        }
+        if(!empty($student_work_list)){
+            $student_work_list = json_decode($student_work_list, true);
+            foreach($student_work_list as $pic_url){
+                $sel_where['teacher_id'] = $id;
+                $sel_where['pic_url'] = $pic_url;
+                $sel_where['status'] = 1;
+                $count = $swmodel->where($sel_where)->count();
+                if(!$count){
+                    $swdata['teacher_id'] = $id;
+                    $swdata['pic_url'] = $pic_url;
+                    $swdata['create_time'] = time();
+                    $swmodel->add($swdata);
+                }
+            }
+        }
+        $this->apiSuccess('更新老师成功', null, array('id'=>$id));
+    }
+
     public function deleteStudentWork($work_id=0){
         $model = M('StudentWorks');
         $data['id'] = $work_id;
