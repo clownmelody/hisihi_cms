@@ -2423,6 +2423,7 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
      * @param float $version
      * @param int $pid
      * @param int $teaching_course_id
+     * @param int $first_level_id
      * @param null $pic_url_list
      * @param null $choose_reason
      * @param null $teachers_group
@@ -2431,7 +2432,8 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
      * @param null $employ_service
      */
     public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null,
-                              $strScoreList=null, $order_id=0, $version=3.0, $pid=0, $teaching_course_id=0,
+                              $strScoreList=null, $order_id=0, $version=3.0, $pid=0,
+                              $teaching_course_id=0, $first_level_id=0,
                               $pic_url_list=null, $choose_reason=null, $teachers_group=null,
                               $teaching_quality=null, $teaching_env=null, $employ_service=null){
         if(!$uid){
@@ -2482,6 +2484,7 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
             $data['organization_id'] = $organization_id;
             $data['uid'] = $uid;
             $data['pid'] = $pid;
+            $data['first_level_id'] = $first_level_id;
             $data['teaching_course_id'] = $teaching_course_id;
             $data['comprehensive_score'] = $comprehensiveScore;
             $data['comment'] = $content;
