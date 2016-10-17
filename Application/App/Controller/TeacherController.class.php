@@ -159,6 +159,13 @@ class TeacherController extends BaseController
         $this->apiSuccess('更新老师成功', null, array('id'=>$id));
     }
 
+    public function deleteTeacher($id){
+        $model = M('OrganizationTeacher');
+        $data['status'] = -1;
+        $model->where('id='.$id)->save($data);
+        $this->apiSuccess('删除老师成功');
+    }
+
     public function deleteStudentWork($work_id=0){
         $model = M('StudentWorks');
         $data['id'] = $work_id;
