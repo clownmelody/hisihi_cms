@@ -2326,7 +2326,7 @@ class OrganizationController extends AppController
         return $totalCount;
     }
 
-    public function getChildCommentList($comment_id, $page=1, $count=10){
+    /*public function getChildCommentList($comment_id, $page=1, $count=10){
         $model = M('OrganizationComment');
         $start = ($page-1)*$count;
         $countSql = "SELECT count(*) as count FROM hisihi.hisihi_organization_comment where pid
@@ -2357,6 +2357,39 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
             $pic_url_list = stripslashes($comment['pic_url_list']);
             $comment['pic_info']= json_decode($pic_url_list, true);
             unset($comment['uid']);
+            unset($comment['pic_url_list']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取评论列表成功', null, $extra);
+    }*/
+
+    public function getChildCommentList($comment_id, $page=1, $count=10){
+        $model = M('OrganizationComment');
+        $start = ($page-1)*$count;
+        $countSql = "SELECT count(*) as count FROM hisihi_organization_comment where
+                    first_level_id =".$comment_id;
+        $countInfo = M()->query($countSql);
+        $totalCount = $countInfo[0]['count'];
+        $sql = "SELECT id, pid, uid, comprehensive_score, comment, pic_url_list,
+                choose_reason, teachers_group, teaching_quality, teaching_env, first_level_id,
+                employ_service, create_time FROM hisihi_organization_comment where
+                first_level_id=".$comment_id." order by create_time desc limit ".$start.",".$count;
+        $list = M()->query($sql);
+        foreach($list as &$comment){
+            $uid = $comment['uid'];
+            $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
+                $uid);
+            if($comment_id!=$comment['pid']){
+                $user = $model->field('uid')->where('id='.$comment['pid'])->find();
+                if($comment['pid']!=$comment['first_level_id']){
+                    $comment['to_user_info'] = query_user(array('uid', 'nickname'), $user['uid']);
+                }
+            }
+            $pic_url_list = stripslashes($comment['pic_url_list']);
+            $comment['pic_info']= json_decode($pic_url_list, true);
+            unset($comment['uid']);
+            unset($comment['first_level_id']);
             unset($comment['pic_url_list']);
         }
         $extra['totalCount'] = $totalCount;

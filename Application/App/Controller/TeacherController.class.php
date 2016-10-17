@@ -27,6 +27,7 @@ class TeacherController extends BaseController
 
     /**
      * 创建老师
+     * @param $organization_id
      * @param $name
      * @param $avatar
      * @param $title
@@ -37,12 +38,14 @@ class TeacherController extends BaseController
      * @param $employment_rate
      * @param $student_num
      * @param null $student_work_list
+     * @param int $uid
      */
-    public function createTeacher($name, $avatar, $title, $tag, $introduce, $student_list=null,
+    public function createTeacher($organization_id, $name, $avatar, $title, $tag, $introduce, $student_list=null,
                            $teach_age, $employment_rate, $student_num, $student_work_list=null, $uid=0){
         $model = M('OrganizationTeacher');
         $tsrmodel = M('TeacherStudentRelation');
         $swmodel = M('StudentWorks');
+        $data['organization_id'] = $organization_id;
         $data['name'] = $name;
         $data['avatar'] = $avatar;
         $data['title'] = $title;
