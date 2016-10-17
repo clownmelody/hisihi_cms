@@ -228,6 +228,7 @@ class RestController extends Controller {
      * @return void
      */
     protected function response($data,$type='',$code=200) {
+        header('Access-Control-Allow-Origin:*');
         $this->sendHttpStatus($code);
         exit($this->encodeData($data,strtolower($type)));
     }
