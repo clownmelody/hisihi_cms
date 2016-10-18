@@ -114,4 +114,11 @@ class TeachingCourseController extends BaseController
         }*/
     }
 
+    public function outLineLongTextPage($id){
+        $model = M('TeachingCourseOutlineResource');
+        $info = $model->field('name, content')->where('id='.$id)->find();
+        $this->assign('info', $info);
+        $this->display('outline_long_text_page');
+    }
+
 }

@@ -15,7 +15,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
 
-
         this.perPageSize=10;
         this.pageIndex=1;
         this.async=true;  //同步加载所有的数据
@@ -571,7 +570,6 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
     t.fillInSignUpInfo=function(data){
         var str='',item,
             flag=!data || data.length==0;
-
         //没有人报名
         if(flag) {
             return;

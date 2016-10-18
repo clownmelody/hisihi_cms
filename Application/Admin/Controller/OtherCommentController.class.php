@@ -8,12 +8,16 @@ use Think\Page;
 
 class OtherCommentController extends AdminController
 {
-    public function index(){
+    public function index($organization_id=0){
         $model = M('OrganizationOtherComment');
-        $count = $model->where('status=1')->count();
+        $whereArray['status'] = 1;
+        if($organization_id!=0){
+            $whereArray['organization_id'] = $organization_id;
+        }
+        $count = $model->where($whereArray)->count();
         $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
-        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $list = $model->where($whereArray)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("total", $count);
@@ -41,10 +45,10 @@ class OtherCommentController extends AdminController
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/othercomment/index');
+                $this->success('添加成功', 'index.php?s=/admin/otherComment/index');
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/othercomment/index');
+                $this->success('更新成功', 'index.php?s=/admin/otherComment/index');
             }
         } else {
             $this->display('add');
@@ -78,7 +82,7 @@ class OtherCommentController extends AdminController
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
             }
-            $this->success('处理成功','index.php?s=/admin/othercomment/index');
+            $this->success('处理成功','index.php?s=/admin/otherComment/index');
         } else {
             $this->error('未选择要处理的数据');
         }

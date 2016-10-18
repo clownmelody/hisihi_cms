@@ -447,6 +447,18 @@ class OrganizationController extends AppController
                 $course_tag_list = $this->getOrgCourseTagListByOrgId($organization_id);
                 $result['teaching_course_tag_list'] = $course_tag_list;
             }
+            if((float)$version>=3.1){
+                $orgCommentModel = M('OrganizationComment');
+                $otherCommentModle = M('OrganizationOtherComment');
+                $app_comment_total_count = $orgCommentModel->where('status=1 and pid=0
+                                            and organization_id='.$organization_id)
+                    ->count();
+                $other_comment_total_count = $otherCommentModle->where('status=1 and
+                                organization_id='.$organization_id)
+                    ->count();
+                $result['app_comment_total_count'] = $app_comment_total_count;
+                $result['other_comment_total_count'] = $other_comment_total_count;
+            }
             if($type=="view"){
                 return $result;
             }else{
@@ -2168,7 +2180,7 @@ class OrganizationController extends AppController
             if($comment_type==1){   // 内部评论包括外部评论
                 $totalCount = $model->where('status=1 and pid=0 and organization_id='.$organization_id)
                     ->count();
-                $comment_list = $model->field('id, uid, comprehensive_score, comment, pic_id_list,
+                $comment_list = $model->field('id, uid, comprehensive_score, comment, pic_url_list,
                                                 choose_reason, teachers_group, teaching_quality,
                                                 teaching_env, employ_service, create_time')
                     ->where('status=1 and pid=0 and organization_id='.$organization_id)
@@ -2179,9 +2191,10 @@ class OrganizationController extends AppController
                     $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
                         $uid);
                     $comment['childCommentCount']= $this->getChildCommentCount($comment['id']);
-                    $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+                    $pic_url_list = stripslashes($comment['pic_url_list']);
+                    $comment['pic_info']= json_decode($pic_url_list, true);
+                    unset($comment['pic_url_list']);
                     unset($comment['uid']);
-                    unset($comment['pic_id_list']);
                 }
                 $extra['totalCount'] = $totalCount;
                 $extra['data'] = $comment_list;
@@ -2216,7 +2229,7 @@ class OrganizationController extends AppController
         if($comment_type==1){   // 内部评论包括外部评论
             $totalCount = $model->where('status=1 and pid=0 and teaching_course_id='.$teaching_course_id)
                 ->count();
-            $comment_list = $model->field('id, uid, comprehensive_score, comment, pic_id_list,
+            $comment_list = $model->field('id, uid, comprehensive_score, comment, pic_url_list,
                                                 choose_reason, teachers_group, teaching_quality,
                                                 teaching_env, employ_service, create_time')
                 ->where('status=1 and pid=0 and teaching_course_id='.$teaching_course_id)
@@ -2227,19 +2240,20 @@ class OrganizationController extends AppController
                 $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
                     $uid);
                 $comment['childCommentCount']= $this->getChildCommentCount($comment['id']);
-                $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+                $pic_url_list = stripslashes($comment['pic_url_list']);
+                $comment['pic_info']= json_decode($pic_url_list, true);
                 unset($comment['uid']);
-                unset($comment['pic_id_list']);
+                unset($comment['pic_url_list']);
             }
             $extra['totalCount'] = $totalCount;
             $extra['data'] = $comment_list;
             $this->apiSuccess('获取机构评论列表成功', null, $extra);
         } else {   // 外部评论
             $otherCommentModle = M('OrganizationOtherComment');
-            $totalCount = $otherCommentModle->where('status=1 and organization_id='.$organization_id)
+            $totalCount = $otherCommentModle->where('status=1 and type=2 and organization_id='.$organization_id)
                 ->count();
             $comment_list = $otherCommentModle->field('name, content, from, create_time')
-                ->where('status=1 and organization_id='.$organization_id)
+                ->where('status=1 and type=2 and organization_id='.$organization_id)
                 ->order('create_time desc')
                 ->page($page, $count)
                 ->select();
@@ -2251,7 +2265,7 @@ class OrganizationController extends AppController
 
     public function commentDetail($comment_id=0){
         $model = M('OrganizationComment');
-        $comment = $model->field('id, uid, comprehensive_score, comment, pic_id_list, organization_id,
+        $comment = $model->field('id, uid, comprehensive_score, comment, pic_url_list, organization_id,
                                                 choose_reason, teachers_group, teaching_quality,
                                                 teaching_env, employ_service, create_time')
             ->where('id='.$comment_id)->find();
@@ -2259,11 +2273,13 @@ class OrganizationController extends AppController
         $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
             $uid);
         $comment['childCommentCount'] = $this->getChildCommentCount($comment['id']);
-        $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+        $comment['otherCommentCount'] = $this->getOtherCommentCount($comment['organization_id']);
+        $pic_url_list = stripslashes($comment['pic_url_list']);
+        $comment['pic_info']= json_decode($pic_url_list, true);
         $comment['pre_comment_id'] = $this->getPreCommentId($comment['organization_id'], $comment_id);
         $comment['next_comment_id'] = $this->getNextCommentId($comment['organization_id'], $comment_id);
         unset($comment['uid']);
-        unset($comment['pic_id_list']);
+        unset($comment['pic_url_list']);
         unset($comment['organization_id']);
         $extra['data'] = $comment;
         $this->apiSuccess('获取机构评论详情成功', null, $extra);
@@ -2279,6 +2295,13 @@ class OrganizationController extends AppController
         } else {
             return 0;
         }
+    }
+
+    private function getOtherCommentCount($organization_id=0){
+        $otherCommentModle = M('OrganizationOtherComment');
+        $totalCount = $otherCommentModle->where('status=1 and organization_id='.$organization_id)
+            ->count();
+        return $totalCount;
     }
 
     private function getNextCommentId($organization_id, $comment_id){
@@ -2304,7 +2327,7 @@ class OrganizationController extends AppController
         return $totalCount;
     }
 
-    public function getChildCommentList($comment_id, $page=1, $count=10){
+    /*public function getChildCommentList($comment_id, $page=1, $count=10){
         $model = M('OrganizationComment');
         $start = ($page-1)*$count;
         $countSql = "SELECT count(*) as count FROM hisihi.hisihi_organization_comment where pid
@@ -2315,11 +2338,11 @@ union SELECT count(*) as count FROM hisihi.hisihi_organization_comment where sta
         foreach($count_list as $item){
             $totalCount += (int)$item['count'];
         }
-        $sql = "SELECT id, pid, uid, comprehensive_score, comment, pic_id_list,
+        $sql = "SELECT id, pid, uid, comprehensive_score, comment, pic_url_list,
                 choose_reason, teachers_group, teaching_quality, teaching_env,
                 employ_service, create_time FROM hisihi.hisihi_organization_comment where pid
 in (SELECT id FROM hisihi.hisihi_organization_comment where status=1 and pid=".$comment_id.")
-union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_reason,
+union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_reason,
  teachers_group, teaching_quality, teaching_env,
  employ_service, create_time FROM hisihi.hisihi_organization_comment where status=1 and pid=".$comment_id."
  order by create_time desc limit ".$start.",".$count;
@@ -2332,9 +2355,43 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
                 $user = $model->field('uid')->where('id='.$comment['pid'])->find();
                 $comment['to_user_info'] = query_user(array('uid', 'nickname'), $user['uid']);
             }
-            $comment['pic_info']= $this->resolvePicListToURL($comment['pic_id_list']);
+            $pic_url_list = stripslashes($comment['pic_url_list']);
+            $comment['pic_info']= json_decode($pic_url_list, true);
             unset($comment['uid']);
-            unset($comment['pic_id_list']);
+            unset($comment['pic_url_list']);
+        }
+        $extra['totalCount'] = $totalCount;
+        $extra['data'] = $list;
+        $this->apiSuccess('获取评论列表成功', null, $extra);
+    }*/
+
+    public function getChildCommentList($comment_id, $page=1, $count=10){
+        $model = M('OrganizationComment');
+        $start = ($page-1)*$count;
+        $countSql = "SELECT count(*) as count FROM hisihi_organization_comment where
+                    first_level_id =".$comment_id;
+        $countInfo = M()->query($countSql);
+        $totalCount = $countInfo[0]['count'];
+        $sql = "SELECT id, pid, uid, comprehensive_score, comment, pic_url_list,
+                choose_reason, teachers_group, teaching_quality, teaching_env, first_level_id,
+                employ_service, create_time FROM hisihi_organization_comment where
+                first_level_id=".$comment_id." order by create_time desc limit ".$start.",".$count;
+        $list = M()->query($sql);
+        foreach($list as &$comment){
+            $uid = $comment['uid'];
+            $comment['userInfo'] = query_user(array('uid', 'avatar128', 'avatar256', 'nickname'),
+                $uid);
+            if($comment_id!=$comment['pid']){
+                $user = $model->field('uid')->where('id='.$comment['pid'])->find();
+                if($comment['pid']!=$comment['first_level_id']){
+                    $comment['to_user_info'] = query_user(array('uid', 'nickname'), $user['uid']);
+                }
+            }
+            $pic_url_list = stripslashes($comment['pic_url_list']);
+            $comment['pic_info']= json_decode($pic_url_list, true);
+            unset($comment['uid']);
+            unset($comment['first_level_id']);
+            unset($comment['pic_url_list']);
         }
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
@@ -2400,19 +2457,19 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
      * @param float $version
      * @param int $pid
      * @param int $teaching_course_id
-     * @param null $pic_id_list
+     * @param int $first_level_id
+     * @param null $pic_url_list
      * @param null $choose_reason
      * @param null $teachers_group
+     * @param null $teaching_quality
      * @param null $teaching_env
      * @param null $employ_service
      */
     public function doComment($organization_id=0, $uid=0, $comprehensiveScore=5, $content=null,
-                              $strScoreList=null, $order_id=0, $version=3.0, $pid=0, $teaching_course_id=0,
-                              $pic_id_list=null, $choose_reason=null, $teachers_group=null, $teaching_quality=null,
-                              $teaching_env=null, $employ_service=null){
-        if(empty($content)||$organization_id==0){
-            $this->apiError(-1, '传入参数不能为空');
-        }
+                              $strScoreList=null, $order_id=0, $version=3.0, $pid=0,
+                              $teaching_course_id=0, $first_level_id=0,
+                              $pic_url_list=null, $choose_reason=null, $teachers_group=null,
+                              $teaching_quality=null, $teaching_env=null, $employ_service=null){
         if(!$uid){
             $this->requireLogin();
             $uid = $this->getUid();
@@ -2458,15 +2515,22 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
                 $organization_id = $pidInfo['organization_id'];
                 $teaching_course_id = $pidInfo['teaching_course_id'];
             }
-            $data['organization_id'] = $organization_id;
+            if($teaching_course_id!=0){
+                $courseModel = M('OrganizationTeachingCourse');
+                $courseInfo = $courseModel->field('organization_id')->where('id='.$teaching_course_id)->find();
+                $data['organization_id'] = $courseInfo['organization_id'];
+            } else {
+                $data['organization_id'] = $organization_id;
+            }
             $data['uid'] = $uid;
             $data['pid'] = $pid;
+            $data['first_level_id'] = $first_level_id;
             $data['teaching_course_id'] = $teaching_course_id;
             $data['comprehensive_score'] = $comprehensiveScore;
             $data['comment'] = $content;
             $data['create_time'] = time();
             $data['order_id'] = intval($order_id);
-            $data['pic_id_list'] = $pic_id_list;
+            $data['pic_url_list'] = $pic_url_list;
             $data['choose_reason'] = $choose_reason;
             $data['teachers_group'] = $teachers_group;
             $data['teaching_env'] = $teaching_env;
@@ -2530,13 +2594,26 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_id_list, choose_rea
      * @param null $version
      * @return mixed
      */
-    public function appGetTeacherList($organization_id=0,$page = 1, $count = 10,
+    public function appGetTeacherList($organization_id=0, $page = 1, $count = 10,
                                       $type=null, $version=null){
         if($organization_id==0){
             $this->apiError(-1, '传入机构id不能为空');
         }
+        if((float)$version>=3.1){
+            $model = M('OrganizationTeacher');
+            $totalCount = $model->where('status=1 and organization_id='.$organization_id)->count();
+            $list = $model->field('id, name, avatar, title, introduce, uid')
+                ->where('status=1 and organization_id='.$organization_id)
+                ->page($page, $count)->select();
+            foreach($list as &$item){
+                $item['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$item['id'];
+            }
+            $extra['totalCount'] = $totalCount;
+            $extra['teacherList'] = $list;
+            $this->apiSuccess("获取机构老师列表成功", null, $extra);
+        }
         $Model = new \Think\Model();
-        $totalCount = $Model->query('select count(*) as count from (select distinct uid from hisihi_organization_relation where `status`=1 and `group`=6 and `organization_id`='.$organization_id.')m');
+        $totalCount = $Model->query('select count(*) as count from (select distinct uid from hisihi_organization_relation where status=1 and group=6 and organization_id='.$organization_id.')m');
         $totalCount = $totalCount[0]['count'];
         if((float)$version>=2.8){
             $teacher_ids = M('OrganizationRelation')->distinct('uid')

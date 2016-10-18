@@ -503,10 +503,14 @@ body {
   overflow: auto;
   padding-bottom: 50px;
   overflow-x: hidden;
+  color: #212121;
+  font-size: 14px;
+}
+p {
+  margin: 0;
+  padding: 0;
 }
 .head > p {
-  font-size: 14px;
-  color: #212121;
   line-height: 40px;
 }
 .nodata {
@@ -527,7 +531,6 @@ body {
   margin: 14px 14px 0 14px;
   background-color: #FFFFFF;
   box-sizing: border-box;
-  border-radius: 4px;
   overflow: hidden;
 }
 .wrapper .info {
@@ -536,18 +539,19 @@ body {
 .wrapper .info .info-left {
   width: 70px;
   height: 70px;
-  background: url("../../images/teacher/LL.jpg") no-repeat;
-  background-size: 69px 59.5px;
-  border-radius: 70px;
   display: inline-block;
   margin-right: 10px;
+}
+.wrapper .info .info-left > img {
+  max-width: 70px;
+  height: 70px;
+  border-radius: 70px;
 }
 .wrapper .info .info-right {
   display: inline-block;
   vertical-align: 14px;
 }
 .wrapper .info .info-right #name {
-  color: #212121;
   font-size: 18px;
   padding-bottom: 4px;
 }
@@ -556,13 +560,181 @@ body {
   font-size: 12px;
 }
 .wrapper .tag {
-  max-height: 90px;
+  min-height: 82px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .wrapper .tag .tag-left {
-  width: 60px;
-  height: 60px;
+  float: left;
+  width: 40%;
+  height: 100%;
+  padding-left: 8%;
+}
+.wrapper .tag .tag-left .tag-img {
+  width: 35px;
+  height: 38px;
   background: url("../../images/teacher/sprite.png") no-repeat;
+  background-size: 126px 37.5px;
   background-position: 0px 0px;
-  display: inline-block;
+}
+.wrapper .tag .tag-right {
+  font-size: 12px;
+}
+.wrapper .tag .tag-right > ul {
+  display: table;
+  padding-top: 10px;
+}
+.wrapper .tag .tag-right > ul > li {
+  margin-bottom: 10px;
   margin-right: 10px;
+  float: left;
+  height: 22px;
+  background-color: #f2f2f2;
+}
+.wrapper .number {
+  min-height: 88px;
+  display: box;
+  text-align: center;
+  padding-top: 20px;
+  border-bottom: 1px #F2F2F2 solid;
+}
+.wrapper .number #student {
+  box-flex: 1;
+}
+.wrapper .number #year {
+  box-flex: 1;
+}
+.wrapper .number #job {
+  box-flex: 1;
+}
+.wrapper .number #student-img {
+  width: 30px;
+  height: 24px;
+  background-position: -87px 0px;
+}
+.wrapper .number #year-img {
+  width: 26px;
+  height: 24px;
+  background-position: -61px 0px;
+}
+.wrapper .number #job-img {
+  width: 27px;
+  height: 24px;
+  background-position: -34px 0px;
+}
+.wrapper .number .num-img {
+  display: inline-block;
+  background: url("../../images/teacher/sprite.png") no-repeat;
+  background-size: 126px 37.5px;
+}
+.wrapper .number .num > span {
+  color: #1F1F1F;
+  font-weight: bold;
+  font-size: 15px;
+}
+.wrapper .introduction {
+  border-bottom: 1px #F2F2F2 solid;
+}
+.wrapper .introduction .head {
+  margin: 14px 14px 0 14px;
+  text-align: left;
+  height: 19px;
+  padding-bottom: 8px;
+}
+.wrapper .introduction .head > span {
+  width: 100%;
+}
+.wrapper .introduction .detail {
+  margin: 0px 14px 0 14px;
+  font-size: 13px;
+  padding-bottom: 20px;
+  line-height: 20px;
+}
+.wrapper .picture {
+  border-bottom: 1px solid #f2f2f2;
+}
+.wrapper .picture .header {
+  margin: 14px 14px 0 14px;
+  width: 95%;
+  height: 40px;
+  line-height: 40px;
+  display: inline-block;
+}
+.wrapper .picture .header .pic-title {
+  height: 100%;
+}
+.wrapper .picture .header .right-arrow {
+  float: right;
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  text-align: center;
+}
+.wrapper .picture .header .right-arrow > span {
+  display: inline-block;
+  vertical-align: -5px;
+  width: 10px;
+  height: 19px;
+  background: url("../../images/teacher/sprite.png");
+  background-size: 151.2px 45px;
+  background-position: 10px 0px;
+}
+.wrapper .picture .preview-box {
+  margin: 0px 14px 0 14px;
+  overflow-x: auto;
+}
+.wrapper .picture .preview-box ul {
+  margin: 0px 0 14px 0;
+  white-space: nowrap;
+}
+.wrapper .picture .preview-box ul li {
+  overflow-y: hidden;
+  border: 1px solid rgba(145, 145, 145, 0.2);
+}
+.wrapper .picture .preview-box ul li img {
+  width: 100%;
+  height: 100%;
+}
+.wrapper .employee .head {
+  padding-bottom: 8px;
+}
+.wrapper .employee .head > span {
+  color: #212121;
+}
+.wrapper .employee .employee-box {
+  min-height: 90px;
+  padding-top: 14px;
+}
+.wrapper .employee .employee-box .student-left {
+  display: inline-block;
+  min-width: 44px;
+  padding-right: 14px;
+}
+.wrapper .employee .employee-box .student-left > img {
+  width: 44px;
+  height: 44px;
+  border-radius: 44px;
+}
+.wrapper .employee .employee-box .student-right {
+  display: inline-block;
+  vertical-align: -32px;
+  width: 80%;
+}
+.wrapper .employee .employee-box .student-right > ul > li {
+  width: 100%;
+  padding-bottom: 3px;
+}
+.wrapper .employee .employee-box .student-right > ul > li:last-child {
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f1f1;
+}
+.wrapper .employee .employee-box .student-right .student-name {
+  font-size: 15px;
+  font-weight: bold;
+}
+.wrapper .employee .employee-box .student-right .right {
+  color: #808080;
 }
