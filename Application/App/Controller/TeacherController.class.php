@@ -58,6 +58,7 @@ class TeacherController extends BaseController
         $data['create_time'] = time();
         $teacher_id = $model->add($data);
         if(!empty($student_list)){
+            $student_list = stripslashes($student_list);
             $student_list = json_decode($student_list, true);
             foreach($student_list as $sid){
                 $tsrdata['teacher_id'] = $teacher_id;
@@ -67,6 +68,7 @@ class TeacherController extends BaseController
             }
         }
         if(!empty($student_work_list)){
+            $student_work_list = stripslashes($student_work_list);
             $student_work_list = json_decode($student_work_list, true);
             foreach($student_work_list as $pic_url){
                 $swdata['teacher_id'] = $teacher_id;
@@ -127,6 +129,7 @@ class TeacherController extends BaseController
         }
         $model->where('id='.$id)->save($data);
         if(!empty($student_list)){
+            $student_list = stripslashes($student_list);
             $student_list = json_decode($student_list, true);
             foreach($student_list as $sid){
                 $sel_where['teacher_id'] = $id;
@@ -142,6 +145,7 @@ class TeacherController extends BaseController
             }
         }
         if(!empty($student_work_list)){
+            $student_work_list = stripslashes($student_work_list);
             $student_work_list = json_decode($student_work_list, true);
             foreach($student_work_list as $pic_url){
                 $sel_where['teacher_id'] = $id;
@@ -182,6 +186,7 @@ class TeacherController extends BaseController
         }
         $model = M('StudentWorks');
         if(!empty($pic_url_list)){
+            $pic_url_list = stripslashes($pic_url_list);
             $pic_url_list = json_decode($pic_url_list, true);
             foreach($pic_url_list as $pic_url){
                 $sel_where['teacher_id'] = $teacher_id;
@@ -324,6 +329,7 @@ class TeacherController extends BaseController
         $data['create_time'] = time();
         $course_id = $courseModel->add($data);
         if(!empty($student_work_list)){
+            $student_work_list = stripslashes($student_work_list);
             $student_work_list = json_decode($student_work_list, true);
             foreach($student_work_list as $pic_url){
                 $swdata['course_id'] = $course_id;
