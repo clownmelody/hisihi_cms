@@ -173,6 +173,22 @@ class TeacherController extends BaseController
         $this->apiSuccess('删除学生作品成功');
     }
 
+    public function bindStudentWork($teacher_id=0, $course_id=0, $pic_url=null){
+        if(empty($pic_url)){
+            $this->apiError(-1, '图片地址不能为空');
+        }
+        if($teacher_id==0&&$course_id==0){
+            $this->apiError(-1, '老师id和课程id不能同时为空');
+        }
+        $data['teacher_id'] = $teacher_id;
+        $data['course_id'] = $course_id;
+        $data['pic_url'] = $pic_url;
+        $data['create_time'] = time();
+        $model = M('StudentWorks');
+        $model->add($data);
+        $this->apiSuccess('绑定学生作品成功');
+    }
+
     public function deleteStudentEmployInfo($teacher_id=0, $student_id=0){
         $model = M('TeacherStudentRelation');
         $data['teacher_id'] = $teacher_id;
