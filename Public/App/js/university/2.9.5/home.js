@@ -91,7 +91,6 @@ define(['base','myPhotoSwipe'],function(Base,MyPhotoSwipe){
             strMajor=this.getMajorInfoStr(result),
             strEn=this.getInEnvironmentStr(result),
             strAlbum=this.getAlbumInfo();
-
         var str=strBasic+
             strNums+
             strMajor+
@@ -103,7 +102,6 @@ define(['base','myPhotoSwipe'],function(Base,MyPhotoSwipe){
         }else{
             $('#watch-more').show();
         }
-
         this.getMajorSelect(result);
     };
 

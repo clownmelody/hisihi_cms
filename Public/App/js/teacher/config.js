@@ -12,7 +12,7 @@ requirejs.config({
         photoswipe:'sharecommon/photoswipe/photoswipe.min',
         photoswipeui:'sharecommon/photoswipe/photoswipe-ui-default.min',
         myPhotoSwipe:'sharecommon/photoswipe/myphotoswipe',
-        home:'forum/teacher/teacherv3.1',
+        home:'teacher/teacherv3.1',
         base:'sharecommon/base-1.1',
         async:'sharecommon/async',
     },
@@ -42,9 +42,20 @@ requirejs.config({
 });
 
 
-require(['fx','home','prefixfree'],function(fx,Detail){
-    var userAgent = window.location.href,
-        reg = /post_id\/[1-9][0-9]*/g,
-        id = userAgent.match(reg)[0].toString().replace(/post_id\//g,'');
-    window.topic = new Detail(id);
+//require(['fx','home','prefixfree'],function(fx,Detail){
+//    var userAgent = window.location.href,
+//        reg = /post_id\/[1-9][0-9]*/g,
+//        id = userAgent.match(reg)[0].toString().replace(/post_id\//g,'');
+//    window.topic = new Detail(id);
+//});
+
+require(['home','prefixfree'],function(Teacher){
+    var url = window.location.href;
+    if(url.indexOf('%2F')>0){
+        url=url.replace(/\%2F/g,'\/');
+    }
+
+    var reg = /uid\/[1-9][0-9]*/g,
+        id = url.match(reg)[0].toString().replace(/uid\//g,'');
+    window.Teacher = new Teacher($('#wrapper'),id,window.hisihiUrlObj.api_url_php);
 });
