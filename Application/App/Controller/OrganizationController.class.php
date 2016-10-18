@@ -2250,10 +2250,10 @@ class OrganizationController extends AppController
             $this->apiSuccess('获取机构评论列表成功', null, $extra);
         } else {   // 外部评论
             $otherCommentModle = M('OrganizationOtherComment');
-            $totalCount = $otherCommentModle->where('status=1 and organization_id='.$organization_id)
+            $totalCount = $otherCommentModle->where('status=1 and type=2 and organization_id='.$organization_id)
                 ->count();
             $comment_list = $otherCommentModle->field('name, content, from, create_time')
-                ->where('status=1 and organization_id='.$organization_id)
+                ->where('status=1 and type=2 and organization_id='.$organization_id)
                 ->order('create_time desc')
                 ->page($page, $count)
                 ->select();
@@ -2515,7 +2515,13 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
                 $organization_id = $pidInfo['organization_id'];
                 $teaching_course_id = $pidInfo['teaching_course_id'];
             }
-            $data['organization_id'] = $organization_id;
+            if($teaching_course_id!=0){
+                $courseModel = M('OrganizationTeachingCourse');
+                $courseInfo = $courseModel->field('organization_id')->where('id='.$teaching_course_id)->find();
+                $data['organization_id'] = $courseInfo['organization_id'];
+            } else {
+                $data['organization_id'] = $organization_id;
+            }
             $data['uid'] = $uid;
             $data['pid'] = $pid;
             $data['first_level_id'] = $first_level_id;

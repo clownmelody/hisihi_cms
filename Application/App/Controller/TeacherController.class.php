@@ -58,6 +58,7 @@ class TeacherController extends BaseController
         $data['create_time'] = time();
         $teacher_id = $model->add($data);
         if(!empty($student_list)){
+            $student_list = stripslashes($student_list);
             $student_list = json_decode($student_list, true);
             foreach($student_list as $sid){
                 $tsrdata['teacher_id'] = $teacher_id;
@@ -67,6 +68,7 @@ class TeacherController extends BaseController
             }
         }
         if(!empty($student_work_list)){
+            $student_work_list = stripslashes($student_work_list);
             $student_work_list = json_decode($student_work_list, true);
             foreach($student_work_list as $pic_url){
                 $swdata['teacher_id'] = $teacher_id;
@@ -127,6 +129,7 @@ class TeacherController extends BaseController
         }
         $model->where('id='.$id)->save($data);
         if(!empty($student_list)){
+            $student_list = stripslashes($student_list);
             $student_list = json_decode($student_list, true);
             foreach($student_list as $sid){
                 $sel_where['teacher_id'] = $id;
@@ -142,6 +145,7 @@ class TeacherController extends BaseController
             }
         }
         if(!empty($student_work_list)){
+            $student_work_list = stripslashes($student_work_list);
             $student_work_list = json_decode($student_work_list, true);
             foreach($student_work_list as $pic_url){
                 $sel_where['teacher_id'] = $id;
@@ -171,6 +175,35 @@ class TeacherController extends BaseController
         $data['id'] = $work_id;
         $model->where($data)->save(array('status'=>-1));
         $this->apiSuccess('删除学生作品成功');
+    }
+
+    public function bindStudentWork($teacher_id=0, $course_id=0, $pic_url_list=null){
+        if(empty($pic_url_list)){
+            $this->apiError(-1, '图片地址不能为空');
+        }
+        if($teacher_id==0&&$course_id==0){
+            $this->apiError(-1, '老师id和课程id不能同时为空');
+        }
+        $model = M('StudentWorks');
+        if(!empty($pic_url_list)){
+            $pic_url_list = stripslashes($pic_url_list);
+            $pic_url_list = json_decode($pic_url_list, true);
+            foreach($pic_url_list as $pic_url){
+                $sel_where['teacher_id'] = $teacher_id;
+                $sel_where['course_id'] = $course_id;
+                $sel_where['pic_url'] = $pic_url;
+                $sel_where['status'] = 1;
+                $count = $model->where($sel_where)->count();
+                if(!$count){
+                    $data['teacher_id'] = $teacher_id;
+                    $data['course_id'] = $course_id;
+                    $data['pic_url'] = $pic_url;
+                    $data['create_time'] = time();
+                    $model->add($data);
+                }
+            }
+        }
+        $this->apiSuccess('绑定学生作品成功');
     }
 
     public function deleteStudentEmployInfo($teacher_id=0, $student_id=0){
@@ -296,6 +329,7 @@ class TeacherController extends BaseController
         $data['create_time'] = time();
         $course_id = $courseModel->add($data);
         if(!empty($student_work_list)){
+            $student_work_list = stripslashes($student_work_list);
             $student_work_list = json_decode($student_work_list, true);
             foreach($student_work_list as $pic_url){
                 $swdata['course_id'] = $course_id;

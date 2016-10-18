@@ -223,7 +223,7 @@ define(['$','fastclick'],function() {
                 type: paras.type,
                 data: paras.paraData,
                 //timeout: 20000,
-                timeout: 50000,
+                timeout: 10000,
                 contentType: 'application/json',
                 beforeSend: function (myXhr) {
                     //自定义 头信息
