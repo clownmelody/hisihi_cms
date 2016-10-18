@@ -890,7 +890,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 callback && callback(result)
             },
             eCallback:function(txt){
-
+                callback && callback(null);
             },
             type:'get',
             async:this.async
