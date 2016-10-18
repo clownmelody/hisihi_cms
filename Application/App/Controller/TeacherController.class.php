@@ -173,19 +173,31 @@ class TeacherController extends BaseController
         $this->apiSuccess('删除学生作品成功');
     }
 
-    public function bindStudentWork($teacher_id=0, $course_id=0, $pic_url=null){
-        if(empty($pic_url)){
+    public function bindStudentWork($teacher_id=0, $course_id=0, $pic_url_list=null){
+        if(empty($pic_url_list)){
             $this->apiError(-1, '图片地址不能为空');
         }
         if($teacher_id==0&&$course_id==0){
             $this->apiError(-1, '老师id和课程id不能同时为空');
         }
-        $data['teacher_id'] = $teacher_id;
-        $data['course_id'] = $course_id;
-        $data['pic_url'] = $pic_url;
-        $data['create_time'] = time();
         $model = M('StudentWorks');
-        $model->add($data);
+        if(!empty($pic_url_list)){
+            $pic_url_list = json_decode($pic_url_list, true);
+            foreach($pic_url_list as $pic_url){
+                $sel_where['teacher_id'] = $teacher_id;
+                $sel_where['course_id'] = $course_id;
+                $sel_where['pic_url'] = $pic_url;
+                $sel_where['status'] = 1;
+                $count = $model->where($sel_where)->count();
+                if(!$count){
+                    $data['teacher_id'] = $teacher_id;
+                    $data['course_id'] = $course_id;
+                    $data['pic_url'] = $pic_url;
+                    $data['create_time'] = time();
+                    $model->add($data);
+                }
+            }
+        }
         $this->apiSuccess('绑定学生作品成功');
     }
 
