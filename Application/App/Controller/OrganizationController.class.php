@@ -2250,10 +2250,10 @@ class OrganizationController extends AppController
             $this->apiSuccess('获取机构评论列表成功', null, $extra);
         } else {   // 外部评论
             $otherCommentModle = M('OrganizationOtherComment');
-            $totalCount = $otherCommentModle->where('status=1 and type=2 and organization_id='.$organization_id)
+            $totalCount = $otherCommentModle->where('status=1 and organization_id='.$organization_id)
                 ->count();
             $comment_list = $otherCommentModle->field('name, content, from, create_time')
-                ->where('status=1 and type=2 and organization_id='.$organization_id)
+                ->where('status=1 and organization_id='.$organization_id)
                 ->order('create_time desc')
                 ->page($page, $count)
                 ->select();
