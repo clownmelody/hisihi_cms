@@ -394,7 +394,6 @@ define(['base','myPhotoSwipe'],function(Base,MyPhotoSwipe){
         }
     };
 
-
     //取消
     t.closeHaveClass=function(){
         $('.class-show').removeClass('show');
