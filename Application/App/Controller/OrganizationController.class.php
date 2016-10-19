@@ -3005,7 +3005,7 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
             );
             $pic_small = $pic_url . '@50p';
             $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_small);
-            $new_pic_url = $new_pic_url . '&info';
+            $new_pic_url = $new_pic_url . '@info';
             $origin_img_info = getOssImgSizeInfo($new_pic_url);
             $img_info = json_decode($origin_img_info);
             $thumb_size = Array();
