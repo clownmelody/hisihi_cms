@@ -1,7 +1,7 @@
 /**
  * Created by hisihi on 2016/10/10.
  */
-define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhotoSwipe){
+define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSwipe){
 
     function Teacher($wrapper,uid,url) {
         this.$wrapper = $wrapper;
@@ -14,14 +14,16 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
 
-        this.perPageSize=10;
-        this.pageIndex=1;
         this.async=true;  //同步加载所有的数据
-        this.controlLoadingBox(false);  //是否显示加载等待动画
+        this.controlLoadingBox(true);  //是否显示加载等待动画
         window.setTimeout(function(){
             that.initData();
         },100);
 
+        //photoswipe 查看相册大图
+        new PhotoSwipe('.picture-ul',{
+            bgFilter: true,
+        });
     }
 
     //下载条
@@ -60,7 +62,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
         //http://localhost/api.php?s=/teacher/getTeacherStudentWorkList
        queryPara={
             url:this.baseUrl + 'teacher/getTeacherStudentWorkList',
-            paraData: {teacher_id:this.uid ,page:8, count:8},
+            paraData: {teacher_id:this.uid ,page:1, count:8},
             sCallback: function(result){
                 callback && callback(result);
             },
@@ -126,7 +128,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
                         fn = that.fillInBasicInfoData;
                         break;
                     case 'teacher':
-                        fn= that.fillStudentWork;
+                        fn= that.fillStudentAlbum;
                         break;
                     case 'job':
                         fn = that.fillStudentEmployee;
@@ -136,7 +138,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
                 }
                 fn && fn.call(that, val);
             }
-            $('#wrapper').show();
+            $('.wrapper').show();
             that.controlLoadingBox(false);
             $('.lazy-img').picLazyLoad($(window), {
                 threshold: 150
@@ -178,7 +180,11 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
     };
 
     //填充标签信息，#分割具体标签内容
+    //如果老师优势标签不存在，隐藏该模块
     t.fillTips=function(result){
+        if(!result || !result.data.tag){
+            return '';
+        }
         var str='',
             tip=result.data.tag,//字符串
             a = new Array(),//定义一个数组
@@ -192,46 +198,89 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
     };
 
     //填充数字信息
+    //判断老师信息，30为软件类，31为留学，32为手绘
+    //如果是留学机构老师，页面数字文字说明部分修改
     t.fillNumber=function(result){
         var num=result.data.student_num,
             age=result.data.teach_age,
-            rate=result.data.employment_rate;
-            str= '<div class="num-li" id="student">'+
-            '<ul>'+
-            '<li class="num-img" id="student-img">'+
-            '</li>'+
-            '<li class="num-title">'+
-            '<span>学生人数</span>'+
-            '</li>'+
-            '<li class="num">'+
-            '<span>'+
-                num+'人'+
-            '</span>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '<div class="num-li" id="year">'+
+            rate=result.data.employment_rate,
+            type=result.data.org_type;
+        if (type!=31) {
+            var str= '<div class="num-li" id="student">'+
                 '<ul>'+
-                    '<li class="num-img" id="year-img"></li>'+
-                    '<li class="num-title"><span>从教年份</span></li>'+
-                    '<li class="num">'+
-                    '<span>'+
-                        age+'年'+
-                    '</span>'+
-                    '</li>'+
+                '<li class="num-img" id="student-img">'+
+                '</li>'+
+                '<li class="num-title">'+
+                '<span>学生人数</span>'+
+                '</li>'+
+                '<li class="num">'+
+                '<span>'+
+                num+'人'+
+                '</span>'+
+                '</li>'+
                 '</ul>'+
-            '</div>'+
-            '<div class="num-li" id="job">'+
-            '<ul>'+
-            '<li class="num-img" id="job-img"></li>'+
-            '<li class="num-title"><span>就业率</span></li>'+
-            '<li class="num">'+
-            '<span>'+
+                '</div>'+
+                '<div class="num-li" id="year">'+
+                '<ul>'+
+                '<li class="num-img" id="year-img"></li>'+
+                '<li class="num-title"><span>从教年份</span></li>'+
+                '<li class="num">'+
+                '<span>'+
+                age+'年'+
+                '</span>'+
+                '</li>'+
+                '</ul>'+
+                '</div>'+
+                '<div class="num-li" id="job">'+
+                '<ul>'+
+                '<li class="num-img" id="job-img"></li>'+
+                '<li class="num-title"><span>就业率</span></li>'+
+                '<li class="num">'+
+                '<span>'+
                 rate+'%'+
-            '</span>'+
-            '</li>'+
-            '</ul>'+
-            '</div>';
+                '</span>'+
+                '</li>'+
+                '</ul>'+
+                '</div>';
+        }
+        else {
+            var str= '<div class="num-li" id="student">'+
+                '<ul>'+
+                '<li class="num-img" id="student-img">'+
+                '</li>'+
+                '<li class="num-title">'+
+                '<span>指导人数</span>'+
+                '</li>'+
+                '<li class="num">'+
+                '<span>'+
+                num+'人'+
+                '</span>'+
+                '</li>'+
+                '</ul>'+
+                '</div>'+
+                '<div class="num-li" id="year">'+
+                '<ul>'+
+                '<li class="num-img" id="year-img"></li>'+
+                '<li class="num-title"><span>从教年份</span></li>'+
+                '<li class="num">'+
+                '<span>'+
+                age+'年'+
+                '</span>'+
+                '</li>'+
+                '</ul>'+
+                '</div>'+
+                '<div class="num-li" id="job">'+
+                '<ul>'+
+                '<li class="num-img" id="job-img"></li>'+
+                '<li class="num-title"><span>留学成功率</span></li>'+
+                '<li class="num">'+
+                '<span>'+
+                rate+'%'+
+                '</span>'+
+                '</li>'+
+                '</ul>'+
+                '</div>';
+        }
         $('.number').html(str);
     };
 
@@ -248,55 +297,137 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
     };
 
     //填充学生作品相册
-    t.fillStudentWork=function(result){
-        if(!result||result.count==0){
+    //老师为留学老师则不显示
+    t.fillStudentAlbum=function(result){
+        if(!result.success||result.data==null){
             return '';
         }
         var strLi='',
-            len=result.length,
+            len=result.data.length,
             item;
         for(var i=0;i<len;i++){
-            item=result.list[i];
+            item=result.data[i];
+             var imgH=item.origin_info.height,
+                 imgW=item.origin_info.width;
             strLi+='<li>'+
-                '<a href="'+item.pic_url+'" data-size="'+item.size[0]+'x'+item.size[1]+'"></a>'+
+                '<a href="'+item.pic_url+'" data-size="'+imgW+'x'+imgH+'"></a>'+
+                //'<a href="'+item.pic_url+'"></a>'+
                 '<img src="'+item.pic_url+'@80h_80w_1e">'+
                 '</li>';
         }
         strLi+='<div style="clear: both;"></div>';
-        var str= '<div class="picture">'+
-            '<div class="header">'+
-            '<span class="pic-title">学生作品</span>'+
-            '<div class="right-arrow"><span></span></div>'+
-            '</div>'+
-            '<div class="preview-box">'+
-            '<ul>'+
-            strLi+
-            '</ul>'+
-            '</div>'+
-            '</div>';
-        return str;
+        var str= '<ul class="picture-ul">'+ strLi+ '</ul>';
+        var strL='',
+            strL= '<div class="header">'+
+                '<span class="pic-title">学生作品</span>'+
+                '<div class="right-arrow"><span></span></div>'+
+                '</div>'+
+                '<div class="preview-box">'+
+                    str+
+                '</div>'+
+                '</div>';
+        $('.picture').html(strL);
     };
 
     //加载学生就业信息
+    //判断老师信息，30为软件类，31为留学，32为手绘
+    //如果是留学机构老师，学生就业信息文字说明部分修改
     t.fillStudentEmployee=function(result){
+        if (!result.success||result.data.totalCount==0){
+            return '';
+        }
         var str='',
-                    ;
-        for (var i=0;i<)
-        '<div class="employee-box">'+
-            '<div class="student-left">'+
-            '<img src="__IMG__/teacher/LL.jpg"/>'+
-            '</div>'+
-            '<div class="student-right">'+
-            '<ul>'+
-            '<li><span class="student-name">张飞</span></li>'+
-        '<li><span class="left">就职公司：</span><span class="right">阿里巴巴</span></li>'+
-        '<li><span class="left">职位：</span><span class="right">淘宝客服</span></li>'+
-        '<li><span class="left">薪资：</span><span class="right">8000+</span></li>'+
-        '</ul>'+
-        '</div>'+
-        '</div>';
-    };
+            len=result.data.length,
+            type=result.data.org_type;
+        //if (type!=31){
+            for (var i=0;i<len;i++){
+                var item=result.data[i];
+                str +='<div class="employee-box">'+
+                    '<div class="student-left">'+
+                    '<img src="' + item.avatar + '"/>' +
+                    '</div>'+
+                    '<div class="student-right">'+
+                    '<ul>'+
+                    '<li>'+
+                    '<span class="student-name">'+
+                    item.name+
+                    '</span>'+
+                    '</li>'+
+                    '<li>'+
+                    '<span class="left">就职公司：</span>'+
+                    '<span class="right">'+
+                    item.company+
+                    '</span>'+
+                    '</li>'+
+                    '<li>'+
+                    '<span class="left">职位：</span>'+
+                    '<span class="right">'+
+                    item.title+
+                    '</span>'+
+                    '</li>'+
+                    '<li>'+
+                    '<span class="left">薪资：</span>'+
+                    '<span class="right">'+
+                    item.salary+
+                    '</span>'+
+                    '</li>'+
+                    '</ul>'+
+                    '</div>'+
+                    '</div>';
+                var strL='<div class="head">'+
+                    '<span>学生就业信息</span>'+
+                    '</div>'+
+                    '<div class="employee-s">'+
+                    str+
+                    '</div>';
+            }
+        //}
+        //else {
+        //    for (var i = 0; i < len; i++) {
+        //        var item = result.data[i];
+        //        str += '<div class="employee-box">' +
+        //            '<div class="student-left">' +
+        //            '<img src="' + item.avatar + '"/>' +
+        //            '</div>' +
+        //            '<div class="student-right">' +
+        //            '<ul>' +
+        //            '<li>' +
+        //            '<span class="student-name">' +
+        //            item.name +
+        //            '</span>' +
+        //            '</li>' +
+        //            '<li>' +
+        //            '<span class="left">国家：</span>' +
+        //            '<span class="right">' +
+        //            item.company +
+        //            '</span>' +
+        //            '</li>' +
+        //            '<li>' +
+        //            '<span class="left">学校：</span>' +
+        //            '<span class="right">' +
+        //            item.title +
+        //            '</span>' +
+        //            '</li>' +
+        //            '<li>' +
+        //            '<span class="left">专业：</span>' +
+        //            '<span class="right">' +
+        //            item.salary +
+        //            '</span>' +
+        //            '</li>' +
+        //            '</ul>' +
+        //            '</div>' +
+        //            '</div>';
+        //    }
+        //}
+        //var strL='<div class="head">'+
+        //    '<span>学生就业信息</span>'+
+        //    '</div>'+
+        //    '<div class="employee-s">'+
+        //    str+
+        //    '</div>';
 
+        $('.employee').html(strL);
+    };
 
     return Teacher;
 });
