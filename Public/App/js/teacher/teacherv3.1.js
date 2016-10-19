@@ -1,7 +1,7 @@
 /**
  * Created by hisihi on 2016/10/10.
  */
-define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhotoSwipe){
+define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSwipe){
 
     function Teacher($wrapper,uid,url) {
         this.$wrapper = $wrapper;
@@ -14,13 +14,18 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         }
 
-        this.perPageSize=10;
-        this.pageIndex=1;
+        //this.perPageSize=10;
+        //this.pageIndex=1;
         this.async=true;  //同步加载所有的数据
-        this.controlLoadingBox(false);  //是否显示加载等待动画
+        this.controlLoadingBox(true);  //是否显示加载等待动画
         window.setTimeout(function(){
             that.initData();
         },100);
+
+        //photoswipe 查看相册大图
+        new PhotoSwipe('.picture-ul',{
+            bgFilter: true,
+        });
 
     }
 
@@ -60,7 +65,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
         //http://localhost/api.php?s=/teacher/getTeacherStudentWorkList
        queryPara={
             url:this.baseUrl + 'teacher/getTeacherStudentWorkList',
-            paraData: {teacher_id:this.uid ,page:8, count:8},
+            paraData: {teacher_id:this.uid ,page:1, count:8},
             sCallback: function(result){
                 callback && callback(result);
             },
@@ -126,7 +131,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
                         fn = that.fillInBasicInfoData;
                         break;
                     case 'teacher':
-                        fn= that.fillStudentWork;
+                        fn= that.fillStudentAlbum;
                         break;
                     case 'job':
                         fn = that.fillStudentEmployee;
@@ -248,55 +253,72 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,MyPhoto
     };
 
     //填充学生作品相册
-    t.fillStudentWork=function(result){
+    t.fillStudentAlbum=function(result){
         if(!result||result.count==0){
             return '';
         }
         var strLi='',
-            len=result.length,
+            len=result.data.length,
             item;
         for(var i=0;i<len;i++){
-            item=result.list[i];
+            item=result.data[i];
             strLi+='<li>'+
                 '<a href="'+item.pic_url+'" data-size="'+item.size[0]+'x'+item.size[1]+'"></a>'+
+                //'<a href="'+item.pic_url+'"></a>'+
                 '<img src="'+item.pic_url+'@80h_80w_1e">'+
                 '</li>';
         }
         strLi+='<div style="clear: both;"></div>';
-        var str= '<div class="picture">'+
-            '<div class="header">'+
-            '<span class="pic-title">学生作品</span>'+
-            '<div class="right-arrow"><span></span></div>'+
-            '</div>'+
-            '<div class="preview-box">'+
-            '<ul>'+
-            strLi+
-            '</ul>'+
-            '</div>'+
-            '</div>';
-        return str;
+        var str= '<ul class="picture-ul">'+ strLi+ '</ul>';
+        $('.preview-box').html(str);
     };
 
     //加载学生就业信息
     t.fillStudentEmployee=function(result){
         var str='',
-                    ;
-        for (var i=0;i<)
-        '<div class="employee-box">'+
-            '<div class="student-left">'+
-            '<img src="__IMG__/teacher/LL.jpg"/>'+
-            '</div>'+
-            '<div class="student-right">'+
-            '<ul>'+
-            '<li><span class="student-name">张飞</span></li>'+
-        '<li><span class="left">就职公司：</span><span class="right">阿里巴巴</span></li>'+
-        '<li><span class="left">职位：</span><span class="right">淘宝客服</span></li>'+
-        '<li><span class="left">薪资：</span><span class="right">8000+</span></li>'+
-        '</ul>'+
-        '</div>'+
-        '</div>';
+            len=result.data.length;
+        for (var i=0;i<len;i++){
+             var item=result.data[i];
+            str +='<div class="employee-box">'+
+                    '<div class="student-left">'+
+                        '<img src="' + item.avatar + '"/>' +
+                    '</div>'+
+                    '<div class="student-right">'+
+                        '<ul>'+
+                            '<li>'+
+                                '<span class="student-name">'+
+                                    item.name+
+                                '</span>'+
+                            '</li>'+
+                            '<li>'+
+                                '<span class="left">就职公司：</span>'+
+                                '<span class="right">'+
+                                     item.company+
+                                '</span>'+
+                            '</li>'+
+                            '<li>'+
+                                '<span class="left">职位：</span>'+
+                                '<span class="right">'+
+                                    item.title+
+                                '</span>'+
+                            '</li>'+
+                            '<li>'+
+                                '<span class="left">薪资：</span>'+
+                                '<span class="right">'+
+                                    item.salary+
+                                '</span>'+
+                            '</li>'+
+                        '</ul>'+
+                    '</div>'+
+                '</div>';
+        }
+        $('.employee-s').html(str);
     };
 
+    //学生就业信息文字超长部分进行省略
+    t.getWold=function(result){
+
+    };
 
     return Teacher;
 });

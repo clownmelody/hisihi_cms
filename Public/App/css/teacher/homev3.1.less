@@ -4,7 +4,7 @@ body{
   max-width: 700px;
   overflow: auto;
   //下载条高度
-  padding-bottom: 50px;
+  padding-bottom: 56px;
   overflow-x: hidden;
   color: @c;
   font-size: 14px;
@@ -18,16 +18,6 @@ p {
     line-height: 40px;
   }
 }
-//.li-preview-img(50px,60px,@ml:5px){
-//  .size(50px,60px);
-//  display: inline-block;
-//  vertical-align: top;
-//  margin-right: @ml;
-//  img {
-//    //max-width: 100%;
-//    .size(100%,100%);
-//  }
-//}
 .nodata{
   position: fixed;
   .size(108px,60px);
@@ -47,7 +37,6 @@ p {
     background-color: #FFFFFF;
     box-sizing: border-box;
     overflow: hidden;
-    //padding-bottom: 56px;
   }
   .info{
     @l:70px;
@@ -55,7 +44,7 @@ p {
     .info-left {
       .size(@l,@l);
       display: inline-block;
-      margin-right: 10px;
+      margin-right: 18px;
       > img {
         max-width: @l;
         height: @l;
@@ -84,14 +73,12 @@ p {
     justify-content: center;
     align-items: center;
     .tag-left{
-      float: left;
-      .size(40%,100%);
-      padding-left: 8%;
       .tag-img {
         .size(35px,38px);
         background: url("../../images/teacher/sprite.png") no-repeat;
         background-size: 252px*0.5 75px*0.5;
         background-position: 0px 0px;
+        margin-right: 15px;
       }
     }
     .tag-right {
@@ -179,7 +166,7 @@ p {
     @m:40px;
     border-bottom: 1px solid #f2f2f2;
     .header {
-      margin: 14px 14px 0 14px;
+      margin: 8px 14px 0 14px;
       width: 95%;
       height: @m;
       line-height: @m;
@@ -205,15 +192,16 @@ p {
     .preview-box{
       margin: 0px 14px 0 14px;
         overflow-x: auto;
-        ul{
-          margin: 0px 0 14px 0;
+        > ul{
           white-space: nowrap;
-          li{
+          padding-bottom: 14px;
+          > li{
+            display: inline-block;
+            .size(80px,80px);
             overflow-y: hidden;
-            border:1px solid rgba(145,145,145,.2);
-            //.li-preview-img(40%,110px,5px);
-            img{
-              .size(100%,100%);
+            padding-left: 5px;
+            &:first-child {
+              padding-left: 0px;
             }
           }
         }
@@ -258,6 +246,7 @@ p {
           font-weight: bold;
         }
         .left {
+
         }
         .right {
           color: #808080;
