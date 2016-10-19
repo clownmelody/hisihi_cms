@@ -2250,10 +2250,10 @@ class OrganizationController extends AppController
             $this->apiSuccess('获取机构评论列表成功', null, $extra);
         } else {   // 外部评论
             $otherCommentModle = M('OrganizationOtherComment');
-            $totalCount = $otherCommentModle->where('status=1 and type=2 and organization_id='.$organization_id)
+            $totalCount = $otherCommentModle->where('status=1 and organization_id='.$organization_id)
                 ->count();
             $comment_list = $otherCommentModle->field('name, content, from, create_time')
-                ->where('status=1 and type=2 and organization_id='.$organization_id)
+                ->where('status=1 and organization_id='.$organization_id)
                 ->order('create_time desc')
                 ->page($page, $count)
                 ->select();
@@ -2323,7 +2323,7 @@ class OrganizationController extends AppController
      */
     private function getChildCommentCount($comment_id){
         $model = M('OrganizationComment');
-        $totalCount = $model->where('status=1 and pid='.$comment_id)->count();
+        $totalCount = $model->where('status=1 and type=1 and first_level_id='.$comment_id)->count();
         return $totalCount;
     }
 
@@ -3005,7 +3005,7 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
             );
             $pic_small = $pic_url . '@50p';
             $new_pic_url = preg_replace("/.oss-cn-qingdao.aliyuncs.com/", ".img-cn-qingdao.aliyuncs.com", $pic_small);
-            $new_pic_url = $new_pic_url . '&info';
+            $new_pic_url = $new_pic_url . '@info';
             $origin_img_info = getOssImgSizeInfo($new_pic_url);
             $img_info = json_decode($origin_img_info);
             $thumb_size = Array();

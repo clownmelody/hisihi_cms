@@ -403,11 +403,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
 
         for(var i=0;i<len;i++){
             item=list[i];
-            //if(!item.rebate_info){
-            //    continue;
-            //}
             rightStr=this.getRightStrAndMarginInfo(item.rebate_info);  //抵扣券信息
-
             count++;
             var money=this.judgeInfoNullInfo(item.price);
             if(money!=''){
