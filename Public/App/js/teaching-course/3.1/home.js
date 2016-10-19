@@ -91,6 +91,11 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 that.getDecutionInfo(function(result){
                     callback(null,result);
                 });
+            },
+            studentWorks: function(callback) {
+                that.geStudentWorksInfo(function (result){
+                    callback(null,result);
+                });
             }
         },function (err,results) {
             var val;
@@ -119,6 +124,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                         break;
                     case 'deduction':
                         fn=that.fillInDedutionInfo;
+                        break;
+                    case 'studentWorks':
+                        fn=that.fillInStudentWorksInfo;
                         break;
                     default :
                         fn=that.fillDetailCommentInfo;
@@ -549,6 +557,33 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             new Deduction(tipsArr, $target,options);
         }
     };
+
+
+    /*获取学生作品*/
+    t.geStudentWorksInfo=function(callback){
+        var that=this,
+            queryPara={
+                url:this.baseUrl.replace('Organization','teacher')+'getTeacherStudentWorkList',
+                paraData:{teaching_course_id:this.cid | 0},
+                sCallback:function(result){
+                    callback && callback(result);
+                },
+                eCallback:function(){
+                    callback && callback(null);
+                },
+                type:'get',
+            };
+        this.getDataAsync(queryPara);
+    };
+
+    t.fillInStudentWorksInfo=function(data){
+        data;
+        //showStudentWorksList()
+        //teacherDetailInfoPage(url,name)
+    }
+
+
+
 
     /*控制模态窗口的显示和隐藏*/
     t.controlLoginTipModal=function(flag){
