@@ -2322,7 +2322,7 @@ class OrganizationController extends AppController
      */
     private function getChildCommentCount($comment_id){
         $model = M('OrganizationComment');
-        $totalCount = $model->where('status=1 and pid='.$comment_id)->count();
+        $totalCount = $model->where('status=1 and type=1 and first_level_id='.$comment_id)->count();
         return $totalCount;
     }
 
