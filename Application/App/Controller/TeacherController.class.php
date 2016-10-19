@@ -270,6 +270,10 @@ class TeacherController extends BaseController
         $totalCount = $model->where('status=1 and teacher_id='.$teacher_id)->count();
         $list = $model->field('id, pic_url')->where('status=1 and teacher_id='.$teacher_id)
             ->page($page, $count)->select();
+        foreach($list as &$item){
+            $new_pic_url = $item['pic_url'] . '@info';
+            $item['origin_info'] = json_decode(getOssImgSizeInfo($new_pic_url));
+        }
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取老师下学生作品成功', null, $extra);
@@ -391,6 +395,10 @@ class TeacherController extends BaseController
         $totalCount = $model->where('status=1 and course_id='.$teaching_course_id)->count();
         $list = $model->field('id, pic_url')->where('status=1 and course_id='.$teaching_course_id)
             ->page($page, $count)->select();
+        foreach($list as &$item){
+            $new_pic_url = $item['pic_url'] . '@info';
+            $item['origin_info'] = json_decode(getOssImgSizeInfo($new_pic_url));
+        }
         $extra['totalCount'] = $totalCount;
         $extra['data'] = $list;
         $this->apiSuccess('获取课程下学生作品成功', null, $extra);
