@@ -16,7 +16,8 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         this.controlLoadingBox(true);
         //加载页面数据
         window.setTimeout(function(){
-            that.initData();
+            //that.initData();
+            that.fillInTeachersInfo();
         },100);
 
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
@@ -92,6 +93,11 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             },
             deduction:function(callback){
                 that.getDecutionInfo(function(result){
+                    callback(null,result);
+                });
+            },
+            teacher:function(callback){
+                that.getTeachersInfo(function(result){
                     callback(null,result);
                 });
             },
@@ -559,6 +565,69 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             }
             new Deduction(tipsArr, $target,options);
         }
+    };
+
+
+    /*主讲老师*/
+    t.getTeachersInfo=function(callback){
+        var that=this,
+            queryPara={
+                url:this.baseUrl.replace('Organization','teacher')+'getTeacherList',
+                paraData:{teaching_course_id:this.cid | 0},
+                sCallback:function(result){
+                    callback && callback(result);
+                },
+                eCallback:function(){
+                    callback && callback(null);
+                },
+                type:'get',
+            };
+        this.getDataAsync(queryPara);
+    };
+
+    /*显示主讲老师信息*/
+    t.fillInTeachersInfo=function(result){
+        //if(!result || !result.data){
+        //    return;
+        //}
+        var str1 = '<div class="center-content">' +
+                        '<div class="lessons-item">' +
+                            '<div class="head-txt">' +
+                                '<label>主讲老师</label>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="teacher-info-main">' +
+                            '<ul>'+this.getTeachersHtmlStr(result)+'</ul>'+
+                        '</div>' +
+                   '</div>';
+        $('.lessons-teachers－box').html(str1).show();
+    };
+
+    t.getTeachersHtmlStr=function(data){
+        data={};
+        data.length=2;
+        var len=data.length,
+            str='',
+            pic,item;
+        for(var i=0;i<len;i++){
+            //item=data[i];
+            //pic=item.pic_url;
+            str+='<li>'+
+                    '<div class="li-item-main">'+
+                        '<div class="left-item">'+
+                            '<img class="lazy-img works" data-original="'+pic+'@315w">'+
+                        '</div>'+
+                        '<div class="right-item">'+
+                            '<div class="name-info">'+
+                                '<span>好大爷</span>'+
+                                '<span>北极星的音乐作者吧啦吧吧啦发放撒呃呃呃</span>'+
+                            '</div>'+
+                            '<div class="teacher-introduce">今年以来，面对复杂严峻的国内外形势，各地区、各部门在党中央、国务院的坚强领导下，认真贯彻落实新发展理念，积极适应引领发展新常态，坚持稳中求进工作总基调，适度扩大总需求，坚定不移推进供给侧结构性改革，引导良好发展预期</div>'+
+                        '</div>'+
+                    '</div>'+
+                '</li>';
+        }
+        return str;
     };
 
 
@@ -1087,21 +1156,22 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         }
     };
 
+    /*显示所有的学生作品*/
     t.showAllWorks=function(){
         if (this.isFromApp) {
             if (this.deviceType.android) {
                 //如果方法存在
-                if (typeof AppFunction !='undefined' &&  typeof AppFunction.buyRebate !='undefined') {
-                    AppFunction.buyRebate(this.cid); //显示app的登录方法，得到用户的基体信息
+                if (typeof AppFunction !='undefined' &&  typeof AppFunction.showStudentWorkList !='undefined') {
+                    AppFunction.showStudentWorkList(); //显示所有的学生作品列表
                 }
             } else {
                 //如果方法存在
                 if (typeof buyRebate != "undefined") {
-                    buyRebate();//调用app的方法，得到用户的基体信息
+                    showStudentWorkList();//调用app的方法，得到用户的基体信息
                 }
             }
         }else{
-            this.cotrolDownloadAppModalStatus(true);
+            that.showTips.call(that,'下载嘿设汇app，查看更多学生作品！');
         }
     };
 

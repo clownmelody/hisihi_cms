@@ -304,12 +304,64 @@ body {
     }
   }
 
-  &.lessons-techers{
-    .head-txt{
-      .border-bottom();
+  &.lessons-teachers－box{
+    .center-content{
+      margin-left: 14px;
+      margin-right: 0;
     }
-    .content-txt{
-      .word-info;
+      .head-txt{
+        .border-bottom();
+      }
+    .teacher-info-main{
+      ul{
+        li{
+          border-bottom: 1px solid #F3F3F3;
+          .li-item-main{
+            padding: 12px 12px 12px 0;
+            position: relative;
+          }
+          &:last-child{
+            border:none;
+          }
+          @w:50px;
+          .left-item{
+            .size(@w;@w);
+            position: absolute;
+            top:0;
+            left:0;
+            img{
+              .size(100%,100%);
+              .border-radius(@w/2);
+            }
+          }
+          .right-item{
+            margin-left: @w;
+
+            .name-info{
+              .txt-ellipsis-p(1);
+              margin-bottom: 5px;
+              span{
+                color: #808080;
+                font-size:14px;
+                &:first-child{
+                  color: #212121;
+                  font-size: 16px;
+                  margin-right: 10px;
+                }
+
+              }
+            }
+            .teacher-introduce{
+              .txt-ellipsis-p(2);
+              background-color: #F7F7F7;
+              padding:3px 5px;
+              color: #808080;
+              font-size: 14px;
+              line-height: 24px;
+            }
+          }
+        }
+      }
     }
   }
 
