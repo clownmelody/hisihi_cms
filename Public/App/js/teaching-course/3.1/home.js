@@ -34,6 +34,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         $(document).on(eventName,'.deduction-main-info .btn', $.proxy(this,'buyNow'));
 
         $(document).on(eventName,'.download-app-modal', $.proxy(this,'cotrolDownloadAppModalStatus'));
+
+        /*显示所有的学生作品*/
+        $(document).on(eventName,'.show-all-works', $.proxy(this,'showAllWorks'));
     };
 
     var tempFlag =window.location.href.indexOf('hisihi-app') < 0,  //是否来源于app
@@ -564,7 +567,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         var that=this,
             queryPara={
                 url:this.baseUrl.replace('Organization','teacher')+'getTeacherStudentWorkList',
-                paraData:{teaching_course_id:this.cid | 0},
+                paraData:{teaching_course_id:this.cid | 0,page:1,count:8},
                 sCallback:function(result){
                     callback && callback(result);
                 },
@@ -576,11 +579,41 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         this.getDataAsync(queryPara);
     };
 
-    t.fillInStudentWorksInfo=function(data){
-        data;
+    t.fillInStudentWorksInfo=function(result){
         //showStudentWorksList()
         //teacherDetailInfoPage(url,name)
+        if(!result || !result.data){
+            return;
+        }
+        var str1 = '<div class="center-content">' +
+                        '<div class="lessons-item">' +
+                            '<div class="head-txt">' +
+                                '<label>学生作品</label>' +
+                                '<div class="show-all-works"><i></i></div>'+
+                            '</div>' +
+                        '</div>' +
+                        '<div class="works-preview-box">' +
+                           '<ul>'+this.getWorksHtmlStr(result.data)+'</ul>'+
+                        '</div>' +
+                '</div>';
+        $('.works-box').html(str1).show();
+
     }
+
+    t.getWorksHtmlStr=function(data){
+        var len=data.length,
+            str='',
+            pic,item;
+        for(var i=0;i<len;i++){
+            item=data[i];
+            pic=item.pic_url;
+            str+='<li class="li-img" data-id="'+item.id+'">'+
+                '<a href="'+pic +'" data-size="'+item.origin_info.width +'x'+item.origin_info.height+'"></a>'+
+                '<img class="lazy-img works" data-original="'+pic+'@315w">'+
+                '</li>';
+        }
+        return str;
+    };
 
 
 
@@ -1051,6 +1084,24 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             $target.show();
         }else{
             $target.hide();
+        }
+    };
+
+    t.showAllWorks=function(){
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction !='undefined' &&  typeof AppFunction.buyRebate !='undefined') {
+                    AppFunction.buyRebate(this.cid); //显示app的登录方法，得到用户的基体信息
+                }
+            } else {
+                //如果方法存在
+                if (typeof buyRebate != "undefined") {
+                    buyRebate();//调用app的方法，得到用户的基体信息
+                }
+            }
+        }else{
+            this.cotrolDownloadAppModalStatus(true);
         }
     };
 

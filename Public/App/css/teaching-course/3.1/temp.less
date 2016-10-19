@@ -283,6 +283,18 @@ body {
     }
   }
 
+  .li-preview-img(@w,@h,@ml:5px){
+    .size(@w,@h);
+    display: inline-block;
+    vertical-align: top;
+    margin-right: @ml;
+    img {
+      //max-width: 100%;
+      .size(100%,100%);
+    }
+
+  }
+
   &.lessons-detail{
     .head-txt{
       .border-bottom();
@@ -585,6 +597,41 @@ body {
         }
         p{
           margin: 6px 0;
+        }
+      }
+    }
+  }
+
+  &.works-box{
+    display: none;
+    .head-txt{
+      position: relative;
+      .show-all-works{
+        .size(28px,28px);
+        position: absolute;
+        top:5px;
+        right: 5px;
+        text-align: center;
+        i{
+          transform: scale(.6);
+          .size(18px,32px);
+          display: inline-block;
+          background: url(../../../images/teaching-course/bottom-right.png);
+        }
+      }
+    }
+    .works-preview-box{
+      overflow-x: auto;
+      ul {
+        white-space: nowrap;
+        margin: 0px 0 14px 0;
+        li {
+          overflow-y: hidden;
+          border: 1px solid rgba(145, 145, 145, .2);
+          .li-preview-img(40%, 110px, 5px);
+          img {
+            .size(100%, 100%);
+          }
         }
       }
     }
