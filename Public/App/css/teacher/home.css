@@ -505,6 +505,7 @@ body {
   overflow-x: hidden;
   color: #212121;
   font-size: 14px;
+  background-color: #ffffff;
 }
 p {
   margin: 0;
@@ -546,7 +547,7 @@ p {
   display: inline-block;
   margin-right: 18px;
 }
-.wrapper .info .info-left > img {
+.wrapper .info .info-left > a .pic-head {
   max-width: 70px;
   height: 70px;
   border-radius: 70px;
@@ -563,30 +564,37 @@ p {
   color: #808080;
   font-size: 12px;
 }
-.wrapper .tag {
+.wrapper .tag .tag-box {
   min-height: 82px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+}
+.wrapper .tag .tag-box .tag-left-box {
+  float: left;
+  min-height: 82px;
+  width: 25%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.wrapper .tag .tag-left .tag-img {
+.wrapper .tag .tag-box .tag-left-box .tag-left .tag-img {
   width: 35px;
   height: 38px;
   background: url("../../images/teacher/sprite.png") no-repeat;
   background-size: 126px 37.5px;
   background-position: 0px 0px;
-  margin-right: 15px;
 }
-.wrapper .tag .tag-right {
+.wrapper .tag .tag-box .tag-right {
+  float: left;
+  width: 75%;
+  min-height: 82px;
   font-size: 12px;
 }
-.wrapper .tag .tag-right > ul {
+.wrapper .tag .tag-box .tag-right > ul {
   display: table;
-  padding-top: 10px;
+  padding-top: 28px;
 }
-.wrapper .tag .tag-right > ul > li {
+.wrapper .tag .tag-box .tag-right > ul > li {
   margin-bottom: 10px;
   margin-right: 10px;
   float: left;
@@ -594,7 +602,7 @@ p {
   line-height: 25px;
   background-color: #f2f2f2;
 }
-.wrapper .tag .tag-right > ul > li > span {
+.wrapper .tag .tag-box .tag-right > ul > li > span {
   padding: 0 5px;
 }
 .wrapper .number {
