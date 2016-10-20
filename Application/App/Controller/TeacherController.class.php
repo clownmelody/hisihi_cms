@@ -507,8 +507,10 @@ class TeacherController extends BaseController
         foreach($teacherList as $item){
             $info = $model->field('id, name, avatar, title, introduce, uid')
                 ->where('id='.$item)->find();
-            $info['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$info['id'];
-            $list[] = $info;
+            if($info){
+                $info['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$info['id'];
+                $list[] = $info;
+            }
         }
         $this->apiSuccess('获取课程下老师列表成功', null, array('data'=>$list));
     }
