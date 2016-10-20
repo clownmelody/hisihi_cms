@@ -593,7 +593,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
     /*显示主讲老师信息*/
     t.fillInTeachersInfo=function(result){
-        if(!result || !result.data){
+        if(!result || !result.data || result.data.length==0){
             return;
         }
         var str1 = '<div class="center-content">' +
@@ -645,7 +645,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     t.geStudentWorksInfo=function(callback){
         var that=this,
             queryPara={
-                url:this.baseUrl.replace('Organization','teacher')+'getTeacherStudentWorkList',
+                url:this.baseUrl.replace('Organization','teacher')+'getCourseStudentWorkList',
                 paraData:{teaching_course_id:this.cid | 0,page:1,count:8},
                 sCallback:function(result){
                     callback && callback(result);
@@ -1181,7 +1181,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 }
             }
         }else{
-            that.showTips.call(that,'下载嘿设汇app，查看更多学生作品！');
+            this.showTips.call(this,'下载嘿设汇App，查看更多！');
         }
     };
 
