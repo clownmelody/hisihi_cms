@@ -94,7 +94,7 @@ class TeacherController extends BaseController
      * @param null $student_work_list
      * @param int $uid
      */
-    public function updateTeacher($id, $name=null, $avatar=null, $title=null, $tag=null, $introduce=null,
+    public function updateTeacher($id, $name=null, $avatar=null, $title=null, $tag='', $introduce=null,
                                   $student_list=null, $teach_age=null, $employment_rate=null,
                                   $student_num=null, $student_work_list=null, $uid=0){
         $model = M('OrganizationTeacher');
@@ -109,9 +109,7 @@ class TeacherController extends BaseController
         if(!empty($title)){
             $data['title'] = $title;
         }
-        if(!empty($tag)){
-            $data['tag'] = $tag;
-        }
+        $data['tag'] = $tag;
         if(!empty($introduce)){
             $data['introduce'] = $introduce;
         }
@@ -507,8 +505,10 @@ class TeacherController extends BaseController
         foreach($teacherList as $item){
             $info = $model->field('id, name, avatar, title, introduce, uid')
                 ->where('id='.$item)->find();
-            $info['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$info['id'];
-            $list[] = $info;
+            if($info){
+                $info['web_url'] = C('HOST_NAME_PREFIX')."api.php?s=/teacher/teacherv3_1/uid/".$info['id'];
+                $list[] = $info;
+            }
         }
         $this->apiSuccess('获取课程下老师列表成功', null, array('data'=>$list));
     }
