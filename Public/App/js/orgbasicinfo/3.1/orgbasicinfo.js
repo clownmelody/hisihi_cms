@@ -804,7 +804,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             eCallback:function(txt){
                 $target.css('opacity',1);
                 $target.find('.loadErrorCon').show().find('a').text('获取视频信息失败，，点击重新加载').show();
-                callback();
+                callback(null);
             },
             type:'get',
             async:this.async
@@ -853,10 +853,10 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             url: this.baseUrl + 'appGetStudentWorks',
             paraData: {organization_id: this.oid,count:8,version:2.9},
             sCallback: function(result){
-                callback && callback(result)
+                callback && callback(result);
             },
             eCallback:function(txt){
-
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -919,7 +919,9 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             sCallback: function(result){
                 callback&&callback.call(that,result);
             },
-            eCallback:function(txt){},
+            eCallback:function(txt){
+                callback&&callback.call(that,null);
+            },
             type:'get',
             async:this.async
         });
@@ -992,6 +994,13 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         //}
     };
 
+    t.getImgSize=function(src){
+        src=src.replace(/@.*/,'')+'@info';
+        $.get(src,null,function(data){
+            alert(data);
+        });
+    };
+
     //子评论条数，超过万则用万作单位
     t.getChildrenCommentCounts=function(num){
         num =num | 0;
@@ -1057,6 +1066,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             for(var i=0;i<len;i++){
                 //item = picInfo[i];
                 src = picInfo[i];
+                //this.getImgSize(src);
                 str+='<li class="li-img" style="' + style + '">'+
                         //'<a href="'+ src +'" data-size="'+item.src_size[0] +'x'+item.src_size[1]+'"></a>'+
                         '<img class="lazy-img works" data-original="'+ src +'">'+
