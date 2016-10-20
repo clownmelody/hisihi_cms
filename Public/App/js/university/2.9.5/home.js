@@ -24,7 +24,6 @@ define(['base','myPhotoSwipe'],function(Base,MyPhotoSwipe){
             window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
         });
 
-
         //控制确定报名按钮的可用性
         $(document).on('input','.class-num', $.proxy(this,'singUpBtnControl'));
 

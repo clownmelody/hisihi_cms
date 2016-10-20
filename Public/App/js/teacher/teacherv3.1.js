@@ -22,7 +22,14 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
 
 
         //点击相册加载更多，调用客户端的方法，弹出相册列表
-        $(document).on(eventName, '.right-arrow', $.proxy(this, '.showAllStudentsWorks'));
+        $(document).on(eventName, '.right-arrow', $.proxy(this, 'showAllStudentWorks'));
+
+
+        //点击相册，查看全部
+        $(document).on(eventName,'.right-arrow',function(){
+            window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
+        });
+
 
         //photoswipe 查看相册大图
         new PhotoSwipe('.picture-ul', {
@@ -229,7 +236,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
     //判断老师信息，30为软件类，31为留学，32为手绘
     //如果是留学机构老师，页面数字文字说明部分修改
     t.fillNumber = function (result) {
-        if (!result || !result.data.student_num||!result.data.teach_age) {
+        if (!result || !result.data.student_num) {
             return '';
         }
         var num = result.data.student_num,
@@ -333,12 +340,12 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
     //填充学生作品相册
     //老师为留学老师则不显示
     t.fillStudentAlbum = function (result) {
-        if (!result.success || result.data == null) {
+        if (!result.success || !result.data) {
             return '';
         }
-        if (result.data.ory_type==31){
-            return '';
-        }
+        //if (result.data.ory_type==31){
+        //    return '';
+        //}
         var strLi = '',
             len = result.data.length,
             item;
@@ -351,15 +358,16 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<img src="' + item.pic_url + '@80h_80w_1e">' +
                 '</li>';
         }
-        strLi += '<div style="clear: both;"></div>';
-        var str = '<ul class="picture-ul">' + strLi + '</ul>';
-        var strL = '',
-            strL = '<div class="header">' +
+        //strLi +=
+        var strL = '<div class="header">' +
                 '<span class="pic-title">学生作品</span>' +
                 '<div class="right-arrow"><span></span></div>' +
                 '</div>' +
                 '<div class="preview-box">' +
-                str +
+                '<ul class="picture-ul">' +
+                    strLi +
+                '<div style="clear: both;"></div>'+
+                '</ul>';
                 '</div>' +
                 '</div>';
         $('.picture').html(strL);
@@ -395,44 +403,10 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         if (result.data)
         var str = '',
             len = result.data.length,
-            com = result.data.company;
-        if (com!=null){
-        for (var i = 0; i < len; i++) {
-            var item = result.data[i];
-            str += '<div class="employee-box">' +
-                '<div class="student-left">' +
-                '<img src="' + item.avatar + '"/>' +
-                '</div>' +
-                '<div class="student-right">' +
-                '<ul>' +
-                '<li>' +
-                '<span class="student-name">' +
-                item.name +
-                '</span>' +
-                '</li>' +
-                '<li>' +
-                '<span class="left">就职公司：</span>' +
-                '<span class="right">' +
-                item.company +
-                '</span>' +
-                '</li>' +
-                '<li>' +
-                '<span class="left">职位：</span>' +
-                '<span class="right">' +
-                item.title +
-                '</span>' +
-                '</li>' +
-                '<li>' +
-                '<span class="left">薪资：</span>' +
-                '<span class="right">' +
-                item.salary +
-                '</span>' +
-                '</li>' +
-                '</ul>' +
-                '</div>' +
-                '</div>';
-             }
-        }else {
+            lm=result.data[0],
+            com = lm.company;
+        //判断该老师是否为留学老师
+        if (com!=null) {
             for (var i = 0; i < len; i++) {
                 var item = result.data[i];
                 str += '<div class="employee-box">' +
@@ -447,26 +421,62 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                     '</span>' +
                     '</li>' +
                     '<li>' +
-                    '<span class="left">国家：</span>' +
+                    '<span class="left">就职公司：</span>' +
                     '<span class="right">' +
-                    item.country +
+                    item.company +
                     '</span>' +
                     '</li>' +
                     '<li>' +
-                    '<span class="left">学校：</span>' +
+                    '<span class="left">职位：</span>' +
                     '<span class="right">' +
-                    item.school +
+                    item.title +
                     '</span>' +
                     '</li>' +
                     '<li>' +
-                    '<span class="left">专业：</span>' +
+                    '<span class="left">薪资：</span>' +
                     '<span class="right">' +
-                    item.major +
+                    item.salary +
                     '</span>' +
                     '</li>' +
                     '</ul>' +
                     '</div>' +
                     '</div>';
+            }else {
+                for (var i = 0; i < len; i++) {
+                    var item = result.data[i];
+                    str += '<div class="employee-box">' +
+                        '<div class="student-left">' +
+                        '<img src="' + item.avatar + '"/>' +
+                        '</div>' +
+                        '<div class="student-right">' +
+                        '<ul>' +
+                        '<li>' +
+                        '<span class="student-name">' +
+                        item.name +
+                        '</span>' +
+                        '</li>' +
+                        '<li>' +
+                        '<span class="left">国家：</span>' +
+                        '<span class="right">' +
+                        item.country +
+                        '</span>' +
+                        '</li>' +
+                        '<li>' +
+                        '<span class="left">学校：</span>' +
+                        '<span class="right">' +
+                        item.school +
+                        '</span>' +
+                        '</li>' +
+                        '<li>' +
+                        '<span class="left">专业：</span>' +
+                        '<span class="right">' +
+                        item.major +
+                        '</span>' +
+                        '</li>' +
+                        '</ul>' +
+                        '</div>' +
+                        '</div>';
+                }
             }
             var strL = '<div class="head">' +
                 '<span>学生就业信息</span>' +
