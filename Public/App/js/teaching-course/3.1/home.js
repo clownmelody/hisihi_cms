@@ -16,8 +16,8 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         this.controlLoadingBox(true);
         //加载页面数据
         window.setTimeout(function(){
-            //that.initData();
-            that.fillInTeachersInfo();
+            that.initData();
+            //that.fillInTeachersInfo();
         },100);
 
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
@@ -38,6 +38,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         /*显示所有的学生作品*/
         $(document).on(eventName,'.show-all-works', $.proxy(this,'showAllWorks'));
+
+        /*跳转老师详情页面*/
+        $(document).on(eventName,'.teacher-info-main li', $.proxy(this,'showTeacherInfo'));
     };
 
     var tempFlag =window.location.href.indexOf('hisihi-app') < 0,  //是否来源于app
@@ -136,6 +139,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                         break;
                     case 'studentWorks':
                         fn=that.fillInStudentWorksInfo;
+                        break;
+                    case 'teacher':
+                        fn=that.fillInTeachersInfo;
                         break;
                     default :
                         fn=that.fillDetailCommentInfo;
@@ -572,7 +578,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     t.getTeachersInfo=function(callback){
         var that=this,
             queryPara={
-                url:this.baseUrl.replace('Organization','teacher')+'getTeacherList',
+                url:this.baseUrl.replace('Organization','teacher')+'getCourseTeacherList',
                 paraData:{teaching_course_id:this.cid | 0},
                 sCallback:function(result){
                     callback && callback(result);
@@ -587,9 +593,9 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
     /*显示主讲老师信息*/
     t.fillInTeachersInfo=function(result){
-        //if(!result || !result.data){
-        //    return;
-        //}
+        if(!result || !result.data || result.data.length==0){
+            return;
+        }
         var str1 = '<div class="center-content">' +
                         '<div class="lessons-item">' +
                             '<div class="head-txt">' +
@@ -597,32 +603,31 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                             '</div>' +
                         '</div>' +
                         '<div class="teacher-info-main">' +
-                            '<ul>'+this.getTeachersHtmlStr(result)+'</ul>'+
+                            '<ul>'+this.getTeachersHtmlStr(result.data)+'</ul>'+
                         '</div>' +
                    '</div>';
         $('.lessons-teachers－box').html(str1).show();
     };
 
+    /*拼接同，内容字符串*/
     t.getTeachersHtmlStr=function(data){
-        data={};
-        data.length=2;
         var len=data.length,
             str='',
-            pic,item;
+            pic,item,url='hisihi://orgteacher/detailinfo?id=';
         for(var i=0;i<len;i++){
-            //item=data[i];
-            //pic=item.pic_url;
-            str+='<li>'+
+            item=data[i];
+            pic=item.avatar;
+            str+='<li data-id="'+item.id+'" data-url="'+item.web_url+'" data-name="'+item.name+'">'+
                     '<div class="li-item-main">'+
                         '<div class="left-item">'+
-                            '<img class="lazy-img works" data-original="'+pic+'@315w">'+
+                            '<img class="lazy-img works" data-original="'+pic+'">'+
                         '</div>'+
                         '<div class="right-item">'+
                             '<div class="name-info">'+
-                                '<span>好大爷</span>'+
-                                '<span>北极星的音乐作者吧啦吧吧啦发放撒呃呃呃</span>'+
+                                '<span>'+item.name+'</span>'+
+                                '<span>'+item.title+'</span>'+
                             '</div>'+
-                            '<div class="teacher-introduce">今年以来，面对复杂严峻的国内外形势，各地区、各部门在党中央、国务院的坚强领导下，认真贯彻落实新发展理念，积极适应引领发展新常态，坚持稳中求进工作总基调，适度扩大总需求，坚定不移推进供给侧结构性改革，引导良好发展预期</div>'+
+                            '<div class="teacher-introduce">'+item.introduce+'</div>'+
                         '</div>'+
                     '</div>'+
                 '</li>';
@@ -635,7 +640,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
     t.geStudentWorksInfo=function(callback){
         var that=this,
             queryPara={
-                url:this.baseUrl.replace('Organization','teacher')+'getTeacherStudentWorkList',
+                url:this.baseUrl.replace('Organization','teacher')+'getCourseStudentWorkList',
                 paraData:{teaching_course_id:this.cid | 0,page:1,count:8},
                 sCallback:function(result){
                     callback && callback(result);
@@ -1171,7 +1176,28 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 }
             }
         }else{
-            that.showTips.call(that,'下载嘿设汇app，查看更多学生作品！');
+            this.showTips.call(this,'下载嘿设汇App，查看更多！');
+        }
+    };
+
+    /*显示老师的详细信息页面*/
+    t.showTeacherInfo=function(e){
+        var $li=$(e.currentTarget),
+            id=$li.attr('data-id');
+        if (this.isFromApp) {
+            if (this.deviceType.android) {
+                //如果方法存在
+                if (typeof AppFunction !='undefined' &&  typeof AppFunction.teacherDetailInfoPage !='undefined') {
+                    AppFunction.teacherDetailInfoPage($li.attr('data-url'),$li.attr('data-name'));
+                }
+            } else {
+                //如果方法存在
+                if (typeof teacherDetailInfoPage != "undefined") {
+                    teacherDetailInfoPage(id);//调用app的方法，得到用户的基体信息
+                }
+            }
+        }else{
+               window.location.href = this.baseUrl.replace('Organization','teacher')+'teacherv3_1/uid/'+id;
         }
     };
 

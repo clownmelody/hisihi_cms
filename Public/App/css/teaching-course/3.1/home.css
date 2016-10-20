@@ -723,7 +723,7 @@ body {
 .main-item.appointment .left-item {
   display: inline-block;
   text-align: left;
-  background: url("../../images/teaching-course/appointment.png") no-repeat;
+  background: url("http://pic.hisihi.com/2016-10-20/1476936059539209.png") no-repeat;
   background-size: 84px, 33.6px;
   width: 84px;
   height: 33.6px;
@@ -790,6 +790,7 @@ body {
   width: 110%;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li {
+  cursor: pointer;
   border-bottom: 1px solid #F3F3F3;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li .li-item-main {
@@ -803,7 +804,7 @@ body {
   width: 50px;
   height: 50px;
   position: absolute;
-  top: 0;
+  top: 10px;
   left: 0;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li .left-item img {
@@ -813,7 +814,8 @@ body {
   background-clip: padding-box;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li .right-item {
-  margin-left: 50px;
+  margin-left: 64px;
+  font-size: 12px;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li .right-item .name-info {
   text-overflow: ellipsis;
@@ -825,11 +827,11 @@ body {
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li .right-item .name-info span {
   color: #808080;
-  font-size: 14px;
+  font-size: 12px;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li .right-item .name-info span:first-child {
   color: #212121;
-  font-size: 16px;
+  font-size: 14px;
   margin-right: 10px;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li .right-item .teacher-introduce {
@@ -841,8 +843,7 @@ body {
   background-color: #F7F7F7;
   padding: 3px 5px;
   color: #808080;
-  font-size: 14px;
-  line-height: 24px;
+  line-height: 21px;
 }
 .main-item.lessons-singin .head-txt {
   border-bottom: 1px solid #f3f3f3;
@@ -1138,11 +1139,11 @@ body {
   height: 28px;
   position: absolute;
   top: 5px;
-  right: 5px;
+  right: 0px;
   text-align: center;
 }
 .main-item.works-box .head-txt .show-all-works i {
-  transform: scale(0.6);
+  transform: scale(0.5);
   width: 18px;
   height: 32px;
   display: inline-block;

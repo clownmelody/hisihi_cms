@@ -240,7 +240,7 @@ body {
     .left-item {
       display: inline-block;
       text-align: left;
-      background: url("../../images/teaching-course/appointment.png") no-repeat;
+      background: url("http://pic.hisihi.com/2016-10-20/1476936059539209.png") no-repeat;
       background-size: 210px*0.4,84px*0.4;
       .size(210px*0.4,84px*0.4);
       margin: 5px 0px;
@@ -315,6 +315,7 @@ body {
     .teacher-info-main{
       ul{
         li{
+          cursor: pointer;
           border-bottom: 1px solid #F3F3F3;
           .li-item-main{
             padding: 12px 12px 12px 0;
@@ -327,7 +328,7 @@ body {
           .left-item{
             .size(@w;@w);
             position: absolute;
-            top:0;
+            top:10px;
             left:0;
             img{
               .size(100%,100%);
@@ -335,17 +336,17 @@ body {
             }
           }
           .right-item{
-            margin-left: @w;
-
+            margin-left: @w + 14px;
+            font-size: 12px;
             .name-info{
               .txt-ellipsis-p(1);
               margin-bottom: 5px;
               span{
                 color: #808080;
-                font-size:14px;
+                font-size:12px;
                 &:first-child{
                   color: #212121;
-                  font-size: 16px;
+                  font-size: 14px;
                   margin-right: 10px;
                 }
 
@@ -356,8 +357,7 @@ body {
               background-color: #F7F7F7;
               padding:3px 5px;
               color: #808080;
-              font-size: 14px;
-              line-height: 24px;
+              line-height: 21px;
             }
           }
         }
@@ -662,10 +662,10 @@ body {
         .size(28px,28px);
         position: absolute;
         top:5px;
-        right: 5px;
+        right: 0px;
         text-align: center;
         i{
-          transform: scale(.6);
+          transform: scale(.5);
           .size(18px,32px);
           display: inline-block;
           background: url(../../../images/teaching-course/bottom-right.png);
