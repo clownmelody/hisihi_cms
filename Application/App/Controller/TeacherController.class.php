@@ -214,19 +214,36 @@ class TeacherController extends BaseController
         $this->apiSuccess('删除学生就业信息成功');
     }
 
-    public function createStudent($name, $avatar, $title, $company, $salary){
+    public function createStudent($name, $avatar, $title=null, $company=null, $salary=null,
+                                  $country=null, $school=null, $major=null){
         $model = M('OrganizationStudent');
         $data['name'] = $name;
         $data['avatar'] = $avatar;
-        $data['title'] = $title;
-        $data['company'] = $company;
-        $data['salary'] = $salary;
+        if(!empty($title)){
+            $data['title'] = $title;
+        }
+        if(!empty($company)){
+            $data['company'] = $company;
+        }
+        if(!empty($salary)){
+            $data['salary'] = $salary;
+        }
+        if(!empty($country)){
+            $data['country'] = $country;
+        }
+        if(!empty($school)){
+            $data['school'] = $school;
+        }
+        if(!empty($major)){
+            $data['major'] = $major;
+        }
         $data['create_time'] = time();
         $id = $model->add($data);
         $this->apiSuccess('创建学生就业信息成功', null, array('id'=>$id));
     }
 
-    public function updateStudent($id, $name=null, $avatar=null, $title=null, $company=null, $salary=null){
+    public function updateStudent($id, $name=null, $avatar=null, $title=null, $company=null, $salary=null,
+                                  $country=null, $school=null, $major=null){
         $model = M('OrganizationStudent');
         if(!empty($name)){
             $data['name'] = $name;
@@ -242,6 +259,15 @@ class TeacherController extends BaseController
         }
         if(!empty($salary)){
             $data['salary'] = $salary;
+        }
+        if(!empty($country)){
+            $data['country'] = $country;
+        }
+        if(!empty($school)){
+            $data['school'] = $school;
+        }
+        if(!empty($major)){
+            $data['major'] = $major;
         }
         $model->where('id='.$id)->save($data);
         $this->apiSuccess('修改学生就业信息成功');
