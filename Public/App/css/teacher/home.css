@@ -547,6 +547,11 @@ p {
   display: inline-block;
   margin-right: 18px;
 }
+.wrapper .info .info-left > a {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+}
 .wrapper .info .info-left > a .pic-head {
   max-width: 70px;
   height: 70px;
@@ -564,7 +569,7 @@ p {
   color: #808080;
   font-size: 12px;
 }
-.wrapper .tag .tag-box {
+.wrapper .tag {
   min-height: 82px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -604,6 +609,9 @@ p {
 }
 .wrapper .tag .tag-box .tag-right > ul > li > span {
   padding: 0 5px;
+}
+.wrapper .tag.hide {
+  display: none;
 }
 .wrapper .number {
   min-height: 88px;
