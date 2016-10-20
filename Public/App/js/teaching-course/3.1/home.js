@@ -2,7 +2,7 @@
  * Created by hisihi on 2016/9/19.
  */
 
-define(['base','async','deduction','lazyloading','fastclick'],function(Base,async,Deduction){
+define(['base','async','deduction','myPhotoSwipe','lazyloading','fastclick'],function(Base,async,Deduction,MyPhotoSwipe){
     var Course=function(id,oid,url){
         this.cid = id;
         this.oid=oid;
@@ -17,7 +17,6 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
         //加载页面数据
         window.setTimeout(function(){
             that.initData();
-            //that.fillInTeachersInfo();
         },100);
 
         $(document).on(eventName,'.sing-in-box .active', $.proxy(this,'singIn'));
@@ -41,6 +40,8 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
 
         /*跳转老师详情页面*/
         $(document).on(eventName,'.teacher-info-main li', $.proxy(this,'showTeacherInfo'));
+
+        this.initPhotoSwipe();
     };
 
     var tempFlag =window.location.href.indexOf('hisihi-app') < 0,  //是否来源于app
@@ -152,10 +153,20 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
             $('#wrapper,#footer').show();
             that.controlLoadingBox(false);
             $('.lazy-img').picLazyLoad($(window),{
-                threshold:150
+                threshold:0
             });
         });
     };
+
+    /*初始化图片查看*/
+    t.initPhotoSwipe=function(){
+        //app 内部，由于安卓的滑动原因，不实现全图查看
+        if(this.isFromApp && this.deviceType.android){
+            return;
+        }
+        new MyPhotoSwipe('.works-preview-ul');
+    };
+
 
     //获得当前机构的基本信息
     t.getOrgBasicInfo=function(callback){
@@ -667,7 +678,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                             '</div>' +
                         '</div>' +
                         '<div class="works-preview-box">' +
-                           '<ul>'+this.getWorksHtmlStr(result.data)+'</ul>'+
+                           '<ul class="works-preview-ul">'+this.getWorksHtmlStr(result.data)+'</ul>'+
                         '</div>' +
                 '</div>';
         $('.works-box').html(str1).show();
@@ -1171,7 +1182,7 @@ define(['base','async','deduction','lazyloading','fastclick'],function(Base,asyn
                 }
             } else {
                 //如果方法存在
-                if (typeof buyRebate != "undefined") {
+                if (typeof showStudentWorkList != "undefined") {
                     showStudentWorkList();//调用app的方法，得到用户的基体信息
                 }
             }

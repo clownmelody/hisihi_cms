@@ -767,7 +767,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 callback && callback(result.teacherList);
             },
             eCallback:function(txt){
-
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -804,7 +804,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             eCallback:function(txt){
                 $target.css('opacity',1);
                 $target.find('.loadErrorCon').show().find('a').text('获取视频信息失败，，点击重新加载').show();
-                callback();
+                callback(null);
             },
             type:'get',
             async:this.async
@@ -853,10 +853,10 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             url: this.baseUrl + 'appGetStudentWorks',
             paraData: {organization_id: this.oid,count:8,version:2.9},
             sCallback: function(result){
-                callback && callback(result)
+                callback && callback(result);
             },
             eCallback:function(txt){
-
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -919,7 +919,9 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             sCallback: function(result){
                 callback&&callback.call(that,result);
             },
-            eCallback:function(txt){},
+            eCallback:function(txt){
+                callback&&callback.call(that,null);
+            },
             type:'get',
             async:this.async
         });
@@ -954,7 +956,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             }
             chooseReasonObj=this.getChooseReaons(item);  //选择理由
             commentPicsObj=this.getCommentPics(item.pic_info);  //评论图片
-            commentTxt=item.comment;
+            commentTxt=item.comment || '';
             if(chooseReasonObj.flag && (commentPicsObj.flag || commentTxt!=='')){
                 chooseReasonObj.str=chooseReasonObj.str.replace(/no-border/,'border-box');
             }
@@ -990,6 +992,13 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         //    $('.net-comment-box').show();
         //    $('.net-comment-box-detail').append(netStr);
         //}
+    };
+
+    t.getImgSize=function(src){
+        src=src.replace(/@.*/,'')+'@info';
+        $.get(src,null,function(data){
+            alert(data);
+        });
     };
 
     //子评论条数，超过万则用万作单位
@@ -1050,15 +1059,16 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 len=picInfo.length,
                 src,
                 w=($('body').width() * 0.33) | 0 + 'px',
-                style='height:'+w;
+                style='height:'+w+'px';
             if(len>0){
                 flag=true;
             }
             for(var i=0;i<len;i++){
-                item = picInfo[i];
-                src = item.src;
+                //item = picInfo[i];
+                src = picInfo[i];
+                //this.getImgSize(src);
                 str+='<li class="li-img" style="' + style + '">'+
-                        '<a href="'+ src +'" data-size="'+item.src_size[0] +'x'+item.src_size[1]+'"></a>'+
+                        //'<a href="'+ src +'" data-size="'+item.src_size[0] +'x'+item.src_size[1]+'"></a>'+
                         '<img class="lazy-img works" data-original="'+ src +'">'+
                     '</li>';
             }
