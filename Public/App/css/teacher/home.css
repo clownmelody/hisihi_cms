@@ -547,6 +547,11 @@ p {
   display: inline-block;
   margin-right: 18px;
 }
+.wrapper .info .info-left > a {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+}
 .wrapper .info .info-left > a .pic-head {
   max-width: 70px;
   height: 70px;
@@ -564,8 +569,8 @@ p {
   color: #808080;
   font-size: 12px;
 }
-.wrapper .tag .tag-box {
-  min-height: 82px;
+.wrapper .tag {
+  min-height: 75px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
 }
@@ -604,6 +609,9 @@ p {
 }
 .wrapper .tag .tag-box .tag-right > ul > li > span {
   padding: 0 5px;
+}
+.wrapper .tag.hide {
+  display: none;
 }
 .wrapper .number {
   min-height: 88px;
@@ -743,6 +751,9 @@ p {
 .wrapper .employee .employee-box .student-right > ul > li:last-child {
   padding-bottom: 14px;
   border-bottom: 1px solid #f1f1f1;
+}
+.wrapper .employee .employee-box .student-right > ul > li.hide {
+  display: none;
 }
 .wrapper .employee .employee-box .student-right .student-name {
   font-size: 15px;

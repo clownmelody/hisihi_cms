@@ -49,6 +49,9 @@ p {
       display: inline-block;
       margin-right: 18px;
       > a {
+        display: inline-block;
+        width: @l;
+        height: @l;
         .pic-head {
           max-width: @l;
           height: @l;
@@ -71,10 +74,10 @@ p {
     }
   }
   .tag {
+    min-height: 75px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    border-radius: 4px;
     .tag-box {
-      min-height: 82px;
-      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
-      border-radius: 4px;
       .tag-left-box {
         float: left;
         min-height: 82px;
@@ -112,6 +115,9 @@ p {
           }
         }
       }
+    }
+    &.hide {
+      display: none;
     }
   }
   .number {
@@ -252,6 +258,9 @@ p {
             &:last-child {
               padding-bottom: 14px;
               border-bottom: 1px solid #f1f1f1;
+            }
+            &.hide {
+              display: none;
             }
           }
         }
