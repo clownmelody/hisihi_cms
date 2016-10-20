@@ -1059,7 +1059,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 len=picInfo.length,
                 src,
                 w=($('body').width() * 0.33) | 0 + 'px',
-                style='height:'+w;
+                style='height:'+w+'px';
             if(len>0){
                 flag=true;
             }
