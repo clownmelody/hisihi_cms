@@ -313,7 +313,7 @@ class TeacherController extends BaseController
         $list = $model->field('student_id')->where('status=1 and teacher_id='.$teacher_id)
             ->order('create_time desc')->select();
         foreach($list as $item){
-            $info = $stuModel->field('id, name, company, title, avatar, salary')
+            $info = $stuModel->field('id, name, company, title, avatar, salary, country, school, major')
                 ->where('id='.$item['student_id'])->find();
             $stuList[] = $info;
         }
@@ -401,6 +401,103 @@ class TeacherController extends BaseController
         $this->apiSuccess('创建课程成功', null, array('id'=>$course_id));
     }
 
+    /**
+     * 更新课程信息
+     * @param int $teaching_course_id
+     * @param null $course_name
+     * @param null $cover_pic
+     * @param null $introduction
+     * @param int $price
+     * @param null $teacher_id_list
+     * @param null $student_work_list
+     * @param null $outline
+     */
+    public function updateTeachingCourse($teaching_course_id=0, $course_name=null, $cover_pic=null,
+                                         $introduction=null, $price=null, $teacher_id_list=null,
+                                         $student_work_list=null, $outline=null){
+        if($teaching_course_id==0){
+            $this->apiError(-1, '课程id不能为空');
+        }
+        $courseModel = M('OrganizationTeachingCourse');
+        $swmodel = M('StudentWorks');
+        $outlineModel = M('TeachingCourseOutline');
+        $outlineResModel = M('TeachingCourseOutlineResource');
+        if(!empty($course_name)){
+            $data['course_name'] = $course_name;
+        }
+        if(!empty($cover_pic)){
+            $data['cover_pic'] = $cover_pic;
+        }
+        if(!empty($introduction)){
+            $data['introduction'] = $introduction;
+        }
+        if(!empty($price)){
+            $data['price'] = $price;
+        }
+        if(!empty($teacher_id_list)){
+            $data['teacher_id_list'] = $teacher_id_list;
+        }
+        $course_id = $courseModel->where('id='.$teaching_course_id)->save($data);
+        if(!empty($student_work_list)){
+            $student_work_list = stripslashes($student_work_list);
+            $student_work_list = json_decode($student_work_list, true);
+            foreach($student_work_list as $pic_url){
+                $sel_data['course_id'] = $course_id;
+                $sel_data['pic_url'] = $pic_url;
+                $sel_data['status'] = 1;
+                $count = $swmodel->where($sel_data)->count();
+                if(!$count){
+                    $swdata['course_id'] = $course_id;
+                    $swdata['pic_url'] = $pic_url;
+                    $swdata['create_time'] = time();
+                    $swmodel->add($swdata);
+                }
+            }
+        }
+        if(!empty($outline)){
+            $outline = stripslashes($outline);
+            $outline = json_decode($outline, true);
+            foreach($outline as $item){
+                $old_outline_id = $item['outline_id'];
+                if(empty($old_outline_id)){
+                    $first_title = $item['title'];
+                    $outlineData['teaching_course_id'] = $course_id;
+                    $outlineData['title'] = $first_title;
+                    $outlineData['create_time'] = time();
+                    $outlineId = $outlineModel->add($outlineData);
+                } else {
+                    $outlineModel->where('id='.$old_outline_id)->save(array('title'=>$item['title']));
+                    $outlineId = $old_outline_id;
+                }
+                $contentList = $item['data'];
+                foreach($contentList as $content){
+                    $old_outline_res_id = $content['outline_res_id'];
+                    $outlineResData['outline_id'] = $outlineId;
+                    $outlineResData['name'] = $content['name'];
+                    $outlineResData['type'] = $content['type'];
+                    if($outlineResData['type']==1){
+                        $outlineResData['status'] = 0;
+                    }
+                    $outlineResData['video_id'] = $content['video_id'];
+                    $outlineResData['content']  = $content['content'];
+                    $outlineResData['cover_pic']  = $content['cover_pic'];
+                    if($content['is_top']){
+                        $outlineResData['is_top'] = $content['is_top'];
+                    } else {
+                        $outlineResData['is_top'] = 0;
+                    }
+                    if(empty($old_outline_res_id)){
+                        $outlineResData['create_time'] = time();
+                        $outlineResModel->add($outlineResData);
+                    } else {
+                        $outlineResModel->where('id='.$old_outline_res_id)->save($outlineResData);
+                    }
+                }
+            }
+        }
+        $this->apiSuccess('更新课程成功', null, array('id'=>$course_id));
+    }
+
     public function getCourseTeacherList($teaching_course_id=0){
         $courseModel = M('OrganizationTeachingCourse');
         $courseInfo = $courseModel->field('teacher_id_list')->where('id='.$teaching_course_id)->find();
@@ -453,6 +550,22 @@ class TeacherController extends BaseController
         $model = M('UcenterMember');
         $info = $model->field('id, username')->where('mobile='.$mobile)->find();
         $this->apiSuccess('根据手机号查找用户成功', null, array('data'=>$info));
+    }
+
+    public function deleteOutline($outline_id=null, $outline_res_id=null){
+        if(empty($outline_id)&&empty($outline_res_id)){
+            $this->apiError(-1, '参数不能为空');
+        }
+        $outlineModel = M('TeachingCourseOutline');
+        $outlineResModel = M('TeachingCourseOutlineResource');
+        $data['status'] = -1;
+        if(!empty($outline_id)){
+            $outlineModel->where('id='.$outline_id)->save($data);
+        }
+        if(!empty($outline_res_id)){
+            $outlineResModel->where('id='.$outline_res_id)->save($data);
+        }
+        $this->apiSuccess('删除成功');
     }
 
 }
