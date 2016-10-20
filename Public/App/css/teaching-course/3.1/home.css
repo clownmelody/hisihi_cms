@@ -790,6 +790,7 @@ body {
   width: 110%;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li {
+  cursor: pointer;
   border-bottom: 1px solid #F3F3F3;
 }
 .main-item.lessons-teachers－box .teacher-info-main ul li .li-item-main {
