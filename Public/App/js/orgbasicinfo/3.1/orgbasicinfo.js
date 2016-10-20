@@ -767,7 +767,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 callback && callback(result.teacherList);
             },
             eCallback:function(txt){
-
+                callback && callback(null);
             },
             type:'get',
             async:this.async
@@ -954,7 +954,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             }
             chooseReasonObj=this.getChooseReaons(item);  //选择理由
             commentPicsObj=this.getCommentPics(item.pic_info);  //评论图片
-            commentTxt=item.comment;
+            commentTxt=item.comment || '';
             if(chooseReasonObj.flag && (commentPicsObj.flag || commentTxt!=='')){
                 chooseReasonObj.str=chooseReasonObj.str.replace(/no-border/,'border-box');
             }
@@ -1055,10 +1055,10 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 flag=true;
             }
             for(var i=0;i<len;i++){
-                item = picInfo[i];
-                src = item.src;
+                //item = picInfo[i];
+                src = picInfo[i];
                 str+='<li class="li-img" style="' + style + '">'+
-                        '<a href="'+ src +'" data-size="'+item.src_size[0] +'x'+item.src_size[1]+'"></a>'+
+                        //'<a href="'+ src +'" data-size="'+item.src_size[0] +'x'+item.src_size[1]+'"></a>'+
                         '<img class="lazy-img works" data-original="'+ src +'">'+
                     '</li>';
             }
