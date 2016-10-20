@@ -210,7 +210,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<span>' + a[i] + '</span>' +
                 '</li>';
         }
-        var strL= '<div class=tag-box'>+
+        var strL = '<div class="content-box tag-box">'+
             '<div class="tag-left-box">'+
             '<div class="tag-left">'+
             '<div class="tag-img"></div>'+
@@ -220,8 +220,8 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             '<ul>'+
                 str+
             '</ul>'+
-            '</div>'+
             '</div>';
+        $('.tag').removeClass('hide');
         $('.tag').html(strL);
     };
 
@@ -229,12 +229,15 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
     //判断老师信息，30为软件类，31为留学，32为手绘
     //如果是留学机构老师，页面数字文字说明部分修改
     t.fillNumber = function (result) {
+        if (!result || !result.data.student_num||!result.data.teach_age) {
+            return '';
+        }
         var num = result.data.student_num,
             age = result.data.teach_age,
             rate = result.data.employment_rate,
             type = result.data.org_type;
         if (type != 31) {
-            var str = '<div class="num-li" id="student">' +
+            var str = '<div class="num-li" id="student">'+
                 '<ul>' +
                 '<li class="num-img" id="student-img">' +
                 '</li>' +
@@ -381,7 +384,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             this.showTips.call(this,'下载嘿设汇App，查看更多！');
         }
     };
-
 
     //加载学生就业信息
     //判断老师信息，30为软件类，31为留学，32为手绘
