@@ -13,6 +13,9 @@ requirejs.config({
         async:'async',
         lazyloading:'lazyloading',
         deduction:'../orgbasicinfo/2.9.5/deduction',
+        photoswipe:'photoswipe/photoswipe.min',
+        photoswipeui:'photoswipe/photoswipe-ui-default.min',
+        myPhotoSwipe:'photoswipe/myphotoswipe'
     },
     shim: {
         $:{
