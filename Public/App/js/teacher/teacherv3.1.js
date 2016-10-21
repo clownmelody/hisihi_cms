@@ -409,9 +409,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             len = result.data.length;
             for (var i = 0; i < len; i++) {
                 var item = result.data[i];
-                companyStr='<span class="left">就职公司：</span>' +
+                companyStr= '<span class="left">就职公司：</span>' +
                             '<span class="right">' +
-                                item.company +
+                                item.company+
                             '</span>' ;
                 titleStr= '<span class="left">职位：</span>' +
                             '<span class="right">' +
@@ -424,7 +424,8 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 countryStr= '<span class="left">国家：</span>' +
                             '<span class="right">' +
                                 item.country +
-                            '</span>' ;
+                            '</span>'
+                            '</div>';
                 schoolStr='<span class="left">学校：</span>' +
                             '<span class="right">' +
                                 item.school +
@@ -514,6 +515,16 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
     };
 
     //就业信息文字过长，超过一行则用省略号代替
+    //t.getTextLong=function(){
+    //    $('.employee-box li').each(function(){
+    //        var maxWidth=19;
+    //        if($(this).text().length>maxWidth) {
+    //            $(this).text($(this).text().substring(0,maxWidth));
+    //            $(this).html($(this).html()+'...');
+    //        }
+    //    })
+    //};
+
 
 
     return Teacher;

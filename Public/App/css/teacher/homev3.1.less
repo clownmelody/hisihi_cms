@@ -4,7 +4,7 @@ body{
   max-width: 700px;
   overflow: auto;
   //下载条高度
-  padding-bottom: 56px;
+  padding-bottom: 50px;
   overflow-x: hidden;
   color: @c;
   font-size: 14px;
@@ -259,13 +259,15 @@ p {
         display: inline-block;
         width: 80%;
         padding-left: 58px;
+        border-bottom: 1px solid #f1f1f1;
         > ul {
           > li {
             width: 100%;
             padding-bottom: 3px;
+            .txt-ellipsis-p(1);
             &:last-child {
-              padding-bottom: 14px;
-              border-bottom: 1px solid #f1f1f1;
+              margin-bottom: 13px;
+              border: none;
             }
             &.hide {
               display: none;
@@ -279,7 +281,7 @@ p {
         .left {
         }
         .right {
-          color: #808080;
+            color: #808080;
         }
       }
     }
