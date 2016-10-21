@@ -24,13 +24,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         //点击相册加载更多，调用客户端的方法，弹出相册列表
         $(document).on(eventName, '.right-arrow', $.proxy(this, 'showAllStudentWorks'));
 
-
-        //点击相册，查看全部
-        $(document).on(eventName,'.right-arrow',function(){
-            window.location.href='hisihi://university/detailinfo/album?id='+that.uid;
-        });
-
-
         //photoswipe 查看相册大图
         new PhotoSwipe('.picture-ul', {
             bgFilter: true,
@@ -174,30 +167,35 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             return '';
         }
         else {
-            var avatar = result.data.avatar,
+            var str='',
+                avatar = result.data.avatar,
                 name = result.data.name,
-                title = result.data.title;
-                if (result.data.uid==null){
-                return '';
-            }else {
-                    var  str = '<div class="info-left">' +
-                        '<a href="hisihi://user/detailinfo?uid='+result.data.uid+'"><img class="pic-head" src="'+avatar+'"></a>'+
-                        '</div>' +
-                        '<div class="info-right">' +
-                        '<ul>' +
-                        '<li>' +
-                        '<span id="name">' +
-                        name +
-                        '</span>' +
-                        '</li>' +
-                        '<li>' +
-                        '<span id="title">' +
-                        title +
-                        '</span>' +
-                        '</li>' +
-                        '</ul>' +
-                        '</div>';
-            }
+                title = result.data.title,
+                aStr='';
+                //获取不到用户uid则禁止跳转
+                if (result.data.uid!=''){
+                    aStr='<a href="hisihi://user/detailinfo?uid=' + result.data.uid + '"><img class="pic-head" src="' + avatar + '"></a>';
+                }else{
+                    aStr='<img class="pic-head" src="' + avatar + '">';
+                }
+                str = '<div class="info-left">' +
+                        aStr+
+                    '</div>' +
+                    '<div class="info-right">' +
+                    '<ul>' +
+                    '<li>' +
+                    '<span id="name">' +
+                    name +
+                    '</span>' +
+                    '</li>' +
+                    '<li>' +
+                    '<span id="title">' +
+                    title +
+                    '</span>' +
+                    '</li>' +
+                    '</ul>' +
+                    '</div>';
+
         }
         $('.info').show().html(str);
     };
@@ -217,16 +215,16 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<span>' + a[i] + '</span>' +
                 '</li>';
         }
-        var strL = '<div class="content-box tag-box">'+
-            '<div class="tag-left-box">'+
+        var strL = '<div class="tag-left-box">'+
             '<div class="tag-left">'+
             '<div class="tag-img"></div>'+
             '</div>'+
             '</div>'+
+            '<div class="tag-right-box">'+
             '<div class="tag-right">'+
             '<ul>'+
                 str+
-            '</ul>'+
+            '</ul>'
             '</div>';
         $('.tag').removeClass('hide');
         $('.tag').html(strL);
@@ -402,68 +400,62 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         }
         if (result.data)
         var str = '',
+            companyStr='',
             titleStr='' ,
             salaryStr='',
+            countryStr='',
+            schoolStr='',
+            majorStr='',
             len = result.data.length;
             for (var i = 0; i < len; i++) {
                 var item = result.data[i];
-                //判断该老师是否为留学老师
-                if(item.company!=''||item.company!=null){
-                    titleStr= '<span class="left">职位：</span>' +
-                                '<span class="right">' +
+                companyStr= '<span class="left">就职公司：</span>' +
+                            '<span class="right">' +
+                                item.company+
+                            '</span>' ;
+                titleStr= '<span class="left">职位：</span>' +
+                            '<span class="right">' +
                                 item.title +
                             '</span>' ;
-                    salaryStr= '<span class="left">薪资：</span>' +
-                        '<span class="right">' +
-                        item.salary +
-                        '</span>' ;
-                }
-                str += '<div class="employee-box">' +
-                    '<div class="student-left">' +
-                    '<img src="' + item.avatar + '"/>' +
-                    '</div>' +
-                    '<div class="student-right">' +
-                    '<ul>' +
-                    '<li>' +
-                    '<span class="student-name">' +
-                    item.name +
-                    '</span>' +
-                    '</li>' +
-                    '<li>' +
-                    '<span class="left">就职公司：</span>' +
-                    '<span class="right">' +
-                    item.company +
-                    '</span>' +
-                    '</li>' +
-                    '<li>' +
-                        titleStr+
-                    '</li>' +
-                    '<li>' +
-                        salaryStr+
-                    '</li>' +
-                    '</ul>' +
-                    '</div>' +
-                    '</div>';
-            }else {
-                for (var i = 0; i < len; i++) {
-                    var countryStr='',
-                        schoolStr='',
-                        majorStr='';
-                    countryStr= '<span class="left">国家：</span>' +
-                        '<span class="right">' +
-                        item.country +
-                        '</span>' ;
-                    schoolStr='<span class="left">学校：</span>' +
-                        '<span class="right">' +
-                        item.school +
-                        '</span>' ;
-                    majorStr= '<span class="left">专业：</span>' +
-                        '<span class="right">' +
-                        item.major +
-                        '</span>' +
-                        '</li>' ;
+                salaryStr= '<span class="left">薪资：</span>' +
+                            '<span class="right">' +
+                                item.salary +
+                            '</span>' ;
+                countryStr= '<span class="left">国家：</span>' +
+                            '<span class="right">' +
+                                item.country +
+                            '</span>'
+                            '</div>';
+                schoolStr='<span class="left">学校：</span>' +
+                            '<span class="right">' +
+                                item.school +
+                            '</span>' ;
+                majorStr= '<span class="left">专业：</span>' +
+                            '<span class="right">' +
+                                item.major +
+                            '</span>' +
+                            '</li>' ;
+                //判断该老师是否为留学老师,如果没有就职公司信息，判断为留学机构学生
+                if(item.company==''||item.company==null){
+                    //判断字段是否为空，如果为空则不显示
+                    if(item.company=''||item.company==null){
+                        companyStr='';
                     }
-                    var item = result.data[i];
+                    if(item.title=''||item.title==null){
+                        titleStr='';
+                    }
+                    if(item.salary=''||item.salary==null){
+                        salaryStr='';
+                    }
+                    if(item.country=''||item.country==null){
+                        countryStr='';
+                    }
+                    if(item.school=''||item.school==null){
+                        schoolStr='';
+                    }
+                    if(item.major=''||item.major==null){
+                        majorStr='';
+                    }
                     str += '<div class="employee-box">' +
                         '<div class="student-left">' +
                         '<img src="' + item.avatar + '"/>' +
@@ -482,7 +474,31 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                         schoolStr+
                         '</li>' +
                         '<li>' +
-                            majorStr+
+                        majorStr+
+                        '</ul>' +
+                        '</div>' +
+                        '</div>';
+                } else {
+                    str += '<div class="employee-box">' +
+                        '<div class="student-left">' +
+                        '<img src="' + item.avatar + '"/>' +
+                        '</div>' +
+                        '<div class="student-right">' +
+                        '<ul>' +
+                        '<li>' +
+                        '<span class="student-name">' +
+                        item.name +
+                        '</span>' +
+                        '</li>' +
+                        '<li>' +
+                            companyStr+
+                        '</li>' +
+                        '<li>' +
+                            titleStr+
+                        '</li>' +
+                        '<li>' +
+                            salaryStr+
+                        '</li>' +
                         '</ul>' +
                         '</div>' +
                         '</div>';
@@ -494,8 +510,22 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<div class="employee-s">' +
                 str +
                 '</div>';
+
         $('.employee').html(strL);
     };
+
+    //就业信息文字过长，超过一行则用省略号代替
+    //t.getTextLong=function(){
+    //    $('.employee-box li').each(function(){
+    //        var maxWidth=19;
+    //        if($(this).text().length>maxWidth) {
+    //            $(this).text($(this).text().substring(0,maxWidth));
+    //            $(this).html($(this).html()+'...');
+    //        }
+    //    })
+    //};
+
+
 
     return Teacher;
 });

@@ -55,7 +55,7 @@ require(['home','prefixfree'],function(Teacher){
         url=url.replace(/\%2F/g,'\/');
     }
 
-    var reg = /uid\/[1-9][0-9]*/g,
+    var reg = /uid\/[0-9][0-9]*/g,
         id = url.match(reg)[0].toString().replace(/uid\//g,'');
     window.Teacher = new Teacher($('#wrapper'),id,window.hisihiUrlObj.api_url_php);
 });

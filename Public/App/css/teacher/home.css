@@ -501,7 +501,7 @@ body {
   margin: 0 auto;
   max-width: 700px;
   overflow: auto;
-  padding-bottom: 56px;
+  padding-bottom: 50px;
   overflow-x: hidden;
   color: #212121;
   font-size: 14px;
@@ -552,7 +552,7 @@ p {
   width: 70px;
   height: 70px;
 }
-.wrapper .info .info-left > a .pic-head {
+.wrapper .info .info-left .pic-head {
   max-width: 70px;
   height: 70px;
   border-radius: 70px;
@@ -573,33 +573,43 @@ p {
   min-height: 75px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+  display: flex;
+  align-items: center;
 }
-.wrapper .tag .tag-box .tag-left-box {
-  float: left;
-  min-height: 82px;
-  width: 25%;
+.wrapper .tag .tag-left-box {
+  height: 100%;
+  display: inline-block;
+  z-index: 98;
+}
+.wrapper .tag .tag-left-box .tag-left {
+  width: 60px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.wrapper .tag .tag-box .tag-left-box .tag-left .tag-img {
-  width: 35px;
-  height: 38px;
+.wrapper .tag .tag-left-box .tag-left .tag-img {
+  width: 28px;
+  height: 30px;
   background: url("../../images/teacher/sprite.png") no-repeat;
-  background-size: 126px 37.5px;
+  background-size: 100.8px 30px;
   background-position: 0px 0px;
 }
-.wrapper .tag .tag-box .tag-right {
-  float: left;
-  width: 75%;
-  min-height: 82px;
+.wrapper .tag .tag-right-box {
   font-size: 12px;
+  z-index: 98;
+  display: inline-block;
 }
-.wrapper .tag .tag-box .tag-right > ul {
-  display: table;
-  padding-top: 28px;
+.wrapper .tag .tag-right-box .tag-right {
+  margin: 10px 0px 10px 0px;
+  border-left: 1px solid #f2f2f2;
 }
-.wrapper .tag .tag-box .tag-right > ul > li {
+.wrapper .tag .tag-right-box .tag-right > ul {
+  display: inline-block;
+  padding-left: 10px;
+  vertical-align: -29px;
+}
+.wrapper .tag .tag-right-box .tag-right > ul > li {
   margin-bottom: 10px;
   margin-right: 10px;
   float: left;
@@ -607,7 +617,7 @@ p {
   line-height: 25px;
   background-color: #f2f2f2;
 }
-.wrapper .tag .tag-box .tag-right > ul > li > span {
+.wrapper .tag .tag-right-box .tag-right > ul > li > span {
   padding: 0 5px;
 }
 .wrapper .tag.hide {
@@ -726,13 +736,13 @@ p {
   color: #212121;
 }
 .wrapper .employee .employee-box {
-  min-height: 90px;
   padding-top: 14px;
+  position: relative;
 }
 .wrapper .employee .employee-box .student-left {
   display: inline-block;
   min-width: 44px;
-  padding-right: 14px;
+  position: absolute;
 }
 .wrapper .employee .employee-box .student-left > img {
   width: 44px;
@@ -741,16 +751,22 @@ p {
 }
 .wrapper .employee .employee-box .student-right {
   display: inline-block;
-  vertical-align: -32px;
   width: 80%;
+  padding-left: 58px;
+  border-bottom: 1px solid #f1f1f1;
 }
 .wrapper .employee .employee-box .student-right > ul > li {
   width: 100%;
   padding-bottom: 3px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 .wrapper .employee .employee-box .student-right > ul > li:last-child {
-  padding-bottom: 14px;
-  border-bottom: 1px solid #f1f1f1;
+  margin-bottom: 13px;
+  border: none;
 }
 .wrapper .employee .employee-box .student-right > ul > li.hide {
   display: none;
