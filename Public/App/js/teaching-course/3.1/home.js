@@ -160,8 +160,10 @@ define(['base','async','deduction','myPhotoSwipe','lazyloading','fastclick'],fun
 
     /*初始化图片查看*/
     t.initPhotoSwipe=function(){
-        //app 内部，由于安卓的滑动原因，不实现全图查看
+        //app 内部，由于安卓的滑动原因，调用原生来实现全图查看
         if(this.isFromApp && this.deviceType.android){
+            this.arrWorksForAndroid=[];  //前8张作品地址
+            $(document).on('click','.works-preview-ul li', $.proxy(this,'showOriginalWorks'));
             return;
         }
         new MyPhotoSwipe('.works-preview-ul');
@@ -700,8 +702,22 @@ define(['base','async','deduction','myPhotoSwipe','lazyloading','fastclick'],fun
         return str;
     };
 
-
-
+    /*调用android的大图片查看功能*/
+    t.showOriginalWorks=function(e){
+        var $li=$(e.currentTarget),
+            index=$li.index(),
+            $allLi=$li.parent().find('li'),
+            that=this;
+        if(this.arrWorksForAndroid.length==0) {
+            $allLi.each(function () {
+                that.arrWorksForAndroid.push($(this).find('a')[0].href);
+            });
+        }
+        //如果方法存在
+        if (typeof AppFunction != 'undefined' && typeof AppFunction.viewWorkInOriginSize != 'undefined') {
+            AppFunction.viewWorkInOriginSize(that.arrWorksForAndroid,index); //显示学生作品 大图
+        }
+    };
 
     /*控制模态窗口的显示和隐藏*/
     t.controlLoginTipModal=function(flag){
