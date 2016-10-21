@@ -717,14 +717,15 @@ p {
 }
 .wrapper .picture .preview-box > ul {
   white-space: nowrap;
-  padding-bottom: 14px;
+  margin-bottom: 14px;
 }
 .wrapper .picture .preview-box > ul > li {
   display: inline-block;
   width: 80px;
   height: 80px;
-  overflow-y: hidden;
+  overflow: hidden;
   padding-left: 5px;
+  vertical-align: top;
 }
 .wrapper .picture .preview-box > ul > li:first-child {
   padding-left: 0px;

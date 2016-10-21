@@ -10,7 +10,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         this.uid = uid;
         var eventName = 'click', that = this;
         if (this.isLocal) {
-            //eventName='touchend';
+            eventName='touchend';
             this.baseUrl = this.baseUrl.replace('api.php', 'hisihi-cms/api.php');
         }
 
@@ -377,8 +377,8 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         if (this.isFromApp) {
             if (this.deviceType.android) {
                 //如果方法存在
-                if (typeof AppFunction !='undefined' &&  typeof AppFunction.showStudentWorkList !='undefined') {
-                    AppFunction.showStudentWorkList(); //显示所有的学生作品列表
+                if (typeof AppFunction !='undefined' &&  typeof AppFunction.showAllStudentWorks !='undefined') {
+                    AppFunction.showAllStudentWorks(this.uid); //显示所有的学生作品列表
                 }
             } else {
                 //如果方法存在
