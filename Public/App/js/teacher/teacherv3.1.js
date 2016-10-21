@@ -385,7 +385,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             } else {
                 //如果方法存在
                 if (typeof buyRebate != "undefined") {
-                    showStudentWorkList();//调用app的方法，得到用户的基体信息
+                    showStudentWorkList();//调用app的方法，得到用户的基体信息sss
                 }
             }
         }else{
@@ -402,13 +402,22 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         }
         if (result.data)
         var str = '',
-            len = result.data.length,
-            lm=result.data[0],
-            com = lm.company;
-        //判断该老师是否为留学老师
-        if (com!=null) {
+            titleStr='' ,
+            salaryStr='',
+            len = result.data.length;
             for (var i = 0; i < len; i++) {
                 var item = result.data[i];
+                //判断该老师是否为留学老师
+                if(item.company!=''||item.company!=null){
+                    titleStr= '<span class="left">职位：</span>' +
+                                '<span class="right">' +
+                                item.title +
+                            '</span>' ;
+                    salaryStr= '<span class="left">薪资：</span>' +
+                        '<span class="right">' +
+                        item.salary +
+                        '</span>' ;
+                }
                 str += '<div class="employee-box">' +
                     '<div class="student-left">' +
                     '<img src="' + item.avatar + '"/>' +
@@ -427,22 +436,33 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                     '</span>' +
                     '</li>' +
                     '<li>' +
-                    '<span class="left">职位：</span>' +
-                    '<span class="right">' +
-                    item.title +
-                    '</span>' +
+                        titleStr+
                     '</li>' +
                     '<li>' +
-                    '<span class="left">薪资：</span>' +
-                    '<span class="right">' +
-                    item.salary +
-                    '</span>' +
+                        salaryStr+
                     '</li>' +
                     '</ul>' +
                     '</div>' +
                     '</div>';
             }else {
                 for (var i = 0; i < len; i++) {
+                    var countryStr='',
+                        schoolStr='',
+                        majorStr='';
+                    countryStr= '<span class="left">国家：</span>' +
+                        '<span class="right">' +
+                        item.country +
+                        '</span>' ;
+                    schoolStr='<span class="left">学校：</span>' +
+                        '<span class="right">' +
+                        item.school +
+                        '</span>' ;
+                    majorStr= '<span class="left">专业：</span>' +
+                        '<span class="right">' +
+                        item.major +
+                        '</span>' +
+                        '</li>' ;
+                    }
                     var item = result.data[i];
                     str += '<div class="employee-box">' +
                         '<div class="student-left">' +
@@ -456,23 +476,13 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                         '</span>' +
                         '</li>' +
                         '<li>' +
-                        '<span class="left">国家：</span>' +
-                        '<span class="right">' +
-                        item.country +
-                        '</span>' +
+                        countryStr+
                         '</li>' +
                         '<li>' +
-                        '<span class="left">学校：</span>' +
-                        '<span class="right">' +
-                        item.school +
-                        '</span>' +
+                        schoolStr+
                         '</li>' +
                         '<li>' +
-                        '<span class="left">专业：</span>' +
-                        '<span class="right">' +
-                        item.major +
-                        '</span>' +
-                        '</li>' +
+                            majorStr+
                         '</ul>' +
                         '</div>' +
                         '</div>';
@@ -484,7 +494,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<div class="employee-s">' +
                 str +
                 '</div>';
-        }
         $('.employee').html(strL);
     };
 
