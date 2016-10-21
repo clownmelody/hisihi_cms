@@ -242,48 +242,57 @@ p {
         color: #212121;
       }
     }
-    .employee-box {
-      padding-top: 14px;
-      position: relative;
-      @z:44px;
-      .student-left {
-        display: inline-block;
-        min-width: @z;
-        position: absolute;
-        >img {
-          .size(@z,@z);
-          border-radius: @z;
-        }
-      }
-      .student-right {
-        display: inline-block;
-        width: 80%;
-        padding-left: 58px;
-        border-bottom: 1px solid #f1f1f1;
-        > ul {
-          > li {
-            width: 100%;
-            padding-bottom: 3px;
-            .txt-ellipsis-p(1);
-            &:last-child {
-              margin-bottom: 13px;
-              border: none;
-            }
-            &.hide {
-              display: none;
-            }
+    .employee-s{
+      .employee-box {
+        padding-top: 14px;
+        position: relative;
+        @z:44px;
+        .student-left {
+          display: inline-block;
+          min-width: @z;
+          position: absolute;
+          >img {
+            .size(@z,@z);
+            border-radius: @z;
           }
         }
-        .student-name {
-          font-size: 15px;
-          font-weight: bold;
-        }
-        .left {
-        }
-        .right {
+        .student-right {
+          display: inline-block;
+          width: 80%;
+          border-bottom: 1px solid #f1f1f1;
+          margin-left: 58px;
+          > ul {
+            > li {
+              width: 100%;
+              padding-bottom: 3px;
+              .txt-ellipsis-p(1);
+              &:last-child {
+                margin-bottom: 13px;
+                border: none;
+              }
+              &.hide {
+                display: none;
+              }
+            }
+          }
+          .student-name {
+            font-size: 15px;
+            font-weight: bold;
+          }
+          .left {
+          }
+          .right {
+            max-height: 20px;
             color: #808080;
+          }
+        }
+        &:last-child {
+          .student-right {
+            border: none;
+          }
         }
       }
     }
+
   }
 }
