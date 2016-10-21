@@ -77,45 +77,53 @@ p {
     min-height: 75px;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
     border-radius: 4px;
-    .tag-box {
+    display: flex;
+    //justify-content: center;
+    align-items: center;
       .tag-left-box {
-        float: left;
-        min-height: 82px;
-        width: 25%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        height: 100%;
+        display: inline-block;
+        z-index: 98;
         .tag-left{
+          width: 60px;
+          height: 60px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           .tag-img {
-            .size(35px,38px);
+            .size(28px,30px);
             background: url("../../images/teacher/sprite.png") no-repeat;
-            background-size: 252px*0.5 75px*0.5;
+            background-size: 252px*0.4 75px*0.4;
             background-position: 0px 0px;
           }
         }
       }
-      .tag-right {
-        float: left;
-        width: 75%;
-        min-height: 82px;
+      .tag-right-box {
         font-size: 12px;
-        > ul {
-          display: table;
-          padding-top: 28px;
-          >li {
-            margin-bottom: 10px;
-            margin-right: 10px;
-            float: left;
-            height: 25px;
-            line-height: 25px;
-            background-color: #f2f2f2;
-            > span {
-              padding: 0 5px;
+        z-index: 98;
+        display: inline-block;
+        .tag-right {
+          margin: 10px 0px 10px 0px;
+          border-left: 1px solid #f2f2f2;
+          > ul {
+            display: inline-block;
+            padding-left: 10px;
+            vertical-align: -29px;
+            >li {
+              margin-bottom: 10px;
+              margin-right: 10px;
+              float: left;
+              height: 25px;
+              line-height: 25px;
+              background-color: #f2f2f2;
+              > span {
+                padding: 0 5px;
+              }
             }
           }
         }
+
       }
-    }
     &.hide {
       display: none;
     }
@@ -235,13 +243,13 @@ p {
       }
     }
     .employee-box {
-      min-height: 90px;
       padding-top: 14px;
+      position: relative;
       @z:44px;
       .student-left {
         display: inline-block;
         min-width: @z;
-        padding-right: 14px;
+        position: absolute;
         >img {
           .size(@z,@z);
           border-radius: @z;
@@ -249,8 +257,8 @@ p {
       }
       .student-right {
         display: inline-block;
-        vertical-align: -32px;
         width: 80%;
+        padding-left: 58px;
         > ul {
           > li {
             width: 100%;
@@ -269,7 +277,6 @@ p {
           font-weight: bold;
         }
         .left {
-
         }
         .right {
           color: #808080;
