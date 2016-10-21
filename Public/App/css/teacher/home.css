@@ -735,27 +735,27 @@ p {
 .wrapper .employee .head > span {
   color: #212121;
 }
-.wrapper .employee .employee-box {
+.wrapper .employee .employee-s .employee-box {
   padding-top: 14px;
   position: relative;
 }
-.wrapper .employee .employee-box .student-left {
+.wrapper .employee .employee-s .employee-box .student-left {
   display: inline-block;
   min-width: 44px;
   position: absolute;
 }
-.wrapper .employee .employee-box .student-left > img {
+.wrapper .employee .employee-s .employee-box .student-left > img {
   width: 44px;
   height: 44px;
   border-radius: 44px;
 }
-.wrapper .employee .employee-box .student-right {
+.wrapper .employee .employee-s .employee-box .student-right {
   display: inline-block;
   width: 80%;
-  padding-left: 58px;
   border-bottom: 1px solid #f1f1f1;
+  margin-left: 58px;
 }
-.wrapper .employee .employee-box .student-right > ul > li {
+.wrapper .employee .employee-s .employee-box .student-right > ul > li {
   width: 100%;
   padding-bottom: 3px;
   text-overflow: ellipsis;
@@ -764,17 +764,21 @@ p {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
-.wrapper .employee .employee-box .student-right > ul > li:last-child {
+.wrapper .employee .employee-s .employee-box .student-right > ul > li:last-child {
   margin-bottom: 13px;
   border: none;
 }
-.wrapper .employee .employee-box .student-right > ul > li.hide {
+.wrapper .employee .employee-s .employee-box .student-right > ul > li.hide {
   display: none;
 }
-.wrapper .employee .employee-box .student-right .student-name {
+.wrapper .employee .employee-s .employee-box .student-right .student-name {
   font-size: 15px;
   font-weight: bold;
 }
-.wrapper .employee .employee-box .student-right .right {
+.wrapper .employee .employee-s .employee-box .student-right .right {
+  max-height: 20px;
   color: #808080;
+}
+.wrapper .employee .employee-s .employee-box:last-child .student-right {
+  border: none;
 }

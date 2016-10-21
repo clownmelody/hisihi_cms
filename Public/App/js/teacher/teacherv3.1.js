@@ -173,7 +173,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 title = result.data.title,
                 aStr='';
                 //获取不到用户uid则禁止跳转
-                if (result.data.uid!=''){
+                if (result.data.uid==''|| result.data.uid!=0){
                     aStr='<a href="hisihi://user/detailinfo?uid=' + result.data.uid + '"><img class="pic-head" src="' + avatar + '"></a>';
                 }else{
                     aStr='<img class="pic-head" src="' + avatar + '">';
@@ -382,7 +382,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 }
             } else {
                 //如果方法存在
-                if (typeof buyRebate != "undefined") {
+                if (typeof showStudentWorkList != "undefined") {
                     showStudentWorkList();//调用app的方法，得到用户的基体信息sss
                 }
             }
@@ -456,7 +456,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                     if(item.major=''||item.major==null){
                         majorStr='';
                     }
-                    str += '<div class="employee-box">' +
+                    str += '<li class="employee-box">' +
                         '<div class="student-left">' +
                         '<img src="' + item.avatar + '"/>' +
                         '</div>' +
@@ -477,9 +477,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                         majorStr+
                         '</ul>' +
                         '</div>' +
-                        '</div>';
+                        '</li>';
                 } else {
-                    str += '<div class="employee-box">' +
+                    str += '<li class="employee-box">' +
                         '<div class="student-left">' +
                         '<img src="' + item.avatar + '"/>' +
                         '</div>' +
@@ -501,30 +501,18 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                         '</li>' +
                         '</ul>' +
                         '</div>' +
-                        '</div>';
+                        '</li>';
                 }
             }
             var strL = '<div class="head">' +
                 '<span>学生就业信息</span>' +
                 '</div>' +
-                '<div class="employee-s">' +
+                '<ul class="employee-s">' +
                 str +
-                '</div>';
+                '</ul>';
 
         $('.employee').html(strL);
     };
-
-    //就业信息文字过长，超过一行则用省略号代替
-    //t.getTextLong=function(){
-    //    $('.employee-box li').each(function(){
-    //        var maxWidth=19;
-    //        if($(this).text().length>maxWidth) {
-    //            $(this).text($(this).text().substring(0,maxWidth));
-    //            $(this).html($(this).html()+'...');
-    //        }
-    //    })
-    //};
-
 
 
     return Teacher;
