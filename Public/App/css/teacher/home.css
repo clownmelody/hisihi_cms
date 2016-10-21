@@ -552,7 +552,7 @@ p {
   width: 70px;
   height: 70px;
 }
-.wrapper .info .info-left > a .pic-head {
+.wrapper .info .info-left .pic-head {
   max-width: 70px;
   height: 70px;
   border-radius: 70px;

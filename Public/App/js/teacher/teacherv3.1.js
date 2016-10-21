@@ -167,30 +167,35 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             return '';
         }
         else {
-            var avatar = result.data.avatar,
+            var str='',
+                avatar = result.data.avatar,
                 name = result.data.name,
-                title = result.data.title;
-                if (result.data.uid==null){
-                return '';
-            }else {
-                    var  str = '<div class="info-left">' +
-                        '<a href="hisihi://user/detailinfo?uid='+result.data.uid+'"><img class="pic-head" src="'+avatar+'"></a>'+
-                        '</div>' +
-                        '<div class="info-right">' +
-                        '<ul>' +
-                        '<li>' +
-                        '<span id="name">' +
-                        name +
-                        '</span>' +
-                        '</li>' +
-                        '<li>' +
-                        '<span id="title">' +
-                        title +
-                        '</span>' +
-                        '</li>' +
-                        '</ul>' +
-                        '</div>';
-            }
+                title = result.data.title,
+                aStr='';
+                //获取不到用户uid则禁止跳转
+                if (result.data.uid!=''){
+                    aStr='<a href="hisihi://user/detailinfo?uid=' + result.data.uid + '"><img class="pic-head" src="' + avatar + '"></a>';
+                }else{
+                    aStr='<img class="pic-head" src="' + avatar + '">';
+                }
+                str = '<div class="info-left">' +
+                        aStr+
+                    '</div>' +
+                    '<div class="info-right">' +
+                    '<ul>' +
+                    '<li>' +
+                    '<span id="name">' +
+                    name +
+                    '</span>' +
+                    '</li>' +
+                    '<li>' +
+                    '<span id="title">' +
+                    title +
+                    '</span>' +
+                    '</li>' +
+                    '</ul>' +
+                    '</div>';
+
         }
         $('.info').show().html(str);
     };
