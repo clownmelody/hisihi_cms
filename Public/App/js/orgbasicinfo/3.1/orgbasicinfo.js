@@ -761,7 +761,7 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
         var that=this;
         this.getDataAsync({
             url: this.baseUrl + 'appGetTeacherList',
-            paraData: {organization_id: this.oid},
+            paraData: {organization_id: this.oid,version:'3.1',page:1,count:10},
             sCallback: function(result){
                 //that.fillMyTeachersInfo(result.teacherList);
                 callback && callback(result.teacherList);
@@ -781,10 +781,15 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
             return;
         }
         else {
-            var len = data.length;
+            var len = data.length,tempStr='',id;
             for (var i = 0; i < len; i++) {
-                itemInfo = data[i].info;
-                str+='<li><a target="_blank" href="'+this.baseUrl.replace('Organization','Teacher')+'teacherv3_1/uid/'+data[i].uid+'"><img src="'+itemInfo.avatar128+'"><p>' + itemInfo.nickname + '</p></a></li>';
+                itemInfo = data[i];
+                id=itemInfo.uid;
+                tempStr='<a target="_blank" href="'+this.baseUrl.replace('Organization','Teacher')+'teacherv3_1/uid/'+itemInfo.id+'"><img src="'+itemInfo.avatar+'"><p>' + itemInfo.name + '</p></a>';
+                if(id == null || id=='0'){
+                    tempStr=tempStr.replace(/<a[^<]*>/,'').replace(/<\/a>/,'');
+                }
+                str+='<li>'+tempStr+'</li>';
             }
         }
         $('.teachers-box').show();
