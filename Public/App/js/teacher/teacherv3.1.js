@@ -419,132 +419,94 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         }
         if (result.data)
         var str = '',
-            companyStr='',
-            titleStr='' ,
-            salaryStr='',
-            countryStr='',
-            schoolStr='',
-            majorStr='',
-            len = result.data.length;
+            diffStr,
+            titleStr='学生就业信息',
+            len = result.data.length,
+            isOVersea=null;
             for (var i = 0; i < len; i++) {
                 var item = result.data[i];
-                companyStr= '<span class="left">就职公司：</span>' +
-                            '<span class="right">' +
-                                item.company+
-                            '</span>' ;
-                titleStr= '<span class="left">职位：</span>' +
-                            '<span class="right">' +
-                                item.title +
-                            '</span>' ;
-                salaryStr= '<span class="left">薪资：</span>' +
-                            '<span class="right">' +
-                                item.salary +
-                            '</span>' ;
-                countryStr= '<span class="left">国家：</span>' +
-                            '<span class="right">' +
-                                item.country +
-                            '</span>'
-                            '</div>';
-                schoolStr='<span class="left">学校：</span>' +
-                            '<span class="right">' +
-                                item.school +
-                            '</span>' ;
-                majorStr= '<span class="left">专业：</span>' +
-                            '<span class="right">' +
-                                item.major +
-                            '</span>' +
-                            '</li>' ;
-                //判断该老师是否为留学老师,如果没有就职公司信息，判断为留学机构学生
-                if(item.company==''||item.company==null){
-                    //判断字段是否为空，如果为空则不显示
-                    if(item.company=''||item.company==null){
-                        companyStr='';
-                    }
-                    if(item.title=''||item.title==null){
-                        titleStr='';
-                    }
-                    if(item.salary=''||item.salary==null){
-                        salaryStr='';
-                    }
-                    if(item.country=''||item.country==null){
-                        countryStr='';
-                    }
-                    if(item.school=''||item.school==null){
-                        schoolStr='';
-                    }
-                    if(item.major=''||item.major==null){
-                        majorStr='';
-                    }
-                    str += '<li class="employee-box">' +
-                        '<div class="student-left">' +
-                        '<img src="' + item.avatar + '"/>' +
-                        '</div>' +
-                        '<div class="student-right">' +
-                        '<ul>' +
-                        '<li>' +
-                        '<span class="student-name">' +
-                        item.name +
-                        '</span>' +
-                        '</li>' +
-                        '<li>' +
-                        countryStr+
-                        '</li>' +
-                        '<li>' +
-                        schoolStr+
-                        '</li>' +
-                        '<li>' +
-                        majorStr+
-                        '</ul>' +
-                        '</div>' +
-                        '</li>';
-                    var strL = '<div class="head">' +
-                        '<span>学生留学信息</span>' +
-                        '</div>' +
-                        '<ul class="employee-s">' +
-                        str +
-                        '</ul>';
+                if(i==0){
+                    isOVersea=item.company==''||item.company==null;
                 }
-                else {
-                    str += '<li class="employee-box">' +
-                        '<div class="student-left">' +
-                        '<img src="' + item.avatar + '"/>' +
-                        '</div>' +
-                        '<div class="student-right">' +
-                        '<ul>' +
-                        '<li>' +
-                        '<span class="student-name">' +
-                        item.name +
-                        '</span>' +
-                        '</li>' +
-                        '<li>' +
-                            companyStr+
-                        '</li>' +
-                        '<li>' +
-                            titleStr+
-                        '</li>' +
-                        '<li>' +
-                            salaryStr+
-                        '</li>' +
-                        '</ul>' +
-                        '</div>' +
-                        '</li>';
-                    var strL = '<div class="head">' +
-                        '<span>学生就业信息</span>' +
-                        '</div>' +
-                        '<ul class="employee-s">' +
-                        str +
-                        '</ul>';
+                //留学
+                if(isOVersea){
+                    diffStr=this.getOverseaStudentInfo(item);
+                    titleStr='学生留学信息';
+                }else{
+                    diffStr=this.getNormalStudentInfo(item);
                 }
+                str += '<li class="employee-box">' +
+                            '<div class="student-left">' +
+                                '<img src="' + item.avatar + '"/>' +
+                            '</div>' +
+                            '<div class="student-right">' +
+                                '<ul>' +
+                                    '<li>' +
+                                        '<span class="student-name">' +
+                                        item.name +
+                                        '</span>' +
+                                    '</li>' +
+                                    diffStr+
+                                '</ul>' +
+                            '</div>' +
+                        '</li>';
+
             }
-            //var strL = '<div class="head">' +
-            //    '<span>学生就业信息</span>' +
-            //    '</div>' +
-            //    '<ul class="employee-s">' +
-            //    str +
-            //    '</ul>';
+            var strL = '<div class="head">' +
+                            '<span>'+titleStr+'</span>' +
+                        '</div>' +
+                        '<ul class="employee-s">' +
+                            str +
+                        '</ul>';
 
         $('.employee').html(strL);
     };
+
+
+    t.getFilterStudentInfo=function(data,keyArr){
+        var obj={},val;
+        for(var key in data){
+            if($.inArray(key,keyArr)>=0){
+                val=data[key];
+                if(val){
+                    obj[key]=val;
+                }
+            }
+        }
+        return obj;
+    };
+
+    t.getStudentInfoHtmlStr=function(nameObj,valObj){
+        var str='',val;
+        for(var key in valObj){
+            val=valObj[key];
+            if(val){
+                str+='<li>'+
+                    '<span class="left">'+ nameObj[key]+'：</span>' +
+                    '<span class="right">' +val +'</span>'+
+                    '</li>';
+            }
+        }
+        return str;
+    }
+
+    /*留学学生留学信息*/
+    t.getOverseaStudentInfo=function(data){
+        var arr=['country','school','major'],
+            nameObj={country:'国家',school:'学校',major:'专业'},
+            valObj=this.getFilterStudentInfo(data,arr);
+         return this.getStudentInfoHtmlStr(nameObj,valObj);
+    };
+
+    /*普通学生就业信息*/
+    t.getNormalStudentInfo=function(data){
+        var arr=['company','title','salary'],
+            nameObj={company:'就职公司',title:'职位',salary:'薪资'},
+            valObj=this.getFilterStudentInfo(data,arr);
+        return this.getStudentInfoHtmlStr(nameObj,valObj);
+    };
+
+
 
     return Teacher;
 });
