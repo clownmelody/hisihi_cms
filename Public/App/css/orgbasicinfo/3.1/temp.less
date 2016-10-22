@@ -648,23 +648,28 @@ body{
     .basic-header {
       .border-top;
     }
-    .teachers-detail{
-      li{
-        display: inline-block;
-        margin-right: 12px;
-        vertical-align: top;
-        .size(50px,100%);
-          img{
-            .size(50px,50px);
+    .teachers-detail-box{
+       overflow-x:auto;
+       overflow-y:hidden;
+      .teachers-detail {
+        white-space: nowrap;
+        li {
+          display: inline-block;
+          margin-right: 12px;
+          vertical-align: top;
+          .size(50px, 100%);
+          img {
+            .size(50px, 50px);
             border-radius: 100%;
           }
-          p{
+          p {
             text-align: center;
-            margin:4px 0 14px 0;
+            margin: 4px 0 14px 0;
             .txt-ellipsis-p(1);
             color: @fcolor;
             font-size: 12px;
           }
+        }
       }
     }
   }
