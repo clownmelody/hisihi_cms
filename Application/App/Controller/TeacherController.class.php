@@ -243,24 +243,12 @@ class TeacherController extends BaseController
         if(!empty($avatar)){
             $data['avatar'] = $avatar;
         }
-        if(!empty($title)){
-            $data['title'] = $title;
-        }
-        if(!empty($company)){
-            $data['company'] = $company;
-        }
-        if(!empty($salary)){
-            $data['salary'] = $salary;
-        }
-        if(!empty($country)){
-            $data['country'] = $country;
-        }
-        if(!empty($school)){
-            $data['school'] = $school;
-        }
-        if(!empty($major)){
-            $data['major'] = $major;
-        }
+        $data['title'] = $title;
+        $data['company'] = $company;
+        $data['salary'] = $salary;
+        $data['country'] = $country;
+        $data['school'] = $school;
+        $data['major'] = $major;
         $model->where('id='.$id)->save($data);
         $this->apiSuccess('修改学生就业信息成功');
     }
