@@ -20,7 +20,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             that.initData();
         }, 100);
 
-
         //点击相册加载更多，调用客户端的方法，弹出相册列表
         $(document).on(eventName, '.right-arrow', $.proxy(this, 'showAllStudentWorks'));
 
@@ -234,9 +233,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
     //判断老师信息，30为软件类，31为留学，32为手绘
     //如果是留学机构老师，页面数字文字说明部分修改
     t.fillNumber = function (result) {
-        if (!result || !result.data.student_num) {
-            return '';
-        }
         var num = result.data.student_num,
             age = result.data.teach_age,
             rate = result.data.employment_rate,
@@ -261,7 +257,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<li class="num-title"><span>从教年份</span></li>' +
                 '<li class="num">' +
                 '<span>' +
-                age + '年' +
+                age  +
                 '</span>' +
                 '</li>' +
                 '</ul>'+
@@ -297,7 +293,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<li class="num-title"><span>从教年份</span></li>' +
                 '<li class="num">' +
                 '<span>' +
-                age + '年' +
+                age  +
                 '</span>' +
                 '</li>' +
                 '</ul>'+
@@ -313,6 +309,11 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '</li>' +
                 '</ul>'+
                 '</div>';
+        if(!result||num==''&age==''&rate==''){
+            return '',
+            $('.number-box').removeClass('hide');
+        };
+
         //判断字段是否为空，如果为空则不显示
         if(num==''||num==null){
             numStr1='', numStr2='';
@@ -526,7 +527,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
 
         $('.employee').html(strL);
     };
-
 
     return Teacher;
 });
