@@ -786,9 +786,9 @@ define(['base','async','myPhotoSwipe','deduction','lazyloading'],function(Base,A
                 itemInfo = data[i];
                 id=itemInfo.uid;
                 tempStr='<a target="_blank" href="'+this.baseUrl.replace('Organization','Teacher')+'teacherv3_1/uid/'+itemInfo.id+'"><img src="'+itemInfo.avatar+'"><p>' + itemInfo.name + '</p></a>';
-                if(id == null || id=='0'){
-                    tempStr=tempStr.replace(/<a[^<]*>/,'').replace(/<\/a>/,'');
-                }
+                //if(id == null || id=='0'){
+                //    tempStr=tempStr.replace(/<a[^<]*>/,'').replace(/<\/a>/,'');
+                //}
                 str+='<li>'+tempStr+'</li>';
             }
         }
