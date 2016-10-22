@@ -358,6 +358,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         if (!result.success || !result.data) {
             return '';
         }
+        
         var strLi = '',
             len = result.data.length,
             item;
@@ -371,7 +372,8 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '</li>';
         }
         //strLi +=
-        var strL = '<div class="header">' +
+        var strL = '<div class="picture">'+
+                '<div class="header">' +
                 '<span class="pic-title">学生作品</span>' +
                 '<div class="right-arrow"><span></span></div>' +
                 '</div>' +
@@ -381,8 +383,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<div style="clear: both;"></div>'+
                 '</ul>';
                 '</div>' +
+                '</div>'
                 '</div>';
-        $('.picture').html(strL);
+        $('.picture-box').html(strL);
     };
 
     //调用客户端方法
