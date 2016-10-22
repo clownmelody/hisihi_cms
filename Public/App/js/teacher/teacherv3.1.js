@@ -497,7 +497,14 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                         '</ul>' +
                         '</div>' +
                         '</li>';
-                } else {
+                    var strL = '<div class="head">' +
+                        '<span>学生留学信息</span>' +
+                        '</div>' +
+                        '<ul class="employee-s">' +
+                        str +
+                        '</ul>';
+                }
+                else {
                     str += '<li class="employee-box">' +
                         '<div class="student-left">' +
                         '<img src="' + item.avatar + '"/>' +
@@ -521,14 +528,20 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                         '</ul>' +
                         '</div>' +
                         '</li>';
+                    var strL = '<div class="head">' +
+                        '<span>学生就业信息</span>' +
+                        '</div>' +
+                        '<ul class="employee-s">' +
+                        str +
+                        '</ul>';
                 }
             }
-            var strL = '<div class="head">' +
-                '<span>学生就业信息</span>' +
-                '</div>' +
-                '<ul class="employee-s">' +
-                str +
-                '</ul>';
+            //var strL = '<div class="head">' +
+            //    '<span>学生就业信息</span>' +
+            //    '</div>' +
+            //    '<ul class="employee-s">' +
+            //    str +
+            //    '</ul>';
 
         $('.employee').html(strL);
     };
