@@ -2711,7 +2711,9 @@ union SELECT id, pid, uid, comprehensive_score, comment, pic_url_list, choose_re
     public function shareOrganization($organization_id=0, $version=null){
         $result = M('Organization')->where(array('id'=>$organization_id,'status'=>1))->find();
         if($result){
-            if((float)$version>=2.95){
+            if((float)$version>=3.1){
+                $extra['org_share_url'] = "api.php/Organization/OrganizationBasicInfo_v3_1/organization_id/".$organization_id;
+            } else if((float)$version>=2.95&&(float)$version<3.1){
                 $extra['org_share_url'] = "api.php/Organization/OrganizationBasicInfo_v2_9_5/organization_id/".$organization_id;
             } else {
                 $extra['org_share_url'] = "api.php/Organization/OrganizationBasicInfo/organization_id/".$organization_id;
