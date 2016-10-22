@@ -4,7 +4,7 @@ body{
   max-width: 700px;
   overflow: auto;
   //下载条高度
-  padding-bottom: 50px;
+  //padding-bottom: 50px;
   overflow-x: hidden;
   color: @c;
   font-size: 14px;
@@ -73,13 +73,13 @@ p {
       }
     }
   }
-  .tag {
-    min-height: 75px;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
-    border-radius: 4px;
-    display: flex;
-    //justify-content: center;
-    align-items: center;
+    .tag {
+      min-height: 75px;
+      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+      border-radius: 4px;
+      display: flex;
+      //justify-content: center;
+      align-items: center;
       .tag-left-box {
         height: 100%;
         display: inline-block;
@@ -124,101 +124,112 @@ p {
         }
 
       }
+      &.hide {
+        display: none;
+      }
+    }
+
+  .number-box {
+    .number {
+      min-height: 88px;
+      display: box;
+      text-align: center;
+      padding-top: 20px;
+      border-bottom: 1px #F2F2F2 solid;
+      #student {
+        box-flex: 1;
+      }
+      #year {
+        box-flex: 1;
+      }
+      #job {
+        box-flex: 1;
+      }
+      #student-img {
+        .size(30px, 24px);
+        background-position: -87px 0px;
+      }
+      #year-img {
+        .size(26px, 24px);
+        background-position: -61px 0px;
+      }
+      #job-img {
+        .size(27px, 24px);
+        background-position: -34px 0px;
+      }
+      .num-img {
+        display: inline-block;
+        background: url("../../images/teacher/sprite.png") no-repeat;
+        background-size: 252px*0.5 75px*0.5;
+      }
+      .num-title {
+        > span {
+        }
+      }
+      .num {
+        > span {
+          color: #1F1F1F;
+          font-weight: bold;
+          font-size: 15px;
+        }
+      }
+    }
     &.hide {
       display: none;
     }
   }
-  .number {
-    min-height: 88px;
-    display: box;
-    text-align: center;
-    padding-top: 20px;
-    border-bottom: 1px #F2F2F2 solid;
-    #student {
-      box-flex: 1;
-    }
-    #year {
-      box-flex: 1;
-    }
-    #job {
-      box-flex: 1;
-    }
-    #student-img {
-      .size(30px, 24px);
-      background-position: -87px 0px;
-    }
-    #year-img {
-      .size(26px, 24px);
-      background-position: -61px 0px;
-    }
-    #job-img {
-      .size(27px, 24px);
-      background-position: -34px 0px;
-    }
-    .num-img {
-      display: inline-block;
-      background: url("../../images/teacher/sprite.png") no-repeat;
-      background-size: 252px*0.5 75px*0.5;
-    }
-    .num-title {
-      > span {
-      }
-    }
-    .num {
-      > span {
-        color: #1F1F1F;
-        font-weight: bold;
-        font-size: 15px;
-      }
-    }
-  }
-  .introduction {
-    border-bottom: 1px #F2F2F2 solid;
-    .head {
-      margin: 14px 14px 0 14px;
-      text-align: left;
-      height: 19px;
-      padding-bottom: 8px;
-      > span {
-        width: 100%;
-      }
-    }
-    .detail {
-      margin: 0px 14px 0 14px;
-      font-size: 13px;
-      padding-bottom: 20px;
-      line-height: 20px;
-    }
-  }
-  .picture{
-    @m:40px;
-    border-bottom: 1px solid #f2f2f2;
-    .header {
-      margin: 8px 14px 0 14px;
-      width: 95%;
-      height: @m;
-      line-height: @m;
-      display: inline-block;
-      .pic-title {
-        height: 100%;
-      }
-      .right-arrow {
-        float: right;
-        .size(@m,@m);
-        display: inline-block;
-        text-align: center;
-       >span {
-         display: inline-block;
-         vertical-align: -5px;
-         .size (10px,19px);
-        background: url("../../images/teacher/sprite.png");
-         background-size: 252px*0.6 75px*0.6;
-        background-position: 10px 0px;
+
+  .introduction-box {
+    .introduction {
+      border-bottom: 1px #F2F2F2 solid;
+      .head {
+        margin: 14px 14px 0 14px;
+        text-align: left;
+        height: 19px;
+        padding-bottom: 8px;
+        > span {
+          width: 100%;
         }
       }
+      .detail {
+        margin: 0px 14px 0 14px;
+        font-size: 13px;
+        padding-bottom: 20px;
+        line-height: 20px;
+      }
     }
-    .preview-box{
-      margin: 0px 14px 0 14px;
+  }
+
+  .picture-box {
+    .picture{
+      @m:40px;
+      border-bottom: 1px solid #f2f2f2;
+      .header {
+        margin: 8px 14px 0 14px;
+        width: 95%;
+        height: @m;
+        line-height: @m;
+        display: inline-block;
+        .pic-title {
+          height: 100%;
+        }
+        .right-arrow {
+          float: right;
+          .size(@m,@m);
+          display: inline-block;
+          text-align: center;
+          >span {
+            display: inline-block;
+            vertical-align: -5px;
+            .size (10px,19px);
+            background: url("../../images/teacher/sprite.png");
+            background-size: 252px*0.6 75px*0.6;
+            background-position: 10px 0px;
+          }
+        }
+      }
+      .preview-box{
+        margin: 0px 14px 0 14px;
         overflow-x: auto;
         > ul{
           white-space: nowrap;
@@ -236,6 +247,8 @@ p {
         }
       }
     }
+  }
+
   .employee {
     .head {
       padding-bottom: 8px;

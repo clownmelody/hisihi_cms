@@ -501,7 +501,6 @@ body {
   margin: 0 auto;
   max-width: 700px;
   overflow: auto;
-  padding-bottom: 50px;
   overflow-x: hidden;
   color: #212121;
   font-size: 14px;
@@ -623,86 +622,89 @@ p {
 .wrapper .tag.hide {
   display: none;
 }
-.wrapper .number {
+.wrapper .number-box .number {
   min-height: 88px;
   display: box;
   text-align: center;
   padding-top: 20px;
   border-bottom: 1px #F2F2F2 solid;
 }
-.wrapper .number #student {
+.wrapper .number-box .number #student {
   box-flex: 1;
 }
-.wrapper .number #year {
+.wrapper .number-box .number #year {
   box-flex: 1;
 }
-.wrapper .number #job {
+.wrapper .number-box .number #job {
   box-flex: 1;
 }
-.wrapper .number #student-img {
+.wrapper .number-box .number #student-img {
   width: 30px;
   height: 24px;
   background-position: -87px 0px;
 }
-.wrapper .number #year-img {
+.wrapper .number-box .number #year-img {
   width: 26px;
   height: 24px;
   background-position: -61px 0px;
 }
-.wrapper .number #job-img {
+.wrapper .number-box .number #job-img {
   width: 27px;
   height: 24px;
   background-position: -34px 0px;
 }
-.wrapper .number .num-img {
+.wrapper .number-box .number .num-img {
   display: inline-block;
   background: url("../../images/teacher/sprite.png") no-repeat;
   background-size: 126px 37.5px;
 }
-.wrapper .number .num > span {
+.wrapper .number-box .number .num > span {
   color: #1F1F1F;
   font-weight: bold;
   font-size: 15px;
 }
-.wrapper .introduction {
+.wrapper .number-box.hide {
+  display: none;
+}
+.wrapper .introduction-box .introduction {
   border-bottom: 1px #F2F2F2 solid;
 }
-.wrapper .introduction .head {
+.wrapper .introduction-box .introduction .head {
   margin: 14px 14px 0 14px;
   text-align: left;
   height: 19px;
   padding-bottom: 8px;
 }
-.wrapper .introduction .head > span {
+.wrapper .introduction-box .introduction .head > span {
   width: 100%;
 }
-.wrapper .introduction .detail {
+.wrapper .introduction-box .introduction .detail {
   margin: 0px 14px 0 14px;
   font-size: 13px;
   padding-bottom: 20px;
   line-height: 20px;
 }
-.wrapper .picture {
+.wrapper .picture-box .picture {
   border-bottom: 1px solid #f2f2f2;
 }
-.wrapper .picture .header {
+.wrapper .picture-box .picture .header {
   margin: 8px 14px 0 14px;
   width: 95%;
   height: 40px;
   line-height: 40px;
   display: inline-block;
 }
-.wrapper .picture .header .pic-title {
+.wrapper .picture-box .picture .header .pic-title {
   height: 100%;
 }
-.wrapper .picture .header .right-arrow {
+.wrapper .picture-box .picture .header .right-arrow {
   float: right;
   width: 40px;
   height: 40px;
   display: inline-block;
   text-align: center;
 }
-.wrapper .picture .header .right-arrow > span {
+.wrapper .picture-box .picture .header .right-arrow > span {
   display: inline-block;
   vertical-align: -5px;
   width: 10px;
@@ -711,15 +713,15 @@ p {
   background-size: 151.2px 45px;
   background-position: 10px 0px;
 }
-.wrapper .picture .preview-box {
+.wrapper .picture-box .picture .preview-box {
   margin: 0px 14px 0 14px;
   overflow-x: auto;
 }
-.wrapper .picture .preview-box > ul {
+.wrapper .picture-box .picture .preview-box > ul {
   white-space: nowrap;
   margin-bottom: 14px;
 }
-.wrapper .picture .preview-box > ul > li {
+.wrapper .picture-box .picture .preview-box > ul > li {
   display: inline-block;
   width: 80px;
   height: 80px;
@@ -727,7 +729,7 @@ p {
   padding-left: 5px;
   vertical-align: top;
 }
-.wrapper .picture .preview-box > ul > li:first-child {
+.wrapper .picture-box .picture .preview-box > ul > li:first-child {
   padding-left: 0px;
 }
 .wrapper .employee .head {
