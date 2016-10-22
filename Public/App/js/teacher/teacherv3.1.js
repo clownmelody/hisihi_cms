@@ -48,9 +48,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 url: this.baseUrl + 'teacher/getTeacherInfo/',
                 paraData: {teacher_id: this.uid},
                 sCallback: function (result) {
-                    //if(!result.success||result.data.org_type==null){
-                    //    that.showTips('老师不存在01');
-                    //}
+                    if(!result.success||result.data.org_type==null){
+                        that.showTips('该老师不存在');
+                    }
                     callback && callback(result);
                 },
                 eCallback: function () {
@@ -310,8 +310,8 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '</ul>'+
                 '</div>';
         if(!result||num==''&age==''&rate==''){
-            return '',
-            $('.number-box').removeClass('hide');
+            return ' ',
+            $('.number-box').addClass('hide');
         };
 
         //判断字段是否为空，如果为空则不显示
@@ -336,19 +336,21 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
 
     //老师简介
     t.fillTeacherIntroduce = function (result) {
-        var int = result.data.introduce,
-            str='';
-        if(!result||int==''){
-            return;
+        if(!result||result.data.org_type ==''){
+            return '';
         }
-        str = '<div class="introduction">'+
-            '<div class="head">' +
+        var int = result.data.introduce,
+            intStr= '<div class="head">' +
                 '<span>简介</span>' +
                 '</div>' +
                 '<p class="detail">' +
                 int +
-                '</p>'+
-                '</div>';
+                '</p>';
+        if(int==''||int==null){
+            intStr='';
+        }
+         var str = '<div class="introduction">'+ intStr+ '</div>';
+        $('.introduction-box').removeClass('hide');
         $('.introduction-box').html(str);
     };
 
@@ -358,7 +360,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         if (!result.success || !result.data) {
             return '';
         }
-        
+
         var strLi = '',
             len = result.data.length,
             item;

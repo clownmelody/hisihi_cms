@@ -684,6 +684,9 @@ p {
   padding-bottom: 20px;
   line-height: 20px;
 }
+.wrapper .introduction-box.hide {
+  display: none;
+}
 .wrapper .picture-box .picture {
   border-bottom: 1px solid #f2f2f2;
 }
@@ -779,7 +782,6 @@ p {
   font-weight: bold;
 }
 .wrapper .employee .employee-s .employee-box .student-right .right {
-  max-height: 20px;
   color: #808080;
 }
 .wrapper .employee .employee-s .employee-box:last-child .student-right {
