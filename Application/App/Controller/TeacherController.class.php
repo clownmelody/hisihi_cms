@@ -113,15 +113,9 @@ class TeacherController extends BaseController
         if(!empty($introduce)){
             $data['introduce'] = $introduce;
         }
-        if(!empty($teach_age)){
-            $data['teach_age'] = $teach_age;
-        }
-        if(!empty($employment_rate)){
-            $data['employment_rate'] = $employment_rate;
-        }
-        if(!empty($student_num)){
-            $data['student_num'] = $student_num;
-        }
+        $data['teach_age'] = $teach_age;
+        $data['employment_rate'] = $employment_rate;
+        $data['student_num'] = $student_num;
         if(!empty($uid)){
             $data['uid'] = $uid;
         }

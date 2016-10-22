@@ -242,7 +242,8 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             rate = result.data.employment_rate,
             type = result.data.org_type;
         if (type != 31) {
-            var str = '<div class="num-li" id="student">'+
+            var str = '<div class="number">'+
+                '<div class="num-li" id="student">'+
                 '<ul>' +
                 '<li class="num-img" id="student-img">' +
                 '</li>' +
@@ -277,10 +278,12 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '</span>' +
                 '</li>' +
                 '</ul>' +
+                '</div>'
                 '</div>';
         }
         else {
-            var str = '<div class="num-li" id="student">' +
+            var str = '<div class="number">'+
+                '<div class="num-li" id="student">' +
                 '<ul>' +
                 '<li class="num-img" id="student-img">' +
                 '</li>' +
@@ -315,24 +318,29 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '</span>' +
                 '</li>' +
                 '</ul>' +
+                '</div>'+
                 '</div>';
         }
-        $('.number').html(str);
+        $('.number-box').removeClass('hide');
+        $('.number-box').html(str);
     };
 
     //老师简介
     t.fillTeacherIntroduce = function (result) {
-        if(!result||result.data.introduce==null){
+        var int = result.data.introduce,
+            str='';
+        if(!result||int==''){
             return;
         }
-        var int = result.data.introduce,
-            str = '<div class="head">' +
+        str = '<div class="introduction">'+
+            '<div class="head">' +
                 '<span>简介</span>' +
                 '</div>' +
                 '<p class="detail">' +
                 int +
-                '</p>';
-        $('.introduction').html(str);
+                '</p>'+
+                '</div>';
+        $('.introduction-box').html(str);
     };
 
     //填充学生作品相册
@@ -341,9 +349,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         if (!result.success || !result.data) {
             return '';
         }
-        //if (result.data.ory_type==31){
-        //    return '';
-        //}
         var strLi = '',
             len = result.data.length,
             item;
