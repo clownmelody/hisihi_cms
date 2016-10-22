@@ -240,24 +240,22 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         var num = result.data.student_num,
             age = result.data.teach_age,
             rate = result.data.employment_rate,
-            type = result.data.org_type;
-        if (type != 31) {
-            var str = '<div class="number">'+
-                '<div class="num-li" id="student">'+
+            type = result.data.org_type,
+            numStr1 = '<div class="num-li" id="student">'+
                 '<ul>' +
-                '<li class="num-img" id="student-img">' +
-                '</li>' +
-                '<li class="num-title">' +
-                '<span>学生人数</span>' +
-                '</li>' +
-                '<li class="num">' +
-                '<span>' +
-                num + '人' +
-                '</span>' +
-                '</li>' +
-                '</ul>' +
-                '</div>' +
-                '<div class="num-li" id="year">' +
+            '<li class="num-img" id="student-img">' +
+            '</li>' +
+            '<li class="num-title">' +
+            '<span>学生人数</span>' +
+            '</li>' +
+            '<li class="num">' +
+            '<span>' +
+            num + '人' +
+            '</span>' +
+            '</li>'+
+            '</ul>' +
+            '</div>',
+            ageStr1= '<div class="num-li" id="year">' +
                 '<ul>' +
                 '<li class="num-img" id="year-img"></li>' +
                 '<li class="num-title"><span>从教年份</span></li>' +
@@ -266,9 +264,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 age + '年' +
                 '</span>' +
                 '</li>' +
-                '</ul>' +
-                '</div>' +
-                '<div class="num-li" id="job">' +
+                '</ul>'+
+                '</div>',
+            rateStr1='<div class="num-li" id="job">' +
                 '<ul>' +
                 '<li class="num-img" id="job-img"></li>' +
                 '<li class="num-title"><span>就业率</span></li>' +
@@ -277,13 +275,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 rate + '%' +
                 '</span>' +
                 '</li>' +
-                '</ul>' +
-                '</div>'
-                '</div>';
-        }
-        else {
-            var str = '<div class="number">'+
-                '<div class="num-li" id="student">' +
+                '</ul>'+
+                '</div>',
+            numStr2= '<div class="num-li" id="student">' +
                 '<ul>' +
                 '<li class="num-img" id="student-img">' +
                 '</li>' +
@@ -295,9 +289,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 num + '人' +
                 '</span>' +
                 '</li>' +
-                '</ul>' +
-                '</div>' +
-                '<div class="num-li" id="year">' +
+                '</ul>'+
+                '</div>' ,
+            ageStr2= '<div class="num-li" id="year">' +
                 '<ul>' +
                 '<li class="num-img" id="year-img"></li>' +
                 '<li class="num-title"><span>从教年份</span></li>' +
@@ -306,9 +300,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 age + '年' +
                 '</span>' +
                 '</li>' +
-                '</ul>' +
-                '</div>' +
-                '<div class="num-li" id="job">' +
+                '</ul>'+
+                '</div>',
+            rateStr2= '<div class="num-li" id="job">' +
                 '<ul>' +
                 '<li class="num-img" id="job-img"></li>' +
                 '<li class="num-title"><span>留学成功率</span></li>' +
@@ -317,9 +311,23 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 rate + '%' +
                 '</span>' +
                 '</li>' +
-                '</ul>' +
-                '</div>'+
+                '</ul>'+
                 '</div>';
+        //判断字段是否为空，如果为空则不显示
+        if(num==''||num==null){
+            numStr1='', numStr2='';
+        }
+        if(age==''||age==null){
+            ageStr1='',ageStr2='';
+        }
+        if(rate==''||rate==null){
+            rateStr1='',rateStr2='';
+        }
+        if (type != 31) {
+            var str = '<div class="number">'+ numStr1+ ageStr1+ rateStr1+ '</div>';
+        }
+        else {
+            var str = '<div class="number">'+ numStr2+ ageStr2+ rateStr2+ '</div>';
         }
         $('.number-box').removeClass('hide');
         $('.number-box').html(str);
