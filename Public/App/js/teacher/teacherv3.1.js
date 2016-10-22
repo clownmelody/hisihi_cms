@@ -20,7 +20,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             that.initData();
         }, 100);
 
-
         //点击相册加载更多，调用客户端的方法，弹出相册列表
         $(document).on(eventName, '.right-arrow', $.proxy(this, 'showAllStudentWorks'));
 
@@ -49,9 +48,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 url: this.baseUrl + 'teacher/getTeacherInfo/',
                 paraData: {teacher_id: this.uid},
                 sCallback: function (result) {
-                    //if(!result.success||result.data.org_type==null){
-                    //    that.showTips('老师不存在01');
-                    //}
+                    if(!result.success||result.data.org_type==null){
+                        that.showTips('该老师不存在');
+                    }
                     callback && callback(result);
                 },
                 eCallback: function () {
@@ -234,9 +233,6 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
     //判断老师信息，30为软件类，31为留学，32为手绘
     //如果是留学机构老师，页面数字文字说明部分修改
     t.fillNumber = function (result) {
-        if (!result || !result.data.student_num) {
-            return '';
-        }
         var num = result.data.student_num,
             age = result.data.teach_age,
             rate = result.data.employment_rate,
@@ -261,7 +257,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<li class="num-title"><span>从教年份</span></li>' +
                 '<li class="num">' +
                 '<span>' +
-                age + '年' +
+                age  +
                 '</span>' +
                 '</li>' +
                 '</ul>'+
@@ -297,7 +293,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<li class="num-title"><span>从教年份</span></li>' +
                 '<li class="num">' +
                 '<span>' +
-                age + '年' +
+                age  +
                 '</span>' +
                 '</li>' +
                 '</ul>'+
@@ -313,6 +309,11 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '</li>' +
                 '</ul>'+
                 '</div>';
+        if(!result||num==''&age==''&rate==''){
+            return ' ',
+            $('.number-box').addClass('hide');
+        };
+
         //判断字段是否为空，如果为空则不显示
         if(num==''||num==null){
             numStr1='', numStr2='';
@@ -335,19 +336,21 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
 
     //老师简介
     t.fillTeacherIntroduce = function (result) {
-        var int = result.data.introduce,
-            str='';
-        if(!result||int==''){
-            return;
+        if(!result||result.data.org_type ==''){
+            return '';
         }
-        str = '<div class="introduction">'+
-            '<div class="head">' +
+        var int = result.data.introduce,
+            intStr= '<div class="head">' +
                 '<span>简介</span>' +
                 '</div>' +
                 '<p class="detail">' +
                 int +
-                '</p>'+
-                '</div>';
+                '</p>';
+        if(int==''||int==null){
+            intStr='';
+        }
+         var str = '<div class="introduction">'+ intStr+ '</div>';
+        $('.introduction-box').removeClass('hide');
         $('.introduction-box').html(str);
     };
 
@@ -357,6 +360,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
         if (!result.success || !result.data) {
             return '';
         }
+
         var strLi = '',
             len = result.data.length,
             item;
@@ -370,7 +374,8 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '</li>';
         }
         //strLi +=
-        var strL = '<div class="header">' +
+        var strL = '<div class="picture">'+
+                '<div class="header">' +
                 '<span class="pic-title">学生作品</span>' +
                 '<div class="right-arrow"><span></span></div>' +
                 '</div>' +
@@ -380,8 +385,9 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                 '<div style="clear: both;"></div>'+
                 '</ul>';
                 '</div>' +
+                '</div>'
                 '</div>';
-        $('.picture').html(strL);
+        $('.picture-box').html(strL);
     };
 
     //调用客户端方法
@@ -491,7 +497,14 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                         '</ul>' +
                         '</div>' +
                         '</li>';
-                } else {
+                    var strL = '<div class="head">' +
+                        '<span>学生留学信息</span>' +
+                        '</div>' +
+                        '<ul class="employee-s">' +
+                        str +
+                        '</ul>';
+                }
+                else {
                     str += '<li class="employee-box">' +
                         '<div class="student-left">' +
                         '<img src="' + item.avatar + '"/>' +
@@ -515,18 +528,23 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
                         '</ul>' +
                         '</div>' +
                         '</li>';
+                    var strL = '<div class="head">' +
+                        '<span>学生就业信息</span>' +
+                        '</div>' +
+                        '<ul class="employee-s">' +
+                        str +
+                        '</ul>';
                 }
             }
-            var strL = '<div class="head">' +
-                '<span>学生就业信息</span>' +
-                '</div>' +
-                '<ul class="employee-s">' +
-                str +
-                '</ul>';
+            //var strL = '<div class="head">' +
+            //    '<span>学生就业信息</span>' +
+            //    '</div>' +
+            //    '<ul class="employee-s">' +
+            //    str +
+            //    '</ul>';
 
         $('.employee').html(strL);
     };
-
 
     return Teacher;
 });
