@@ -33,14 +33,15 @@ class EventController extends AdminController
             ->buttonSubmit('', '保存')->data($data);
         $admin_config->display();
     }
-    public function event($page = 1, $r = 10, $title='')
-    {
+
+    public function event($page = 1, $r = 10, $title=''){
         $r = C('LIST_ROWS');
         if(!empty($title)){
             $map['title'] = array('like', '%' . $title . '%');
         }
         //读取列表
         $map['status'] = 1;
+        $map['type_id'] = 2;
         $model = $this->eventModel;
         $list = $model->where($map)->page($page, $r)->order('create_time desc')->select();
         unset($li);
@@ -52,7 +53,38 @@ class EventController extends AdminController
         $attr['class'] = 'btn ajax-post';
         $attr['target-form'] = 'ids';
 
-        $builder->title('内容管理')
+        $builder->title('设计大赛管理')
+            ->setStatusUrl(U('setEventContentStatus'))->buttonDisable('', '审核不通过')->buttonDelete()->button('设为推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 1)))))
+            ->button('取消推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 0)))))
+            ->buttonNew(U('Event/add'))
+            ->keyId()->keyLink('title', '标题', 'Event/add?id=###')->keyUid()->keyCreateTime()->keyStatus()->keyMap('is_recommend', '是否推荐', array(0 => '否', 1 => '是'))
+            ->keyDoActionEdit( 'Event/add?id=###','编辑')
+            ->data($list)
+            ->search('标题', 'title')
+            ->pagination($totalCount, $r)
+            ->display();
+    }
+
+    public function offlineevent($page = 1, $r = 10, $title=''){
+        $r = C('LIST_ROWS');
+        if(!empty($title)){
+            $map['title'] = array('like', '%' . $title . '%');
+        }
+        //读取列表
+        $map['status'] = 1;
+        $map['type_id'] = 5;
+        $model = $this->eventModel;
+        $list = $model->where($map)->page($page, $r)->order('create_time desc')->select();
+        unset($li);
+        $totalCount = $model->where($map)->count();
+
+        //显示页面
+        $builder = new AdminListBuilder();
+
+        $attr['class'] = 'btn ajax-post';
+        $attr['target-form'] = 'ids';
+
+        $builder->title('线下活动管理')
             ->setStatusUrl(U('setEventContentStatus'))->buttonDisable('', '审核不通过')->buttonDelete()->button('设为推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 1)))))
             ->button('取消推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 0)))))
             ->buttonNew(U('Event/add'))
@@ -75,11 +107,12 @@ class EventController extends AdminController
         }
 
         $event_add->title('发布活动')
-            ->keyText('title', '标题')->keySelect('type_id',"选择课程",'',$event_types)
+            ->keyText('title', '标题')->keySelect('type_id',"选择类型",'',$event_types)
             /*->keyTime('deadline', '报名结束时间')*/
             ->keyTime('sTime', '课程开始时间')
             ->keyTime('eTime', '课程结束时间')
             ->keyText('address', '地点','线下培训地点')
+            ->keyText('organizer', '主办方')
             ->keyInteger('limitCount','人数','课程人数上线')
             ->keyTextArea('explain','介绍')
             ->keyEditor('detail_content', '详细内容')
@@ -96,7 +129,8 @@ class EventController extends AdminController
         $event_add->display();
     }
 
-    public function addEvent($type_id,$cover_id,$id=0,$title='',$sTime='',$eTime='',$deadline='',$explain='',$address='',$limitCount=1)
+    public function addEvent($type_id, $cover_id, $id=0, $title='', $sTime='', $eTime='',
+                             $deadline='',$explain='',$address='',$organizer='', $limitCount=1)
     {
         if (!$cover_id) {
             $this->error('请上传封面。');
