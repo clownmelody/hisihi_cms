@@ -30,13 +30,14 @@ class EventModel extends Model{
         array('uid', 'is_login',3, 'function'),
     );
 
-    public function getCompetitionEventList($page, $count, $removeId){
+    public function getCompetitionEventList($page, $count, $removeId, $type_id){
         $now = time();
-        $totalCount = $this->where("status=1 and type_id=2 and id!=".$removeId)->count();
-        $unend_count = $this->where("status=1 and type_id=2 and eTime>".$now)->count();
+        $totalCount = $this->where("status=1 and type_id=".$type_id." and id!=".$removeId)->count();
+        $unend_count = $this->where("status=1 and type_id=".$type_id." and eTime>".$now)->count();
         $ended_count = $totalCount - $unend_count;
-        $list = $this->where("status=1 and type_id=2 and eTime>".$now." and id!=".$removeId)->page($page, $count)->order('eTime asc')
-                        ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
+        $list = $this->where("status=1 and type_id=".$type_id." and eTime>".$now." and id!=".$removeId)
+            ->page($page, $count)->order('eTime asc')
+            ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
 
         $can_page_count = ceil($unend_count/$count);  // 未结束比赛可以形成的分页数
         $start_limit = 0;
@@ -49,28 +50,29 @@ class EventModel extends Model{
             $start_limit = $count*($page-$can_page_count-1) + $can_page_count*$count - $unend_count;
 
         if($count>count($list)){  // 当前页中进行中的比赛数量不够，加入已结束的比赛
-            $expire_list = $this->where("status=1 and type_id=2 and eTime<".$now." and id!=".$removeId)->limit($start_limit, $count-count($list))/*->page($page-$page_count, $count-count($list))*/->order('eTime desc')
+            $expire_list = $this->where("status=1 and type_id=".$type_id." and eTime<".$now." and id!=".$removeId)->limit($start_limit, $count-count($list))/*->page($page-$page_count, $count-count($list))*/->order('eTime desc')
                 ->field('title, explain, sTime, eTime, id, cover_id, view_count')->select();
             if(empty($list)){
                 $list = array();
             }
-            $list = array_merge($list, $expire_list);
+            if(!empty($expire_list)){
+                $list = array_merge($list, $expire_list);
+            }
         }
-
         $result['totalCount'] = $totalCount;
         $result['list'] = $list;
         return $result;
     }
 
     public function getCompetitionDetail($id){
-        $competition = $this->where("status=1 and type_id=2 and id=".$id)
+        $competition = $this->where("id=".$id)
             ->field('title, detail_content, create_time')->find();
         return $competition;
     }
 
     public function getCompetitionInfo($id){
-        $competition = $this->where("status=1 and type_id=2 and id=".$id)
-            ->field('id, title, explain, sTime, eTime, cover_id, view_count')->find();
+        $competition = $this->where("id=".$id)
+            ->field('id, title, explain, sTime, eTime, cover_id, view_count, address, organizer')->find();
         return $competition;
     }
 

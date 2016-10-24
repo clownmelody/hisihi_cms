@@ -19,14 +19,14 @@ class EventController extends AppController{
         C('SHOW_PAGE_TRACE', false);
     }
 
-    public function competitionList($page=1, $count=5, $version=null, $removeId=0){
+    public function competitionList($page=1, $count=5, $version=null, $removeId=0, $type_id=2){
         if((float)$version>=2.2){
             $eventModel = M();
             $allCount = $eventModel->query('select sum(view_count) as allCount from hisihi_event where status=1');
             $extra['allCount'] = $allCount[0]['allCount'];
         }
         $picModel = D('Home/Picture');
-        $listData = $this->eventModel->getCompetitionEventList($page, $count, $removeId);
+        $listData = $this->eventModel->getCompetitionEventList($page, $count, $removeId, $type_id);
         foreach($listData['list'] as &$event){
             $event['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/competitioncontent/type/view/id/'.$event['id'];
             $event['pic_path'] = null;
@@ -44,7 +44,7 @@ class EventController extends AppController{
         }
         $extra['totalCount'] = $listData['totalCount'];
         $extra['data'] = $listData['list'];
-        $this->apiSuccess("获取比赛列表成功", null, $extra);
+        $this->apiSuccess("获取比赛活动列表成功", null, $extra);
     }
 
     public function competitionDetail($competition_id=0){
@@ -69,7 +69,6 @@ class EventController extends AppController{
             $event_pic = "http://hisihi-other".C('OSS_ENDPOINT').$picKey;
             $info['pic_path'] = $event_pic;
         }
-        //$info['content_url'] = 'http://www.hisihi.com/app.php/event/competitioncontent/type/view/id/'.$competition_id;
         $this->apiSuccess("获取比赛详情成功", null, array('data' => $info));
     }
 
@@ -94,6 +93,21 @@ class EventController extends AppController{
             $this->setTitle('比赛详情 — 嘿设汇');
             $this->display();
         }
+    }
+
+    public function activityv3_2($id){
+        $this->assign('id', $id);
+        $this->display('activityv3.2');
+    }
+
+    public function competitionv3_2($id){
+        $this->assign('id', $id);
+        $this->display('competitionv3.2');
+    }
+
+    public function competitionworkv3_2($id){
+        $this->assign('id', $id);
+        $this->display('competitionworkv3.2');
     }
 
     /**
