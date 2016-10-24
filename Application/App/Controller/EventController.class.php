@@ -117,4 +117,20 @@ class EventController extends AppController{
         $this->display('sharecompetitionlist');
     }
 
+    public function enroll($uid=0, $event_id, $mobile, $username){
+        $model = M('EventAttend');
+        $data['uid'] = $uid;
+        $data['event_id'] = $event_id;
+        $data['status'] = 1;
+        $count = $model->where($data)->count();
+        if($count){
+            $this->apiError(-1, '你已经报名');
+        }
+        $data['mobile'] = $mobile;
+        $data['username'] = $username;
+        $data['create_time'] = time();
+        $model->add($data);
+        $this->apiSuccess('预约报名成功');
+    }
+
 }

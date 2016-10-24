@@ -12,6 +12,7 @@ use Admin\Builder\AdminConfigBuilder;
 use Admin\Builder\AdminListBuilder;
 use Admin\Builder\AdminTreeListBuilder;
 use Think\Hook;
+use Think\Page;
 
 
 class EventController extends AdminController
@@ -287,5 +288,44 @@ class EventController extends AdminController
             ->data($list)
             ->pagination($totalCount, $r)
             ->display();
+    }
+
+    public function enroll(){
+        $model = M('EventAttend');
+        $eventModel = M('Event');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, C('LIST_ROWS'));
+        $show = $Page->show();
+        $list = $model->field('id, event_id, username, mobile, create_time')->where('status=1')
+            ->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$item){
+            $info = $eventModel->field('title')->where('id='.$item['event_id'])->find();
+            $item['name'] = $info['title'];
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title", "预约报名列表");
+        $this->display();
+    }
+
+    public function enroll_delete($id){
+        if(!empty($id)){
+            $model = M('EventAttend');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/event/enroll');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
     }
 }
