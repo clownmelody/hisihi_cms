@@ -12,6 +12,7 @@ use Admin\Builder\AdminConfigBuilder;
 use Admin\Builder\AdminListBuilder;
 use Admin\Builder\AdminTreeListBuilder;
 use Think\Hook;
+use Think\Page;
 
 
 class EventController extends AdminController
@@ -59,6 +60,7 @@ class EventController extends AdminController
             ->buttonNew(U('Event/add'))
             ->keyId()->keyLink('title', '标题', 'Event/add?id=###')->keyUid()->keyCreateTime()->keyStatus()->keyMap('is_recommend', '是否推荐', array(0 => '否', 1 => '是'))
             ->keyDoActionEdit( 'Event/add?id=###','编辑')
+            ->keyDoActionEdit( 'Event/works_list?id=###','作品管理')
             ->data($list)
             ->search('标题', 'title')
             ->pagination($totalCount, $r)
@@ -287,5 +289,140 @@ class EventController extends AdminController
             ->data($list)
             ->pagination($totalCount, $r)
             ->display();
+    }
+
+    public function enroll(){
+        $model = M('EventAttend');
+        $eventModel = M('Event');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, C('LIST_ROWS'));
+        $show = $Page->show();
+        $list = $model->field('id, event_id, username, mobile, create_time')->where('status=1')
+            ->order('create_time desc')
+            ->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$item){
+            $info = $eventModel->field('title')->where('id='.$item['event_id'])->find();
+            $item['name'] = $info['title'];
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->assign("meta_title", "预约报名列表");
+        $this->display();
+    }
+
+    public function enroll_delete($id){
+        if(!empty($id)){
+            $model = M('EventAttend');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->where('id='.$i)->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where('id='.$id)->save($data);
+            }
+            $this->success('处理成功','index.php?s=/admin/event/enroll');
+        } else {
+            $this->error('未选择要处理的数据');
+        }
+    }
+
+    public function works_list($page = 1, $r = 10){
+        $r = C('LIST_ROWS');
+        //读取列表
+        $map['status'] = 1;
+        $map['competition_id'] = I('id');
+        $model = M('EventWorks');
+        $list = $model->where($map)->page($page, $r)->order('create_time desc')->select();
+        $totalCount = $model->where($map)->count();
+
+        //显示页面
+        $builder = new AdminListBuilder();
+
+        $attr['class'] = 'btn ajax-post';
+        $attr['target-form'] = 'ids';
+
+        $builder->title('比赛作品管理')->setStatusUrl(U('setWorksStatus'))
+            ->buttonNew(U('Event/works_add?competition_id='.I('id')))
+            ->buttonDelete()
+            ->keyId()->keyText('name', '名称')->keyText('author', '作者')->keyCreateTime()->keyStatus()
+            ->keyDoActionEdit( 'Event/works_add?id=###','编辑')
+            ->data($list)
+            ->pagination($totalCount, $r)
+            ->display();
+    }
+
+    public function setWorksStatus($ids, $status)
+    {
+        $builder = new AdminListBuilder();
+        $builder->doSetStatus('EventWorks', $ids, $status);
+    }
+
+    public function works_add($id=0)
+    {
+        $competition_id = I('competition_id');
+        $event_add = new AdminConfigBuilder();
+
+        $event_add->title('上传作品')
+            ->keyText('name', '作品名称')
+            ->keyText('author', '作者')
+            ->keyEditor('content', '详细内容')
+            ->keySingleImage('cover_id','封面')
+            ->keyHidden('competition_id')
+            ->buttonSubmit(U('Event/addWorks'), '保存')
+            ->buttonBack();
+        $event_add->data(array('competition_id'=>$competition_id));
+        if($id){
+            $event_add->keyHidden('id');
+            $event_content = D('EventWorks')->where(array('status' => 1, 'id' => $id))->find();
+            $event_add->data($event_content);
+        }
+        $this->assign('meta_title', '比赛作品');
+        $event_add->display();
+    }
+
+    public function addWorks($competition_id, $cover_id, $id=0, $name='', $author)
+    {
+        if (!$cover_id) {
+            $this->error('请上传封面。');
+        }
+        if (trim(op_t($name)) == '') {
+            $this->error('请输入作品名称');
+        }
+        if (trim(op_h($author)) == '') {
+            $this->error('请输入作者');
+        }
+
+        $content = D('EventWorks')->create();
+        $content['author'] = op_h($content['author']);
+        $content['name'] = op_t($content['name']);
+        $content['create_time'] = time();
+        $content['status'] = 1;
+        if ($id) {
+            $content_temp = D('EventWorks')->find($id);
+            if (!is_administrator(is_login())) { //不是管理员则进行检测
+                if ($content_temp['uid'] != is_login()) {
+                    $this->error('小样儿，可别学坏。别以为改一下页面元素就能越权操作。');
+                }
+            }
+            $rs = D('EventWorks')->save($content);
+
+            if ($rs) {
+                $this->uploadEventPicToOSS($content['cover_id']);
+                $this->success('编辑成功。', U('works_list?id='.$content['competition_id']));
+            } else {
+                $this->success('编辑失败。', '');
+            }
+        }else{
+            $rs = D('EventWorks')->add($content);
+            if ($rs) {
+                $this->success('发布成功。' , U('works_list?id='.$content['competition_id']));
+            } else {
+                $this->success('发布失败。', '');
+            }
+        }
     }
 }
