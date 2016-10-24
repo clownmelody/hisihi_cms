@@ -33,8 +33,8 @@ class EventController extends AdminController
             ->buttonSubmit('', '保存')->data($data);
         $admin_config->display();
     }
-    public function event($page = 1, $r = 10, $title='')
-    {
+
+    public function event($page = 1, $r = 10, $title=''){
         $r = C('LIST_ROWS');
         if(!empty($title)){
             $map['title'] = array('like', '%' . $title . '%');
@@ -53,7 +53,38 @@ class EventController extends AdminController
         $attr['class'] = 'btn ajax-post';
         $attr['target-form'] = 'ids';
 
-        $builder->title('内容管理')
+        $builder->title('设计大赛管理')
+            ->setStatusUrl(U('setEventContentStatus'))->buttonDisable('', '审核不通过')->buttonDelete()->button('设为推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 1)))))
+            ->button('取消推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 0)))))
+            ->buttonNew(U('Event/add'))
+            ->keyId()->keyLink('title', '标题', 'Event/add?id=###')->keyUid()->keyCreateTime()->keyStatus()->keyMap('is_recommend', '是否推荐', array(0 => '否', 1 => '是'))
+            ->keyDoActionEdit( 'Event/add?id=###','编辑')
+            ->data($list)
+            ->search('标题', 'title')
+            ->pagination($totalCount, $r)
+            ->display();
+    }
+
+    public function offlineevent($page = 1, $r = 10, $title=''){
+        $r = C('LIST_ROWS');
+        if(!empty($title)){
+            $map['title'] = array('like', '%' . $title . '%');
+        }
+        //读取列表
+        $map['status'] = 1;
+        $map['type_id'] = 5;
+        $model = $this->eventModel;
+        $list = $model->where($map)->page($page, $r)->order('create_time desc')->select();
+        unset($li);
+        $totalCount = $model->where($map)->count();
+
+        //显示页面
+        $builder = new AdminListBuilder();
+
+        $attr['class'] = 'btn ajax-post';
+        $attr['target-form'] = 'ids';
+
+        $builder->title('线下活动管理')
             ->setStatusUrl(U('setEventContentStatus'))->buttonDisable('', '审核不通过')->buttonDelete()->button('设为推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 1)))))
             ->button('取消推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 0)))))
             ->buttonNew(U('Event/add'))
