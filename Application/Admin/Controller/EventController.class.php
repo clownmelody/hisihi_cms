@@ -41,6 +41,7 @@ class EventController extends AdminController
         }
         //读取列表
         $map['status'] = 1;
+        $map['type_id'] = 2;
         $model = $this->eventModel;
         $list = $model->where($map)->page($page, $r)->order('create_time desc')->select();
         unset($li);
@@ -75,11 +76,12 @@ class EventController extends AdminController
         }
 
         $event_add->title('发布活动')
-            ->keyText('title', '标题')->keySelect('type_id',"选择课程",'',$event_types)
+            ->keyText('title', '标题')->keySelect('type_id',"选择类型",'',$event_types)
             /*->keyTime('deadline', '报名结束时间')*/
             ->keyTime('sTime', '课程开始时间')
             ->keyTime('eTime', '课程结束时间')
             ->keyText('address', '地点','线下培训地点')
+            ->keyText('organizer', '主办方')
             ->keyInteger('limitCount','人数','课程人数上线')
             ->keyTextArea('explain','介绍')
             ->keyEditor('detail_content', '详细内容')
@@ -96,7 +98,8 @@ class EventController extends AdminController
         $event_add->display();
     }
 
-    public function addEvent($type_id,$cover_id,$id=0,$title='',$sTime='',$eTime='',$deadline='',$explain='',$address='',$limitCount=1)
+    public function addEvent($type_id, $cover_id, $id=0, $title='', $sTime='', $eTime='',
+                             $deadline='',$explain='',$address='',$organizer='', $limitCount=1)
     {
         if (!$cover_id) {
             $this->error('请上传封面。');
