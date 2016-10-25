@@ -133,4 +133,50 @@ class EventController extends AppController{
         $this->apiSuccess('预约报名成功');
     }
 
+    public function worksList($page=1, $count=5, $version=null, $competition_id=null){
+        $picModel = D('Home/Picture');
+        $map['status'] = array('gt', 0);
+        $map['competition_id'] = $competition_id;
+        $listData = M('EventWorks')->where($map)->field('id, name , cover_id')->page($page, $count)->select();
+        foreach($listData as &$event){
+            $event['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/workscontent/type/view/id/'.$event['id'];
+            $event['cover_path'] = null;
+            $cover_id = $event['cover_id'];
+            $result = $picModel->where('status=1 and id='.$cover_id)->field('path')->find();
+            $picKey = substr($result['path'], 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            unset($event['cover_id']);
+            if($isExist){
+                $event_pic = "http://hisihi-other".C('OSS_ENDPOINT').$picKey;
+                $event['cover_path'] = $event_pic;
+            }
+        }
+        $extra['totalCount'] = M('EventWorks')->where($map)->count();
+        $extra['data'] = $listData;
+        $this->apiSuccess("获取比赛作品列表成功", null, $extra);
+    }
+
+    /**
+     * 比赛详情
+     * @param $id
+     * @param string $type
+     */
+    public function workscontent($id,$type = ''){
+        $detail = M('EventWorks')->where('id='.$id)->find();
+        $content = array(
+            'content'=>$detail['content'],
+            'name'=>$detail['name'],
+            'create_time'=>$detail['create_time']
+        );
+        if($type == 'view') {
+            $this->assign('top_content_info', $content);
+            $this->assign('articleId', $id);
+            $this->assign('name', $detail['name']);
+            $this->assign('create_time', $detail['create_time']);
+            $this->setTitle('作品详情 — 嘿设汇');
+            $this->display();
+        }
+    }
 }
