@@ -69,7 +69,16 @@ class EventController extends AppController{
             $event_pic = "http://hisihi-other".C('OSS_ENDPOINT').$picKey;
             $info['pic_path'] = $event_pic;
         }
+        $info['is_enroll'] = $this->is_enroll($competition_id);
         $this->apiSuccess("获取比赛详情成功", null, array('data' => $info));
+    }
+
+    private function is_enroll($competition_id){
+        $model = M('EventAttend');
+        $data['uid'] = $this->getUid();
+        $data['event_id'] = $competition_id;
+        $data['status'] = 1;
+        return $model->where($data)->count();
     }
 
     /**
