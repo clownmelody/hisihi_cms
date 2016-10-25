@@ -520,6 +520,7 @@ class TeacherController extends BaseController
                 ->where('status>=0 and outline_id='.$item['id'])->select();
             foreach($resList as &$res){
                 if($res['type']==2){
+                    $res['html_content'] = $res['content'];
                     $res['content'] = C('HOST_NAME_PREFIX')."api.php?s=TeachingCourse/outLineLongTextPage/id/".$res['id'];
                 }
             }

@@ -72,7 +72,7 @@ class EventModel extends Model{
 
     public function getCompetitionInfo($id){
         $competition = $this->where("id=".$id)
-            ->field('id, title, explain, sTime, eTime, cover_id, view_count, address, organizer')->find();
+            ->field('id, title, explain, sTime, eTime, cover_id, view_count, address, organizer, type_id')->find();
         return $competition;
     }
 
