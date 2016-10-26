@@ -573,6 +573,7 @@ p {
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 .wrapper .tag .tag-left-box {
