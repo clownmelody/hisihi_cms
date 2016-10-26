@@ -55,7 +55,14 @@ class EventController extends AppController{
         if(empty($info)){
             $this->apiError(-1, "id不存在");
         }
-        $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/competitioncontent/type/view/id/'.$info['id'];
+        if($info['type_id']==2){  // 比赛
+            $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/competitionv3_2/type/view/id/'.$competition_id;
+            $info['share_url'] = $info['content_url'];
+        }
+        if($info['type_id']==5){  // 活动
+            $info['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/activityv3_2/type/view/id/'.$competition_id;
+            $info['share_url'] = $info['content_url'];
+        }
         $event['pic_path'] = null;
         $cover_id = $info['cover_id'];
         $picModel = D('Home/Picture');
