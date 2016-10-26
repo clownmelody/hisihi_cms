@@ -89,7 +89,7 @@ class EventController extends AdminController
         $builder->title('线下活动管理')
             ->setStatusUrl(U('setEventContentStatus'))->buttonDisable('', '审核不通过')->buttonDelete()->button('设为推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 1)))))
             ->button('取消推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 0)))))
-            ->buttonNew(U('Event/add'))
+            ->buttonNew(U('Event/activity_add'))
             ->keyId()->keyLink('title', '标题', 'Event/add?id=###')->keyUid()->keyCreateTime()->keyStatus()->keyMap('is_recommend', '是否推荐', array(0 => '否', 1 => '是'))
             ->keyDoActionEdit( 'Event/add?id=###','编辑')
             ->data($list)
@@ -105,7 +105,44 @@ class EventController extends AdminController
         $types = D('Event/EventType')->getTree(0, 'id,title,sort,pid,status');
         $event_types = array();
         foreach($types as $key => $value){
-            $event_types[$value['id']] = $value['title'];
+            if($value['id']==2){
+                $event_types[$value['id']] = $value['title'];
+            }
+        }
+
+        $event_add->title('发布活动')
+            ->keyText('title', '标题')->keySelect('type_id',"选择类型",'',$event_types)
+            /*->keyTime('deadline', '报名结束时间')*/
+            ->keyTime('sTime', '课程开始时间')
+            ->keyTime('eTime', '课程结束时间')
+            ->keyText('address', '地点','线下培训地点')
+            ->keyText('organizer', '主办方')
+            ->keyInteger('limitCount','人数','课程人数上线')
+            ->keyTextArea('explain','介绍')
+            ->keyEditor('detail_content', '详细内容')
+            ->keySingleImage('cover_id','封面')
+            ->buttonSubmit(U('Event/addEvent'), '保存')
+            ->buttonBack();
+
+        if($id){
+            $event_add->keyHidden('id','编号');
+            $event_content = D('Event')->where(array('status' => 1, 'id' => $id))->find();
+            $event_add->data($event_content);
+        }
+        $this->assign('meta_title', '活动');
+        $event_add->display();
+    }
+
+    public function activity_add($id=0)
+    {
+        $event_add = new AdminConfigBuilder();
+
+        $types = D('Event/EventType')->getTree(0, 'id,title,sort,pid,status');
+        $event_types = array();
+        foreach($types as $key => $value){
+            if($value['id']==5){
+                $event_types[$value['id']] = $value['title'];
+            }
         }
 
         $event_add->title('发布活动')
