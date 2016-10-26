@@ -500,7 +500,6 @@ ul li {
 body {
   padding: 0;
   margin: 0;
-  background-color: #F2F2F2;
 }
 .wrapper {
   position: absolute;
@@ -510,6 +509,8 @@ body {
   right: 0;
   overflow-x: hidden;
   font-size: 14px;
+  background-color: #F2F2F2;
+  opacity: 0;
 }
 .wrapper .content-box {
   max-width: 414px;
@@ -517,26 +518,22 @@ body {
   margin-bottom: 14px;
 }
 .wrapper #img-box {
-  position: relative;
-  display: none;
   text-align: center;
-  max-height: 250px;
+  width: 100%;
+  min-height: 200px;
 }
 .wrapper #img-box > img {
   height: 100%;
-  display: block;
-}
-.wrapper .head {
-  height: 100%;
+  max-width: 100%;
 }
 .wrapper .head .header {
   color: #212121;
   font-size: 15px;
   padding: 14px;
   border-bottom: 1px solid #F2F2F2;
+  font-weight: bold;
 }
 .wrapper .head .head-box {
-  height: 100%;
   color: #212121;
   display: inline-block;
 }
@@ -558,7 +555,7 @@ body {
   align-items: center;
 }
 .wrapper .head .head-box .logo-box .logo {
-  background: url("http://localhost/hisihi-cms/Public/App/images/event/compretition/sprite.png") no-repeat;
+  background: url("../../../images/event/compretition/sprite.png") no-repeat;
   background-size: 99px 28.8px;
 }
 .wrapper .head .head-box .text {
