@@ -107,7 +107,7 @@ define(['base','async','myPhotoSwipe','lazyloading'],function(Base,Async,PhotoSw
             basic: function (callback) {
                 that.loadBasicInfoData(function (result) {
                     if (!result) {
-                        that.showTips('老师不存在02');
+                        that.showTips('老师不存在');
                         that.controlLoadingBox(false);
                         return;
                     }

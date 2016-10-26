@@ -19,7 +19,7 @@ define(['base','async'],function(Base,Async){
 
         this.controlLoadingBox(false);//是否显示加载等待动画
         window.setTimeout(function () {
-            that.initData();
+            that.loadCompetitionInfo();
         }, 100);
     };
 
@@ -42,11 +42,16 @@ define(['base','async'],function(Base,Async){
             queryPara = {
                 url: this.baseUrl + 'event/competitionDetail',
                 paraData: {competition_id: this.id},
-                sCallback: function (result) {
-                    callback && callback(result);
+                sCallback:function(result){
+                    if(result.data){
+                        that.fillCompetitionInfo(result.data);
+                        $('.wrapper').css('opacity','1');
+                    }else{
+                        that.showTips('比赛详情加载失败');
+                    }
                 },
-                eCallback: function () {
-                    callback && callback(null);
+                eCallback:function(){
+                    that.showTips('比赛详情加载失败');
                 },
                 type: 'get',
                 async: this.async
@@ -54,69 +59,83 @@ define(['base','async'],function(Base,Async){
         this.getDataAsync(queryPara);
     };
 
-    t.initData = function (){
-        var that= this;
-        Async.parallel({
-            basic:function(callback) {
-                that.loadCompetitionInfo(function (result) {
-                    if (!result||!result.success) {
-                        that.showTips('比赛不存在');
-                        that.controlLoadingBox(false);
-                        return;
-                    }
-                    callback(null, result);//返回值是为空还是有值
-                    });
-                },
-            },function (err, results) {
-            var val;
-            for (var item in results) {
-                var fn = null;
-                val = results[item]
-                switch (item) {
-                    case 'basic':
-                        fn = that.fillCompetitionInfo;
-                        break;
-                    default :
-                        break;
-                }
-                fn && fn.call(that, val);
-            }
-            $('.wrapper').show();//数据加载完毕展示页面内容
-            that.controlLoadingBox(false);
-        });
-    };
 
     //填充页面大赛信息
-    t.fillCompetitionInfo = function(result){
-        if(!result||result.id==''){
-            return ;
+    t.fillCompetitionInfo = function(result) {
+        if (!result || result.id == '') {
+            return;
         }
-        var t=result.title,
-            o=result.organizer,
-            a=result.aaddress,
-            str='';
-        str =  '<div class="content-box head">'+
-            '<div class="content-box" id="img-box">'+
-                '<img src="__IMG__/event/compretition/sprite.png"/>'+
-            '</div>'+
-            '<div class="header">'+t+'</div>'+
+        var i = result.pic_path,
+            t = result.title,
+            e = result.explain,
+            str = '',
+            iStr = '<div class="content-box" id="img-box">' +
+                '<img  src="http://pic.hisihi.com/2016-06-29/57733124ec788.jpg">' +
+                //'<img  src="' + i + '">' +
+                '</div>';
+        str =  iStr+
+                '<div class="content-box head">'+
+                '<div class="header">'+t+'</div>'+
             <!--活动时间-->
             '<ul class="head-box">'+
-            '<li id="time">'+
+                //t.getTimeInfo(result)+t.getAddressInfo(result)+t.getHostInfo(result)+
+            '</div>'+
+            '<div class="content-box detail">'+
+                e+
+            '</div>';
+            //t.getComInfo(result);
+        $('.wrapper').html(str);
+    };
+
+    /*
+    * 日期时间检查
+    * 判断比赛是否结束,eTime 是否结束
+    * 获取当前时间进行时间差计算
+    * 格式为YYYY-MM-DD
+    * */
+    t.getDaysBetween = function(result,t1,t2){
+        var t1= new Date(),
+            t2 = result.eTime;
+            t1.toLocaleString( );        //获取日期与时间
+        //判断时间差
+        if ((new Date(t1.replace(/-/g,"\/"))) > (new Date(t2.replace(/-/g,"\/")))){
+            return true;
+            }
+        else {
+            return false;
+            }
+        };
+
+    //获取比赛时间
+    t.getTimeInfo = function (result){
+        if (!result.sTime||!result.eTime){
+            return '';
+        }
+        var begin=this.getDiffTime(result.sTime),
+            end=this.getDiffTime(result.eTime),
+            str='';
+        str= '<li id="time">'+
             '<div class="logo-box">'+
             '<span class="logo"></span>'+
             '</div>'+
             '<div class="text">'+
             '<span class="title">'+
-                this.getDiffTime(result.sTime)+
-                this.getDiffTime(result.eTime)+
+                begin+
+                end+
             '</span>'+
             '<span class="status">'+
                 //(进行中)时间状态
             '</span>'+
             '</div>'+
-            '</li>'+
-            '<li id="address">'+
+            '</li>';
+        return str;
+    };
+
+    //获取比赛地址
+    t.getAddressInfo = function (result){
+        var str='',
+            a = result.address;
+        str= '<li id="address">'+
             '<div class="logo-box">'+
             '<span class="logo">'+
             '</span>'+
@@ -124,22 +143,45 @@ define(['base','async'],function(Base,Async){
             '<div class="text">'+
             '<span class="title">地址：</span>'+
             '<span class="detail">'+a+'</span>'
-            '</div>'+
-            '</li>'+
-            '<li id="host">'+
+        '</div>'+
+        '</li>';
+        //判断是否有地址信息，如果没有地址信息则不显示
+        if (!result||a=='') {
+            return '';
+        }else {
+            return str;
+        }
+    };
+
+    //获取比赛主办方
+    t.getHostInfo = function(result){
+        var str='',
+            h=result.organizer;
+        if (!result||h=='') {
+            return '';
+        }
+        str='<li id="address">'+
             '<div class="logo-box">'+
-            '<span class="logo"></span>'+
+            '<span class="logo">'+
+            '</span>'+
             '</div>'+
             '<div class="text">'+
             '<span class="title">主办方：</span>'+
-            '<span class="detail">'+o+'</span>'+
-            '</div>'+
-            '</li>'+
-            '</div>';
+            '<span class="detail">'+h+'</span>'
+        '</div>'+
+        '</li>';
+        return str;
     };
 
-
-
+    //获取比赛详情
+    t.getComInfo= function (result){
+        if (!result||result.explain==''){
+            return '';
+        };
+        return  '<div class="content-box detail">'+
+                    result.data.explain+
+                '</div>';
+    };
 
     return Competition;
 });
