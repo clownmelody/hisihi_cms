@@ -21,87 +21,97 @@ body {
   #img-box {
     text-align: center;
     width: 100%;
-    max-height: 200px;
+    min-height: 200px;
     > img {
       height: 100%;
       max-width: 100%;
     }
-  }
-  .head {
-    .header {
-      color: #212121;
-      font-size: 15px;
-      padding: 14px;
-      border-bottom: 1px solid #F2F2F2;
-      //标题加粗
-      font-weight: bold;
+    &.hide {
+      display: none;
     }
-    .head-box {
-      width: 100%;
-      color: #212121;
-      display: inline-block;
-      > li {
-        min-height: 40px;
-        position: relative;
-        padding: 0px 14px;
+  }
+  .detail-head {
+    .head {
+      .header {
+        color: #212121;
+        font-size: 15px;
+        padding: 14px;
         border-bottom: 1px solid #F2F2F2;
-        &:last-child {
-          border-bottom: none;
-        }
-        > div {
-          float: left;
-        }
+        //标题加粗
+        font-weight: bold;
       }
-      .logo-box {
-        position: relative;
-        .size(40px,40px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .logo {
-          background: url(".././../.././images/event/compretition/sprite.png") no-repeat;
-          background-size: 165px*0.6 48px*0.6;
-        }
-      }
-      .text {
+      .head-box {
+        width: 100%;
+        color: #212121;
         display: inline-block;
-        position: relative;
-        //设置段落行高
-        line-height: 40px;
-        .title {
-          color: #212121;
+        > li {
+          min-height: 40px;
+          position: relative;
+          padding: 0px 14px;
+          border-bottom: 1px solid #F2F2F2;
+          &:last-child {
+            border-bottom: none;
+          }
+          > div {
+            float: left;
+          }
         }
-        .detail {
-        color: #808080;
+        .logo-box {
+          position: relative;
+          .size(40px,40px);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .logo {
+            background: url(".././../.././images/event/compretition/sprite.png") no-repeat;
+            background-size: 165px*0.6 48px*0.6;
+          }
+        }
+        .text {
+          display: inline-block;
+          position: relative;
+          //设置段落行高
+          line-height: 40px;
+          .title {
+            color: #212121;
+          }
+          .detail {
+            color: #808080;
+          }
+          .status {
+            color: #FF5A00;
+          }
+        }
+        #time {
+          .logo {
+            .size(22px,22px);
+            background-position: -51px 0px;
+          }
+          &.activity-end {
+            .size(22px,22px);
+            background-position: -77px 0px;
+          }
+        }
+        #address {
+          .logo {
+            .size(22px,27px);
+            background-position: -24px 0px;
+          }
+        }
+        #host {
+          .logo {
+            .size(17px,29px);
+            background-position: 0px 0px;
+          }
+        }
       }
-        .status {
-          color: #FF5A00;
-        }
-      }
-      #time {
-        .logo {
-          .size(22px,22px);
-          background-position: -51px 0px;
-        }
-        &.activity-end {
-          .size(22px,22px);
-          background-position: -77px 0px;
-        }
-      }
-      #address {
-        .logo {
-          .size(22px,27px);
-          background-position: -24px 0px;
-        }
-      }
-      #host {
-        .logo {
-          .size(17px,29px);
-          background-position: 0px 0px;
-        }
-      }
+
     }
-
   }
-
+  .detail-box {
+    padding:14px;
+    background-color: #ffffff;
+    .detail-body {
+    }
+  }
 }

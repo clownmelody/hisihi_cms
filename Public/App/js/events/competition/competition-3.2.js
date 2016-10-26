@@ -13,9 +13,6 @@ define(['base','async'],function(Base,Async){
             eventsName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         };
-        if(!this.isFromApp){ //判断是不是来自于app
-            $('#img-box').show();
-        }
 
         this.controlLoadingBox(false);//是否显示加载等待动画
         window.setTimeout(function () {
@@ -65,23 +62,27 @@ define(['base','async'],function(Base,Async){
         if (!result || result.id == '') {
             return;
         }
-        var i = result.pic_path,
-            t = result.title,
-            e = result.explain,
+        var t = result.title,
             str = '',
-            iStr = '<div class="content-box" id="img-box">' +
-                //'<img  src="http://pic.hisihi.com/2016-06-29/57733124ec788.jpg">' +
+            i = result.pic_path,
+            imgStr= '<div class="content-box hide" id="img-box">' +
                 '<img  src="' + i + '">' +
-                '</div>';
-        str =  iStr+
+                '</div>',
+            $box=$('#img-box');
+        if (!result||i==null){
+            imgStr='';
+        }
+        if(this.isFromApp){
+            $box.removeClass('hide');
+        }
+        str = imgStr+
                 '<div class="content-box head">'+
                 '<div class="header">'+t+'</div>'+
-            <!--活动时间-->
                 '<ul class="head-box">'+
                     this.getTimeInfo(result)+this.getAddressInfo(result)+this.getHostInfo(result)+
                 '</ul>'+
-                '</div>'+
-                this.getComInfo(result);
+                '</div>';
+        //判断是不是来自于app,如果不是，则显示封面
         $('.detail-head').html(str);
     };
 
@@ -103,6 +104,7 @@ define(['base','async'],function(Base,Async){
             return false;
             }
         };
+
 
     //获取比赛时间
     t.getTimeInfo = function (result){
@@ -169,16 +171,6 @@ define(['base','async'],function(Base,Async){
                 '</div>'+
                 '</li>';
         return str;
-    };
-
-    //获取比赛详情
-    t.getComInfo= function (result){
-        if (!result||result.explain==null){
-            return '';
-        };
-        return  '<div class="content-box detail">'+
-                    result.explain+
-                '</div>';
     };
 
     return Competition;
