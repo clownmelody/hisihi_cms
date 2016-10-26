@@ -112,12 +112,18 @@ class EventController extends AppController{
     }
 
     public function activityv3_2($id){
+        $model = M('Event');
+        $info = $model->field('detail_content')->where('id='.$id)->find();
         $this->assign('id', $id);
+        $this->assign('content', $info['detail_content']);
         $this->display('activityv3.2');
     }
 
     public function competitionv3_2($id){
+        $model = M('Event');
+        $info = $model->field('detail_content')->where('id='.$id)->find();
         $this->assign('id', $id);
+        $this->assign('content', $info['detail_content']);
         $this->display('competitionv3.2');
     }
 
