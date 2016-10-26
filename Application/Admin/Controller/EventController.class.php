@@ -384,7 +384,7 @@ class EventController extends AdminController
         $event_add->display();
     }
 
-    public function addWorks($competition_id, $cover_id, $id=0, $name='', $author)
+    public function addWorks($competition_id, $cover_id, $id=0, $name='', $author='')
     {
         if (!$cover_id) {
             $this->error('请上传封面。');
