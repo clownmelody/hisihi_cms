@@ -1,7 +1,6 @@
 body {
   padding: 0;
   margin: 0;
-  background-color: #F2F2F2;
 }
 .wrapper{
   position: absolute;
@@ -11,33 +10,35 @@ body {
   right: 0;
   overflow-x: hidden;
   font-size: 14px;
+  background-color: #F2F2F2;
   //数据没有加载完毕的时候不展示页面内容
-  //opacity: 0;
+  opacity: 0;
   .content-box {
     max-width: 414px;
     background-color: #ffffff;
     margin-bottom: 14px;
   }
   #img-box {
-    position: relative;
-    display: none;
     text-align: center;
-    max-height: 250px;
+    width: 100%;
+    min-height: 200px;
     > img {
       height: 100%;
-      display: block;
+      max-width: 100%;
     }
   }
   .head {
-    height: 100%;
+    //height: 100%;
     .header {
       color: #212121;
       font-size: 15px;
       padding: 14px;
       border-bottom: 1px solid #F2F2F2;
+      //标题加粗
+      font-weight: bold;
     }
     .head-box {
-      height: 100%;
+      //.size(100%,100%);
       color: #212121;
       display: inline-block;
       > li {
@@ -56,7 +57,7 @@ body {
         justify-content: center;
         align-items: center;
         .logo {
-          background: url("http://localhost/hisihi-cms/Public/App/images/event/compretition/sprite.png") no-repeat;
+          background: url(".././../.././images/event/compretition/sprite.png") no-repeat;
           background-size: 165px*0.6 48px*0.6;
         }
       }
