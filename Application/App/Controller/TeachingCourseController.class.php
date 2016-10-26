@@ -12,6 +12,11 @@ use log\ApiInfoLog;
 class TeachingCourseController extends BaseController
 {
     private $log;
+
+    function _initialize(){
+        C('SHOW_PAGE_TRACE', false);
+    }
+
     public function __construct(){
         parent::__construct();
         $this->log = new ApiInfoLog('TeachingCourseController');
