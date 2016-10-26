@@ -21,14 +21,13 @@ body {
   #img-box {
     text-align: center;
     width: 100%;
-    min-height: 200px;
+    max-height: 200px;
     > img {
       height: 100%;
       max-width: 100%;
     }
   }
   .head {
-    //height: 100%;
     .header {
       color: #212121;
       font-size: 15px;
@@ -38,14 +37,17 @@ body {
       font-weight: bold;
     }
     .head-box {
-      //.size(100%,100%);
+      width: 100%;
       color: #212121;
       display: inline-block;
       > li {
         min-height: 40px;
         position: relative;
-        padding: 10px 14px;
+        padding: 0px 14px;
         border-bottom: 1px solid #F2F2F2;
+        &:last-child {
+          border-bottom: none;
+        }
         > div {
           float: left;
         }

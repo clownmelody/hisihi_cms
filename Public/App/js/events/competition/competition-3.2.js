@@ -70,21 +70,19 @@ define(['base','async'],function(Base,Async){
             e = result.explain,
             str = '',
             iStr = '<div class="content-box" id="img-box">' +
-                '<img  src="http://pic.hisihi.com/2016-06-29/57733124ec788.jpg">' +
-                //'<img  src="' + i + '">' +
+                //'<img  src="http://pic.hisihi.com/2016-06-29/57733124ec788.jpg">' +
+                '<img  src="' + i + '">' +
                 '</div>';
         str =  iStr+
                 '<div class="content-box head">'+
                 '<div class="header">'+t+'</div>'+
             <!--活动时间-->
-            '<ul class="head-box">'+
-                //t.getTimeInfo(result)+t.getAddressInfo(result)+t.getHostInfo(result)+
-            '</div>'+
-            '<div class="content-box detail">'+
-                e+
-            '</div>';
-            //t.getComInfo(result);
-        $('.wrapper').html(str);
+                '<ul class="head-box">'+
+                    this.getTimeInfo(result)+this.getAddressInfo(result)+this.getHostInfo(result)+
+                '</ul>'+
+                '</div>'+
+                this.getComInfo(result);
+        $('.detail-head').html(str);
     };
 
     /*
@@ -96,7 +94,7 @@ define(['base','async'],function(Base,Async){
     t.getDaysBetween = function(result,t1,t2){
         var t1= new Date(),
             t2 = result.eTime;
-            t1.toLocaleString( );        //获取日期与时间
+            t1.toLocaleString( );//获取日期与时间
         //判断时间差
         if ((new Date(t1.replace(/-/g,"\/"))) > (new Date(t2.replace(/-/g,"\/")))){
             return true;
@@ -146,7 +144,7 @@ define(['base','async'],function(Base,Async){
         '</div>'+
         '</li>';
         //判断是否有地址信息，如果没有地址信息则不显示
-        if (!result||a=='') {
+        if (!result||a==null) {
             return '';
         }else {
             return str;
@@ -157,29 +155,29 @@ define(['base','async'],function(Base,Async){
     t.getHostInfo = function(result){
         var str='',
             h=result.organizer;
-        if (!result||h=='') {
+        if (!result||h==null) {
             return '';
         }
-        str='<li id="address">'+
-            '<div class="logo-box">'+
-            '<span class="logo">'+
-            '</span>'+
-            '</div>'+
-            '<div class="text">'+
-            '<span class="title">主办方：</span>'+
-            '<span class="detail">'+h+'</span>'
-        '</div>'+
-        '</li>';
+            str='<li id="host">'+
+                '<div class="logo-box">'+
+                '<span class="logo">'+
+                '</span>'+
+                '</div>'+
+                '<div class="text">'+
+                '<span class="title">主办方：</span>'+
+                '<span class="detail">'+h+'</span>'+
+                '</div>'+
+                '</li>';
         return str;
     };
 
     //获取比赛详情
     t.getComInfo= function (result){
-        if (!result||result.explain==''){
+        if (!result||result.explain==null){
             return '';
         };
         return  '<div class="content-box detail">'+
-                    result.data.explain+
+                    result.explain+
                 '</div>';
     };
 

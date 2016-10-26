@@ -520,7 +520,7 @@ body {
 .wrapper #img-box {
   text-align: center;
   width: 100%;
-  min-height: 200px;
+  max-height: 200px;
 }
 .wrapper #img-box > img {
   height: 100%;
@@ -534,14 +534,18 @@ body {
   font-weight: bold;
 }
 .wrapper .head .head-box {
+  width: 100%;
   color: #212121;
   display: inline-block;
 }
 .wrapper .head .head-box > li {
   min-height: 40px;
   position: relative;
-  padding: 10px 14px;
+  padding: 0px 14px;
   border-bottom: 1px solid #F2F2F2;
+}
+.wrapper .head .head-box > li:last-child {
+  border-bottom: none;
 }
 .wrapper .head .head-box > li > div {
   float: left;
