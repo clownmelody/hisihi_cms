@@ -133,7 +133,7 @@ class EventController extends AppController{
         $this->display('sharecompetitionlist');
     }
 
-    public function enroll($uid=0, $event_id, $mobile, $username){
+    public function enroll($uid=0, $event_id, $mobile, $username=''){
         $model = M('EventAttend');
         $data['uid'] = $uid;
         $data['event_id'] = $event_id;
