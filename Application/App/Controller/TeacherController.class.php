@@ -459,7 +459,11 @@ class TeacherController extends BaseController
                         $outlineResData['status'] = 0;
                     }
                     $outlineResData['video_id'] = $content['video_id'];
-                    $outlineResData['content']  = $content['content'];
+                    if($outlineResData['type']==2){
+                        $outlineResData['content']  = $content['html_content'];
+                    } else {
+                        $outlineResData['content']  = $content['content'];
+                    }
                     $outlineResData['cover_pic']  = $content['cover_pic'];
                     if($content['is_top']){
                         $outlineResData['is_top'] = $content['is_top'];
