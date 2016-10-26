@@ -417,17 +417,17 @@ class TeacherController extends BaseController
         if(!empty($teacher_id_list)){
             $data['teacher_id_list'] = $teacher_id_list;
         }
-        $course_id = $courseModel->where('id='.$teaching_course_id)->save($data);
+        $courseModel->where('id='.$teaching_course_id)->save($data);
         if(!empty($student_work_list)){
             $student_work_list = stripslashes($student_work_list);
             $student_work_list = json_decode($student_work_list, true);
             foreach($student_work_list as $pic_url){
-                $sel_data['course_id'] = $course_id;
+                $sel_data['course_id'] = $teaching_course_id;
                 $sel_data['pic_url'] = $pic_url;
                 $sel_data['status'] = 1;
                 $count = $swmodel->where($sel_data)->count();
                 if(!$count){
-                    $swdata['course_id'] = $course_id;
+                    $swdata['course_id'] = $teaching_course_id;
                     $swdata['pic_url'] = $pic_url;
                     $swdata['create_time'] = time();
                     $swmodel->add($swdata);
@@ -441,7 +441,7 @@ class TeacherController extends BaseController
                 $old_outline_id = $item['outline_id'];
                 if(empty($old_outline_id)){
                     $first_title = $item['title'];
-                    $outlineData['teaching_course_id'] = $course_id;
+                    $outlineData['teaching_course_id'] = $teaching_course_id;
                     $outlineData['title'] = $first_title;
                     $outlineData['create_time'] = time();
                     $outlineId = $outlineModel->add($outlineData);
@@ -459,7 +459,11 @@ class TeacherController extends BaseController
                         $outlineResData['status'] = 0;
                     }
                     $outlineResData['video_id'] = $content['video_id'];
-                    $outlineResData['content']  = $content['content'];
+                    if($outlineResData['type']==2){
+                        $outlineResData['content']  = $content['html_content'];
+                    } else {
+                        $outlineResData['content']  = $content['content'];
+                    }
                     $outlineResData['cover_pic']  = $content['cover_pic'];
                     if($content['is_top']){
                         $outlineResData['is_top'] = $content['is_top'];
@@ -475,7 +479,7 @@ class TeacherController extends BaseController
                 }
             }
         }
-        $this->apiSuccess('更新课程成功', null, array('id'=>$course_id));
+        $this->apiSuccess('更新课程成功', null, array('id'=>$teaching_course_id));
     }
 
     public function getCourseTeacherList($teaching_course_id=0){
