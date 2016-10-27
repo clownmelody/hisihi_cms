@@ -3,8 +3,7 @@
  */
 define(['base'],function(Base) {
 
-    var Activity = function ($wrapper, id, url) {
-        this.$wrapper = $wrapper;
+    var Activity = function (id, url) {
         var that = this;
         this.id = id;
         this.baseUrl = url;
@@ -44,7 +43,7 @@ define(['base'],function(Base) {
                     if (result.data) {
                         that.controlLoadingBox(false);
                         that.fillCompetitionInfo(result.data);
-                        $('.wrapper').css('opacity', '1');
+                        $('body').css('opacity', '1');
                     } else {
                         that.controlLoadingBox(false);
                         that.showTips('比赛详情加载失败');
@@ -97,27 +96,15 @@ define(['base'],function(Base) {
      * 获取当前时间进行时间差计算
      * 格式为YYYY-MM-DD
      * */
-    t.getDaysBetween = function (result, t1, t2) {
-        var t1 = new Date(),
+    t.getDaysBetween = function (result) {
+        var now = new Date(),
             t2 = result.eTime,
-            timeStr = '';
-        t1.toLocaleString();//获取日期与时间
-        //判断时间差
-        if ((new Date(t1.replace(/-/g, "\/"))) > (new Date(t2.replace(/-/g, "\/")))) {
-            //return true;
-            timeStr = '<span class="status">' +
-                    //(进行中)时间状态
-                +'(进行中)' +
-                '</span>';
+            recordTime=new Date(parseFloat(t2)*1000),
+            diff = now -recordTime;
+        if (diff > 0) {
+            return '已结束';
         }
-        else {
-            //return false;
-            timeStr = '<span class="status">' +
-                    //(进行中)时间状态
-                +'(已结束)' +
-                '</span>';
-        }
-        return timeStr;
+        return '进行中';
     };
 
 
@@ -126,8 +113,8 @@ define(['base'],function(Base) {
         if (result.sTime == 0 || result.eTime == 0) {
             return '';
         }
-        var begin = this.getDiffTime(result.sTime),
-            end = this.getDiffTime(result.eTime),
+        var begin = this.getTimeFromTimestamp(result.sTime,'yyyy.MM.dd'),
+            end = this.getTimeFromTimestamp(result.eTime,'yyyy.MM.dd'),
             str = '';
         str = '<li id="time">' +
             '<div class="logo-box">' +
@@ -139,7 +126,7 @@ define(['base'],function(Base) {
             ' - ' +
             end +
             '</span>' +
-                //this.getDaysBetween(result)+
+            '<span class="status">(' +this.getDaysBetween(result)+')</span>'+
             '</div>' +
             '</li>';
         return str;

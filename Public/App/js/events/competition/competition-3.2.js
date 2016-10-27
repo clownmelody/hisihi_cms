@@ -96,50 +96,38 @@ define(['base','async'],function(Base,Async){
     * 获取当前时间进行时间差计算
     * 格式为YYYY-MM-DD
     * */
-    t.getDaysBetween = function(result,t1,t2){
-        var t1= new Date(),
+    t.getDaysBetween = function (result) {
+        var now = new Date(),
             t2 = result.eTime,
-            timeStr='';
-            t1.toLocaleString( );//获取日期与时间
-        //判断时间差
-        if ((new Date(t1.replace(/-/g,"\/"))) > (new Date(t2.replace(/-/g,"\/")))){
-            //return true;
-            timeStr= '<span class="status">'+
-                    //(进行中)时间状态
-                    +'(进行中)'+
-                    '</span>';
-            }
-        else {
-            //return false;
-            timeStr= '<span class="status">'+
-                    //(进行中)时间状态
-                +'(已结束)'+
-                '</span>';
-            }
-        return timeStr;
-        };
+            recordTime=new Date(parseFloat(t2)*1000),
+            diff = now -recordTime;
+        if (diff > 0) {
+            return '已结束';
+        }
+        return '进行中';
+    };
 
 
     //获取比赛时间
-    t.getTimeInfo = function (result){
-        if (result.sTime==0||result.eTime==0){
+    t.getTimeInfo = function (result) {
+        if (result.sTime == 0 || result.eTime == 0) {
             return '';
         }
-        var begin=this.getDiffTime(result.sTime),
-            end=this.getDiffTime(result.eTime),
-            str='';
-        str= '<li id="time">'+
-            '<div class="logo-box">'+
-            '<span class="logo"></span>'+
-            '</div>'+
-            '<div class="text">'+
-            '<span class="title">'+
-                begin+
-                ' - '+
-                end+
-            '</span>'+
-                //this.getDaysBetween(result)+
-            '</div>'+
+        var begin = this.getTimeFromTimestamp(result.sTime,'yyyy.MM.dd'),
+            end = this.getTimeFromTimestamp(result.eTime,'yyyy.MM.dd'),
+            str = '';
+        str = '<li id="time">' +
+            '<div class="logo-box">' +
+            '<span class="logo"></span>' +
+            '</div>' +
+            '<div class="text">' +
+            '<span class="title">' +
+            begin +
+            ' - ' +
+            end +
+            '</span>' +
+            '<span class="status">(' +this.getDaysBetween(result)+')</span>'+
+            '</div>' +
             '</li>';
         return str;
     };
