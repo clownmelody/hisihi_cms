@@ -9,10 +9,9 @@ define(['base'],function(Base) {
         this.baseUrl = url;
         var eventsName = 'click', that = this;
         if (this.isLocal) {
-            eventsName = 'touchend';
+            //eventsName = 'touchend';
             this.baseUrl = this.baseUrl.replace('api.php', 'hisihi-cms/api.php');
         }
-        ;
 
         this.controlLoadingBox(true);//是否显示加载等待动画
         window.setTimeout(function () {
@@ -43,7 +42,7 @@ define(['base'],function(Base) {
                     if (result.data) {
                         that.controlLoadingBox(false);
                         that.fillCompetitionInfo(result.data);
-                        $('body').css('opacity', '1');
+                        $('.wrapper').css('opacity', '1');
                     } else {
                         that.controlLoadingBox(false);
                         that.showTips('比赛详情加载失败');
