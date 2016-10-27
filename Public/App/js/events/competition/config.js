@@ -49,5 +49,5 @@ require(['home','prefixfree'],function(Competition){
 
     var reg = /id\/[0-9][0-9]*/g,
         id = url.match(reg)[0].toString().replace(/id\//g,'');
-    window.Competition = new Competition($('.wrapper'),id,window.hisihiUrlObj.api_url_php);
+    window.Competition = new Competition(id,window.hisihiUrlObj.api_url_php);
 });
