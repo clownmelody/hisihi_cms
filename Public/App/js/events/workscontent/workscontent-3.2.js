@@ -3,13 +3,9 @@
  */
 define(['base'],function(Base){
     var Work=function(){
-        if(this.isLocal){
-            eventsName='touched';
-            this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
-        };
-
-        this.controlLoadingBox(true);
-        window.setTimeout(function () {},100);
+        var that = this;
+        var eventsName='click',that=this;
+        this.controlLoadingBox(false);
     }
 
     //œ¬‘ÿÃı
@@ -21,5 +17,6 @@ define(['base'],function(Base){
     };
 
     Work.prototype=new Base(config);
+
     return Work;
 });

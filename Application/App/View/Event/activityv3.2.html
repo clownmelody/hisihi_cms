@@ -12,11 +12,26 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <link rel="stylesheet" href="__CSS__/event/competition/home.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="__CSS__/event/activity/home.css" rel="stylesheet" type="text/css">
     <title>活动详情</title>
 </head>
 <body>
-activityv3.2.html
+<div class="wrapper">
+    <div class="detail-head"></div>
+    <div class="detail-box">
+        <div class="detail-body">
+            {$content}
+        </div>
+    </div>
+</div>
 </body>
-<script type="application/javascript" src="__JS__/sharecommon/require.js" data-main="__JS__/events/competition/config"></script>
+<script>
+    window.hisihiUrlObj={
+        api_url_php:'http://{$Think.server.HTTP_HOST}/api.php?s=',
+        img_url:'__IMG__',
+        js: "__JS__",
+        api_url:'__API_URL__'
+    };
+</script>
+<script type="application/javascript" src="__JS__/sharecommon/require.js" data-main="__JS__/events/activity/config"></script>
 </html>

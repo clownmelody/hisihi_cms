@@ -14,14 +14,13 @@ body {
   //数据没有加载完毕的时候不展示页面内容
   opacity: 0;
   .content-box {
-    //max-width: 414px;
     background-color: #ffffff;
     margin-bottom: 14px;
   }
   #img-box {
     text-align: center;
     width: 100%;
-    min-height: 200px;
+    max-height: 200px;
     overflow: hidden;
     > img {
       max-width: 100%;
@@ -79,6 +78,7 @@ body {
           .status {
             color: #FF5A00;
             vertical-align: 1px;
+            padding-left: 8px;
           }
         }
         #time {

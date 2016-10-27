@@ -12,7 +12,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <link rel="stylesheet" href="__CSS__/event/competitionwork/home.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="__CSS__/event/workscontent/home.css" rel="stylesheet" type="text/css">
     <title>作品详情</title>
 </head>
 <body>
@@ -24,5 +24,13 @@
     <div class="box content">{$top_content_info.content}</div>
 </div>
 </body>
-<script type="application/javascript" src="__JS__/sharecommon/require.js" data-main="__JS__/events/competitionwork/config"></script>
+<script>
+    window.hisihiUrlObj={
+        api_url_php:'http://{$Think.server.HTTP_HOST}/api.php?s=',
+        img_url:'__IMG__',
+        js: "__JS__",
+        api_url:'__API_URL__'
+    };
+</script>
+<script type="application/javascript" src="__JS__/sharecommon/require.js" data-main="__JS__/events/workscontent/config"></script>
 </html>

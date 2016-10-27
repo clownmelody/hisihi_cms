@@ -519,7 +519,7 @@ body {
 .wrapper #img-box {
   text-align: center;
   width: 100%;
-  min-height: 200px;
+  max-height: 200px;
   overflow: hidden;
 }
 .wrapper #img-box > img {
@@ -575,6 +575,7 @@ body {
 .wrapper .detail-head .head .head-box .text .status {
   color: #FF5A00;
   vertical-align: 1px;
+  padding-left: 8px;
 }
 .wrapper .detail-head .head .head-box #time .logo {
   width: 22px;
