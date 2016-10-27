@@ -13,11 +13,8 @@ define(['base','async'],function(Base,Async){
             eventsName='touchend';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         };
-        if(!this.isFromApp){ //判断是不是来自于app
-            $('#img-box').show();
-        }
 
-        this.controlLoadingBox(false);//是否显示加载等待动画
+        this.controlLoadingBox(true);//是否显示加载等待动画
         window.setTimeout(function () {
             that.loadCompetitionInfo();
         }, 100);
@@ -44,13 +41,16 @@ define(['base','async'],function(Base,Async){
                 paraData: {competition_id: this.id},
                 sCallback:function(result){
                     if(result.data){
+                        that.controlLoadingBox(false);
                         that.fillCompetitionInfo(result.data);
                         $('.wrapper').css('opacity','1');
                     }else{
+                        that.controlLoadingBox(false);
                         that.showTips('比赛详情加载失败');
                     }
                 },
                 eCallback:function(){
+                    that.controlLoadingBox(false);
                     that.showTips('比赛详情加载失败');
                 },
                 type: 'get',
@@ -65,26 +65,29 @@ define(['base','async'],function(Base,Async){
         if (!result || result.id == '') {
             return;
         }
-        var i = result.pic_path,
-            t = result.title,
-            e = result.explain,
+        var t = result.title,
             str = '',
-            iStr = '<div class="content-box" id="img-box">' +
-                '<img  src="http://pic.hisihi.com/2016-06-29/57733124ec788.jpg">' +
-                //'<img  src="' + i + '">' +
+            i = result.pic_path,
+            imgStr= '<div class="content-box" id="img-box">' +
+                '<img  src="' + i + '">' +
                 '</div>';
-        str =  iStr+
+            //$选择器length 为0
+
+        if (!result||i==null){
+            imgStr='';
+        }
+        //判断是不是来自于app,如果是，则不显示封面
+        if(this.isFromApp){
+            imgStr='';
+        }
+        str = imgStr+
                 '<div class="content-box head">'+
                 '<div class="header">'+t+'</div>'+
-            <!--活动时间-->
-            '<ul class="head-box">'+
-                //t.getTimeInfo(result)+t.getAddressInfo(result)+t.getHostInfo(result)+
-            '</div>'+
-            '<div class="content-box detail">'+
-                e+
-            '</div>';
-            //t.getComInfo(result);
-        $('.wrapper').html(str);
+                '<ul class="head-box">'+
+                    this.getTimeInfo(result)+this.getAddressInfo(result)+this.getHostInfo(result)+
+                '</ul>'+
+                '</div>';
+        $('.detail-head').html(str);
     };
 
     /*
@@ -95,20 +98,31 @@ define(['base','async'],function(Base,Async){
     * */
     t.getDaysBetween = function(result,t1,t2){
         var t1= new Date(),
-            t2 = result.eTime;
-            t1.toLocaleString( );        //获取日期与时间
+            t2 = result.eTime,
+            timeStr='';
+            t1.toLocaleString( );//获取日期与时间
         //判断时间差
         if ((new Date(t1.replace(/-/g,"\/"))) > (new Date(t2.replace(/-/g,"\/")))){
-            return true;
+            //return true;
+            timeStr= '<span class="status">'+
+                    //(进行中)时间状态
+                    +'(进行中)'+
+                    '</span>';
             }
         else {
-            return false;
+            //return false;
+            timeStr= '<span class="status">'+
+                    //(进行中)时间状态
+                +'(已结束)'+
+                '</span>';
             }
+        return timeStr;
         };
+
 
     //获取比赛时间
     t.getTimeInfo = function (result){
-        if (!result.sTime||!result.eTime){
+        if (result.sTime==0||result.eTime==0){
             return '';
         }
         var begin=this.getDiffTime(result.sTime),
@@ -121,11 +135,10 @@ define(['base','async'],function(Base,Async){
             '<div class="text">'+
             '<span class="title">'+
                 begin+
+                ' - '+
                 end+
             '</span>'+
-            '<span class="status">'+
-                //(进行中)时间状态
-            '</span>'+
+                //this.getDaysBetween(result)+
             '</div>'+
             '</li>';
         return str;
@@ -135,22 +148,20 @@ define(['base','async'],function(Base,Async){
     t.getAddressInfo = function (result){
         var str='',
             a = result.address;
+        //判断是否有地址信息，如果没有地址信息则不显示
+        if (!result||a==null) {
+            return '';
+        }
         str= '<li id="address">'+
             '<div class="logo-box">'+
             '<span class="logo">'+
             '</span>'+
             '</div>'+
             '<div class="text">'+
-            '<span class="title">地址：</span>'+
-            '<span class="detail">'+a+'</span>'
-        '</div>'+
+            '<span class="title">地址：</span>'+ '<span class="detail">'+a+'</span>'
+            '</div>'+
         '</li>';
-        //判断是否有地址信息，如果没有地址信息则不显示
-        if (!result||a=='') {
-            return '';
-        }else {
-            return str;
-        }
+        return str;
     };
 
     //获取比赛主办方
@@ -160,27 +171,20 @@ define(['base','async'],function(Base,Async){
         if (!result||h=='') {
             return '';
         }
-        str='<li id="address">'+
-            '<div class="logo-box">'+
-            '<span class="logo">'+
-            '</span>'+
-            '</div>'+
-            '<div class="text">'+
-            '<span class="title">主办方：</span>'+
-            '<span class="detail">'+h+'</span>'
-        '</div>'+
-        '</li>';
-        return str;
-    };
-
-    //获取比赛详情
-    t.getComInfo= function (result){
-        if (!result||result.explain==''){
+        if (h==null){
             return '';
-        };
-        return  '<div class="content-box detail">'+
-                    result.data.explain+
-                '</div>';
+        }
+            str='<li id="host">'+
+                '<div class="logo-box">'+
+                '<span class="logo">'+
+                '</span>'+
+                '</div>'+
+                '<div class="text">'+
+                '<span class="title">主办方：</span>'+
+                '<span class="detail">'+h+'</span>'+
+                '</div>'+
+                '</li>';
+        return str;
     };
 
     return Competition;

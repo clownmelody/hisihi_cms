@@ -1,111 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <php>
-        $oneplus_seo_meta = get_seo_meta($vars,$seo);
-    </php>
-
-    <title>嘿设汇</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-    <link rel="stylesheet" href="__CSS__/app.min.css">
-    <style>
-        img {
-            max-width:100%;height:auto;
-        }
-        .moreRecommend, #loadingTip, #downloadCon{
-            display: none;
-        }
-    </style>
-    <link type="text/css" href="__CSS__/share-common/share-recommend.css" rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <meta name="Resource-type" content="Document">
+    <!--禁止缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--禁止数字识别为手机号-->
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="stylesheet" href="__CSS__/event/competitionwork/home.css" rel="stylesheet" type="text/css">
+    <title>作品详情</title>
 </head>
-
 <body>
-    <div class="app-page" data-page="home">
-        <div id="test-agent" style="display:none">user-agent</div>
-        <div class="app-content" style.="-webkit-box-shadow: none;">
-            <div class="app-section" style="margin: 10px 10px 10px 10px">
-                <div class="info-title">
-                    <div style="float:left;margin-top:-10px;width:100%">
-                        <h2>{$top_content_info.name}</h2>
-                    </div>
-                </div>
-                <div class="info-time">
-                    <p>{$top_content_info.create_time|date='m-d H:i',###}</p>
-                </div>
-                <div style="height:2px;width: 100%; border-top: 1px #e8e9ea solid;border-radius:0px;margin-left:-8px;padding-right: 16px">
-                </div>
-                <div>
-                    <p>
-                        {$top_content_info.content}
-                    </p>
-                </div>
-            </div>
-            <div class="moreRecommend" data-type="比赛" data-id="{$articleId}">
-            <div class="moreItem" ></div>
-            <div class="moreItem"></div>
-            <div class="moreItem"></div>
-            <div class="moreItem"></div>
-            <div class="moreItem"></div>
-        </div>
-            <div id="loadingTip" class="loadingResultTips">
-                <div class="loadingImg active"></div>
-                <a class="loadError btnElement" href="javascript:void(0)">加载失败，点击重新加载</a>
-            </div>
-        </div>
-    </div>
-    <!--下载条-->
-    <div id="downloadCon">
-        <img src="__IMG__/v2content/d.png" class="allDownImg" />
-        <a href="http://www.hisihi.com/download.php" class="btnElement">立即下载</a>
-    </div>
+<div class="wrapper">
+    <!--标题-->
+    <p class="box title">{$top_content_info.name}</p>
+    <p class="box author">{$top_content_info.create_time|date='m-d H:i',###}</p>
+    <!--作品信息-->
+    <div class="box content">{$top_content_info.content}</div>
+</div>
 </body>
-<script src="__JS__/zepto.js"></script>
-<script src="__JS__/app.min.js"></script>
-<script>
-    App.controller('home', function (page) {
-        $(page)
-                .find('.app-button')
-                .on('click', function () {
-                    window.location.href = "http://www.hisihi.com/download.php";
-                });
-    });
-
-    App.controller('page2', function (page) {
-        // put stuff here
-    });
-
-    try {
-        App.restore();
-    } catch (err) {
-        App.load('home');
-    }
-
-    $("a").removeAttr('href');
-
-    var userAgent = window.location.href;
-    if(userAgent.indexOf("hisihi-app") < 0) {
-        //推荐阅读 以及下载条
-        $(".moreRecommend, #loadingTip, #downloadCon").show();
-
-        window.hisihiUrlObj={
-            link_url:'http://{$Think.server.HTTP_HOST}/',
-            img_url:'__IMG__',
-            js:'__JS__/sharecommon'
-        };
-//        window.hisihiUrlObj.link_url='http://{$Think.server.HTTP_HOST}/hisihi-cms/';
-        window.hisihiUrlObj.server_url=window.hisihiUrlObj.link_url+'api.php?s=/';
-    }
-
-
-
-    // 禁用链接
-    /*var aLink=document.getElementsByTagName("a");
-     for(var i=0; i<aLink.length; i++){
-     aLink[i].href = "javascript:void(0);";
-     aLink[i].setAttribute("disabled", "disabled");
-     }*/
-
-</script>
-<script type="text/javascript" data-main="__JS__/sharecommon/config"  src="__JS__/sharecommon/require.js" ></script>
+<script type="application/javascript" src="__JS__/sharecommon/require.js" data-main="__JS__/events/competitionwork/config"></script>
 </html>
