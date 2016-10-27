@@ -1,23 +1,15 @@
 /**
  * Created by hisihi on 2016/10/26.
  */
-define(['base','async'],function(Base,Async){
-
-    var Work=function($wrapper,id,url){
-        this.$wrapper=$wrapper;
-        var that = this;
-        this.id = id;
-        this.baseUrl =  url;
-        var eventsName='click',that=this;
+define(['base'],function(Base){
+    var Work=function(){
         if(this.isLocal){
             eventsName='touched';
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         };
 
-        this.controlLoadingBox(false);
-        window.setTimeout(function () {
-            //that.加载方法();
-        },100);
+        this.controlLoadingBox(true);
+        window.setTimeout(function () {},100);
     }
 
     //下载条
@@ -28,20 +20,6 @@ define(['base','async'],function(Base,Async){
         }
     };
 
-
-
     Work.prototype=new Base(config);
-    Work.constructor=Work;
-    var t=Work.prototype;
-
-    //获取比赛活动
-
-
-
-
-
-
-
-
     return Work;
 });

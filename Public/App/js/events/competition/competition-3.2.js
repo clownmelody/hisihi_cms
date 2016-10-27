@@ -14,7 +14,7 @@ define(['base','async'],function(Base,Async){
             this.baseUrl=this.baseUrl.replace('api.php','hisihi-cms/api.php');
         };
 
-        this.controlLoadingBox(false);//是否显示加载等待动画
+        this.controlLoadingBox(true);//是否显示加载等待动画
         window.setTimeout(function () {
             that.loadCompetitionInfo();
         }, 100);
@@ -41,13 +41,16 @@ define(['base','async'],function(Base,Async){
                 paraData: {competition_id: this.id},
                 sCallback:function(result){
                     if(result.data){
+                        that.controlLoadingBox(false);
                         that.fillCompetitionInfo(result.data);
                         $('.wrapper').css('opacity','1');
                     }else{
+                        that.controlLoadingBox(false);
                         that.showTips('比赛详情加载失败');
                     }
                 },
                 eCallback:function(){
+                    that.controlLoadingBox(false);
                     that.showTips('比赛详情加载失败');
                 },
                 type: 'get',
@@ -65,15 +68,17 @@ define(['base','async'],function(Base,Async){
         var t = result.title,
             str = '',
             i = result.pic_path,
-            imgStr= '<div class="content-box hide" id="img-box">' +
+            imgStr= '<div class="content-box" id="img-box">' +
                 '<img  src="' + i + '">' +
-                '</div>',
-            $box=$('#img-box');
+                '</div>';
+            //$选择器length 为0
+
         if (!result||i==null){
             imgStr='';
         }
+        //判断是不是来自于app,如果是，则不显示封面
         if(this.isFromApp){
-            $box.removeClass('hide');
+            imgStr='';
         }
         str = imgStr+
                 '<div class="content-box head">'+
@@ -82,7 +87,6 @@ define(['base','async'],function(Base,Async){
                     this.getTimeInfo(result)+this.getAddressInfo(result)+this.getHostInfo(result)+
                 '</ul>'+
                 '</div>';
-        //判断是不是来自于app,如果不是，则显示封面
         $('.detail-head').html(str);
     };
 
@@ -94,21 +98,31 @@ define(['base','async'],function(Base,Async){
     * */
     t.getDaysBetween = function(result,t1,t2){
         var t1= new Date(),
-            t2 = result.eTime;
+            t2 = result.eTime,
+            timeStr='';
             t1.toLocaleString( );//获取日期与时间
         //判断时间差
         if ((new Date(t1.replace(/-/g,"\/"))) > (new Date(t2.replace(/-/g,"\/")))){
-            return true;
+            //return true;
+            timeStr= '<span class="status">'+
+                    //(进行中)时间状态
+                    +'(进行中)'+
+                    '</span>';
             }
         else {
-            return false;
+            //return false;
+            timeStr= '<span class="status">'+
+                    //(进行中)时间状态
+                +'(已结束)'+
+                '</span>';
             }
+        return timeStr;
         };
 
 
     //获取比赛时间
     t.getTimeInfo = function (result){
-        if (!result.sTime||!result.eTime){
+        if (result.sTime==0||result.eTime==0){
             return '';
         }
         var begin=this.getDiffTime(result.sTime),
@@ -121,11 +135,10 @@ define(['base','async'],function(Base,Async){
             '<div class="text">'+
             '<span class="title">'+
                 begin+
+                ' - '+
                 end+
             '</span>'+
-            '<span class="status">'+
-                //(进行中)时间状态
-            '</span>'+
+                //this.getDaysBetween(result)+
             '</div>'+
             '</li>';
         return str;
@@ -135,29 +148,30 @@ define(['base','async'],function(Base,Async){
     t.getAddressInfo = function (result){
         var str='',
             a = result.address;
+        //判断是否有地址信息，如果没有地址信息则不显示
+        if (!result||a==null) {
+            return '';
+        }
         str= '<li id="address">'+
             '<div class="logo-box">'+
             '<span class="logo">'+
             '</span>'+
             '</div>'+
             '<div class="text">'+
-            '<span class="title">地址：</span>'+
-            '<span class="detail">'+a+'</span>'
-        '</div>'+
+            '<span class="title">地址：</span>'+ '<span class="detail">'+a+'</span>'
+            '</div>'+
         '</li>';
-        //判断是否有地址信息，如果没有地址信息则不显示
-        if (!result||a==null) {
-            return '';
-        }else {
-            return str;
-        }
+        return str;
     };
 
     //获取比赛主办方
     t.getHostInfo = function(result){
         var str='',
             h=result.organizer;
-        if (!result||h==null) {
+        if (!result||h=='') {
+            return '';
+        }
+        if (h==null){
             return '';
         }
             str='<li id="host">'+
