@@ -414,9 +414,7 @@ class TeacherController extends BaseController
         if(!empty($price)){
             $data['price'] = $price;
         }
-        if(!empty($teacher_id_list)){
-            $data['teacher_id_list'] = $teacher_id_list;
-        }
+        $data['teacher_id_list'] = $teacher_id_list;
         $courseModel->where('id='.$teaching_course_id)->save($data);
         if(!empty($student_work_list)){
             $student_work_list = stripslashes($student_work_list);
