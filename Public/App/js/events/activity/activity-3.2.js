@@ -42,7 +42,7 @@ define(['base'],function(Base) {
                     if (result.data) {
                         that.controlLoadingBox(false);
                         that.fillCompetitionInfo(result.data);
-                        $('.wrapper').css('opacity', '1');
+                        $('body').css('opacity', '1');
                     } else {
                         that.controlLoadingBox(false);
                         that.showTips('比赛详情加载失败');
