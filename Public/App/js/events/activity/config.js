@@ -9,7 +9,10 @@ requirejs.config({
         fastclick:'sharecommon/fastclick',
         lazyloading:'sharecommon/lazyloading',
         prefixfree:'sharecommon/prefixfree.min',
-        home:'events/competition/competition-3.2',
+        photoswipe:'sharecommon/photoswipe/photoswipe.min',
+        photoswipeui:'sharecommon/photoswipe/photoswipe-ui-default.min',
+        myPhotoSwipe:'sharecommon/photoswipe/myphotoswipe',
+        home:'events/activity/activity-3.2',
         base:'sharecommon/base-1.1',
         async:'sharecommon/async',
     },
@@ -21,6 +24,13 @@ requirejs.config({
             steps:['$'],
             output:'fx'
         },
+        photoswipe:{
+            output:'photoswipe'
+        },
+        photoswipeui:{
+            steps:['photoswipe'],
+            output:'photoswipeui'
+        },
         lazyloading:{
             steps:['$','fx'],
             output:'lazyloading'
@@ -31,7 +41,7 @@ requirejs.config({
     }
 });
 
-require(['home','prefixfree'],function(Competition){
+require(['home','prefixfree'],function(Activity){
     var url = window.location.href;
     if(url.indexOf('%2F')>0){
         url=url.replace(/\%2F/g,'\/');
@@ -39,5 +49,5 @@ require(['home','prefixfree'],function(Competition){
 
     var reg = /id\/[0-9][0-9]*/g,
         id = url.match(reg)[0].toString().replace(/id\//g,'');
-    window.Competition = new Competition($('.wrapper'),id,window.hisihiUrlObj.api_url_php);
+    window.Competition = new Activity($('.wrapper'),id,window.hisihiUrlObj.api_url_php);
 });

@@ -1,9 +1,6 @@
 /**
  * Created by hisihi on 2016/10/24.
  */
-/**
- * Created by hisihi on 2016/10/10.
- */
 requirejs.config({
     baseUrl: window.hisihiUrlObj.js,
     paths: {
