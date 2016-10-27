@@ -89,9 +89,9 @@ class EventController extends AdminController
         $builder->title('线下活动管理')
             ->setStatusUrl(U('setEventContentStatus'))->buttonDisable('', '审核不通过')->buttonDelete()->button('设为推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 1)))))
             ->button('取消推荐', array_merge($attr, array('url' => U('doRecommend', array('tip' => 0)))))
-            ->buttonNew(U('Event/add'))
+            ->buttonNew(U('Event/activity_add'))
             ->keyId()->keyLink('title', '标题', 'Event/add?id=###')->keyUid()->keyCreateTime()->keyStatus()->keyMap('is_recommend', '是否推荐', array(0 => '否', 1 => '是'))
-            ->keyDoActionEdit( 'Event/add?id=###','编辑')
+            ->keyDoActionEdit( 'Event/activity_add?id=###','编辑')
             ->data($list)
             ->search('标题', 'title')
             ->pagination($totalCount, $r)
@@ -105,7 +105,44 @@ class EventController extends AdminController
         $types = D('Event/EventType')->getTree(0, 'id,title,sort,pid,status');
         $event_types = array();
         foreach($types as $key => $value){
-            $event_types[$value['id']] = $value['title'];
+            if($value['id']==2){
+                $event_types[$value['id']] = $value['title'];
+            }
+        }
+
+        $event_add->title('发布活动')
+            ->keyText('title', '标题')->keySelect('type_id',"选择类型",'',$event_types)
+            /*->keyTime('deadline', '报名结束时间')*/
+            ->keyTime('sTime', '课程开始时间')
+            ->keyTime('eTime', '课程结束时间')
+            ->keyText('address', '地点','线下培训地点')
+            ->keyText('organizer', '主办方')
+            ->keyInteger('limitCount','人数','课程人数上线')
+            ->keyTextArea('explain','介绍')
+            ->keyEditor('detail_content', '详细内容')
+            ->keySingleImage('cover_id','封面')
+            ->buttonSubmit(U('Event/addEvent'), '保存')
+            ->buttonBack();
+
+        if($id){
+            $event_add->keyHidden('id','编号');
+            $event_content = D('Event')->where(array('status' => 1, 'id' => $id))->find();
+            $event_add->data($event_content);
+        }
+        $this->assign('meta_title', '活动');
+        $event_add->display();
+    }
+
+    public function activity_add($id=0)
+    {
+        $event_add = new AdminConfigBuilder();
+
+        $types = D('Event/EventType')->getTree(0, 'id,title,sort,pid,status');
+        $event_types = array();
+        foreach($types as $key => $value){
+            if($value['id']==5){
+                $event_types[$value['id']] = $value['title'];
+            }
         }
 
         $event_add->title('发布活动')
@@ -166,30 +203,33 @@ class EventController extends AdminController
         $content['create_time'] = time();
         $content['sTime'] = $sTime;
         $content['eTime'] = $eTime;
+        $content['organizer'] = $organizer;
+        $content['address'] = $address;
         $content['status'] = 1;
         if ($id) {
-            $content_temp = D('Event')->find($id);
-            if (!is_administrator(is_login())) { //不是管理员则进行检测
-                if ($content_temp['uid'] != is_login()) {
-                    $this->error('小样儿，可别学坏。别以为改一下页面元素就能越权操作。');
-                }
-            }
-            $content['uid'] = $content_temp['uid']; //权限矫正，防止被改为管理员
             $rs = D('Event')->save($content);
 
             if ($rs) {
                 $this->uploadEventPicToOSS($content['cover_id']);
-                $this->success('编辑成功。', U('event'));
+                if($content['type_id']==2){
+                    $this->success('编辑成功', 'index.php?s=/admin/event/event');
+                } else {
+                    $this->success('编辑成功', 'index.php?s=/admin/event/offlineevent');
+                }
             } else {
-                $this->success('编辑失败。', '');
+                $this->success('编辑失败', '');
             }
         }else{
             $content['view_count'] = rand(C('CompetitionInitMinViewCount'), C('CompetitionInitMaxViewCount'));
             $rs = D('Event')->add($content);
             if ($rs) {
-                $this->success('发布成功。' , U('event'));
+                if($content['type_id']==2){
+                    $this->success('发布成功', 'index.php?s=/admin/event/event');
+                } else {
+                    $this->success('发布成功', 'index.php?s=/admin/event/offlineevent');
+                }
             } else {
-                $this->success('发布失败。', '');
+                $this->success('发布失败', '');
             }
         }
     }
