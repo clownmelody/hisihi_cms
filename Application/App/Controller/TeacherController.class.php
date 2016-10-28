@@ -518,7 +518,7 @@ class TeacherController extends BaseController
             ->where('status=1 and teaching_course_id='.$teacher_course_id)->select();
         foreach($outlineList as &$item){
             $resList = $outlineResModel->field('id, outline_id, name, type, video_id,
-                                                content, cover_pic, is_top')
+                                                content, cover_pic, is_top, status')
                 ->where('status>=0 and outline_id='.$item['id'])->select();
             foreach($resList as &$res){
                 if($res['type']==2){
