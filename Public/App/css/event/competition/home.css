@@ -513,6 +513,7 @@ body {
   opacity: 0;
 }
 .wrapper .content-box {
+  position: relative;
   background-color: #ffffff;
   margin-bottom: 14px;
 }
@@ -563,7 +564,7 @@ body {
 }
 .wrapper .detail-head .head .head-box .text {
   display: inline-block;
-  position: relative;
+  position: absolute;
   line-height: 40px;
 }
 .wrapper .detail-head .head .head-box .text .title {
