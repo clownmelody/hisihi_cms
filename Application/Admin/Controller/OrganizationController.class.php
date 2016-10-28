@@ -4148,7 +4148,10 @@ class OrganizationController extends AdminController
     public function course_video_checked($id=0){
         if(!empty($id)){
             $model = M('TeachingCourseOutlineResource');
+            $videoModel = M('OrganizationVideo');
+            $info = $model->field('video_id')->where('id='.$id)->find();
             $data['status'] = 1;
+            $videoModel->where('id='.$info['video_id'])->save($data);
             if(is_array($id)){
                 foreach ($id as $i)
                 {
