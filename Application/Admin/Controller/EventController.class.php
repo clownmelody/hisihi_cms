@@ -452,8 +452,6 @@ class EventController extends AdminController
             if ($rs) {
                 $this->uploadEventPicToOSS($content['cover_id']);
                 $this->success('编辑成功。', U('works_list?id='.$content['competition_id']));
-            } else {
-                $this->success('编辑失败。', '');
             }
         }else{
             $content['create_time'] = time();
