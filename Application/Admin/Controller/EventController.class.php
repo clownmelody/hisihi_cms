@@ -200,7 +200,6 @@ class EventController extends AdminController
         $content['explain'] = op_h($content['explain']);
         $content['title'] = op_t($content['title']);
         $content['type_id'] = intval($type_id);
-        $content['create_time'] = time();
         $content['sTime'] = $sTime;
         $content['eTime'] = $eTime;
         $content['organizer'] = $organizer;
