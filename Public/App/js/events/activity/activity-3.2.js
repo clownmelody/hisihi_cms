@@ -9,10 +9,9 @@ define(['base'],function(Base) {
         this.baseUrl = url;
         var eventsName = 'click', that = this;
         if (this.isLocal) {
-            eventsName = 'touchend';
+            //eventsName = 'touchend';
             this.baseUrl = this.baseUrl.replace('api.php', 'hisihi-cms/api.php');
         }
-        ;
 
         this.controlLoadingBox(true);//是否显示加载等待动画
         window.setTimeout(function () {
