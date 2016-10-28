@@ -449,7 +449,9 @@ class EventController extends AdminController
             }
             $rs = D('EventWorks')->save($content);
 
-            if ($rs) {
+            if ($rs ===false) {
+                $this->error('编辑失败。', '');
+            }else{
                 $this->uploadEventPicToOSS($content['cover_id']);
                 $this->success('编辑成功。', U('works_list?id='.$content['competition_id']));
             }
@@ -459,7 +461,7 @@ class EventController extends AdminController
             if ($rs) {
                 $this->success('发布成功。' , U('works_list?id='.$content['competition_id']));
             } else {
-                $this->success('发布失败。', '');
+                $this->error('发布失败。', '');
             }
         }
     }
