@@ -9,12 +9,8 @@ requirejs.config({
         fastclick:'sharecommon/fastclick',
         lazyloading:'sharecommon/lazyloading',
         prefixfree:'sharecommon/prefixfree.min',
-        photoswipe:'sharecommon/photoswipe/photoswipe.min',
-        photoswipeui:'sharecommon/photoswipe/photoswipe-ui-default.min',
-        myPhotoSwipe:'sharecommon/photoswipe/myphotoswipe',
         home:'events/activity/activity-3.2',
         base:'sharecommon/base-1.1',
-        async:'sharecommon/async',
     },
     shim: {
         $:{
@@ -23,13 +19,6 @@ requirejs.config({
         fx:{
             steps:['$'],
             output:'fx'
-        },
-        photoswipe:{
-            output:'photoswipe'
-        },
-        photoswipeui:{
-            steps:['photoswipe'],
-            output:'photoswipeui'
         },
         lazyloading:{
             steps:['$','fx'],
