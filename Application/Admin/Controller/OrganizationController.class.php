@@ -4149,17 +4149,19 @@ class OrganizationController extends AdminController
         if(!empty($id)){
             $model = M('TeachingCourseOutlineResource');
             $videoModel = M('OrganizationVideo');
-            $info = $model->field('video_id')->where('id='.$id)->find();
             $data['status'] = 1;
-            $videoModel->where('id='.$info['video_id'])->save($data);
             if(is_array($id)){
                 foreach ($id as $i)
                 {
                     $model->where('id='.$i)->save($data);
+                    $info = $model->field('video_id')->where('id='.$i)->find();
+                    $videoModel->where('id='.$info['video_id'])->save($data);
                 }
             } else {
                 $id = intval($id);
                 $model->where('id='.$id)->save($data);
+                $info = $model->field('video_id')->where('id='.$id)->find();
+                $videoModel->where('id='.$info['video_id'])->save($data);
             }
             $this->success('审核通过','index.php?s=/admin/organization/coursevideo');
         } else {
