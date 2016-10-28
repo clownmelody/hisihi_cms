@@ -31,7 +31,7 @@ requirejs.config({
 });
 
 
-require(['home','prefixfree'],function(course){
+require(['home','prefixfree'],function(course,pre){
     var url = window.location.href;
     if(url.indexOf('%2F')>0){
         url=url.replace(/\%2F/g,'\/');
