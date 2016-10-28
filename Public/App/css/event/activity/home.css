@@ -520,7 +520,7 @@ img {
 .detail-head .head .header {
   color: #212121;
   font-size: 15px;
-  padding: 14px;
+  padding: 14px 14px 14px 24px;
   border-bottom: 1px solid #F2F2F2;
   font-weight: bold;
 }
@@ -530,9 +530,11 @@ img {
   display: inline-block;
 }
 .detail-head .head .head-box > li {
-  min-height: 40px;
+  height: 100%;
+  width: 100%;
+  float: left;
   position: relative;
-  padding: 0px 14px;
+  margin: 0px 14px;
   border-bottom: 1px solid #F2F2F2;
 }
 .detail-head .head .head-box > li:last-child {
@@ -551,42 +553,43 @@ img {
 }
 .detail-head .head .head-box .logo-box .logo {
   background: url("../../../images/event/compretition/sprite.png") no-repeat;
-  background-size: 99px 28.8px;
+  background-size: 82.5px 24px;
 }
 .detail-head .head .head-box .text {
   display: inline-block;
-  position: relative;
-  line-height: 40px;
+  width: 79%;
 }
 .detail-head .head .head-box .text .title {
   color: #212121;
+  vertical-align: -8px;
 }
 .detail-head .head .head-box .text .detail {
   color: #808080;
+  vertical-align: -8px;
 }
 .detail-head .head .head-box .text .status {
   color: #FF5A00;
-  vertical-align: 1px;
   padding-left: 8px;
+  vertical-align: -7px;
 }
 .detail-head .head .head-box #time .logo {
-  width: 22px;
-  height: 22px;
-  background-position: -51px 0px;
+  width: 19px;
+  height: 19px;
+  background-position: -42px 0px;
 }
 .detail-head .head .head-box #time.activity-end {
-  width: 22px;
-  height: 22px;
-  background-position: -77px 0px;
+  width: 19px;
+  height: 19px;
+  background-position: -64px 0px;
 }
 .detail-head .head .head-box #address .logo {
-  width: 22px;
-  height: 27px;
-  background-position: -24px 0px;
+  width: 19px;
+  height: 23px;
+  background-position: -20px 0px;
 }
 .detail-head .head .head-box #host .logo {
-  width: 17px;
-  height: 29px;
+  width: 14px;
+  height: 25px;
   background-position: 0px 0px;
 }
 .detail-box {

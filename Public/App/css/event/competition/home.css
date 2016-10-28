@@ -554,7 +554,7 @@ img {
 }
 .detail-head .head .head-box .logo-box .logo {
   background: url("../../../images/event/compretition/sprite.png") no-repeat;
-  background-size: 99px 28.8px;
+  background-size: 82.5px 24px;
 }
 .detail-head .head .head-box .text {
   display: inline-block;
@@ -574,23 +574,23 @@ img {
   vertical-align: -7px;
 }
 .detail-head .head .head-box #time .logo {
-  width: 22px;
-  height: 22px;
-  background-position: -51px 0px;
+  width: 19px;
+  height: 19px;
+  background-position: -42px 0px;
 }
 .detail-head .head .head-box #time.activity-end {
-  width: 22px;
-  height: 22px;
-  background-position: -77px 0px;
+  width: 19px;
+  height: 19px;
+  background-position: -64px 0px;
 }
 .detail-head .head .head-box #address .logo {
-  width: 22px;
-  height: 27px;
-  background-position: -24px 0px;
+  width: 19px;
+  height: 23px;
+  background-position: -20px 0px;
 }
 .detail-head .head .head-box #host .logo {
-  width: 17px;
-  height: 29px;
+  width: 14px;
+  height: 25px;
   background-position: 0px 0px;
 }
 .detail-box {
