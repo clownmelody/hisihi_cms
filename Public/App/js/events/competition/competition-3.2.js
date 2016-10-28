@@ -3,8 +3,7 @@
  */
 define(['base','async'],function(Base,Async){
 
-    var Competition=function($wrapper,id,url){
-        this.$wrapper= $wrapper;
+    var Competition=function(id,url){
         var that = this;
         this.id = id;
         this.baseUrl = url;
@@ -43,7 +42,7 @@ define(['base','async'],function(Base,Async){
                     if(result.data){
                         that.controlLoadingBox(false);
                         that.fillCompetitionInfo(result.data);
-                        $('.wrapper').css('opacity','1');
+                        $('body').css('opacity','1');
                     }else{
                         that.controlLoadingBox(false);
                         that.showTips('比赛详情加载失败');
