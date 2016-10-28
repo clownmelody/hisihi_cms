@@ -159,7 +159,7 @@ class EventController extends AppController{
         $picModel = D('Home/Picture');
         $map['status'] = array('gt', 0);
         $map['competition_id'] = $competition_id;
-        $listData = M('EventWorks')->where($map)->field('id, name , cover_id')->page($page, $count)->select();
+        $listData = M('EventWorks')->where($map)->field('id, name , cover_id')->order('create_time desc')->page($page, $count)->select();
         foreach($listData as &$event){
             $event['content_url'] = C('HOST_NAME_PREFIX').'app.php/event/workscontent/type/view/id/'.$event['id'];
             $event['cover_path'] = null;

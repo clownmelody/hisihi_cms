@@ -200,7 +200,6 @@ class EventController extends AdminController
         $content['explain'] = op_h($content['explain']);
         $content['title'] = op_t($content['title']);
         $content['type_id'] = intval($type_id);
-        $content['create_time'] = time();
         $content['sTime'] = $sTime;
         $content['eTime'] = $eTime;
         $content['organizer'] = $organizer;
@@ -439,7 +438,6 @@ class EventController extends AdminController
         $content = D('EventWorks')->create();
         $content['author'] = op_h($content['author']);
         $content['name'] = op_t($content['name']);
-        $content['create_time'] = time();
         $content['status'] = 1;
         if ($id) {
             $content_temp = D('EventWorks')->find($id);
@@ -453,10 +451,9 @@ class EventController extends AdminController
             if ($rs) {
                 $this->uploadEventPicToOSS($content['cover_id']);
                 $this->success('编辑成功。', U('works_list?id='.$content['competition_id']));
-            } else {
-                $this->success('编辑失败。', '');
             }
         }else{
+            $content['create_time'] = time();
             $rs = D('EventWorks')->add($content);
             if ($rs) {
                 $this->success('发布成功。' , U('works_list?id='.$content['competition_id']));
