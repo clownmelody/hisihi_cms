@@ -10,7 +10,7 @@ requirejs.config ({
         base:'sharecommon/base-1.1',
         fastclick:'sharecommon/fastclick',
         prefixfree:'sharecommon/prefixfree',
-        home:'baike/baike',
+        home:'encyclopedia/encyclopedia',
         //约定不需要具体网络数据获取情况
     },
     shim: {
@@ -28,7 +28,7 @@ requirejs.config ({
 });
 
 //正则表达式获取当前页面的id和网络地址
-require(['home','prefixfree'],function(Baike) {
+require(['home','prefixfree'],function(Encyclopedia) {
     var url = window.location.href;
     if (url.indexOf('%2f') > 0) {
         url=url.replace(/\%2F/g,'\/');
@@ -36,5 +36,5 @@ require(['home','prefixfree'],function(Baike) {
 
     var reg = /id\/[0-9][0-9]*/g,
         id = url.match(reg)[0].toString().replace(/id\//g,'');
-    window.Baike = new Baike(id,window.hisihiUrlObj.api_url_php);
+    window.Baike = new Encyclopedia(id,window.hisihiUrlObj.api_url_php);
 });
