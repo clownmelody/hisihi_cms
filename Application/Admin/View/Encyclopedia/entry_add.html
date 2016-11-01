@@ -50,9 +50,9 @@
                                 'removeTimeout'	  : 1,
                                 'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
                                 "onUploadSuccess" : uploadPictureCompany,
-                            'onFallback' : function() {
-                                alert('未检测到兼容版本的Flash.');
-                            }
+                                'onFallback' : function() {
+                                    alert('未检测到兼容版本的Flash.');
+                                }
                             });
                             function uploadPictureCompany(file, data){
                                 var data = $.parseJSON(data);
@@ -100,18 +100,8 @@
             </form>
         </div>
     </div>
-
-    <!-- ZUI Javascript组件 -->
-    <script src="__STATIC__/zui/js/zui.min.js"></script>
-    <script>
-        $('select.relevant_entry').chosen({
-            no_results_text: '没有找到',    // 当检索时没有找到匹配项时显示的提示文本
-            disable_search_threshold: 0, // 10 个以下的选择项则不显示检索框
-            search_contains: true         // 从任意位置开始检索
-        });
-    </script>
-
 </block>
+
 <script>
     //导航高亮
     highlight_subnav('{:U('Encyclopedia/add_entry')}');

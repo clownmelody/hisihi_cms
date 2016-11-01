@@ -152,6 +152,11 @@ class EncyclopediaController extends AdminController {
     }
 
     public function entry_catagory_add(){
+        $model = M('EncyclopediaCategory');
+        $plist = $model->where('pid = 0 and status=1')->order('create_time desc')->select();
+        $list = $model->where('status=1 and pid > 0')->order('create_time desc')->select();
+        $this->assign('pcatagory', $plist);
+        $this->assign('catagory', $list);
         $this->display('entry_catagory_add');
     }
 
@@ -182,7 +187,19 @@ class EncyclopediaController extends AdminController {
     }
 
     public function entry_link_add(){
-        $this->display('entry_catagory_add');
+        $model = M('EncyclopediaEntryLink');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, C('LIST_ROWS'));
+        $show = $Page->show();
+        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        foreach($list as &$item){
+            $info = M('InformationFlowContent')->field('name')->where('id='.$item['link_id'])->find();
+            $item['name'] = $info['name'];
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->display('entry_link_add');
     }
 
     public function entry_link_update(){
@@ -208,6 +225,36 @@ class EncyclopediaController extends AdminController {
             }
         } else {
             $this->display('entry_add');
+        }
+    }
+
+    public function content_add(){
+        $this->display('content_add');
+    }
+
+    public function content_update(){
+        if (IS_POST) { //提交表单
+            $model = M('EncyclopediaEntryCatalogue');
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $data["sort"] = $_POST["sort"];
+            $data["cover_id"] = $_POST["cover_id"];
+            $data["abstract"] = $_POST["abstract"];
+            $data["relevant_entry"] = $_POST["relevant_entry"];
+            if(empty($cid)){
+                $data["create_time"] = time();
+                try {
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+            }
+        } else {
+            $this->display('content_add');
         }
     }
 }
