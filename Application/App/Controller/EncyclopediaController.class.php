@@ -10,7 +10,7 @@ namespace App\Controller;
 use Common\Controller\BaseController;
 
 
-class Encyclopedia extends BaseController {
+class EncyclopediaController extends BaseController {
 
     public function __construct(){
         parent::__construct();
