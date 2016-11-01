@@ -19,12 +19,22 @@ class EncyclopediaController extends AdminController {
         parent::_initialize();
     }
 
-    public function category(){
+    public function category($pid=0){
         $model = M('EncyclopediaCategory');
         $count = $model->where('status=1')->count();
         $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
-        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        if($pid==0){
+            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        } else {
+            $list = $model->where('status=1 and pid='.$pid)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        foreach($list as &$item){
+            $info = $model->field('name')->where('id='.$item['pid'])->find();
+            $item['pid_name'] = $info['name'];
+        }
+        $first_level_list = $model->field('id,name')->where('status=1 and pid=0')->select();
+        $this->assign('first_level_list', $first_level_list);
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("_total", $count);
