@@ -33,7 +33,7 @@
                             <input type="hidden" name="cover_id" id="cover_id_company"/>
                             <div class="upload-img-box">
                                 <notempty name="data[$field['name']]">
-                                    <div class="upload-pre-item"><img src="{$data[$field['name']]|get_cover='path'}"/></div>
+                                    <div class="upload-pre-item"><img src="{$data[$field['cover_id']]|get_cover='path'}"/></div>
                                 </notempty>
                             </div>
                         </div>
@@ -81,8 +81,11 @@
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">相关词条</label>
-                        <select class="text input-large relevant_entry" name="relevant_entry" style="height: 30px;width: 400px;">
-                        </select>
+                        <!--<select class="text input-large relevant_entry" name="relevant_entry" style="height: 30px;width: 400px;">
+                        </select>-->
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="relevant_entry" value="">
+                        </div>
                     </div>
                 </div>
 

@@ -84,4 +84,120 @@ class EncyclopediaController extends AdminController {
     public function entry_add(){
         $this->display('entry_add');
     }
+
+    public function entry_update(){
+        if (IS_POST) { //提交表单
+            $model = M('EncyclopediaEntry');
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $data["sort"] = $_POST["sort"];
+            $data["cover_id"] = $_POST["cover_id"];
+            $data["abstract"] = $_POST["abstract"];
+            $data["relevant_entry"] = $_POST["relevant_entry"];
+            if(empty($cid)){
+                $data["create_time"] = time();
+                try {
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+            }
+        } else {
+            $this->display('entry_add');
+        }
+    }
+
+    public function catalogue_add(){
+        $this->display('catalogue_add');
+    }
+
+    public function catalogue_update(){
+        if (IS_POST) { //提交表单
+            $model = M('EncyclopediaEntryCatalogue');
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $data["sort"] = $_POST["sort"];
+            $data["cover_id"] = $_POST["cover_id"];
+            $data["abstract"] = $_POST["abstract"];
+            $data["relevant_entry"] = $_POST["relevant_entry"];
+            if(empty($cid)){
+                $data["create_time"] = time();
+                try {
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+            }
+        } else {
+            $this->display('entry_add');
+        }
+    }
+
+    public function entry_catagory_add(){
+        $this->display('entry_catagory_add');
+    }
+
+    public function entry_catagory_update(){
+        if (IS_POST) { //提交表单
+            $model = M('EncyclopediaEntryCatalogue');
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $data["sort"] = $_POST["sort"];
+            $data["cover_id"] = $_POST["cover_id"];
+            $data["abstract"] = $_POST["abstract"];
+            $data["relevant_entry"] = $_POST["relevant_entry"];
+            if(empty($cid)){
+                $data["create_time"] = time();
+                try {
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+            }
+        } else {
+            $this->display('entry_add');
+        }
+    }
+
+    public function entry_link_add(){
+        $this->display('entry_catagory_add');
+    }
+
+    public function entry_link_update(){
+        if (IS_POST) { //提交表单
+            $model = M('EncyclopediaEntryCatalogue');
+            $cid = $_POST["cid"];
+            $data["name"] = $_POST["name"];
+            $data["sort"] = $_POST["sort"];
+            $data["cover_id"] = $_POST["cover_id"];
+            $data["abstract"] = $_POST["abstract"];
+            $data["relevant_entry"] = $_POST["relevant_entry"];
+            if(empty($cid)){
+                $data["create_time"] = time();
+                try {
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
+            } else {
+                $model->where('id='.$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+            }
+        } else {
+            $this->display('entry_add');
+        }
+    }
 }
