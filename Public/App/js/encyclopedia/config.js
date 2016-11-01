@@ -4,12 +4,12 @@
 requirejs.config ({
     //give me the things that I loved when the diamond in the sky
     baseUrl:window.hisihiUrlObj.js,
-    path: {
+    paths: {
         $:'sharecommon/zepto.min',
-        p:'sharecommon/fx_v1.1',
+        fx:'sharecommon/fx_v1.1',
         base:'sharecommon/base-1.1',
         fastclick:'sharecommon/fastclick',
-        prefixfree:'sharecommon/prefixfree',
+        prefixfree:'sharecommon/prefixfree.min',
         home:'encyclopedia/encyclopedia',
         //约定不需要具体网络数据获取情况
     },

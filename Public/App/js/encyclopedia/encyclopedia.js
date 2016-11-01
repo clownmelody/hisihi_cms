@@ -1,10 +1,13 @@
 /**
  * Created by hisihi on 2016/10/31.
  */
-encyclopedia
-define(['base'],function(Encyclopedia) {
+define(['base'],function(Base) {
+
 
     var Encyclopedia = function (id, url) {
+        //ÇëÇóÊý¾Ý
+        $.getJSON("data.json",function(result){});
+
         var that = this;
         this.id = id;
         this.baseUrl = url;
@@ -27,6 +30,7 @@ define(['base'],function(Encyclopedia) {
             pos: 1
         }
     };
+
 
     Encyclopedia.prototype = new Base(config);
     Encyclopedia.constructor = Encyclopedia;
