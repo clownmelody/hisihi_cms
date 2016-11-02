@@ -68,6 +68,8 @@ class EncyclopediaController extends BaseController {
                 $item2['cover_url'] = $cover_pic;
             }
             $item2['content_url'] = C('HOST_NAME_PREFIX').'app.php/encyclopedia/encyclopedia/entry_id/'.$item2['id'];
+            $item2['digest'] = $item2['abstract'];
+            unset($item2['abstract']);
         }
         $count = M('EncyclopediaEntry')->where($entry_map)->count();
         $this->apiSuccess("获取词条列表成功", null,
