@@ -2,6 +2,9 @@
 img  {
   max-width: 100%;
 }
+.clear {
+  clear: both;
+}
 body {
   margin: 0;
   padding: 0;
@@ -11,7 +14,6 @@ body {
   font-size: 14px;
   background-color: #F2F2F2;
   .head {
-    position: absolute;
     background-color: #ffffff;
     padding: 14px;
     .head-main-title {
@@ -27,7 +29,7 @@ body {
       padding-bottom: 14px;
     }
     .head-tag {
-      position: relative;
+      //position: relative;
       > li {
         float: left;
         height: 25px;
@@ -51,14 +53,22 @@ body {
 
   //目录样式
   .index {
-
   }
 
   .content {
     background-color: #ffffff;
-    margin-top: 12px;
+    color: #212121;
+    font-size: 14px;
+    padding: 14px;
     .content-head {
+      font-weight: bold;
+      border-left: 4px solid #FF5A00;
+    }
+    .content-info {
 
+      .active-word {
+        color: #039be5;
+      }
     }
   }
 }

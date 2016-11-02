@@ -27,7 +27,6 @@ requirejs.config({
     }
 });
 
-//正则表达式获取当前页面的id和网络地址
 require(['home','prefixfree'],function(Encyclopedia) {
     var url = window.location.href;
     if (url.indexOf('%2f') > 0) {

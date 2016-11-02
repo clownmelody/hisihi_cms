@@ -3,7 +3,6 @@
  */
 define(['base'],function(Base) {
 
-
     var Encyclopedia = function (id, url) {
 
         var that = this;
@@ -45,7 +44,7 @@ define(['base'],function(Base) {
     });
 
     t.loadEncyclopediaInfo = function() {
-        alert('成功');
+
     };
 
 
