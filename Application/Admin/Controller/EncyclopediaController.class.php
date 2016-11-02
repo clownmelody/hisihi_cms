@@ -104,17 +104,28 @@ class EncyclopediaController extends AdminController {
             $data["cover_id"] = $_POST["cover_id"];
             $data["abstract"] = $_POST["abstract"];
             $data["relevant_entry"] = $_POST["relevant_entry"];
+            if(intval($data["cover_id"]) > 0){
+                $this->uploadLogoPicToOSS($data["cover_id"]);
+            }
             if(empty($cid)){
                 $data["create_time"] = time();
                 try {
-                    $model->add($data);
+                    $entry_id = $model->add($data);
+                    if($entry_id === false){
+                        $this->error("新增失败");
+                    }else{
+                        $this->success('添加成功', 'index.php?s=/admin/encyclopedia/catalogue_add/entry_id/'.$entry_id);
+                    }
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
             } else {
-                $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+                $res = $model->where('id='.$cid)->save($data);
+                if ($res === false){
+                    $this->error("编辑失败");
+                }else{
+                    $this->success('更新成功', 'index.php?s=/admin/encyclopedia/catalogue_add/entry_id/'.$cid);
+                }
             }
         } else {
             $this->display('entry_add');
@@ -122,6 +133,12 @@ class EncyclopediaController extends AdminController {
     }
 
     public function catalogue_add(){
+        $entry_id = I('entry_id');
+        if(empty($entry_id)){
+            $this->error('请先添加词条基本信息', 'index.php?s=/admin/encyclopedia/entry_add/');
+        }
+        $entry = M('EncyclopediaEntry')->where('id='.$entry_id)->find();
+        $this->assign('entry', $entry);
         $this->display('catalogue_add');
     }
 
@@ -130,21 +147,38 @@ class EncyclopediaController extends AdminController {
             $model = M('EncyclopediaEntryCatalogue');
             $cid = $_POST["cid"];
             $data["name"] = $_POST["name"];
-            $data["sort"] = $_POST["sort"];
-            $data["cover_id"] = $_POST["cover_id"];
-            $data["abstract"] = $_POST["abstract"];
-            $data["relevant_entry"] = $_POST["relevant_entry"];
             if(empty($cid)){
+                $data["entry_id"] = $_POST["entry_id"];
+                $data["pid"] = $_POST["pid"];
                 $data["create_time"] = time();
                 try {
-                    $model->add($data);
+                    $catalogue_id = $model->add($data);
+                    if($catalogue_id === false){
+                        $rdata['status'] = -1;
+                        $rdata['msg'] = '新增失败';
+                        $this->ajaxReturn($rdata, 'JSON');
+                    }else{
+                        $rdata['catalogue_id'] = $catalogue_id;
+                        $rdata['status'] = 1;
+                        $rdata['msg'] = '新增成功';
+                        $this->ajaxReturn($rdata, 'JSON');
+                    }
                 } catch (Exception $e) {
-                    $this->error($e->getMessage());
+                    $rdata['status'] = -1;
+                    $rdata['msg'] = '新增失败';
+                    $this->ajaxReturn($rdata, 'JSON');
                 }
-                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
             } else {
-                $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+                $res = $model->where('id='.$cid)->save($data);
+                if ($res === false){
+                    $rdata['status'] = -1;
+                    $rdata['msg'] = '修改失败';
+                    $this->ajaxReturn($rdata, 'JSON');
+                }else{
+                    $rdata['status'] = 1;
+                    $rdata['msg'] = '修改成功';
+                    $this->ajaxReturn($rdata, 'JSON');
+                }
             }
         } else {
             $this->display('entry_add');
@@ -257,4 +291,24 @@ class EncyclopediaController extends AdminController {
             $this->display('content_add');
         }
     }
+
+    /**
+     * 上传图片到OSS
+     * @param $picID
+     */
+    public function uploadLogoPicToOSS($picID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$picID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            }
+        }
+    }
+
 }
