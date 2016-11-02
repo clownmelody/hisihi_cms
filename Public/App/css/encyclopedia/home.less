@@ -9,8 +9,11 @@ body {
   left: 0;
   right: 0;
   font-size: 14px;
+  background-color: #F2F2F2;
   .head {
-    margin: 14px;
+    position: absolute;
+    background-color: #ffffff;
+    padding: 14px;
     .head-main-title {
       width: 100%;
       color: #212121;
@@ -24,25 +27,38 @@ body {
       padding-bottom: 14px;
     }
     .head-tag {
-      width: 100%;
       position: relative;
+      > li {
+        float: left;
+        height: 25px;
+        padding-left: 5px;
+        padding-right: 5px;
+        margin-bottom: 10px;
+        line-height: 25px;
+      }
       .head-title {
-        //float: left;
-        width: 20%;
         color: #212121;
       }
-      > ul {
-        width: 80%;
-        .head-title-tag {
-          margin-right: 10px;
-          font-size: 14px;
-          color: #FF5A00;
-          //float: left;
-          border: 1px solid #FF5A00;
-          border-radius: 4px;
-          line-height: 22px;
-        }
+      .head-title-tag {
+        margin-right: 10px;
+        font-size: 14px;
+        color: #FF5A00;
+        border: 1px solid #FF5A00;
+        border-radius: 4px;
       }
+    }
+  }
+
+  //目录样式
+  .index {
+
+  }
+
+  .content {
+    background-color: #ffffff;
+    margin-top: 12px;
+    .content-head {
+
     }
   }
 }

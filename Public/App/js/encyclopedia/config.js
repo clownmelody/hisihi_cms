@@ -1,7 +1,7 @@
 /**
  * Created by hisihi on 2016/10/31.
  */
-requirejs.config ({
+requirejs.config({
     //give me the things that I loved when the diamond in the sky
     baseUrl:window.hisihiUrlObj.js,
     paths: {
@@ -36,5 +36,5 @@ require(['home','prefixfree'],function(Encyclopedia) {
 
     var reg = /id\/[0-9][0-9]*/g,
         id = url.match(reg)[0].toString().replace(/id\//g,'');
-    window.Baike = new Encyclopedia(id,window.hisihiUrlObj.api_url_php);
+    window.Encyclopedia = new Encyclopedia(id,window.hisihiUrlObj.api_url_php);
 });
