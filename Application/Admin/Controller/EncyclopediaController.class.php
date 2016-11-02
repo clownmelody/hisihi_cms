@@ -104,6 +104,9 @@ class EncyclopediaController extends AdminController {
             $data["cover_id"] = $_POST["cover_id"];
             $data["abstract"] = $_POST["abstract"];
             $data["relevant_entry"] = $_POST["relevant_entry"];
+            if(intval($data["cover_id"]) > 0){
+                $this->uploadLogoPicToOSS($data["cover_id"]);
+            }
             if(empty($cid)){
                 $data["create_time"] = time();
                 try {
@@ -288,4 +291,24 @@ class EncyclopediaController extends AdminController {
             $this->display('content_add');
         }
     }
+
+    /**
+     * 上传图片到OSS
+     * @param $picID
+     */
+    public function uploadLogoPicToOSS($picID){
+        $model = M();
+        $result = $model->query("select path from hisihi_picture where id=".$picID);
+        if($result){
+            $picLocalPath = $result[0]['path'];
+            $picKey = substr($picLocalPath, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $picKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if(!$isExist){
+                Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
+            }
+        }
+    }
+
 }
