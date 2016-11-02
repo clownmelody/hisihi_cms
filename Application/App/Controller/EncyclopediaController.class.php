@@ -20,7 +20,8 @@ class EncyclopediaController extends BaseController {
         C('SHOW_PAGE_TRACE', false);
     }
 
-    public function encyclopedia(){
+    public function encyclopedia($entry_id=0){
+        $this->assign('entry_id', $entry_id);
         $this->display('encyclopedia');
     }
 
@@ -66,9 +67,12 @@ class EncyclopediaController extends BaseController {
                 $cover_pic = "http://hisihi-other".C('OSS_ENDPOINT').$picKey;
                 $item2['cover_url'] = $cover_pic;
             }
+            $item2['content_url'] = C('HOST_NAME_PREFIX').'app.php/encyclopedia/encyclopedia/entry_id/'.$item2['id'];
         }
         $count = M('EncyclopediaEntry')->where($entry_map)->count();
         $this->apiSuccess("获取词条列表成功", null,
             array('data' => $list, 'total_count' => $count));
     }
+
+
 }
