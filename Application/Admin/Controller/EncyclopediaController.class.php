@@ -338,4 +338,9 @@ class EncyclopediaController extends AdminController {
         return $picUrl;
     }
 
+    public function item(){
+        
+        $list = M('EncyclopediaEntry')->where()->order('sort desc , create_time desc')->select();
+        $this->display('item');
+    }
 }

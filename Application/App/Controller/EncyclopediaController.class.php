@@ -160,8 +160,13 @@ class EncyclopediaController extends BaseController {
     }
 
     public function getEntryUrl($entry_id=0){
+        $entry = M('EncyclopediaEntry')->where('id='.$entry_id)->find();
         $url = C('HOST_NAME_PREFIX').'app.php/encyclopedia/encyclopedia/entry_id/'.$entry_id;
         $data['content_url'] = $url;
+        $data['id'] = $entry['id'];
+        $data['name'] = $entry['name'];
+        $data['digest'] = $entry['abstract'];
+        $data['cover_url'] = $entry['cover_url'];
         $this->apiSuccess("查询词条成功", null,
             array('data' => $data));
     }
