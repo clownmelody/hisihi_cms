@@ -207,7 +207,6 @@ class EventController extends AdminController
         $content['status'] = 1;
         if ($id) {
             $rs = D('Event')->save($content);
-
             if ($rs) {
                 $this->uploadEventPicToOSS($content['cover_id']);
                 if($content['type_id']==2){
@@ -219,6 +218,7 @@ class EventController extends AdminController
                 $this->success('编辑失败', '');
             }
         }else{
+            $content['create_time'] = time();
             $content['view_count'] = rand(C('CompetitionInitMinViewCount'), C('CompetitionInitMaxViewCount'));
             $rs = D('Event')->add($content);
             if ($rs) {
