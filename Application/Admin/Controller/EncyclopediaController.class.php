@@ -92,6 +92,11 @@ class EncyclopediaController extends AdminController {
     }
 
     public function entry_add(){
+        $id = I('id');
+        if(!empty($id)){
+            $entry = M('EncyclopediaEntry')->where('id='.$id)->find();
+            $this->assign('info', $entry);
+        }
         $this->display('entry_add');
     }
 
@@ -188,9 +193,26 @@ class EncyclopediaController extends AdminController {
     }
 
     public function entry_catagory_add(){
+        $id = I('id');
+        $entry_category_ids = M('EncyclopediaEntryCatagory')->where('`status`=1 and entry_id='.$id)
+            ->field('catagory_id')->select();
         $model = M('EncyclopediaCategory');
         $plist = $model->where('pid = 0 and status=1')->order('create_time desc')->select();
         $list = $model->where('status=1 and pid > 0')->order('create_time desc')->select();
+        foreach ($list as &$item){
+            $has_add = false;
+            foreach ($entry_category_ids as $item2){
+                if($item['id'] == $item2['catagory_id']){
+                    $has_add = true;
+                }
+            }
+            if($has_add){
+                $item['checked'] = 1;
+            }else{
+                $item['checked'] = 0;
+            }
+        }
+        $this->assign('cid', $id);
         $this->assign('pcatagory', $plist);
         $this->assign('catagory', $list);
         $this->display('entry_catagory_add');
@@ -198,27 +220,29 @@ class EncyclopediaController extends AdminController {
 
     public function entry_catagory_update(){
         if (IS_POST) { //提交表单
-            $model = M('EncyclopediaEntryCatalogue');
+            $model = M('EncyclopediaEntryCatagory');
             $cid = $_POST["cid"];
-            $data["name"] = $_POST["name"];
-            $data["sort"] = $_POST["sort"];
-            $data["cover_id"] = $_POST["cover_id"];
-            $data["abstract"] = $_POST["abstract"];
-            $data["relevant_entry"] = $_POST["relevant_entry"];
-            if(empty($cid)){
-                $data["create_time"] = time();
-                try {
-                    $model->add($data);
-                } catch (Exception $e) {
-                    $this->error($e->getMessage());
-                }
-                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
-            } else {
-                $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+            $category_ids = $_POST["category_id"];
+            $category_arr = array();
+            foreach ($category_ids as &$item){
+                $category_arr[] = $item;
             }
+            $map['id'] = array('in', $category_arr);
+            $category_list = M('EncyclopediaCategory')->where($map)->select();
+            $checked_category = array();
+            foreach ($category_list as &$item2){
+                $checked_category[] = array(
+                    'entry_id'=>$cid,
+                    'catagory_id'=>$item2['id'],
+                    'first_catagory_id'=>$item2['pid'],
+                    'create_time'=>time()
+                );
+            }
+            $model->where('entry_id='.$cid)->delete();
+            $model->addAll($checked_category);
+            $this->success('更新成功', 'index.php?s=/admin/encyclopedia/item');
         } else {
-            $this->display('entry_add');
+            $this->display('item');
         }
     }
 
@@ -339,8 +363,24 @@ class EncyclopediaController extends AdminController {
     }
 
     public function item(){
-        
-        $list = M('EncyclopediaEntry')->where()->order('sort desc , create_time desc')->select();
+        $name = I('name');
+        if(!empty($name)){
+            $map['name'] = array('like', '%'.$name.'%');
+        }
+        if(!empty($pid) && intval($pid) > 0){
+            $entry_ids = M('EncyclopediaEntryCatagory')->where('`status`=1 and first_catagory_id='.$pid)
+                    ->field('entry_id')-select();
+            $entry_array = array();
+            foreach ($entry_ids as &$item){
+                $entry_array[] = $item['entry'];
+            }
+            $map['id'] = array('in', $entry_array);
+        }
+        $map['status'] = 1;
+        $list = M('EncyclopediaEntry')->where($map)->order('sort desc , create_time desc')->select();
+        $first_category = M('EncyclopediaCategory')->where('`status`=1 and pid=0')->select();
+        $this->assign('first_level_list', $first_category);
+        $this->assign('_list', $list);
         $this->display('item');
     }
 }

@@ -10,19 +10,19 @@
         <div class="tab-content">
             <!-- 表单 -->
             <form id="form" action="{:U('entry_update')}" method="post" class="form-horizontal doc-modal-form">
-                <input type="hidden" name="cid" id="cid" value=""/>
+                <input type="hidden" name="cid" id="cid" value="{$info.id|default=''}"/>
                 <!-- 基础 -->
                 <div id="tab1" class="tab-pane in tab1">
                     <div class="form-item cf">
                         <label class="item-label">名称</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="name" value="">
+                            <input type="text" class="text input-large" name="name" value="{$info.name|default=''}">
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">排序</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="sort" value="">
+                            <input type="text" class="text input-large" name="sort" value="{$info.sort|default=''}">
                         </div>
                     </div>
 
@@ -32,8 +32,8 @@
                             <input type="file" id="upload_company_picture">
                             <input type="hidden" name="cover_id" id="cover_id_company"/>
                             <div class="upload-img-box">
-                                <notempty name="data[$field['name']]">
-                                    <div class="upload-pre-item"><img src="{$data[$field['cover_id']]|get_cover='path'}"/></div>
+                                <notempty name="info['cover_url']">
+                                    <div class="upload-pre-item"><img src="{$info['cover_url']}"/></div>
                                 </notempty>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                     <div class="form-item cf">
                         <label class="item-label">摘要</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="abstract" value="">
+                            <input type="text" class="text input-large" name="abstract" value="{$info.abstract|default=''}">
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -84,7 +84,7 @@
                         <!--<select class="text input-large relevant_entry" name="relevant_entry" style="height: 30px;width: 400px;">
                         </select>-->
                         <div class="controls">
-                            <input type="text" class="text input-large" name="relevant_entry" value="">
+                            <input type="text" class="text input-large" name="relevant_entry" value="{$info.relevant_entry|default=''}">
                         </div>
                     </div>
                 </div>
@@ -104,6 +104,6 @@
 
 <script>
     //导航高亮
-    highlight_subnav('{:U('Encyclopedia/add_entry')}');
+    highlight_subnav('{:U('Encyclopedia/item')}');
 </script>
 
