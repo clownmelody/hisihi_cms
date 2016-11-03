@@ -93,7 +93,7 @@ class EncyclopediaController extends BaseController {
         $first_catragory_map['id'] = array('in', $first_catragory_array);
         $first_catragory_list = M('EncyclopediaCategory')->where($first_catragory_map)->field('id, name')
             ->order('sort desc, create_time desc')->select();
-        $all_catagory_list = [];
+        $all_catagory_list = array();
         foreach ($first_catragory_list as &$item2){
             $map1['first_catagory_id'] = $item2['id'];
             $map1['status'] = 1;
