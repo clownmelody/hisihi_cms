@@ -1,10 +1,10 @@
 /**
  * Created by hisihi on 2016/10/31.
  */
-encyclopedia
-define(['base'],function(Encyclopedia) {
+define(['base'],function(Base) {
 
     var Encyclopedia = function (id, url) {
+
         var that = this;
         this.id = id;
         this.baseUrl = url;
@@ -14,23 +14,39 @@ define(['base'],function(Encyclopedia) {
             this.baseUrl = this.baseUrl.replace('api.php', 'hisihi-cms/api.php');
         }
 
-        this.controlLoadingBox(true);//ÊÇ·ñÏÔÊ¾¼ÓÔØµÈ´ı¶¯»­
-        window.setTimeout(function () {
-            //that.loadCompetitionInfo();
-        }, 100);
+        //æ˜¯å¦æ˜¾ç¤ºåŠ è½½ç­‰å¾…åŠ¨ç”»
+        this.controlLoadingBox(false);
+        //window.setTimeout(function () {
+        //    that.loadEncyclopediaInfo();
+        //è¯·æ±‚æ•°æ®
+        //$.getJSON("data.json",function(result){});
+        //}, 100);
     };
 
-    //ÏÂÔØÌõ
+    //ä¸‹è½½æ¡
     var config = {
         downloadBar: {
             show: true,
-            pos: 1
+            pos: 0
         }
     };
+
 
     Encyclopedia.prototype = new Base(config);
     Encyclopedia.constructor = Encyclopedia;
     var t = Encyclopedia.prototype;
+
+    //è·å–ç™¾ç§‘åŸºæœ¬ä¿¡æ¯
+    $.getJSON("Public/App/js/encyclopedia/data.json",function(result){
+        if (result.status == 'success') {
+            loadEncyclopediaInfo(result);
+        }
+    });
+
+    t.loadEncyclopediaInfo = function() {
+
+    };
+
 
     return Encyclopedia;
 });

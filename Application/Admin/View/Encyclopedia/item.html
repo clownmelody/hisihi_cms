@@ -1,0 +1,130 @@
+<extend name="Public/base"/>
+<block name="body">
+    <!-- 标题 -->
+    <div class="main-title">
+        <h2>
+            词条列表
+        </h2>
+    </div>
+
+    <!-- 按钮工具栏 -->
+    <div class="cf">
+        <div class="fl">
+            <div class="btn-group">
+                <button class="btn document_add" url="{:U('entry_add')}">新增词条</button>
+                <button class="btn ajax-post confirm" target-form="ids" url='{:U("encyclopedia/entry_delete",array("status"=>-1))}'>删 除</button>
+            </div>
+        </div>
+
+        <div class="search-form fr cf">
+            <div class="sleft">
+                <div class="drop-down">
+                    <span id="sch-sort-txt" class="sort-txt">所有</span>
+                    <i class="arrow arrow-down"></i>
+                    <ul id="sub-sch-menu" class="nav-list hidden">
+                        <notempty name="first_level_list">
+                            <volist name="first_level_list" id="vo">
+                                <li><a href="javascript:;" value="{$vo.id}">{$vo.name}</a></li>
+                            </volist>
+                            <else/>
+                            <li><a href="javascript:;" value="0">暂无一级分类</a></li>
+                        </notempty>
+                    </ul>
+                </div>
+                <a class="sch-btn" href="javascript:;" id="search" url="{:U('encyclopedia/item')}"><i class="btn-search"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据列表 -->
+    <div class="data-table table-striped">
+        <table class="">
+            <thead>
+            <tr>
+                <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+                <th class="">ID</th>
+                <th class="">名称</th>
+                <th class="">排序</th>
+                <th class="">创建时间</th>
+                <th class="">状态</th>
+                <th class="">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="_list">
+                <volist name="_list" id="vo">
+                    <tr>
+                        <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}"/></td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.sort}</td>
+                        <td><span>{$vo.create_time|time_format}</span></td>
+                        <td><if condition="($vo.status eq 1) "> 正常
+                            <else /> 已删除
+                        </if>
+                        </td>
+                        <td>
+                            <a href="{:U('encyclopedia/category_edit?id='.$vo['id'])}" >编辑基本信息</a>
+                            <a href="{:U('encyclopedia/category_edit?id='.$vo['id'])}" >编辑目录</a>
+                            <a href="{:U('encyclopedia/category_add?id='.$vo['id'])}" >添加分类</a>
+                            <a href="{:U('encyclopedia/category_add?id='.$vo['id'])}" >添加延伸阅读</a>
+                            <a href="{:U('encyclopedia/category_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+                <else/>
+                <td colspan="9" class="text-center"> aOh! 暂时还没有内容!</td>
+            </notempty>
+            </tbody>
+        </table>
+    </div>
+    <div class="page">
+        {$_page}
+    </div>
+
+</block>
+<block name="script">
+    <script type="text/javascript">
+        //导航高亮
+        highlight_subnav("{:U('Encyclopedia/item')}");
+
+        $('.document_add').click(function(){
+            var url = $(this).attr('url');
+            if(url != undefined && url != ''){
+                window.location.href = url;
+            }
+        });
+    </script>
+</block>
+<block name="script">
+    <link href="__STATIC__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+    <php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__STATIC__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+    <link href="__STATIC__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script type="text/javascript">
+        $(function(){
+            //搜索功能
+            $("#search").click(function(){
+                var url = $(this).attr('url');
+                var id = $("#sch-sort-txt").attr("data");
+                url = url + "&pid=" + id;
+                window.location.href = url;
+            });
+
+            /* 状态搜索子菜单 */
+            $(".search-form").find(".drop-down").hover(function(){
+                $("#sub-sch-menu").removeClass("hidden");
+            },function(){
+                $("#sub-sch-menu").addClass("hidden");
+            });
+            $("#sub-sch-menu li").find("a").each(function(){
+                $(this).click(function(){
+                    var text = $(this).text();
+                    $("#sch-sort-txt").text(text).attr("data",$(this).attr("value"));
+                    $("#sub-sch-menu").addClass("hidden");
+                })
+            });
+        })
+    </script>
+</block>

@@ -1,0 +1,175 @@
+<extend name="Public/base" />
+<block name="body">
+    <input type="hidden" name="cid" id="cid" value="{$info.id}"/>
+    <input type="hidden" name="entry_id" id="entry_id" value="{$entry.id}"/>
+    <div style=" width: 20%;float: left;height: 100%;">
+        <ul id="tree" class="ztree"></ul>
+    </div>
+    <div style="float: right;right: 0px;height: 300px;width: 80%;min-height: 455px;">
+        <iframe id="entry_content" style="width: 100%;height: 100%;" src="{:U('Encyclopedia/content_add')}"></iframe>
+    </div>
+    <link rel="stylesheet" href="__STATIC__/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <style type="text/css">
+        .ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
+    </style>
+    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.excheck.js"></script>
+    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.exedit.js"></script>
+    <script>
+        var setting = {
+            view: {
+                addHoverDom: addHoverDom,
+                removeHoverDom: removeHoverDom,
+                selectedMulti: false,
+                showIcon: false,
+                dblClickExpand: dblClickExpand
+            },
+            edit: {
+                enable: true,
+                editNameSelectAll: true,
+                showRemoveBtn: showRemoveBtn,
+                showRenameBtn: showRenameBtn
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                beforeDrag: beforeDrag,
+                beforeEditName: beforeEditName,
+                beforeRemove: beforeRemove,
+                beforeRename: beforeRename,
+                onRemove: onRemove,
+                onRename: onRename,
+                onClick: onClick
+            }
+        };
+
+        var zNodes =[
+            { id:1, pId:0, name:"根节点"}
+        ];
+        var log, className = "dark";
+
+        function dblClickExpand(treeId, treeNode) {
+            return treeNode.level > 0;
+        }
+
+        function beforeDrag(treeId, treeNodes) {
+            return false;
+        }
+        function beforeEditName(treeId, treeNode) {
+            className = (className === "dark" ? "":"dark");
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.selectNode(treeNode);
+            return true;
+        }
+        function beforeRemove(treeId, treeNode) {
+            className = (className === "dark" ? "":"dark");
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.selectNode(treeNode);
+            return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
+        }
+        function onRemove(e, treeId, treeNode) {
+
+        }
+        function beforeRename(treeId, treeNode, newName, isCancel) {
+            className = (className === "dark" ? "":"dark");
+            if (newName.length == 0) {
+                alert("节点名称不能为空.");
+                var zTree = $.fn.zTree.getZTreeObj("tree");
+                setTimeout(function(){zTree.editName(treeNode)}, 10);
+                return false;
+            }
+            return true;
+        }
+        function onRename(e, treeId, treeNode, isCancel) {
+
+        }
+
+        function onClick(e, treeId, treeNode, isCancel) {
+            $("#entry_content").src("{:U('Encyclopedia/content_add')}" + "?");
+        }
+
+        function showRemoveBtn(treeId, treeNode) {
+            return treeNode.pId > 0;
+        }
+        function showRenameBtn(treeId, treeNode) {
+            return treeNode.pId > 0;
+        }
+        function showLog(str) {
+            if (!log) log = $("#log");
+            log.append("<li class='"+className+"'>"+str+"</li>");
+            if(log.children("li").length > 8) {
+                log.get(0).removeChild(log.children("li")[0]);
+            }
+        }
+        function getTime() {
+            var now= new Date(),
+                    h=now.getHours(),
+                    m=now.getMinutes(),
+                    s=now.getSeconds(),
+                    ms=now.getMilliseconds();
+            return (h+":"+m+":"+s+ " " +ms);
+        }
+
+        var newCount = 1;
+        function addHoverDom(treeId, treeNode) {
+            var sObj = $("#" + treeNode.tId + "_span");
+            if (treeNode.editNameFlag || treeNode.pId > 1 || $("#addBtn_"+treeNode.tId).length>0) return;
+            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                    + "' title='add node' onfocus='this.blur();'></span>";
+            sObj.after(addStr);
+            var btn = $("#addBtn_"+treeNode.tId);
+            if (btn) btn.bind("click", function(){
+                var new_node_name = "new node" + (newCount++);
+                var entry_id = $("#entry_id").val();
+                var pid = 0;
+                if(treeNode.catalogue_id){
+                    pid = treeNode.catalogue_id;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "{:U('Encyclopedia/catalogue_update')}",
+                    data: "name=" + new_node_name + "&pid=" + pid + '&entry_id=' + entry_id,
+                    success: function(msg){
+                        if(msg['status'] > 0){
+                            var zTree = $.fn.zTree.getZTreeObj("tree");
+                            zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name: new_node_name, catalogue_id: msg['catalogue_id']});
+                        }else {
+                            alert("新增目录失败");
+                        }
+                        return false;
+                    }
+                });
+                return false;
+            });
+        };
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_"+treeNode.tId).unbind().remove();
+        };
+        function selectAll() {
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
+        }
+
+        $(document).ready(function(){
+            $.fn.zTree.init($("#tree"), setting, zNodes);
+        });
+
+    </script>
+</block>
+<script>
+    //导航高亮
+    highlight_subnav('{:U('Encyclopedia/catalogue_add')}');
+
+    var setting = { };
+    var zNodes =[{ name:"父节点1 - 展开", open:true}];
+    $(document).ready(function(){
+        var t = $("#tree");
+        t = $.fn.zTree.init(t, setting, zNodes);
+    });
+
+</script>
+
+
