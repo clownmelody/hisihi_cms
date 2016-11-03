@@ -48,7 +48,7 @@ class EncyclopediaController extends AdminController {
         $this->display();
     }
 
-    public function category_add($id){
+    public function category_add($id=0){
         $this->assign('pid', $id);
         $this->display();
     }
