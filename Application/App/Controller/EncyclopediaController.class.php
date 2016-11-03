@@ -126,4 +126,37 @@ class EncyclopediaController extends BaseController {
             array('data' => $all_catagory_list));
     }
 
+    public function searchEntryMore($name='', $category_id=0, $page=1, $count=10){
+        $entry_map['name'] = array('like', '%'.$name.'%');
+        $entry_map['status'] = 1;
+        $entry_ids = M('EncyclopediaEntry')->where($entry_map)->field('id')
+            ->select();
+        $entry_id_array = array();
+        foreach ($entry_ids as &$item1){
+            $entry_id_array[] = $item1['id'];
+        }
+
+        $map0['entry_id'] = array('in', $entry_id_array);
+        $map0['first_catagory_id'] = $category_id;
+        $first_catragory_ids = M('EncyclopediaEntryCatagory')->field('entry_id')->where($map0)
+            ->select();
+        $first_catragory_array = array();
+        foreach ($first_catragory_ids as &$item){
+            $first_catragory_array[] = $item['entry_id'];
+        }
+        $map2['id'] = array('in', $first_catragory_array);
+        $limit_index = ($page-1)*$count + 3;
+        $entry_in_catagory = M('EncyclopediaEntry')->where($map2)->field('id, name, abstract, cover_url')
+            ->order('sort desc, create_time desc')->limit($limit_index,$count)->select();
+        foreach ($entry_in_catagory as &$item4){
+            $item4['content_url'] = C('HOST_NAME_PREFIX').'app.php/encyclopedia/encyclopedia/entry_id/'.$item4['id'];
+            $item4['digest'] = $item4['abstract'];
+            unset($item4['abstract']);
+        }
+        $total_count = M('EncyclopediaEntry')->where($map2)->count();
+
+        $this->apiSuccess("查询词条成功", null,
+            array('data' => $entry_in_catagory, 'total_count'=>$total_count));
+    }
+
 }
