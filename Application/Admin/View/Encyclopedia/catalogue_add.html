@@ -47,7 +47,7 @@
         };
 
         var zNodes =[
-            { id:1, pId:0, name:"根节点"}
+            { id:1, pId:0, name:"根节点", open:true},{$catalogue_str}
         ];
         var log, className = "dark";
 
@@ -81,6 +81,21 @@
                 setTimeout(function(){zTree.editName(treeNode)}, 10);
                 return false;
             }
+            $.ajax({
+                type: "POST",
+                url: "{:U('Encyclopedia/edit_catalogue_name')}",
+                data: "name=" + newName + "&catalogue_id=" + treeNode.catalogue_id ,
+                success: function(msg){
+                    if(msg['status'] > 0){
+                        return true;
+                    }else {
+                        alert("修改目录名称失败");
+                        var zTree = $.fn.zTree.getZTreeObj("tree");
+                        setTimeout(function(){zTree.editName(treeNode)}, 10);
+                        return false;
+                    }
+                }
+            });
             return true;
         }
         function onRename(e, treeId, treeNode, isCancel) {

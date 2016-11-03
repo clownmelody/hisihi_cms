@@ -139,12 +139,43 @@ class EncyclopediaController extends AdminController {
         }
     }
 
+    public function edit_catalogue_name(){
+        $id = I('catalogue_id');
+        $name = I('name');
+        $data['name'] = $name;
+        $res = M('EncyclopediaEntryCatalogue')->where('id='.$id)->save($data);
+        if($res === false){
+            $rdata['status'] = -1;
+            $rdata['msg'] = '修改失败';
+            $this->ajaxReturn($rdata, 'JSON');
+        }else{
+            $rdata['status'] = 1;
+            $rdata['msg'] = '修改成功';
+            $this->ajaxReturn($rdata, 'JSON');
+        }
+    }
+
     public function catalogue_add(){
-        $entry_id = I('entry_id');
+        $entry_id = I('id');
         if(empty($entry_id)){
             $this->error('请先添加词条基本信息', 'index.php?s=/admin/encyclopedia/entry_add/');
         }
         $entry = M('EncyclopediaEntry')->where('id='.$entry_id)->find();
+        $catalogue_list = M('EncyclopediaEntryCatalogue')->where('`status`=1 and entry_id='.$entry_id)
+            ->field('id, entry_id, pid, name')->select();
+        $catalogue_str_arr = array();
+        foreach ($catalogue_list as &$item){
+            $node_id = 100 + $item['id'];
+            if($item['pid'] == 0){
+                $item['pid'] = 1;
+            }else{
+                $item['pid'] += 100;
+            }
+            $catalogue_str = '{id: '.$node_id.', pId: '.$item['pid'].', name: "'.$item['name'].'", catalogue_id: '.$item['id'].', open:true}';
+            $catalogue_str_arr[] = $catalogue_str;
+        }
+        $str = implode(",", $catalogue_str_arr);
+        $this->assign('catalogue_str', $str);
         $this->assign('entry', $entry);
         $this->display('catalogue_add');
     }
