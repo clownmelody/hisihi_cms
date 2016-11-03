@@ -106,7 +106,9 @@ class EncyclopediaController extends AdminController {
             $data["relevant_entry"] = $_POST["relevant_entry"];
             if(intval($data["cover_id"]) > 0){
                 $this->uploadLogoPicToOSS($data["cover_id"]);
+                $data['cover_url'] = $this->fetchCdnImage($data["cover_id"]);
             }
+            unset($data['cover_id']);
             if(empty($cid)){
                 $data["create_time"] = time();
                 try {
@@ -309,6 +311,31 @@ class EncyclopediaController extends AdminController {
                 Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'uploadOtherResource', $param);
             }
         }
+    }
+
+    /**
+     * 获取cdn oss图片地址
+     * @param $pic_id
+     * @return null|string
+     */
+    public function fetchCdnImage($pic_id){
+        if($pic_id == null)
+            return null;
+        $model = M();
+        $pic_info = $model->query("select path from hisihi_picture where id=".$pic_id);
+        if($pic_info){
+            $path = $pic_info[0]['path'];
+            $objKey = substr($path, 17);
+            $param["bucketName"] = "hisihi-other";
+            $param['objectKey'] = $objKey;
+            $isExist = Hook::exec('Addons\\Aliyun_Oss\\Aliyun_OssAddon', 'isResourceExistInOSS', $param);
+            if($isExist){
+                $picUrl = "http://pic.hisihi.com/".$objKey;
+            } else {
+                $picUrl = null;
+            }
+        }
+        return $picUrl;
     }
 
 }
