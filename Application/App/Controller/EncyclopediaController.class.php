@@ -159,4 +159,11 @@ class EncyclopediaController extends BaseController {
             array('data' => $entry_in_catagory, 'total_count'=>$total_count));
     }
 
+    public function getEntryUrl($entry_id=0){
+        $url = C('HOST_NAME_PREFIX').'app.php/encyclopedia/encyclopedia/entry_id/'.$entry_id;
+        $data['content_url'] = $url;
+        $this->apiSuccess("查询词条成功", null,
+            array('data' => $data));
+    }
+
 }
