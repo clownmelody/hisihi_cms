@@ -1,0 +1,98 @@
+.relevant_entry_box{
+  position: relative;
+  //overflow: auto !important;
+  a{
+    display: inline-block;
+    margin-left: 15px;
+  }
+  .left-box{
+      display: inline-block;
+      width: 322px;
+      vertical-align: top;
+      .relevant_entry_main{
+        position: absolute;
+        top:66px;
+        left:1px;
+        max-height: 180px;
+        width: 228px;
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.55);
+        background-color: #F8F8F8;
+        z-index: 100;
+        overflow-y: auto;
+
+        ul {
+          li {
+            height: 34px;
+            border-bottom: 1px solid #E8E8E8;
+            cursor: pointer;
+            line-height: 34px;
+            position: relative;
+            label{
+              margin-left:10px;
+              display: inline-block;
+              color: #686868;
+              font-size: 14px;
+            }
+            .check{
+              width: 25px;
+              height: 17px;
+              position: absolute;
+              right: 7px;
+              top: 13px;
+              background: url('http://pic.hisihi.com/2016-10-27/1477538016694197.png');
+              background-position: -332px 0;
+            }
+          }
+        }
+      }
+    }
+  .right-box{
+    display:inline-block;
+    width: 580px;
+    max-height: 210px;
+    vertical-align: top;
+    margin-left: 20px;
+    overflow-y: auto;
+    .box-tag {
+      margin: 5px 0;
+      text-align: left;
+      cursor: pointer;
+      .myAdvantageItem {
+        margin-bottom: 8px;
+        display: inline-block;
+        position: relative;
+        padding: 0;
+        background-color:#03AE87;
+        border-radius: .25em;
+        color: #fff;
+        .myAdvantageItemTxt {
+          display: inline-block;
+          //min-width: 55px;
+          padding: .3em .8em;
+          margin-right: 15px;
+          position: relative;
+          &::after {
+            content: '|';
+            position: absolute;
+            color: #fff;
+            top: 3px;
+            right: 3px;
+          }
+        }
+        .box-remove {
+          position: absolute;
+          right: 0px;
+          top:0;
+          padding: 0.2em;
+          cursor: pointer;
+          font-size: 16px;
+          &:hover {
+            color: red;
+          }
+
+        }
+      }
+    }
+  }
+
+}

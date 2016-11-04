@@ -1,6 +1,7 @@
 <extend name="Public/base" />
 <block name="body">
     <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+    <link type="text/css" href="__CSS__/entry_add.css" rel="stylesheet">
     <div class="main-title cf">
         <h2>新增词条</h2>
     </div>
@@ -76,15 +77,41 @@
                     <div class="form-item cf">
                         <label class="item-label">摘要</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="abstract" value="{$info.abstract|default=''}">
+                            <textarea type="text" class="input-large" name="abstract" value="{$info.abstract|default=''}"></textarea>
                         </div>
                     </div>
-                    <div class="form-item cf">
+                    <div class="form-item cf relevant_entry_box">
+
                         <label class="item-label">相关词条</label>
                         <!--<select class="text input-large relevant_entry" name="relevant_entry" style="height: 30px;width: 400px;">
                         </select>-->
-                        <div class="controls">
-                            <input type="text" class="text input-large" name="relevant_entry" value="{$info.relevant_entry|default=''}">
+                        <div class="left-box">
+                            <div class="controls">
+                                <input type="text" class="text" name="relevant_entry" value="{$info.relevant_entry|default=''}">
+                                <a href="javascript:void(0)" class="btn">搜索</a>
+
+                            </div>
+                            <div class="relevant_entry_main">
+                                <ul>
+                                    <li>
+                                        <label>1234131313</label>
+                                        <i class="check"></i>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right-box">
+                            <div class="box-tag tag-open" id="myAdvantage">
+
+                                <span class="myAdvantageItem" title="环境相当优越">
+                                    <span class="myAdvantageItemTxt">环境相当优越</span>
+                                    <span class="box-remove">×</span>
+                                </span>
+                                <span class="myAdvantageItem" title="下午茶都是小问题">
+                                    <span class="myAdvantageItemTxt">下午茶都是小问题</span>
+                                    <span class="box-remove">×</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,10 +127,30 @@
             </form>
         </div>
     </div>
+    <script>
+        $(function(){
+            var $d= $(document);
+            $d.on('click','.box-remove',function(){
+                $(this).closest('.myAdvantageItem').remove();
+            });
+
+            $d.on('click','.relevant_entry_main li',function(){
+
+            });
+
+            $d.on('click','.left-box .btn',function(){
+                $.get('',null,function(){
+
+                });
+            });
+        });
+    </script>
+
 </block>
 
 <script>
     //导航高亮
     highlight_subnav('{:U('Encyclopedia/item')}');
+
 </script>
 
