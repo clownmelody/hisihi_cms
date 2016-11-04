@@ -71,7 +71,15 @@
             return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
         }
         function onRemove(e, treeId, treeNode) {
+            var entry_id = $("#entry_id").val();
+            $.ajax({
+                type: "POST",
+                url: "{:U('Encyclopedia/catalogue_delete')}",
+                data: "entry_id=" + entry_id + "&catalogue_id=" + treeNode.catalogue_id ,
+                success: function(msg){
 
+                }
+            });
         }
         function beforeRename(treeId, treeNode, newName, isCancel) {
             className = (className === "dark" ? "":"dark");
