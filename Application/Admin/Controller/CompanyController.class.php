@@ -675,4 +675,67 @@ class CompanyController extends AdminController {
         }
     }
 
+    public function job_title($type=null){
+        $model = M('JobTitleList');
+        $count = $model->where('status=1')->count();
+        $Page = new Page($count, C('LIST_ROWS'));
+        $show = $Page->show();
+        if(!empty($type)){
+            $map["type"] = $type;
+            $list = $model->where($map)->where("status=1")->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }else{
+            $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        }
+        $this->assign('_list', $list);
+        $this->assign('_page', $show);
+        $this->assign("_total", $count);
+        $this->display("job_title");
+    }
+
+    public function job_title_add(){
+        $this->display("job_title_add");
+    }
+
+    public function job_title_update(){
+        $model = M('JobTitleList');
+        if (IS_POST) {
+            $cid = $_POST['cid'];
+            $data['name'] = $_POST["name"];
+            $data["type"] = $_POST["type"];
+            if(empty($cid)){
+                try {
+                    $data['create_time'] = time();
+                    $model->add($data);
+                } catch (Exception $e) {
+                    $this->error($e->getMessage());
+                }
+                $this->success('添加成功', 'index.php?s=/admin/company/job_title');
+            } else {
+                $model->where("id=".$cid)->save($data);
+                $this->success('更新成功', 'index.php?s=/admin/company/job_title');
+            }
+        } else {
+            $this->display('job_title_add');
+        }
+    }
+
+    public function job_title_delete($id){
+        if(!empty($id)){
+            $model = M('JobTitleList');
+            $data['status'] = -1;
+            if(is_array($id)){
+                foreach ($id as $i)
+                {
+                    $model->save($data);
+                }
+            } else {
+                $id = intval($id);
+                $model->where("id=".$id)->save($data);
+            }
+            $this->success('删除成功','index.php?s=/admin/company/job_title');
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
 }

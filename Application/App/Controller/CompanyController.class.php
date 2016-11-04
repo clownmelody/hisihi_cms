@@ -417,4 +417,13 @@ class CompanyController extends AppController {
         }
     }
 
+    public function getJobTitleList(){
+        $model = M("JobTitleList");
+        $visual_design_list = $model->field("name")->where("type=1 and status=1")->select();
+        $top_title_list = $model->field("name")->where("type=2 and status=1")->select();
+        $extra["visual_design_list"] = $visual_design_list;
+        $extra["top_title_list"] = $top_title_list;
+        $this->apiSuccess("获取列表成功",null, $extra);
+    }
+
 }
