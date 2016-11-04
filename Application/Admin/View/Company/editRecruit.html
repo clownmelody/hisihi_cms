@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">任职要求</label>
+                        <label class="item-label">自定义标签</label>
                         <div class="controls">
                             <notempty name="requirement">
                                 <ul class="dowebok">
@@ -51,16 +51,45 @@
                         </div>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">任职技能描述</label>
+                        <label class="item-label">职位描述</label>
+                        <div class="controls">
+                            <textarea name="description" style="height: 300px;width: 500px;">{$recruit.description}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">岗位要求</label>
                         <div class="controls">
                             <textarea name="skills" style="height: 300px;width: 500px;">{$recruit.skills}</textarea>
-                            <!--{:hook('adminArticleEdit', array('name'=>'skills','value'=>$field['value']))}-->
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">工作详细地址</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="work_location" value="{$recruit.work_location}">
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">工作所在城市</label>
                         <div class="controls">
                             <input type="text" class="text input-large" name="work_city" value="{$recruit.work_city}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">学历</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="education" value="{$recruit.education}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">工作类型</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="type_of_job" value="{$recruit.type_of_job}">
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">工作经历</label>
+                        <div class="controls">
+                            <input type="text" class="text input-large" name="work_experience" value="{$recruit.work_experience}">
                         </div>
                     </div>
                     <div class="form-item cf">

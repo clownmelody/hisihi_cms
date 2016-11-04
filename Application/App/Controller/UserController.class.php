@@ -2462,4 +2462,31 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
         var_dump($this->getUid());
     }
 
+    public function addJobIntension($uid=null, $position_applied=null, $expect_city=null,
+                                    $monthly_salary_range=null, $education=null, $work_experience=null,
+                                    $type_of_job=null, $scale=null, $industry=null){
+        if (!$uid) {
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        if(empty($uid)||empty($position_applied)||empty($expect_city)||
+            empty($monthly_salary_range)||empty($education)||empty($work_experience)||
+            empty($type_of_job)||empty($scale)||empty($industry)){
+            $this->apiError(-1, "数据未填写完整");
+        }
+        $model = M('UserJobIntension');
+        $data['uid'] = $uid;
+        $data['position_applied'] = $position_applied;
+        $data['expect_city'] = $expect_city;
+        $data['monthly_salary_range'] = $monthly_salary_range;
+        $data['education'] = $education;
+        $data['work_experience'] = $work_experience;
+        $data['type_of_job'] = $type_of_job;
+        $data['scale'] = $scale;
+        $data['industry'] = $industry;
+        $data['create_time'] = time();
+        $model->add($data);
+        $this->apiSuccess("填写成功");
+    }
+
 }
