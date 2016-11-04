@@ -87,6 +87,8 @@ class CompanyController extends AdminController {
             $data["fullname"] = $_POST["fullname"];
             $data["location"] = $_POST["location"];
             $data['hr_email'] = $_POST['hr_email'];
+            $data['industry'] = $_POST['industry'];
+            $data['product_description'] = $_POST['product_description'];
             $data["picture"] = $_POST["picture"];
             $data["create_time"] = time();
             if(empty($cid)){
