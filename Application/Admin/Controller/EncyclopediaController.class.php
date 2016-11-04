@@ -156,6 +156,19 @@ class EncyclopediaController extends AdminController {
     public function catalogue_delete(){
         $id = I('catalogue_id');
         $entry_id = I('entry_id');
+        $child_ids = M('EncyclopediaEntryCatalogue')->where('pid='.$id)->field('id')->select();
+        if(!empty($child_ids)){
+            $child_ids_arr = array();
+            foreach ($child_ids as &$item){
+                $child_ids_arr[] = $item['id'];
+            }
+            $map1['id'] = array('in', $child_ids_arr);
+            $map1['entry_id'] = $entry_id;
+            $res = M('EncyclopediaEntryCatalogue')->where($map1)->delete();
+            $map2['catalogue_id'] = array('in', $child_ids_arr);
+            $map2['entry_id'] = $entry_id;
+            $res1 = M('EncyclopediaEntryContent')->where($map2)->delete();
+        }
         $res = M('EncyclopediaEntryCatalogue')->where('id='.$id)->delete();
         $res1 = M('EncyclopediaEntryContent')->where('catalogue_id='.$id.' and entry_id='.$entry_id)->delete();
     }
@@ -349,13 +362,21 @@ class EncyclopediaController extends AdminController {
             $data["catalogue_id"] = $_POST["catalogue_id"];
             $data["entry_id"] = $_POST["entry_id"];
             if(empty($cid)){
-                $data["create_time"] = time();
-                try {
-                    $model->add($data);
-                } catch (Exception $e) {
-                    $this->error($e->getMessage());
+                $map['catalogue_id'] = $data["catalogue_id"];
+                $map['entry_id'] = $data["entry_id"];
+                $re = $model->where($map)->find();
+                if(!empty($re)){
+                    $model->where($map)->save($data);
+                    $this->success('更新成功', '', true);
+                }else{
+                    $data["create_time"] = time();
+                    try {
+                        $model->add($data);
+                    } catch (Exception $e) {
+                        $this->error($e->getMessage());
+                    }
+                    $this->success('添加成功', '', true);
                 }
-                $this->success('添加成功', '', true);
             } else {
                 $model->where('id='.$cid)->save($data);
                 $this->success('更新成功', '', true);
