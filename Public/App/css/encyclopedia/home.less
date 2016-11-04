@@ -8,9 +8,6 @@ img  {
 body {
   margin: 0 auto;
   padding: 0;
-  top: 0;
-  left: 0;
-  right: 0;
   font-size: 14px;
   background-color: #F2F2F2;
   max-width: 700px;
@@ -44,9 +41,11 @@ body {
       .head-title-tag {
         margin-right: 10px;
         font-size: 14px;
-        color: #FF5A00;
         border: 1px solid #FF5A00;
         border-radius: 4px;
+        > a {
+          color: #FF5A00;
+        }
       }
     }
   }
@@ -55,6 +54,60 @@ body {
   .index {
     margin-top: 12px;
     background-color: #ffffff;
+    display:-webkit-box;
+    padding: 20px 0;
+    >div{
+        display:flex;
+        &.catalog-left{
+          width: 60px;
+          text-align: center;
+          .catalog-left-main{
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            .catalog-left-cnotent{
+              display: table-cell;
+              vertical-align: middle;
+            }
+          }
+        }
+        &.catalog-right{
+          display:-webkit-box;
+          flex: 1;
+          -webkit-box-flex:1;
+          >div{
+            display:flex;
+            width: 31%;
+
+          }
+          ul{
+            li{
+              vertical-align: top;
+              text-align: -webkit-match-parent;
+              display: list-item;
+              &.level1{
+                a{
+                  text-decoration: none;
+                  color: #212121;
+                  font-size: 14px;
+                  /*margin: 10px 0;*/
+                  line-height: 28px;
+                }
+              }
+              &.level2{
+                a{
+                  text-decoration: none;
+                  color: #808080;
+                  font-size: 12px;
+                  /*margin: 2px 0;*/
+                  line-height: 21px;
+                }
+              }
+            }
+          }
+        }
+      }
   }
 
   .content {
@@ -90,9 +143,11 @@ body {
       font-size: 14px;
     }
     .rd-link {
-      color: #039be5;
       font-size: 14px;
       padding-bottom: 10px;
+      > a {
+        color: #039be5;
+      }
     }
   }
 }
