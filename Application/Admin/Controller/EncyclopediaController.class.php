@@ -13,8 +13,6 @@
 // | Author: huajie <banhuajie@163.com>
 // +----------------------------------------------------------------------
 namespace Admin\Controller;
-use Admin\Model\AuthGroupModel;
-use Admin\Model\CompanyConfigModel;
 use Think\Exception;
 use Think\Hook;
 use Think\Page;
@@ -155,6 +153,13 @@ class EncyclopediaController extends AdminController {
         }
     }
 
+    public function catalogue_delete(){
+        $id = I('catalogue_id');
+        $entry_id = I('entry_id');
+        $res = M('EncyclopediaEntryCatalogue')->where('id='.$id)->delete();
+        $res1 = M('EncyclopediaEntryContent')->where('catalogue_id='.$id.' and entry_id='.$entry_id)->delete();
+    }
+
     public function catalogue_add(){
         $entry_id = I('id');
         if(empty($entry_id)){
@@ -171,7 +176,8 @@ class EncyclopediaController extends AdminController {
             }else{
                 $item['pid'] += 100;
             }
-            $catalogue_str = '{id: '.$node_id.', pId: '.$item['pid'].', name: "'.$item['name'].'", catalogue_id: '.$item['id'].', open:true}';
+            $name2 = op_t($item['name']);
+            $catalogue_str = '{id: '.$node_id.', pId: '.$item['pid'].', name: "'.$name2.'", catalogue_id: '.$item['id'].', open:true}';
             $catalogue_str_arr[] = $catalogue_str;
         }
         $str = implode(",", $catalogue_str_arr);
@@ -320,18 +326,28 @@ class EncyclopediaController extends AdminController {
     }
 
     public function content_add(){
+        $catalogue_id = I('catalogue_id');
+        $entry_id = I('entry_id');
+        $content = M('EncyclopediaEntryContent')
+            ->where('`status`=1 and catalogue_id='.$catalogue_id.' and entry_id='.$entry_id)->find();
+        if(empty($content)){
+            $this->assign('content', '');
+        }else{
+            $this->assign('content', $content['content']);
+            $this->assign('id', $content['id']);
+        }
+        $this->assign('entry_id', $entry_id);
+        $this->assign('catalogue_id', $catalogue_id);
         $this->display('content_add');
     }
 
     public function content_update(){
         if (IS_POST) { //提交表单
-            $model = M('EncyclopediaEntryCatalogue');
+            $model = M('EncyclopediaEntryContent');
             $cid = $_POST["cid"];
-            $data["name"] = $_POST["name"];
-            $data["sort"] = $_POST["sort"];
-            $data["cover_id"] = $_POST["cover_id"];
-            $data["abstract"] = $_POST["abstract"];
-            $data["relevant_entry"] = $_POST["relevant_entry"];
+            $data["content"] = $_POST["content"];
+            $data["catalogue_id"] = $_POST["catalogue_id"];
+            $data["entry_id"] = $_POST["entry_id"];
             if(empty($cid)){
                 $data["create_time"] = time();
                 try {
@@ -339,10 +355,10 @@ class EncyclopediaController extends AdminController {
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
+                $this->success('添加成功', '', true);
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+                $this->success('更新成功', '', true);
             }
         } else {
             $this->display('content_add');
@@ -414,4 +430,5 @@ class EncyclopediaController extends AdminController {
         $this->assign('_list', $list);
         $this->display('item');
     }
+
 }
