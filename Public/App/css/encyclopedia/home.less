@@ -1,5 +1,4 @@
-
-img  {
+img,p {
   max-width: 100%;
 }
 .clear {
@@ -11,6 +10,8 @@ body {
   font-size: 14px;
   background-color: #F2F2F2;
   max-width: 700px;
+  overflow-x: hidden;
+  opacity: 0;
   .head {
     background-color: #ffffff;
     padding: 14px;
@@ -79,7 +80,7 @@ body {
           >div{
             display:flex;
             width: 31%;
-
+            border-right: 1px solid #cccccc;
           }
           ul{
             li{
@@ -87,20 +88,20 @@ body {
               text-align: -webkit-match-parent;
               display: list-item;
               &.level1{
+                .txt-ellipsis-p(1);
                 a{
                   text-decoration: none;
                   color: #212121;
                   font-size: 14px;
-                  /*margin: 10px 0;*/
                   line-height: 28px;
                 }
               }
               &.level2{
+                .txt-ellipsis-p(1);
                 a{
                   text-decoration: none;
                   color: #808080;
                   font-size: 12px;
-                  /*margin: 2px 0;*/
                   line-height: 21px;
                 }
               }

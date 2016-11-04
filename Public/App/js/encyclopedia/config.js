@@ -11,6 +11,7 @@ requirejs.config({
         fastclick:'sharecommon/fastclick',
         prefixfree:'sharecommon/prefixfree.min',
         home:'encyclopedia/encyclopedia',
+        async:'sharecommon/async',
         //约定不需要具体网络数据获取情况
     },
     shim: {

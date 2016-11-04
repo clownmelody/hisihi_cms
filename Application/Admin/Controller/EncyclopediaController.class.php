@@ -356,6 +356,57 @@ class EncyclopediaController extends AdminController {
         }
     }
 
+    /**
+     * 获取资讯流类型
+     */
+    public function getArticleTypeList(){
+        $map['status'] = array('gt', -1);
+        $res = M('InformationFlowConfig')->where($map)->field('id, title')->order('create_time desc')->select();
+        if(empty($res)){
+            $rdata['status'] = 1;
+            $rdata['msg'] = '获取成功';
+            $rdata['data'] = null;
+            $this->ajaxReturn($rdata, 'JSON');
+        }else{
+            $rdata['status'] = 1;
+            $rdata['msg'] = '获取成功';
+            $rdata['data'] = $res;
+            $this->ajaxReturn($rdata, 'JSON');
+        }
+    }
+
+    /**
+     * 搜索资讯流文章
+     */
+    public function searchArticle(){
+        $name = I('name');
+        $type = I('type');
+        if(!empty($name)){
+            $map['content_name'] = array('like', '%'.$name.'%');
+        }
+        if(!empty($type) && intval($type) > 0){
+            $map['config_type'] = $type;
+        }
+        $map['status'] = 1;
+        $map['content_type'] = 1;
+        $res = M('InformationFlowContent')->where($map)->field('id, content_id, content_name')->group('content_id')
+            ->order('sort desc, create_time desc')->select();
+        foreach ($res as &$item){
+            $item['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/3.3/type/view/id/'.$item['content_id'];
+        }
+        if(empty($res)){
+            $rdata['status'] = 1;
+            $rdata['msg'] = '获取成功';
+            $rdata['data'] = null;
+            $this->ajaxReturn($rdata, 'JSON');
+        }else{
+            $rdata['status'] = 1;
+            $rdata['msg'] = '获取成功';
+            $rdata['data'] = $res;
+            $this->ajaxReturn($rdata, 'JSON');
+        }
+    }
+
     public function content_add(){
         $catalogue_id = I('catalogue_id');
         $entry_id = I('entry_id');

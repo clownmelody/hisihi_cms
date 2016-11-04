@@ -1,7 +1,7 @@
 /**
  * Created by hisihi on 2016/10/31.
  */
-define(['base'],function(Base) {
+define(['base','async'],function(Base,Async) {
 
     var Encyclopedia = function (id, url) {
 
@@ -17,7 +17,7 @@ define(['base'],function(Base) {
         //是否显示加载等待动画
         this.controlLoadingBox(true);
         window.setTimeout(function () {
-            that.initData();
+            that.loadEncyclopediaInfo();
         //请求数据
         }, 100);
 
@@ -37,19 +37,38 @@ define(['base'],function(Base) {
     var t = Encyclopedia.prototype;
 
 
-    t.initData = function(){
-        var that=this;
-     //获取百科基本信息
-        $.getJSON("Public/App/js/encyclopedia/data.json",function(result){
-            t.loadAllInfo(result);
-            that.controlLoadingBox(false);
-        });
-    }
+
+    //获取比赛活动详情信息
+    //http://localhost/hisihi-cms/api.php?s=Encyclopedia/getEntryDetail
+    t.loadEncyclopediaInfo = function(){
+        var that = this,
+            queryPara = {
+                url: this.baseUrl + 'Encyclopedia/getEntryDetail',
+                paraData: {entry_id: this.id},
+                sCallback:function(result){
+                    if(result.data){
+                        that.controlLoadingBox(false);
+                        that.loadAllInfo(result);
+                        $('body').css('opacity','1');
+                    }else{
+                        that.controlLoadingBox(false);
+                        that.showTips('词条详情加载失败01');
+                    }
+                },
+                eCallback:function(){
+                    that.controlLoadingBox(false);
+                    that.showTips('词条详情加载失败02');
+                },
+                type: 'get',
+                async: this.async
+            };
+        this.getDataAsync(queryPara);
+    };
+
 
     //加载页面全部信息
     t.loadAllInfo =  function (result) {
         this.loadHeadInfo(result);
-
         this.loadContentInfo(result),
         this.loadReadAboutInfo(result);
         this.loadIndexInfo(result);
@@ -58,24 +77,24 @@ define(['base'],function(Base) {
     //加载头部信息
     t.loadHeadInfo = function(result) {
         //判断数据是否存在
-        if (!result  ) {
+        if (!result||result.data.headInfo.title=='') {
             return '';
         }
         var str='',
             strTag='',
-            title=result.headInfo.title,
-            detail=result.headInfo.detail,
-            len=result.likeKeyWords.length,
+            title=result.data.headInfo.title,
+            detail=result.data.headInfo.detail,
+            len=result.data.likeKeyWords.length,
             item,
             linkHref='';
         if(this.isFromApp){
-            linkHref='hisihi://user/detailinfo?uid=';
+            linkHref='hisihi://encyclopedia/detailinfo?id=';
         }else{
-            linkHref=this.baseUrl+'s=/Encyclopedia/encyclopedia/id/';
+            linkHref=this.baseUrl+'/Encyclopedia/encyclopedia/id/';
         }
         for(var i=0;i<len;i++){
-            item=result.likeKeyWords[i];
-            strTag += '<li class="head-title-tag"><a href="'+linkHref+item.id+'" target="_blank"><span>'+ item.txt +'</span></a></li>';
+            item=result.data.likeKeyWords[i];
+            strTag += '<li class="head-title-tag"><a href="'+linkHref+item.id+'" target="_blank"><span>'+ item.name +'</span></a></li>';
         }
         str ='<div class="head-main-title">'+title+'</div>'+
             '<div class="head-detail">'+detail+'</div>'+
@@ -91,7 +110,7 @@ define(['base'],function(Base) {
     //加载目录
     t.loadIndexInfo = function(result){
         //判断数据是否存在或者目录长度是否为空
-        if(!result){
+        if(!result||result.data.catalog.length==0){
             return ' ';
         }
         var arr=this.setUpArr(result);
@@ -99,7 +118,7 @@ define(['base'],function(Base) {
     };
 
     t.setUpArr=function(result){
-        var arrdata = result.catalog;
+        var arrdata = result.data.catalog;
         var len = arrdata.length,
             tempArr = [],
             arr1 = [],
@@ -109,7 +128,7 @@ define(['base'],function(Base) {
             var item = arrdata[i];
             var num1=i+1;
             tempArr.push({
-                txt: item.txt,
+                txt: item.name,
                 level: 1,
                 num: num1,
                 hashTarget:'hash_'+num1
@@ -119,7 +138,7 @@ define(['base'],function(Base) {
                 for (var j = 0; j < len2; j++) {
                     var num2=j+1;
                     tempArr.push({
-                        txt: item.level2[j].txt,
+                        txt: item.level2[j].name,
                         level: 2,
                         hashTarget:'hash_'+num1+'_'+num2
                     });
@@ -182,7 +201,6 @@ define(['base'],function(Base) {
             str = '<div class="width:' + width + '"><ul>' + str + '</ul></div>';
         }
         return str;
-
     };
 
     //得到第一列 的列表项 数目
@@ -202,19 +220,19 @@ define(['base'],function(Base) {
 
     //加载百科简介
     t.loadContentInfo = function(result){
-        if(!result){
+        if(!result||result.data.catalog.length==0){
             return ' ';
         }
         var str='',
             strTxt='',
             strDetail = '',
-            len=result.catalog.length,
+            len=result.data.catalog.length,
             item,
             id;
         for(var i=0;i<len;i++) {
             id='hash_'+(i+1);
-            item = result.catalog[i];
-            strTxt ='<div class="content-head first" id="'+id+'">' +item.txt +'</div>' ;
+            item = result.data.catalog[i];
+            strTxt ='<div class="content-head first" id="'+id+'">' +item.name +'</div>' ;
             strDetail = '<p class="content-info">'+ item.detail+'</p>';
             if (!item.txt||item.txt=='') {
                 strTxt='';
@@ -236,7 +254,7 @@ define(['base'],function(Base) {
             str='';
             for (var j=0;j<len;j++) {
                 level=item.level2[j];
-                str += '<div class="content-head" id="'+id+'_'+(j+1)+'">' +level.txt +'</div>' +
+                str += '<div class="content-head" id="'+id+'_'+(j+1)+'">' +level.name +'</div>' +
                         '<p class="content-info">'+ level.detail+'</p>';
                 }
             return str;
@@ -244,16 +262,16 @@ define(['base'],function(Base) {
 
     //加载百科延伸阅读
     t.loadReadAboutInfo = function (result) {
-        if (!result||result==null) {
+        if (!result||result.data.linkInfo==null) {
             return '';
         }
         var str='',
             strL='',
-            len=result.linkInfo.length,
+            len=result.data.linkInfo.length,
             item;
         for(var i=0;i<len;i++) {
-            item=result.linkInfo[i];
-            strL +='<li class="rd-link"><a href="www.baidu.com" target="_blank">'+item.txt +'</a></li>';
+            item=result.data.linkInfo[i];
+            strL +='<li class="rd-link"><a href="'+item.link+'" target="_blank">'+item.name +'</a></li>';
         }
         str = '<div class="rd-head">延伸阅读</div>' +
             '<ul>' +
