@@ -6,13 +6,14 @@ img  {
   clear: both;
 }
 body {
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   top: 0;
   left: 0;
   right: 0;
   font-size: 14px;
   background-color: #F2F2F2;
+  max-width: 700px;
   .head {
     background-color: #ffffff;
     padding: 14px;
@@ -29,7 +30,6 @@ body {
       padding-bottom: 14px;
     }
     .head-tag {
-      //position: relative;
       > li {
         float: left;
         height: 25px;
@@ -53,22 +53,46 @@ body {
 
   //目录样式
   .index {
+    margin-top: 12px;
+    background-color: #ffffff;
   }
 
   .content {
+    margin-top: 12px;
     background-color: #ffffff;
     color: #212121;
     font-size: 14px;
     padding: 14px;
     .content-head {
       font-weight: bold;
-      border-left: 4px solid #FF5A00;
+      margin-bottom: 14px;
+      &.first {
+        border-left: 4px solid #FF5A00;
+        padding-left: 8px;
+      }
     }
     .content-info {
-
       .active-word {
         color: #039be5;
       }
+    }
+  }
+
+  //延伸阅读
+  .read-about {
+    margin-top: 14px;
+    padding: 14px 14px 0px 14px;
+    background-color: #ffffff;
+    .rd-head {
+      width: 100%;
+      padding-bottom: 10px;
+      color: #808080;
+      font-size: 14px;
+    }
+    .rd-link {
+      color: #039be5;
+      font-size: 14px;
+      padding-bottom: 10px;
     }
   }
 }
