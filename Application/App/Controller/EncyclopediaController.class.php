@@ -171,4 +171,83 @@ class EncyclopediaController extends BaseController {
             array('data' => $data));
     }
 
+    public function getEntryDetail($entry_id=0){
+        $entry_info = M('EncyclopediaEntry')->where('id='.$entry_id)->field('id, name, abstract, relevant_entry')->find();
+        $headInfo = array(
+            'id'=>$entry_info['id'],
+            'title'=>$entry_info['name'],
+            'detail'=>$entry_info['abstract']
+        );
+        $likeKeyWords = null;
+        if(!empty($entry_info['relevant_entry'])){
+            $relevant_entry_id =  explode('#', $entry_info['relevant_entry']);
+            $map['id'] = array('in', $relevant_entry_id);
+            $map['status'] = 1;
+            $relevant_entry_list = M('EncyclopediaEntry')->where($map)->field('id, name')
+                ->order('sort desc , create_time desc')->select();
+            $likeKeyWords = $relevant_entry_list;
+        }
+        $catalog = null;
+        $map1['entry_id'] = $entry_id;
+        $map1['status'] = 1;
+        $map1['pid'] = 0;
+        $p_catalog = M('EncyclopediaEntryCatalogue')->where($map1)->field('id, name')->select();
+        if(!empty($p_catalog)){
+            $p_catalog_arr = array();
+            foreach ($p_catalog as $item0){
+                $p_catalog_arr[] = $item0['id'];
+            }
+            $map2['catalogue_id'] = array('in', $p_catalog_arr);
+            $map2['entry_id'] = $entry_id;
+            $map2['status'] = 1;
+            $p_content = M('EncyclopediaEntryContent')->where($map2)->field('catalogue_id, content')->select();
+            foreach ($p_catalog as &$item1){
+                foreach ($p_content as &$content1){
+                    if($content1['catalogue_id'] == $item1['id']){
+                        $item1['detail'] = $content1['content'];
+                    }
+                }
+                $item1['level2'] = null;
+                $map3['pid'] = $item1['id'];
+                $map3['entry_id'] = $entry_id;
+                $map3['status'] = 1;
+                $c_catalog = M('EncyclopediaEntryCatalogue')->where($map3)->field('id, name')->select();
+                if(!empty($c_catalog)){
+                    $c_catalog_arr = array();
+                    foreach ($c_catalog as $item2){
+                        $c_catalog_arr[] = $item2['id'];
+                    }
+                    $map4['catalogue_id'] = array('in', $c_catalog_arr);
+                    $map4['entry_id'] = $entry_id;
+                    $map4['status'] = 1;
+                    $c_content = M('EncyclopediaEntryContent')->where($map4)->field('catalogue_id, content')->select();
+                    foreach ($c_catalog as &$item3){
+                        foreach ($c_content as &$content2){
+                            if($content2['catalogue_id'] == $item3['id']){
+                                $item3['detail'] = $content2['content'];
+                            }
+                        }
+                    }
+                    $item1['level2'] = $c_catalog;
+                }
+            }
+            $catalog = $p_catalog;
+        }
+
+        $linkInfo = null;
+        $map5['entry_id'] = $entry_id;
+        $map5['status'] = 1;
+        $link_list = M('EncyclopediaEntryLink')->where($map5)->field('id, name, link')->select();
+        if(!empty($link_list)){
+            $linkInfo = $link_list;
+        }
+        $data = array(
+            'headInfo'=>$headInfo,
+            'likeKeyWords'=>$likeKeyWords,
+            'catalog'=>$catalog,
+            'linkInfo'=>$linkInfo
+        );
+        $this->apiSuccess("获取词条详情成功", null,
+            array('data' => $data));
+    }
 }
