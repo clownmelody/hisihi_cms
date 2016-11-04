@@ -137,6 +137,24 @@ class EncyclopediaController extends AdminController {
         }
     }
 
+    public function searchEntry(){
+        $name = I('name');
+        $map['name'] = array('like', '%'.$name.'%');
+        $map['status'] = 1;
+        $res = M('EncyclopediaEntry')->where($map)->field('id, name')->order('sort desc, create_time desc')->select();
+        if(empty($res)){
+            $rdata['status'] = 1;
+            $rdata['msg'] = '获取成功';
+            $rdata['data'] = null;
+            $this->ajaxReturn($rdata, 'JSON');
+        }else{
+            $rdata['status'] = 1;
+            $rdata['msg'] = '获取成功';
+            $rdata['data'] = $res;
+            $this->ajaxReturn($rdata, 'JSON');
+        }
+    }
+
     public function edit_catalogue_name(){
         $id = I('catalogue_id');
         $name = I('name');
