@@ -7,18 +7,23 @@
   }
   .left-box{
       display: inline-block;
-      width: 322px;
+      width: 400px;
       vertical-align: top;
+      #relevant_entry_input{
+        width: 297px;
+      }
       .relevant_entry_main{
+        display: none;
         position: absolute;
         top:66px;
         left:1px;
         max-height: 180px;
-        width: 228px;
+        width: 305px;
         box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.55);
         background-color: #F8F8F8;
         z-index: 100;
         overflow-y: auto;
+
 
         ul {
           li {
@@ -27,13 +32,20 @@
             cursor: pointer;
             line-height: 34px;
             position: relative;
-            label{
+            padding-left: 10px;
+            p{
               margin-left:10px;
-              display: inline-block;
+              margin-right: 35px;
               color: #686868;
               font-size: 14px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
             }
             .check{
+              display: none;
               width: 25px;
               height: 17px;
               position: absolute;
@@ -42,8 +54,25 @@
               background: url('http://pic.hisihi.com/2016-10-27/1477538016694197.png');
               background-position: -332px 0;
             }
+            &.selected{
+              .check{
+                display: block;
+              }
+            }
           }
         }
+      }
+      .btn{
+        &.disabled{
+          pointer-events: none;
+          opacity: 0.5;
+          background-color: #fff;
+        }
+      }
+      .nodata{
+        display: none;
+        font-size: 12px;
+        color: #808080;
       }
     }
   .right-box{
@@ -59,6 +88,7 @@
       cursor: pointer;
       .myAdvantageItem {
         margin-bottom: 8px;
+        margin-right: 8px;
         display: inline-block;
         position: relative;
         padding: 0;
