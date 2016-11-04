@@ -377,11 +377,11 @@ function get_action_type($type, $all = false){
  * @param string text 文本内容
  * @return string 处理后内容
  */
-function op_t($text)
+/*function op_t($text)
 {
     $text = nl2br($text);
     $text = real_strip_tags($text);
     $text = addslashes($text);
     $text = trim($text);
     return $text;
-}
+}*/
