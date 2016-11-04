@@ -11,7 +11,7 @@
     <div class="cf">
         <div class="fl">
             <div class="btn-group">
-                <button class="btn document_add" url="{:U('entry_add')}">新增词条</button>
+                <a class="btn document_add" href="{:U('entry_add')}">新增词条</a>
                 <button class="btn ajax-post confirm" target-form="ids" url='{:U("encyclopedia/entry_delete",array("status"=>-1))}'>删 除</button>
             </div>
         </div>
@@ -31,6 +31,7 @@
                         </notempty>
                     </ul>
                 </div>
+                <input type="text" name="name" class="search-input" value="{:I('name')}" placeholder="请输词条名">
                 <a class="sch-btn" href="javascript:;" id="search" url="{:U('encyclopedia/item')}"><i class="btn-search"></i></a>
             </div>
         </div>
@@ -64,9 +65,9 @@
                         </if>
                         </td>
                         <td>
-                            <a href="{:U('encyclopedia/category_edit?id='.$vo['id'])}" >编辑基本信息</a>
-                            <a href="{:U('encyclopedia/category_edit?id='.$vo['id'])}" >编辑目录</a>
-                            <a href="{:U('encyclopedia/category_add?id='.$vo['id'])}" >添加分类</a>
+                            <a href="{:U('encyclopedia/entry_add?id='.$vo['id'])}" >编辑基本信息</a>
+                            <a href="{:U('encyclopedia/catalogue_add?id='.$vo['id'])}" >编辑目录</a>
+                            <a href="{:U('encyclopedia/entry_catagory_add?id='.$vo['id'])}" >添加分类</a>
                             <a href="{:U('encyclopedia/category_add?id='.$vo['id'])}" >添加延伸阅读</a>
                             <a href="{:U('encyclopedia/category_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
@@ -107,8 +108,15 @@
             //搜索功能
             $("#search").click(function(){
                 var url = $(this).attr('url');
+                var query  = $('.search-form').find('input').serialize();
+                query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+                query = query.replace(/^&/g,'');
+
                 var id = $("#sch-sort-txt").attr("data");
-                url = url + "&pid=" + id;
+                if(!id){
+                    id = 0;
+                }
+                url = url + "&pid=" + id + "&" + query;
                 window.location.href = url;
             });
 

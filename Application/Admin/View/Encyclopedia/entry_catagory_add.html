@@ -9,7 +9,7 @@
         <div class="tab-content">
             <!-- 表单 -->
             <form id="form" action="{:U('entry_catagory_update')}" method="post" class="form-horizontal doc-modal-form">
-                <input type="hidden" name="cid" id="cid" value=""/>
+                <input type="hidden" name="cid" id="cid" value="{$cid|default=''}"/>
                 <!-- 基础 -->
                 <div id="tab1" class="tab-pane in tab1">
                     <notempty name="pcatagory">
@@ -18,7 +18,9 @@
                             <div>
                                 <notempty name="catagory">
                                     <volist name="catagory" id="co">
-                                        <eq name="vo['id']" value="$co['pid']"><input type="checkbox" value="{$co.id}" >{$co.name}</input></eq>
+                                        <eq name="vo['id']" value="$co['pid']">
+                                            <input type="checkbox" name="category_id[]" value="{$co.id}" pid="{$co.pid}" <eq name="co['checked']" value="1">checked</eq> >{$co.name}</input>
+                                        </eq>
                                     </volist>
                                 </notempty>
                             </div>

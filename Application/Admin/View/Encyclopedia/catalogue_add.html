@@ -47,7 +47,7 @@
         };
 
         var zNodes =[
-            { id:1, pId:0, name:"根节点"}
+            { id:1, pId:0, name:"新增目录", open:true},{$catalogue_str}
         ];
         var log, className = "dark";
 
@@ -81,6 +81,21 @@
                 setTimeout(function(){zTree.editName(treeNode)}, 10);
                 return false;
             }
+            $.ajax({
+                type: "POST",
+                url: "{:U('Encyclopedia/edit_catalogue_name')}",
+                data: "name=" + newName + "&catalogue_id=" + treeNode.catalogue_id ,
+                success: function(msg){
+                    if(msg['status'] > 0){
+                        return true;
+                    }else {
+                        alert("修改目录名称失败");
+                        var zTree = $.fn.zTree.getZTreeObj("tree");
+                        setTimeout(function(){zTree.editName(treeNode)}, 10);
+                        return false;
+                    }
+                }
+            });
             return true;
         }
         function onRename(e, treeId, treeNode, isCancel) {
@@ -88,7 +103,9 @@
         }
 
         function onClick(e, treeId, treeNode, isCancel) {
-            $("#entry_content").src("{:U('Encyclopedia/content_add')}" + "?");
+            var entry_id = $("#entry_id").val();
+            $("#entry_content").attr("src", "{:U('Encyclopedia/content_add')}"
+                    + "&catalogue_id=" + treeNode.catalogue_id + "&entry_id=" + entry_id);
         }
 
         function showRemoveBtn(treeId, treeNode) {
@@ -155,6 +172,15 @@
 
         $(document).ready(function(){
             $.fn.zTree.init($("#tree"), setting, zNodes);
+            var treeObj = $.fn.zTree.getZTreeObj("tree");
+            var nodes = treeObj.getNodes();
+            if(nodes[0].children.length > 0){
+                var first_child = nodes[0].children[0];
+                var entry_id = $("#entry_id").val();
+                $("#entry_content").attr("src", "{:U('Encyclopedia/content_add')}"
+                        + "&catalogue_id=" + first_child.catalogue_id + "&entry_id=" + entry_id);
+            }
+
         });
 
     </script>
