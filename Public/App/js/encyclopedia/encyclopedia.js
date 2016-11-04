@@ -66,10 +66,16 @@ define(['base'],function(Base) {
             title=result.headInfo.title,
             detail=result.headInfo.detail,
             len=result.likeKeyWords.length,
-            item;
+            item,
+            linkHref='';
+        if(this.isFromApp){
+            linkHref='hisihi://user/detailinfo?uid=';
+        }else{
+            linkHref=this.baseUrl+'s=/Encyclopedia/encyclopedia/id/';
+        }
         for(var i=0;i<len;i++){
             item=result.likeKeyWords[i];
-            strTag += '<li class="head-title-tag"><span>'+ item.txt +'</span></li>';
+            strTag += '<li class="head-title-tag"><a href="'+linkHref+item.id+'" target="_blank"><span>'+ item.txt +'</span></a></li>';
         }
         str ='<div class="head-main-title">'+title+'</div>'+
             '<div class="head-detail">'+detail+'</div>'+
@@ -247,7 +253,7 @@ define(['base'],function(Base) {
             item;
         for(var i=0;i<len;i++) {
             item=result.linkInfo[i];
-            strL +='<li class="rd-link">'+item.txt +'</li>';
+            strL +='<li class="rd-link"><a href="www.baidu.com" target="_blank">'+item.txt +'</a></li>';
         }
         str = '<div class="rd-head">延伸阅读</div>' +
             '<ul>' +

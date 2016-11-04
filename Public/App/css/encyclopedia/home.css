@@ -540,9 +540,11 @@ body .head .head-tag .head-title {
 body .head .head-tag .head-title-tag {
   margin-right: 10px;
   font-size: 14px;
-  color: #FF5A00;
   border: 1px solid #FF5A00;
   border-radius: 4px;
+}
+body .head .head-tag .head-title-tag > a {
+  color: #FF5A00;
 }
 body .index {
   margin-top: 12px;
@@ -625,7 +627,9 @@ body .read-about .rd-head {
   font-size: 14px;
 }
 body .read-about .rd-link {
-  color: #039be5;
   font-size: 14px;
   padding-bottom: 10px;
+}
+body .read-about .rd-link > a {
+  color: #039be5;
 }
