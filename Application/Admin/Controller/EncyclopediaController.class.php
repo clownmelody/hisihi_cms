@@ -176,7 +176,7 @@ class EncyclopediaController extends AdminController {
             }else{
                 $item['pid'] += 100;
             }
-            $name2 = op_t($item['name']);
+            $name2 = $this->op_t($item['name']);
             $catalogue_str = '{id: '.$node_id.', pId: '.$item['pid'].', name: "'.$name2.'", catalogue_id: '.$item['id'].', open:true}';
             $catalogue_str_arr[] = $catalogue_str;
         }
@@ -431,4 +431,17 @@ class EncyclopediaController extends AdminController {
         $this->display('item');
     }
 
+    /**
+     * t函数用于过滤标签，输出没有html的干净的文本
+     * @param string text 文本内容
+     * @return string 处理后内容
+     */
+    function op_t($text)
+    {
+        $text = nl2br($text);
+        $text = real_strip_tags($text);
+        $text = addslashes($text);
+        $text = trim($text);
+        return $text;
+    }
 }
