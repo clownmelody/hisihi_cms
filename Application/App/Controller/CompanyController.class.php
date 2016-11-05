@@ -426,4 +426,62 @@ class CompanyController extends AppController {
         $this->apiSuccess("获取列表成功",null, $extra);
     }
 
+    public function jobList($page=1, $count=10){
+        $model = M("CompanyRecruit");
+        $companyModel = M("Company");
+        $data["status"] = 1;
+        $total_count = $model->where($data)->count();
+        $list = $model->field("id, company_id, job, salary, work_experience, work_city, education, type_of_job")
+            ->where($data)
+            ->page($page, $count)
+            ->order("create_time desc")
+            ->select();
+        foreach($list as &$item){
+            $companyInfo = $companyModel->field("name, picture")->where("id=".$item["company_id"])->find();
+            $companyInfo["picture"] = $this->fetchImage($companyInfo["picture"]);
+            $companyInfo["id"] = $item["company_id"];
+            $item["companyInfo"] = $companyInfo;
+            unset($item["company_id"]);
+        }
+        $extra["total_count"] = $total_count;
+        $extra["data"] = $list;
+        $this->apiSuccess("获取职位列表成功",null, $extra);
+    }
+
+    public function jobDetail($id=0){
+        $model = M("CompanyRecruit");
+        $companyModel = M("Company");
+        $cmodel = M("CompanyConfig");
+        $info = $model->field("id, company_id, job, salary, requirement, work_city, skills, create_time, end_time,
+        education, type_of_job, work_experience, description, work_location")
+            ->where("id=".$id)->find();
+        $companyInfo = $companyModel->field("name, picture, website, industry, scale")->where("id=".$info["company_id"])->find();
+        $companyInfo["picture"] = $this->fetchImage($companyInfo["picture"]);
+        $companyInfo["scale"] = $cmodel->where('type=2 and status=1 and value='.$companyInfo['scale'])->getField("value_explain");
+        $info["companyInfo"] = $companyInfo;
+        unset($info["company_id"]);
+        $extra["data"] = $info;
+        $this->apiSuccess("获取职位详情成功",null, $extra);
+    }
+
+    public function companyList($page=1, $count=10){
+        $companyModel = M("Company");
+        $cmodel = M("CompanyConfig");
+        $data["status"] = 1;
+        $total_count = $companyModel->where($data)->count();
+        $list = $companyModel->field("id, name, city, scale, picture, industry")
+            ->where($data)
+            ->page($page, $count)
+            ->order("create_time desc")
+            ->select();
+        foreach($list as &$item){
+            $item["scale"] = $cmodel->where('type=2 and status=1 and value='.$item['scale'])
+                ->getField("value_explain");
+            $companyInfo["picture"] = $this->fetchImage($item["picture"]);
+        }
+        $extra["total_count"] = $total_count;
+        $extra["data"] = $list;
+        $this->apiSuccess("获取公司列表成功",null, $extra);
+    }
+
 }
