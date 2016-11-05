@@ -147,7 +147,11 @@
            $d.on('click','.add-link-btn',function(){
                var arr=[],paraData;
                $('.entry-link-ul li').each(function(){
-                   arr.push($(this).attr('data-id'));
+                   arr.push({
+                            id:$(this).attr('data-id'),
+                            title:$(this).find('p').text(),
+                            url:$(this).attr('attr-url'),
+                   });
                });
                paraData={
                  entry_id:'{$entry_id}',
