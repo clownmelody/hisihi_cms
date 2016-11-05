@@ -102,6 +102,31 @@ class EncyclopediaController extends AdminController {
         $this->display('entry_add');
     }
 
+    public function entry_delete(){
+        $id = I('id');
+        if(!empty($id)){
+            if(is_array($id)){
+                $map1['id'] = array('in', $id);
+                $res = M('EncyclopediaEntry')->where($map1)->delete();
+                $map2['entry_id'] = array('in', $id);
+                $res = M('EncyclopediaEntryCatagory')->where($map2)->delete();
+                $res = M('EncyclopediaEntryCatalogue')->where($map2)->delete();
+                $res = M('EncyclopediaEntryContent')->where($map2)->delete();
+                $res = M('EncyclopediaEntryLink')->where($map2)->delete();
+            }else{
+                $map1['id'] = $id;
+                $res = M('EncyclopediaEntry')->where($map1)->delete();
+                $map2['entry_id'] = $id;
+                $res = M('EncyclopediaEntryCatagory')->where($map2)->delete();
+                $res = M('EncyclopediaEntryCatalogue')->where($map2)->delete();
+                $res = M('EncyclopediaEntryContent')->where($map2)->delete();
+                $res = M('EncyclopediaEntryLink')->where($map2)->delete();
+            }
+            $this->success('删除成功','index.php?s=/admin/encyclopedia/item');
+        }
+        $this->error('未选择要删除的数据');
+    }
+
     public function entry_update(){
         if (IS_POST) { //提交表单
             $model = M('EncyclopediaEntry');
@@ -351,6 +376,22 @@ class EncyclopediaController extends AdminController {
         }
     }
 
+    public function entry_link_delete(){
+        $id = I('id');
+        $entry_id = I('entry_id');
+        if(!empty($id)){
+            if(is_array($id)){
+                $map['id'] = array('in', $id);
+                $res = M('EncyclopediaEntryLink')->where($map)->delete();
+            }else{
+                $res = M('EncyclopediaEntryLink')->where('id='.$id)->delete();
+            }
+            $this->success('删除成功','index.php?s=/admin/encyclopedia/entry_link_add/id/'.$entry_id);
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
     public function entry_link_update(){
         if (IS_POST) { //提交表单
             $model = M('EncyclopediaEntryLink');
@@ -365,16 +406,39 @@ class EncyclopediaController extends AdminController {
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/entry_link_add/entry_id'.$data['entry_id']);
+                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/entry_link_add/id/'.$data['entry_id']);
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/entry_link_add/entry_id'.$data['entry_id']);
+                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/entry_link_add/id/'.$data['entry_id']);
             }
         } else {
             $this->display('item');
         }
     }
 
+    public function ajaxAddLink(){
+        $param = I('post.');
+        $link_arr = array();
+        foreach ($param as &$item){
+            $link_arr[] = array(
+                'entry_id'=>$item['entry_id'],
+                'name'=>$item['name'],
+                'link'=>$item['link'],
+                'link_id'=>$item['id'],
+                'create_time'=>time()
+            );
+        }
+        $res = M('EncyclopediaEntryLink')->addAll($link_arr);
+        if(empty($res)){
+            $rdata['status'] = -1;
+            $rdata['msg'] = '添加失败';
+            $this->ajaxReturn($rdata, 'JSON');
+        }else{
+            $rdata['status'] = 1;
+            $rdata['msg'] = '添加成功';
+            $this->ajaxReturn($rdata, 'JSON');
+        }
+    }
     /**
      * 获取资讯流类型
      */
