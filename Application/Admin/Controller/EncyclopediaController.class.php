@@ -315,30 +315,45 @@ class EncyclopediaController extends AdminController {
     }
 
     public function entry_link_add(){
+        $entry_id = I('id');
         $model = M('EncyclopediaEntryLink');
         $count = $model->where('status=1')->count();
         $Page = new Page($count, C('LIST_ROWS'));
         $show = $Page->show();
-        $list = $model->where('status=1')->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
-        foreach($list as &$item){
-            $info = M('InformationFlowContent')->field('name')->where('id='.$item['link_id'])->find();
-            $item['name'] = $info['name'];
-        }
+        $map['entry_id'] = $entry_id;
+        $map['status'] = 1;
+        $list = $model->where($map)->order('create_time desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+        $this->assign('entry_id', $entry_id);
         $this->assign('_list', $list);
         $this->assign('_page', $show);
         $this->assign("_total", $count);
         $this->display('entry_link_add');
     }
 
+    /**
+     * 编辑外链
+     */
+    public function entry_link_edit(){
+        $id = I('id');
+        $entry_id = I('entry_id');
+        $this->assign('entry_id', $entry_id);
+        if(empty($id)){
+            $this->display();
+        }else{
+            $model = M('EncyclopediaEntryLink');
+            $link = $model->where('status=1 and id='.$id)->find();
+            $this->assign('info', $link);
+            $this->display();
+        }
+    }
+
     public function entry_link_update(){
         if (IS_POST) { //提交表单
-            $model = M('EncyclopediaEntryCatalogue');
+            $model = M('EncyclopediaEntryLink');
             $cid = $_POST["cid"];
             $data["name"] = $_POST["name"];
-            $data["sort"] = $_POST["sort"];
-            $data["cover_id"] = $_POST["cover_id"];
-            $data["abstract"] = $_POST["abstract"];
-            $data["relevant_entry"] = $_POST["relevant_entry"];
+            $data["link"] = $_POST["link"];
+            $data["entry_id"] = $_POST["entry_id"];
             if(empty($cid)){
                 $data["create_time"] = time();
                 try {
@@ -346,13 +361,13 @@ class EncyclopediaController extends AdminController {
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
-                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/category');
+                $this->success('添加成功', 'index.php?s=/admin/encyclopedia/entry_link_add/entry_id'.$data['entry_id']);
             } else {
                 $model->where('id='.$cid)->save($data);
-                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/category');
+                $this->success('更新成功', 'index.php?s=/admin/encyclopedia/entry_link_add/entry_id'.$data['entry_id']);
             }
         } else {
-            $this->display('entry_add');
+            $this->display('item');
         }
     }
 
@@ -390,7 +405,7 @@ class EncyclopediaController extends AdminController {
         $map['status'] = 1;
         $map['content_type'] = 1;
         $res = M('InformationFlowContent')->where($map)->field('id, content_id, content_name')->group('content_id')
-            ->order('sort desc, create_time desc')->select();
+            ->limit(20)->order('sort desc, create_time desc')->select();
         foreach ($res as &$item){
             $item['content_url'] = C('HOST_NAME_PREFIX').'app.php/public/topcontent/version/3.3/type/view/id/'.$item['content_id'];
         }
