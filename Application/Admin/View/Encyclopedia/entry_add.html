@@ -204,12 +204,14 @@
 
                 for(var i=0;i<len;i++){
                     item=arr[0];
-
-                    str+='<span class="myAdvantageItem" title="'+item.val+'" id="tag-'+item.id+'">'+
-                            '<span class="myAdvantageItemTxt">'+item.val+'</span>'+
-                            '<span class="box-remove">×</span>'+
-                          '</span>';
+                    if($('#tag-'+item.id).length==0) {
+                        str += '<span class="myAdvantageItem" title="' + item.val + '" id="tag-' + item.id + '">' +
+                                '<span class="myAdvantageItemTxt">' + item.val + '</span>' +
+                                '<span class="box-remove">×</span>' +
+                                '</span>';
+                    }
                 }
+
                 $('#myAdvantage').append(str);
             }
 
