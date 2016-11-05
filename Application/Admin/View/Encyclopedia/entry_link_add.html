@@ -152,12 +152,16 @@
                             url:$(this).attr('data-url'),
                    });
                });
+               if(arr.length==0){
+                   return;
+               }
                paraData={
                  entry_id:'{$entry_id}',
                  data:JSON.stringify(arr)
                };
                $.post(url3,paraData,function(result){
                    if(result && result.status==1){
+                       $('.entry-link-module').hide();
                        location.reload();
                    }else{
                        alert('添加失败，请重试！');
