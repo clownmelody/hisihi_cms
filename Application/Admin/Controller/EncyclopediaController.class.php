@@ -416,19 +416,38 @@ class EncyclopediaController extends AdminController {
         }
     }
 
+    /**
+     * 添加站内链接
+     */
     public function ajaxAddLink(){
         $param = I('post.');
         $link_arr = array();
         $entry_id = $param['entry_id'];
-        $param_arr = json_decode($param['data']);
+        $param_arr = json_decode($param['data'], true);
+        $map['entry_id'] = $entry_id;
+        $map['link_id'] = array('gt', 0);
+        $has_add_link = M('EncyclopediaEntryLink')->where($map)->field('link_id')->select();
         foreach ($param_arr as &$item){
-            $link_arr[] = array(
-                'entry_id'=>$entry_id,
-                'name'=>$item['title'],
-                'link'=>$item['url'],
-                'link_id'=>$item['id'],
-                'create_time'=>time()
-            );
+            $had_add = false;
+            foreach ($has_add_link as &$item2){
+                if($item['id'] == $item2['link_id']){
+                    $had_add = true;
+                }
+            }
+            if(!$had_add){
+                $cur_time = time();
+                $data['create_time'] = $cur_time;
+                $data['entry_id'] = $entry_id;
+                $data['name'] = $item['title'];
+                $data['link'] = $item['url'];
+                $data['link_id'] = $item['id'];
+                $link_arr[] = $data;
+            }
+        }
+        if(empty($link_arr) && !empty($param_arr)){
+            $rdata['status'] = 1;
+            $rdata['msg'] = '添加成功';
+            $this->ajaxReturn($rdata, 'JSON');
         }
         $res = M('EncyclopediaEntryLink')->addAll($link_arr);
         if(empty($res)){
