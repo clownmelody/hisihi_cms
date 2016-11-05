@@ -497,7 +497,8 @@ ul li {
     line-height: 30px;
   }
 }
-img {
+img,
+p {
   max-width: 100%;
 }
 .clear {
@@ -509,6 +510,8 @@ body {
   font-size: 14px;
   background-color: #F2F2F2;
   max-width: 700px;
+  overflow-x: hidden;
+  opacity: 0;
 }
 body .head {
   background-color: #ffffff;
@@ -550,7 +553,7 @@ body .index {
   margin-top: 12px;
   background-color: #ffffff;
   display: -webkit-box;
-  padding: 20px 0;
+  padding: 10px 0;
 }
 body .index > div {
   display: flex;
@@ -577,24 +580,37 @@ body .index > div.catalog-right {
 body .index > div.catalog-right > div {
   display: flex;
   width: 31%;
+  border-right: 1px solid #cccccc;
 }
 body .index > div.catalog-right ul li {
   vertical-align: top;
   text-align: -webkit-match-parent;
   display: list-item;
 }
+body .index > div.catalog-right ul li.level1 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
 body .index > div.catalog-right ul li.level1 a {
   text-decoration: none;
   color: #212121;
   font-size: 14px;
-  /*margin: 10px 0;*/
   line-height: 28px;
+}
+body .index > div.catalog-right ul li.level2 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 body .index > div.catalog-right ul li.level2 a {
   text-decoration: none;
   color: #808080;
   font-size: 12px;
-  /*margin: 2px 0;*/
   line-height: 21px;
 }
 body .content {
