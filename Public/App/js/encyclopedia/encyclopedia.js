@@ -52,19 +52,18 @@ define(['base','async'],function(Base,Async) {
                         $('body').css('opacity','1');
                     }else{
                         that.controlLoadingBox(false);
-                        that.showTips('词条详情加载失败01');
+                        that.showTips('词条详情加载失败');
                     }
                 },
                 eCallback:function(){
                     that.controlLoadingBox(false);
-                    that.showTips('词条详情加载失败02');
+                    that.showTips('词条详情加载失败');
                 },
                 type: 'get',
                 async: this.async
             };
         this.getDataAsync(queryPara);
     };
-
 
     //加载页面全部信息
     t.loadAllInfo =  function (result) {
@@ -105,7 +104,6 @@ define(['base','async'],function(Base,Async) {
             '</ul>';
         $('.head').html(str);
     };
-
 
     //加载目录
     t.loadIndexInfo = function(result){
@@ -217,7 +215,6 @@ define(['base','async'],function(Base,Async) {
         return firstBoxNum | 0;
     };
 
-
     //加载百科简介
     t.loadContentInfo = function(result){
         if(!result||result.data.catalog.length==0){
@@ -240,8 +237,7 @@ define(['base','async'],function(Base,Async) {
             if(!item.detail||item.detail==''){
                strDetail='';
             }
-            str += strTxt +strDetail+
-                    this.getSecondLevel(item,id);
+            str += strTxt +strDetail+ this.getSecondLevel(item,id);
         }
         $('.content').html(str);
     };
@@ -279,6 +275,18 @@ define(['base','async'],function(Base,Async) {
             '</ul>';
         $('.read-about').html(str);
     };
+
+
+    //目录文字超长省略
+    t.getTxtLong = function() {
+        //限制字符个数
+        $(".text").each(function(){
+            var maxwidth=23;
+            if($(this).text().length>maxwidth){ $(this).text($(this).text().substring(0,maxwidth)); $(this).html($(this).html()+'…');
+            }
+        })
+        };
+
 
     return Encyclopedia;
 });

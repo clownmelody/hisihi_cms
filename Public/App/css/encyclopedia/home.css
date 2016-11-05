@@ -512,6 +512,7 @@ body {
   max-width: 700px;
   overflow-x: hidden;
   opacity: 0;
+  word-wrap: break-word;
 }
 body .head {
   background-color: #ffffff;
