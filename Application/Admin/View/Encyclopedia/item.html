@@ -12,7 +12,7 @@
         <div class="fl">
             <div class="btn-group">
                 <a class="btn document_add" href="{:U('entry_add')}">新增词条</a>
-                <button class="btn ajax-post confirm" target-form="ids" url='{:U("encyclopedia/entry_delete",array("status"=>-1))}'>删 除</button>
+                <button class="btn ajax-post confirm" target-form="ids" url='{:U("encyclopedia/entry_delete")}'>删 除</button>
             </div>
         </div>
 
@@ -69,7 +69,7 @@
                             <a href="{:U('encyclopedia/catalogue_add?id='.$vo['id'])}" >编辑目录</a>
                             <a href="{:U('encyclopedia/entry_catagory_add?id='.$vo['id'])}" >添加分类</a>
                             <a href="{:U('encyclopedia/entry_link_add?id='.$vo['id'])}" >添加延伸阅读</a>
-                            <a href="{:U('encyclopedia/category_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
+                            <a href="{:U('encyclopedia/entry_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
                         </td>
                     </tr>
                 </volist>
