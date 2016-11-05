@@ -190,16 +190,13 @@ define(['base','async'],function(Base,Async) {
             if (item.level == 1) {
                 className = 'level1';
                 txt = item.num + '.' + txt;
-                txt=this.substrLongStr(txt,9).replace('…','');
-            }else{
-                txt=this.substrLongStr(txt,8).replace('…','');
             }
             str += '<li class="second-catalog ' + className + '"><a href="#'+item.hashTarget+'">' + txt + '</a></li>';
         }
         if (len == 0) {
             str = '';
         } else {
-            str = '<div class="width:' + width + '"><ul>' + str + '</ul></div>';
+            str = '<div><ul>' + str + '</ul></div>';
         }
         return str;
     };
@@ -234,7 +231,7 @@ define(['base','async'],function(Base,Async) {
             item = result.data.catalog[i];
             strTxt ='<div class="content-head first" id="'+id+'">' +item.name +'</div>' ;
             strDetail = '<p class="content-info">'+ item.detail+'</p>';
-            if (!item.txt||item.txt=='') {
+            if (!item.name||item.name=='') {
                 strTxt='';
             }
             if(!item.detail||item.detail==''){
