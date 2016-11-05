@@ -158,7 +158,9 @@
                  data:JSON.stringify(arr)
                };
                $.post(url3,paraData,function(result){
-                   result;
+                   if(result && result.status==1){
+                       location.reload();
+                   }
                });
            });
 
