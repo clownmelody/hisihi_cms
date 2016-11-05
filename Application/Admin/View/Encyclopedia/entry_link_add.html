@@ -158,7 +158,11 @@
                  data:JSON.stringify(arr)
                };
                $.post(url3,paraData,function(result){
-                   result;
+                   if(result && result.status==1){
+                       location.reload();
+                   }else{
+                       alert('添加失败，请重试！');
+                   }
                });
            });
 
