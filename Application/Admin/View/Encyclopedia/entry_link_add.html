@@ -146,7 +146,7 @@
 
            $d.on('click','.add-link-btn',function(){
                var arr=[],paraData;
-               $('.entry-link-ul li').each(function(){
+               $('.entry-link-ul li.selected').each(function(){
                    arr.push({
                             id:$(this).attr('data-id'),
                             title:$(this).find('p').text(),
