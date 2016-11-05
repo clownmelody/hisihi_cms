@@ -93,6 +93,10 @@ class EncyclopediaController extends AdminController {
         $id = I('id');
         if(!empty($id)){
             $entry = M('EncyclopediaEntry')->where('id='.$id)->find();
+            $entry_tags = explode('#', $entry['relevant_entry']);
+            $map['id'] = array('in', $entry_tags);
+            $entry_tags_list = M('EncyclopediaEntry')->where($map)->field('id,name')->select();
+            $this->assign('entry_tags_list', $entry_tags_list);
             $this->assign('info', $entry);
         }
         $this->display('entry_add');
@@ -119,7 +123,7 @@ class EncyclopediaController extends AdminController {
                     if($entry_id === false){
                         $this->error("新增失败");
                     }else{
-                        $this->success('添加成功', 'index.php?s=/admin/encyclopedia/catalogue_add/entry_id/'.$entry_id);
+                        $this->success('添加成功', 'index.php?s=/admin/encyclopedia/catalogue_add/id/'.$entry_id);
                     }
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
@@ -129,7 +133,7 @@ class EncyclopediaController extends AdminController {
                 if ($res === false){
                     $this->error("编辑失败");
                 }else{
-                    $this->success('更新成功', 'index.php?s=/admin/encyclopedia/catalogue_add/entry_id/'.$cid);
+                    $this->success('更新成功', 'index.php?s=/admin/encyclopedia/item');
                 }
             }
         } else {

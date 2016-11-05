@@ -94,7 +94,16 @@
                             <div class="relevant_entry_main"><ul class="search_modal"></ul></div>
                         </div>
                         <div class="right-box">
-                            <div class="box-tag tag-open" id="myAdvantage"> </div>
+                            <div class="box-tag tag-open" id="myAdvantage">
+                                <notempty name="entry_tags_list">
+                                    <volist name="entry_tags_list" id="to">
+                                        <span class="myAdvantageItem" title="{$to.name}" id="tag-{$to.id}">
+                                            <span class="myAdvantageItemTxt">{$to.name}</span>
+                                            <span class="box-remove">×</span>
+                                        </span>
+                                    </volist>
+                                </notempty>
+                            </div>
                             <input type="hidden" id="relevant_entry" name="relevant_entry" value={$info.relevant_entry|default=''}">
                         </div>
                     </div>
