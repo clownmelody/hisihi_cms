@@ -419,11 +419,13 @@ class EncyclopediaController extends AdminController {
     public function ajaxAddLink(){
         $param = I('post.');
         $link_arr = array();
-        foreach ($param as &$item){
+        $entry_id = $param['entry_id'];
+        $param_arr = json_decode($param['data']);
+        foreach ($param_arr as &$item){
             $link_arr[] = array(
-                'entry_id'=>$item['entry_id'],
-                'name'=>$item['name'],
-                'link'=>$item['link'],
+                'entry_id'=>$entry_id,
+                'name'=>$item['title'],
+                'link'=>$item['url'],
                 'link_id'=>$item['id'],
                 'create_time'=>time()
             );
