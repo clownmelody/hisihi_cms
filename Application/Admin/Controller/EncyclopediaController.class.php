@@ -351,6 +351,22 @@ class EncyclopediaController extends AdminController {
         }
     }
 
+    public function entry_link_delete(){
+        $id = I('id');
+        $entry_id = I('entry_id');
+        if(!empty($id)){
+            if(is_array($id)){
+                $map['id'] = array('in', $id);
+                $res = M('EncyclopediaEntryLink')->where($map)->delete();
+            }else{
+                $res = M('EncyclopediaEntryLink')->where('id='.$id)->delete();
+            }
+            $this->success('删除成功','index.php?s=/admin/encyclopedia/entry_link_add/id/'.$entry_id);
+        } else {
+            $this->error('未选择要删除的数据');
+        }
+    }
+
     public function entry_link_update(){
         if (IS_POST) { //提交表单
             $model = M('EncyclopediaEntryLink');
