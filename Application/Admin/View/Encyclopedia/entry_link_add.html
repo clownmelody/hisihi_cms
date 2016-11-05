@@ -121,7 +121,6 @@
            $d.on('click','.search-btn',function(){
                var keyword=$('#relevant_entry_input').val(),
                    type=$('.select-box select option:selected').val();
-               console.log(keyword+'-'+type);
                $.post(url2,{name:keyword,type:type},function(result){
                    var str = '';
                    if(result && result.data) {
