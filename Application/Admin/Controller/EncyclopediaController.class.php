@@ -416,6 +416,29 @@ class EncyclopediaController extends AdminController {
         }
     }
 
+    public function ajaxAddLink(){
+        $param = I('post.');
+        $link_arr = array();
+        foreach ($param as &$item){
+            $link_arr[] = array(
+                'entry_id'=>$item['entry_id'],
+                'name'=>$item['name'],
+                'link'=>$item['link'],
+                'link_id'=>$item['id'],
+                'create_time'=>time()
+            );
+        }
+        $res = M('EncyclopediaEntryLink')->addAll($link_arr);
+        if(empty($res)){
+            $rdata['status'] = -1;
+            $rdata['msg'] = '添加失败';
+            $this->ajaxReturn($rdata, 'JSON');
+        }else{
+            $rdata['status'] = 1;
+            $rdata['msg'] = '添加成功';
+            $this->ajaxReturn($rdata, 'JSON');
+        }
+    }
     /**
      * 获取资讯流类型
      */
