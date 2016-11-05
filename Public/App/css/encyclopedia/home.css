@@ -580,8 +580,13 @@ body .index > div.catalog-right {
 }
 body .index > div.catalog-right > div {
   display: flex;
-  width: 31%;
+  flex: 1;
+  -webkit-box-flex: 1;
   border-right: 1px solid #cccccc;
+  padding: 0 8px;
+}
+body .index > div.catalog-right > div:last-child {
+  border: none;
 }
 body .index > div.catalog-right ul li {
   vertical-align: top;

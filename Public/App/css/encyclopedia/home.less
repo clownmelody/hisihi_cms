@@ -81,8 +81,13 @@ body {
           -webkit-box-flex:1;
           >div{
             display:flex;
-            width: 31%;
+            flex: 1;
+            -webkit-box-flex:1;
             border-right: 1px solid #cccccc;
+            padding: 0 8px;
+            &:last-child{
+              border: none;
+            }
           }
           ul{
             li{

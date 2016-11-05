@@ -166,9 +166,9 @@ define(['base','async'],function(Base,Async) {
     }
 
     t.getHtmlStr=function(data) {
-        var width = '31%';
-        if (data.arr3.lenght == 0) {
-            width = '50%';
+        var width = '0%';
+        if (data.arr3.length == 0) {
+            //width = '50%';
         }
         var str = '';
         for (var item in data) {
@@ -190,6 +190,9 @@ define(['base','async'],function(Base,Async) {
             if (item.level == 1) {
                 className = 'level1';
                 txt = item.num + '.' + txt;
+                txt=this.substrLongStr(txt,9).replace('…','');
+            }else{
+                txt=this.substrLongStr(txt,8).replace('…','');
             }
             str += '<li class="second-catalog ' + className + '"><a href="#'+item.hashTarget+'">' + txt + '</a></li>';
         }
