@@ -1,3 +1,47 @@
+.data-ul {
+  li {
+    height: 34px;
+    border-bottom: 1px solid #E8E8E8;
+    cursor: pointer;
+    line-height: 34px;
+    position: relative;
+    padding-left: 10px;
+    p{
+      margin-left:10px;
+      margin-right: 35px;
+      color: #686868;
+      font-size: 14px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+    }
+    .check{
+      display: none;
+      width: 25px;
+      height: 17px;
+      position: absolute;
+      right: 7px;
+      top: 13px;
+      background: url('http://pic.hisihi.com/2016-10-27/1477538016694197.png');
+      background-position: -332px 0;
+    }
+    &.selected{
+      .check{
+        display: block;
+      }
+    }
+    &:hover{
+      background-color:rgba(104,104,104,.3);
+    }
+  }
+}
+.nodata{
+  display: none;
+  font-size: 12px;
+  color: #808080;
+}
 #abstract{
   height: 190px;
   padding: 5px;
@@ -29,42 +73,7 @@
         overflow-y: auto;
 
 
-        ul {
-          li {
-            height: 34px;
-            border-bottom: 1px solid #E8E8E8;
-            cursor: pointer;
-            line-height: 34px;
-            position: relative;
-            padding-left: 10px;
-            p{
-              margin-left:10px;
-              margin-right: 35px;
-              color: #686868;
-              font-size: 14px;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-            }
-            .check{
-              display: none;
-              width: 25px;
-              height: 17px;
-              position: absolute;
-              right: 7px;
-              top: 13px;
-              background: url('http://pic.hisihi.com/2016-10-27/1477538016694197.png');
-              background-position: -332px 0;
-            }
-            &.selected{
-              .check{
-                display: block;
-              }
-            }
-          }
-        }
+
       }
       .btn{
         &.disabled{
@@ -73,11 +82,7 @@
           background-color: #fff;
         }
       }
-      .nodata{
-        display: none;
-        font-size: 12px;
-        color: #808080;
-      }
+
     }
   .right-box{
     display:inline-block;
@@ -129,4 +134,109 @@
     }
   }
 
+}
+
+.entry-link-module{
+  position: fixed;
+  top:0;
+  left:0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0,0,0,.4);
+  z-index: 8000;
+  display: none;
+  .module-main{
+    position: absolute;
+    @h:500px;
+    @w:800px;
+    height: @h;
+    width: @w;
+    left: 50%;
+    top:50%;
+    margin-top: -@h/2;
+    margin-left: -@w/2;
+    background-color: #fff;
+    box-shadow: 0 0 2px rgba(81,81,81,.9);
+    border-radius: 5px;
+    .head{
+      height: 50px;
+      background-color: #03ae87;
+      padding: 0 10px;
+      display:flex;
+      .select-box{
+        width: 80px;
+        height:100%;
+        select{
+          width: 100%;
+          height:60%;
+          margin-top: 10%;
+          background-color: transparent;
+          color: #fff;
+          border: none;
+          text-align: center;
+          option{
+            text-align: center;
+            height: 25px;
+            background-color: #676A6A;
+          }
+        }
+      }
+      .btn-box{
+        width: 80px;
+        height:100%;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+        .search-btn{
+            color: #fff;
+        }
+      }
+      .input-box{
+        flex: 1;
+        -webkit-flex: 1;
+        -webkit-width: 1;
+        -moz-width: 1;
+        -ms-width: 1;
+        -o-width: 1;
+        padding: 0 15px;
+        input{
+          height: 32px;
+          width: 100%;
+          background-color: #fff;
+          border-radius: 3px;
+          margin-top: 8px;
+          padding:0 3px;
+        }
+      }
+    }
+    .entry-link-main{
+      margin: 10px 0;
+      max-height: 84%;
+      overflow-y: auto;
+      .data-ul{
+        li{
+          height: 40px;
+          line-height: 40px;
+        }
+        .nodata{
+          display: block;
+          text-align: center;
+          margin-top: 10px;
+        }
+      }
+    }
+    .add-link-btn{
+      height: 40px;
+      width: 100%;
+      background-color:#ccc;
+      color: #686868;
+      font-size: 15px;
+      line-height: 40px;
+      text-align: center;
+      cursor: pointer;
+      &:hover{
+        color: #444242;
+      }
+    }
+  }
 }
