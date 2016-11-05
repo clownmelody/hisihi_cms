@@ -1,6 +1,7 @@
 <extend name="Public/base" />
 <block name="body">
     <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+    <link type="text/css" href="__CSS__/entry_add.css" rel="stylesheet">
     <div class="main-title cf">
         <h2>新增词条</h2>
     </div>
@@ -76,15 +77,34 @@
                     <div class="form-item cf">
                         <label class="item-label">摘要</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="abstract" value="{$info.abstract|default=''}">
+                            <textarea type="text" class="input-large" name="abstract" id="abstract" value="">{$info.abstract|default=''}</textarea>
                         </div>
                     </div>
-                    <div class="form-item cf">
+                    <div class="form-item cf relevant_entry_box">
+
                         <label class="item-label">相关词条</label>
                         <!--<select class="text input-large relevant_entry" name="relevant_entry" style="height: 30px;width: 400px;">
                         </select>-->
-                        <div class="controls">
-                            <input type="text" class="text input-large" name="relevant_entry" value="{$info.relevant_entry|default=''}">
+                        <div class="left-box">
+                            <div class="controls">
+                                <input type="text" class="text search_modal" id="relevant_entry_input" name="relevant_entry">
+                                <a href="javascript:void(0)" class="btn search_modal disabled">搜索</a>
+                                <label class="nodata">查询结果为空</label>
+                            </div>
+                            <div class="relevant_entry_main"><ul class="search_modal data-ul"></ul></div>
+                        </div>
+                        <div class="right-box">
+                            <div class="box-tag tag-open" id="myAdvantage">
+                                <notempty name="entry_tags_list">
+                                    <volist name="entry_tags_list" id="to">
+                                        <span class="myAdvantageItem" title="{$to.name}" id="tag-{$to.id}">
+                                            <span class="myAdvantageItemTxt">{$to.name}</span>
+                                            <span class="box-remove">×</span>
+                                        </span>
+                                    </volist>
+                                </notempty>
+                            </div>
+                            <input type="hidden" id="relevant_entry" name="relevant_entry" value="{$info.relevant_entry|default=''}">
                         </div>
                     </div>
                 </div>
@@ -93,17 +113,136 @@
                 <div class="form-item cf">
                     <label class="item-label"></label>
                     <div class="controls edit_sort_btn">
-                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">确 定</button>
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal" onclick="ctlFormData()">确 定</button>
                         <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    <script>
+        $(function(){
+            var $d= $(document);
+
+            $d.on('click',function(e){
+                var event =e || window.event,
+                    target = event.srcElement || event.target;
+                var $target=$(target);
+                if($target.hasClass('search_modal') || $target.closest('ul').hasClass('search_modal')){
+                    return;
+                }else{
+                    $('.relevant_entry_main').hide();
+                }
+            });
+
+            $d.on('click','.box-remove',function(){
+                var $li=$(this).closest('.myAdvantageItem'),
+                    id=$li[0].id.replace('tag-','');
+                $li.remove();
+                $('.relevant_entry_main li').each(function(){
+                    if($(this).attr('data-id')==id){
+                        $(this).removeClass('selected');
+                        return false;
+                    }
+                });
+
+            });
+
+            $d.on('click','.relevant_entry_main li',function(){
+                $(this).toggleClass('selected');
+                var id=$(this).attr('data-id');
+                if($(this).hasClass('selected')){
+                    showRelevant_entry([{
+                        val:$(this).find('p').text(),
+                        id:id
+                    }]);
+                }else{
+                    $('#tag-'+id).remove();
+                }
+            });
+
+            $d.on('click','.left-box .btn',function(){
+                var url='{:U('Encyclopedia/searchEntry')}',
+                    str='',
+                    className='';
+                $.get(url,{name:$('#relevant_entry_input').val()},function(result){
+                    $('.relevant_entry_main').show();
+                    var data=result.data,
+                        item;
+                    if(data && data.length!=0) {
+                        var len = data.length;
+                        for (var i = 0; i < len; i++) {
+                            item=data[i];
+                            if(getTagIndex(item.id)>=0){
+                                className='selected';
+                            }else{
+                                className='';
+                            }
+                            str += '<li class="'+className+'" data-id="'+item.id+'"><p>' + item.name + '</p><i class="check"></i></li>';
+                        }
+                    }else{
+                        $('.nodata').show().delay(3000).hide(0);
+                    }
+                    $('.relevant_entry_main ul').html(str);
+                });
+            });
+
+            //控制按钮的可用性
+            $d.on('input','#relevant_entry_input',function(e){
+                var txt=$(this).val().trim(),
+                        className='disabled',
+                        $btn=$('.left-box .btn');
+                if(txt){
+                    $btn.removeClass(className);
+                }else{
+                    $btn.addClass(className);
+                }
+            });
+
+            window.ctlFormData=function(){
+                var str=[];
+                $('#myAdvantage .myAdvantageItem').each(function(){
+                    str.push($(this)[0].id.replace('tag-',''));
+                });
+                $('#relevant_entry').val(str.join('#'));
+            };
+
+            function showRelevant_entry(arr){
+                var len=arr.length,
+                    item,str='';
+
+                for(var i=0;i<len;i++){
+                    item=arr[0];
+                    if($('#tag-'+item.id).length==0) {
+                        str += '<span class="myAdvantageItem" title="' + item.val + '" id="tag-' + item.id + '">' +
+                                '<span class="myAdvantageItemTxt">' + item.val + '</span>' +
+                                '<span class="box-remove">×</span>' +
+                                '</span>';
+                    }
+                }
+
+                $('#myAdvantage').append(str);
+            }
+
+            function getTagIndex(id) {
+                var index=-1;
+                $('#myAdvantage .myAdvantageItem').each(function (i) {
+                    if($(this)[0].id=='tag-'+id){
+                        index=i;
+//                        return true;
+                        return index;
+                    }
+                });
+                return index;
+            }
+        });
+    </script>
+
 </block>
 
 <script>
     //导航高亮
     highlight_subnav('{:U('Encyclopedia/item')}');
+
 </script>
 

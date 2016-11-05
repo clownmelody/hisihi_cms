@@ -554,7 +554,7 @@ body .index {
   margin-top: 12px;
   background-color: #ffffff;
   display: -webkit-box;
-  padding: 20px 0;
+  padding: 10px 0;
 }
 body .index > div {
   display: flex;
