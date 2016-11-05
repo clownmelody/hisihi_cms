@@ -1,3 +1,7 @@
+#abstract {
+  height: 190px;
+  padding: 5px;
+}
 .relevant_entry_box {
   position: relative;
 }

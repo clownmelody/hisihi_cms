@@ -77,7 +77,7 @@
                     <div class="form-item cf">
                         <label class="item-label">摘要</label>
                         <div class="controls">
-                            <textarea type="text" class="input-large" name="abstract" value="{$info.abstract|default=''}"></textarea>
+                            <textarea type="text" class="input-large" name="abstract" id="abstract" value="">{$info.abstract|default=''}</textarea>
                         </div>
                     </div>
                     <div class="form-item cf relevant_entry_box">
@@ -87,7 +87,7 @@
                         </select>-->
                         <div class="left-box">
                             <div class="controls">
-                                <input type="text" class="text search_modal" id="relevant_entry_input" name="relevant_entry" value="{$info.relevant_entry|default=''}">
+                                <input type="text" class="text search_modal" id="relevant_entry_input" name="relevant_entry">
                                 <a href="javascript:void(0)" class="btn search_modal disabled">搜索</a>
                                 <label class="nodata">查询结果为空</label>
                             </div>
@@ -95,6 +95,7 @@
                         </div>
                         <div class="right-box">
                             <div class="box-tag tag-open" id="myAdvantage"> </div>
+                            <input type="hidden" id="relevant_entry" name="relevant_entry" value={$info.relevant_entry|default=''}">
                         </div>
                     </div>
                 </div>
@@ -103,7 +104,7 @@
                 <div class="form-item cf">
                     <label class="item-label"></label>
                     <div class="controls edit_sort_btn">
-                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">确 定</button>
+                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal" onclick="ctlFormData">确 定</button>
                         <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
                     </div>
                 </div>
@@ -140,13 +141,12 @@
 
             $d.on('click','.relevant_entry_main li',function(){
                 $(this).toggleClass('selected');
-                var id='tag-'+$(this).attr('data-id');
+                var id=$(this).attr('data-id');
                 if($(this).hasClass('selected')){
-                    var str='<span class="myAdvantageItem" title="环境相当优越" id="'+id+'">'+
-                                '<span class="myAdvantageItemTxt">环境相当优越</span>'+
-                                '<span class="box-remove">×</span>'+
-                            '</span>';
-                    $('#myAdvantage').append(str)
+                    showRelevant_entry([{
+                        val:$(this).find('p').text(),
+                        id:id
+                    }]);
                 }else{
                     $('#'+id).remove();
                 }
@@ -154,14 +154,22 @@
 
             $d.on('click','.left-box .btn',function(){
                 var url='{:U('Encyclopedia/searchEntry')}',
-                    str='';
+                    str='',
+                    className='';
                 $.get(url,{name:$('#relevant_entry_input').val()},function(result){
                     $('.relevant_entry_main').show();
-                    var data=result.data;
+                    var data=result.data,
+                        item;
                     if(data && data.length!=0) {
                         var len = data.length;
                         for (var i = 0; i < len; i++) {
-                            str += '<li data-id="'+data[i].id+'"><p>' + data[i].name + '</p><i class="check"></i></li>';
+                            item=data[i];
+                            if(getTagIndex(item.id)>=0){
+                                className='selected';
+                            }else{
+                                className='';
+                            }
+                            str += '<li class="'+className+'" data-id="'+item.id+'"><p>' + item.name + '</p><i class="check"></i></li>';
                         }
                     }else{
                         $('.nodata').show().delay(3000).hide(0);
@@ -181,6 +189,41 @@
                     $btn.addClass(className);
                 }
             });
+
+            window.ctlFormData=function(){
+                var str=[];
+                $('#myAdvantage_main .myAdvantageItem').each(function(){
+                    str.push($(this)[0].id.replace('tag-',''));
+                });
+                $('#relevant_entry').val(str.splice('#'));
+            };
+
+            function showRelevant_entry(arr){
+                var len=arr.length,
+                    item,str='';
+
+                for(var i=0;i<len;i++){
+                    item=arr[0];
+
+                    str+='<span class="myAdvantageItem" title="'+item.val+'" id="tag-'+item.id+'">'+
+                            '<span class="myAdvantageItemTxt">'+item.val+'</span>'+
+                            '<span class="box-remove">×</span>'+
+                          '</span>';
+                }
+                $('#myAdvantage').append(str);
+            }
+
+            function getTagIndex(id) {
+                var index=-1;
+                $('#myAdvantage_main .myAdvantageItem').each(function (i) {
+                    if($(this).id=='tag-'+id){
+                        index=i;
+//                        return true;
+                        return index;
+                    }
+                });
+                return index;
+            }
         });
     </script>
 
