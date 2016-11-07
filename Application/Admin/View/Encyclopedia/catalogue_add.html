@@ -3,11 +3,13 @@
 <block name="body">
     <style type="text/css" rel="stylesheet">
         .main-content-box{
-            position:absolute;
-            top:50px;
-            left: 5%;
-            height: 90%;
+            /*position:absolute;*/
+            /*top:50px;*/
+            /*left: 5%;*/
+            /*bottom: 40px;*/
+            height: 100%;
             width: 90%;
+            position: relative;
         }
         .main-content-left-box{
             width: 190px;
@@ -24,14 +26,22 @@
         #entry_content{
             overflow: hidden;
             border:none;
-            min-height: 100%;
+            width: 100%;
+            min-height: 80%;
         }
     </style>
     <script>
 
         function changeFrameHeight(){
-            var ifm= document.getElementById("entry_content");
-            ifm.height=document.documentElement.clientHeight;
+                var iframe = document.getElementById("entry_content");
+                try{
+                    var bHeight = iframe.contentWindow.document.body.scrollHeight;
+                    var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+                    var height = Math.max(bHeight, dHeight);
+                    iframe.height = height;
+                    console.log(height);
+                }catch (ex){}
+
         }
         window.onresize=function(){
             changeFrameHeight();
@@ -46,6 +56,10 @@
         </div>
         <div class="main-content-right-box">
             <iframe id="entry_content" style="width: 100%;" src="" onLoad="changeFrameHeight()"></iframe>
+
+            <!--编辑器-->
+
+
         </div>
     </div>
     <link rel="stylesheet" href="__STATIC__/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
@@ -152,6 +166,7 @@
 
         function onClick(e, treeId, treeNode, isCancel) {
             var entry_id = $("#entry_id").val();
+
             $("#entry_content").attr("src", "{:U('Encyclopedia/content_add')}"
                     + "&catalogue_id=" + treeNode.catalogue_id + "&entry_id=" + entry_id);
         }

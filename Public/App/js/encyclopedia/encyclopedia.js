@@ -4,7 +4,6 @@
 define(['base','async'],function(Base,Async) {
 
     var Encyclopedia = function (id, url) {
-        alert('123');
         var that = this;
         this.id = id;
         this.baseUrl = url;
