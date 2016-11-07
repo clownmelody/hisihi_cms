@@ -139,6 +139,27 @@
                });
            });
 
+            $d.on('change','.select-box select',function(){
+                var keyword=$('#relevant_entry_input').val(),
+                        type=$('.select-box select option:selected').val();
+                $.post(url2,{name:keyword,type:type},function(result){
+                    var str = '';
+                    if(result && result.data) {
+                        var len = result.data.length,
+                                str = '',
+                                item;
+                        for (var i = 0; i < len; i++) {
+                            item=result.data[i];
+                            str+='<li data-id="'+item.id+'" data-url="'+item.content_url+'"><p>'+item.content_name+'</p><i class="check"></i></li>';
+                        }
+                        str = str==''?'<p class="nodata">结果为空</p>':str;
+                    }else{
+                        str='<p class="nodata">结果为空</p>';
+                    }
+                    $('.entry-link-ul').html(str);
+                });
+            });
+
            $d.on('click','.entry-link-ul li',function(){
                $(this).toggleClass('selected');
            });
@@ -175,11 +196,10 @@
     </script>
 </block>
 
-<script>
-    //导航高亮
-    highlight_subnav('{:U('Encyclopedia/item')}');
-
-
-
-</script>
+<block name="script">
+    <script type="text/javascript">
+        //导航高亮
+        highlight_subnav("{:U('Encyclopedia/item')}");
+    </script>
+</block>
 

@@ -1,13 +1,25 @@
 <extend name="Public/base2" />
 <block name="body">
     <style type="text/css" rel="stylesheet">
+        body{
+            height: auto;
+        }
         #main-content{
             margin-left: 0;
         }
+        .submit-btn{
+            margin-top: 10px;
+            height: 35px;
+            width:100px;
+            cursor: pointer;
+        }
+        .submit-btn:hover{
+            color: white;
+        }
     </style>
     <!-- 标签页导航 -->
-    <div class="tab-wrap">
-        <div class="tab-content">
+    <!--<div class="tab-wrap">-->
+        <!--<div class="tab-content">-->
             <!-- 表单 -->
             <form id="form" action="{:U('content_update')}" method="post" class="form-horizontal doc-modal-form">
                 <input type="hidden" name="cid" id="cid" value="{$id|default=''}"/>
@@ -16,7 +28,7 @@
                 <!-- 基础 -->
                 <div id="tab1" class="tab-pane in tab1">
                     <div class="form-item cf">
-                        <label class="item-label">内容</label>
+                        <!--<label class="item-label">内容</label>-->
                         <div class="controls">
                             <textarea name="content">{$content|default=''}</textarea>
                             {:hook('adminArticleEdit', array('name'=>content,'value'=>$content))}
@@ -33,12 +45,14 @@
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
+        <!--</div>-->
+    <!--</div>-->
 </block>
 
-<script>
-    //导航高亮
-    highlight_subnav('{:U('Encyclopedia/item')}');
-</script>
+<block name="script">
+    <script type="text/javascript">
+        //导航高亮
+        highlight_subnav("{:U('Encyclopedia/item')}");
+    </script>
+</block>
 

@@ -406,11 +406,13 @@ body{
 /* 后台内页模块样式
 ------------------------------------------------- */
 .main {
-    padding:25px;
+    padding:15px;
+    padding-bottom: 40px;
 	background-color: #f6f6f6;
     position: relative;
-    /*margin-bottom: 60px;*/
-    height: 100%;
+    /*margin-bottom: 40px;*/
+    height: 96%;
+    box-sizing: content-box;
     display: flex;
     flex-direction:column;
 }
