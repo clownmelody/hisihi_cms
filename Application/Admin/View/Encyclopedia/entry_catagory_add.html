@@ -1,7 +1,8 @@
 <extend name="Public/base" />
 <block name="body">
+    <link type="text/css" href="__CSS__/entry_catagory_add.css" rel="stylesheet">
     <div class="main-title cf">
-        <h2>添加分类</h2>
+        选择该词条所属分类（多选）
     </div>
 
     <!-- 标签页导航 -->
@@ -14,15 +15,19 @@
                 <div id="tab1" class="tab-pane in tab1">
                     <notempty name="pcatagory">
                         <volist name="pcatagory" id="vo">
-                            <p class="text input-large" style="height: 30px;width: 100%;border: 0;background-color: lightgrey;">{$vo.name}</p>
-                            <div>
-                                <notempty name="catagory">
+                            <div class="first-catalog">{$vo.name}</div>
+                            <div class="second-catalog">
+                                <div class="second-catalog-detail">
+                                    <notempty name="catagory">
                                     <volist name="catagory" id="co">
                                         <eq name="vo['id']" value="$co['pid']">
-                                            <input type="checkbox" name="category_id[]" value="{$co.id}" pid="{$co.pid}" <eq name="co['checked']" value="1">checked</eq> >{$co.name}</input>
+                                            <label title="{$co.name}">
+                                                <input type="checkbox" name="category_id[]" value="{$co.id}" pid="{$co.pid}" <eq name="co['checked']" value="1">checked</eq> >{$co.name}</input>
+                                            </label>
                                         </eq>
                                     </volist>
                                 </notempty>
+                                </div>
                             </div>
                         </volist>
                         <else/>
