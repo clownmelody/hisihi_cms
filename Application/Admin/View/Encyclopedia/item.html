@@ -18,16 +18,29 @@
 
         <div class="search-form fr cf">
             <div class="sleft">
-                <div class="drop-down">
-                    <span id="sch-sort-txt" class="sort-txt">所有</span>
+                <div id="drop-down1" class="drop-down" style="width: 100px;border-right: 1px solid lightgrey;">
+                    <span id="sch-sort-txt" class="sort-txt" style="width: 65px;" data="{$cur_category1['id']|default=0}">{$cur_category1['name']|default='一级分类'}</span>
                     <i class="arrow arrow-down"></i>
-                    <ul id="sub-sch-menu" class="nav-list hidden">
+                    <ul id="sub-sch-menu1" class="nav-list hidden">
                         <notempty name="first_level_list">
                             <volist name="first_level_list" id="vo">
-                                <li><a href="javascript:;" value="{$vo.id}">{$vo.name}</a></li>
+                                <li><a href="javascript:;" value="{$vo.id}" style="width: 80px;">{$vo.name}</a></li>
                             </volist>
                             <else/>
-                            <li><a href="javascript:;" value="0">暂无一级分类</a></li>
+                            <li><a href="javascript:;" value="0" style="width: 80px;">暂无</a></li>
+                        </notempty>
+                    </ul>
+                </div>
+                <div id="drop-down2" class="drop-down" style="width: 100px;">
+                    <span id="sch-sort-txt2" class="sort-txt" style="width: 65px;" data="{$cur_category2['id']|default=0}">{$cur_category2['name']|default='二级分类'}</span>
+                    <i class="arrow arrow-down"></i>
+                    <ul id="sub-sch-menu2" class="nav-list hidden">
+                        <notempty name="second_level_list">
+                            <volist name="second_level_list" id="vo">
+                                <li><a href="javascript:;" value="{$vo.id}" style="width: 80px;">{$vo.name}</a></li>
+                            </volist>
+                            <else/>
+                            <li><a href="javascript:;" value="0" style="width: 80px;">暂无</a></li>
                         </notempty>
                     </ul>
                 </div>
@@ -98,11 +111,6 @@
     </script>
 </block>
 <block name="script">
-    <link href="__STATIC__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
-    <php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__STATIC__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
-    <link href="__STATIC__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
     <script type="text/javascript">
         $(function(){
             //搜索功能
@@ -112,26 +120,81 @@
                 query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
                 query = query.replace(/^&/g,'');
 
-                var id = $("#sch-sort-txt").attr("data");
-                if(!id){
-                    id = 0;
+                var cid = $("#sch-sort-txt2").attr("data");
+                if(!cid){
+                    cid = 0;
                 }
-                url = url + "&pid=" + id + "&" + query;
+                var pid = $("#sch-sort-txt").attr("data");
+                if(!pid){
+                    pid = 0;
+                }
+                url = url + "&cid=" + cid + "&pid=" + pid + "&" + query;
                 window.location.href = url;
             });
 
             /* 状态搜索子菜单 */
-            $(".search-form").find(".drop-down").hover(function(){
-                $("#sub-sch-menu").removeClass("hidden");
+            $(".search-form").find("#drop-down1").hover(function(){
+                $("#sub-sch-menu1").removeClass("hidden");
             },function(){
-                $("#sub-sch-menu").addClass("hidden");
+                $("#sub-sch-menu1").addClass("hidden");
             });
-            $("#sub-sch-menu li").find("a").each(function(){
+            /* 状态搜索子菜单 */
+            $(".search-form").find("#drop-down2").hover(function(){
+                $("#sub-sch-menu2").removeClass("hidden");
+            },function(){
+                $("#sub-sch-menu2").addClass("hidden");
+            });
+            $("#sub-sch-menu1 li").find("a").each(function(){
                 $(this).click(function(){
                     var text = $(this).text();
                     $("#sch-sort-txt").text(text).attr("data",$(this).attr("value"));
-                    $("#sub-sch-menu").addClass("hidden");
-                })
+                    $("#sub-sch-menu1").addClass("hidden");
+                    var pid = $(this).attr("value");
+                    $.ajax({
+                        type: "POST",
+                        url: "{:U('Encyclopedia/getSecondCategory')}",
+                        data: "pid=" + pid ,
+                        success: function(msg){
+                            if(msg['status'] > 0){
+                                if(msg['data']){
+                                    var category2 = [];
+                                    for(var i in msg['data']){
+                                        category2.push("<li><a href='javascript:;' value='" + msg['data'][i]['id']
+                                                + "' style='width: 80px;'>" + msg['data'][i]['name'] + "</a></li>");
+                                    }
+                                    $("#sub-sch-menu2").html(category2.join(''));
+                                    $("#sub-sch-menu2").removeClass("hidden");
+                                }else{
+                                    $("#sub-sch-menu2").html('<li><a href="javascript:;" value="0" style="width: 80px;">暂无</a></li>');
+                                    $("#sub-sch-menu2").removeClass("hidden");
+                                }
+                            }
+                        }
+                    });
+                });
+            });
+
+            $("#sub-sch-menu2").delegate('a', 'click', function(){
+                var text = $(this).text();
+                $("#sch-sort-txt2").text(text).attr("data",$(this).attr("value"));
+                $("#sub-sch-menu2").addClass("hidden");
+
+                var url = $("#search").attr('url');
+                var query  = $('.search-form').find('input').serialize();
+                query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+                query = query.replace(/^&/g,'');
+                if(query){
+                    var cid = $("#sch-sort-txt2").attr("data");
+                    if(!cid){
+                        cid = 0;
+                    }
+                    var pid = $("#sch-sort-txt").attr("data");
+                    if(!pid){
+                        pid = 0;
+                    }
+                    url = url + "&cid=" + cid + "&pid=" + pid + "&" + query;
+                    window.location.href = url;
+                }
             });
         })
     </script>

@@ -1,7 +1,7 @@
 /**
  * Created by hisihi on 2016/10/31.
  */
-define(['base','async'],function(Base,Async) {
+define(['base','async'],function(Base) {
 
     var Encyclopedia = function (id, url) {
         var that = this;
@@ -19,7 +19,6 @@ define(['base','async'],function(Base,Async) {
             that.loadEncyclopediaInfo();
         //请求数据
         }, 100);
-
     };
 
     //下载条
@@ -29,7 +28,6 @@ define(['base','async'],function(Base,Async) {
             pos: 1
         }
     };
-
 
     Encyclopedia.prototype = new Base(config);
     Encyclopedia.constructor = Encyclopedia;
@@ -45,13 +43,12 @@ define(['base','async'],function(Base,Async) {
                 url: this.baseUrl + 'Encyclopedia/getEntryDetail',
                 paraData: {entry_id: this.id},
                 sCallback:function(result){
-                    if(result.data){
-                        that.controlLoadingBox(false);
-                        that.loadAllInfo(result);
-                        $('body').css('opacity','1');
-                    }else{
+                    if(!result.data||result.data.headInfo.id==null){
                         that.controlLoadingBox(false);
                         that.showTips('词条详情加载失败');
+                    }else{
+                        that.controlLoadingBox(false);
+                        that.loadAllInfo(result);
                     }
                 },
                 eCallback:function(){
@@ -66,25 +63,48 @@ define(['base','async'],function(Base,Async) {
 
     //加载页面全部信息
     t.loadAllInfo =  function (result) {
-        this.loadHeadInfo(result);
+        //this.changeTitle(result),
+        this.loadHeadInfo(result),
         this.loadContentInfo(result),
-        this.loadReadAboutInfo(result);
+        this.loadReadAboutInfo(result),
         this.loadIndexInfo(result);
     };
 
     //加载头部信息
     t.loadHeadInfo = function(result) {
         //判断数据是否存在
-        if (!result||result.data.headInfo.title=='') {
+        if (!result||result.data.headInfo.title==null) {
             return '';
         }
         var str='',
-            strTag='',
             title=result.data.headInfo.title,
-            detail=result.data.headInfo.detail,
-            len=result.data.likeKeyWords.length,
-            item,
-            linkHref='';
+            detail=result.data.headInfo.detail;
+        str ='<div class="head-main-title">'+title+'</div>'+
+            '<div class="head-detail">'+detail+'</div>'+ this.loadAboutTips(result);
+        $('.head').removeClass('hide');
+        $('.head').html(str);
+    };
+
+    //更改头部title
+    //t.changeTitle = function(result) {
+    //    if (!result.data||result.data.headInfo.id==null) {
+    //        return '';
+    //    }
+    //    var str = '',
+    //        title=result.data.headInfo.title;
+    //    str = '<title>' +title+ '</title>';
+    //    $('head').html(str);
+    //}
+
+    //加载相关标签
+    t.loadAboutTips = function(result){
+        if (!result||result.data.likeKeyWords==null) {
+            return '';
+        }
+        var len=result.data.likeKeyWords.length,
+            linkHref='',
+            strTag='',
+            item;
         if(this.isFromApp){
             linkHref='hisihi://encyclopedia/detailinfo?id=';
         }else{
@@ -94,21 +114,20 @@ define(['base','async'],function(Base,Async) {
             item=result.data.likeKeyWords[i];
             strTag += '<li class="head-title-tag"><a href="'+linkHref+item.id+'" target="_blank"><span>'+ item.name +'</span></a></li>';
         }
-        str ='<div class="head-main-title">'+title+'</div>'+
-            '<div class="head-detail">'+detail+'</div>'+
-            '<ul class="head-tag">'+
+
+        var str = '<ul class="head-tag">'+
             '<li class="head-title">相关词条：</li>'+
                 strTag+
             '<div class="clear"></div>'+
             '</ul>';
-        $('.head').html(str);
+        return str;
     };
 
     //加载目录
     t.loadIndexInfo = function(result){
         //判断数据是否存在或者目录长度是否为空
-        if(!result||result.data.catalog.length==0){
-            return ' ';
+        if(!result.data||result.data.catalog==null){
+            return '';
         }
         var arr=this.setUpArr(result);
         this.getHtmlStr(arr);
@@ -173,10 +192,11 @@ define(['base','async'],function(Base,Async) {
         for (var item in data) {
             str += this.getArrItemHtmlStr(data[item], width);
         }
+        $('.index').removeClass('hide');
         $('.catalog-right').html(str);
     };
 
-    t.getArrItemHtmlStr=function(arr, width) {
+    t.getArrItemHtmlStr=function(arr,width) {
         var len = arr.length,
             str = '',
             className = '',
@@ -216,8 +236,8 @@ define(['base','async'],function(Base,Async) {
 
     //加载百科简介
     t.loadContentInfo = function(result){
-        if(!result||result.data.catalog.length==0){
-            return ' ';
+        if(!result.data||result.data.catalog==null){
+            return '';
         }
         var str='',
             strTxt='',
@@ -238,6 +258,7 @@ define(['base','async'],function(Base,Async) {
             }
             str += strTxt +strDetail+ this.getSecondLevel(item,id);
         }
+        $('.content').removeClass('hide');
         $('.content').html(str);
     };
 
@@ -257,7 +278,7 @@ define(['base','async'],function(Base,Async) {
 
     //加载百科延伸阅读
     t.loadReadAboutInfo = function (result) {
-        if (!result||result.data.linkInfo==null) {
+        if (!result.data||result.data.linkInfo==null) {
             return '';
         }
         var str='',
@@ -272,20 +293,9 @@ define(['base','async'],function(Base,Async) {
             '<ul>' +
                 strL+
             '</ul>';
+        $('.read-about').removeClass('hide');
         $('.read-about').html(str);
     };
-
-
-    //目录文字超长省略
-    t.getTxtLong = function() {
-        //限制字符个数
-        $(".text").each(function(){
-            var maxwidth=23;
-            if($(this).text().length>maxwidth){ $(this).text($(this).text().substring(0,maxwidth)); $(this).html($(this).html()+'…');
-            }
-        })
-        };
-
 
     return Encyclopedia;
 });
