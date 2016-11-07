@@ -141,7 +141,7 @@ class EncyclopediaController extends AdminController {
             $builder->title('新增分类')->keyId()->keyText('title', '标题')->keySelect('pid', '父分类', '选择父级分类', array('0' => '顶级分类')+$opt)
                 ->keyStatus()->keyCreateTime()
                 ->data($issue)
-                ->buttonSubmit(U('Encyclopedia/add'))->buttonBack()->display();
+                ->buttonSubmit(U('Encyclopedia/add'))->buttonBack()->display2();
         }
 
     }
