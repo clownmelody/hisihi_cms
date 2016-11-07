@@ -63,7 +63,6 @@ define(['base','async'],function(Base) {
 
     //加载页面全部信息
     t.loadAllInfo =  function (result) {
-        //this.changeTitle(result),
         this.loadHeadInfo(result),
         this.loadContentInfo(result),
         this.loadReadAboutInfo(result),
