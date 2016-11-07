@@ -398,7 +398,7 @@ body{
     height: auto;
     min-height: 100%;
     margin-left: 200px;
-
+    overflow: hidden;
 }
 
 
@@ -406,7 +406,7 @@ body{
 /* 后台内页模块样式
 ------------------------------------------------- */
 .main {
-    /*padding:20px;*/
+    padding:25px;
 	background-color: #f6f6f6;
     position: relative;
     /*margin-bottom: 60px;*/

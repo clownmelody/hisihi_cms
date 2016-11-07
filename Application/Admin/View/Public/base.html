@@ -144,7 +144,7 @@
     +function () {
         var $window = $(window), $subnav = $("#subnav"), url;
         $window.resize(function () {
-            $("#main").css("min-height", $('#main-content').height());
+            $("#main").css("min-height", $('#main-content').height()-20);
         }).resize();
 
         /* 左边菜单高亮 */
