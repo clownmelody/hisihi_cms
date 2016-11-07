@@ -63,6 +63,7 @@ class EncyclopediaController extends AdminController {
         $builder->title('分类管理')
             ->buttonNew(U('Encyclopedia/add'))
             ->data($tree)
+            ->highlight_subnav(U('Encyclopedia/category'))
             ->display();
     }
 
