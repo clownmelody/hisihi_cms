@@ -4,7 +4,9 @@ a{color:#666 }
 a:hover{color: #333
 }
 body{
-    padding: 40px 0 0 200px;
+    padding-top: 40px;
+    position: relative;
+    height: 100%;
 }
 .header {background: #03AE87;color: #fff}
 .header .main-nav a , .page a , .tab-nav.nav a , .btn{

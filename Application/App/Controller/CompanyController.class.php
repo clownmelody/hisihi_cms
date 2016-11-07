@@ -21,9 +21,12 @@ class CompanyController extends AppController {
 
     /**
      * 公司列表
+     * @param int $uid
      * @param int $page
      * @param int $count
-     *
+     * @param int $id
+     * @param string $name
+     * @param null $version
      */
     public function alllist($uid=0, $page=1, $count=5, $id=0, $name='',$version=null){
         if (!$uid) {
@@ -433,10 +436,49 @@ class CompanyController extends AppController {
         $this->apiSuccess("获取列表成功",null, $extra);
     }
 
-    public function jobList($page=1, $count=10){
+    /**
+     * @param null $city
+     * @param null $job_name
+     * @param string $education
+     * @param string $type_of_job
+     * @param string $work_experience
+     * @param string $salary
+     * @param string $industry
+     * @param string $scale
+     * @param int $page
+     * @param int $count
+     */
+    public function jobList($city=null, $job_name=null, $education='全部', $type_of_job='全部', $work_experience='全部',
+                            $salary='全部', $industry='全部', $scale='全部', $page=1, $count=10){
         $model = M("CompanyRecruit");
         $companyModel = M("Company");
         $data["status"] = 1;
+        if(empty($job_name)){
+            $data["job"] = array("like", '%'.$job_name.'%');
+        }
+        if(!empty($city)){
+            $data["work_city"] = array("like", '%'.$city.'%');
+        }
+        if($education!='全部'){
+            $data["education"] = array("like", '%'.$education.'%');
+        }
+        if($type_of_job!='全部'){
+            $data["type_of_job"] = array("like", '%'.$type_of_job.'%');
+        }
+        if($work_experience!='全部'){
+            $data["work_experience"] = array("like", '%'.$work_experience.'%');
+        }
+        if($salary!='全部'){
+            $salaryList =$this->getSalaryIdList($salary);
+            $data["salary"] = array("in", $salaryList);
+        }
+        if($scale!='全部'){
+            $list = $this->getCompanyIdList($scale);
+            $data["company_id"] = array("in", $list);
+        }
+        if($industry!='全部'){
+            $data["industry"] = array("like", '%'.$industry.'%');
+        }
         $total_count = $model->where($data)->count();
         $list = $model->field("id, company_id, job, salary, work_experience, work_city, education, type_of_job")
             ->where($data)
@@ -454,6 +496,41 @@ class CompanyController extends AppController {
         $extra["data"] = $list;
         $this->apiSuccess("获取职位列表成功",null, $extra);
     }
+
+    private function getSalaryIdList($salary){
+        $cmodel = M('CompanyConfig');
+        $salaryList = $cmodel->field("value")->where('type=4 and status=1 and value_explain like %'.$salary.'%')->select();
+        if(!empty($salaryList)) {
+            foreach ($salaryList as $salary) {
+                $idList[] = $salary['value'];
+            }
+            return $idList;
+        } else {
+            return null;
+        }
+    }
+
+    private function getCompanyIdList($scale){
+        $cmodel = M('CompanyConfig');
+        $model = M('Company');
+        $scaleList = $cmodel->field("value")->where('type=2 and status=1 and value_explain like %'.$scale.'%')->select();
+        if(!empty($scaleList)){
+            foreach($scaleList as $scale){
+                $idList[] = $scale['value'];
+            }
+            $data["scale"] = array("in", $idList);
+            $idList = $model->field('id')->where($data)->select();
+            if(!empty($idList)){
+                foreach($idList as $item){
+                    $result[] = $item["id"];
+                }
+                return $result;
+            }
+        } else {
+            return null;
+        }
+    }
+
 
     public function jobDetail($id=0){
         $model = M("CompanyRecruit");
