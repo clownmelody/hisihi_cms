@@ -58,8 +58,8 @@ textarea:focus {
   overflow: hidden;
   white-space: nowrap;
 }
-.txt-ellipsis-p(@line-num:10){
-  text-overflow: ellipsis;
+.txt-ellipsis-p(@line-num:10,@type:ellipsis){
+  text-overflow: @type;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;

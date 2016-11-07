@@ -30,7 +30,7 @@ requirejs.config({
 
 require(['home','prefixfree'],function(Encyclopedia) {
     var url = window.location.href;
-    if (url.indexOf('%2f') > 0) {
+    if (url.indexOf('%2F') > 0) {
         url=url.replace(/\%2F/g,'\/');
     }
 

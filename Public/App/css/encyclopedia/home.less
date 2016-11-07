@@ -12,6 +12,8 @@ body {
   max-width: 700px;
   overflow-x: hidden;
   opacity: 0;
+  //强制英文单词换行
+  word-wrap: break-word;
   .head {
     background-color: #ffffff;
     padding: 14px;
@@ -78,31 +80,49 @@ body {
           flex: 1;
           -webkit-box-flex:1;
           >div{
-            display:flex;
-            width: 31%;
             border-right: 1px solid #cccccc;
+            padding: 0 8px;
+            width:1%;
+            -webkit-box-flex:1 ;
+            -moz-box-flex: 1;
+            box-flex: 1;
+            flex: 1;
+            word-break: break-all;
+            &:last-child{
+              border: none;
+            }
           }
           ul{
+            width: 100%;
             li{
               vertical-align: top;
               text-align: -webkit-match-parent;
               display: list-item;
+              a{
+                text-decoration: none;
+              }
               &.level1{
-                .txt-ellipsis-p(1);
+                white-space:nowrap;
                 a{
-                  text-decoration: none;
+
                   color: #212121;
                   font-size: 14px;
                   line-height: 28px;
+                  display: block;
+                  overflow:hidden;
+                  text-overflow: clip;
+
                 }
               }
               &.level2{
-                .txt-ellipsis-p(1);
+                white-space:nowrap;
                 a{
-                  text-decoration: none;
                   color: #808080;
                   font-size: 12px;
                   line-height: 21px;
+                  display: block;
+                  overflow: hidden;
+                  text-overflow: clip;
                 }
               }
             }
