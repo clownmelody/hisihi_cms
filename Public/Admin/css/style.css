@@ -398,6 +398,7 @@ body{
     height: auto;
     min-height: 100%;
     margin-left: 200px;
+
 }
 
 
@@ -405,10 +406,13 @@ body{
 /* 后台内页模块样式
 ------------------------------------------------- */
 .main {
-    padding:20px;
+    /*padding:20px;*/
 	background-color: #f6f6f6;
     position: relative;
-    margin-bottom: 60px;
+    /*margin-bottom: 60px;*/
+    height: 100%;
+    display: flex;
+    flex-direction:column;
 }
 .main-title {
     padding-bottom: 20px;
@@ -639,8 +643,8 @@ body{
 .cont-ft {
     background-color: #f6f6f6;
     position: absolute;
-    height: 60px;
-    bottom: -20px;
+    height: 40px;
+    bottom: 0;
     text-align: center;
     width: 100%;
     border-top: 1px solid #ccc;

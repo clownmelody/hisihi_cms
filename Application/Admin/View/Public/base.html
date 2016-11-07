@@ -116,13 +116,14 @@
         </block>
 
         <block name="body"></block>
-    </div>
-    <div class="cont-ft">
-        <div class="copyright">
-            <div class="fl">Copyright © 2015 - 2016 迅牛科技. All Rights Reserved</div>
-            <div class="fr"></div>
+        <div class="cont-ft">
+            <div class="copyright">
+                <div class="fl">Copyright © 2015 - 2016 迅牛科技. All Rights Reserved</div>
+                <div class="fr"></div>
+            </div>
         </div>
     </div>
+
 </div>
 <!-- /内容区 -->
 <script type="text/javascript">
@@ -143,7 +144,7 @@
     +function () {
         var $window = $(window), $subnav = $("#subnav"), url;
         $window.resize(function () {
-            $("#main").css("min-height", $window.height() - 130);
+            $("#main").css("min-height", $('#main-content').height());
         }).resize();
 
         /* 左边菜单高亮 */
