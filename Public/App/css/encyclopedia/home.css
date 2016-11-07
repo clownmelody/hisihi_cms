@@ -504,6 +504,9 @@ p {
 .clear {
   clear: both;
 }
+.hide {
+  opacity: 0;
+}
 body {
   margin: 0 auto;
   padding: 0;
@@ -511,7 +514,6 @@ body {
   background-color: #F2F2F2;
   max-width: 700px;
   overflow-x: hidden;
-  opacity: 0;
   word-wrap: break-word;
 }
 body .head {
@@ -638,9 +640,6 @@ body .content .content-head {
 body .content .content-head.first {
   border-left: 4px solid #FF5A00;
   padding-left: 8px;
-}
-body .content .content-info .active-word {
-  color: #039be5;
 }
 body .read-about {
   margin-top: 14px;

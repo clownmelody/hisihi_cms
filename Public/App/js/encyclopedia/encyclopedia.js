@@ -43,13 +43,12 @@ define(['base','async'],function(Base) {
                 url: this.baseUrl + 'Encyclopedia/getEntryDetail',
                 paraData: {entry_id: this.id},
                 sCallback:function(result){
-                    if(result.data||result.data.headInfo.id!=null){
-                        that.controlLoadingBox(false);
-                        that.loadAllInfo(result);
-                        $('body').css('opacity', '1');
-                    }else{
+                    if(!result.data||result.data.headInfo.id==null){
                         that.controlLoadingBox(false);
                         that.showTips('词条详情加载失败');
+                    }else{
+                        that.controlLoadingBox(false);
+                        that.loadAllInfo(result);
                     }
                 },
                 eCallback:function(){
@@ -64,6 +63,7 @@ define(['base','async'],function(Base) {
 
     //加载页面全部信息
     t.loadAllInfo =  function (result) {
+        //this.changeTitle(result),
         this.loadHeadInfo(result),
         this.loadContentInfo(result),
         this.loadReadAboutInfo(result),
@@ -77,32 +77,24 @@ define(['base','async'],function(Base) {
             return '';
         }
         var str='',
-            //strTag='',
             title=result.data.headInfo.title,
-            detail=result.data.headInfo.detail,
-            //len=result.data.likeKeyWords.length,
-            item;
-        //    linkHref='';
-        //if(this.isFromApp){
-        //    linkHref='hisihi://encyclopedia/detailinfo?id=';
-        //}else{
-        //    linkHref=this.baseUrl+'/Encyclopedia/encyclopedia/id/';
-        //}
-        //for(var i=0;i<len;i++){
-        //    item=result.data.likeKeyWords[i];
-        //    strTag += '<li class="head-title-tag"><a href="'+linkHref+item.id+'" target="_blank"><span>'+ item.name +'</span></a></li>';
-        //}
+            detail=result.data.headInfo.detail;
         str ='<div class="head-main-title">'+title+'</div>'+
-            '<div class="head-detail">'+detail+'</div>'+
-            //'<ul class="head-tag">'+
-            //'<li class="head-title">相关词条：</li>'+
-                //strTag+
-                this.loadAboutTips(result);
-            //'<div class="clear"></div>'+
-            //'</ul>';
+            '<div class="head-detail">'+detail+'</div>'+ this.loadAboutTips(result);
+        $('.head').removeClass('hide');
         $('.head').html(str);
     };
 
+    //更改头部title
+    //t.changeTitle = function(result) {
+    //    if (!result.data||result.data.headInfo.id==null) {
+    //        return '';
+    //    }
+    //    var str = '',
+    //        title=result.data.headInfo.title;
+    //    str = '<title>' +title+ '</title>';
+    //    $('head').html(str);
+    //}
 
     //加载相关标签
     t.loadAboutTips = function(result){
@@ -112,7 +104,6 @@ define(['base','async'],function(Base) {
         var len=result.data.likeKeyWords.length,
             linkHref='',
             strTag='',
-            str='',
             item;
         if(this.isFromApp){
             linkHref='hisihi://encyclopedia/detailinfo?id=';
@@ -124,20 +115,19 @@ define(['base','async'],function(Base) {
             strTag += '<li class="head-title-tag"><a href="'+linkHref+item.id+'" target="_blank"><span>'+ item.name +'</span></a></li>';
         }
 
-        str= '<ul class="head-tag">'+
+        var str = '<ul class="head-tag">'+
             '<li class="head-title">相关词条：</li>'+
                 strTag+
             '<div class="clear"></div>'+
             '</ul>';
-
         return str;
     };
 
     //加载目录
     t.loadIndexInfo = function(result){
         //判断数据是否存在或者目录长度是否为空
-        if(!result.data||result.data.catalog.length==0){
-            return ' ';
+        if(!result.data||result.data.catalog==null){
+            return '';
         }
         var arr=this.setUpArr(result);
         this.getHtmlStr(arr);
@@ -202,10 +192,11 @@ define(['base','async'],function(Base) {
         for (var item in data) {
             str += this.getArrItemHtmlStr(data[item], width);
         }
+        $('.index').removeClass('hide');
         $('.catalog-right').html(str);
     };
 
-    t.getArrItemHtmlStr=function(arr, width) {
+    t.getArrItemHtmlStr=function(arr,width) {
         var len = arr.length,
             str = '',
             className = '',
@@ -246,8 +237,7 @@ define(['base','async'],function(Base) {
     //加载百科简介
     t.loadContentInfo = function(result){
         if(!result.data||result.data.catalog==null){
-            //return '';
-            $('.content').hide();
+            return '';
         }
         var str='',
             strTxt='',
@@ -268,6 +258,7 @@ define(['base','async'],function(Base) {
             }
             str += strTxt +strDetail+ this.getSecondLevel(item,id);
         }
+        $('.content').removeClass('hide');
         $('.content').html(str);
     };
 
@@ -288,8 +279,7 @@ define(['base','async'],function(Base) {
     //加载百科延伸阅读
     t.loadReadAboutInfo = function (result) {
         if (!result.data||result.data.linkInfo==null) {
-            //return '';
-            $('.read-about').hide();
+            return '';
         }
         var str='',
             strL='',
@@ -303,6 +293,7 @@ define(['base','async'],function(Base) {
             '<ul>' +
                 strL+
             '</ul>';
+        $('.read-about').removeClass('hide');
         $('.read-about').html(str);
     };
 
