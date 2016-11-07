@@ -98,6 +98,10 @@ class EncyclopediaController extends AdminController {
             $entry_tags_list = M('EncyclopediaEntry')->where($map)->field('id,name')->select();
             $this->assign('entry_tags_list', $entry_tags_list);
             $this->assign('info', $entry);
+        }else{
+            $sort = M('EncyclopediaEntry')->where('`status`=1')->Max('sort');
+            $info['sort'] = $sort + 1;
+            $this->assign('info', $info);
         }
         $this->display('entry_add');
     }
@@ -608,18 +612,40 @@ class EncyclopediaController extends AdminController {
         if(!empty($name)){
             $map['name'] = array('like', '%'.$name.'%');
         }
-        if(!empty($pid) && intval($pid) > 0){
-            $entry_ids = M('EncyclopediaEntryCatagory')->where('`status`=1 and first_catagory_id='.$pid)
-                    ->field('entry_id')-select();
+        $cid = I('cid');
+        if(!empty($cid) && intval($cid) > 0){
+            $entry_ids = M('EncyclopediaEntryCatagory')->where('`status`=1 and catagory_id='.$cid)
+                    ->field('entry_id')->select();
             $entry_array = array();
             foreach ($entry_ids as &$item){
-                $entry_array[] = $item['entry'];
+                $entry_array[] = $item['entry_id'];
             }
             $map['id'] = array('in', $entry_array);
         }
         $map['status'] = 1;
         $list = M('EncyclopediaEntry')->where($map)->order('sort desc , create_time desc')->select();
         $first_category = M('EncyclopediaCategory')->where('`status`=1 and pid=0')->select();
+        $pid = I('pid');
+        if(!empty($pid) && intval($pid) > 0){
+            $cur_list = M('EncyclopediaCategory')->where('`status`=1 and id in ('.$cid.', '.$pid.')')
+                ->field('id, name')->select();
+            $cur_category1 = array();
+            $cur_category2 = array();
+            foreach ($cur_list as $item){
+                if($item['id'] == $cid){
+                    $cur_category2['id'] = $cid;
+                    $cur_category2['name'] = $item['name'];
+                }
+                if($item['id'] == $pid){
+                    $cur_category1['id'] = $pid;
+                    $cur_category1['name'] = $item['name'];
+                }
+            }
+            $second_category = M('EncyclopediaCategory')->where('`status`=1 and pid='.$pid)->select();
+            $this->assign('second_level_list', $second_category);
+            $this->assign('cur_category1', $cur_category1);
+            $this->assign('cur_category2', $cur_category2);
+        }
         $this->assign('first_level_list', $first_category);
         $this->assign('_list', $list);
         $this->display('item');
@@ -637,5 +663,24 @@ class EncyclopediaController extends AdminController {
         $text = addslashes($text);
         $text = trim($text);
         return $text;
+    }
+
+    public function getSecondCategory(){
+        $pid = I('pid');
+        $map['status'] = 1;
+        $map['pid'] = $pid;
+        $list = M('EncyclopediaCategory')->where($map)->field('id, name')
+            ->order('sort desc , create_time desc')->select();
+        if(empty($list)){
+            $rdata['status'] = 1;
+            $rdata['msg'] = '获取成功';
+            $rdata['data'] = null;
+            $this->ajaxReturn($rdata, 'JSON');
+        }else{
+            $rdata['status'] = 1;
+            $rdata['msg'] = '获取成功';
+            $rdata['data'] = $list;
+            $this->ajaxReturn($rdata, 'JSON');
+        }
     }
 }
