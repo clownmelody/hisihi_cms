@@ -10,7 +10,8 @@ html {
     overflow-y: scroll;
 }
 body{
-    padding: 40px 0 0 200px;
+    /*padding: 40px 0 0 200px;*/
+    padding: 0;
 }
 .header {
     position: fixed;
@@ -396,6 +397,7 @@ body{
     position: relative;
     height: auto;
     min-height: 100%;
+    margin-left: 200px;
 }
 
 
