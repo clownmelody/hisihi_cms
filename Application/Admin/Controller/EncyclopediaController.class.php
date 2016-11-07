@@ -16,6 +16,8 @@ namespace Admin\Controller;
 use Think\Exception;
 use Think\Hook;
 use Think\Page;
+use Admin\Builder\AdminTreeListBuilder;
+use Admin\Builder\AdminConfigBuilder;
 
 class EncyclopediaController extends AdminController {
 
@@ -23,7 +25,7 @@ class EncyclopediaController extends AdminController {
         parent::_initialize();
     }
 
-    public function category($pid=0){
+/*    public function category($pid=0){
         $model = M('EncyclopediaCategory');
         $count = $model->where('status=1')->count();
         $Page = new Page($count, C('LIST_ROWS'));
@@ -44,6 +46,135 @@ class EncyclopediaController extends AdminController {
         $this->assign("_total", $count);
         $this->assign("meta_title","分类列表");
         $this->display();
+    }*/
+
+    public function category($pid=0){
+        //显示页面
+        $builder = new AdminTreeListBuilder();
+        $tree = $this->getTree(0, 'id,name,sort,pid,status');
+        foreach ($tree as &$item1){
+            $item1['title'] = $item1['name'];
+            if(is_array($item1['_'])){
+                foreach ($item1['_'] as &$item2){
+                    $item2['title'] = $item2['name'];
+                }
+            }
+        }
+        $builder->title('分类管理')
+            ->buttonNew(U('Encyclopedia/add'))
+            ->data($tree)
+            ->display();
+    }
+
+    /**获得分类树
+     * @param int  $id
+     * @param bool $field
+     * @return array
+     * @auth 陈一枭
+     */
+    public function getTree($id = 0, $field = true){
+        $model = M('EncyclopediaCategory');
+        /* 获取当前分类信息 */
+        if($id){
+            $info = $this->info($id);
+            $id   = $info['id'];
+        }
+
+        /* 获取所有分类 */
+        $map  = array('status' => array('gt', 0));
+        $list = $model->field($field)->where($map)->order('sort desc, create_time desc ')->select();
+        $list = list_to_tree($list, $pk = 'id', $pid = 'pid', $child = '_', $root = $id);
+
+
+        /* 获取返回数据 */
+        if(isset($info)){ //指定分类则返回当前分类极其子分类
+            $info['_'] = $list;
+        } else { //否则返回所有分类
+            $info = $list;
+        }
+
+        return $info;
+    }
+
+    public function add($id = 0, $pid = 0)
+    {
+        $model = D('EncyclopediaCategory');
+        if (IS_POST) {
+            if ($id != 0) {
+                $issue = $model->create();
+                $issue['name'] = $_POST['title'];
+                if ($model->save($issue)) {
+                    $this->success('编辑成功', 'index.php?s=Admin/Encyclopedia/category');
+                } else {
+                    $this->error('编辑失败', 'index.php?s=Admin/Encyclopedia/category');
+                }
+            } else {
+                $issue = $model->create();
+                $issue['name'] = $_POST['title'];
+                $issue['create_time'] = time();
+                $max_sort = $model->where('pid='.$_POST['pid'])->max('sort');
+                if(empty($max_sort)){
+                    $max_sort = 0;
+                }
+                $issue['sort'] = $max_sort + 1;
+                if ($model->add($issue)) {
+                    $this->success('新增成功', 'index.php?s=Admin/Encyclopedia/category');
+                } else {
+                    $this->error('新增失败', 'index.php?s=Admin/Encyclopedia/category');
+                }
+            }
+        } else {
+            $builder = new AdminConfigBuilder();
+            $opt = array();
+            if($pid != 0){
+                $issues = $model->where('pid=0')->select();
+                foreach ($issues as $issue) {
+                    $opt[$issue['id']] = $issue['name'];
+                }
+            }
+            if ($id != 0) {
+                $issue = $model->find($id);
+                $issue['title'] = $issue['name'];
+            } else {
+                $issue = array('pid' => $pid, 'status' => 1);
+            }
+            $builder->title('新增分类')->keyId()->keyText('title', '标题')->keySelect('pid', '父分类', '选择父级分类', array('0' => '顶级分类')+$opt)
+                ->keyStatus()->keyCreateTime()
+                ->data($issue)
+                ->buttonSubmit(U('Encyclopedia/add'))->buttonBack()->display();
+        }
+
+    }
+
+    public function setstatus(){
+        $model = D('EncyclopediaCategory');
+        $id = I('ids');
+        $status = I('status');
+        $res = $model->where('id='.$id)->save(array('status'=>$status));
+        if($res === false){
+            $this->error('设置失败', 'index.php?s=Admin/Encyclopedia/category');
+        }else{
+            $this->success('设置成功', 'index.php?s=Admin/Encyclopedia/category');
+        }
+    }
+
+    /**
+     * 获取分类详细信息
+     * @param  milit   $id 分类ID或标识
+     * @param  boolean $field 查询字段
+     * @return array     分类信息
+     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
+     */
+    public function info($id, $field = true){
+        $model = M('EncyclopediaCategory');
+        /* 获取分类信息 */
+        $map = array();
+        if(is_numeric($id)){ //通过ID查询
+            $map['id'] = $id;
+        } else { //通过标识查询
+            $map['name'] = $id;
+        }
+        return $model->field($field)->where($map)->find();
     }
 
     public function category_add($id=0){
