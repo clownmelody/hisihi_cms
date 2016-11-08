@@ -548,9 +548,26 @@ class CompanyController extends AppController {
         $this->apiSuccess("获取职位详情成功",null, $extra);
     }
 
-    public function companyList($page=1, $count=10){
+    public function companyList($uid=0, $page=1, $count=10){
+        if (!$uid) {
+            $uid = $this->getUid();
+        }
+        $userJobIntentionModel = M("UserJobIntension");
         $companyModel = M("Company");
         $cmodel = M("CompanyConfig");
+        $recruitModel = M("CompanyRecruit");
+        $info = $userJobIntentionModel->field("position_applied")->where("uid=".$uid)->find();
+        if(!empty($info)){
+            $user_position_applied = $info["position_applied"];
+            $sel_data["job"] = array("like", '%'.$user_position_applied.'%');
+            $companyList = $recruitModel->field("company_id")->where($sel_data)->select();
+            foreach($companyList as $company){
+                $companyIdList[] = $company["company_id"];
+            }
+            if(!empty($companyIdList)){
+                $data['id'] = array("in", $companyIdList);
+            }
+        }
         $data["status"] = 1;
         $total_count = $companyModel->where($data)->count();
         $list = $companyModel->field("id, name, city, scale, picture, industry")
@@ -562,11 +579,31 @@ class CompanyController extends AppController {
             $item["scale"] = $cmodel->where('type=2 and status=1 and value='.$item['scale'])
                 ->getField("value_explain");
             $item["picture"] = $this->fetchImage($item["picture"]);
-            $item["hot_job"] = null;
+            if(!empty($info)){
+                $user_position_applied = $info["position_applied"];
+                $item["hot_job"] = $this->getHotJobListByUser($user_position_applied, $item['id']);
+            } else {
+                $item["hot_job"] = null;
+            }
         }
         $extra["total_count"] = $total_count;
         $extra["data"] = $list;
         $this->apiSuccess("获取公司列表成功",null, $extra);
+    }
+
+    private function getHotJobListByUser($job_applied=null, $company_id=0){
+        if(empty($job_applied)||empty($company_id)){
+            return null;
+        }
+        $recruitModel = M("CompanyRecruit");
+        $sel_data["job"] = array("like", '%'.$job_applied.'%');
+        $sel_data["company_id"] = $company_id;
+        $list = $recruitModel->field("job")->where($sel_data)->select();
+        $data = array();
+        foreach($list as $item){
+            $data[] = $item['job'];
+        }
+        return $data;
     }
 
     public function companyDetail($id=0){
