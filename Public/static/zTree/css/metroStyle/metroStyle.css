@@ -89,7 +89,8 @@ website:    http://code.google.com/p/jquerytree/
 
 
 /*.ztree li span.button.bottom_docu{background-position: -84px -42px;}*/
-.ztree li span.button.bottom_docu{background-position: -147px -45px;}
+.ztree li span.button.bottom_docu,
+.ztree li span.button.center_docu{background-position: -147px -45px;}
 .ztree li span.button.noline_docu{ background:none;}
 
 .ztree li span.button.root_open,
