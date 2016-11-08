@@ -196,6 +196,26 @@ class AdminConfigBuilder extends AdminBuilder
         parent::display('admin_config');
     }
 
+    public function display2()
+    {
+        //将数据融入到key中
+        foreach ($this->_keyList as &$e) {
+            $e['value'] = $this->_data[$e['name']];
+        }
+
+        //编译按钮的html属性
+        foreach ($this->_buttonList as &$button) {
+            $button['attr'] = $this->compileHtmlAttr($button['attr']);
+        }
+
+        //显示页面
+        $this->assign('title', $this->_title);
+        $this->assign('keyList', $this->_keyList);
+        $this->assign('buttonList', $this->_buttonList);
+        $this->assign('savePostUrl', $this->_savePostUrl);
+        parent::display('admin_config2');
+    }
+
     /**自动处理配置存储事件，配置项必须全大写
      * @auth 陈一枭
      */

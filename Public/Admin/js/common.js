@@ -321,6 +321,7 @@ function showBtn() {
 //导航高亮
 function highlight_subnav(url) {
     $('.side-sub-menu').find('a[href="' + url + '"]').closest('li').addClass('current');
+    $("#subnav").find("a[href='" + url + "']").parent().parent().css("display", "block");
 }
 
 moduleManager = {

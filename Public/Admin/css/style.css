@@ -10,7 +10,8 @@ html {
     overflow-y: scroll;
 }
 body{
-    padding: 40px 0 0 200px;
+    /*padding: 40px 0 0 200px;*/
+    padding: 0;
 }
 .header {
     position: fixed;
@@ -392,12 +393,28 @@ body{
     text-align: left;
 }
 
+#main-content{
+    position: relative;
+    height: auto;
+    min-height: 100%;
+    margin-left: 200px;
+    overflow: hidden;
+}
+
+
 
 /* 后台内页模块样式
 ------------------------------------------------- */
 .main {
-    padding:20px;
+    padding:15px;
+    padding-bottom: 40px;
 	background-color: #f6f6f6;
+    position: relative;
+    /*margin-bottom: 40px;*/
+    height: 96%;
+    box-sizing: content-box;
+    display: flex;
+    flex-direction:column;
 }
 .main-title {
     padding-bottom: 20px;
@@ -626,14 +643,21 @@ body{
 
 /* 版权信息 */
 .cont-ft {
-    padding: 0 15px;
     background-color: #f6f6f6;
+    position: absolute;
+    height: 40px;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    border-top: 1px solid #ccc;
+    z-index: 100000;
 }
 .copyright {
     height: 39px;
     line-height: 39px;
     text-align: center;
-    border-top: 1px solid #ccc;
+
+    display: inline-block;
 }
 .copyright a {
     margin: 0 4px;
