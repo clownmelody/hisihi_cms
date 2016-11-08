@@ -561,7 +561,8 @@ class CompanyController extends AppController {
         foreach($list as &$item){
             $item["scale"] = $cmodel->where('type=2 and status=1 and value='.$item['scale'])
                 ->getField("value_explain");
-            $companyInfo["picture"] = $this->fetchImage($item["picture"]);
+            $item["picture"] = $this->fetchImage($item["picture"]);
+            $item["hot_job"] = null;
         }
         $extra["total_count"] = $total_count;
         $extra["data"] = $list;
@@ -579,6 +580,10 @@ class CompanyController extends AppController {
         $extra["data"] = $companyInfo;
         $this->apiSuccess("获取公司详情成功",null, $extra);
 
+    }
+
+    public function search($type=1, $key_word=null){
+        return null;
     }
 
 }
