@@ -82,10 +82,9 @@ class EncyclopediaController extends AdminController {
         }
 
         /* 获取所有分类 */
-        $map  = array('status' => array('gt', 0));
+        $map  = array('status' => array('gt', -1));
         $list = $model->field($field)->where($map)->order('sort desc, create_time desc ')->select();
         $list = list_to_tree($list, $pk = 'id', $pid = 'pid', $child = '_', $root = $id);
-
 
         /* 获取返回数据 */
         if(isset($info)){ //指定分类则返回当前分类极其子分类
@@ -151,11 +150,18 @@ class EncyclopediaController extends AdminController {
         $model = D('EncyclopediaCategory');
         $id = I('ids');
         $status = I('status');
+        if(intval($status) == -1){
+            $count = M('EncyclopediaEntryCatagory')
+                ->where('`status`=1 and (catagory_id='.$id.' or first_catagory_id='.$id.')')->count();
+            if($count > 0){
+                $this->error('该分类中包含词条，不可删除', 'index.php?s=Admin/Encyclopedia/category', 2);
+            }
+        }
         $res = $model->where('id='.$id)->save(array('status'=>$status));
         if($res === false){
-            $this->error('设置失败', 'index.php?s=Admin/Encyclopedia/category');
+            $this->error('设置失败', 'index.php?s=Admin/Encyclopedia/category', 2);
         }else{
-            $this->success('设置成功', 'index.php?s=Admin/Encyclopedia/category');
+            $this->success('设置成功', 'index.php?s=Admin/Encyclopedia/category', 2);
         }
     }
 
