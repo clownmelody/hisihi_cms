@@ -12,7 +12,7 @@
             position: relative;
         }
         .main-content-left-box{
-            max-width: 350px;
+            max-width: 250px;
             position: absolute;
             top:0;
             bottom: 0;
@@ -20,7 +20,7 @@
             opacity: 0;
         }
         .main-content-right-box{
-            margin-left: 355px;
+            margin-left: 255px;
             overflow: hidden;
         }
 
@@ -213,6 +213,12 @@
         }
         function beforeRename(treeId, treeNode, newName, isCancel) {
             className = (className === "dark" ? "":"dark");
+            if (newName.length > 12) {
+                alert("最大长度为12.");
+                var zTree = $.fn.zTree.getZTreeObj("tree");
+                setTimeout(function(){zTree.editName(treeNode)}, 10);
+                return false;
+            }
             if (newName.length == 0) {
                 alert("节点名称不能为空.");
                 var zTree = $.fn.zTree.getZTreeObj("tree");
