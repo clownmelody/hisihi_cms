@@ -621,12 +621,22 @@ class CompanyController extends AppController {
 
     /**
      * @param int $type  1 职位  2 公司
+     * @param int $uid
+     * @param int $type
      * @param null $key_word
+     * @param null $city
+     * @param string $education
+     * @param string $type_of_job
+     * @param string $work_experience
+     * @param string $salary
+     * @param string $industry
+     * @param string $scale
      * @param int $page
      * @param int $count
-     * @return null
      */
-    public function search($uid=0, $type=1, $key_word=null, $page=1, $count=10){
+    public function search($uid=0, $type=1, $key_word=null, $city=null, $education='全部',
+                           $type_of_job='全部', $work_experience='全部',
+                           $salary='全部', $industry='全部', $scale='全部', $page=1, $count=10){
         if(empty($key_word)){
             $this->apiError(-1, "搜索关键字不能为空");
         }
@@ -640,6 +650,29 @@ class CompanyController extends AppController {
         $sel_data["status"] = 1;
         if($type==1){  // 职位
             $sel_data["job"] = array("like", '%'.$key_word.'%');
+            if(!empty($city)){
+                $sel_data["work_city"] = array("like", '%'.$city.'%');
+            }
+            if($education!='全部'){
+                $sel_data["education"] = array("like", '%'.$education.'%');
+            }
+            if($type_of_job!='全部'){
+                $sel_data["type_of_job"] = array("like", '%'.$type_of_job.'%');
+            }
+            if($work_experience!='全部'){
+                $sel_data["work_experience"] = array("like", '%'.$work_experience.'%');
+            }
+            if($salary!='全部'){
+                $salaryList =$this->getSalaryIdList($salary);
+                $sel_data["salary"] = array("in", $salaryList);
+            }
+            if($scale!='全部'){
+                $list = $this->getCompanyIdList($scale);
+                $sel_data["company_id"] = array("in", $list);
+            }
+            if($industry!='全部'){
+                $sel_data["industry"] = array("like", '%'.$industry.'%');
+            }
             $total_count = $recruitModel->where($sel_data)->count();
             $list = $recruitModel->field("id, company_id, job, salary, work_experience, work_city, education, type_of_job")
                 ->where($sel_data)
