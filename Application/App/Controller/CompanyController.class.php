@@ -810,12 +810,8 @@ class CompanyController extends AppController {
 
     public function getHotSearch(){
         $model = M("JobSearchLog");
-        $list = $model->field("key_word")->order("count desc")->page(1, 10)->select();
-        $result = array();
-        foreach($list as $item){
-            $result[] = $item['key_word'];
-        }
-        $extra["data"] = $result;
+        $list = $model->field("type, key_word")->order("count desc")->page(1, 10)->select();
+        $extra["data"] = $list;
         $this->apiSuccess("获取热门搜索关键词成功",null, $extra);
     }
 
