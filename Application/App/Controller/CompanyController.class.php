@@ -269,20 +269,28 @@ class CompanyController extends AppController {
      * 用户向公司投递简历
      * @param int $uid
      * @param int $companyId
+     * @param int $job_id
      */
-    public function sendResume($uid=0, $companyId=0){
-        if(!$companyId){
+    public function sendResume($uid=0, $companyId=0, $job_id=0){
+        /*if(!$companyId){
             $this->apiError(-3, '传入公司id为空');
-        }
+        }*/
         if (!$uid) {
             $this->requireLogin();
             $uid = $this->getUid();
         }
-
         $resumeModel = D('User/ResumeDelivery');
-        $is_delivery = $resumeModel->where('status=1 and uid='.$uid.' and company_id='.$companyId)->select();
-        if($is_delivery){
-            $this->apiError(-1, '该公司已经投递过了');
+        if(!empty($companyId)){
+            $is_delivery = $resumeModel->where('status=1 and job_id=0 and uid='.$uid.' and company_id='.$companyId)->count();
+            if($is_delivery){
+                $this->apiError(-1, '该公司已经投递过了');
+            }
+        }
+        if(!empty($job_id)){
+            $is_delivery = $resumeModel->where('status=1 and company_id=0 and uid='.$uid.' and job_id='.$job_id)->count();
+            if($is_delivery){
+                $this->apiError(-1, '该职位已经投递过了');
+            }
         }
 
         //判断简历信息是否完整
@@ -301,8 +309,14 @@ class CompanyController extends AppController {
         if($emailUtils->sendMail(null, $returnData)){//简历发送至嘿设汇指定邮箱
             $model = D('User/ResumeDelivery');
             $data['uid'] = $uid;
-            $data['company_id'] = $companyId;
-            $data['job_id'] = 0;
+            if(!empty($companyId)){
+                $data['company_id'] = $companyId;
+                $data['job_id'] = 0;
+            }
+            if(!empty($job_id)){
+                $data['company_id'] = 0;
+                $data['job_id'] = $job_id;
+            }
             $data['create_time'] = time();
             $model->save($data);
             $this->apiSuccess("简历投递成功");
@@ -539,18 +553,35 @@ class CompanyController extends AppController {
     }
 
 
-    public function jobDetail($id=0){
+    public function jobDetail($uid=0, $id=0){
+        if (!$uid) {
+            $uid = $this->getUid();
+        }
         $model = M("CompanyRecruit");
         $companyModel = M("Company");
         $cmodel = M("CompanyConfig");
-        $info = $model->field("id, company_id, job, salary, requirement, work_city, skills, create_time, end_time,
+        $info = $model->field("id, company_id, job, salary, marks, work_city, skills, create_time, end_time,
         education, type_of_job, work_experience, description, work_location")
             ->where("id=".$id)->find();
+        $mark = explode('#',$info['marks']);
+        $markarray = array();
+        foreach($mark as &$markid){
+            $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->find();
+            if(!empty($markarr)){
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['id'];
+                $markobj->value = $markarr['value'];
+                array_push($markarray,$markobj);
+            }
+        }
+        $info['marks'] = $markarray;
         $companyInfo = $companyModel->field("name, picture, website, industry, scale")->where("id=".$info["company_id"])->find();
         $companyInfo["picture"] = $this->fetchImage($companyInfo["picture"]);
         $companyInfo["scale"] = $cmodel->where('type=2 and status=1 and value='.$companyInfo['scale'])->getField("value_explain");
         $companyInfo["salary"] = $cmodel->where('type=4 and status=1 and value='.$companyInfo['salary'])->getField("value_explain");
         $info["companyInfo"] = $companyInfo;
+        $info["is_delivery"] = $this->isUserDeliveryJob($uid, $id);
         unset($info["company_id"]);
         $extra["data"] = $info;
         $this->apiSuccess("获取职位详情成功",null, $extra);
@@ -614,14 +645,31 @@ class CompanyController extends AppController {
         return $data;
     }
 
-    public function companyDetail($id=0){
+    public function companyDetail($uid=0, $id=0){
+        if (!$uid) {
+            $uid = $this->getUid();
+        }
         $companyModel = M("Company");
         $cmodel = M("CompanyConfig");
-        $companyInfo = $companyModel->field("id, name, city, slogan, introduce, filtrate_mark, marks, scale, website,
+        $companyInfo = $companyModel->field("id, name, city, slogan, introduce, marks, scale, website,
         fullname, location, picture, industry, product_description")->where("id=".$id)->find();
         $companyInfo["scale"] = $cmodel->where('type=2 and status=1 and value='.$companyInfo['scale'])
             ->getField("value_explain");
         $companyInfo["picture"] = $this->fetchImage($companyInfo["picture"]);
+        $companyInfo["is_delivery"] = $this->isUserDeliveryJob($uid, $id);
+        $mark = explode('#',$companyInfo['marks']);
+        $markarray = array();
+        foreach($mark as &$markid){
+            $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->find();
+            if(!empty($markarr)){
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['id'];
+                $markobj->value = $markarr['value'];
+                array_push($markarray,$markobj);
+            }
+        }
+        $companyInfo['marks'] = $markarray;
         $extra["data"] = $companyInfo;
         $this->apiSuccess("获取公司详情成功",null, $extra);
     }
@@ -647,7 +695,7 @@ class CompanyController extends AppController {
         if(empty($key_word)){
             $this->apiError(-1, "搜索关键字不能为空");
         }
-        $this->logToJobSearchLog($key_word);
+        $this->logToJobSearchLog($type, $key_word);
         if (!$uid) {
             $uid = $this->getUid();
         }
@@ -722,9 +770,10 @@ class CompanyController extends AppController {
         }
     }
 
-    private function logToJobSearchLog($key_word=null){
+    private function logToJobSearchLog($type=1, $key_word=null){
         $model = M("JobSearchLog");
         if(!empty($key_word)){
+            $data["type"] = $type;
             $data["key_word"] = $key_word;
             $count = $model->where($data)->count();
             if($count>0){
@@ -736,14 +785,40 @@ class CompanyController extends AppController {
         }
     }
 
+    private function isUserDeliveryCompany($uid=null, $company_id=null){
+        if(empty($uid)||empty($company_id)){
+            return false;
+        }
+        $model = M('ResumeDelivery');
+        $data['uid'] = $uid;
+        $data['company_id'] = $company_id;
+        $data['job_id'] = 0;
+        $data['status'] = 1;
+        if($model->where($data)->count()){
+            return true;
+        }
+        return false;
+    }
+
+    private function isUserDeliveryJob($uid=null, $job_id=null){
+        if(empty($uid)||empty($job_id)){
+            return false;
+        }
+        $model = M('ResumeDelivery');
+        $data['uid'] = $uid;
+        $data['company_id'] = 0;
+        $data['job_id'] = $job_id;
+        $data['status'] = 1;
+        if($model->where($data)->count()){
+            return true;
+        }
+        return false;
+    }
+
     public function getHotSearch(){
         $model = M("JobSearchLog");
-        $list = $model->field("key_word")->order("count desc")->page(1, 10)->select();
-        $result = array();
-        foreach($list as $item){
-            $result[] = $item['key_word'];
-        }
-        $extra["data"] = $result;
+        $list = $model->field("type, key_word")->order("count desc")->page(1, 10)->select();
+        $extra["data"] = $list;
         $this->apiSuccess("获取热门搜索关键词成功",null, $extra);
     }
 
