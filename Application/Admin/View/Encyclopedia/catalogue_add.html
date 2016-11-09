@@ -12,14 +12,15 @@
             position: relative;
         }
         .main-content-left-box{
-            width: 190px;
+            max-width: 250px;
             position: absolute;
             top:0;
             bottom: 0;
             overflow-x:auto;
+            opacity: 0;
         }
         .main-content-right-box{
-            margin-left: 200px;
+            margin-left: 255px;
             overflow: hidden;
         }
 
@@ -29,10 +30,83 @@
             width: 100%;
             min-height: 80%;
         }
+        .modal-box{
+            position: fixed;
+            display: none;
+            top:0;
+            left:0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,.6);
+            z-index: 10000;
+        }
+        .modal-main-box{
+
+            position: absolute;
+            top:50%;
+            left: 50%;
+            width: 164px;
+            height: 20px;
+            margin-top: -10px;
+            margin-left: -82px;;
+        }
+        .loading-bubble-box span {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: 5px;
+            border-radius: 100%;
+        }
+        .loading-bubble-box span:nth-of-type(1) {
+            margin-left: 0;
+            background-color: #FC4040;
+        }
+        .loading-bubble-box span:nth-of-type(2) {
+            background-color: #30B4E4;
+        }
+        .loading-bubble-box span:nth-of-type(3) {
+            background-color: #98C800;
+        }
+        .loading-bubble-box span:nth-of-type(4) {
+            background-color: #FCB830;
+        }
+        .loading-bubble-box.active {
+            display: inline-block;
+        }
+        .loading-bubble-box.active span {
+            animation: 0.8s loading-bubble linear infinite alternate;
+        }
+        .loading-bubble-box.active span:nth-of-type(1) {
+            animation-delay: -1.2s;
+        }
+        .loading-bubble-box.active span:nth-of-type(2) {
+            animation-delay: -0.8s;
+        }
+        .loading-bubble-box.active span:nth-of-type(3) {
+            animation-delay: -0.4s;
+        }
+        .loading-bubble-box.active span:nth-of-type(4) {
+            animation-delay: 0s;
+        }
+        .loading-bubble-box label {
+            color: #aaaaaa;
+            margin-left: 10px;
+            vertical-align: 2px;
+        }
+        @keyframes loading-bubble {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
     </style>
     <script>
 
         function changeFrameHeight(){
+
                 var iframe = document.getElementById("entry_content");
                 try{
                     var bHeight = iframe.contentWindow.document.body.scrollHeight;
@@ -41,7 +115,7 @@
                     iframe.height = height;
                     console.log(height);
                 }catch (ex){}
-
+                ctrlModal && ctrlModal(false);
         }
         window.onresize=function(){
             changeFrameHeight();
@@ -62,10 +136,12 @@
 
         </div>
     </div>
-    <link rel="stylesheet" href="__STATIC__/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
-    <style type="text/css">
-        .ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
-    </style>
+    <div class="modal-box">
+        <div class="modal-main-box">
+            <span class="loading-bubble-box"><span></span><span></span><span></span><span></span><label>数据加载中…</label></span>
+        </div>
+    </div>
+    <link rel="stylesheet" href="__STATIC__/zTree/css/metroStyle/metroStyle.css" type="text/css">
     <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.core.js"></script>
     <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.excheck.js"></script>
     <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.exedit.js"></script>
@@ -137,6 +213,12 @@
         }
         function beforeRename(treeId, treeNode, newName, isCancel) {
             className = (className === "dark" ? "":"dark");
+            if (newName.length > 12) {
+                alert("最大长度为12.");
+                var zTree = $.fn.zTree.getZTreeObj("tree");
+                setTimeout(function(){zTree.editName(treeNode)}, 10);
+                return false;
+            }
             if (newName.length == 0) {
                 alert("节点名称不能为空.");
                 var zTree = $.fn.zTree.getZTreeObj("tree");
@@ -166,6 +248,7 @@
 
         function onClick(e, treeId, treeNode, isCancel) {
             var entry_id = $("#entry_id").val();
+//            ctrlModal(true);
 
             $("#entry_content").attr("src", "{:U('Encyclopedia/content_add')}"
                     + "&catalogue_id=" + treeNode.catalogue_id + "&entry_id=" + entry_id);
@@ -198,8 +281,9 @@
             var sObj = $("#" + treeNode.tId + "_span");
             if (treeNode.editNameFlag || treeNode.pId > 1 || $("#addBtn_"+treeNode.tId).length>0) return;
             var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                    + "' title='add node' onfocus='this.blur();'></span>";
+                    + "' title='添加' onfocus='this.blur();'></span>";
             sObj.after(addStr);
+
             var btn = $("#addBtn_"+treeNode.tId);
             if (btn) btn.bind("click", function(){
                 var new_node_name = "new node" + (newCount++);
@@ -245,6 +329,22 @@
             }
 
         });
+
+        window.setTimeout(function(){
+            $('.main-content-left-box').css('opacity','1');
+        },1000);
+
+        function ctrlModal(flag){
+            var $targetBox=$('.modal-box'),
+                $loadingBox=$('.loading-bubble-box');
+            if(flag) {
+                $targetBox.fadeIn(500);
+                $loadingBox.addClass('active');
+            }else{
+                $targetBox.hide();
+                $loadingBox.removeClass('active');
+            }
+        };
 
     </script>
 
