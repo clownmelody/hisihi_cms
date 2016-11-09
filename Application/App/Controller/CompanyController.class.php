@@ -536,9 +536,22 @@ class CompanyController extends AppController {
         $model = M("CompanyRecruit");
         $companyModel = M("Company");
         $cmodel = M("CompanyConfig");
-        $info = $model->field("id, company_id, job, salary, requirement, work_city, skills, create_time, end_time,
+        $info = $model->field("id, company_id, job, salary, marks, work_city, skills, create_time, end_time,
         education, type_of_job, work_experience, description, work_location")
             ->where("id=".$id)->find();
+        $mark = explode('#',$info['marks']);
+        $markarray = array();
+        foreach($mark as &$markid){
+            $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->find();
+            if(!empty($markarr)){
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['id'];
+                $markobj->value = $markarr['value'];
+                array_push($markarray,$markobj);
+            }
+        }
+        $info['marks'] = $markarray;
         $companyInfo = $companyModel->field("name, picture, website, industry, scale")->where("id=".$info["company_id"])->find();
         $companyInfo["picture"] = $this->fetchImage($companyInfo["picture"]);
         $companyInfo["scale"] = $cmodel->where('type=2 and status=1 and value='.$companyInfo['scale'])->getField("value_explain");
