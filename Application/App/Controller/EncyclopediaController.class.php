@@ -29,7 +29,7 @@ class EncyclopediaController extends BaseController {
         $model = M('EncyclopediaCategory');
         $data['status'] = 1;
         $data['pid'] = 0;
-        $list = $model->field('id,name')->where($data)->order('sort desc')->select();
+        $list = $model->field('id,name')->where($data)->order('sort asc')->select();
         $this->apiSuccess("获取百科一级分类列表成功", null,
             array('data' => $list, 'total_count' => count($list)));
     }
@@ -38,7 +38,7 @@ class EncyclopediaController extends BaseController {
         $model = M('EncyclopediaCategory');
         $data['status'] = 1;
         $data['pid'] = $id;
-        $list = $model->field('id,name')->where($data)->order('sort desc')->select();
+        $list = $model->field('id,name')->where($data)->order('sort asc')->select();
         $this->apiSuccess("获取百科二级分类列表成功", null,
             array('data' => $list, 'total_count' => count($list)));
     }
