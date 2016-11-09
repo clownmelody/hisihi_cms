@@ -640,6 +640,7 @@ class CompanyController extends AppController {
         if(empty($key_word)){
             $this->apiError(-1, "搜索关键字不能为空");
         }
+        $this->logToJobSearchLog($key_word);
         if (!$uid) {
             $uid = $this->getUid();
         }
@@ -712,6 +713,31 @@ class CompanyController extends AppController {
             $extra["data"] = $list;
             $this->apiSuccess("搜索公司成功",null, $extra);
         }
+    }
+
+    private function logToJobSearchLog($key_word=null){
+        $model = M("JobSearchLog");
+        if(!empty($key_word)){
+            $data["key_word"] = $key_word;
+            $count = $model->where($data)->count();
+            if($count>0){
+                $model->where($data)->setInc("count");
+            } else {
+                $data['count'] = 1;
+                $model->add($data);
+            }
+        }
+    }
+
+    public function getHotSearch(){
+        $model = M("JobSearchLog");
+        $list = $model->field("key_word")->order("count desc")->page(1, 10)->select();
+        $result = array();
+        foreach($list as $item){
+            $result[] = $item['key_word'];
+        }
+        $extra["data"] = $result;
+        $this->apiSuccess("获取热门搜索关键词成功",null, $extra);
     }
 
 }
