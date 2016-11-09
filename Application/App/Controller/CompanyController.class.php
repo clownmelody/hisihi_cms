@@ -623,11 +623,24 @@ class CompanyController extends AppController {
     public function companyDetail($id=0){
         $companyModel = M("Company");
         $cmodel = M("CompanyConfig");
-        $companyInfo = $companyModel->field("id, name, city, slogan, introduce, filtrate_mark, marks, scale, website,
+        $companyInfo = $companyModel->field("id, name, city, slogan, introduce, marks, scale, website,
         fullname, location, picture, industry, product_description")->where("id=".$id)->find();
         $companyInfo["scale"] = $cmodel->where('type=2 and status=1 and value='.$companyInfo['scale'])
             ->getField("value_explain");
         $companyInfo["picture"] = $this->fetchImage($companyInfo["picture"]);
+        $mark = explode('#',$companyInfo['marks']);
+        $markarray = array();
+        foreach($mark as &$markid){
+            $markarr = $cmodel->field('id,value')->where('status=1 and id='.$markid)->find();
+            if(!empty($markarr)){
+                $markobj = array();
+                $markobj = (object)$markobj;
+                $markobj->id = $markarr['id'];
+                $markobj->value = $markarr['value'];
+                array_push($markarray,$markobj);
+            }
+        }
+        $companyInfo['marks'] = $markarray;
         $extra["data"] = $companyInfo;
         $this->apiSuccess("获取公司详情成功",null, $extra);
     }
