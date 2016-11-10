@@ -187,10 +187,17 @@ class CompanyController extends AppController {
         }
         $model = D('CompanyRecruit');
         $totalCount = $model->where(array('company_id'=>$id,'status'=>1))->count();
-        $result = $model->field('id, job, salary, requirement, skills,work_city,create_time,
+        if(floatval($version) < 3.3){
+            $result = $model->field('id, job, salary, requirement, skills,work_city,create_time,
+        end_time')
+                ->where('status<>-1 and company_id='.$id)
+                ->order('create_time desc')->page($page, $count)->select();
+        }else{
+            $result = $model->field('id, job, salary, requirement, skills,work_city,create_time,
         end_time,education,work_experience')
-            ->where('status<>-1 and company_id='.$id)
-            ->order('create_time desc')->page($page, $count)->select();
+                ->where('status<>-1 and company_id='.$id)
+                ->order('create_time desc')->page($page, $count)->select();
+        }
         $cmodel = D('CompanyConfig');
         foreach($result as &$recruit){
             $salary = $cmodel->where('type=4 and status=1 and value='.$recruit['salary'])->getField("value_explain");
