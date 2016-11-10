@@ -473,7 +473,10 @@ class CompanyController extends AppController {
         if(!empty($city)){
             $data["work_city"] = array("like", '%'.$city.'%');
         }
-        if($education!='全部'){
+        if($education!='全部'||$education!='不限'){
+            if($education=='硕士及以上学位'){
+                $education = '硕士';
+            }
             $data["education"] = array("like", '%'.$education.'%');
         }
         if($type_of_job!='全部'){
