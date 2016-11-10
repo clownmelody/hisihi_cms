@@ -474,13 +474,13 @@ class CompanyController extends AppController {
         $model = M("CompanyRecruit");
         $companyModel = M("Company");
         $data["status"] = 1;
-        if(empty($job_name)){
+        if(!empty($job_name)){
             $data["job"] = array("like", '%'.$job_name.'%');
         }
         if(!empty($city)){
             $data["work_city"] = array("like", '%'.$city.'%');
         }
-        if($education!='全部'||$education!='不限'){
+        if($education!='全部'&&$education!='不限'){
             if($education=='硕士及以上学位'){
                 $education = '硕士';
             }
