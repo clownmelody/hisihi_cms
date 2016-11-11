@@ -2463,7 +2463,7 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
     }
 
     public function addJobIntension($uid=null, $position_applied=null, $expect_city=null,
-                                    $monthly_salary_range=null, $education=null, $work_experience=null,
+                                    $salary=null, $education=null, $work_experience=null,
                                     $type_of_job=null, $scale=null, $industry=null){
         if (!$uid) {
             $this->requireLogin();
@@ -2478,7 +2478,7 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
         $data['uid'] = $uid;
         $data['position_applied'] = $position_applied;
         $data['expect_city'] = $expect_city;
-        $data['monthly_salary_range'] = $monthly_salary_range;
+        $data['monthly_salary_range'] = $salary;
         $data['education'] = $education;
         $data['work_experience'] = $work_experience;
         $data['type_of_job'] = $type_of_job;
