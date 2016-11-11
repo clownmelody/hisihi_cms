@@ -45,6 +45,9 @@ class BannerService extends Model
                     $promotion_id = $banner['url'];
                     $banner['url'] = 'hisihi://promotion/detailinfo?id='.$promotion_id.'&oid='.$organization_id;
                     break;
+                case 7: // 招聘主页
+                    $banner['url'] = 'hisihi://recruitment';
+                    break;
             }
         }
         return $list;
@@ -84,6 +87,9 @@ class BannerService extends Model
                 case 6: // 活动详情页
                     $promotion_id = $banner['url'];
                     $banner['url'] = 'hisihi://promotion/detailinfo?id='.$promotion_id.'&oid='.$organization_id;
+                    break;
+                case 7: // 招聘主页
+                    $banner['url'] = 'hisihi://recruitment';
                     break;
             }
         }

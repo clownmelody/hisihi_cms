@@ -19,7 +19,7 @@
         <div class="search-form fr cf">
             <div class="sleft">
                 <div class="drop-down">
-                    <span id="sch-sort-txt" class="sort-txt">所有</span>
+                    <span id="sch-sort-txt" class="sort-txt" style="width: 56px;">所有</span>
                     <i class="arrow arrow-down"></i>
                     <ul id="sub-sch-menu" class="nav-list hidden">
                         <notempty name="first_level_list">
@@ -68,7 +68,10 @@
                         <td>
                             <a href="{:U('encyclopedia/category_edit?id='.$vo['id'])}" >编辑</a>
                             <a href="{:U('encyclopedia/category_delete?id='.$vo['id'])}" class="ajax-get confirm">删除</a>
-                            <a href="{:U('encyclopedia/category_add?id='.$vo['id'])}" >新增二级分类</a>
+                            <if condition="($vo.pid eq 0) ">
+                                <a href="{:U('encyclopedia/category_add?id='.$vo['id'])}" >新增二级分类</a>
+                                <else />
+                            </if>
                         </td>
                     </tr>
                 </volist>

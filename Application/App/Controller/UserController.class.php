@@ -2463,7 +2463,7 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
     }
 
     public function addJobIntension($uid=null, $position_applied=null, $expect_city=null,
-                                    $monthly_salary_range=null, $education=null, $work_experience=null,
+                                    $salary=null, $education=null, $work_experience=null,
                                     $type_of_job=null, $scale=null, $industry=null){
         if (!$uid) {
             $this->requireLogin();
@@ -2476,17 +2476,45 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
         }
         $model = M('UserJobIntension');
         $data['uid'] = $uid;
-        $data['position_applied'] = $position_applied;
-        $data['expect_city'] = $expect_city;
-        $data['monthly_salary_range'] = $monthly_salary_range;
-        $data['education'] = $education;
-        $data['work_experience'] = $work_experience;
-        $data['type_of_job'] = $type_of_job;
-        $data['scale'] = $scale;
-        $data['industry'] = $industry;
-        $data['create_time'] = time();
-        $model->add($data);
+        $data['status'] = 1;
+        $count = $model->where($data)->count();
+        if($count){
+            $data['position_applied'] = $position_applied;
+            $data['expect_city'] = $expect_city;
+            $data['monthly_salary_range'] = $salary;
+            $data['education'] = $education;
+            $data['work_experience'] = $work_experience;
+            $data['type_of_job'] = $type_of_job;
+            $data['scale'] = $scale;
+            $data['industry'] = $industry;
+            $model->where("status=1 and uid=".$uid)->save($data);
+        } else {
+            $data['position_applied'] = $position_applied;
+            $data['expect_city'] = $expect_city;
+            $data['monthly_salary_range'] = $salary;
+            $data['education'] = $education;
+            $data['work_experience'] = $work_experience;
+            $data['type_of_job'] = $type_of_job;
+            $data['scale'] = $scale;
+            $data['industry'] = $industry;
+            $data['create_time'] = time();
+            $model->add($data);
+        }
         $this->apiSuccess("填写成功");
+    }
+
+    public function getJobIntension($uid=null){
+        if (!$uid) {
+            $this->requireLogin();
+            $uid = $this->getUid();
+        }
+        $model = M('UserJobIntension');
+        $data['uid'] = $uid;
+        $data['status'] = 1;
+        $info = $model->field('position_applied, expect_city, monthly_salary_range,
+        education, work_experience, type_of_job, scale, industry')->where($data)->find();
+        $extra["data"] = $info;
+        $this->apiSuccess("获取用户求职意向成功",null, $extra);
     }
 
 }

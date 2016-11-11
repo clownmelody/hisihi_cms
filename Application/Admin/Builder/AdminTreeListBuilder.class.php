@@ -22,6 +22,15 @@ class AdminTreeListBuilder extends AdminBuilder
     private $_move=false;
     private $_merge=false;
 
+    //左侧高亮菜单
+    private $_highlight_url = '';
+
+    public function highlight_subnav($url)
+    {
+        $this->_highlight_url = $url;
+        return $this;
+    }
+
     public function title($title)
     {
         $this->_title = $title;
@@ -349,6 +358,7 @@ class AdminTreeListBuilder extends AdminBuilder
         $this->assign('tree', $this->_data);
         $this->assign('canMove',$this->_move);
         $this->assign('canMerge',$this->_merge);
+        $this->assign('highlight_url',$this->_highlight_url);
         parent::display('admin_tree');
     }
 

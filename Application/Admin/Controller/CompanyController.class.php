@@ -573,10 +573,12 @@ class CompanyController extends AdminController {
      */
     public function addRecruit($id){
         $cmodel = D('CompanyConfig');
-        $marks = $cmodel->where('type=3 and status=1')->select();
+        $requirement = $cmodel->where('type=3 and status=1')->select();
         $salary = $cmodel->where('type=4 and status=1')->select();
+        $marks = $cmodel->where('type=13 and status=1')->select();
         $this->assign('_salary', $salary);
-        $this->assign('requirement', $marks);
+        $this->assign('requirement', $requirement);
+        $this->assign('marks', $marks);
         $this->assign('company_id', $id);
         $this->display('addRecruit');
     }
@@ -621,9 +623,13 @@ class CompanyController extends AdminController {
         $cmodel = D('CompanyConfig');
         $marks = $cmodel->where('type=3 and status=1')->select();
         $salary = $cmodel->where('type=4 and status=1')->select();
-        $markarray = explode("#",$result['requirement']);
-        $this->assign('_markarray', $markarray);
+        $requirearray = explode("#",$result['requirement']);
+        $tags = $cmodel->where('type=13 and status=1')->select();
+        $_marksarray = explode("#",$result['marks']);
+        $this->assign('_requirementarray', $requirearray);
+        $this->assign('_marksarray', $_marksarray);
         $this->assign('_salary', $salary);
+        $this->assign('marks', $tags);
         $this->assign('requirement', $marks);
         $this->assign('recruit', $result);
         $this->display('editRecruit');
