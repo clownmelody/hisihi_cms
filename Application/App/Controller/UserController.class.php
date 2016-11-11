@@ -2470,7 +2470,7 @@ on a.row=b.id where b.status>0 and a.uid=".$uid." and a.appname='Organization'")
             $uid = $this->getUid();
         }
         if(empty($uid)||empty($job)||empty($city)||
-            empty($monthly_salary_range)||empty($education)||empty($work_experience)||
+            empty($salary)||empty($education)||empty($work_experience)||
             empty($type_of_job)||empty($scale)||empty($industry)){
             $this->apiError(-1, "数据未填写完整");
         }
