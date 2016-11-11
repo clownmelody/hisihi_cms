@@ -261,16 +261,20 @@ define(['base','async'],function(Base) {
         $('.content').html(str);
     };
 
+    //得到二级目录详情
     t.getSecondLevel = function(item,id){
         if (!item.level2||item.level2.length==0) {
             return '';
         }
         var len=item.level2.length,
-            str='';
+            str='',
+            strD='';
             for (var j=0;j<len;j++) {
                 level=item.level2[j];
-                str += '<div class="content-head" id="'+id+'_'+(j+1)+'">' +level.name +'</div>' +
-                        '<p class="content-info">'+ level.detail+'</p>';
+                if(level.detail){
+                    strD='<p class="content-info">'+ level.detail+'</p>';
+                }
+                str += '<div class="content-head" id="'+id+'_'+(j+1)+'">' +level.name +'</div>' + strD;
                 }
             return str;
     };
