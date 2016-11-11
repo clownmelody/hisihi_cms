@@ -84,17 +84,6 @@ define(['base','async'],function(Base) {
         $('.head').html(str);
     };
 
-    //更改头部title
-    //t.changeTitle = function(result) {
-    //    if (!result.data||result.data.headInfo.id==null) {
-    //        return '';
-    //    }
-    //    var str = '',
-    //        title=result.data.headInfo.title;
-    //    str = '<title>' +title+ '</title>';
-    //    $('head').html(str);
-    //}
-
     //加载相关标签
     t.loadAboutTips = function(result){
         if (!result||result.data.likeKeyWords==null) {
@@ -270,9 +259,10 @@ define(['base','async'],function(Base) {
             str='',
             strD='';
             for (var j=0;j<len;j++) {
-                level=item.level2[j];
-                if(level.detail){
+                var level=item.level2[j],
                     strD='<p class="content-info">'+ level.detail+'</p>';
+                if (!level.detail) {
+                    strD= '';
                 }
                 str += '<div class="content-head" id="'+id+'_'+(j+1)+'">' +level.name +'</div>' + strD;
                 }
