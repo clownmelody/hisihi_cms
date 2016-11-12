@@ -459,7 +459,7 @@ class CompanyController extends AppController {
 
     /**
      * @param null $city
-     * @param null $job_name
+     * @param null $job
      * @param string $education
      * @param string $type_of_job
      * @param string $work_experience
@@ -469,13 +469,13 @@ class CompanyController extends AppController {
      * @param int $page
      * @param int $count
      */
-    public function jobList($city=null, $job_name=null, $education='全部', $type_of_job='全部', $work_experience='全部',
+    public function jobList($city=null, $job=null, $education='全部', $type_of_job='全部', $work_experience='全部',
                             $salary='全部', $industry='全部', $scale='全部', $page=1, $count=10){
         $model = M("CompanyRecruit");
         $companyModel = M("Company");
         $data["status"] = 1;
-        if(!empty($job_name)){
-            $data["job"] = array("like", '%'.$job_name.'%');
+        if(!empty($job)){
+            $data["job"] = array("like", '%'.$job.'%');
         }
         if(!empty($city)){
             $data["work_city"] = array("like", '%'.$city.'%');

@@ -535,7 +535,6 @@ body .head .head-detail {
 body .head .head-tag > li {
   float: left;
   height: 25px;
-  padding-left: 5px;
   padding-right: 5px;
   margin-bottom: 10px;
   line-height: 25px;
@@ -544,6 +543,7 @@ body .head .head-tag .head-title {
   color: #212121;
 }
 body .head .head-tag .head-title-tag {
+  padding-left: 5px;
   margin-right: 10px;
   font-size: 14px;
   border: 1px solid #FF5A00;
@@ -652,4 +652,21 @@ body .read-about .rd-link {
 }
 body .read-about .rd-link > a {
   color: #039be5;
+}
+body .top-btn {
+  right: 10px;
+  bottom: 90px;
+  width: 56px;
+  height: 56px;
+  background: url('../../images/encyclopedia/btn_up.png') no-repeat;
+  background-size: 56px 56px;
+  position: fixed;
+  z-index: 99;
+  -moz-transition: background 1s;
+  -webkit-transition: background 1s;
+  -o-transition: background 1s;
+}
+body .top-btn a {
+  display: block;
+  height: 100%;
 }

@@ -60,6 +60,15 @@
                         }
                     });
 
+            /* 分类收起 */
+            $(".category dd").prev().find(".fold i").addClass("icon-fold")
+                    .each(function(){
+                        var self = $(this);
+                        self.closest("dt").next().slideUp("fast", function(){
+                            self.removeClass("icon-unfold").addClass("icon-fold");
+                        });
+                    });
+
             /* 三级分类删除新增按钮 */
             $(".category dd dd .add-sub").remove();
 
