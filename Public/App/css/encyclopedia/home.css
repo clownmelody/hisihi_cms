@@ -659,3 +659,20 @@ body .read-about .rd-link {
 body .read-about .rd-link > a {
   color: #039be5;
 }
+body .top-btn {
+  right: 10px;
+  bottom: 90px;
+  width: 56px;
+  height: 56px;
+  background: url('../../images/encyclopedia/btn_up.png') no-repeat;
+  background-size: 56px 56px;
+  position: fixed;
+  z-index: 99;
+  -moz-transition: background 1s;
+  -webkit-transition: background 1s;
+  -o-transition: background 1s;
+}
+body .top-btn a {
+  display: block;
+  height: 100%;
+}
