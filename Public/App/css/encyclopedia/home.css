@@ -604,9 +604,6 @@ body .index > div.catalog-right ul li {
 body .index > div.catalog-right ul li a {
   text-decoration: none;
 }
-body .index > div.catalog-right ul li.level1 {
-  white-space: nowrap;
-}
 body .index > div.catalog-right ul li.level1 a {
   color: #212121;
   font-size: 14px;
@@ -614,9 +611,6 @@ body .index > div.catalog-right ul li.level1 a {
   display: block;
   overflow: hidden;
   text-overflow: clip;
-}
-body .index > div.catalog-right ul li.level2 {
-  white-space: nowrap;
 }
 body .index > div.catalog-right ul li.level2 a {
   color: #808080;
