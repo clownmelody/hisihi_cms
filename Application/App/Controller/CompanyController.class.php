@@ -473,6 +473,7 @@ class CompanyController extends AppController {
                             $salary='全部', $industry='全部', $scale='全部', $page=1, $count=10){
         $model = M("CompanyRecruit");
         $companyModel = M("Company");
+        $cmodel = M('CompanyConfig');
         $data["status"] = 1;
         if(!empty($job)){
             $data["job"] = array("like", '%'.$job.'%');
@@ -514,6 +515,7 @@ class CompanyController extends AppController {
             $companyInfo["picture"] = $this->fetchImage($companyInfo["picture"]);
             $companyInfo["id"] = $item["company_id"];
             $item["companyInfo"] = $companyInfo;
+            $item["salary"] = $cmodel->where('type=4 and status=1 and value='.$item['salary'])->getField("value_explain");
             unset($item["company_id"]);
         }
         $extra["total_count"] = $total_count;
