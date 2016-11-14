@@ -473,6 +473,7 @@ class CompanyController extends AppController {
                             $salary='全部', $industry='全部', $scale='全部', $page=1, $count=10){
         $model = M("CompanyRecruit");
         $companyModel = M("Company");
+        $cmodel = M('CompanyConfig');
         $data["status"] = 1;
         if(!empty($job)){
             $data["job"] = array("like", '%'.$job.'%');
