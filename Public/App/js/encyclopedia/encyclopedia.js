@@ -304,11 +304,11 @@ define(['base','fx','async'],function(Base) {
     //滚动显示
     t.getScroll = function(){
     $(window).scroll(function() {
-        if ($(window).scrollTop() > 600) {
-            $(".top-btn").fadeIn(1500);
+        if ($(window).scrollTop() > 800) {
+            $(".top-btn").fadeIn(0);
         }
         else {
-            $(".top-btn").fadeOut(1500);
+            $(".top-btn").fadeOut(0);
         }
     })
     };
