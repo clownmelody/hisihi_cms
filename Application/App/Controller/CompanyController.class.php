@@ -514,6 +514,7 @@ class CompanyController extends AppController {
             $companyInfo["picture"] = $this->fetchImage($companyInfo["picture"]);
             $companyInfo["id"] = $item["company_id"];
             $item["companyInfo"] = $companyInfo;
+            $item["salary"] = $cmodel->where('type=4 and status=1 and value='.$item['salary'])->getField("value_explain");
             unset($item["company_id"]);
         }
         $extra["total_count"] = $total_count;
