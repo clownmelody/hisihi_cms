@@ -104,7 +104,7 @@ body {
                 text-decoration: none;
               }
               &.level1{
-                white-space:nowrap;
+                //white-space:nowrap;
                 a{
 
                   color: #212121;
@@ -117,7 +117,7 @@ body {
                 }
               }
               &.level2{
-                white-space:nowrap;
+                //white-space:nowrap;
                 a{
                   color: #808080;
                   font-size: 12px;
@@ -170,4 +170,22 @@ body {
       }
     }
   }
+
+    .top-btn {
+      right: 10px;
+      bottom: 90px;
+      .size(140px*0.4,140px*0.4);
+      background: url('../../images/encyclopedia/btn_up.png') no-repeat;
+      background-size: 140px*0.4 140px*0.4;
+      position: fixed;
+      z-index: 99;
+      -moz-transition:background 1s;
+      -webkit-transition:background 1s;
+      -o-transition:background 1s;
+      a{
+        display: block;
+        height: 100%;
+      }
+    }
+
 }
