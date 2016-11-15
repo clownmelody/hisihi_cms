@@ -203,7 +203,7 @@ define(['base','fx','async'],function(Base) {
                 className = 'level1';
                 txt = item.num + '.' + txt;
             }
-            str += '<li class="second-catalog ' + className + '"><a href="#'+item.hashTarget+'">' + txt + '</a></li>';
+            str += '<li class="second-catalog ' + className + '"><a href="#'+item.hashTarget+'" target="_self">' + txt + '</a></li>';
         }
         if (len == 0) {
             str = '';
@@ -299,7 +299,7 @@ define(['base','fx','async'],function(Base) {
     //加载跳转顶部按钮
     t.loadTopBtn = function (){
         var str ='',
-         str = '<div class="top-btn"><a href="#head"></a></div>';
+         str = '<div class="top-btn"><a href="#head" target="_self"></a></div>';
         $('body').append(str);
     };
 

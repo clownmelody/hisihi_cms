@@ -32,9 +32,9 @@ website:    http://code.google.com/p/jquerytree/
     text-decoration:none;
     border-bottom: none;
 }
-.ztree li a.curSelectedNode {padding-top:0px; background-color:#e5e5e5; color:black; height:21px; opacity:0.8;}
-.ztree li a.curSelectedNode_Edit {padding-top:0px; background-color:#e5e5e5; color:black; height:21px; border:1px #666 solid; opacity:0.8;}
-.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#aaa; color:white; height:21px; border:1px #666 solid;
+.ztree li a.curSelectedNode {padding-top:0px; color:#d01616; height:36px; opacity:0.8;}
+.ztree li a.curSelectedNode_Edit {padding-top:0px;color:#d01616; height:21px; opacity:0.8;}
+.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#aaa; color:white; height:36px; border:1px #666 solid;
   opacity:0.8; filter:alpha(opacity=80)}
 .ztree li a.tmpTargetNode_prev {}
 .ztree li a.tmpTargetNode_next {}
