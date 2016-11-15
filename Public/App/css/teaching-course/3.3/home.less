@@ -10,8 +10,6 @@ body {
   right: 0;
   overflow-x: hidden;
   font-size: 14px;
-  //数据没有加载完毕的时候不展示页面内容
-  //opacity: 0;
   .box {
     margin-left: 14px;
     &.title {
@@ -22,17 +20,11 @@ body {
       font-size: 16px;
       font-weight: bold;
     }
-    &.author {
-      margin-top: 8px;
-      color: #808080;
-      font-size: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #e5e5e5;
-    }
     &.content {
       margin-top: 14px;
       margin-bottom: 14px;
       margin-right: 14px;
+      border-top: 1px solid #e5e5e5;
       > p {
         line-height: 21px;
       }

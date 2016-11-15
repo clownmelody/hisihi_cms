@@ -661,6 +661,7 @@ body .read-about .rd-link > a {
   color: #039be5;
 }
 body .top-btn {
+  display: none;
   right: 10px;
   bottom: 90px;
   width: 56px;

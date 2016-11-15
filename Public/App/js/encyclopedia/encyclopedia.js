@@ -15,7 +15,7 @@ define(['base','fx','async'],function(Base) {
 
         //是否显示加载等待动画
         this.controlLoadingBox(true);
-        //this.getScroll();
+        this.getScroll();
         window.setTimeout(function () {
             that.loadEncyclopediaInfo();
         //请求数据
@@ -72,7 +72,6 @@ define(['base','fx','async'],function(Base) {
         this.loadIndexInfo(result);
         //this.loadTopBtn(result);
     };
-
 
     //加载头部信息
     t.loadHeadInfo = function(result) {
@@ -295,7 +294,6 @@ define(['base','fx','async'],function(Base) {
         $('.read-about').html(str);
     };
 
-
     //加载跳转顶部按钮
     t.loadTopBtn = function (){
         var str ='',
@@ -303,15 +301,14 @@ define(['base','fx','async'],function(Base) {
         $('body').append(str);
     };
 
-
     //滚动显示
     t.getScroll = function(){
-    $("html,body").scroll(function() {
-        if ($(window).scrollTop() > 500) {
-            $(".top-btn").fadeIn(1500);
+    $(window).scroll(function() {
+        if ($(window).scrollTop() > 800) {
+            $(".top-btn").fadeIn(0);
         }
         else {
-            $(".top-btn").fadeOut(1500);
+            $(".top-btn").fadeOut(0);
         }
     })
     };

@@ -521,17 +521,11 @@ body {
   font-size: 16px;
   font-weight: bold;
 }
-.wrapper .box.author {
-  margin-top: 8px;
-  color: #808080;
-  font-size: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e5e5e5;
-}
 .wrapper .box.content {
   margin-top: 14px;
   margin-bottom: 14px;
   margin-right: 14px;
+  border-top: 1px solid #e5e5e5;
 }
 .wrapper .box.content > p {
   line-height: 21px;
