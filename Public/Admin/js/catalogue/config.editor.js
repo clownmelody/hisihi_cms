@@ -30,6 +30,7 @@ require(['jqueryform','simditor'],function(){
                     textarea: $editor,
                     toolbar:toolbar,
                     toolbarFloat: true,
+                    cleanPaste:false
                 });
                 window.setTimeout(function () {
                     $editor.add().css('opacity', '1');
