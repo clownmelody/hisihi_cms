@@ -57,6 +57,7 @@ return array(
         '__IMG__'    => __ROOT__ . '/Public/' . MODULE_NAME . '/images',
         '__CSS__'    => __ROOT__ . '/Public/' . MODULE_NAME . '/css',
         '__JS__'     => __ROOT__ . '/Public/' . MODULE_NAME . '/js',
+        '__API_URL__' => 'http://api.hisihi.com/',
     ),
 
     /* SESSION 和 COOKIE 配置 */

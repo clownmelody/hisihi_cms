@@ -1,5 +1,20 @@
 <extend name="Public/base" />
 <block name="body">
+    <link href="__CSS__/company/areaselect.css" type="text/css" rel="stylesheet">
+    <style type="text/css">
+        .form-item{
+            margin: 20px 10px;
+        }
+        .location-info-box{
+            position: relative;
+            height: 175px;
+        }
+        #addressProvince,#addressCity{
+            width:183px;
+            margin-right: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
     <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
     <div class="main-title cf">
         <h2>添加招聘信息</h2>
@@ -77,40 +92,59 @@
                             <textarea name="skills" style="height: 300px;width: 500px;"></textarea>
                         </div>
                     </div>
-                    <div class="form-item cf">
-                        <label class="item-label">工作详细地址</label>
-                        <div class="controls">
-                            <input type="text" class="text input-large" name="work_location" value="">
-                        </div>
-                    </div>
-                    <div class="form-item cf">
-                        <label class="item-label">工作所在城市</label>
-                        <div class="controls">
-                            <input type="text" class="text input-large" name="work_city" value="">
-                        </div>
-                    </div>
+
                     <div class="form-item cf">
                         <label class="item-label">学历</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="education" value="">
+                            <!--<input type="text" class="text input-large" name="education" value="">-->
+                            <select name="education">
+                                <option value="不限">不限</option>
+                                <option value="大专">大专</option>
+                                <option value="本科">本科</option>
+                                <option value="硕士及以上学历">硕士及以上学历</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">工作类型</label>
+                        <label class="item-label">工作性质</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="type_of_job" value="">
+                            <!--<input type="text" hidden class="text input-large" name="type_of_job" value="">-->
+                            <select name="type_of_job">
+                                <option value="全职">全职</option>
+                                <option value="兼职">兼职</option>
+                                <option value="实习">实习</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">工作经历</label>
+                        <label class="item-label">工作经验</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="work_experience" value="">
+                            <!--<input type="text" class="text input-large" name="work_experience" value="">-->
+                            <select name="work_experience">
+                                <option value="应届毕业生">应届毕业生</option>
+                                <option value="3年以下">3年以下</option>
+                                <option value="3-5年">3-5年</option>
+                                <option value="5-10年">5-10年</option>
+                                <option value="10年">10年以上</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">招聘截止时间</label>
                         <div class="controls">
                             <input type="text" name="end_time" class="text input-large time" value="" placeholder="请选择时间" />
+                        </div>
+                    </div>
+                    <div class="form-item cf">
+                        <label class="item-label">工作地址</label>
+                        <div class="controls location-info-box">
+                            <div>
+                                <input class="text input-large" placeholder="请选择省/直辖市" value="" name="location" id="addressProvince"/>
+                                <input class="text input-large" placeholder="请选择市/区" value="" name="location" id="addressCity"/>
+                            </div>
+                            <input type="text" class="text input-large" hidden name="work_city" value="" id="city">
+                            <input  class="text input-large" placeholder="详细街道" value="" name="work_location" id="address"/>
+                            <span class="basicFormInfoError"></span>
                         </div>
                     </div>
                 </div>
@@ -151,38 +185,45 @@
             $(':input').labelauty();
             $('.time').datetimepicker({
                 format: 'yyyy-mm-dd hh:ii',
-                language:"zh-CN",
-                minView:2,
-                autoclose:true
+                language: "zh-CN",
+                minView: 2,
+                autoclose: true
             });
-        });
-        function setAdvantage(){
-            var advantage = "";
-            $.each($("#requirement_ul li"),function(i,n){
-                var li = $(this);
-                var span = li.find("span:visible");
-                var input = li.find("input");
-                var classattr = span.attr("class");
-                if(classattr == "labelauty-checked-image"){
-                    advantage += (input.attr("id") + "#");
-                }
-            });
-            advantage = advantage.substring(0,advantage.length - 1);
-            $("#advantage").val(advantage);
+            window.setAdvantage = function () {
+                var advantage = "";
+                $.each($("#requirement_ul li"), function (i, n) {
+                    var li = $(this);
+                    var span = li.find("span:visible");
+                    var input = li.find("input");
+                    var classattr = span.attr("class");
+                    if (classattr == "labelauty-checked-image") {
+                        advantage += (input.attr("id") + "#");
+                    }
+                });
+                advantage = advantage.substring(0, advantage.length - 1);
+                $("#advantage").val(advantage);
 
-            var marks = "";
-            $.each($("#marks_ul li"),function(i,n){
-                var li = $(this);
-                var span = li.find("span:visible");
-                var input = li.find("input");
-                var classattr = span.attr("class");
-                if(classattr == "labelauty-checked-image"){
-                    marks += (input.attr("id") + "#");
-                }
-            });
-            marks = marks.substring(0,marks.length - 1);
-            $("#marks").val(marks);
+                var marks = "";
+                $.each($("#marks_ul li"), function (i, n) {
+                    var li = $(this);
+                    var span = li.find("span:visible");
+                    var input = li.find("input");
+                    var classattr = span.attr("class");
+                    if (classattr == "labelauty-checked-image") {
+                        marks += (input.attr("id") + "#");
+                    }
+                });
+                marks = marks.substring(0, marks.length - 1);
+                $("#marks").val(marks);
+
+                //城市
+                $('#city').val($('#addressProvince').val() +' '+ $('#addressCity').val());
+            }
+        });
+
+        window.urlObj={
+            js:'__JS__'
         }
     </script>
-
+    <script type="text/javascript" src="__JS__/require.js" data-main="__JS__/company/config.js"></script>
 </block>

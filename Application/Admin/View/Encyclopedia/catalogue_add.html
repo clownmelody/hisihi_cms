@@ -2,11 +2,32 @@
 
 <block name="body">
     <style type="text/css" rel="stylesheet">
+
+        #top-alert {
+            position: fixed;
+            top: 50px;
+            left: 220px;
+            right: 20px;
+            z-index: 3000;
+            margin-top: 20px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            overflow: hidden;
+            font-size: 16px;
+        }
+        #top-alert .close{
+            right:35px;
+            position: fixed;
+            top:75px;
+        }
+        .alert-content{
+            margin-left: 14px;
+            max-width:600px;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
         .main-content-box{
-            /*position:absolute;*/
-            /*top:50px;*/
-            /*left: 5%;*/
-            /*bottom: 40px;*/
             height: 100%;
             width: 90%;
             position: relative;
@@ -23,13 +44,14 @@
         .main-content-right-box{
             margin-left: 275px;
             overflow: hidden;
+            opacity: 0;
         }
 
         #entry_content{
             overflow: hidden;
             border:none;
             width: 100%;
-            min-height: 80%;
+            min-height: 500px;
         }
         .modal-box{
             position: fixed;
@@ -38,11 +60,10 @@
             left:0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0,0,0,.6);
+            background-color: rgba(0,0,0,0);
             z-index: 10000;
         }
         .modal-main-box{
-
             position: absolute;
             top:50%;
             left: 50%;
@@ -50,6 +71,7 @@
             height: 20px;
             margin-top: -10px;
             margin-left: -82px;;
+            color: #212121;
         }
         .loading-bubble-box span {
             display: inline-block;
@@ -90,7 +112,7 @@
             animation-delay: 0s;
         }
         .loading-bubble-box label {
-            color: #aaaaaa;
+            color: #212121;
             margin-left: 10px;
             vertical-align: 2px;
         }
@@ -102,39 +124,22 @@
                 transform: scale(1);
             }
         }
-
+        #save-info{
+            margin: 25px;
+        }
     </style>
-    <script>
-
-        function changeFrameHeight(){
-
-                var iframe = document.getElementById("entry_content");
-                try{
-                    var bHeight = iframe.contentWindow.document.body.scrollHeight;
-                    var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
-                    var height = Math.max(bHeight, dHeight);
-                    iframe.height = height;
-                    console.log(height);
-                }catch (ex){}
-                ctrlModal && ctrlModal(false);
-        }
-        window.onresize=function(){
-            changeFrameHeight();
-        }
-    </script>
-        <h2>词条--{$entry.name}</h2>
-        <input type="hidden" name="cid" id="cid" value="{$info.id}"/>
-        <input type="hidden" name="entry_id" id="entry_id" value="{$entry.id}"/>
-        <div class="main-content-box">
+    <h2>词条--{$entry.name}</h2>
+    <input type="hidden" name="cid" id="cid" value="{$info.id}"/>
+    <input type="hidden" name="entry_id" id="entry_id" value="{$entry.id}"/>
+    <div class="main-content-box">
         <div class="main-content-left-box">
             <ul id="tree" class="ztree"></ul>
         </div>
         <div class="main-content-right-box">
-            <iframe id="entry_content" style="width: 100%;" src="" onLoad="changeFrameHeight()"></iframe>
 
             <!--编辑器-->
-
-
+            <iframe id="entry_content" style="width: 100%;" src=""></iframe>
+            <input type="button" class="btn submit-btn ajax-post no-refresh" value="保存" id="save-info">
         </div>
     </div>
     <div class="modal-box">
@@ -143,9 +148,6 @@
         </div>
     </div>
     <link rel="stylesheet" href="__STATIC__/zTree/css/metroStyle/metroStyle.css" type="text/css">
-    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.core.js"></script>
-    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.excheck.js"></script>
-    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.exedit.js"></script>
     <script>
         var setting = {
             view: {
@@ -249,8 +251,8 @@
 
         function onClick(e, treeId, treeNode, isCancel) {
             var entry_id = $("#entry_id").val();
-//            ctrlModal(true);
-
+            ctrlModal(true);
+            $('.main-content-right-box').css('opacity','0');
             $("#entry_content").attr("src", "{:U('Encyclopedia/content_add')}"
                     + "&catalogue_id=" + treeNode.catalogue_id + "&entry_id=" + entry_id);
         }
@@ -320,6 +322,9 @@
 
         $(document).ready(function(){
             $.fn.zTree.init($("#tree"), setting, zNodes);
+
+            $('.main-content-box').css('height',$('#main').height());
+
             var treeObj = $.fn.zTree.getZTreeObj("tree");
             var nodes = treeObj.getNodes();
             if(nodes[0].children.length > 0){
@@ -329,6 +334,18 @@
                         + "&catalogue_id=" + first_child.catalogue_id + "&entry_id=" + entry_id);
             }
 
+            $("#entry_content").load(function () {
+                var mainheight = $(this).contents().find("body").height() + 30;
+                $(this).height(mainheight);
+                $('.main-content-right-box').css('opacity','1');
+                ctrlModal(false);
+            });
+
+            //保存
+            $('#save-info').click(function(){
+                document.getElementById('entry_content').contentWindow.setTextAreaData();
+            });
+
         });
 
         window.setTimeout(function(){
@@ -337,17 +354,24 @@
 
         function ctrlModal(flag){
             var $targetBox=$('.modal-box'),
-                $loadingBox=$('.loading-bubble-box');
+                    $loadingBox=$('.loading-bubble-box');
             if(flag) {
-                $targetBox.fadeIn(500);
+                $targetBox.fadeIn(100);
                 $loadingBox.addClass('active');
             }else{
                 $targetBox.hide();
                 $loadingBox.removeClass('active');
             }
         };
-
+        window.urlObj={
+            js:'__JS__',
+            apiUrl:'__API_URL__'
+        };
     </script>
+    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.excheck.js"></script>
+    <script type="text/javascript" src="__STATIC__/zTree/js/jquery.ztree.exedit.js"></script>
+    <script type="text/javascript" src="__JS__/catalogue/tokeninfo.js"></script>
 
 </block>
 <block name="script">
@@ -356,5 +380,3 @@
         highlight_subnav("{:U('Encyclopedia/item')}");
     </script>
 </block>
-
-

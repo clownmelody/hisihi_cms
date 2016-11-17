@@ -12,41 +12,91 @@
             height: 35px;
             width:100px;
             cursor: pointer;
+            display: none;
         }
         .submit-btn:hover{
             color: white;
         }
+        #target-area{
+            display: none;
+        }
+        #my-editor{
+            min-height: 500px;
+        }
+        #uploadImgFile{
+            display: none;
+        }
+        .loding-modal{
+            position: fixed;
+            width:80px;
+            height:80px;
+            left:50%;
+            top:50%;
+            margin-top: -40px;
+            margin-left: -40px;
+            border-radius: 4px;
+            background-color: rgba(160,160,160,1);
+            text-align: center;
+            font-size: 12px;
+            color: #fff;
+            z-index: 8000;
+            display: none;
+        }
+        .loadingCircle {
+            margin: 15px auto 10px auto;
+            display: inline-block;
+            background-image: url("__IMG__/loading.svg");
+            height: 2em;
+            width: 2em;
+        }
+        .loadingCircle.active {
+            z-index: 1;
+            animation: aloading 0.8s steps(6, end) 0s infinite;
+        }
+        @keyframes aloading {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
     </style>
-    <!-- 标签页导航 -->
-    <!--<div class="tab-wrap">-->
-        <!--<div class="tab-content">-->
-            <!-- 表单 -->
-            <form id="form" action="{:U('content_update')}" method="post" class="form-horizontal doc-modal-form">
-                <input type="hidden" name="cid" id="cid" value="{$id|default=''}"/>
-                <input type="hidden" name="catalogue_id" id="catalogue_id" value="{$catalogue_id|default=''}"/>
-                <input type="hidden" name="entry_id" id="entry_id" value="{$entry_id|default=''}"/>
-                <!-- 基础 -->
-                <div id="tab1" class="tab-pane in tab1">
-                    <div class="form-item cf">
-                        <!--<label class="item-label">内容</label>-->
-                        <div class="controls">
-                            <textarea name="content">{$content|default=''}</textarea>
-                            {:hook('adminArticleEdit', array('name'=>content,'value'=>$content))}
-                        </div>
-                    </div>
+    <link rel="stylesheet" type="text/css" href="__JS__/editor/simditor.css">
+    <form id="form" action="{:U('content_update')}" method="post" class="form-horizontal doc-modal-form">
+        <input type="hidden" name="cid" id="cid" value="{$id|default=''}"/>
+        <input type="hidden" name="catalogue_id" id="catalogue_id" value="{$catalogue_id|default=''}"/>
+        <input type="hidden" name="entry_id" id="entry_id" value="{$entry_id|default=''}"/>
+        <!-- 基础 -->
+        <div id="tab1" class="tab-pane in tab1">
+            <div class="form-item cf">
+                <div class="controls">
+                    <textarea name="content" id="target-area">{$content|default=''}</textarea>
+                    <textarea id="my-editor">{$content|default=''}</textarea>
                 </div>
+            </div>
+        </div>
 
-                <!-- 按钮 -->
-                <div class="form-item cf">
-                    <label class="item-label"></label>
-                    <div class="controls edit_sort_btn">
-                        <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">保 存</button>
-
-                    </div>
-                </div>
-            </form>
-        <!--</div>-->
-    <!--</div>-->
+        <!-- 按钮 -->
+        <div class="form-item cf">
+            <label class="item-label"></label>
+            <div class="controls edit_sort_btn">
+                <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">保 存</button>
+            </div>
+        </div>
+    </form>
+    <form id="upImgForm" method="post">
+        <input type="file" name="filedata" class="dataImportFileInput" id="uploadImgFile" size="28" accept=".jpg,.png">
+    </form>
+    <div class="loding-modal">
+        <i id="imgLoadingCircle" class="loadingCircle active"></i>
+        <div>上传中…</div>
+    </div>
+    <script>
+        window.urlObj={
+            js:'__JS__',
+            apiUrl:'__API_URL__'
+        };
+    </script>
+    <script type="text/javascript" data-main="__JS__/catalogue/config.editor.js" src="__JS__/require.js"></script>
 </block>
 
 <block name="script">

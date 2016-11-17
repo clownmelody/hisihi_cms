@@ -693,7 +693,10 @@ class EncyclopediaController extends AdminController {
                     $this->success('添加成功', '', true);
                 }
             } else {
-                $model->where('id='.$cid)->save($data);
+                $res = $model->where('id='.$cid)->save($data);
+                if($res===false){
+                    $this->error('更新失败', '', true);
+                }
                 $this->success('更新成功', '', true);
             }
         } else {
