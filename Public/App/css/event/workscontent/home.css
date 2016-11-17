@@ -535,4 +535,5 @@ body {
 }
 .wrapper .box.content > p {
   line-height: 21px;
+  background-color: transparent;
 }
