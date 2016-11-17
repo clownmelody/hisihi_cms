@@ -25,7 +25,12 @@ require(['jqueryform','simditor'],function(){
 
             init:function(){
                 var $editor = $('#my-editor'),
-                    toolbar = ['title', 'bold', 'italic', 'underline', 'color', '|', 'ol', 'ul', 'blockquote', 'table', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
+                    toolbar = ['title', 'bold', 'italic', 'underline', 'fontScale', 'color', '|',
+                        'ol', 'ul', 'blockquote', 'table', '|',
+                        'link', 'image', 'hr', '|',
+                        'indent', 'outdent', 'alignment'
+                    ];
+                //Simditor.locale = 'en-US'
                 this.editor = new Simditor({
                     textarea: $editor,
                     toolbar:toolbar,

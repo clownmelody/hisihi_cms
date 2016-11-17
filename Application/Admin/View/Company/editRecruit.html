@@ -24,6 +24,7 @@
                         <label class="item-label">薪酬</label>
                         <div class="controls">
                             <!--<input type="text" class="text input-large" name="salary" value="{$recruit.salary}">-->
+                            <div>123 {$recruit['salary']}</div>
                             <notempty name="_salary">
                                 <select class="text input-large" name="salary" style="height: 30px;width: 400px;">
                                     <volist name="_salary" id="vo">
@@ -93,6 +94,11 @@
                         <label class="item-label">学历</label>
                         <div class="controls">
                             <input type="text" class="text input-large" name="education" value="{$recruit.education}">
+                                <!--<select class="text input-large" name="education" style="height: 30px;width: 400px;">-->
+                                    <!--<volist name="_salary" id="vo">-->
+                                        <!--<option value="{$vo.value}" <eq name="vo['value']" value="$recruit['education']">selected="selected"</eq> >{$vo.value_explain}</option>-->
+                                    <!--</volist>-->
+                                <!--</select>-->
                         </div>
                     </div>
                     <div class="form-item cf">
