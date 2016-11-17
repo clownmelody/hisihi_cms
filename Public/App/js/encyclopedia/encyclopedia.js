@@ -297,11 +297,11 @@ define(['base','fx','async'],function(Base) {
     //加载跳转顶部按钮
     t.loadTopBtn = function (){
         var str ='',
-         str = '<div class="top-btn"><a href="#head" target="_self"></a></div>';
+         str = '<div class="top-btn"><a href="#hash_head" target="_self"></a></div>';
         $('body').append(str);
     };
 
-    //滚动显示
+    //滚动显示,滚动到顶部隐藏跳转顶部按钮
     t.getScroll = function(){
     $(window).scroll(function() {
         if ($(window).scrollTop() > 800) {
@@ -310,7 +310,7 @@ define(['base','fx','async'],function(Base) {
         else {
             $(".top-btn").fadeOut(0);
         }
-    })
+        })
     };
 
     return Encyclopedia;
