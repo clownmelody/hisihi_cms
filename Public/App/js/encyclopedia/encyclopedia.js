@@ -298,10 +298,11 @@ define(['base','fx','async'],function(Base) {
     t.loadTopBtn = function (){
         var str ='',
          str = '<div class="top-btn"><a href="#head"></a></div>';
+        //append方法
         $('body').append(str);
     };
 
-    //滚动显示
+    //滚动显示,滚动到顶部隐藏跳转顶部按钮
     t.getScroll = function(){
     $(window).scroll(function() {
         if ($(window).scrollTop() > 800) {
@@ -310,7 +311,7 @@ define(['base','fx','async'],function(Base) {
         else {
             $(".top-btn").fadeOut(0);
         }
-    })
+        })
     };
 
     return Encyclopedia;
