@@ -40,7 +40,7 @@ require(['jqueryform','simditor'],function(){
                 window.setTimeout(function () {
                     $editor.add().css('opacity', '1');
                 }, 200);
-                this.overWriteImgBtnFn();
+                this.overWriteImgBtnFn(toolbar);
                 this.initImgsArr();  //定义100个图片id 数组。
 
                 this.getBasicToken();
@@ -68,8 +68,8 @@ require(['jqueryform','simditor'],function(){
             },
 
             /*重写编辑器的上传图片的方法*/
-            overWriteImgBtnFn:function() {
-                this.btn = this.editor.toolbar.buttons[9];
+            overWriteImgBtnFn:function(arr) {
+                this.btn = this.editor.toolbar.buttons[this.getImageBtnIndex(arr)];
                 var that = this;
                 this.btn.createImage = function (url, maxId) {
                     var range;
@@ -99,6 +99,20 @@ require(['jqueryform','simditor'],function(){
                         alert('最多只能添加100张图片');
                     }
                 };
+            },
+
+            /*得到图片按钮的下标*/
+            getImageBtnIndex:function(arr){
+                var tempNum=0;
+                var len=arr.length;
+                for(var i=0;i<len;i++){
+                    if(arr[i]=='|'){
+                        tempNum++;
+                    }
+                    if(arr[i]=='image'){
+                        return (i-tempNum);
+                    }
+                }
             },
 
             /*

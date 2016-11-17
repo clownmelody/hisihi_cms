@@ -1,5 +1,17 @@
 <extend name="Public/base" />
 <block name="body">
+    <link href="__CSS__/company/areaselect.css" type="text/css" rel="stylesheet">
+    <style rel="stylesheet" type="text/css">
+        .location-info-box{
+            position: relative;
+            height: 175px;
+        }
+        #addressProvince,#addressCity{
+            width:183px;
+            margin-right: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
     <script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
     <div class="main-title cf">
         <h2>编辑招聘信息</h2>
@@ -78,39 +90,53 @@
                             <textarea name="skills" style="height: 300px;width: 500px;">{$recruit.skills}</textarea>
                         </div>
                     </div>
-                    <div class="form-item cf">
-                        <label class="item-label">工作详细地址</label>
-                        <div class="controls">
-                            <input type="text" class="text input-large" name="work_location" value="{$recruit.work_location}">
-                        </div>
-                    </div>
-                    <div class="form-item cf">
-                        <label class="item-label">工作所在城市</label>
-                        <div class="controls">
-                            <input type="text" class="text input-large" name="work_city" value="{$recruit.work_city}">
-                        </div>
-                    </div>
+
                     <div class="form-item cf">
                         <label class="item-label">学历</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="education" value="{$recruit.education}">
-                                <!--<select class="text input-large" name="education" style="height: 30px;width: 400px;">-->
-                                    <!--<volist name="_salary" id="vo">-->
-                                        <!--<option value="{$vo.value}" <eq name="vo['value']" value="$recruit['education']">selected="selected"</eq> >{$vo.value_explain}</option>-->
-                                    <!--</volist>-->
-                                <!--</select>-->
+                            <select class="text input-large" name="education" style="height: 30px;width: 400px;">
+                                <?php
+                                    $arr=array("不限","大专","本科","硕士及以上学历");
+                                    foreach ($arr as $value) {
+                                        ?>
+                                            <option value="{$value}" <eq name="recruit['education']" value="$value">selected="selected"</eq> >{$value}</option>
+                                        <?php
+
+                                    }
+                                ?>
+                            </select>
                         </div>
                     </div>
                     <div class="form-item cf">
-                        <label class="item-label">工作类型</label>
+                        <label class="item-label">工作性质</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="type_of_job" value="{$recruit.type_of_job}">
+                            <select class="text input-large" name="type_of_job" style="height: 30px;width: 400px;">
+                                <?php
+                                    $arr=array("全职","兼职","实习");
+                                    foreach ($arr as $value) {
+                                        ?>
+                                        <option value="{$value}" <eq name="recruit['type_of_job']" value="$value">selected="selected"</eq> >{$value}</option>
+                                        <?php
+
+                                        }
+                                ?>
+                            </select>
                         </div>
                     </div>
                     <div class="form-item cf">
                         <label class="item-label">工作经历</label>
                         <div class="controls">
-                            <input type="text" class="text input-large" name="work_experience" value="{$recruit.work_experience}">
+                            <select class="text input-large" name="work_experience" style="height: 30px;width: 400px;">
+                                <?php
+                                    $arr=array("应届毕业生","3年以下","3-5年","5-10年","10年以上");
+                                    foreach ($arr as $value) {
+                                        ?>
+                                        <option value="{$value}" <eq name="recruit['work_experience']" value="$value">selected="selected"</eq> >{$value}</option>
+                                        <?php
+
+                                        }
+                                        ?>
+                            </select>
                         </div>
                     </div>
                     <div class="form-item cf">
@@ -119,6 +145,20 @@
                             <input type="text" name="end_time" class="text input-large time" value="{$recruit.end_time|time_format}" placeholder="请选择时间" />
                         </div>
                     </div>
+                </div>
+
+                <!--工作地址-->
+                <div class="form-item cf">
+                    <label class="item-label">工作地址</label>
+                    <div class="controls location-info-box">
+                        <div>
+                            <input class="text input-large" placeholder="请选择省/直辖市" value="" name="location" id="addressProvince"/>
+                            <input class="text input-large" placeholder="请选择市/区" value="" name="location" id="addressCity"/>
+                        </div>
+                        <input type="text" class="text input-large" hidden name="work_city" value="{$recruit.work_city}" id="city">
+                        <input  class="text input-large" placeholder="详细街道" value="{$recruit.work_location}" name="work_location" id="address"/>
+                    </div>
+
                 </div>
 
                 <!-- 按钮 -->
@@ -188,7 +228,13 @@
             });
             marks = marks.substring(0,marks.length - 1);
             $("#marks").val(marks);
+
+            //城市
+            $('#city').val($('#addressProvince').val() +' '+ $('#addressCity').val());
+        }
+        window.urlObj={
+            js:'__JS__'
         }
     </script>
-
+    <script type="text/javascript" src="__JS__/require.js" data-main="__JS__/company/config.js"></script>
 </block>

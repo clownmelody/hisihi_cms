@@ -11,6 +11,24 @@ requirejs.config({
 });
 require(['jquery','areaselect','areadata'],function($,locationCard){
     /*地区选择*/
+    var city=$('#city').val(),
+        cityArr = [],
+        p = '',
+        c = '';
+    if (city) {
+        cityArr = city.split(' ');
+        if(cityArr.length==1){
+            cityArr.splice(0,0,'');
+        }
+        if (cityArr[0]) {
+            p = cityArr[0];
+        }
+        if (cityArr[1]) {
+            c = cityArr[1];
+        }
+    }
+    $('#addressProvince').val(p);
+    $('#addressCity').val(c);
     new locationCard({
         ids: ['addressProvince', 'addressCity',''],
         targetSelector:'.location-info-box'
